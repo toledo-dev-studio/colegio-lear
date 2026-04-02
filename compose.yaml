@@ -1,0 +1,34 @@
+services:
+
+  colegio-lear-backend-cli:
+    container_name: 'colegio-lear-backend-cli'
+    image: 'node-cli'
+    build:
+      context: ./
+      dockerfile: docker/node.dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./backend:/app:rw
+      
+  colegio-lear-admin-web-cli:
+    container_name: 'colegio-lear-admin-web-cli'
+    image: 'node-cli'
+    build:
+      context: ./
+      dockerfile: docker/node.dockerfile
+    ports:
+      - '80:80'
+    volumes:
+      - ./frontend/admin-web:/app:rw
+
+  colegio-lear-student-web-cli:
+    container_name: 'colegio-lear-student-web-cli'
+    image: 'node-cli'
+    build:
+      context: ./
+      dockerfile: docker/node.dockerfile
+    ports:
+      - '80:80'
+    volumes:
+      - ./frontend/student-web:/app:rw
