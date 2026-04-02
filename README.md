@@ -1,6 +1,6 @@
 # COLEGIO LEAR
 
-```COLEGIO LEAN``` is a project focus on student service, from administrative operations to manage the student lifecycle, unit self-service site for students.
+```COLEGIO LEAR``` is a project focus on student service, from administrative operations to manage the student lifecycle, unit self-service site for students.
 
 ## Docker Compose
 
