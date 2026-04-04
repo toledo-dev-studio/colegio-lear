@@ -22,16 +22,19 @@ The project includes three containerized services:
    - Volume: `./frontend/student-web:/app`
    - Port: `80:80`
 
-### Main Commands
-
-#### Start a service
+### Start a service
 
 To start one of the available services locally you will need to run a command like the following:
 
 ```bash
+# Backend utility container
 docker compose run -p 3000:3000 --rm colegio-lear-backend-cli
-docker compose run -p 80:80 --rm colegio-admin-web-cli
-docker compose run -p 80:80 --rm colegio-student-web-cli
+
+# Admin web utility container
+docker compose run -p 80:80 --rm colegio-lear-admin-web-cli
+
+# Student web utility container
+docker compose run -p 80:80 --rm colegio-lear-student-web-cli
 ```
 
 > [!NOTE]
@@ -39,3 +42,17 @@ docker compose run -p 80:80 --rm colegio-student-web-cli
 > - Port `80` is exposed on many services. If you need to run multiple services simultaneously, you will need to modify the ports in `compose.yaml`
 > - Use `--rm` with `docker compose run` to automatically clean up the container after execution
 > - To stop without removing volumes, use `docker compose stop`. To remove them, use `docker compose down`
+> - To re-build the image remember to use ```--build``` with ```docker compose``` command
+
+The previous commands will create a ```CLI``` with ```node``` installed, with that you could execute any command or install any library that you will need, for example.
+
+```bash
+docker compose run -p 80:80 --rm colegio-lear-admin-web-cli
+> npm create vite@latest
+> npm install
+> npm run dev
+> ...
+```
+> [!IMPORTANT]
+> Remember to use the specific service according about you going to develop, because all the dependencies and volumes will work different
+
