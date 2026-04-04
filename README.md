@@ -47,6 +47,7 @@ docker compose run -p 80:80 --rm colegio-lear-student-web-cli
 The previous commands will create a ```CLI``` with ```node``` installed, with that you could execute any command or install any library that you will need, for example.
 
 ```bash
+# Admin web utility container
 docker compose run -p 80:80 --rm colegio-lear-admin-web-cli
 > npm create vite@latest
 > npm install
