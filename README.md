@@ -27,8 +27,13 @@ The project includes three containerized services:
 To start one of the available services locally you will need to run a command like the following:
 
 ```bash
+# Backend utility container
 docker compose run -p 3000:3000 --rm colegio-lear-backend-cli
+
+# Admin web utility container
 docker compose run -p 80:80 --rm colegio-lear-admin-web-cli
+
+# Student web utility container
 docker compose run -p 80:80 --rm colegio-lear-student-web-cli
 ```
 
