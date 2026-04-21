@@ -38,8 +38,12 @@ export async function createEmployee(
   return employee;
 }
 
+/** Super Admin email — used to hide this account from regular listings */
+const SUPER_ADMIN_EMAIL = env.SUPER_ADMIN_EMAIL.toLowerCase();
+
 /**
  * Retrieve a paginated list of employees with optional search.
+ * The Super Admin account is always excluded from listings.
  * When search is provided, filters by firstName, lastName, or email
  * using case-insensitive contains matching.
  * Returns data array and total count, excluding passwordHash.
@@ -50,15 +54,22 @@ export async function getEmployees(
 ): Promise<{ data: EmployeeResponse[]; total: number }> {
   const skip = calculateSkip(params);
 
+  const baseFilter = { email: { not: SUPER_ADMIN_EMAIL } };
+
   const where = search
     ? {
-        OR: [
-          { firstName: { contains: search, mode: "insensitive" as const } },
-          { lastName: { contains: search, mode: "insensitive" as const } },
-          { email: { contains: search, mode: "insensitive" as const } },
+        AND: [
+          baseFilter,
+          {
+            OR: [
+              { firstName: { contains: search, mode: "insensitive" as const } },
+              { lastName: { contains: search, mode: "insensitive" as const } },
+              { email: { contains: search, mode: "insensitive" as const } },
+            ],
+          },
         ],
       }
-    : {};
+    : baseFilter;
 
   const [data, total] = await prisma.$transaction([
     prisma.employee.findMany({

@@ -12,6 +12,9 @@
     "prisma:studio": "prisma studio",
     "test": "vitest --run"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "keywords": [],
   "author": "Omar Ernesto Trejo Palafox",
   "license": "ISC",
