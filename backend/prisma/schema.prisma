@@ -106,3 +106,82 @@ model AuditLog {
   @@map("audit_logs")
   @@schema("logs")
 }
+
+// ─── education structure (core schema) ───
+
+model EducationLevel {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  grades Grade[]
+
+  @@map("education_levels")
+  @@schema("core")
+}
+
+model Grade {
+  id               Int      @id @default(autoincrement())
+  name             String
+  description      String?
+  order            Int      @default(0)
+  isActive         Boolean  @default(true) @map("is_active")
+  educationLevelId Int      @map("education_level_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  educationLevel EducationLevel @relation(fields: [educationLevelId], references: [id])
+  groups         Group[]
+  gradeSubjects  GradeSubject[]
+
+  @@unique([name, educationLevelId])
+  @@map("grades")
+  @@schema("core")
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  name      String
+  isActive  Boolean  @default(true) @map("is_active")
+  gradeId   Int      @map("grade_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  grade Grade @relation(fields: [gradeId], references: [id])
+
+  @@unique([name, gradeId])
+  @@map("groups")
+  @@schema("core")
+}
+
+model Subject {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  gradeSubjects GradeSubject[]
+
+  @@map("subjects")
+  @@schema("core")
+}
+
+model GradeSubject {
+  id        Int      @id @default(autoincrement())
+  gradeId   Int      @map("grade_id")
+  subjectId Int      @map("subject_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  grade   Grade   @relation(fields: [gradeId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@unique([gradeId, subjectId])
+  @@map("grade_subjects")
+  @@schema("core")
+}

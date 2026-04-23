@@ -11,6 +11,10 @@ import authRoutes from "./modules/auth/auth.routes";
 import employeeRoutes from "./modules/employees/employees.routes";
 import profileRoutes from "./modules/profiles/profiles.routes";
 import auditRoutes from "./modules/audit/audit.routes";
+import educationLevelRoutes from "./modules/education-levels/education-levels.routes";
+import gradeRoutes from "./modules/grades/grades.routes";
+import groupRoutes from "./modules/groups/groups.routes";
+import subjectRoutes from "./modules/subjects/subjects.routes";
 
 /** Create Express application */
 const app = express();
@@ -29,6 +33,10 @@ app.use(authRoutes);
 app.use(employeeRoutes);
 app.use(profileRoutes);
 app.use(auditRoutes);
+app.use(educationLevelRoutes);
+app.use(gradeRoutes);
+app.use(groupRoutes);
+app.use(subjectRoutes);
 
 /* --- Global Error Handler (must be last) --- */
 app.use(errorHandler);

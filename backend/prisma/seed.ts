@@ -10,6 +10,13 @@ const MODULE_REFERENCES = [
   { name: "employees", description: "Employee management module" },
   { name: "profiles", description: "Profile and privilege management module" },
   { name: "audit", description: "Audit log module" },
+  {
+    name: "education-levels",
+    description: "Education level management module",
+  },
+  { name: "grades", description: "Grade management module" },
+  { name: "groups", description: "Group management module" },
+  { name: "subjects", description: "Subject management module" },
 ];
 
 /** All CRUD actions available for privilege assignment */
