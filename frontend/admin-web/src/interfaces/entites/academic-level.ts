@@ -8,5 +8,6 @@ export interface AcademicLevel {
     name: string;
     description: string;
     status: boolean;
+    
     educationLevels: EducationLevel[]
 }

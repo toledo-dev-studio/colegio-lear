@@ -6,6 +6,9 @@ const config: Config = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
     extend: {
+      backgroundImage: {
+        login: "url('@/assets/imgs/login-background.jpg')"
+      },
       fontFamily: {
         heading: ['Outfit', 'system-ui', 'sans-serif'],
         body: ['Figtree', 'system-ui', 'sans-serif'],

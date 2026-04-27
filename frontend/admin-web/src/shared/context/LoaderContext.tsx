@@ -9,7 +9,7 @@ export const LoaderContextProvider = ({ children }: PropsWithChildren) => {
 
     return (
         <>
-            {isLoading && <CustomFullScreenLoading title={title!} subtitle={subTitle} />}
+            {isLoading && <CustomFullScreenLoading className="fixed" title={title!} subtitle={subTitle} />}
             {children}
         </>
 

@@ -1,4 +1,4 @@
-import { Pencil } from 'lucide-react'
+import { Pencil, Plus } from 'lucide-react'
 
 import { Input } from '@/shared/ui/input'
 import { Button } from '@/shared/ui/button'
@@ -24,14 +24,15 @@ export const EducationLevelGrid = ({ educationLevels = [], handleAddEducationLev
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 px-6">
                     <div>
                         <h3 className="text-base font-semibold text-foreground">Grados escolares disponibles</h3>
-                        <p className="text-sm text-muted-foreground">Agrega los grados escolares que pertenecerán a este nivel académico.</p>
+                        <p className="text-sm text-muted-foreground mt-2">Agrega los grados escolares que pertenecerán a este nivel académico.</p>
                     </div>
                     <Button
                         type="button"
                         variant="outline"
-                        className="h-10 px-4"
+                        className="h-10 px-4 text-foreground"
                         onClick={handleAddEducationLevel}>
                         Agregar nuevo
+                        <Plus className="ml-4 w-3 h-3 text-foreground" />
                     </Button>
                 </div>
 

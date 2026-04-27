@@ -21,7 +21,7 @@ const navbar: Navbar[] = [
   {
     title: "Seguimiento escolar",
     items: [
-      { to: "/academic-levels", label: "Niveles educativos", icon: Ruler, testid: "academic-levels" },
+      { to: "/academic-levels", label: "Niveles académicos", icon: Ruler, testid: "academic-levels" },
       { to: "/school-subjects", label: "Materias escolares", icon: GraduationCap, testid: "school-subjects" },
 
 

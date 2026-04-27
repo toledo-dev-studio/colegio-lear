@@ -1,3 +1,6 @@
+import type { AcademicLevel } from "./academic-level";
+import type { EducationLevel } from "./education-level";
+
 /**
  * Materias escolares
  */
@@ -6,7 +9,11 @@ export interface SchoolSubject {
     name: string;
     description: string;
     status:  boolean;
-    academicLevelId: string
-    educationLevelId: string
+    
+    academicLevelId: string;
+    academicLevel?: AcademicLevel;
+
+    educationLevelId: string;
+    educationLevel: EducationLevel;
 }
 

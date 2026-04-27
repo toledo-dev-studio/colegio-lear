@@ -9,6 +9,8 @@ import { JobTitlesPage } from "@/modules/job-titles/pages/job-titles/JobTitlesPa
 import { JobTitlePage } from "@/modules/job-titles/pages/job-title/JobTitlePage";
 import { AcademicLevelsPage } from "@/modules/academic-levels/pages/academic-levels/AcademicLevelsPage";
 import { AcademicLevelPage } from "@/modules/academic-levels/pages/academic-level/AcademicLevelPage";
+import { SchoolSubjectsPage } from "@/modules/school-subjects/pages/school-subjects/SchoolSubjectsPage";
+import { SchoolSubjectPage } from "@/modules/school-subjects/pages/school-subject/SchoolSubjectPage";
 
 // Lazy load de layout para optimizar carga inicial
 const AuthLayout = lazy(() => import('@/modules/auth/layout/AuthLayout'));
@@ -17,6 +19,7 @@ const DashboardLayout = lazy(() => import('@/modules/dashboard/layout/DashboardL
 const SystemUsersLayout = lazy(() => import('@/modules/system-users/layout/SystemUsersLayout'));
 const JobTitlesLayout = lazy(() => import('@/modules/job-titles/layout/JobTitlesLayout'));
 const AcademicLevelsLayout = lazy(() => import('@/modules/academic-levels/layout/AcademicLevelsLayout'));
+const SchoolSubjectsLayout = lazy(() => import('@/modules/school-subjects/layout/SchoolSubjectsLayout'));
 
 export const appRouter = createBrowserRouter([
     // Auth routes
@@ -115,6 +118,28 @@ export const appRouter = createBrowserRouter([
             {
                 path: '*',
                 element: <Navigate to='/job-titles' />
+            }
+        ]
+    },
+    /** school-subjects */
+    {
+        path: '/school-subjects',
+        element:
+            <SystemLayout>
+                <SchoolSubjectsLayout />
+            </SystemLayout>,
+        children: [
+            {
+                path: '',
+                element: <SchoolSubjectsPage />
+            },
+            {
+                path: ':id',
+                element: <SchoolSubjectPage />
+            },
+            {
+                path: '*',
+                element: <Navigate to='/school-subjects' />
             }
         ]
     },
