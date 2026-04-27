@@ -14,6 +14,6 @@ export interface SchoolSubject {
     academicLevel?: AcademicLevel;
 
     educationLevelId: string;
-    educationLevel: EducationLevel;
+    educationLevel?: EducationLevel;
 }
 

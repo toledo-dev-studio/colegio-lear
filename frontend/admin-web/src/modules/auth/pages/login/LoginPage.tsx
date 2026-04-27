@@ -4,6 +4,7 @@ import { Eye, EyeOff, GraduationCap, Lock, LogIn, Mail } from "lucide-react"
 
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
+import background from "@/assets/images/login-background.jpg";
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const LoginPage = () => {
 
     return (
         <>
-            <div className="flex-1 flex items-center justify-center p-6 sm:p-12">
+            <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-cover" style={{backgroundImage: `url(${background})`}}>
                 <div className="w-full max-w-xl border border-gray-200 shadow-md rounded-lg p-12 bg-card">
                     <div className="lg:hidden flex items-center gap-3 mb-8">
                         <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center">

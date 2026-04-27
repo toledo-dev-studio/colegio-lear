@@ -4,6 +4,8 @@
     "name": "Matemáticas",
     "description": "Materia de matemáticas básicas",
     "status": true,
+    "academicLevelId": "1",
+    "educationLevelId": "1-1",
     "academicLevel": {
       "id": "1",
       "name": "Primaria",
@@ -11,7 +13,7 @@
       "status": true,
       "educationLevels": []
     },
-    "educationLevelId": {
+    "educationLevel": {
       "id": "1-1",
       "name": "1er Grado"
     }
@@ -28,10 +30,12 @@
       "status": true,
       "educationLevels": []
     },
-    "educationLevelId": {
+    "educationLevel": {
       "id": "1-2",
       "name": "2do Grado"
-    }
+    },
+    "academicLevelId": "1",
+    "educationLevelId": "1-2"
   },
   {
     "id": "3",
@@ -45,10 +49,12 @@
       "status": true,
       "educationLevels": []
     },
-    "educationLevelId": {
+    "educationLevel": {
       "id": "2-1",
       "name": "1er Año"
-    }
+    },
+    "academicLevelId": "2",
+    "educationLevelId": "2-1"
   },
   {
     "id": "4",
@@ -62,10 +68,12 @@
       "status": true,
       "educationLevels": []
     },
-    "educationLevelId": {
+    "educationLevel": {
       "id": "3-1",
       "name": "4to Año"
-    }
+    },
+    "academicLevelId": "3",
+    "educationLevelId": "3-1"
   },
   {
     "id": "5",
@@ -79,9 +87,11 @@
       "status": true,
       "educationLevels": []
     },
-    "educationLevelId": {
+    "educationLevel": {
       "id": "4-3",
       "name": "Profesional"
-    }
+    },
+    "academicLevelId": "4",
+    "educationLevelId": "4-3"
   }
 ]

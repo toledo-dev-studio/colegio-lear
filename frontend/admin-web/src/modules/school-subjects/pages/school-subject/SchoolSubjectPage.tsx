@@ -23,9 +23,9 @@ export const SchoolSubjectPage = () => {
       !schoolSubjectLike.id && (schoolSubjectLike.id = "new");
 
       await mutation.mutateAsync(schoolSubjectLike, {
-        onSuccess: (product) => {
+        onSuccess: (response) => {
           toast.success('Materia escolar actualizada correctamente');
-          navigate(`/school-subjects/${product.id}`);
+          navigate(`/school-subjects/${response.id}`);
         }
       });
     } catch (error) {
@@ -61,7 +61,7 @@ export const SchoolSubjectPage = () => {
           <div className="flex flex-col min-h-full gap-8 mt-14">
 
             <SchoolSubjectForm
-              schoolSubject={undefined}
+              schoolSubject={schoolSubject}
               isSubmitting={mutation.isPending}
               onSubmit={handleSubmit}
             />

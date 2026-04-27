@@ -23,9 +23,9 @@ export const JobTitlePage = () => {
       !jobTitleLike.id && (jobTitleLike.id = "new");
 
       await mutation.mutateAsync(jobTitleLike, {
-        onSuccess: (product) => {
+        onSuccess: (response) => {
           toast.success('Puesto de trabajo actualizado correctamente');
-          navigate(`/job-titles/${product.id}`);
+          navigate(`/job-titles/${response.id}`);
         }
       });
     } catch (error) {
