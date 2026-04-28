@@ -1,0 +1,32 @@
+import { lazy } from "react";
+import { Navigate, type RouteObject } from "react-router";
+
+import { JobTitlePage } from "../pages/job-title/JobTitlePage";
+import { JobTitlesPage } from "../pages/job-titles/JobTitlesPage";
+
+const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
+const JobTitlesLayout = lazy(() => import('@/modules/job-titles/layout/JobTitlesLayout'));
+
+export const jobTitlesRouter: RouteObject = {
+    path: '/job-titles',
+    element:
+        <SystemLayout>
+            <JobTitlesLayout />
+        </SystemLayout>,
+    children: [
+        {
+            path: '',
+            element: <JobTitlesPage />
+        },
+        {
+            path: ':id',
+            element: <JobTitlePage />
+        },
+        {
+            path: '*',
+            element: <Navigate to='/job-titles' />
+        }
+    ]
+}
+
+export default jobTitlesRouter;

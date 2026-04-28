@@ -23,12 +23,12 @@ const navbar: Navbar[] = [
     items: [
       { to: "/academic-levels", label: "Niveles académicos", icon: Ruler, testid: "academic-levels" },
       { to: "/school-subjects", label: "Materias escolares", icon: GraduationCap, testid: "school-subjects" },
+      { to: "/scholarships", label: "Becas y solicitudes", icon: Telescope, testid: "scholarships" },
 
 
 
       { to: "/placeholder/estudiantes", label: "Estudiantes", icon: Users, testid: "nav-estudiantes" },
       { to: "/placeholder/ciclos", label: "Ciclos escolares", icon: CalendarDays, testid: "nav-ciclos" },
-      { to: "/placeholder/becas", label: "Becas y solicitudes", icon: Telescope, testid: "nav-becas" },
     ],
   },
   {
