@@ -101,7 +101,7 @@ export const SchoolSubjectsPage = () => {
     <>
       <div className="w-full py-12 px-10 lg:px-15">
 
-        <CustomPageTitle title="Materias escolares" subtitle="Gestiona las materias escolares disponibles en la organización" />
+        <CustomPageTitle title="Materias escolares" subtitle="Gestiona las materias escolares que estarán disponibles en el colegio" />
 
         <div className="flex flex-col gap-8 mt-14">
 

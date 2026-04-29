@@ -55,7 +55,7 @@ export const JobTitlePage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
         <CustomPageTitle
           title={title}
-          subtitle="Getiona la información del puesto de trabajo para que este dispoible en el sistema" />
+          subtitle="Getiona la información del puesto de trabajo para que este dispoible en la organiación" />
 
         <div className="flex-1">
           <div className="flex flex-col min-h-full gap-8 mt-14">

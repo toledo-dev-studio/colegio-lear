@@ -2,12 +2,11 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import { X } from "lucide-react";
 
-
-import { Button } from "@/shared/ui/button";
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
 import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { stringToBooleanWithDefault } from "@/lib/utils";
+import type { JobTitle } from "@/interfaces/entites/job-title.interface";
 
 interface Props {
     open: boolean;
@@ -15,11 +14,10 @@ interface Props {
     handleClickClose: () => void;
 }
 
-export const JobTitlesAdvancedFilters = (props: Props) => {
+export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
 
-    const { open, title = "Filtros avanzados", handleClickClose } = props;
     const [searchParams, setSearchParams] = useSearchParams();
-    const productLikeFilter: Partial<JobTitle> = {
+    const jobTitleLikeFilter: Partial<JobTitle> = {
         name: searchParams.get('query') ?? '',
         status: stringToBooleanWithDefault(searchParams.get('status'))
     };
@@ -31,7 +29,7 @@ export const JobTitlesAdvancedFilters = (props: Props) => {
         reset,
         watch
     } = useForm<Partial<JobTitle>>({
-        defaultValues: productLikeFilter
+        defaultValues: jobTitleLikeFilter
     });
 
     if (!open)

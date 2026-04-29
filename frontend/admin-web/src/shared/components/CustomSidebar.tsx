@@ -23,7 +23,7 @@ const navbar: Navbar[] = [
     items: [
       { to: "/academic-levels", label: "Niveles académicos", icon: Ruler, testid: "academic-levels" },
       { to: "/school-subjects", label: "Materias escolares", icon: GraduationCap, testid: "school-subjects" },
-      { to: "/scholarships", label: "Becas y solicitudes", icon: Telescope, testid: "scholarships" },
+      { to: "/scholarships", label: "Becas escolares", icon: Telescope, testid: "scholarships" },
 
 
 

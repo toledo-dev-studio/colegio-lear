@@ -31,7 +31,7 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
     const {
         register,
         handleSubmit,
-        formState: { errors, touchedFields },
+        formState: { errors },
         getValues,
         setValue,
         watch,
@@ -146,16 +146,7 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                     </div>
 
                     <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">Descripción de la materia escolar:</label>
-                        <Textarea
-                            {...register('description')}
-                            defaultValue={getValues('description')}
-                            placeholder="Descripción de la materia..."
-                            className="pill-input w-full pl-8" />
-                    </div>
-
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico:</label>
+                        <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico <span className="text-destructive">*</span>:</label>
                         <CustomSearchInput
                             {...register('academicLevelId', { required: true })}
                             defaultValue={watch('academicLevel.name')}
@@ -177,7 +168,7 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                     </div>
 
                     <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo:</label>
+                        <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo <span className="text-destructive">*</span>:</label>
                         <CustomSearchInput
                             {...register('educationLevelId', { required: true })}
                             defaultValue={watch('educationLevel.name')}
@@ -197,6 +188,15 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                                 </p>
                             )
                         }
+                    </div>
+
+                    <div className="w-full">
+                        <label className="text-sm font-medium text-foreground mb-3 block">Descripción de la materia escolar:</label>
+                        <Textarea
+                            {...register('description')}
+                            defaultValue={getValues('description')}
+                            placeholder="Descripción de la materia..."
+                            className="pill-input w-full pl-8" />
                     </div>
 
                 </div>

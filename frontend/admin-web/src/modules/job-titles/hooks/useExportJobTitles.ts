@@ -13,7 +13,7 @@ export const useExportJobTitles = () => {
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
     return useQuery({
-        queryKey: [GET_JOB_TITLES_QUERY_KEY, { query }],
+        queryKey: [GET_JOB_TITLES_QUERY_KEY, { query, status }],
         queryFn: () => getJobTitlesActionAsync({
             query,
             status

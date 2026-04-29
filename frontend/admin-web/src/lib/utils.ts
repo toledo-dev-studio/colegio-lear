@@ -32,6 +32,18 @@ export const stringToBooleanWithDefault = (value: string | null | undefined) : b
 }
 
 /**
+ * Convert a query string to a number value with a default fallback.
+ * @param value The value to normalize.
+ * @returns number result.
+ */
+export const stringToNumberWithDefault = (value: string | null | undefined) : number => {
+    if (!value || isNaN(+value)) {
+        return 0;
+    }
+    return +value;
+}
+
+/**
  * Read a nested property from an object using dot notation.
  * Example: getValueByPath(obj, 'user.address.city')
  * @param object The source object.

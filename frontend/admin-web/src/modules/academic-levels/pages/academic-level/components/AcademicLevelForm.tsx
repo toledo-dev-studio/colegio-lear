@@ -34,7 +34,8 @@ export const AcademicLevelForm = ({ academicLevel, isSubmitting, onSubmit }: Pro
             id: `new-${current.length + 1}`,
             name: `Grado educativo - ${current.length + 1}`,
             description: '',
-            isEditing: true
+            isEditing: true,
+            academicLevelId: getValues('id') ?? 'new'
         };
         setValue('educationLevels', [...current, newElement]);
     }
@@ -132,7 +133,7 @@ export const AcademicLevelForm = ({ academicLevel, isSubmitting, onSubmit }: Pro
 
                 {/* Creación de grados disponibles */}
                 <h2 className="w-full text-muted-foreground border-b border-border pb-4 mt-4">
-                    GRADOS ESCOLARES
+                    INFORMACIÓN DE GRADOS ESCOLARES DISPONIBLES
                 </h2>
 
                 <EducationLevelGrid 

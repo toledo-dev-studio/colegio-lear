@@ -15,7 +15,7 @@ export const usePagedJobTitles = () => {
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
     return useQuery({
-        queryKey: [GET_PAGED_JOB_TITLES_QUERY_KEY, { query, page, pageSize }],
+        queryKey: [GET_PAGED_JOB_TITLES_QUERY_KEY, { query, status, page, pageSize }],
         queryFn: () => getPagedJobTitlesActionAsync({
             query,
             status,

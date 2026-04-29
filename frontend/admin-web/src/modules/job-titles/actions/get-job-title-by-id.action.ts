@@ -2,7 +2,7 @@ import { api } from "@/api/client";
 import type { JobTitle } from "@/interfaces/entites/job-title.interface";
 import { sleep } from "@/lib/utils";
 
-export const getJobTitleByIdAction = async (id: string): Promise<JobTitle> => {
+export const getJobTitleByIdActionAsync = async (id: string): Promise<JobTitle> => {
     
     if (!id)
         throw new Error('Id del puesto es requerido');

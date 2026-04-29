@@ -3,8 +3,8 @@ import { api } from "@/api/client";
 import { sleep } from "@/lib/utils";
 import type { JobTitle } from "@/interfaces/entites/job-title.interface";
 
-export const CreateUpdateJobTitleAction = async (jobTitleLike: Partial<JobTitle>): Promise<JobTitle> => {
-    await sleep(500);
+export const CreateUpdateJobTitleActionAsync = async (jobTitleLike: Partial<JobTitle>): Promise<JobTitle> => {
+    await sleep();
 
     const { id } = jobTitleLike;
 

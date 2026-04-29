@@ -55,7 +55,7 @@ export const SchoolSubjectPage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
         <CustomPageTitle
           title={title}
-          subtitle="Gestiona la información de la materia escolar para que este disponible en el sistema" />
+          subtitle="Gestiona la información de la materia escolar que estará disponible en el colegio" />
 
         <div className="flex-1">
           <div className="flex flex-col min-h-full gap-8 mt-14">
