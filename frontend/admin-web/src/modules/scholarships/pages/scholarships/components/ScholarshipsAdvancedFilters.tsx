@@ -25,7 +25,6 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
         getValues,
         reset,
         watch,
-        formState: { touchedFields }
     } = useForm<Partial<Scholarship>>({
         defaultValues: {
             name: searchParams.get('query') ?? '',
@@ -43,12 +42,13 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
         searchParams.delete('discount-percentage');
         reset({ name: '', status: true, discountPercentage: 0 }, { keepTouched: false });
         setSearchParams(searchParams);
+        handleClickClose();
     }
 
-    const handleSubmitForm = (scholarshipLikeFilter: Partial<Scholarship>) => {
-        scholarshipLikeFilter.name ? searchParams.set('query', scholarshipLikeFilter.name) : searchParams.delete('query');
-        searchParams.set('status', `${scholarshipLikeFilter.status}`);
-        (scholarshipLikeFilter.discountPercentage !== 0 && touchedFields.discountPercentage) && searchParams.set('discount-percentage', `${scholarshipLikeFilter.discountPercentage}`)
+    const handleSubmitForm = (filter: Partial<Scholarship>) => {
+        searchParams.set('status', `${filter.status}`);
+        searchParams.set('discount-percentage', `${filter.discountPercentage}`);
+        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
         setSearchParams(searchParams);
         handleClickClose();
     }

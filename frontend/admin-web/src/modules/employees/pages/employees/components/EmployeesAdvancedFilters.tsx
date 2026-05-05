@@ -12,7 +12,9 @@ import { stringToBooleanWithDefault } from "@/lib/utils";
 import type { Employee } from "@/interfaces/entites/employee";
 import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
 import { useRolesForEmployees } from "@/modules/employees/hooks/useRolesForEmployees";
-import { GET_ROLES_FOR_EMPLOYEE_QUERY_KEY } from "@/modules/employees/lib/queries-key";
+import { GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY, GET_ROLES_FOR_EMPLOYEE_QUERY_KEY } from "@/modules/employees/lib/queries-key";
+import { useSearchInput } from "@/shared/hooks/useSearchInput";
+import { useJobTitlesForEmployees } from "@/modules/employees/hooks/useJobTitlesForEmployees";
 
 interface Props {
     open: boolean;
@@ -23,17 +25,13 @@ interface Props {
 export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
 
     // Main hooks
-    const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
-
-    // Role request
-    const [rolesQuery, setRolesQuery] = useState<string>("");
-    const { data: roles, isFetching: isFetchingRoles } = useRolesForEmployees(rolesQuery);
 
     // Form config
     const {
         register,
         handleSubmit,
+        formState: { touchedFields },
         setValue,
         reset,
         watch
@@ -44,9 +42,39 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
             roleId: searchParams.get('role-id') ?? undefined,
             role: {
                 name: searchParams.get('role-name') ?? undefined,
+            },
+            jobTitleId: searchParams.get('job-title-id') ?? undefined,
+            jobTitle: {
+                name: searchParams.get('job-title-name') ?? undefined,
             }
         }
     });
+
+    // Role assign configuration
+    const { query: rolesQuery, handleOnSearch: handleOnSearchRoles, handleOnOptionChange: handleOnOptionChangeRole, handleOnClearSelection: handleOnClearSelectionRole } = useSearchInput(
+        {
+            queryKey: GET_ROLES_FOR_EMPLOYEE_QUERY_KEY,
+            setValue: setValue,
+            fieldIdKey: 'roleId',
+            fieldNameKey: 'role.name',
+            propIdKey: 'id',
+            propNameKey: 'name'
+        }
+    );
+    const { data: roles, isFetching: isFetchingRoles } = useRolesForEmployees(rolesQuery);
+
+    // JobTitle assign configuration
+    const { query: jobTitlesQuery, handleOnSearch: handleOnSearchJobTitles, handleOnOptionChange: handleOnOptionChangeJobTitle, handleOnClearSelection: handleOnClearSelectionJobTitle } = useSearchInput(
+        {
+            queryKey: GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY,
+            setValue: setValue,
+            fieldIdKey: 'jobTitleId',
+            fieldNameKey: 'jobTitle.name',
+            propIdKey: 'id',
+            propNameKey: 'name'
+        }
+    );
+    const { data: jobTitles, isFetching: isFetchingJobTitles } = useJobTitlesForEmployees(jobTitlesQuery);
 
     if (!open)
         return null;
@@ -56,6 +84,8 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         searchParams.delete('status');
         searchParams.delete('role-id');
         searchParams.delete('role-name');
+        searchParams.delete('job-title-id');
+        searchParams.delete('job-title-name');
         reset({
             name: '',
             status: true,
@@ -66,37 +96,18 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         });
         setSearchParams(searchParams);
         handleOnClearSelectionRole();
-    }
-
-    const handleSubmitForm = (filter: Partial<Employee>) => {
-        filter.status ? searchParams.set('status', `${filter.status}`) : searchParams.delete('status');
-        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
-
-        filter.roleId ? searchParams.set('role-id', filter.roleId) : searchParams.delete('role-id');
-        filter.role?.name ? searchParams.set('role-name', filter.role.name) : searchParams.delete('role-name');
-
-        setSearchParams(searchParams);
         handleClickClose();
     }
 
-    const handleOnSearchRoles = (query: string) => {
-        queryClient.removeQueries({ queryKey: [GET_ROLES_FOR_EMPLOYEE_QUERY_KEY, rolesQuery] });
-        queryClient.setQueryData([GET_ROLES_FOR_EMPLOYEE_QUERY_KEY, rolesQuery], []);
-        setRolesQuery(query);
-    }
-
-    const handleOnOptionChangeRole = (option: Role) => {
-        // Clear data from useQuery
-        queryClient.setQueryData([GET_ROLES_FOR_EMPLOYEE_QUERY_KEY, rolesQuery], []);
-        setValue('roleId', option.id);
-        setValue('role.name', option.name);
-    }
-
-    const handleOnClearSelectionRole = () => {
-        queryClient.setQueryData([GET_ROLES_FOR_EMPLOYEE_QUERY_KEY, rolesQuery], []);
-        setValue('roleId', undefined);
-        setValue('role.name', undefined);
-        setRolesQuery("");
+    const handleSubmitForm = (filter: Partial<Employee>) => {
+        searchParams.set('status', `${filter.status}`);
+        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
+        filter.roleId ? searchParams.set('role-id', filter.roleId) : searchParams.delete('role-id');
+        filter.role?.name ? searchParams.set('role-name', filter.role.name) : searchParams.delete('role-name');
+        filter.jobTitleId ? searchParams.set('job-title-id', filter.jobTitleId) : searchParams.delete('job-title-id');
+        filter.jobTitle?.name ? searchParams.set('job-title-name', filter.jobTitle.name) : searchParams.delete('job-title-name');
+        setSearchParams(searchParams);
+        handleClickClose();
     }
 
     return (
@@ -129,6 +140,20 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                             </div>
 
                             <div>
+                                <label className="text-sm font-medium text-foreground mb-2 block">Puesto de trabajo:</label>
+                                <CustomSearchInput
+                                    defaultValue={watch('jobTitle.name')}
+                                    selected={!!watch('jobTitleId')}
+                                    placeholder="Busqueda de puesto de trabajo"
+                                    options={jobTitles?.data ?? []}
+                                    isSearching={isFetchingJobTitles}
+                                    onClearSelection={handleOnClearSelectionJobTitle}
+                                    onOptionChange={handleOnOptionChangeJobTitle}
+                                    onSearch={handleOnSearchJobTitles}
+                                />
+                            </div>
+
+                            <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">Rol asignado:</label>
                                 <CustomSearchInput
                                     defaultValue={watch('role.name')}
@@ -147,7 +172,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                 <Switch
                                     size="default"
                                     checked={watch('status')}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
+                                    onCheckedChange={(checked) => setValue('status', checked, { shouldTouch: true })} />
                             </div>
                         </div>
                     </div>

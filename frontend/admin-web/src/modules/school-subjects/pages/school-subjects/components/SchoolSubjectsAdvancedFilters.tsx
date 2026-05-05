@@ -84,18 +84,16 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
         });
         setSearchParams(searchParams);
         handleOnClearSelectionForAcademicLevel();
+        handleClickClose();
     }
 
-    const handleSubmitForm = (schoolSubjectLike: Partial<SchoolSubject>) => {
-        schoolSubjectLike.status ? searchParams.set('status', `${schoolSubjectLike.status}`) : searchParams.delete('status');
-        schoolSubjectLike.name ? searchParams.set('query', schoolSubjectLike.name) : searchParams.delete('query');
-
-        schoolSubjectLike.academicLevelId ? searchParams.set('academic-level-id', schoolSubjectLike.academicLevelId) : searchParams.delete('academic-level-id');
-        schoolSubjectLike.academicLevel?.name ? searchParams.set('academic-level-name', schoolSubjectLike.academicLevel.name) : searchParams.delete('academic-level-name');
-
-        schoolSubjectLike.educationLevelId ? searchParams.set('education-level-id', schoolSubjectLike.educationLevelId) : searchParams.delete('education-level-id');
-        schoolSubjectLike.educationLevel?.name ? searchParams.set('education-level-name', schoolSubjectLike.educationLevel?.name) : searchParams.delete('education-level-name');
-        
+    const handleSubmitForm = (filter: Partial<SchoolSubject>) => {
+        searchParams.set('status', `${filter.status}`);
+        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
+        filter.academicLevelId ? searchParams.set('academic-level-id', filter.academicLevelId) : searchParams.delete('academic-level-id');
+        filter.academicLevel?.name ? searchParams.set('academic-level-name', filter.academicLevel.name) : searchParams.delete('academic-level-name');
+        filter.educationLevelId ? searchParams.set('education-level-id', filter.educationLevelId) : searchParams.delete('education-level-id');
+        filter.educationLevel?.name ? searchParams.set('education-level-name', filter.educationLevel?.name) : searchParams.delete('education-level-name');
         setSearchParams(searchParams);
         handleClickClose();
     }

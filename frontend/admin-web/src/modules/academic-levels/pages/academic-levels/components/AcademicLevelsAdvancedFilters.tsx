@@ -23,7 +23,7 @@ export const AcademicLevelsAdvancedFilters = (props: Props) => {
         name: searchParams.get('query') ?? '',
         status: stringToBooleanWithDefault(searchParams.get('status'))
     };
-    
+
     const {
         register,
         handleSubmit,
@@ -42,11 +42,12 @@ export const AcademicLevelsAdvancedFilters = (props: Props) => {
         searchParams.delete('status');
         reset({ name: '', status: true });
         setSearchParams(searchParams);
+        handleClickClose();
     }
 
-    const handleSubmitForm = (academicLevelLike: Partial<AcademicLevel>) => {
-        academicLevelLike.name ? searchParams.set('query', academicLevelLike.name) : searchParams.delete('query');
-        searchParams.set('status', `${academicLevelLike.status}`);
+    const handleSubmitForm = (filter: Partial<AcademicLevel>) => {
+        searchParams.set('status', `${filter.status}`);
+        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
         setSearchParams(searchParams);
         handleClickClose();
     }

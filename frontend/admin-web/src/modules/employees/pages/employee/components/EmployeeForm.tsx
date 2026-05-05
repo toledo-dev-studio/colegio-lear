@@ -1,20 +1,20 @@
-import type { Employee } from '@/interfaces/entites/employee';
-import { isValidPhone } from '@/lib/utils';
-
-import { useJobTitlesForEmployees } from '@/modules/employees/hooks/useJobTitlesForEmployees';
-import { useRolesForEmployees } from '@/modules/employees/hooks/useRolesForEmployees';
-import { GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY, GET_ROLES_FOR_EMPLOYEE_QUERY_KEY } from '@/modules/employees/lib/queries-key';
-import { CustomSearchInput } from '@/shared/components/CustomSearchInput';
-import { CustomSpinner } from '@/shared/components/CustomSpinner';
-import { useSearchInput } from '@/shared/hooks/useSearchInput';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { Switch } from '@/shared/ui/switch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
-import { Mail, Phone, Save, User, X } from 'lucide-react';
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form';
 import { Link } from 'react-router';
+import { useForm } from 'react-hook-form';
+import { Mail, Phone, Save, User, X } from 'lucide-react';
+
+import { Input } from '@/shared/ui/input';
+import { isValidPhone } from '@/lib/utils';
+import { Switch } from '@/shared/ui/switch';
+import { Button } from '@/shared/ui/button';
+import type { Employee } from '@/interfaces/entites/employee';
+import { useSearchInput } from '@/shared/hooks/useSearchInput';
+import { CustomSpinner } from '@/shared/components/CustomSpinner';
+import { CustomSearchInput } from '@/shared/components/CustomSearchInput';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
+import { useRolesForEmployees } from '@/modules/employees/hooks/useRolesForEmployees';
+import { useJobTitlesForEmployees } from '@/modules/employees/hooks/useJobTitlesForEmployees';
+import { GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY, GET_ROLES_FOR_EMPLOYEE_QUERY_KEY } from '@/modules/employees/lib/queries-key';
 
 interface Props {
     employee?: Employee,

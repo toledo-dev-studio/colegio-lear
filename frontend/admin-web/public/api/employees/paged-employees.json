@@ -4,10 +4,11 @@
     "itemsCount": 15,
     "data": [
         {
-            "id": "a1f3c2d4-9b6e-4f12-8c3a-1d2e3f4a5b6c",
+            "id": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
             "name": "Juan",
             "firstLastName": "Pérez",
             "secondLastName": "García",
+            "phoneNumber": "4771234567",
             "email": "juan.perez@example.com",
             "username": "jperez",
             "status": true,
@@ -16,13 +17,21 @@
                 "id": "r1",
                 "name": "Administrador",
                 "description": "Acceso completo al sistema"
+            },
+            "jobTitleId": "j1",
+            "jobTitle": {
+                "id": "j1",
+                "name": "Gerente General",
+                "description": "Responsable de la operación general",
+                "status": true
             }
         },
         {
-            "id": "b2e4d6f8-1a2b-4c3d-9e0f-2a3b4c5d6e7f",
+            "id": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
             "name": "María",
             "firstLastName": "López",
             "secondLastName": "Hernández",
+            "phoneNumber": "4772345678",
             "email": "maria.lopez@example.com",
             "username": "mlopez",
             "status": true,
@@ -30,14 +39,22 @@
             "role": {
                 "id": "r2",
                 "name": "Supervisor",
-                "description": "Supervisa operaciones y reportes"
+                "description": "Supervisa operaciones"
+            },
+            "jobTitleId": "j2",
+            "jobTitle": {
+                "id": "j2",
+                "name": "Coordinador",
+                "description": "Coordina equipos de trabajo",
+                "status": true
             }
         },
         {
-            "id": "c3d5e7f9-2b3c-4d5e-8f1a-3b4c5d6e7f8a",
+            "id": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
             "name": "Carlos",
             "firstLastName": "Ramírez",
             "secondLastName": "Torres",
+            "phoneNumber": "4773456789",
             "email": "carlos.ramirez@example.com",
             "username": "cramirez",
             "status": true,
@@ -45,14 +62,22 @@
             "role": {
                 "id": "r3",
                 "name": "Empleado",
-                "description": "Acceso básico al sistema"
+                "description": "Acceso básico"
+            },
+            "jobTitleId": "j3",
+            "jobTitle": {
+                "id": "j3",
+                "name": "Desarrollador",
+                "description": "Desarrolla software",
+                "status": true
             }
         },
         {
-            "id": "d4e6f8a0-3c4d-5e6f-9a2b-4c5d6e7f8a9b",
+            "id": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
             "name": "Ana",
             "firstLastName": "Martínez",
             "secondLastName": "Sánchez",
+            "phoneNumber": "4774567890",
             "email": "ana.martinez@example.com",
             "username": "amartinez",
             "status": false,
@@ -60,14 +85,22 @@
             "role": {
                 "id": "r3",
                 "name": "Empleado",
-                "description": "Acceso básico al sistema"
+                "description": "Acceso básico"
+            },
+            "jobTitleId": "j4",
+            "jobTitle": {
+                "id": "j4",
+                "name": "Diseñador",
+                "description": "Diseña interfaces",
+                "status": true
             }
         },
         {
-            "id": "e5f7a9b1-4d5e-6f7a-0b3c-5d6e7f8a9b0c",
+            "id": "e4f5a6b7-8c9d-4e0f-2a3b-4c5d6e7f8a9b",
             "name": "Luis",
             "firstLastName": "Gómez",
             "secondLastName": "Díaz",
+            "phoneNumber": "4775678901",
             "email": "luis.gomez@example.com",
             "username": "lgomez",
             "status": true,
@@ -75,14 +108,22 @@
             "role": {
                 "id": "r2",
                 "name": "Supervisor",
-                "description": "Supervisa operaciones y reportes"
+                "description": "Supervisa operaciones"
+            },
+            "jobTitleId": "j5",
+            "jobTitle": {
+                "id": "j5",
+                "name": "Analista",
+                "description": "Analiza información",
+                "status": true
             }
         },
         {
-            "id": "f6a8b0c2-5e6f-7a8b-1c4d-6e7f8a9b0c1d",
+            "id": "f5a6b7c8-9d0e-4f1a-3b4c-5d6e7f8a9b0c",
             "name": "Sofía",
             "firstLastName": "Fernández",
             "secondLastName": "Ruiz",
+            "phoneNumber": "4776789012",
             "email": "sofia.fernandez@example.com",
             "username": "sfernandez",
             "status": true,
@@ -90,14 +131,22 @@
             "role": {
                 "id": "r3",
                 "name": "Empleado",
-                "description": "Acceso básico al sistema"
+                "description": "Acceso básico"
+            },
+            "jobTitleId": "j6",
+            "jobTitle": {
+                "id": "j6",
+                "name": "Soporte Técnico",
+                "description": "Atiende incidencias",
+                "status": true
             }
         },
         {
-            "id": "07b9c1d3-6f7a-8b9c-2d5e-7f8a9b0c1d2e",
+            "id": "06b7c8d9-0e1f-4a2b-4c5d-6e7f8a9b0c1d",
             "name": "Diego",
             "firstLastName": "Vargas",
             "secondLastName": "Morales",
+            "phoneNumber": "4777890123",
             "email": "diego.vargas@example.com",
             "username": "dvargas",
             "status": true,
@@ -106,13 +155,21 @@
                 "id": "r1",
                 "name": "Administrador",
                 "description": "Acceso completo al sistema"
+            },
+            "jobTitleId": "j7",
+            "jobTitle": {
+                "id": "j7",
+                "name": "Arquitecto de Software",
+                "description": "Define arquitectura",
+                "status": true
             }
         },
         {
-            "id": "18c0d2e4-7a8b-9c0d-3e6f-8a9b0c1d2e3f",
+            "id": "17c8d9e0-1f2a-4b3c-5d6e-7f8a9b0c1d2e",
             "name": "Lucía",
             "firstLastName": "Castro",
             "secondLastName": "Ortega",
+            "phoneNumber": "4778901234",
             "email": "lucia.castro@example.com",
             "username": "lcastro",
             "status": false,
@@ -120,14 +177,22 @@
             "role": {
                 "id": "r2",
                 "name": "Supervisor",
-                "description": "Supervisa operaciones y reportes"
+                "description": "Supervisa operaciones"
+            },
+            "jobTitleId": "j8",
+            "jobTitle": {
+                "id": "j8",
+                "name": "Contador",
+                "description": "Gestiona finanzas",
+                "status": true
             }
         },
         {
-            "id": "29d1e3f5-8b9c-0d1e-4f7a-9b0c1d2e3f4a",
+            "id": "28d9e0f1-2a3b-4c4d-6e7f-8a9b0c1d2e3f",
             "name": "Miguel",
             "firstLastName": "Navarro",
             "secondLastName": "Jiménez",
+            "phoneNumber": "4779012345",
             "email": "miguel.navarro@example.com",
             "username": "mnavarro",
             "status": true,
@@ -135,14 +200,22 @@
             "role": {
                 "id": "r3",
                 "name": "Empleado",
-                "description": "Acceso básico al sistema"
+                "description": "Acceso básico"
+            },
+            "jobTitleId": "j9",
+            "jobTitle": {
+                "id": "j9",
+                "name": "Vendedor",
+                "description": "Gestiona ventas",
+                "status": true
             }
         },
         {
-            "id": "3ae2f4a6-9c0d-1e2f-5a8b-0c1d2e3f4a5b",
+            "id": "39e0f1a2-3b4c-4d5e-7f8a-9b0c1d2e3f4a",
             "name": "Elena",
             "firstLastName": "Rojas",
             "secondLastName": "Mendoza",
+            "phoneNumber": "4770123456",
             "email": "elena.rojas@example.com",
             "username": "erojas",
             "status": true,
@@ -151,6 +224,13 @@
                 "id": "r1",
                 "name": "Administrador",
                 "description": "Acceso completo al sistema"
+            },
+            "jobTitleId": "j10",
+            "jobTitle": {
+                "id": "j10",
+                "name": "Director",
+                "description": "Toma decisiones estratégicas",
+                "status": true
             }
         }
     ]
