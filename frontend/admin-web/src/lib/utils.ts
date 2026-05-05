@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge"
  * This helper combines class values and removes duplicates using tailwind-merge.
  */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+    return twMerge(clsx(inputs))
 }
 
 /**
@@ -23,7 +23,7 @@ export const sleep = (ms: number = 1000) => new Promise(resolve => setTimeout(re
  * @param value The value to normalize.
  * @returns boolean result.
  */
-export const stringToBooleanWithDefault = (value: string | null | undefined) : boolean => {
+export const stringToBooleanWithDefault = (value: string | null | undefined): boolean => {
     const normalizedValue = value?.trim().toLowerCase();
     if (normalizedValue === "false") {
         return false;
@@ -36,7 +36,7 @@ export const stringToBooleanWithDefault = (value: string | null | undefined) : b
  * @param value The value to normalize.
  * @returns number result.
  */
-export const stringToNumberWithDefault = (value: string | null | undefined) : number => {
+export const stringToNumberWithDefault = (value: string | null | undefined): number => {
     if (!value || isNaN(+value)) {
         return 0;
     }
@@ -90,4 +90,11 @@ export const downloadDataToCsvFile = (fieldName: string, headers: { label: strin
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+}
+
+export const isValidPhone = (value?: string) => {
+    if (!value)
+        return "El número de teléfono no es válido"
+    const cleaned = value.replace(/\D/g, "")
+    return cleaned.length >= 10 || "El número de teléfono no es válido"
 }

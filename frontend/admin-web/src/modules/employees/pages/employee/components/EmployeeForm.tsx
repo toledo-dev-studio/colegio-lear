@@ -1,4 +1,5 @@
 import type { Employee } from '@/interfaces/entites/employee';
+import { isValidPhone } from '@/lib/utils';
 
 import { useJobTitlesForEmployees } from '@/modules/employees/hooks/useJobTitlesForEmployees';
 import { useRolesForEmployees } from '@/modules/employees/hooks/useRolesForEmployees';
@@ -139,15 +140,16 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                         <div className="relative">
                             <Phone className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input
-                                type="tel"
-                                {...register('phoneNumber', { required: true })}
+                                type="number"
+                                {...register('phoneNumber', { required: true, validate: (value) => isValidPhone(value) })}
                                 placeholder="+52 (55) 1234-5678"
+                                maxLength={10}
                                 className="pill-input w-full pl-8 pr-13" />
                         </div>
                         {
                             errors.phoneNumber && (
                                 <p className="text-red-500 text-sm mt-2">
-                                    El número de teléfono del empleado es obligatorio
+                                    { errors.phoneNumber.message || 'El número de teléfono del empleado es obligatorio' }
                                 </p>
                             )
                         }
