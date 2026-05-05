@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router';
 import { Input } from '@/shared/ui/input';
 import { Button } from '@/shared/ui/button';
 import { Switch } from '@/shared/ui/switch';
-import { Slider } from '@/components/ui/slider';
+import { Slider } from '@/shared/ui/slider';
 import type { Scholarship } from '@/interfaces/entites/scholarship';
 import { stringToBooleanWithDefault, stringToNumberWithDefault } from '@/lib/utils';
 
@@ -62,8 +62,8 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
-                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-8 min-h-8 bg-white text-foreground">
-                            <X className="w-8 h-8" />
+                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-white text-foreground !px-0">
+                            <X className="!w-5 !h-5 text-muted-foreground" />
                         </Button>
                     </div>
                     <div className="flex-1 overflow-y-auto px-10 py-10 space-y-5">

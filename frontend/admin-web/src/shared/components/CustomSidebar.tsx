@@ -41,11 +41,11 @@ const navbar: Navbar[] = [
   {
     title: "Seguridad",
     items: [
+      { to: "/employees", label: "Empleados", icon: UserCog, testid: "employees" },
       { to: "/job-titles", label: "Puestos de trabajo", icon: Briefcase, testid: "job-titles" },
 
 
 
-      { to: "/system-users", label: "Usuarios del sistema", icon: UserCog, testid: "nav-usuarios" },
       { to: "/roles", label: "Roles de seguridad", icon: ShieldCheck, testid: "nav-roles" },
       { to: "/placeholder/configuracion", label: "Configuración", icon: Settings, testid: "nav-configuracion" },
     ],

@@ -3,7 +3,7 @@ import { api } from "@/api/client";
 import { sleep } from "@/lib/utils";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 
-export const CreateUpdateSchoolSubjectAction = async (schoolSubjectLike: Partial<SchoolSubject>): Promise<SchoolSubject> => {
+export const CreateUpdateSchoolSubjectActionAsync = async (schoolSubjectLike: Partial<SchoolSubject>): Promise<SchoolSubject> => {
     await sleep(500);
 
     const { id } = schoolSubjectLike;

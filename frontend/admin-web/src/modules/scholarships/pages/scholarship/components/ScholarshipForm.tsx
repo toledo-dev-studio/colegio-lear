@@ -7,7 +7,7 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "@/shared/ui/slider";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import type { Scholarship } from "@/interfaces/entites/scholarship"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";

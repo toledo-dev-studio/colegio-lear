@@ -3,7 +3,7 @@ import { Pencil, Trash } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import type { SchoolSubject } from '@/interfaces/responses/school-subject.response'
+import type { SchoolSubject } from '@/interfaces/entites/school-subject';
 
 interface Props {
     schoolSubjects: SchoolSubject[];
@@ -67,7 +67,7 @@ export const SchoolSubjectsTable = ({ schoolSubjects = [], isLoading, handleClic
                                     </td>
                                     <td className="row">{item.description}</td>
                                     <td className="row">{item.academicLevel?.name}</td>
-                                    <td className="row">{item.educationLevelId?.name}</td>
+                                    <td className="row">{item.educationLevel?.name}</td>
                                     <td className="row">
                                         <Badge variant={item.status ? "default" : "destructive"} className="py-4 px-6">
                                             {

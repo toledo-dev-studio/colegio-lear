@@ -1,0 +1,152 @@
+[
+    {
+        "id": "a1f3c2d4-9b6e-4f12-8c3a-1d2e3f4a5b6c",
+        "name": "Juan",
+        "firstLastName": "Pérez",
+        "secondLastName": "García",
+        "email": "juan.perez@example.com",
+        "username": "jperez",
+        "status": true,
+        "roleId": "r1",
+        "role": {
+            "id": "r1",
+            "name": "Administrador",
+            "description": "Acceso completo al sistema"
+        }
+    },
+    {
+        "id": "b2e4d6f8-1a2b-4c3d-9e0f-2a3b4c5d6e7f",
+        "name": "María",
+        "firstLastName": "López",
+        "secondLastName": "Hernández",
+        "email": "maria.lopez@example.com",
+        "username": "mlopez",
+        "status": true,
+        "roleId": "r2",
+        "role": {
+            "id": "r2",
+            "name": "Supervisor",
+            "description": "Supervisa operaciones y reportes"
+        }
+    },
+    {
+        "id": "c3d5e7f9-2b3c-4d5e-8f1a-3b4c5d6e7f8a",
+        "name": "Carlos",
+        "firstLastName": "Ramírez",
+        "secondLastName": "Torres",
+        "email": "carlos.ramirez@example.com",
+        "username": "cramirez",
+        "status": true,
+        "roleId": "r3",
+        "role": {
+            "id": "r3",
+            "name": "Empleado",
+            "description": "Acceso básico al sistema"
+        }
+    },
+    {
+        "id": "d4e6f8a0-3c4d-5e6f-9a2b-4c5d6e7f8a9b",
+        "name": "Ana",
+        "firstLastName": "Martínez",
+        "secondLastName": "Sánchez",
+        "email": "ana.martinez@example.com",
+        "username": "amartinez",
+        "status": false,
+        "roleId": "r3",
+        "role": {
+            "id": "r3",
+            "name": "Empleado",
+            "description": "Acceso básico al sistema"
+        }
+    },
+    {
+        "id": "e5f7a9b1-4d5e-6f7a-0b3c-5d6e7f8a9b0c",
+        "name": "Luis",
+        "firstLastName": "Gómez",
+        "secondLastName": "Díaz",
+        "email": "luis.gomez@example.com",
+        "username": "lgomez",
+        "status": true,
+        "roleId": "r2",
+        "role": {
+            "id": "r2",
+            "name": "Supervisor",
+            "description": "Supervisa operaciones y reportes"
+        }
+    },
+    {
+        "id": "f6a8b0c2-5e6f-7a8b-1c4d-6e7f8a9b0c1d",
+        "name": "Sofía",
+        "firstLastName": "Fernández",
+        "secondLastName": "Ruiz",
+        "email": "sofia.fernandez@example.com",
+        "username": "sfernandez",
+        "status": true,
+        "roleId": "r3",
+        "role": {
+            "id": "r3",
+            "name": "Empleado",
+            "description": "Acceso básico al sistema"
+        }
+    },
+    {
+        "id": "07b9c1d3-6f7a-8b9c-2d5e-7f8a9b0c1d2e",
+        "name": "Diego",
+        "firstLastName": "Vargas",
+        "secondLastName": "Morales",
+        "email": "diego.vargas@example.com",
+        "username": "dvargas",
+        "status": true,
+        "roleId": "r1",
+        "role": {
+            "id": "r1",
+            "name": "Administrador",
+            "description": "Acceso completo al sistema"
+        }
+    },
+    {
+        "id": "18c0d2e4-7a8b-9c0d-3e6f-8a9b0c1d2e3f",
+        "name": "Lucía",
+        "firstLastName": "Castro",
+        "secondLastName": "Ortega",
+        "email": "lucia.castro@example.com",
+        "username": "lcastro",
+        "status": false,
+        "roleId": "r2",
+        "role": {
+            "id": "r2",
+            "name": "Supervisor",
+            "description": "Supervisa operaciones y reportes"
+        }
+    },
+    {
+        "id": "29d1e3f5-8b9c-0d1e-4f7a-9b0c1d2e3f4a",
+        "name": "Miguel",
+        "firstLastName": "Navarro",
+        "secondLastName": "Jiménez",
+        "email": "miguel.navarro@example.com",
+        "username": "mnavarro",
+        "status": true,
+        "roleId": "r3",
+        "role": {
+            "id": "r3",
+            "name": "Empleado",
+            "description": "Acceso básico al sistema"
+        }
+    },
+    {
+        "id": "3ae2f4a6-9c0d-1e2f-5a8b-0c1d2e3f4a5b",
+        "name": "Elena",
+        "firstLastName": "Rojas",
+        "secondLastName": "Mendoza",
+        "email": "elena.rojas@example.com",
+        "username": "erojas",
+        "status": true,
+        "roleId": "r1",
+        "role": {
+            "id": "r1",
+            "name": "Administrador",
+            "description": "Acceso completo al sistema"
+        }
+    }
+]

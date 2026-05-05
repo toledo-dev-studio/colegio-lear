@@ -5,7 +5,7 @@ import academicLevelsRouter from "@/modules/academic-levels/routes/academic-leve
 import dashboardRouter from "@/modules/dashboard/routes/dashboard.router";
 import jobTitlesRouter from "@/modules/job-titles/routes/job-titles.router";
 import schoolSubjectRouter from "@/modules/school-subjects/routes/school-subject.router";
-import systemUserRouter from "@/modules/system-users/routes/system-user.router";
+import employeeRouter from "@/modules/employees/routes/employee.router";
 import scholarshipsRouter from "@/modules/scholarships/routes/scholarships.router";
 
 export const appRouter = createBrowserRouter([
@@ -25,8 +25,8 @@ export const appRouter = createBrowserRouter([
 
     /** job-titles */
     jobTitlesRouter,
-    /** system-users */
-    systemUserRouter,
+    /** employees */
+    employeeRouter,
     {
         path: '*',
         element: <Navigate to='/auth/login' />
