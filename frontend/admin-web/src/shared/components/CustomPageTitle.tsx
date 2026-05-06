@@ -9,7 +9,7 @@ export const CustomPageTitle = ({ title, subtitle }: Props) => {
     <div className="flex items-start gap-4 mb-8 relative">
       <div className="page-title-bar" />
       <div className="flex flex-col ml-7">
-        <h1 className="font-heading text-3xl sm:text-4xl font-bold text-foreground tracking-tight">{title}</h1>
+        <h1 className="font-heading text-xl sm:text-2xl font-bold text-foreground tracking-tight uppercase">{title}</h1>
         {subtitle && <p className="text-sm text-muted-foreground mt-1.5">{subtitle}</p>}
       </div>
     </div>

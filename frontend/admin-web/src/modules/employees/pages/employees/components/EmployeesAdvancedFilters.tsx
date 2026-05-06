@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import type { Role } from "@/interfaces/entites/role";
+import type { Role } from "@/interfaces/entites/security-role";
 import { stringToBooleanWithDefault } from "@/lib/utils";
 import type { Employee } from "@/interfaces/entites/employee";
 import { CustomSearchInput } from "@/shared/components/CustomSearchInput";

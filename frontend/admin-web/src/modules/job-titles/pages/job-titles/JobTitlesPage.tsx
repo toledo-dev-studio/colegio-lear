@@ -128,15 +128,21 @@ export const JobTitlesPage = () => {
             )
           }
 
-          <CustomDeleteModal
-            open={isOpenSingleDeleteModal}
-            title={`¿Estas seguro de eliminar el registro ${jobTitleToDelete?.name}`}
-            message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-            isLoading={deleteJobTitle.isPending}
-            handleClickConfirm={handleClickDelteJobTitle}
-            handleClickCancel={handleClickCancelDelteJobTitle}
-          />
+          {/* Delete single record modal */}
+          {
+            jobTitleToDelete && (
+              <CustomDeleteModal
+                open={isOpenSingleDeleteModal}
+                title={`¿Estas seguro de eliminar el registro ${jobTitleToDelete?.name}`}
+                message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
+                isLoading={deleteJobTitle.isPending}
+                handleClickConfirm={handleClickDelteJobTitle}
+                handleClickCancel={handleClickCancelDelteJobTitle}
+              />
+            )
+          }
 
+          {/* Advanced filters panel */}
           {
             isOpenAdvancedFiltersPanel && (
               <JobTitlesAdvancedFilters

@@ -7,6 +7,7 @@ import jobTitlesRouter from "@/modules/job-titles/routes/job-titles.router";
 import schoolSubjectRouter from "@/modules/school-subjects/routes/school-subject.router";
 import employeeRouter from "@/modules/employees/routes/employee.router";
 import scholarshipsRouter from "@/modules/scholarships/routes/scholarships.router";
+import securityRolesRouter from "@/modules/security-roles/routes/security-roles.router";
 
 export const appRouter = createBrowserRouter([
     /** Auth */
@@ -23,10 +24,12 @@ export const appRouter = createBrowserRouter([
     scholarshipsRouter,
 
 
-    /** job-titles */
-    jobTitlesRouter,
     /** employees */
     employeeRouter,
+    /** job-titles */
+    jobTitlesRouter,
+    /** security-roles */
+    securityRolesRouter,
     {
         path: '*',
         element: <Navigate to='/auth/login' />
