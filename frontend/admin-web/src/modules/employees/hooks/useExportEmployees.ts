@@ -11,14 +11,16 @@ export const useExportEmployees = () => {
 
     const query = searchParams.get('query')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
-    const roleId = searchParams.get('role-id') || undefined;
+    const roleId = searchParams.get('security-role-id') || undefined;
+    const jobTitleId = searchParams.get('job-title-id') || undefined;
 
     return useQuery({
-        queryKey: [GET_EMPLOYEES_QUERY_KEY, { query, status }],
+        queryKey: [GET_EMPLOYEES_QUERY_KEY, { query, status, roleId, jobTitleId }],
         queryFn: () => getEmployeesActionAsync({
             query,
             status,
-            roleId
+            roleId,
+            jobTitleId
         }),
         enabled: false,
     });

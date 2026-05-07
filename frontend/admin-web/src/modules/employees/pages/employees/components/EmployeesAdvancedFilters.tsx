@@ -1,20 +1,17 @@
-import { useState } from "react";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import type { Role } from "@/interfaces/entites/security-role";
 import { stringToBooleanWithDefault } from "@/lib/utils";
 import type { Employee } from "@/interfaces/entites/employee";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
-import { useRolesForEmployees } from "@/modules/employees/hooks/useRolesForEmployees";
-import { GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY, GET_ROLES_FOR_EMPLOYEE_QUERY_KEY } from "@/modules/employees/lib/queries-key";
 import { useSearchInput } from "@/shared/hooks/useSearchInput";
+import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import { useSecurityRolesForEmployees } from "@/modules/employees/hooks/useSecurityRolesForEmployees";
 import { useJobTitlesForEmployees } from "@/modules/employees/hooks/useJobTitlesForEmployees";
+import { GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY, GET_SECURITY_ROLES_FOR_EMPLOYEE_QUERY_KEY } from "@/modules/employees/lib/queries-key";
 
 interface Props {
     open: boolean;
@@ -31,7 +28,6 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     const {
         register,
         handleSubmit,
-        formState: { touchedFields },
         setValue,
         reset,
         watch
@@ -39,9 +35,9 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         defaultValues: {
             name: searchParams.get('query') ?? '',
             status: stringToBooleanWithDefault(searchParams.get('status')),
-            roleId: searchParams.get('role-id') ?? undefined,
-            role: {
-                name: searchParams.get('role-name') ?? undefined,
+            securityRoleId: searchParams.get('security-role-id') ?? undefined,
+            securityRole: {
+                name: searchParams.get('security-role-name') ?? undefined,
             },
             jobTitleId: searchParams.get('job-title-id') ?? undefined,
             jobTitle: {
@@ -53,15 +49,15 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     // Role assign configuration
     const { query: rolesQuery, handleOnSearch: handleOnSearchRoles, handleOnOptionChange: handleOnOptionChangeRole, handleOnClearSelection: handleOnClearSelectionRole } = useSearchInput(
         {
-            queryKey: GET_ROLES_FOR_EMPLOYEE_QUERY_KEY,
+            queryKey: GET_SECURITY_ROLES_FOR_EMPLOYEE_QUERY_KEY,
             setValue: setValue,
-            fieldIdKey: 'roleId',
-            fieldNameKey: 'role.name',
+            fieldIdKey: 'securityRoleId',
+            fieldNameKey: 'securityRole.name',
             propIdKey: 'id',
             propNameKey: 'name'
         }
     );
-    const { data: roles, isFetching: isFetchingRoles } = useRolesForEmployees(rolesQuery);
+    const { data: roles, isFetching: isFetchingRoles } = useSecurityRolesForEmployees(rolesQuery);
 
     // JobTitle assign configuration
     const { query: jobTitlesQuery, handleOnSearch: handleOnSearchJobTitles, handleOnOptionChange: handleOnOptionChangeJobTitle, handleOnClearSelection: handleOnClearSelectionJobTitle } = useSearchInput(
@@ -82,15 +78,15 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     const handleClickClearFilters = () => {
         searchParams.delete('query');
         searchParams.delete('status');
-        searchParams.delete('role-id');
-        searchParams.delete('role-name');
+        searchParams.delete('security-role-id');
+        searchParams.delete('security-role-name');
         searchParams.delete('job-title-id');
         searchParams.delete('job-title-name');
         reset({
             name: '',
             status: true,
-            roleId: undefined,
-            role: {
+            securityRoleId: undefined,
+            securityRole: {
                 name: undefined
             }
         });
@@ -102,8 +98,8 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     const handleSubmitForm = (filter: Partial<Employee>) => {
         searchParams.set('status', `${filter.status}`);
         filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
-        filter.roleId ? searchParams.set('role-id', filter.roleId) : searchParams.delete('role-id');
-        filter.role?.name ? searchParams.set('role-name', filter.role.name) : searchParams.delete('role-name');
+        filter.securityRoleId ? searchParams.set('security-role-id', filter.securityRoleId) : searchParams.delete('security-role-id');
+        filter.securityRole?.name ? searchParams.set('security-role-name', filter.securityRole.name) : searchParams.delete('security-role-name');
         filter.jobTitleId ? searchParams.set('job-title-id', filter.jobTitleId) : searchParams.delete('job-title-id');
         filter.jobTitle?.name ? searchParams.set('job-title-name', filter.jobTitle.name) : searchParams.delete('job-title-name');
         setSearchParams(searchParams);
@@ -156,8 +152,8 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">Rol asignado:</label>
                                 <CustomSearchInput
-                                    defaultValue={watch('role.name')}
-                                    selected={!!watch('roleId')}
+                                    defaultValue={watch('securityRole.name')}
+                                    selected={!!watch('securityRoleId')}
                                     placeholder="Busqueda de rol asignado"
                                     options={roles?.data ?? []}
                                     isSearching={isFetchingRoles}

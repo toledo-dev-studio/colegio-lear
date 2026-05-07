@@ -69,7 +69,7 @@ export const EmployeesTable = ({ data = [], isLoading, handleClickEditRow, handl
                                     <td className="row">{item.email}</td>
                                     <td className="row">{item.username}</td>
                                     <td className="row">{item.jobTitle?.name}</td>
-                                    <td className="row">{item.role?.name}</td>
+                                    <td className="row">{item.securityRole?.name}</td>
                                     <td className="row">
                                         <Badge variant={item.status ? "default" : "destructive"} className="py-4 px-6">
                                             {

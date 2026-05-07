@@ -17,7 +17,7 @@ export const getEmployeeByIdActionAsync = async (id: string): Promise<Employee> 
             email: "",
             username: "",
             status: true,
-            roleId: "",
+            securityRoleId: "",
             jobTitleId: "",
         }
     }

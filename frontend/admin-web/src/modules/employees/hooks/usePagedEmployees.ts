@@ -13,14 +13,16 @@ export const usePagedEmployees = () => {
     const page = searchParams.get('page') || '1';
     const pageSize = searchParams.get('pageSize') || '10';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
-    const roleId = searchParams.get('role-id') || undefined;
+    const roleId = searchParams.get('security-role-id') || undefined;
+    const jobTitleId = searchParams.get('job-title-id') || undefined;
 
     return useQuery({
-        queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY, { query, status, roleId, page, pageSize }],
+        queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY, { query, status, roleId, jobTitleId, page, pageSize }],
         queryFn: () => getPagedEmployeesActionAsync({
             query,
             status,
             roleId,
+            jobTitleId,
             page: isNaN(+page) ? 1 : Number(page),
             pageSize: isNaN(+pageSize) ? 1 : Number(pageSize),
         }),

@@ -1,5 +1,5 @@
 import type { JobTitle } from "./job-title.interface";
-import type { Role } from "./security-role";
+import type { SecurityRole } from "./security-role";
 
 export interface Employee {
     id: string;
@@ -11,8 +11,8 @@ export interface Employee {
     username: string;
     status: boolean;
 
-    roleId: string;
-    role?: Role;
+    securityRoleId: string;
+    securityRole?: SecurityRole;
 
     jobTitleId: string;
     jobTitle?: JobTitle

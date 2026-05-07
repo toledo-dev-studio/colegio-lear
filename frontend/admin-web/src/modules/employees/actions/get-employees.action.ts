@@ -7,9 +7,10 @@ interface Options {
     query?: string;
     status?: boolean
     roleId?: string;
+    jobTitleId?: string;
 }
 
-export const getEmployeesActionAsync = async ({ query = '', status = true, roleId = undefined }: Options): Promise<Employee[]> => {
+export const getEmployeesActionAsync = async ({ query = '', status = true, roleId = undefined, jobTitleId = undefined }: Options): Promise<Employee[]> => {
     await sleep();
 
     const { data } = await api.get<Employee[]>('/employees/employees.json', {
@@ -17,6 +18,7 @@ export const getEmployeesActionAsync = async ({ query = '', status = true, roleI
             q: query,
             status,
             roleId,
+            jobTitleId
         }
     });
 

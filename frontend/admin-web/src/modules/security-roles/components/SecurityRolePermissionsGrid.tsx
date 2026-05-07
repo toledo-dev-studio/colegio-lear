@@ -1,0 +1,55 @@
+import { cn } from "@/lib/utils"
+import { Switch } from "@/shared/ui/switch"
+import { AVAILABLE_MODULES, type ModuleKeys } from "@/interfaces/components/modules"
+import type { SecurityRolePermission } from "@/interfaces/entites/security-role-permission";
+
+interface Props {
+    disabled: boolean;
+    permissions: SecurityRolePermission[];
+    handleOnChangePermission?:  (key: ModuleKeys, permission: 'can-read' | 'can-write' | 'can-delete', checked: boolean) => void;
+}
+
+export const SecurityRolePermissionsGrid = ({ disabled = false, permissions = [], handleOnChangePermission }: Props) => {
+    return (
+        <>
+            <div className='overflow-x-auto'>
+                <table className='w-full min-w-[720px] border-separate border-spacing-0 bg-muted/30 rounded-2xl border border-border py-2 border-separate border-spacing-0'>
+                    <tbody>
+                        {AVAILABLE_MODULES.map((module, index) => (
+                            <tr key={module.key} className='w-full text-sm'>
+                                <td className={cn("border-r py-4 pl-8", index !== (AVAILABLE_MODULES.length - 1) && "border-b")}>
+                                    <div className="flex flex-col gap-y-1 min-w-[12rem]">
+                                        <p className="text-xs text-muted-foreground">Módulo:</p>
+                                        <p className="font-medium text-foreground">{module.name}</p>
+                                    </div>
+                                </td>
+                                <td className={cn("w-full py-4 px-8", index !== (AVAILABLE_MODULES.length - 1) && "border-b border-border")}>
+                                    <div className="flex flex-row items-center justify-start gap-x-8">
+                                        <div className="flex flex-col gap-1.5 min-w-fit">
+                                            <p className="text-xs text-muted-foreground">¿Puede leer?</p>
+                                            <Switch disabled={disabled} size="sm" onCheckedChange={(checked) => handleOnChangePermission?.(module.key, "can-read", checked)} checked={permissions.some(item => item.moduleKey === module.key && item.canRead)} />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5 min-w-fit">
+                                            <p className="text-xs text-muted-foreground">¿Puede escribir?</p>
+                                            <Switch disabled={disabled} size="sm" onCheckedChange={(checked) => handleOnChangePermission?.(module.key, "can-write", checked)} checked={permissions.some(item => item.moduleKey === module.key && item.canWrite)} />
+                                        </div>
+                                        {
+                                            module.key !== "my-account" && (
+                                                <div className="flex flex-col gap-1.5 min-w-fit">
+                                                    <p className="text-xs text-muted-foreground">¿Puede eliminar?</p>
+                                                    <Switch disabled={disabled} size="sm" onCheckedChange={(checked) => handleOnChangePermission?.(module.key, "can-delete", checked)} checked={permissions.some(item => item.moduleKey === module.key && item.canDelete)} />
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+
+                    </tbody>
+
+                </table>
+            </div>
+        </>
+    )
+}

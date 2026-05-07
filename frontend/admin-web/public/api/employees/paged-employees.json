@@ -12,9 +12,9 @@
             "email": "juan.perez@example.com",
             "username": "jperez",
             "status": true,
-            "roleId": "r1",
-            "role": {
-                "id": "r1",
+            "securityRoleId": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
+            "securityRole": {
+                "id": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
                 "name": "Administrador",
                 "description": "Acceso completo al sistema"
             },
@@ -35,8 +35,8 @@
             "email": "maria.lopez@example.com",
             "username": "mlopez",
             "status": true,
-            "roleId": "r2",
-            "role": {
+            "securityRoleId": "r2",
+            "securityRole": {
                 "id": "r2",
                 "name": "Supervisor",
                 "description": "Supervisa operaciones"
@@ -58,8 +58,8 @@
             "email": "carlos.ramirez@example.com",
             "username": "cramirez",
             "status": true,
-            "roleId": "r3",
-            "role": {
+            "securityRoleId": "r3",
+            "securityRole": {
                 "id": "r3",
                 "name": "Empleado",
                 "description": "Acceso básico"
@@ -81,8 +81,8 @@
             "email": "ana.martinez@example.com",
             "username": "amartinez",
             "status": false,
-            "roleId": "r3",
-            "role": {
+            "securityRoleId": "r3",
+            "securityRole": {
                 "id": "r3",
                 "name": "Empleado",
                 "description": "Acceso básico"
@@ -104,8 +104,8 @@
             "email": "luis.gomez@example.com",
             "username": "lgomez",
             "status": true,
-            "roleId": "r2",
-            "role": {
+            "securityRoleId": "r2",
+            "securityRole": {
                 "id": "r2",
                 "name": "Supervisor",
                 "description": "Supervisa operaciones"
@@ -127,8 +127,8 @@
             "email": "sofia.fernandez@example.com",
             "username": "sfernandez",
             "status": true,
-            "roleId": "r3",
-            "role": {
+            "securityRoleId": "r3",
+            "securityRole": {
                 "id": "r3",
                 "name": "Empleado",
                 "description": "Acceso básico"
@@ -150,8 +150,8 @@
             "email": "diego.vargas@example.com",
             "username": "dvargas",
             "status": true,
-            "roleId": "r1",
-            "role": {
+            "securityRoleId": "r1",
+            "securityRole": {
                 "id": "r1",
                 "name": "Administrador",
                 "description": "Acceso completo al sistema"
@@ -173,8 +173,8 @@
             "email": "lucia.castro@example.com",
             "username": "lcastro",
             "status": false,
-            "roleId": "r2",
-            "role": {
+            "securityRoleId": "r2",
+            "securityRole": {
                 "id": "r2",
                 "name": "Supervisor",
                 "description": "Supervisa operaciones"
@@ -196,8 +196,8 @@
             "email": "miguel.navarro@example.com",
             "username": "mnavarro",
             "status": true,
-            "roleId": "r3",
-            "role": {
+            "securityRoleId": "r3",
+            "securityRole": {
                 "id": "r3",
                 "name": "Empleado",
                 "description": "Acceso básico"
@@ -219,8 +219,8 @@
             "email": "elena.rojas@example.com",
             "username": "erojas",
             "status": true,
-            "roleId": "r1",
-            "role": {
+            "securityRoleId": "r1",
+            "securityRole": {
                 "id": "r1",
                 "name": "Administrador",
                 "description": "Acceso completo al sistema"

@@ -1,12 +1,13 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/utils";
 import type { Employee } from "@/interfaces/entites/employee";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
-import { sleep } from "@/lib/utils";
 
 interface Options {
     query?: string;
-    status?: boolean,
-    roleId?: string,
+    status?: boolean;
+    roleId?: string;
+    jobTitleId?: string;
     page?: number;
     pageSize?: number;
 }
@@ -17,6 +18,7 @@ export const getPagedEmployeesActionAsync = async (options: Options): Promise<Pa
         query = '', 
         status = true, 
         roleId = undefined,
+        jobTitleId = undefined,
         page = 1, 
         pageSize = 1 
     } = options;
@@ -28,6 +30,7 @@ export const getPagedEmployeesActionAsync = async (options: Options): Promise<Pa
             q: query,
             status,
             roleId,
+            jobTitleId,
             page,
             pageSize,
         }
