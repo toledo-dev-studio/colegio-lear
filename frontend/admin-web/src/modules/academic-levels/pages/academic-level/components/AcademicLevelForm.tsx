@@ -144,7 +144,6 @@ export const AcademicLevelForm = ({ academicLevel, isSubmitting, onSubmit }: Pro
                     handleToggleEditEducationLevel={handleToggleEditEducationLevel}
                 />
 
-
                 <div className="flex items-center justify-end mt-8 gap-x-6">
                     <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"destructive"} onClick={handleClickCancel}>
                         Cancelar
