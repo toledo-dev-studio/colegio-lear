@@ -1,6 +1,8 @@
-import { Search, Sun, Bell, Menu, ChevronDown, User, LogOut } from "lucide-react";
+import { use, useState } from "react";
+import { Search, Sun, Bell, Menu, ChevronDown, User, LogOut, Moon } from "lucide-react";
+
 import { Input } from "@/shared/ui/input";
-import { useState } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 interface Props {
     toggleSidebar: () => void;
@@ -8,6 +10,7 @@ interface Props {
 
 export const CustomNavbar = ({ toggleSidebar }: Props) => {
 
+    const { theme, toggleTheme } = use(ThemeContext);
     const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
 
     return (
@@ -31,13 +34,12 @@ export const CustomNavbar = ({ toggleSidebar }: Props) => {
 
             <div className="flex items-center gap-2 sm:gap-4">
                 <button
-                    //   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    onClick={toggleTheme}
                     data-testid="theme-toggle"
                     className="icon-btn"
                     aria-label="Cambiar tema"
                 >
-                    <Sun className="w-[18px] h-[18px]" />
-                    {/* {theme === "dark" ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />} */}
+                    {theme === "dark" ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
                 </button>
                 <button
                     data-testid="header-notifications"

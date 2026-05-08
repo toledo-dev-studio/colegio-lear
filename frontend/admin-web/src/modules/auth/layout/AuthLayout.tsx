@@ -15,7 +15,7 @@ export const AuthLayout = () => {
               }} />
               <div className="relative text-white max-w-md">
                 <div className="flex items-center gap-3 mb-10">
-                  <div className="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center">
+                  <div className="!w-12 !h-12 rounded-full bg-card/15 backdrop-blur flex items-center justify-center">
                     <GraduationCap className="w-7 h-7" />
                   </div>
                   <span className="font-heading font-extrabold text-2xl tracking-tight">COLEGIO LEAR</span>

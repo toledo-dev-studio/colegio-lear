@@ -55,7 +55,7 @@ export const CustomTableListRibbon = (props: Props) => {
                         onClick={handleClickAdvancedFilters}
                         variant={"outline"}
                         disabled={disabledAdvancedFilters}
-                        className="icon-btn icon-btn-ribbon bg-white hover:bg-white"
+                        className="icon-btn icon-btn-ribbon bg-card hover:bg-card"
                         aria-label="Abrir filtros avanzados">
                         <Filter className="text-primary w-4 h-4" />
                     </Button>
@@ -65,7 +65,7 @@ export const CustomTableListRibbon = (props: Props) => {
                         onClick={handleClickExport}
                         variant={"outline"}
                         disabled={disabledExport}
-                        className="icon-btn icon-btn-ribbon bg-white hover:bg-white"
+                        className="icon-btn icon-btn-ribbon bg-card hover:bg-card"
                         aria-label="Exportar CSV">
                         <Download className="text-primary w-4 h-4" />
                     </Button>

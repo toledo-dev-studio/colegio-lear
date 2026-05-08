@@ -62,7 +62,7 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
-                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-white text-foreground !px-0">
+                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground !px-0">
                             <X className="!w-5 !h-5 text-muted-foreground" />
                         </Button>
                     </div>

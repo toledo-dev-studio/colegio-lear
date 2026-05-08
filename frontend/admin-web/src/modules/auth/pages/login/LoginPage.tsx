@@ -20,8 +20,8 @@ export const LoginPage = () => {
 
     return (
         <>
-            <div className="flex-1 flex items-center justify-center p-6 sm:p-12 bg-cover" style={{backgroundImage: `url(${background})`}}>
-                <div className="w-full max-w-xl border border-gray-200 shadow-md rounded-lg p-12 bg-card">
+            <div className="relative flex-1 flex items-center justify-center p-6 sm:p-12 bg-cover bg-center after:absolute after:inset-0 after:bg-black/40 after:content-['']" style={{backgroundImage: `url(${background})`}}>
+                <div className="w-full max-w-xl border border-white-400 shadow-md rounded-lg p-12 bg-card z-10">
                     <div className="lg:hidden flex items-center gap-3 mb-8">
                         <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center">
                             <GraduationCap className="w-6 h-6 text-primary-foreground" />

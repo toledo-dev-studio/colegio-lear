@@ -61,7 +61,7 @@ export const AcademicLevelsAdvancedFilters = (props: Props) => {
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
-                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-8 min-h-8 bg-white text-foreground">
+                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-8 min-h-8 bg-card text-foreground">
                             <X className="w-8 h-8" />
                         </Button>
                     </div>

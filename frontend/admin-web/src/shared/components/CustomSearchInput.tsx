@@ -88,7 +88,7 @@ export const CustomSearchInput = (props: Props) => {
                 {
                     isSearching && (
                         <div className="absolute z-10 w-full text-right mt-2">
-                            <ul className="shadow-sm bg-white border border-border text-foreground flex flex-col rounded-md">
+                            <ul className="shadow-sm bg-card border border-border text-foreground flex flex-col rounded-md">
                                 <li className={cn("py-3 text-sm text-left pl-6 border-b border-border cursor-pointer hover:bg-muted")}>
                                     Cargando...
                                 </li>
@@ -100,7 +100,7 @@ export const CustomSearchInput = (props: Props) => {
                 {
                     (options.length > 0) && (
                         <div className="absolute z-10 w-full text-right mt-2">
-                            <ul className="shadow-sm bg-white border border-border text-foreground flex flex-col rounded-md">
+                            <ul className="shadow-sm bg-card border border-border text-foreground flex flex-col rounded-md">
                                 {
                                     options.map((option) => (
                                         <li key={option[keySchemaName]}
