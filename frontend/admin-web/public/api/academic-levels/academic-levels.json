@@ -1,0 +1,200 @@
+[
+  {
+    "id": "1",
+    "name": "Primaria",
+    "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
+    "status": true,
+    "educationLevels": [
+      {
+        "id": "1-1",
+        "name": "1er Grado",
+        "description": "Primer grado de primaria"
+      },
+      {
+        "id": "1-2",
+        "name": "2do Grado",
+        "description": "Segundo grado de primaria"
+      },
+      {
+        "id": "1-3",
+        "name": "3er Grado",
+        "description": "Tercer grado de primaria"
+      },
+      {
+        "id": "1-4",
+        "name": "4to Grado",
+        "description": "Cuarto grado de primaria"
+      },
+      {
+        "id": "1-5",
+        "name": "5to Grado",
+        "description": "Quinto grado de primaria"
+      },
+      {
+        "id": "1-6",
+        "name": "6to Grado",
+        "description": "Sexto grado de primaria"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Secundaria",
+    "description": "Nivel de educación secundaria, preparación para la educación media",
+    "status": true,
+    "educationLevels": [
+      {
+        "id": "2-1",
+        "name": "1er Año",
+        "description": "Primer año de secundaria"
+      },
+      {
+        "id": "2-2",
+        "name": "2do Año",
+        "description": "Segundo año de secundaria"
+      },
+      {
+        "id": "2-3",
+        "name": "3er Año",
+        "description": "Tercer año de secundaria"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Bachillerato",
+    "description": "Nivel de educación bachillerato, formación avanzada",
+    "status": true,
+    "educationLevels": [
+      {
+        "id": "3-1",
+        "name": "4to Año",
+        "description": "Cuarto año de bachillerato"
+      },
+      {
+        "id": "3-2",
+        "name": "5to Año",
+        "description": "Quinto año de bachillerato"
+      },
+      {
+        "id": "3-3",
+        "name": "6to Año",
+        "description": "Sexto año de bachillerato"
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Profesional",
+    "description": "Nivel de educación profesional y técnica",
+    "status": true,
+    "educationLevels": [
+      {
+        "id": "4-1",
+        "name": "Técnico",
+        "description": "Nivel técnico profesional"
+      },
+      {
+        "id": "4-2",
+        "name": "Tecnólogo",
+        "description": "Nivel tecnólogo profesional"
+      },
+      {
+        "id": "4-3",
+        "name": "Profesional",
+        "description": "Nivel profesional universitario"
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Preescolar",
+    "description": "Nivel de educación preescolar, preparación inicial",
+    "status": true,
+    "educationLevels": [
+      {
+        "id": "5-1",
+        "name": "Preparatorio",
+        "description": "Nivel preparatorio"
+      },
+      {
+        "id": "5-2",
+        "name": "Jardín",
+        "description": "Nivel de jardín infantil"
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Educación especial",
+    "description": "Nivel de educación especial para estudiantes con necesidades especiales",
+    "status": true,
+    "educationLevels": []
+  },
+  {
+    "id": "7",
+    "name": "Educación de adultos",
+    "description": "Programas de educación para adultos",
+    "status": true,
+    "educationLevels": [
+      {
+        "id": "7-1",
+        "name": "Alfabetización",
+        "description": "Programa de alfabetización"
+      },
+      {
+        "id": "7-2",
+        "name": "Secundaria para Adultos",
+        "description": "Secundaria adaptada para adultos"
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "name": "Diplomado",
+    "description": "Nivel de diplomado y educación superior",
+    "status": false,
+    "educationLevels": []
+  },
+  {
+    "id": "9",
+    "name": "Postgrado",
+    "description": "Nivel de postgrado y educación avanzada",
+    "status": true,
+    "educationLevels": [
+      {
+        "id": "9-1",
+        "name": "Especialización",
+        "description": "Programa de especialización"
+      },
+      {
+        "id": "9-2",
+        "name": "Maestría",
+        "description": "Programa de maestría"
+      },
+      {
+        "id": "9-3",
+        "name": "Doctorado",
+        "description": "Programa de doctorado"
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "Maestría",
+    "description": "Nivel de maestría y especialización",
+    "status": true,
+    "educationLevels": [
+      {
+        "id": "10-1",
+        "name": "Maestría en Ciencias",
+        "description": "Maestría en ciencias"
+      },
+      {
+        "id": "10-2",
+        "name": "Maestría en Humanidades",
+        "description": "Maestría en humanidades"
+      }
+    ]
+  }
+]

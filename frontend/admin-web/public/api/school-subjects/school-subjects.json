@@ -1,0 +1,97 @@
+[
+  {
+    "id": "1",
+    "name": "Matemáticas",
+    "description": "Materia de matemáticas básicas",
+    "status": true,
+    "academicLevelId": "1",
+    "educationLevelId": "1-1",
+    "academicLevel": {
+      "id": "1",
+      "name": "Primaria",
+      "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
+      "status": true,
+      "educationLevels": []
+    },
+    "educationLevel": {
+      "id": "1-1",
+      "name": "1er Grado"
+    }
+  },
+  {
+    "id": "2",
+    "name": "Lenguaje",
+    "description": "Materia de lenguaje y comunicación",
+    "status": true,
+    "academicLevel": {
+      "id": "1",
+      "name": "Primaria",
+      "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
+      "status": true,
+      "educationLevels": []
+    },
+    "educationLevel": {
+      "id": "1-2",
+      "name": "2do Grado"
+    },
+    "academicLevelId": "1",
+    "educationLevelId": "1-2"
+  },
+  {
+    "id": "3",
+    "name": "Ciencias",
+    "description": "Materia de ciencias naturales",
+    "status": true,
+    "academicLevel": {
+      "id": "2",
+      "name": "Secundaria",
+      "description": "Nivel de educación secundaria, preparación para la educación media",
+      "status": true,
+      "educationLevels": []
+    },
+    "educationLevel": {
+      "id": "2-1",
+      "name": "1er Año"
+    },
+    "academicLevelId": "2",
+    "educationLevelId": "2-1"
+  },
+  {
+    "id": "4",
+    "name": "Historia",
+    "description": "Materia de historia universal",
+    "status": true,
+    "academicLevel": {
+      "id": "3",
+      "name": "Bachillerato",
+      "description": "Nivel de educación bachillerato, formación avanzada",
+      "status": true,
+      "educationLevels": []
+    },
+    "educationLevel": {
+      "id": "3-1",
+      "name": "4to Año"
+    },
+    "academicLevelId": "3",
+    "educationLevelId": "3-1"
+  },
+  {
+    "id": "5",
+    "name": "Ingeniería de Software",
+    "description": "Materia de desarrollo de software",
+    "status": true,
+    "academicLevel": {
+      "id": "4",
+      "name": "Profesional",
+      "description": "Nivel de educación profesional y técnica",
+      "status": true,
+      "educationLevels": []
+    },
+    "educationLevel": {
+      "id": "4-3",
+      "name": "Profesional"
+    },
+    "academicLevelId": "4",
+    "educationLevelId": "4-3"
+  }
+]

@@ -1,0 +1,67 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "name": "Profesor de Matemáticas",
+      "description": "Responsable de impartir clases de matemáticas a estudiantes de primaria y secundaria",
+      "status": true
+    },
+    {
+      "id": "2",
+      "name": "Profesor de Lenguaje",
+      "description": "Encargado de la enseñanza de español, literatura y comunicación",
+      "status": true
+    },
+    {
+      "id": "3",
+      "name": "Profesor de Inglés",
+      "description": "Especialista en enseñanza del idioma inglés como segunda lengua",
+      "status": true
+    },
+    {
+      "id": "4",
+      "name": "Profesor de Ciencias",
+      "description": "Docente de física, química y biología",
+      "status": true
+    },
+    {
+      "id": "5",
+      "name": "Coordinador Académico",
+      "description": "Supervisa y coordina los programas académicos del colegio",
+      "status": true
+    },
+    {
+      "id": "6",
+      "name": "Director Ejecutivo",
+      "description": "Líder principal de la institución educativa",
+      "status": true
+    },
+    {
+      "id": "7",
+      "name": "Orientador Educativo",
+      "description": "Proporciona orientación académica y personal a los estudiantes",
+      "status": true
+    },
+    {
+      "id": "8",
+      "name": "Personal Administrativo",
+      "description": "Apoyo administrativo y gestión de documentos",
+      "status": false
+    },
+    {
+      "id": "9",
+      "name": "Profesor de Educación Física",
+      "description": "Especialista en educación física y deportes",
+      "status": true
+    },
+    {
+      "id": "10",
+      "name": "Profesor de Arte",
+      "description": "Docente de artes visuales y expresión artística",
+      "status": true
+    }
+  ],
+  "totalPages": 1,
+  "currentPage": 1,
+  "itemsCount": 10
+}

@@ -1,0 +1,32 @@
+import { lazy } from "react";
+import { Navigate, type RouteObject } from "react-router";
+
+import SystemLayout from "@/shared/layout/SystemLayout";
+import { AcademicLevelPage } from "../pages/academic-level/AcademicLevelPage";
+import { AcademicLevelsPage } from "../pages/academic-levels/AcademicLevelsPage";
+
+const AcademicLevelsLayout = lazy(() => import('@/modules/academic-levels/layout/AcademicLevelsLayout'));
+
+export const academicLevelsRouter: RouteObject = {
+    path: '/academic-levels',
+    element:
+        <SystemLayout>
+            <AcademicLevelsLayout />
+        </SystemLayout>,
+    children: [
+        {
+            path: '',
+            element: <AcademicLevelsPage />
+        },
+        {
+            path: ':id',
+            element: <AcademicLevelPage />
+        },
+        {
+            path: '*',
+            element: <Navigate to='/academic-levels' />
+        }
+    ]
+}
+
+export default academicLevelsRouter;
