@@ -19,7 +19,7 @@ export const getAcademicLevelByIdAction = async (id: string): Promise<AcademicLe
     await sleep();
 
     // const { data } = await api.get<AcademicLevel>(`/academic-levels/${id}`);
-    const { data } = await api.get<AcademicLevel[]>(`/academic-levels.json`);
+    const { data } = await api.get<AcademicLevel[]>(`/academic-levels/academic-levels.json`);
     
     // DELETE THIS LOGIC
     const academicLevel = data.find(item => item.id === id);

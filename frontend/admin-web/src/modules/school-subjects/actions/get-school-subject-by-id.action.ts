@@ -22,7 +22,7 @@ export const getSchoolSubjectByIdActionAsync = async (id: string): Promise<Schoo
 
     // const { data } = await api.get<SchoolSubject>(`/school-subjects/${id}.json`);
 
-    const { data } = await api.get<SchoolSubject[]>(`/school-subjects.json`);
+    const { data } = await api.get<SchoolSubject[]>(`/school-subjects/school-subjects.json`);
         
         // DELETE THIS LOGIC
         const response = data.find(item => item.id === id);

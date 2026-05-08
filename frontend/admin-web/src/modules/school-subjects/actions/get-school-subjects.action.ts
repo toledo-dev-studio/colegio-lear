@@ -13,7 +13,7 @@ interface Options {
 export const getSchoolSubjectsActionAsync = async ({ query = '', status = true, academicLevelId, educationLevelId }: Options): Promise<SchoolSubject[]> => {
     await sleep();
 
-    const { data } = await api.get<SchoolSubject[]>('/school-subjects.json', {
+    const { data } = await api.get<SchoolSubject[]>('/school-subjects/school-subjects.json', {
         params: {
             q: query,
             status,

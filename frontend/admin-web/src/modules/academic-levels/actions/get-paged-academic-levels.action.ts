@@ -13,7 +13,7 @@ interface Options {
 export const getPagedAcademicLevelsActionAsync = async ({ query = '', status = true, page = 1, pageSize = 1 }: Options): Promise<PagedResponse<AcademicLevel>> => {
     await sleep();
 
-    const { data } = await api.get<PagedResponse<AcademicLevel>>('/paged-academic-levels.json', {
+    const { data } = await api.get<PagedResponse<AcademicLevel>>('/academic-levels/paged-academic-levels.json', {
         params: {
             q: query,
             status,

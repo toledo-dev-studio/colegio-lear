@@ -19,7 +19,7 @@ export const getJobTitleByIdActionAsync = async (id: string): Promise<JobTitle> 
     await sleep();
 
     // const { data } = await api.get<JobTitle>(`/job-titles/${id}`);
-    const { data } = await api.get<JobTitle[]>(`/job-titles.json`);
+    const { data } = await api.get<JobTitle[]>(`/job-titles/job-titles.json`);
     
     // DELETE THIS LOGIC
     const jobTitle = data.find(item => item.id === id);

@@ -11,7 +11,7 @@ interface Options {
 export const getAcademicLevelsActionAsync = async ({ query = '', status = true }: Options): Promise<AcademicLevel[]> => {
     await sleep();
 
-    const { data } = await api.get<AcademicLevel[]>('/academic-levels.json', {
+    const { data } = await api.get<AcademicLevel[]>('/academic-levels/academic-levels.json', {
         params: {
             q: query,
             status

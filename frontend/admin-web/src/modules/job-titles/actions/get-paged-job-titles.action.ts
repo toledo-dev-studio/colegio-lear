@@ -13,7 +13,7 @@ interface Options {
 export const getPagedJobTitlesActionAsync = async ({ query = '', status = true, page = 1, pageSize = 1 }: Options): Promise<PagedResponse<JobTitle>> => {
     await sleep();
 
-    const { data } = await api.get<PagedResponse<JobTitle>>('/paged-job-titles.json', {
+    const { data } = await api.get<PagedResponse<JobTitle>>('/job-titles/paged-job-titles.json', {
         params: {
             q: query,
             status,

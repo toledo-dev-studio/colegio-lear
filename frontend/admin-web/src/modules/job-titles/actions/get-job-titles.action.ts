@@ -11,7 +11,7 @@ interface Options {
 export const getJobTitlesActionAsync = async ({ query = '', status = true }: Options): Promise<JobTitle[]> => {
     await sleep();
 
-    const { data } = await api.get<JobTitle[]>('/job-titles.json', {
+    const { data } = await api.get<JobTitle[]>('/job-titles/job-titles.json', {
         params: {
             q: query,
             status
