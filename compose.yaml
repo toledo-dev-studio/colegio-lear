@@ -1,5 +1,18 @@
 services:
 
+  colegio-lear-db:
+    container_name: 'colegio-lear-db'
+    image: 'postgres:17'
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: colegio_lear
+    volumes:
+      - colegio-lear-db-data:/var/lib/postgresql/data
+
   colegio-lear-backend-cli:
     container_name: 'colegio-lear-backend-cli'
     image: 'node-cli'
@@ -32,3 +45,6 @@ services:
       - '80:80'
     volumes:
       - ./frontend/student-web:/app:rw
+
+volumes:
+  colegio-lear-db-data:

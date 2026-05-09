@@ -154,4 +154,9 @@ psd
 thumb
 sketch
 
+# Kiro IDE
+.kiro/
+
 # End of https://www.toptal.com/developers/gitignore/api/react,node
+
+git-cheatsheet-modulos.md
