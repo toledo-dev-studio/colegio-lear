@@ -18,7 +18,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
 
     const [searchParams, setSearchParams] = useSearchParams();
     const jobTitleLikeFilter: Partial<JobTitle> = {
-        name: searchParams.get('query') ?? '',
+        name: searchParams.get('name') ?? '',
         status: stringToBooleanWithDefault(searchParams.get('status'))
     };
 
@@ -36,7 +36,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         return null;
 
     const handleClickClearFilters = () => {
-        searchParams.delete('query');
+        searchParams.delete('name');
         searchParams.delete('status');
         reset({ name: '', status: true });
         setSearchParams(searchParams);
@@ -45,7 +45,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
 
     const handleSubmitForm = (filter: Partial<JobTitle>) => {
         searchParams.set('status', `${filter.status}`);
-        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
+        filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
         setSearchParams(searchParams);
         handleClickClose();
     }

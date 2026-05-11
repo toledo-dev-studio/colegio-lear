@@ -33,7 +33,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         watch
     } = useForm<Partial<Employee>>({
         defaultValues: {
-            name: searchParams.get('query') ?? '',
+            name: searchParams.get('name') ?? '',
             status: stringToBooleanWithDefault(searchParams.get('status')),
             securityRoleId: searchParams.get('security-role-id') ?? undefined,
             securityRole: {
@@ -76,7 +76,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         return null;
 
     const handleClickClearFilters = () => {
-        searchParams.delete('query');
+        searchParams.delete('name');
         searchParams.delete('status');
         searchParams.delete('security-role-id');
         searchParams.delete('security-role-name');
@@ -97,7 +97,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
 
     const handleSubmitForm = (filter: Partial<Employee>) => {
         searchParams.set('status', `${filter.status}`);
-        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
+        filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
         filter.securityRoleId ? searchParams.set('security-role-id', filter.securityRoleId) : searchParams.delete('security-role-id');
         filter.securityRole?.name ? searchParams.set('security-role-name', filter.securityRole.name) : searchParams.delete('security-role-name');
         filter.jobTitleId ? searchParams.set('job-title-id', filter.jobTitleId) : searchParams.delete('job-title-id');

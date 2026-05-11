@@ -9,13 +9,18 @@ export const useExportJobTitles = () => {
 
     const [searchParams] = useSearchParams();
 
+    // Main query filters
     const query = searchParams.get('query')?.trim() || '';
+
+    // Advanced query filters
+    const name = searchParams.get('name')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
     return useQuery({
-        queryKey: [GET_JOB_TITLES_QUERY_KEY, { query, status }],
+        queryKey: [GET_JOB_TITLES_QUERY_KEY, { query, name, status }],
         queryFn: () => getJobTitlesActionAsync({
             query,
+            name,
             status
         }),
         enabled: false,

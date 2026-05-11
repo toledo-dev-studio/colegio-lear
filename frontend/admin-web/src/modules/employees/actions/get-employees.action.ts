@@ -5,17 +5,25 @@ import type { Employee } from "@/interfaces/entites/employee";
 
 interface Options {
     query?: string;
+    name?: string;
     status?: boolean
     roleId?: string;
     jobTitleId?: string;
 }
 
-export const getEmployeesActionAsync = async ({ query = '', status = true, roleId = undefined, jobTitleId = undefined }: Options): Promise<Employee[]> => {
+export const getEmployeesActionAsync = async ({
+    query = '',
+    name,
+    status,
+    roleId,
+    jobTitleId
+}: Options): Promise<Employee[]> => {
     await sleep();
 
     const { data } = await api.get<Employee[]>('/employees/employees.json', {
         params: {
             q: query,
+            name,
             status,
             roleId,
             jobTitleId

@@ -6,24 +6,26 @@ import { sleep } from "@/lib/utils";
 
 interface Options {
     query?: string;
+    page?: number;
+    pageSize?: number;
+    name?: string;
     status?: boolean,
     academicLevelId?: string;
     educationLevelId?: string;
-    page?: number;
-    pageSize?: number;
 }
 
-export const getPagedSchoolSubjectsActionAsync = async ({ query = '', status = true, academicLevelId, educationLevelId, page = 1, pageSize = 1 }: Options): Promise<PagedResponse<SchoolSubject>> => {
+export const getPagedSchoolSubjectsActionAsync = async ({ query = '', page = 1, pageSize = 1, name, status, academicLevelId, educationLevelId }: Options): Promise<PagedResponse<SchoolSubject>> => {
     await sleep();
 
     const { data } = await api.get<PagedResponse<SchoolSubject>>('/school-subjects/paged-school-subjects.json', {
         params: {
             q: query,
+            page,
+            pageSize,
+            name,
             status,
             academicLevelId,
             educationLevelId,
-            page,
-            pageSize,
         }
     });
 

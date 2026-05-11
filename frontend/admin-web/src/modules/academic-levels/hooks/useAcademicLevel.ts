@@ -36,5 +36,4 @@ export const useAcademicLevel = (id: string) => {
         ...query,
         mutation,
     }
-
 }

@@ -37,7 +37,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
         watch
     } = useForm<Partial<SchoolSubject>>({
         defaultValues: {
-            name: searchParams.get('query') ?? '',
+            name: searchParams.get('name') ?? '',
             status: stringToBooleanWithDefault(searchParams.get('status')),
             academicLevelId: searchParams.get('academic-level-id') ?? undefined,
             academicLevel: {
@@ -64,7 +64,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
         return null;
 
     const handleClickClearFilters = () => {
-        searchParams.delete('query');
+        searchParams.delete('name');
         searchParams.delete('status');
         searchParams.delete('academic-level-id');
         searchParams.delete('academic-level-name');
@@ -89,7 +89,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
 
     const handleSubmitForm = (filter: Partial<SchoolSubject>) => {
         searchParams.set('status', `${filter.status}`);
-        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
+        filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
         filter.academicLevelId ? searchParams.set('academic-level-id', filter.academicLevelId) : searchParams.delete('academic-level-id');
         filter.academicLevel?.name ? searchParams.set('academic-level-name', filter.academicLevel.name) : searchParams.delete('academic-level-name');
         filter.educationLevelId ? searchParams.set('education-level-id', filter.educationLevelId) : searchParams.delete('education-level-id');

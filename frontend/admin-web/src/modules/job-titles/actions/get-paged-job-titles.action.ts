@@ -5,20 +5,22 @@ import { sleep } from "@/lib/utils";
 
 interface Options {
     query?: string;
-    status?: boolean,
     page?: number;
     pageSize?: number;
+    name?: string;
+    status?: boolean,
 }
 
-export const getPagedJobTitlesActionAsync = async ({ query = '', status = true, page = 1, pageSize = 1 }: Options): Promise<PagedResponse<JobTitle>> => {
+export const getPagedJobTitlesActionAsync = async ({ query = '', page = 1, pageSize = 1, name, status, }: Options): Promise<PagedResponse<JobTitle>> => {
     await sleep();
 
     const { data } = await api.get<PagedResponse<JobTitle>>('/job-titles/paged-job-titles.json', {
         params: {
             q: query,
-            status,
             page,
             pageSize,
+            name,
+            status,
         }
     });
 

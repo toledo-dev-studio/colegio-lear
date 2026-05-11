@@ -1,62 +1,72 @@
 [
   {
-    "id": "1",
+    "id": "1f3b2c44-9d0c-4d0a-a111-0b1a2c3d4e5f",
     "name": "Profesor de Matemáticas",
-    "description": "Responsable de impartir clases de matemáticas a estudiantes de primaria y secundaria",
+    "description": "Responsable de impartir clases de matemáticas en nivel secundaria",
+    "jobTitleType": "teacher",
     "status": true
   },
   {
-    "id": "2",
-    "name": "Profesor de Lenguaje",
-    "description": "Encargado de la enseñanza de español, literatura y comunicación",
-    "status": true
-  },
-  {
-    "id": "3",
+    "id": "2a4c5d66-8e1f-4a2b-b222-1c2d3e4f5a6b",
     "name": "Profesor de Inglés",
-    "description": "Especialista en enseñanza del idioma inglés como segunda lengua",
+    "description": "Encargado de impartir clases de inglés y evaluación de alumnos",
+    "jobTitleType": "teacher",
     "status": true
   },
   {
-    "id": "4",
+    "id": "3b5d6e77-7f2a-4b3c-c333-2d3e4f5a6b7c",
     "name": "Profesor de Ciencias",
-    "description": "Docente de física, química y biología",
+    "description": "Imparte materias relacionadas con ciencias naturales",
+    "jobTitleType": "teacher",
     "status": true
   },
   {
-    "id": "5",
+    "id": "4c6e7f88-6a3b-4c4d-d444-3e4f5a6b7c8d",
     "name": "Coordinador Académico",
-    "description": "Supervisa y coordina los programas académicos del colegio",
+    "description": "Supervisa y coordina actividades académicas",
+    "jobTitleType": "administrative-staff",
     "status": true
   },
   {
-    "id": "6",
-    "name": "Director Ejecutivo",
-    "description": "Líder principal de la institución educativa",
+    "id": "5d7f8a99-5b4c-4d5e-e555-4f5a6b7c8d9e",
+    "name": "Auxiliar Administrativo",
+    "description": "Apoya en tareas administrativas y documentación",
+    "jobTitleType": "administrative-staff",
     "status": true
   },
   {
-    "id": "7",
-    "name": "Orientador Educativo",
-    "description": "Proporciona orientación académica y personal a los estudiantes",
+    "id": "6e8a9b00-4c5d-4e6f-f666-5a6b7c8d9e0f",
+    "name": "Director Escolar",
+    "description": "Responsable de la gestión general de la institución",
+    "jobTitleType": "administrative-staff",
     "status": true
   },
   {
-    "id": "8",
-    "name": "Personal Administrativo",
-    "description": "Apoyo administrativo y gestión de documentos",
+    "id": "7f9b0c11-3d6e-4f70-a777-6b7c8d9e0f1a",
+    "name": "Profesor de Historia",
+    "description": "Imparte clases de historia y formación cívica",
+    "jobTitleType": "teacher",
     "status": false
   },
   {
-    "id": "9",
-    "name": "Profesor de Educación Física",
-    "description": "Especialista en educación física y deportes",
+    "id": "8a0c1d22-2e7f-4071-b888-7c8d9e0f1a2b",
+    "name": "Encargado de Recursos Humanos",
+    "description": "Gestiona personal y procesos administrativos internos",
+    "jobTitleType": "administrative-staff",
     "status": true
   },
   {
-    "id": "10",
-    "name": "Profesor de Arte",
-    "description": "Docente de artes visuales y expresión artística",
+    "id": "9b1d2e33-1f8a-4172-c999-8d9e0f1a2b3c",
+    "name": "Profesor de Educación Física",
+    "description": "Coordina actividades deportivas y recreativas",
+    "jobTitleType": "teacher",
+    "status": true
+  },
+  {
+    "id": "0c2e3f44-0a9b-4273-d000-9e0f1a2b3c4d",
+    "name": "Secretaria Escolar",
+    "description": "Atiende recepción y apoyo administrativo escolar",
+    "jobTitleType": "administrative-staff",
     "status": true
   }
 ]

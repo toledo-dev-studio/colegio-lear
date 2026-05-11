@@ -9,22 +9,27 @@ export const usePagedEmployees = () => {
 
     const [searchParams] = useSearchParams();
 
+    // Main query filters
     const query = searchParams.get('query')?.trim() || '';
     const page = searchParams.get('page') || '1';
     const pageSize = searchParams.get('pageSize') || '10';
+
+    // Advanced query filters
+    const name = searchParams.get('name')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
     const roleId = searchParams.get('security-role-id') || undefined;
     const jobTitleId = searchParams.get('job-title-id') || undefined;
 
     return useQuery({
-        queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY, { query, status, roleId, jobTitleId, page, pageSize }],
+        queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY, { query, page, pageSize, name, status, roleId, jobTitleId,  }],
         queryFn: () => getPagedEmployeesActionAsync({
             query,
+            page: isNaN(+page) ? 1 : Number(page),
+            pageSize: isNaN(+pageSize) ? 1 : Number(pageSize),
+            name,
             status,
             roleId,
             jobTitleId,
-            page: isNaN(+page) ? 1 : Number(page),
-            pageSize: isNaN(+pageSize) ? 1 : Number(pageSize),
         }),
     });
 }

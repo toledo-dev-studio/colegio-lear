@@ -9,14 +9,19 @@ export const useExportScholarships = () => {
 
     const [searchParams] = useSearchParams();
 
+    // Main query filters
     const query = searchParams.get('query')?.trim() || '';
+
+    // Advanced query filters
+    const name = searchParams.get('name')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
     const discountPercentage = stringToNumberWithDefault(searchParams.get('discount-percentage'));
 
     return useQuery({
-        queryKey: [GET_SCHOLARSHIPS_QUERY_KEY, { query, status, discountPercentage }],
+        queryKey: [GET_SCHOLARSHIPS_QUERY_KEY, { query, name, status, discountPercentage }],
         queryFn: () => getScholarshipsActionAsync({
             query,
+            name,
             status,
             discountPercentage
         }),
