@@ -30,6 +30,7 @@ export const JobTitlesTable = ({ jobTitles = [], isLoading, handleClickEditRow, 
                             </th>
                             */}
                             <th className="column">Nombre</th>
+                            <th className="column">Tipo de puesto de trabajo</th>
                             <th className="column">Descripción</th>
                             <th className="column">Estado</th>
                             <th className="column">Acciones</th>
@@ -40,7 +41,7 @@ export const JobTitlesTable = ({ jobTitles = [], isLoading, handleClickEditRow, 
                         {
                             isLoading && (
                                 <tr>
-                                    <td colSpan={4} className="no-content-row">
+                                    <td colSpan={5} className="no-content-row">
                                         Cargando información, por favor espere...
                                     </td>
                                 </tr>
@@ -51,7 +52,7 @@ export const JobTitlesTable = ({ jobTitles = [], isLoading, handleClickEditRow, 
                         {
                             (!jobTitles.length && !isLoading) && (
                                 <tr>
-                                    <td colSpan={4} className="no-content-row">
+                                    <td colSpan={5} className="no-content-row">
                                         No se encontraron registros.
                                     </td>
                                 </tr>
@@ -83,9 +84,16 @@ export const JobTitlesTable = ({ jobTitles = [], isLoading, handleClickEditRow, 
                                             </span>
                                         </Link>
                                     </td>
+                                    <td className="row">
+                                        {
+                                            item.jobTitleType === 'administrative-staff'
+                                                ? 'Administrativo'
+                                                : 'Docente'
+                                        }
+                                    </td>
                                     <td className="row">{item.description}</td>
                                     <td className="row">
-                                        <Badge variant={item.status ? "default" : "destructive"} className="py-4 px-6">
+                                        <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
                                             {
                                                 item.status ? 'Activo' : 'Inactivo'
                                             }

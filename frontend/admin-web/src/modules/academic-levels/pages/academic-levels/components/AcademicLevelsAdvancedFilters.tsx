@@ -20,7 +20,7 @@ export const AcademicLevelsAdvancedFilters = (props: Props) => {
     const { open, title = "Filtros avanzados", handleClickClose } = props;
     const [searchParams, setSearchParams] = useSearchParams();
     const academicLevelLikeFilter: Partial<AcademicLevel> = {
-        name: searchParams.get('query') ?? '',
+        name: searchParams.get('name') ?? '',
         status: stringToBooleanWithDefault(searchParams.get('status'))
     };
 
@@ -38,7 +38,7 @@ export const AcademicLevelsAdvancedFilters = (props: Props) => {
         return null;
 
     const handleClickClearFilters = () => {
-        searchParams.delete('query');
+        searchParams.delete('name');
         searchParams.delete('status');
         reset({ name: '', status: true });
         setSearchParams(searchParams);
@@ -47,7 +47,7 @@ export const AcademicLevelsAdvancedFilters = (props: Props) => {
 
     const handleSubmitForm = (filter: Partial<AcademicLevel>) => {
         searchParams.set('status', `${filter.status}`);
-        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
+        filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
         setSearchParams(searchParams);
         handleClickClose();
     }

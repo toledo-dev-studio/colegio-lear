@@ -6,22 +6,33 @@ import type { PagedResponse } from "@/interfaces/responses/paged.response";
 
 interface Options {
     query?: string;
-    status?: boolean,
-    discountPercentage?: number,
     page?: number;
     pageSize?: number;
+    name?: string;
+    status?: boolean,
+    discountPercentage?: number,
 }
 
-export const getPagedScholarshipsActionAsync = async ({ query = '', status = true, discountPercentage = undefined, page = 1, pageSize = 1 }: Options): Promise<PagedResponse<Scholarship>> => {
+export const getPagedScholarshipsActionAsync = async (props: Options): Promise<PagedResponse<Scholarship>> => {
     await sleep();
+
+    const { 
+        query = '', 
+        page = 1, 
+        pageSize = 1,
+        name,
+        status,
+        discountPercentage, 
+    } = props;
 
     const { data } = await api.get<PagedResponse<Scholarship>>('/scholarships/paged-scholarships.json', {
         params: {
             q: query,
-            status,
-            discountPercentage,
             page,
             pageSize,
+            name,
+            status,
+            discountPercentage,
         }
     });
 

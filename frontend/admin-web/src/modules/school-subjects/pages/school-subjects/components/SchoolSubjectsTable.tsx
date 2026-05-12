@@ -69,7 +69,7 @@ export const SchoolSubjectsTable = ({ schoolSubjects = [], isLoading, handleClic
                                     <td className="row">{item.academicLevel?.name}</td>
                                     <td className="row">{item.educationLevel?.name}</td>
                                     <td className="row">
-                                        <Badge variant={item.status ? "default" : "destructive"} className="py-4 px-6">
+                                        <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
                                             {
                                                 item.status ? 'Activo' : 'Inactivo'
                                             }

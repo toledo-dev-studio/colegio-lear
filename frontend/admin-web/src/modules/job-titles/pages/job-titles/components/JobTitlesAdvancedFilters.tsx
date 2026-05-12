@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import { X } from "lucide-react";
 
@@ -6,7 +6,8 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { stringToBooleanWithDefault } from "@/lib/utils";
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle, JobTitleTypes } from "@/interfaces/entites/job-title.interface";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 interface Props {
     open: boolean;
@@ -18,11 +19,13 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
 
     const [searchParams, setSearchParams] = useSearchParams();
     const jobTitleLikeFilter: Partial<JobTitle> = {
-        name: searchParams.get('query') ?? '',
+        name: searchParams.get('name') ?? '',
+        jobTitleType: (searchParams.get('job-title-type') as JobTitleTypes) ?? undefined,
         status: stringToBooleanWithDefault(searchParams.get('status'))
     };
 
     const {
+        control,
         register,
         handleSubmit,
         setValue,
@@ -36,16 +39,18 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         return null;
 
     const handleClickClearFilters = () => {
-        searchParams.delete('query');
+        searchParams.delete('name');
         searchParams.delete('status');
-        reset({ name: '', status: true });
+        searchParams.delete('job-title-type');
+        reset({ name: '', status: true, jobTitleType: undefined });
         setSearchParams(searchParams);
         handleClickClose();
     }
 
     const handleSubmitForm = (filter: Partial<JobTitle>) => {
         searchParams.set('status', `${filter.status}`);
-        filter.name ? searchParams.set('query', filter.name) : searchParams.delete('query');
+        filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
+        filter.jobTitleType ? searchParams.set('job-title-type', filter.jobTitleType) : searchParams.delete('job-title-type');
         setSearchParams(searchParams);
         handleClickClose();
     }
@@ -76,6 +81,35 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                         className="pill-input w-full pl-8"
                                     />
                                 </div>
+                            </div>
+
+                            <div className="w-full">
+                                <label className="text-sm font-medium text-foreground mb-3 block">
+                                    Tipo del puesto de trabajo:
+                                </label>
+                                <Controller
+                                    control={control}
+                                    name='jobTitleType'
+                                    render={({ field }) => (
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={field.onChange}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Selecciona un puesto de trabajo">
+                                                    {field.value === "teacher" && "Docente"}
+                                                    {field.value === "administrative-staff" && "Administrativo"}
+                                                    {!field.value && "Selecciona una opción"}
+                                                </SelectValue>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Tipos de puesto de trabajo</SelectLabel>
+                                                    <SelectItem value="administrative-staff" label="Administrativo">Administrativo</SelectItem>
+                                                    <SelectItem value="teacher" label="Docente">Docente</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    )} />
                             </div>
 
                             <div>

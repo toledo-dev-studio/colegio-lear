@@ -133,24 +133,25 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                     </div>
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-3 block">
-                            Apellido materno:
+                            Apellido paterno: <span className="text-destructive">*</span>:
                         </label>
                         <Input
                             type="text"
-                            {...register('firstLastName')}
-                            placeholder="Apellido materno"
+                            {...register('firstLastName', { required: true })}
+                            placeholder="Apellido paterno"
                             className="pill-input w-full pl-8" />
                     </div>
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-3 block">
-                            Apellido paterno:
+                            Apellido materno:
                         </label>
                         <Input
                             type="text"
-                            {...register('firstLastName')}
-                            placeholder="Apellido paterno"
+                            {...register('secondLastName')}
+                            placeholder="Apellido materno"
                             className="pill-input w-full pl-8" />
                     </div>
+                    
 
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-3 block">

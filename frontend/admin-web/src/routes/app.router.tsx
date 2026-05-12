@@ -8,13 +8,13 @@ import schoolSubjectRouter from "@/modules/school-subjects/routes/school-subject
 import employeeRouter from "@/modules/employees/routes/employee.router";
 import scholarshipsRouter from "@/modules/scholarships/routes/scholarships.router";
 import securityRolesRouter from "@/modules/security-roles/routes/security-roles.router";
+import paymentConceptRouter from "@/modules/payment-concepts/routes/payment-concepts.router";
 
 export const appRouter = createBrowserRouter([
     /** Auth */
     authRouter,
     /** Dashboard */
     dashboardRouter,
-
 
     /** academic-levels */
     academicLevelsRouter,
@@ -23,6 +23,8 @@ export const appRouter = createBrowserRouter([
     /** scholarships */
     scholarshipsRouter,
 
+    /** payment-concepts */
+    paymentConceptRouter,
 
     /** employees */
     employeeRouter,

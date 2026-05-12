@@ -17,7 +17,7 @@ export const JobTitlePage = () => {
   const { isLoading, isError, data: jobTitle, mutation } = useJobTitle(id || '');
   const { showLoading, hideLoading } = useLoaderStore();
 
-  const handleSubmit = async (jobTitleLike: Partial<JobTitle>) => {
+  const handleSubmit = async (jobTitleLike: Partial<JobTitle>) => {    
     try {
       showLoading('Guardando registro');
       !jobTitleLike.id && (jobTitleLike.id = "new");

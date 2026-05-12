@@ -98,3 +98,6 @@ export const isValidPhone = (value?: string) => {
     const cleaned = value.replace(/\D/g, "")
     return cleaned.length >= 10 || "El número de teléfono no es válido"
 }
+
+export const formatMoney = (n: number): string =>
+  new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);

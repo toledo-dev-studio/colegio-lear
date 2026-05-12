@@ -9,15 +9,20 @@ export const useExportSchoolSubjects = () => {
 
     const [searchParams] = useSearchParams();
 
+    // Main query filters
     const query = searchParams.get('query')?.trim() || '';
+
+    // Advanced query filters
+    const name = searchParams.get('name')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
     const academicLevelId = searchParams.get('academic-level-id') || undefined;
     const educationLevelId = searchParams.get('education-level-id') || undefined;
 
     return useQuery({
-        queryKey: [GET_SCHOOL_SUBJECTS_QUERY_KEY, { query, status, academicLevelId, educationLevelId }],
+        queryKey: [GET_SCHOOL_SUBJECTS_QUERY_KEY, { query, name, status, academicLevelId, educationLevelId }],
         queryFn: () => getSchoolSubjectsActionAsync({
             query,
+            name,
             status,
             academicLevelId,
             educationLevelId

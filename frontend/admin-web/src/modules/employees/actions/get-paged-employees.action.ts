@@ -5,22 +5,24 @@ import type { PagedResponse } from "@/interfaces/responses/paged.response";
 
 interface Options {
     query?: string;
+    page?: number;
+    pageSize?: number;
+    name?: string;
     status?: boolean;
     roleId?: string;
     jobTitleId?: string;
-    page?: number;
-    pageSize?: number;
 }
 
 export const getPagedEmployeesActionAsync = async (options: Options): Promise<PagedResponse<Employee>> => {
 
     const { 
         query = '', 
-        status = true, 
-        roleId = undefined,
-        jobTitleId = undefined,
         page = 1, 
-        pageSize = 1 
+        pageSize = 1,
+        name,
+        status,
+        roleId,
+        jobTitleId,
     } = options;
 
     await sleep();
@@ -28,11 +30,12 @@ export const getPagedEmployeesActionAsync = async (options: Options): Promise<Pa
     const { data } = await api.get<PagedResponse<Employee>>('/employees/paged-employees.json', {
         params: {
             q: query,
+            page,
+            pageSize,
+            name,
             status,
             roleId,
             jobTitleId,
-            page,
-            pageSize,
         }
     });
 

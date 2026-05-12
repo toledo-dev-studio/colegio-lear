@@ -5,17 +5,19 @@ import { sleep } from "@/lib/utils";
 
 interface Options {
     query?: string;
+    name?: string;
     status?: boolean;
     academicLevelId?: string;
     educationLevelId?: string;
 }
 
-export const getSchoolSubjectsActionAsync = async ({ query = '', status = true, academicLevelId, educationLevelId }: Options): Promise<SchoolSubject[]> => {
+export const getSchoolSubjectsActionAsync = async ({ query = '', name, status, academicLevelId, educationLevelId }: Options): Promise<SchoolSubject[]> => {
     await sleep();
 
     const { data } = await api.get<SchoolSubject[]>('/school-subjects/school-subjects.json', {
         params: {
             q: query,
+            name,
             status,
             academicLevelId,
             educationLevelId

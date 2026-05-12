@@ -9,15 +9,20 @@ export const useExportEmployees = () => {
 
     const [searchParams] = useSearchParams();
 
+    // Main query filters
     const query = searchParams.get('query')?.trim() || '';
+
+    // Advanced query filters
+    const name = searchParams.get('name')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
     const roleId = searchParams.get('security-role-id') || undefined;
     const jobTitleId = searchParams.get('job-title-id') || undefined;
 
     return useQuery({
-        queryKey: [GET_EMPLOYEES_QUERY_KEY, { query, status, roleId, jobTitleId }],
+        queryKey: [GET_EMPLOYEES_QUERY_KEY, { query, name, status, roleId, jobTitleId }],
         queryFn: () => getEmployeesActionAsync({
             query,
+            name,
             status,
             roleId,
             jobTitleId
