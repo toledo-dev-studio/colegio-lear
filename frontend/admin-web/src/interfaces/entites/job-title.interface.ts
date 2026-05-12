@@ -1,7 +1,9 @@
+export type JobTitleTypes = 'teacher' | 'administrative-staff';
+
 export interface JobTitle {
     id: string;
     name: string;
     description: string;
-    jobTitleType: 'teacher' | 'administrative-staff';
+    jobTitleType: JobTitleTypes;
     status: boolean;
 }

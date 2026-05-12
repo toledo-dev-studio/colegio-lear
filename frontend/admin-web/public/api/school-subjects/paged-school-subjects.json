@@ -12,7 +12,7 @@
         "status": true,
         "educationLevels": []
       },
-      "educationLevelId": {
+      "educationLevel": {
         "id": "1-1",
         "name": "1er Grado"
       }
@@ -29,7 +29,7 @@
         "status": true,
         "educationLevels": []
       },
-      "educationLevelId": {
+      "educationLevel": {
         "id": "1-2",
         "name": "2do Grado"
       }
@@ -46,7 +46,7 @@
         "status": true,
         "educationLevels": []
       },
-      "educationLevelId": {
+      "educationLevel": {
         "id": "2-1",
         "name": "1er Año"
       }
@@ -63,7 +63,7 @@
         "status": true,
         "educationLevels": []
       },
-      "educationLevelId": {
+      "educationLevel": {
         "id": "3-1",
         "name": "4to Año"
       }
@@ -80,7 +80,7 @@
         "status": true,
         "educationLevels": []
       },
-      "educationLevelId": {
+      "educationLevel": {
         "id": "4-3",
         "name": "Profesional"
       }

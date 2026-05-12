@@ -92,7 +92,9 @@ export const JobTitleForm = ({ jobTitle, isSubmitting, onSubmit }: Props) => {
                                     onValueChange={field.onChange}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Selecciona un puesto de trabajo">
-                                            {field.value === "teacher" ? "Docente" : "Administrativo"}
+                                            {field.value === "teacher" && "Docente"}
+                                            {field.value === "administrative-staff" && "Administrativo"}
+                                            {!field.value && "Selecciona una opción"}
                                         </SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>

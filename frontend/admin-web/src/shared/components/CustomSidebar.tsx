@@ -21,21 +21,18 @@ const navbar: Navbar[] = [
   {
     title: "Seguimiento escolar",
     items: [
-      { to: "/academic-levels", label: "Niveles académicos", icon: Ruler, testid: "academic-levels" },
-      { to: "/school-subjects", label: "Materias escolares", icon: GraduationCap, testid: "school-subjects" },
-      { to: "/scholarships", label: "Becas escolares", icon: Telescope, testid: "scholarships" },
-
-
-
       { to: "/placeholder/estudiantes", label: "Estudiantes", icon: Users, testid: "nav-estudiantes" },
       { to: "/placeholder/ciclos", label: "Ciclos escolares", icon: CalendarDays, testid: "nav-ciclos" },
+      { to: "/placeholder/campanas", label: "Campañas", icon: Megaphone, testid: "nav-campanas" },
     ],
   },
   {
     title: "Configuración escolar",
     items: [
-      { to: "/placeholder/conceptos", label: "Conceptos de pago", icon: Wallet, testid: "nav-conceptos" },
-      { to: "/placeholder/campanas", label: "Campañas", icon: Megaphone, testid: "nav-campanas" },
+      { to: "/academic-levels", label: "Niveles académicos", icon: Ruler, testid: "academic-levels" },
+      { to: "/school-subjects", label: "Materias escolares", icon: GraduationCap, testid: "school-subjects" },
+      { to: "/scholarships", label: "Becas escolares", icon: Telescope, testid: "scholarships" },
+      { to: "/payment-concepts", label: "Conceptos de pago", icon: Wallet, testid: "payment-concepts" },
     ],
   },
   {
@@ -44,7 +41,6 @@ const navbar: Navbar[] = [
       { to: "/employees", label: "Empleados", icon: UserCog, testid: "employees" },
       { to: "/job-titles", label: "Puestos de trabajo", icon: Briefcase, testid: "job-titles" },
       { to: "/security-roles", label: "Roles de seguridad", icon: ShieldCheck, testid: "security-roles" },
-
 
 
       { to: "/placeholder/configuracion", label: "Configuración", icon: Settings, testid: "nav-configuracion" },

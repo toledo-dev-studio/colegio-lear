@@ -23,7 +23,6 @@ export const EmployeesTable = ({ data = [], isLoading, handleClickEditRow, handl
                         <tr>
                             <th className="column">Nombre completo</th>
                             <th className="column">Correo electrónico</th>
-                            <th className="column">Usuario del sitema</th>
                             <th className="column">Puesto de trabajo</th>
                             <th className="column">Rol asignado</th>
                             <th className="column">Estado</th>
@@ -35,7 +34,7 @@ export const EmployeesTable = ({ data = [], isLoading, handleClickEditRow, handl
                         {
                             isLoading && (
                                 <tr>
-                                    <td colSpan={7} className="no-content-row">
+                                    <td colSpan={6} className="no-content-row">
                                         Cargando información, por favor espere...
                                     </td>
                                 </tr>
@@ -46,13 +45,12 @@ export const EmployeesTable = ({ data = [], isLoading, handleClickEditRow, handl
                         {
                             (!data.length && !isLoading) && (
                                 <tr>
-                                    <td colSpan={7} className="no-content-row">
+                                    <td colSpan={6} className="no-content-row">
                                         No se encontraron registros.
                                     </td>
                                 </tr>
                             )
                         }
-
 
                         {/* Content */}
                         {
@@ -64,14 +62,14 @@ export const EmployeesTable = ({ data = [], isLoading, handleClickEditRow, handl
                                             <span className="text-primary">
                                                 {`${item.name} ${item.firstLastName} ${item.secondLastName}`}
                                             </span>
+                                            <div className="text-xs text-muted-foreground truncate max-w-xs">{item.username}</div>
                                         </Link>
                                     </td>
                                     <td className="row">{item.email}</td>
-                                    <td className="row">{item.username}</td>
                                     <td className="row">{item.jobTitle?.name}</td>
                                     <td className="row">{item.securityRole?.name}</td>
                                     <td className="row">
-                                        <Badge variant={item.status ? "default" : "destructive"} className="py-4 px-6">
+                                        <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
                                             {
                                                 item.status ? 'Activo' : 'Inactivo'
                                             }
