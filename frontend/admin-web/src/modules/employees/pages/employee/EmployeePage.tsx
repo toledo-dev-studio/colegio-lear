@@ -68,7 +68,6 @@ export const EmployeePage = () => {
           </div>
         </div>
       </div>
-
     </>
   )
 }

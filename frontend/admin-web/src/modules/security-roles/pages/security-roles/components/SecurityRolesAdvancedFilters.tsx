@@ -36,6 +36,7 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
         return null;
 
     const handleClickClearFilters = () => {
+        searchParams.delete('query');
         searchParams.delete('name');
         searchParams.delete('status');
         reset({ name: '', status: true });

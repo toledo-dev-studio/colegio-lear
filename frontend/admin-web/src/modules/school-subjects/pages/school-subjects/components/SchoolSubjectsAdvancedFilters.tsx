@@ -64,6 +64,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
         return null;
 
     const handleClickClearFilters = () => {
+        searchParams.delete('query');
         searchParams.delete('name');
         searchParams.delete('status');
         searchParams.delete('academic-level-id');

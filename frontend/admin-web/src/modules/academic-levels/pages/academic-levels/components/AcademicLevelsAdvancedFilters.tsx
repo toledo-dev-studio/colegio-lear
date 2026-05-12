@@ -38,6 +38,7 @@ export const AcademicLevelsAdvancedFilters = (props: Props) => {
         return null;
 
     const handleClickClearFilters = () => {
+        searchParams.delete('query');
         searchParams.delete('name');
         searchParams.delete('status');
         reset({ name: '', status: true });
@@ -46,6 +47,7 @@ export const AcademicLevelsAdvancedFilters = (props: Props) => {
     }
 
     const handleSubmitForm = (filter: Partial<AcademicLevel>) => {
+        searchParams.delete('query');
         searchParams.set('status', `${filter.status}`);
         filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
         setSearchParams(searchParams);
