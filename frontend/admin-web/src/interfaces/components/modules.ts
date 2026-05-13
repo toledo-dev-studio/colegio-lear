@@ -72,7 +72,7 @@ export const ACADEMIC_YEARS_MODULE: Module = {
 
 export const ANNOUNCEMENTS_MODULE: Module = {
     key: 'announcements',
-    label: 'Comunicados & Campañas',
+    label: 'Comunicados & campañas',
     permissions: {
         canRead: true,
         canWrite: true,
@@ -157,6 +157,7 @@ export const SETTINGS_MODULE: Module = {
         canWrite: true,
     }
 };
+
 export const AVAILABLE_MODULES: Module[] = [
     // Accesos rápidos
     DASHBOARD_MODULE,
@@ -177,6 +178,5 @@ export const AVAILABLE_MODULES: Module[] = [
     // Seguridad
     EMPLOYEES_MODULE,
     JOB_TITLES_MODULE,
-    SECURITY_ROLES_MODULE,
-    SETTINGS_MODULE,
+    SECURITY_ROLES_MODULE
 ];

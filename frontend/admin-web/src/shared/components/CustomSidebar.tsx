@@ -1,10 +1,10 @@
 import { Link, useLocation } from "react-router";
-import { LayoutDashboard, Fingerprint, BookOpen, Users, CalendarDays, GraduationCap, Ruler, Telescope, Wallet, Megaphone, ShieldCheck, UserCog, Settings, LogOut, Briefcase } from "lucide-react";
+import { LayoutDashboard, Fingerprint, BookOpen, Users, CalendarDays, GraduationCap, Ruler, Telescope, Wallet, Megaphone, ShieldCheck, UserCog, LogOut, Briefcase } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { CustomLogo } from "./CustomLogo";
 import type { Navbar } from "@/interfaces/components/navbar";
-import { ACADEMIC_LEVELS_MODULE, ACADEMIC_YEARS_MODULE, ANNOUNCEMENTS_MODULE, DASHBOARD_MODULE, EMPLOYEES_MODULE, JOB_TITLES_MODULE, MY_ACCOUNT_MODULE, MY_CLASSES_MODULE, PAYMENT_CONCEPTS_MODULE, SCHOLARSHIPS_MODULE, SCHOOL_SUBJECTS_MODULE, SECURITY_ROLES_MODULE, SETTINGS_MODULE, STUDENTS_MODULE } from "@/interfaces/components/modules";
+import { ACADEMIC_LEVELS_MODULE, ACADEMIC_YEARS_MODULE, ANNOUNCEMENTS_MODULE, DASHBOARD_MODULE, EMPLOYEES_MODULE, JOB_TITLES_MODULE, MY_ACCOUNT_MODULE, MY_CLASSES_MODULE, PAYMENT_CONCEPTS_MODULE, SCHOLARSHIPS_MODULE, SCHOOL_SUBJECTS_MODULE, SECURITY_ROLES_MODULE, STUDENTS_MODULE } from "@/interfaces/components/modules";
 
 const navbar: Navbar[] = [
   {
@@ -38,7 +38,6 @@ const navbar: Navbar[] = [
       { module: EMPLOYEES_MODULE, icon: UserCog, testId: "nav-employees" },
       { module: JOB_TITLES_MODULE, icon: Briefcase, testId: "nav-job-titles" },
       { module: SECURITY_ROLES_MODULE, icon: ShieldCheck, testId: "nav-security-roles" },
-      { module: SETTINGS_MODULE, icon: Settings, testId: "nav-settings" },
     ],
   },
 ];
