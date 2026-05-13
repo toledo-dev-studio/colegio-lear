@@ -1,11 +1,12 @@
+import type { Module } from "./modules";
+
 export interface Navbar {
     title: string;
     items: NavbarItem[];
 }
 
 export interface NavbarItem {
-    to: string;
-    label: string;
+    module: Module;
     icon: React.ComponentType<{ className?: string }>;
-    testid: string;
+    testId: string;
 }

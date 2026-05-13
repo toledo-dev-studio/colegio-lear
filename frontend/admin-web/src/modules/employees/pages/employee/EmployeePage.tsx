@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import { useEmployee } from "../../hooks/useEmployee";
 import { EmployeeForm } from "./components/EmployeeForm";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import type { Employee } from "@/interfaces/entites/employee";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
+import type { EmployeeFormData } from "../../interfaces/employee-form";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 
 export const EmployeePage = () => {
@@ -16,7 +16,7 @@ export const EmployeePage = () => {
   const { isLoading, isError, data: employee, mutation } = useEmployee(id || '');
   const { showLoading, hideLoading } = useLoaderStore();
 
-  const handleSubmit = async (employeeLike: Partial<Employee>) => {
+  const handleSubmit = async (employeeLike: Partial<EmployeeFormData>) => {
     try {
       showLoading('Guardando registro');
       !employeeLike.id && (employeeLike.id = "new");

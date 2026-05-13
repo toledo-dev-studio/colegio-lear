@@ -9,12 +9,15 @@ import employeeRouter from "@/modules/employees/routes/employee.router";
 import scholarshipsRouter from "@/modules/scholarships/routes/scholarships.router";
 import securityRolesRouter from "@/modules/security-roles/routes/security-roles.router";
 import paymentConceptRouter from "@/modules/payment-concepts/routes/payment-concepts.router";
+import myAccountRouter from "@/modules/my-account/routes/my-account.router";
 
 export const appRouter = createBrowserRouter([
-    /** Auth */
+    /** auth */
     authRouter,
-    /** Dashboard */
+    /** dashboard */
     dashboardRouter,
+    /** my-account */
+    myAccountRouter,
 
     /** academic-levels */
     academicLevelsRouter,

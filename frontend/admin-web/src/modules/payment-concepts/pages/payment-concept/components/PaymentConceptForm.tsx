@@ -91,7 +91,7 @@ export const PaymentConceptForm = ({ paymentConcept, isSubmitting, onSubmit }: P
 
                 <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-7">
                     <h2 className="w-full text-muted-foreground">
-                        INFORMACIÓN DEL EMPLEADO EN LA ORGANIZACIÓN
+                        DETALLES DE PAGO DEL CONCEPTO DE PAGO
                     </h2>
                 </div>
 
@@ -106,16 +106,16 @@ export const PaymentConceptForm = ({ paymentConcept, isSubmitting, onSubmit }: P
                                 type="number"
                                 className="pill-input w-full pl-8 pr-13"
                                 step={1}
-                                min={0}
+                                min={1}
                                 inputMode="numeric"
-                                placeholder="0"
+                                placeholder="Monto de pago..."
                                 onKeyDown={(e) => { if (["e", "E", "+", "-", ".", ","].includes(e.key)) e.preventDefault(); }}
                                 {...register("amount", {
                                     required: true,
                                     valueAsNumber: true,
                                     validate: {
                                         integer: (v) => Number.isInteger(v) || "No se permiten decimales",
-                                        nonNegative: (v) => v! >= 0 || "El monto de pago no puede ser negativo",
+                                        nonNegative: (v) => v! >= 1 || "El monto de pago no puede ser menor o igual a 0",
                                     },
                                 })}
                             />

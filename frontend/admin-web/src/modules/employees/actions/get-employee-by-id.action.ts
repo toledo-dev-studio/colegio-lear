@@ -16,6 +16,7 @@ export const getEmployeeByIdActionAsync = async (id: string): Promise<Employee> 
             phoneNumber: "",
             email: "",
             username: "",
+            avatarUrl: "",
             status: true,
             securityRoleId: "",
             jobTitleId: "",

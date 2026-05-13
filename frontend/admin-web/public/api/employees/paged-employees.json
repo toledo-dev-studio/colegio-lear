@@ -11,6 +11,7 @@
             "phoneNumber": "4771234567",
             "email": "juan.perez@example.com",
             "username": "jperez",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": true,
             "securityRoleId": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
             "securityRole": {
@@ -34,6 +35,7 @@
             "phoneNumber": "4772345678",
             "email": "maria.lopez@example.com",
             "username": "mlopez",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": true,
             "securityRoleId": "r2",
             "securityRole": {
@@ -57,6 +59,7 @@
             "phoneNumber": "4773456789",
             "email": "carlos.ramirez@example.com",
             "username": "cramirez",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": true,
             "securityRoleId": "r3",
             "securityRole": {
@@ -80,6 +83,7 @@
             "phoneNumber": "4774567890",
             "email": "ana.martinez@example.com",
             "username": "amartinez",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": false,
             "securityRoleId": "r3",
             "securityRole": {
@@ -103,6 +107,7 @@
             "phoneNumber": "4775678901",
             "email": "luis.gomez@example.com",
             "username": "lgomez",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": true,
             "securityRoleId": "r2",
             "securityRole": {
@@ -126,6 +131,7 @@
             "phoneNumber": "4776789012",
             "email": "sofia.fernandez@example.com",
             "username": "sfernandez",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": true,
             "securityRoleId": "r3",
             "securityRole": {
@@ -149,6 +155,7 @@
             "phoneNumber": "4777890123",
             "email": "diego.vargas@example.com",
             "username": "dvargas",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": true,
             "securityRoleId": "r1",
             "securityRole": {
@@ -172,6 +179,7 @@
             "phoneNumber": "4778901234",
             "email": "lucia.castro@example.com",
             "username": "lcastro",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": false,
             "securityRoleId": "r2",
             "securityRole": {
@@ -195,6 +203,7 @@
             "phoneNumber": "4779012345",
             "email": "miguel.navarro@example.com",
             "username": "mnavarro",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": true,
             "securityRoleId": "r3",
             "securityRole": {
@@ -218,6 +227,7 @@
             "phoneNumber": "4770123456",
             "email": "elena.rojas@example.com",
             "username": "erojas",
+            "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
             "status": true,
             "securityRoleId": "r1",
             "securityRole": {
