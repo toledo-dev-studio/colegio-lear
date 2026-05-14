@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
+import { AnnouncementPage } from "../pages/announcement/AnnouncementPage";
 import { AnnouncementsPage } from "../pages/announcements/AnnouncementsPage";
 
 const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
@@ -16,6 +17,10 @@ export const announcementsRouter: RouteObject = {
         {
             path: '',
             element: <AnnouncementsPage />
+        },
+        {
+            path: ':id',
+            element: <AnnouncementPage />
         },
         {
             path: '*',
