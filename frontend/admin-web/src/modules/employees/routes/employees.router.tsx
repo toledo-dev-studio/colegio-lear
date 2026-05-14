@@ -7,7 +7,7 @@ import { EmployeesPage } from "../pages/employees/EmployeesPage";
 const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
 const EmployeesLayout = lazy(() => import('@/modules/employees/layout/EmployeesLayout'));
 
-export const employeeRouter: RouteObject = {
+export const employeesRouter: RouteObject = {
     path: '/employees',
     element:
         <SystemLayout>
@@ -29,4 +29,4 @@ export const employeeRouter: RouteObject = {
     ]
 };
 
-export default employeeRouter;
+export default employeesRouter;

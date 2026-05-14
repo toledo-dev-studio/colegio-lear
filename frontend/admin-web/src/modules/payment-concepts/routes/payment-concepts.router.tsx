@@ -6,7 +6,7 @@ import { PaymentConceptPage } from "../pages/payment-concept/PaymentConceptPage"
 const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
 const PaymentConceptsLayout = lazy(() => import('@/modules/payment-concepts/layout/PaymentConceptsLayout'));
 
-export const paymentConceptRouter: RouteObject = {
+export const paymentConceptsRouter: RouteObject = {
     path: '/payment-concepts',
     element:
         <SystemLayout>
@@ -28,4 +28,4 @@ export const paymentConceptRouter: RouteObject = {
     ]
 }
 
-export default paymentConceptRouter;
+export default paymentConceptsRouter;

@@ -77,7 +77,7 @@ export const CustomTableListRibbon = (props: Props) => {
                         <Input
                             ref={inputSearchRef}
                             onKeyDown={handleKeyDown}
-                            placeholder="Búsqueda..."
+                            placeholder="Búsqueda general..."
                             className="pill-input w-full pl-12"
                             defaultValue={query}
                         />
