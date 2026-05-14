@@ -2,17 +2,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner"
 
+import { downloadDataToCsvFile } from "@/lib/utils";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { CustomPagination } from "@/shared/components/CustomPagination";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { downloadDataToCsvFile } from "@/lib/utils";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { usePagedPaymentConcepts } from "../../hooks/usePagedPaymentConcepts";
 import { useExportPaymentConcepts } from "../../hooks/useExportPaymentConcepts";
 import { PaymentConceptsTable } from "./components/PaymentConceptsTable";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 import { useDeletePaymentConcept } from "../../hooks/useDeletePaymentConcept";
+import { PaymentConceptsAdvancedFilters } from "./components/PaymentConceptsAdvancedFilters";
 
 export const PaymentConceptsPage = () => {
 
@@ -144,15 +145,15 @@ export const PaymentConceptsPage = () => {
           }
 
           {/* Advanced filters panel */}
-          {/* {
+          {
             isOpenAdvancedFiltersPanel && (
-              <JobTitlesAdvancedFilters
+              <PaymentConceptsAdvancedFilters
                 open={isOpenAdvancedFiltersPanel}
                 title="Filtros avanzados"
                 handleClickClose={handleClickCloseAdvancedFiltersPanel}
               />
             )
-          } */}
+          }
 
         </div>
       </div>

@@ -4,17 +4,21 @@ import authRouter from "@/modules/auth/routes/auth.router";
 import academicLevelsRouter from "@/modules/academic-levels/routes/academic-levels.router";
 import dashboardRouter from "@/modules/dashboard/routes/dashboard.router";
 import jobTitlesRouter from "@/modules/job-titles/routes/job-titles.router";
-import schoolSubjectRouter from "@/modules/school-subjects/routes/school-subject.router";
-import employeeRouter from "@/modules/employees/routes/employee.router";
+import schoolSubjectRouter from "@/modules/school-subjects/routes/school-subjects.router";
+import employeesRouter from "@/modules/employees/routes/employees.router";
 import scholarshipsRouter from "@/modules/scholarships/routes/scholarships.router";
 import securityRolesRouter from "@/modules/security-roles/routes/security-roles.router";
-import paymentConceptRouter from "@/modules/payment-concepts/routes/payment-concepts.router";
+import paymentConceptsRouter from "@/modules/payment-concepts/routes/payment-concepts.router";
+import myAccountRouter from "@/modules/my-account/routes/my-account.router";
+import announcementsRouter from "@/modules/announcements/routes/announcements.router";
 
 export const appRouter = createBrowserRouter([
-    /** Auth */
+    /** auth */
     authRouter,
-    /** Dashboard */
+    /** dashboard */
     dashboardRouter,
+    /** my-account */
+    myAccountRouter,
 
     /** academic-levels */
     academicLevelsRouter,
@@ -24,10 +28,11 @@ export const appRouter = createBrowserRouter([
     scholarshipsRouter,
 
     /** payment-concepts */
-    paymentConceptRouter,
+    paymentConceptsRouter,
+    announcementsRouter,
 
     /** employees */
-    employeeRouter,
+    employeesRouter,
     /** job-titles */
     jobTitlesRouter,
     /** security-roles */

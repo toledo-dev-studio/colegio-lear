@@ -1,49 +1,43 @@
-import type { Navbar } from "@/interfaces/components/navbar";
-import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard, Fingerprint, BookOpen, Users, CalendarDays, GraduationCap,
-  Ruler, Telescope, Wallet, Megaphone, ShieldCheck, UserCog, Settings, LogOut, Briefcase
-} from "lucide-react";
 import { Link, useLocation } from "react-router";
+import { LayoutDashboard, Fingerprint, BookOpen, Users, CalendarDays, GraduationCap, Ruler, Telescope, Wallet, Megaphone, ShieldCheck, UserCog, LogOut, Briefcase } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import { CustomLogo } from "./CustomLogo";
+import type { Navbar } from "@/interfaces/components/navbar";
+import { ACADEMIC_LEVELS_MODULE, ACADEMIC_YEARS_MODULE, ANNOUNCEMENTS_MODULE, DASHBOARD_MODULE, EMPLOYEES_MODULE, JOB_TITLES_MODULE, MY_ACCOUNT_MODULE, MY_CLASSES_MODULE, PAYMENT_CONCEPTS_MODULE, SCHOLARSHIPS_MODULE, SCHOOL_SUBJECTS_MODULE, SECURITY_ROLES_MODULE, STUDENTS_MODULE } from "@/interfaces/components/modules";
 
 const navbar: Navbar[] = [
   {
     title: "Accesos rápidos",
     items: [
-      { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, testid: "dashboard" },
-
-      
-      { to: "/mi-cuenta", label: "Mi cuenta", icon: Fingerprint, testid: "nav-mi-cuenta" },
-      { to: "/placeholder/mis-clases", label: "Mis clases", icon: BookOpen, testid: "nav-mis-clases" },
+      { module: DASHBOARD_MODULE, icon: LayoutDashboard, testId: "nav-dashboard" },
+      { module: MY_ACCOUNT_MODULE, icon: Fingerprint, testId: "nav-my-account" },
+      { module: MY_CLASSES_MODULE, icon: BookOpen, testId: "nav-my-classes" },
     ],
   },
   {
     title: "Seguimiento escolar",
     items: [
-      { to: "/placeholder/estudiantes", label: "Estudiantes", icon: Users, testid: "nav-estudiantes" },
-      { to: "/placeholder/ciclos", label: "Ciclos escolares", icon: CalendarDays, testid: "nav-ciclos" },
-      { to: "/placeholder/campanas", label: "Campañas", icon: Megaphone, testid: "nav-campanas" },
+      { module: STUDENTS_MODULE, icon: Users, testId: "nav-students" },
+      { module: ACADEMIC_YEARS_MODULE, icon: CalendarDays, testId: "nav-academic-years" },
+      { module: ANNOUNCEMENTS_MODULE, icon: Megaphone, testId: "nav-announcements" },
     ],
   },
   {
     title: "Configuración escolar",
     items: [
-      { to: "/academic-levels", label: "Niveles académicos", icon: Ruler, testid: "academic-levels" },
-      { to: "/school-subjects", label: "Materias escolares", icon: GraduationCap, testid: "school-subjects" },
-      { to: "/scholarships", label: "Becas escolares", icon: Telescope, testid: "scholarships" },
-      { to: "/payment-concepts", label: "Conceptos de pago", icon: Wallet, testid: "payment-concepts" },
+      { module: ACADEMIC_LEVELS_MODULE, icon: Ruler, testId: "nav-academic-levels" },
+      { module: SCHOOL_SUBJECTS_MODULE, icon: GraduationCap, testId: "nav-school-subjects" },
+      { module: SCHOLARSHIPS_MODULE, icon: Telescope, testId: "nav-scholarships" },
+      { module: PAYMENT_CONCEPTS_MODULE, icon: Wallet, testId: "nav-payment-concepts" },
     ],
   },
   {
     title: "Seguridad",
     items: [
-      { to: "/employees", label: "Empleados", icon: UserCog, testid: "employees" },
-      { to: "/job-titles", label: "Puestos de trabajo", icon: Briefcase, testid: "job-titles" },
-      { to: "/security-roles", label: "Roles de seguridad", icon: ShieldCheck, testid: "security-roles" },
-
-
-      { to: "/placeholder/configuracion", label: "Configuración", icon: Settings, testid: "nav-configuracion" },
+      { module: EMPLOYEES_MODULE, icon: UserCog, testId: "nav-employees" },
+      { module: JOB_TITLES_MODULE, icon: Briefcase, testId: "nav-job-titles" },
+      { module: SECURITY_ROLES_MODULE, icon: ShieldCheck, testId: "nav-security-roles" },
     ],
   },
 ];
@@ -59,7 +53,7 @@ export const CustomSidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) =
   const { pathname } = useLocation();
 
   const isActiveRoute = (to?: string) => {
-    if(pathname.includes(to || "")) return true;
+    if (pathname.includes(to || "")) return true;
     return pathname === to;
   }
 
@@ -87,18 +81,18 @@ export const CustomSidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) =
                     nav.items.map((item) => {
                       const Icon = item.icon;
                       return (
-                        <li key={item.to}>
+                        <li key={item.module.key}>
                           <Link
-                            to={item.to}
-                            data-testid={item.testid}
-                            // onClick={onClose}
+                            to={`/${item.module.key}`}
+                            data-testid={item.testId}
+                            onClick={isOpenSidebar ? toggleSidebar : ()=>{}}
                             className={
                               cn("flex items-center gap-3 px-5 py-4 rounded-md text-sm font-medium transition-all",
-                                isActiveRoute(item.to) ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted")
+                                isActiveRoute(item.module.key) ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted")
                             }
                           >
                             <Icon className="w-[18px] h-[18px]" />
-                            <span>{item.label}</span>
+                            <span>{item.module.label}</span>
                           </Link>
                         </li>
                       );

@@ -39,6 +39,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         return null;
 
     const handleClickClearFilters = () => {
+        searchParams.delete('query');
         searchParams.delete('name');
         searchParams.delete('status');
         searchParams.delete('job-title-type');
@@ -48,6 +49,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     }
 
     const handleSubmitForm = (filter: Partial<JobTitle>) => {
+        searchParams.delete('query');
         searchParams.set('status', `${filter.status}`);
         filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
         filter.jobTitleType ? searchParams.set('job-title-type', filter.jobTitleType) : searchParams.delete('job-title-type');

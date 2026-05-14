@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getEmployeeByIdActionAsync } from "../actions/get-employee-by-id.action";
-import { CreateUpdateEmployeeActionAsync } from "../actions/create-update-employee.action";
+import { createUpdateEmployeeActionAsync } from "../actions/create-update-employee.action";
 import { GET_EMPLOYEE_QUERY_KEY, GET_EMPLOYEES_QUERY_KEY, GET_PAGED_EMPLOYEES_QUERY_KEY } from "../lib/queries-key";
 
 export const useEmployee = (id: string) => {
@@ -16,7 +16,7 @@ export const useEmployee = (id: string) => {
     });
 
     const mutation = useMutation({
-        mutationFn: CreateUpdateEmployeeActionAsync,
+        mutationFn: createUpdateEmployeeActionAsync,
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: [GET_EMPLOYEES_QUERY_KEY] });
             queryClient.invalidateQueries({ queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY] });

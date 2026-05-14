@@ -92,12 +92,60 @@ export const downloadDataToCsvFile = (fieldName: string, headers: { label: strin
     URL.revokeObjectURL(url);
 }
 
+/**
+ * Validates that a phone number contains at least 10 digits.
+ * - Removes all non-numeric characters before validation.
+ * - Returns true if valid, otherwise returns an error message string.
+ */
 export const isValidPhone = (value?: string) => {
     if (!value)
-        return "El número de teléfono no es válido"
-    const cleaned = value.replace(/\D/g, "")
-    return cleaned.length >= 10 || "El número de teléfono no es válido"
-}
+        return "El número de teléfono no es válido";
 
+    const cleaned = value.replace(/\D/g, "");
+
+    return cleaned.length >= 10 || "El número de teléfono no es válido";
+};
+
+/**
+ * Formats a number into Mexican Peso currency (MXN).
+ * - Uses "es-MX" locale formatting.
+ * - No decimal places (rounded to integers).
+ */
 export const formatMoney = (n: number): string =>
-  new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n);
+    new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: "MXN",
+        maximumFractionDigits: 0
+    }).format(n);
+
+/**
+ * Formats an ISO date string into a human-readable date format (Spanish locale).
+ * Example output: "12 March 2026"
+ */
+export const formatFriendlyDate = (dateString: string): string => {
+    const date = new Date(dateString);
+
+    return new Intl.DateTimeFormat("es-MX", {
+        year: "numeric",
+        month: "long",
+        day: "2-digit"
+    }).format(date);
+};
+
+/**
+ * Formats an ISO date string into a human-readable date and time format.
+ * Includes weekday, short month, date, hour, and minutes.
+ * Example output: "Mon, 12 Mar 2026, 14:30"
+ */
+export const formatFriendlyDateTime = (dateString: string): string => {
+    const date = new Date(dateString);
+
+    return new Intl.DateTimeFormat("es-MX", {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    }).format(date);
+};

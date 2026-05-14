@@ -37,6 +37,7 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
         return null;
 
     const handleClickClearFilters = () => {
+        searchParams.delete('query');
         searchParams.delete('name');
         searchParams.delete('status');
         searchParams.delete('discount-percentage');
@@ -46,6 +47,7 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
     }
 
     const handleSubmitForm = (filter: Partial<Scholarship>) => {
+        searchParams.delete('query');
         searchParams.set('status', `${filter.status}`);
         searchParams.set('discount-percentage', `${filter.discountPercentage}`);
         filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');

@@ -76,6 +76,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         return null;
 
     const handleClickClearFilters = () => {
+        searchParams.delete('query');
         searchParams.delete('name');
         searchParams.delete('status');
         searchParams.delete('security-role-id');
@@ -96,6 +97,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     }
 
     const handleSubmitForm = (filter: Partial<Employee>) => {
+        searchParams.delete('query');
         searchParams.set('status', `${filter.status}`);
         filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
         filter.securityRoleId ? searchParams.set('security-role-id', filter.securityRoleId) : searchParams.delete('security-role-id');
