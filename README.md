@@ -49,9 +49,9 @@ The previous commands will create a ```CLI``` with ```node``` installed, with th
 ```bash
 # Admin web utility container
 docker compose run -p 80:80 --rm colegio-lear-admin-web-cli
-> npm create vite@latest
-> npm install
-> npm run dev
+> pnpm create vite@latest
+> pnpm install
+> pnpm run dev
 > ...
 ```
 > [!IMPORTANT]
