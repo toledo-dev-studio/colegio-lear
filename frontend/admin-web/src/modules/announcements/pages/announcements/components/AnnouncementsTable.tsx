@@ -23,8 +23,9 @@ export const AnnouncementsTable = ({ data = [], isLoading, handleClickEditRow, h
                         {/* Columns */}
                         <tr>
                             <th className="column">Nombre & descripción</th>
-                            <th className="column">Fecha de públicación</th>
-                            <th className="column">Fecha de expiración</th>
+                            <th className="column">Público objetivo</th>
+                            <th className="column text-nowrap">Fecha de públicación</th>
+                            <th className="column text-nowrap">Fecha de expiración</th>
                             <th className="column">Estado</th>
                             <th className="column">Acciones</th>
                         </tr>
@@ -34,7 +35,7 @@ export const AnnouncementsTable = ({ data = [], isLoading, handleClickEditRow, h
                         {
                             isLoading && (
                                 <tr>
-                                    <td colSpan={5} className="no-content-row">
+                                    <td colSpan={6} className="no-content-row">
                                         Cargando información, por favor espere...
                                     </td>
                                 </tr>
@@ -45,7 +46,7 @@ export const AnnouncementsTable = ({ data = [], isLoading, handleClickEditRow, h
                         {
                             (!data.length && !isLoading) && (
                                 <tr>
-                                    <td colSpan={5} className="no-content-row">
+                                    <td colSpan={6} className="no-content-row">
                                         No se encontraron registros.
                                     </td>
                                 </tr>
@@ -66,10 +67,28 @@ export const AnnouncementsTable = ({ data = [], isLoading, handleClickEditRow, h
                                             <div className="text-xs text-muted-foreground truncate max-w-xs">{item.description}</div>
                                         </Link>
                                     </td>
-                                    <td className="row">
+                                    <td className="row !min-w-fit">
+                                        {
+                                            !item.audience?.length
+                                                ? (<span>-</span>)
+                                                :
+                                                (
+                                                    <div className="flex items-center gap-x-4">
+                                                        {
+                                                            item.audience?.length && item.audience.map((audience) => (
+                                                                <span className="text-nowrap min-w-fit rounded-full bg-gray-400/20 px-4 py-2 text-xs font-medium text-gray-500 inset-ring inset-ring-gray-400/40 dark:text-gray-300">
+                                                                    {audience.label}
+                                                                </span>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                )
+                                        }
+                                    </td>
+                                    <td className="row text-nowrap">
                                         {formatFriendlyDate(item.publishedAt)}
                                     </td>
-                                    <td className="row">
+                                    <td className="row text-nowrap">
                                         {formatFriendlyDate(item.expiresAt)}
                                     </td>
                                     <td className="row">
