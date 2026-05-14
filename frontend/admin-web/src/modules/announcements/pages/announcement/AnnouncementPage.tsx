@@ -12,7 +12,7 @@ export const AnnouncementPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const title = id === "new" ? 'Registro de concepto de pago' : 'Edición de concepto de pago';
+  const title = id === "new" ? 'Registro de campaña' : 'Edición de campaña';
   const { isLoading, isError, data: announcement, mutation } = useAnnouncement(id || '');
   const { showLoading, hideLoading } = useLoaderStore();
 
@@ -57,7 +57,7 @@ export const AnnouncementPage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
         <CustomPageTitle
           title={title}
-          subtitle="Gestiona la información de los conceptos de pago que estará disponible en el colegio" />
+          subtitle="Gestiona las campañas & comunicados disponibles en el colegio y la organización" />
 
         <div className="flex-1">
           <div className="flex flex-col min-h-full gap-8 mt-14">
