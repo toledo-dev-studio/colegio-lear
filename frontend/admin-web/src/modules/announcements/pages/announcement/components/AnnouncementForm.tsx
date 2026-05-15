@@ -11,6 +11,8 @@ import { AUDIENCE, type Announcement } from '@/interfaces/entites/announcement';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { Textarea } from '@/shared/ui/textarea';
 import { CustomMultiSelect } from '@/shared/components/CustomMultiSelect';
+import { CustomDatePicker } from '@/shared/components/CustomDatePicker';
+import { CustomTipTapEditor } from '@/shared/components/custom-text-editor/CustomTipTapEditor';
 
 interface Props {
     announcement?: Announcement,
@@ -98,14 +100,17 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="w-full">
                             <label className="text-sm font-medium text-foreground mb-2 block">Fecha de publicación <span className="text-destructive">*</span>:</label>
-                            <div className="relative">
-                                <Input
-                                    type="date"
-                                    {...register('publishedAt', { required: true })}
-                                    placeholder="Fecha de publicación..."
-                                    className="pill-input w-full pl-8"
-                                />
-                            </div>
+                            <Controller
+                                name="publishedAt"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <CustomDatePicker
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
                             <p className="text-xs text-muted-foreground mt-1.5">A partir de que fecha la campaña estará disponible</p>
                             {
                                 errors.publishedAt && (
@@ -117,14 +122,17 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                         </div>
                         <div className="w-full">
                             <label className="text-sm font-medium text-foreground mb-2 block">Fecha de vencimiento <span className="text-destructive">*</span>:</label>
-                            <div className="relative">
-                                <Input
-                                    type="date"
-                                    {...register('expiresAt', { required: true })}
-                                    placeholder="Fecha de vencimiento..."
-                                    className="pill-input w-full pl-8"
-                                />
-                            </div>
+                            <Controller
+                                name="expiresAt"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <CustomDatePicker
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
                             <p className="text-xs text-muted-foreground mt-1.5">Hasta que fecha la campaña estará disponible</p>
                             {
                                 errors.expiresAt && (
@@ -151,8 +159,30 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 gap-8">
 
+                    <div className="w-full">
+
+                        <Controller
+                            name="content"
+                            control={control}
+                            rules={{
+                                validate: (v) => {
+                                    const text = (v || "").replace(/<[^>]+>/g, "").trim();
+                                    return text.length > 0 || "El contenido de la campaña no puede estar vacío";
+                                },
+                            }}
+                            render={({ field }) => <CustomTipTapEditor value={field.value ?? ''} onChange={field.onChange} />}
+                        />
+                        {
+                            errors.content && (
+                                <p className="text-red-500 text-sm mt-2">
+                                    {errors.content.message as string}
+                                </p>
+                            )
+                        }
+
+                    </div>
                 </div>
 
 

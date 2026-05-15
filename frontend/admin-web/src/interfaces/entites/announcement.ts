@@ -6,6 +6,7 @@ export interface Announcement {
     description: string;
     audience: AudienceType[]; 
     content: string;
+    // attachements: { url: string, name: string, type: string }[];
     publishedAt: string; // Date - ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
     expiresAt: string; // Date - ISO string
     status: boolean;
