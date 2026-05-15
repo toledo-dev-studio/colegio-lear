@@ -2,7 +2,6 @@ import { PrismaClient } from "../../generated/prisma/client";
 import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 import type {
   AcademicLevelFilters,
-  AcademicLevelView,
   AcademicLevelDetail,
   EducationLevelFilters,
   EducationLevelView,
@@ -106,41 +105,67 @@ export class AcademicLevelService {
 
   /**
    * List all academic levels (no pagination) with optional filters.
-   * Reads from the v_academic_levels view.
+   * Uses Prisma include to return nested education levels.
    */
-  async findAll(filters: AcademicLevelFilters): Promise<AcademicLevelView[]> {
+  async findAll(filters: AcademicLevelFilters): Promise<AcademicLevelDetail[]> {
     const where = this.buildWhereClause(filters);
 
-    const results = await this.prisma.vAcademicLevel.findMany({ where });
+    const results = await this.prisma.academicLevel.findMany({
+      where,
+      include: { educationLevels: true },
+    });
 
-    return results as AcademicLevelView[];
+    return results.map((al) => ({
+      id: al.id,
+      name: al.name,
+      description: al.description,
+      status: al.status,
+      educationLevels: al.educationLevels.map((el) => ({
+        id: el.id,
+        name: el.name,
+        description: el.description,
+        academicLevelId: el.academicLevelId,
+      })),
+    }));
   }
 
   /**
    * List academic levels with pagination and optional filters.
-   * Reads from the v_academic_levels view.
+   * Uses Prisma include to return nested education levels.
    * Returns a PagedResult with metadata (totalPages, currentPage, itemsCount).
    */
   async findAllPaged(
     filters: AcademicLevelFilters,
     pagination: PaginationParams,
-  ): Promise<PagedResult<AcademicLevelView>> {
+  ): Promise<PagedResult<AcademicLevelDetail>> {
     const where = this.buildWhereClause(filters);
     const skip = calculateSkip(pagination);
 
     const [data, itemsCount] = await Promise.all([
-      this.prisma.vAcademicLevel.findMany({
+      this.prisma.academicLevel.findMany({
         where,
         skip,
         take: pagination.limit,
+        include: { educationLevels: true },
       }),
-      this.prisma.vAcademicLevel.count({ where }),
+      this.prisma.academicLevel.count({ where }),
     ]);
 
     const meta = buildPaginationMeta(itemsCount, pagination);
 
     return {
-      data: data as AcademicLevelView[],
+      data: data.map((al) => ({
+        id: al.id,
+        name: al.name,
+        description: al.description,
+        status: al.status,
+        educationLevels: al.educationLevels.map((el) => ({
+          id: el.id,
+          name: el.name,
+          description: el.description,
+          academicLevelId: el.academicLevelId,
+        })),
+      })),
       totalPages: meta.totalPages,
       currentPage: meta.page,
       itemsCount,

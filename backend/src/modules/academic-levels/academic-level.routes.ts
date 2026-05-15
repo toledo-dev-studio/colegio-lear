@@ -237,7 +237,7 @@ router.get(
  *                   type: string
  *                   example: Academic level created
  *                 data:
- *                   $ref: '#/components/schemas/AcademicLevel'
+ *                   $ref: '#/components/schemas/AcademicLevelDetail'
  *       400:
  *         description: Validation error
  *       409:
@@ -319,7 +319,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *                 message:
  *                   type: string
  *                 data:
- *                   $ref: '#/components/schemas/AcademicLevel'
+ *                   $ref: '#/components/schemas/AcademicLevelDetail'
  *       400:
  *         description: Validation error or empty body
  *       404:

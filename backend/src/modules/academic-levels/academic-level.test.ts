@@ -10,11 +10,9 @@ import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 // --- Mock PrismaClient factory ---
 function createMockPrisma() {
   return {
-    vAcademicLevel: {
+    academicLevel: {
       findMany: vi.fn(),
       count: vi.fn(),
-    },
-    academicLevel: {
       findUnique: vi.fn(),
       findFirst: vi.fn(),
       create: vi.fn(),
@@ -23,6 +21,9 @@ function createMockPrisma() {
     educationLevel: {
       findMany: vi.fn(),
       count: vi.fn(),
+      createMany: vi.fn(),
+      deleteMany: vi.fn(),
+      update: vi.fn(),
     },
   };
 }
@@ -48,30 +49,48 @@ describe("AcademicLevelService", () => {
           name: "Preescolar",
           description: "Nivel preescolar",
           status: true,
+          educationLevels: [],
         },
         {
           id: "uuid-2",
           name: "Primaria",
           description: "Nivel primaria",
           status: true,
+          educationLevels: [],
         },
       ];
-      prisma.vAcademicLevel.findMany.mockResolvedValue(mockLevels);
+      prisma.academicLevel.findMany.mockResolvedValue(mockLevels);
 
       const result = await service.findAll({});
 
-      expect(result).toEqual(mockLevels);
-      expect(prisma.vAcademicLevel.findMany).toHaveBeenCalledWith({
+      expect(result).toEqual([
+        {
+          id: "uuid-1",
+          name: "Preescolar",
+          description: "Nivel preescolar",
+          status: true,
+          educationLevels: [],
+        },
+        {
+          id: "uuid-2",
+          name: "Primaria",
+          description: "Nivel primaria",
+          status: true,
+          educationLevels: [],
+        },
+      ]);
+      expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
         where: {},
+        include: { educationLevels: true },
       });
     });
 
     it("should apply q filter searching name and description", async () => {
-      prisma.vAcademicLevel.findMany.mockResolvedValue([]);
+      prisma.academicLevel.findMany.mockResolvedValue([]);
 
       await service.findAll({ q: "primaria" });
 
-      expect(prisma.vAcademicLevel.findMany).toHaveBeenCalledWith({
+      expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
         where: {
           AND: [
             {
@@ -82,27 +101,29 @@ describe("AcademicLevelService", () => {
             },
           ],
         },
+        include: { educationLevels: true },
       });
     });
 
     it("should apply status filter", async () => {
-      prisma.vAcademicLevel.findMany.mockResolvedValue([]);
+      prisma.academicLevel.findMany.mockResolvedValue([]);
 
       await service.findAll({ status: true });
 
-      expect(prisma.vAcademicLevel.findMany).toHaveBeenCalledWith({
+      expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
         where: {
           AND: [{ status: true }],
         },
+        include: { educationLevels: true },
       });
     });
 
     it("should combine multiple filters with AND logic", async () => {
-      prisma.vAcademicLevel.findMany.mockResolvedValue([]);
+      prisma.academicLevel.findMany.mockResolvedValue([]);
 
       await service.findAll({ q: "nivel", name: "Primaria", status: true });
 
-      expect(prisma.vAcademicLevel.findMany).toHaveBeenCalledWith({
+      expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
         where: {
           AND: [
             {
@@ -115,6 +136,7 @@ describe("AcademicLevelService", () => {
             { status: true },
           ],
         },
+        include: { educationLevels: true },
       });
     });
   });
@@ -128,25 +150,35 @@ describe("AcademicLevelService", () => {
           name: "Preescolar",
           description: "Nivel preescolar",
           status: true,
+          educationLevels: [],
         },
       ];
-      prisma.vAcademicLevel.findMany.mockResolvedValue(mockData);
-      prisma.vAcademicLevel.count.mockResolvedValue(15);
+      prisma.academicLevel.findMany.mockResolvedValue(mockData);
+      prisma.academicLevel.count.mockResolvedValue(15);
 
       const result = await service.findAllPaged({}, { page: 2, limit: 5 });
 
       expect(result).toEqual({
-        data: mockData,
+        data: [
+          {
+            id: "uuid-1",
+            name: "Preescolar",
+            description: "Nivel preescolar",
+            status: true,
+            educationLevels: [],
+          },
+        ],
         totalPages: 3,
         currentPage: 2,
         itemsCount: 15,
       });
-      expect(prisma.vAcademicLevel.findMany).toHaveBeenCalledWith({
+      expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
         where: {},
         skip: 5,
         take: 5,
+        include: { educationLevels: true },
       });
-      expect(prisma.vAcademicLevel.count).toHaveBeenCalledWith({ where: {} });
+      expect(prisma.academicLevel.count).toHaveBeenCalledWith({ where: {} });
     });
   });
 
