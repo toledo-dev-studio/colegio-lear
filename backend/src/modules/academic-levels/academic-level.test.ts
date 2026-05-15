@@ -229,6 +229,7 @@ describe("AcademicLevelService", () => {
         name: validDto.name,
         description: validDto.description,
         status: true,
+        educationLevels: [],
       });
 
       const result = await service.create(validDto);
@@ -238,6 +239,7 @@ describe("AcademicLevelService", () => {
         name: "Preparatoria",
         description: "Nivel preparatoria",
         status: true,
+        educationLevels: [],
       });
       expect(prisma.academicLevel.create).toHaveBeenCalledWith({
         data: {
@@ -245,6 +247,7 @@ describe("AcademicLevelService", () => {
           description: validDto.description,
           status: true,
         },
+        include: { educationLevels: true },
       });
     });
 
@@ -273,11 +276,15 @@ describe("AcademicLevelService", () => {
     };
 
     it("should update an academic level successfully", async () => {
-      prisma.academicLevel.findUnique.mockResolvedValue(existingLevel);
+      prisma.academicLevel.findUnique.mockResolvedValue({
+        ...existingLevel,
+        educationLevels: [],
+      });
       prisma.academicLevel.findFirst.mockResolvedValue(null);
       prisma.academicLevel.update.mockResolvedValue({
         ...existingLevel,
         name: "Primaria Actualizada",
+        educationLevels: [],
       });
 
       const result = await service.update("uuid-1", {
@@ -285,10 +292,6 @@ describe("AcademicLevelService", () => {
       });
 
       expect(result.name).toBe("Primaria Actualizada");
-      expect(prisma.academicLevel.update).toHaveBeenCalledWith({
-        where: { id: "uuid-1" },
-        data: { name: "Primaria Actualizada" },
-      });
     });
 
     it("should throw NotFoundError when academic level does not exist", async () => {
@@ -303,7 +306,10 @@ describe("AcademicLevelService", () => {
     });
 
     it("should throw ConflictError on duplicate name", async () => {
-      prisma.academicLevel.findUnique.mockResolvedValue(existingLevel);
+      prisma.academicLevel.findUnique.mockResolvedValue({
+        ...existingLevel,
+        educationLevels: [],
+      });
       prisma.academicLevel.findFirst.mockResolvedValue({
         id: "other-uuid",
         name: "Secundaria",

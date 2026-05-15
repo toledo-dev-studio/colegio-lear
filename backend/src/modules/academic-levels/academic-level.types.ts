@@ -59,17 +59,32 @@ export interface PagedResult<T> {
 
 /**
  * Input DTO for creating an academic level.
+ * Optionally includes education levels to create in the same transaction.
  */
 export interface CreateAcademicLevelDto {
   name: string;
   description: string;
+  educationLevels?: EducationLevelInput[];
 }
 
 /**
  * Input DTO for updating an academic level (all fields optional).
+ * Includes educationLevels for sync (create new, update existing, delete removed).
  */
 export interface UpdateAcademicLevelDto {
   name?: string;
+  description?: string;
+  status?: boolean;
+  educationLevels?: EducationLevelInput[];
+}
+
+/**
+ * Input for an education level within the academic level create/update.
+ * If id starts with "new-" it's a new record; otherwise it's an existing one to update.
+ */
+export interface EducationLevelInput {
+  id: string;
+  name: string;
   description?: string;
 }
 

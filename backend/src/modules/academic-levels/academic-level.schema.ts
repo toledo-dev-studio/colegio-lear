@@ -83,25 +83,46 @@ export const educationLevelPagedQuerySchema = z.object({
     .default(10),
 });
 
+// ─── Education Level Input Schema ────────────────────────────────────────────
+
+/**
+ * Validates a single education level input within the academic level form.
+ * - id: required string (can be "new-*" for new records or a UUID for existing)
+ * - name: 1-100 chars, trimmed, non-blank
+ * - description: optional, max 500 chars
+ */
+const educationLevelInputSchema = z.object({
+  id: z.string().min(1, "id is required"),
+  name: nonBlankString(100),
+  description: z
+    .string()
+    .max(500, "description must be at most 500 characters")
+    .optional(),
+});
+
 /**
  * Validates POST body for creating an academic level.
  * - name: 1-100 chars, trimmed, non-blank
  * - description: 1-500 chars, trimmed, non-blank
+ * - educationLevels: optional array of education levels to create
  */
 export const createAcademicLevelSchema = z.object({
   name: nonBlankString(100),
   description: nonBlankString(500),
+  educationLevels: z.array(educationLevelInputSchema).optional(),
 });
 
 /**
  * Validates PATCH body for updating an academic level.
- * All fields are optional but at least one must be provided.
+ * All fields are optional but at least one must be provided (name, description, or educationLevels).
  * When present, fields must satisfy the same constraints as creation.
  */
 export const updateAcademicLevelSchema = z
   .object({
     name: nonBlankString(100).optional(),
     description: nonBlankString(500).optional(),
+    status: z.boolean().optional(),
+    educationLevels: z.array(educationLevelInputSchema).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",

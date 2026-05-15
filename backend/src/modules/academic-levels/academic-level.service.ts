@@ -4,7 +4,6 @@ import type {
   AcademicLevelFilters,
   AcademicLevelView,
   AcademicLevelDetail,
-  AcademicLevelRecord,
   EducationLevelFilters,
   EducationLevelView,
   PagedResult,
@@ -178,12 +177,13 @@ export class AcademicLevelService {
   }
 
   /**
-   * Create a new academic level.
+   * Create a new academic level with optional nested education levels.
    * Validates name uniqueness (case-insensitive).
    * Sets status = true by default.
+   * Creates education levels in the same transaction if provided.
    * Throws ConflictError if a record with the same name already exists.
    */
-  async create(dto: CreateAcademicLevelDto): Promise<AcademicLevelRecord> {
+  async create(dto: CreateAcademicLevelDto): Promise<AcademicLevelDetail> {
     // Check uniqueness: name (case-insensitive)
     const existing = await this.prisma.academicLevel.findFirst({
       where: {
@@ -197,32 +197,56 @@ export class AcademicLevelService {
       );
     }
 
-    // Create the record with status = true
+    // Create the academic level with nested education levels in a transaction
     const created = await this.prisma.academicLevel.create({
       data: {
         name: dto.name,
         description: dto.description,
         status: true,
+        ...(dto.educationLevels && dto.educationLevels.length > 0
+          ? {
+              educationLevels: {
+                create: dto.educationLevels.map((el) => ({
+                  name: el.name,
+                  description: el.description ?? null,
+                })),
+              },
+            }
+          : {}),
       },
+      include: { educationLevels: true },
     });
 
-    return created as AcademicLevelRecord;
+    return {
+      id: created.id,
+      name: created.name,
+      description: created.description,
+      status: created.status,
+      educationLevels: created.educationLevels.map((el) => ({
+        id: el.id,
+        name: el.name,
+        description: el.description,
+        academicLevelId: el.academicLevelId,
+      })),
+    };
   }
 
   /**
-   * Partial update of an academic level.
+   * Partial update of an academic level with nested education levels sync.
    * Verifies the academic level exists.
    * Checks name uniqueness (case-insensitive) when name changes, excluding the current record.
+   * Syncs education levels: creates new ones (id starts with "new-"), updates existing, deletes removed.
    * Throws NotFoundError if the record does not exist.
    * Throws ConflictError if the new name conflicts with another record.
    */
   async update(
     id: string,
     dto: UpdateAcademicLevelDto,
-  ): Promise<AcademicLevelRecord> {
+  ): Promise<AcademicLevelDetail> {
     // Verify academic level exists
     const existing = await this.prisma.academicLevel.findUnique({
       where: { id },
+      include: { educationLevels: true },
     });
 
     if (!existing) {
@@ -245,13 +269,79 @@ export class AcademicLevelService {
       }
     }
 
-    // Update the record
+    // Build the update data for the academic level fields
+    const updateData: Record<string, unknown> = {};
+    if (dto.name !== undefined) updateData.name = dto.name;
+    if (dto.description !== undefined) updateData.description = dto.description;
+    if (dto.status !== undefined) updateData.status = dto.status;
+
+    // Sync education levels if provided
+    if (dto.educationLevels !== undefined) {
+      const incomingIds = dto.educationLevels
+        .filter((el) => !el.id.startsWith("new-"))
+        .map((el) => el.id);
+
+      // Delete education levels that are no longer in the list
+      const toDelete = existing.educationLevels
+        .filter((el) => !incomingIds.includes(el.id))
+        .map((el) => el.id);
+
+      if (toDelete.length > 0) {
+        await this.prisma.educationLevel.deleteMany({
+          where: { id: { in: toDelete } },
+        });
+      }
+
+      // Create new education levels (id starts with "new-")
+      const toCreate = dto.educationLevels.filter((el) =>
+        el.id.startsWith("new-"),
+      );
+
+      if (toCreate.length > 0) {
+        await this.prisma.educationLevel.createMany({
+          data: toCreate.map((el) => ({
+            name: el.name,
+            description: el.description ?? null,
+            academicLevelId: id,
+          })),
+        });
+      }
+
+      // Update existing education levels
+      const toUpdate = dto.educationLevels.filter(
+        (el) => !el.id.startsWith("new-"),
+      );
+
+      for (const el of toUpdate) {
+        await this.prisma.educationLevel.update({
+          where: { id: el.id },
+          data: {
+            name: el.name,
+            description: el.description ?? null,
+          },
+        });
+      }
+    }
+
+    // Update the academic level itself
     const updated = await this.prisma.academicLevel.update({
       where: { id },
-      data: dto,
+      data: updateData,
+      include: { educationLevels: true },
     });
 
-    return updated as AcademicLevelRecord;
+    return {
+      id: updated.id,
+      name: updated.name,
+      description: updated.description,
+      status: updated.status,
+      educationLevels: updated.educationLevels.map((el) => ({
+        id: el.id,
+        name: el.name,
+        description: el.description,
+        academicLevelId: el.academicLevelId,
+      })),
+    };
   }
 
   /**
