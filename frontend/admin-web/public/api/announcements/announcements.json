@@ -8,7 +8,7 @@
       { "key": "teacher", "label": "Docentes" },
       { "key": "administrative-staff", "label": "Personal administrativo" }
     ],
-    "content": "",
+    "content": "<h1>Inicio de ciclo escolar 2026</h1><p>Bienvenidos al nuevo ciclo escolar 2026.</p><p>Este mensaje está dirigido a toda la comunidad educativa.</p><img src=\"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80\" alt=\"Estudiantes en aula\" /><p>Actividades de bienvenida:</p><ul><li>Recorrido por instalaciones</li><li>Reunión con tutores</li><li>Entrega de horarios</li></ul><img src=\"https://images.unsplash.com/photo-1503676260728-1c00da094a0b\" alt=\"Escuela exterior\" /><p><strong>Fecha de inicio:</strong> 5 de enero de 2026</p><blockquote>Les deseamos un excelente ciclo lleno de aprendizaje y crecimiento.</blockquote>",
     "publishedAt": "2026-01-05T08:00:00.000Z",
     "expiresAt": "2026-02-05T23:59:59.000Z",
     "status": true

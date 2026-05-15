@@ -1,0 +1,254 @@
+import React, { useRef } from "react";
+import { useEditor, EditorContent, type Editor, useEditorState } from "@tiptap/react";
+import { StarterKit } from "@tiptap/starter-kit";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TextStyle } from "@tiptap/extension-text-style";
+import {
+  Bold, Italic, Underline as UnderlineIcon, List, ListOrdered,
+  Image as ImageIcon, Table as TableIcon, Type, Quote, Heading1, Heading2, Undo2, Redo2,
+  Link2Off,
+  Link2,
+  ImageUp,
+} from "lucide-react";
+
+import { FontSize } from "./extensions/FontSizeExtension";
+import { ResizableImage } from "./extensions/ResizableImageExtension";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+
+interface TipTapEditorProps {
+  value: string;
+  onChange: (html: string) => void;
+  placeholder?: string;
+  testid?: string;
+}
+
+const DEFAULT_FONT_SIZE = "16px";
+const FONT_SIZES = ["14px", "16px", "18px", "24px", "32px"];
+
+export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el contenido...", testid = "tiptap-editor" }: TipTapEditorProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+        link: {
+          openOnClick: true,
+          HTMLAttributes: {
+            class: "text-primary underline",
+            target: "_blank",
+            rel: "noopener noreferrer",
+          },
+        },
+      }),
+      ResizableImage.configure({ HTMLAttributes: { class: "rounded-xl max-w-full" } }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      TextStyle,
+      FontSize,
+    ],
+    content: value || "",
+    onUpdate: ({ editor }) => onChange(editor.getHTML()),
+    editorProps: {
+      attributes: {
+        class: "prose prose-sm max-w-none focus:outline-none min-h-[260px] px-5 py-4",
+        "data-testid": `${testid}-content`,
+      },
+    },
+  });
+
+  const editorState = useEditorState({
+    editor,
+    selector: ({ editor }) => ({
+      isBold: editor.isActive("bold"),
+      isItalic: editor.isActive("italic"),
+      isUnderline: editor.isActive("underline"),
+      isHeading1: editor.isActive("heading", { level: 1 }),
+      isHeading2: editor.isActive("heading", { level: 2 }),
+      isBlockquote: editor.isActive("blockquote"),
+      isEmpty: editor.isEmpty,
+      hasContentNodes: editor.state.doc.childCount > 1,
+      hasSelection: !editor.state.selection.empty,
+    }),
+  });
+
+  // Sync external value changes (e.g. when initialData loads after editor mount)
+  React.useEffect(() => {
+    if (!editor) return;
+    if (value && value !== editor.getHTML()) {
+      editor.commands.setContent(value, { emitUpdate: false });
+    }
+  }, [value, editor]);
+
+  if (!editor) return null;
+
+  const addLink = () => {
+    const previous = editor.getAttributes("link").href as string | undefined;
+
+    const url = window.prompt("URL del enlace:", previous || "https://");
+
+    if (!url) {
+      editor.chain().focus().unsetLink().run();
+      return;
+    }
+
+    editor.chain().focus().setLink({ href: url, target: "_blank" }).run();
+  };
+
+  const addImageByUrl = () => {
+    const url = window.prompt("URL de la imagen:", "https://");
+
+    if (!url) return;
+
+    const cleanUrl = url.trim();
+
+    if (!cleanUrl || cleanUrl === "https://") return;
+
+    if (url) editor.chain().focus().setImage({ src: url, alt: "Imagen" }).run();
+  };
+
+  const triggerUpload = () => fileInputRef.current?.click();
+
+  const handleFile = (file: File) => {
+    // Simulate upload to /public — keep the data URL as src.
+    const reader = new FileReader();
+    reader.onload = () => {
+      console.log('Cuando la imagen se termina de cargar');
+
+      const dataUrl = reader.result as string;
+      editor.chain().focus().setImage({ src: dataUrl, alt: file.name }).run();
+    };
+    reader.readAsDataURL(file);
+    console.log('Cargando imagen...');
+  };
+
+  // const insertTable = () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+
+  return (
+    <div className="rounded-2xl border border-input bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary" data-testid={testid}>
+      <Toolbar editor={editor}>
+        <Group>
+          <ToolBtn onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} testid="tt-undo" label="Deshacer"><Undo2 className="w-4 h-4" /></ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()} testid="tt-redo" label="Rehacer"><Redo2 className="w-4 h-4" /></ToolBtn>
+        </Group>
+        <Group>
+          <ToolBtn active={editorState.isBold} onClick={() => editor.chain().focus().toggleBold().run()} testid="tt-bold" label="Negrita"><Bold className="w-4 h-4" /></ToolBtn>
+          <ToolBtn active={editorState.isItalic} onClick={() => editor.chain().focus().toggleItalic().run()} testid="tt-italic" label="Itálica"><Italic className="w-4 h-4" /></ToolBtn>
+          <ToolBtn active={editorState.isUnderline} onClick={() => editor.chain().focus().toggleUnderline().run()} testid="tt-underline" label="Subrayado"><UnderlineIcon className="w-4 h-4" /></ToolBtn>
+        </Group>
+        <Group>
+          <ToolBtn active={editorState.isHeading1} onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} testid="tt-h1" label="Título 1">
+            <Heading1 className="w-4 h-4" />
+          </ToolBtn>
+          <ToolBtn active={editorState.isHeading2} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} testid="tt-h2" label="Título 2"><Heading2 className="w-4 h-4" /></ToolBtn>
+          <ToolBtn active={editorState.isBlockquote} onClick={() => editor.chain().focus().toggleBlockquote().run()} testid="tt-quote" label="Cita"><Quote className="w-4 h-4" /></ToolBtn>
+        </Group>
+        <Group>
+          <ToolBtn active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()} testid="tt-bullet" label="Viñetas"><List className="w-4 h-4" /></ToolBtn>
+          <ToolBtn active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()} testid="tt-ordered" label="Lista numerada"><ListOrdered className="w-4 h-4" /></ToolBtn>
+        </Group>
+        <Group>
+          <FontSizePicker editor={editor} />
+        </Group>
+        <Group>
+          <ToolBtn onClick={addLink} active={editor.isActive("link")} disabled={!editorState.hasSelection} testid="tt-link" label="Insertar enlace">
+            {
+              editorState.hasSelection ? (<Link2 className="w-4 h-4" />) : (<Link2Off className="w-4 h-4" />)
+            }
+          </ToolBtn>
+          <ToolBtn onClick={addImageByUrl} testid="tt-img-url" label="Insertar imagen por URL"><ImageIcon className="w-4 h-4" /></ToolBtn>
+          <ToolBtn onClick={triggerUpload} testid="tt-img-upload" label="Cargar imagen"><ImageUp className="w-4 h-4" /></ToolBtn>
+          {/* <ToolBtn onClick={insertTable} testid="tt-table" label="Insertar tabla"><TableIcon className="w-4 h-4" /></ToolBtn> */}
+        </Group>
+      </Toolbar>
+      <div className="border-t border-border bg-card">
+        <EditorContent editor={editor} />
+        {
+          (editorState.isEmpty && !editorState.hasContentNodes) && (
+            <p className="pointer-events-none px-5 -mt-[235px] mb-[200px] text-sm text-muted-foreground select-none">{placeholder}</p>
+          )
+        }
+      </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) handleFile(f);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
+function Toolbar({ children }: { editor: Editor; children: React.ReactNode }) {
+  return <div className="flex flex-wrap items-center gap-1 px-3 py-2 bg-muted/40 border-b border-border">{children}</div>;
+}
+
+function Group({ children }: { children: React.ReactNode }) {
+  return <div className="flex items-center gap-0.5 pr-2 mr-1 border-r border-border last:border-r-0 last:pr-0 last:mr-0">{children}</div>;
+}
+
+function ToolBtn({ children, onClick, active, disabled, testid, label }: { children: React.ReactNode; onClick: () => void; active?: boolean; disabled?: boolean; testid: string; label: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      data-testid={testid}
+      aria-label={label}
+      title={label}
+      className={`h-8 w-8 inline-flex items-center justify-center rounded-lg text-sm transition-colors ${active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-card"} disabled:opacity-40 disabled:cursor-not-allowed`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function FontSizePicker({ editor }: { editor: Editor }) {
+  const editorState = useEditorState({
+    editor,
+    selector: ({ editor }) => ({
+      fontSize:
+        (editor.getAttributes("fontSize").size as string | undefined) || DEFAULT_FONT_SIZE,
+    }),
+  });
+
+  return (
+    <div className="relative">
+      <Type className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+      <Select
+        value={editorState.fontSize}
+        onValueChange={(value) => {
+          if (!value)
+            editor.chain().focus().unsetFontSize().run();
+          else
+            editor.chain().focus().setMark("fontSize", { size: value }).run();
+        }}>
+        <SelectTrigger size="sm" className="w-full pl-11 pr-8 py-4 rounded-full shadow-none my-0">
+          <SelectValue placeholder="Selecciona un puesto de trabajo">
+            {editorState.fontSize}
+          </SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Tamaños de letra</SelectLabel>
+            {
+              FONT_SIZES.map((s) => (
+                <SelectItem key={s} value={s} label={s}>{s}</SelectItem>
+              ))
+            }
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}

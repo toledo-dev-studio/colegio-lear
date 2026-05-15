@@ -76,7 +76,7 @@ export const AnnouncementsTable = ({ data = [], isLoading, handleClickEditRow, h
                                                     <div className="flex items-center gap-x-4">
                                                         {
                                                             item.audience?.length && item.audience.map((audience) => (
-                                                                <span className="text-nowrap min-w-fit rounded-full bg-gray-400/20 px-4 py-2 text-xs font-medium text-gray-500 inset-ring inset-ring-gray-400/40 dark:text-gray-300">
+                                                                <span key={audience.key} className="text-nowrap min-w-fit rounded-full bg-gray-400/20 px-4 py-2 text-xs font-medium text-gray-500 inset-ring inset-ring-gray-400/40 dark:text-gray-300">
                                                                     {audience.label}
                                                                 </span>
                                                             ))

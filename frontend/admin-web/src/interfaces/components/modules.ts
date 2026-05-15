@@ -146,6 +146,7 @@ export const SECURITY_ROLES_MODULE: Module = {
     permissions: {
         canRead: true,
         canWrite: true,
+        canDelete: true
     }
 };
 

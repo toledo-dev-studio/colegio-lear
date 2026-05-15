@@ -12,6 +12,8 @@ export const createUpdateEmployeeActionAsync = async (employeeLike: Partial<Empl
     const isCreating = id === "new";
 
     // TODO: LOGICA PARA SUBIR IMAGEN (QUIZÁS OTRO SERVICIO)
+    console.log(employeeLike);
+    
 
     const { data } = await api<Employee>({
         url: isCreating ? '/employees' : `/employees/${id}`,
