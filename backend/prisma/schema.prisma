@@ -73,3 +73,15 @@ view VSchoolSubject {
   @@map("v_school_subjects")
   @@schema("core")
 }
+
+// ─── View: Academic Levels (read-only, flat projection for list queries) ────────
+
+view VAcademicLevel {
+  id          String  @unique @db.Uuid
+  name        String  @db.VarChar(100)
+  description String  @db.VarChar(500)
+  status      Boolean
+
+  @@map("v_academic_levels")
+  @@schema("core")
+}

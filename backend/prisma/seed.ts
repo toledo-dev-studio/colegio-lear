@@ -10,15 +10,18 @@ const prisma = new PrismaClient({ adapter });
 // ─── Fixed UUIDs for deterministic seed data ────────────────────────────────────
 
 const ACADEMIC_LEVELS = {
-  primaria: "a1b2c3d4-1111-4000-8000-000000000001",
-  secundaria: "a1b2c3d4-1111-4000-8000-000000000002",
+  preescolar: "a1000000-0000-0000-0000-000000000001",
+  primaria: "a1000000-0000-0000-0000-000000000002",
+  secundaria: "a1000000-0000-0000-0000-000000000003",
 };
 
 const EDUCATION_LEVELS = {
-  primero_primaria: "b2c3d4e5-2222-4000-8000-000000000001",
-  segundo_primaria: "b2c3d4e5-2222-4000-8000-000000000002",
-  primero_secundaria: "b2c3d4e5-2222-4000-8000-000000000003",
-  segundo_secundaria: "b2c3d4e5-2222-4000-8000-000000000004",
+  primero_preescolar: "b2c3d4e5-2222-4000-8000-000000000001",
+  segundo_preescolar: "b2c3d4e5-2222-4000-8000-000000000002",
+  primero_primaria: "b2c3d4e5-2222-4000-8000-000000000003",
+  segundo_primaria: "b2c3d4e5-2222-4000-8000-000000000004",
+  primero_secundaria: "b2c3d4e5-2222-4000-8000-000000000005",
+  segundo_secundaria: "b2c3d4e5-2222-4000-8000-000000000006",
 };
 
 const SCHOOL_SUBJECTS = {
@@ -33,11 +36,22 @@ const SCHOOL_SUBJECTS = {
 // ─── Seed function ──────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log("🌱 Seeding school-subjects module...");
+  console.log("🌱 Seeding academic-levels and school-subjects modules...");
 
   // --- Academic Levels ---
+  const preescolar = await prisma.academicLevel.upsert({
+    where: { id: ACADEMIC_LEVELS.preescolar },
+    update: {},
+    create: {
+      id: ACADEMIC_LEVELS.preescolar,
+      name: "Preescolar",
+      description: "Educación preescolar (3 grados)",
+      status: true,
+    },
+  });
+
   const primaria = await prisma.academicLevel.upsert({
-    where: { name: "Primaria" },
+    where: { id: ACADEMIC_LEVELS.primaria },
     update: {},
     create: {
       id: ACADEMIC_LEVELS.primaria,
@@ -48,7 +62,7 @@ async function main() {
   });
 
   const secundaria = await prisma.academicLevel.upsert({
-    where: { name: "Secundaria" },
+    where: { id: ACADEMIC_LEVELS.secundaria },
     update: {},
     create: {
       id: ACADEMIC_LEVELS.secundaria,
@@ -58,16 +72,35 @@ async function main() {
     },
   });
 
-  console.log(`  ✓ Academic levels: ${primaria.name}, ${secundaria.name}`);
+  console.log(
+    `  ✓ Academic levels: ${preescolar.name}, ${primaria.name}, ${secundaria.name}`,
+  );
 
   // --- Education Levels ---
-  const primeroPrimaria = await prisma.educationLevel.upsert({
-    where: {
-      name_academicLevelId: {
-        name: "1° Primaria",
-        academicLevelId: primaria.id,
-      },
+  const primeroPreescolar = await prisma.educationLevel.upsert({
+    where: { id: EDUCATION_LEVELS.primero_preescolar },
+    update: {},
+    create: {
+      id: EDUCATION_LEVELS.primero_preescolar,
+      name: "1° Preescolar",
+      description: "Primer grado de preescolar",
+      academicLevelId: preescolar.id,
     },
+  });
+
+  const segundoPreescolar = await prisma.educationLevel.upsert({
+    where: { id: EDUCATION_LEVELS.segundo_preescolar },
+    update: {},
+    create: {
+      id: EDUCATION_LEVELS.segundo_preescolar,
+      name: "2° Preescolar",
+      description: "Segundo grado de preescolar",
+      academicLevelId: preescolar.id,
+    },
+  });
+
+  const primeroPrimaria = await prisma.educationLevel.upsert({
+    where: { id: EDUCATION_LEVELS.primero_primaria },
     update: {},
     create: {
       id: EDUCATION_LEVELS.primero_primaria,
@@ -78,12 +111,7 @@ async function main() {
   });
 
   const segundoPrimaria = await prisma.educationLevel.upsert({
-    where: {
-      name_academicLevelId: {
-        name: "2° Primaria",
-        academicLevelId: primaria.id,
-      },
-    },
+    where: { id: EDUCATION_LEVELS.segundo_primaria },
     update: {},
     create: {
       id: EDUCATION_LEVELS.segundo_primaria,
@@ -94,12 +122,7 @@ async function main() {
   });
 
   const primeroSecundaria = await prisma.educationLevel.upsert({
-    where: {
-      name_academicLevelId: {
-        name: "1° Secundaria",
-        academicLevelId: secundaria.id,
-      },
-    },
+    where: { id: EDUCATION_LEVELS.primero_secundaria },
     update: {},
     create: {
       id: EDUCATION_LEVELS.primero_secundaria,
@@ -110,12 +133,7 @@ async function main() {
   });
 
   const segundoSecundaria = await prisma.educationLevel.upsert({
-    where: {
-      name_academicLevelId: {
-        name: "2° Secundaria",
-        academicLevelId: secundaria.id,
-      },
-    },
+    where: { id: EDUCATION_LEVELS.segundo_secundaria },
     update: {},
     create: {
       id: EDUCATION_LEVELS.segundo_secundaria,
@@ -126,7 +144,7 @@ async function main() {
   });
 
   console.log(
-    `  ✓ Education levels: ${primeroPrimaria.name}, ${segundoPrimaria.name}, ${primeroSecundaria.name}, ${segundoSecundaria.name}`,
+    `  ✓ Education levels: ${primeroPreescolar.name}, ${segundoPreescolar.name}, ${primeroPrimaria.name}, ${segundoPrimaria.name}, ${primeroSecundaria.name}, ${segundoSecundaria.name}`,
   );
 
   // --- School Subjects ---

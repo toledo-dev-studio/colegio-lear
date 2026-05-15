@@ -13,7 +13,7 @@ import type { PaginationParams } from "../../shared/helpers/pagination.helper";
 /**
  * Business logic layer for the School Subjects module.
  * Handles CRUD operations, filtering, pagination, FK validation, and uniqueness checks.
- * Read operations query the `vSchoolSubject` view; write operations target the `schoolSubject` table.
+ * Read operations use Prisma include for nested objects; write operations target the `schoolSubject` table.
  */
 export class SchoolSubjectService {
   constructor(private readonly prisma: PrismaClient) {}
@@ -68,19 +68,25 @@ export class SchoolSubjectService {
 
   /**
    * List all subjects (no pagination) with optional filters.
-   * Reads from the v_school_subjects view.
+   * Uses Prisma include to return nested academicLevel and educationLevel objects.
    */
   async findAll(filters: SubjectFilters): Promise<SubjectView[]> {
     const where = this.buildWhereClause(filters);
 
-    const results = await this.prisma.vSchoolSubject.findMany({ where });
+    const results = await this.prisma.schoolSubject.findMany({
+      where,
+      include: {
+        academicLevel: { select: { id: true, name: true } },
+        educationLevel: { select: { id: true, name: true } },
+      },
+    });
 
-    return results as SubjectView[];
+    return results as unknown as SubjectView[];
   }
 
   /**
    * List subjects with pagination and optional filters.
-   * Reads from the v_school_subjects view.
+   * Uses Prisma include to return nested academicLevel and educationLevel objects.
    * Returns a PagedResult with metadata (totalPages, currentPage, itemsCount).
    */
   async findAllPaged(
@@ -90,18 +96,22 @@ export class SchoolSubjectService {
     const where = this.buildWhereClause(filters);
 
     const [data, itemsCount] = await Promise.all([
-      this.prisma.vSchoolSubject.findMany({
+      this.prisma.schoolSubject.findMany({
         where,
         skip: (pagination.page - 1) * pagination.limit,
         take: pagination.limit,
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
       }),
-      this.prisma.vSchoolSubject.count({ where }),
+      this.prisma.schoolSubject.count({ where }),
     ]);
 
     const totalPages = Math.ceil(itemsCount / pagination.limit);
 
     return {
-      data: data as SubjectView[],
+      data: data as unknown as SubjectView[],
       totalPages,
       currentPage: pagination.page,
       itemsCount,
@@ -110,19 +120,23 @@ export class SchoolSubjectService {
 
   /**
    * Find a single subject by ID.
-   * Reads from the v_school_subjects view.
+   * Uses Prisma include to return nested academicLevel and educationLevel objects.
    * Throws NotFoundError if the subject does not exist.
    */
   async findById(id: string): Promise<SubjectView> {
-    const subject = await this.prisma.vSchoolSubject.findUnique({
+    const subject = await this.prisma.schoolSubject.findUnique({
       where: { id },
+      include: {
+        academicLevel: { select: { id: true, name: true } },
+        educationLevel: { select: { id: true, name: true } },
+      },
     });
 
     if (!subject) {
       throw new NotFoundError("School subject not found");
     }
 
-    return subject as SubjectView;
+    return subject as unknown as SubjectView;
   }
 
   /**

@@ -10,12 +10,9 @@ import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 // --- Mock PrismaClient factory ---
 function createMockPrisma() {
   return {
-    vSchoolSubject: {
+    schoolSubject: {
       findMany: vi.fn(),
       count: vi.fn(),
-      findUnique: vi.fn(),
-    },
-    schoolSubject: {
       findUnique: vi.fn(),
       findFirst: vi.fn(),
       create: vi.fn(),
@@ -57,22 +54,34 @@ describe("SchoolSubjectService", () => {
           educationLevelName: "1° Primaria",
         },
       ];
-      prisma.vSchoolSubject.findMany.mockResolvedValue(mockSubjects);
+      prisma.schoolSubject.findMany.mockResolvedValue(mockSubjects);
 
       const result = await service.findAll({});
 
       expect(result).toEqual(mockSubjects);
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: {},
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
       });
     });
 
     it("should apply q filter searching name and description", async () => {
-      prisma.vSchoolSubject.findMany.mockResolvedValue([]);
+      prisma.schoolSubject.findMany.mockResolvedValue([]);
 
       await service.findAll({ q: "math" });
 
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: {
           AND: [
             {
@@ -87,11 +96,15 @@ describe("SchoolSubjectService", () => {
     });
 
     it("should apply name filter with case-insensitive contains", async () => {
-      prisma.vSchoolSubject.findMany.mockResolvedValue([]);
+      prisma.schoolSubject.findMany.mockResolvedValue([]);
 
       await service.findAll({ name: "Ciencias" });
 
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: {
           AND: [{ name: { contains: "Ciencias", mode: "insensitive" } }],
         },
@@ -99,11 +112,15 @@ describe("SchoolSubjectService", () => {
     });
 
     it("should apply status filter", async () => {
-      prisma.vSchoolSubject.findMany.mockResolvedValue([]);
+      prisma.schoolSubject.findMany.mockResolvedValue([]);
 
       await service.findAll({ status: true });
 
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: {
           AND: [{ status: true }],
         },
@@ -111,11 +128,15 @@ describe("SchoolSubjectService", () => {
     });
 
     it("should apply academicLevelId filter", async () => {
-      prisma.vSchoolSubject.findMany.mockResolvedValue([]);
+      prisma.schoolSubject.findMany.mockResolvedValue([]);
 
       await service.findAll({ academicLevelId: "al-uuid" });
 
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: {
           AND: [{ academicLevelId: "al-uuid" }],
         },
@@ -123,11 +144,15 @@ describe("SchoolSubjectService", () => {
     });
 
     it("should apply educationLevelId filter", async () => {
-      prisma.vSchoolSubject.findMany.mockResolvedValue([]);
+      prisma.schoolSubject.findMany.mockResolvedValue([]);
 
       await service.findAll({ educationLevelId: "el-uuid" });
 
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: {
           AND: [{ educationLevelId: "el-uuid" }],
         },
@@ -135,7 +160,7 @@ describe("SchoolSubjectService", () => {
     });
 
     it("should combine multiple filters with AND logic", async () => {
-      prisma.vSchoolSubject.findMany.mockResolvedValue([]);
+      prisma.schoolSubject.findMany.mockResolvedValue([]);
 
       await service.findAll({
         q: "math",
@@ -143,7 +168,11 @@ describe("SchoolSubjectService", () => {
         academicLevelId: "al-uuid",
       });
 
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: {
           AND: [
             {
@@ -175,8 +204,8 @@ describe("SchoolSubjectService", () => {
           educationLevelName: "1° Primaria",
         },
       ];
-      prisma.vSchoolSubject.findMany.mockResolvedValue(mockData);
-      prisma.vSchoolSubject.count.mockResolvedValue(15);
+      prisma.schoolSubject.findMany.mockResolvedValue(mockData);
+      prisma.schoolSubject.count.mockResolvedValue(15);
 
       const result = await service.findAllPaged({}, { page: 2, limit: 5 });
 
@@ -186,17 +215,21 @@ describe("SchoolSubjectService", () => {
         currentPage: 2,
         itemsCount: 15,
       });
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: {},
         skip: 5,
         take: 5,
       });
-      expect(prisma.vSchoolSubject.count).toHaveBeenCalledWith({ where: {} });
+      expect(prisma.schoolSubject.count).toHaveBeenCalledWith({ where: {} });
     });
 
     it("should apply filters together with pagination", async () => {
-      prisma.vSchoolSubject.findMany.mockResolvedValue([]);
-      prisma.vSchoolSubject.count.mockResolvedValue(0);
+      prisma.schoolSubject.findMany.mockResolvedValue([]);
+      prisma.schoolSubject.count.mockResolvedValue(0);
 
       const result = await service.findAllPaged(
         { status: false },
@@ -209,7 +242,11 @@ describe("SchoolSubjectService", () => {
         currentPage: 1,
         itemsCount: 0,
       });
-      expect(prisma.vSchoolSubject.findMany).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findMany).toHaveBeenCalledWith({
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
         where: { AND: [{ status: false }] },
         skip: 0,
         take: 10,
@@ -217,8 +254,8 @@ describe("SchoolSubjectService", () => {
     });
 
     it("should calculate totalPages correctly (ceiling division)", async () => {
-      prisma.vSchoolSubject.findMany.mockResolvedValue([]);
-      prisma.vSchoolSubject.count.mockResolvedValue(11);
+      prisma.schoolSubject.findMany.mockResolvedValue([]);
+      prisma.schoolSubject.count.mockResolvedValue(11);
 
       const result = await service.findAllPaged({}, { page: 1, limit: 5 });
 
@@ -240,18 +277,22 @@ describe("SchoolSubjectService", () => {
         educationLevelId: "el-1",
         educationLevelName: "1° Primaria",
       };
-      prisma.vSchoolSubject.findUnique.mockResolvedValue(mockSubject);
+      prisma.schoolSubject.findUnique.mockResolvedValue(mockSubject);
 
       const result = await service.findById("uuid-1");
 
       expect(result).toEqual(mockSubject);
-      expect(prisma.vSchoolSubject.findUnique).toHaveBeenCalledWith({
+      expect(prisma.schoolSubject.findUnique).toHaveBeenCalledWith({
         where: { id: "uuid-1" },
+        include: {
+          academicLevel: { select: { id: true, name: true } },
+          educationLevel: { select: { id: true, name: true } },
+        },
       });
     });
 
     it("should throw NotFoundError when subject does not exist", async () => {
-      prisma.vSchoolSubject.findUnique.mockResolvedValue(null);
+      prisma.schoolSubject.findUnique.mockResolvedValue(null);
 
       await expect(service.findById("non-existent-id")).rejects.toThrow(
         NotFoundError,

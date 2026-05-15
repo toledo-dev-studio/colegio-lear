@@ -14,9 +14,15 @@ export interface SubjectView {
   description: string;
   status: boolean;
   academicLevelId: string;
-  academicLevelName: string;
+  academicLevel: {
+    id: string;
+    name: string;
+  };
   educationLevelId: string;
-  educationLevelName: string;
+  educationLevel: {
+    id: string;
+    name: string;
+  };
 }
 
 /** Result of a paginated query */
