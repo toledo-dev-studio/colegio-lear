@@ -1,9 +1,242 @@
-import { PrismaClient } from "../src/generated/prisma";
+import "dotenv/config";
+import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 
-const prisma = new PrismaClient();
+const pool = new pg.Pool({ connectionString: process.env["DATABASE_URL"] });
+const adapter = new PrismaPg(pool, { schema: "core" });
+const prisma = new PrismaClient({ adapter });
+
+// ─── Fixed UUIDs for deterministic seed data ────────────────────────────────────
+
+const ACADEMIC_LEVELS = {
+  primaria: "a1b2c3d4-1111-4000-8000-000000000001",
+  secundaria: "a1b2c3d4-1111-4000-8000-000000000002",
+};
+
+const EDUCATION_LEVELS = {
+  primero_primaria: "b2c3d4e5-2222-4000-8000-000000000001",
+  segundo_primaria: "b2c3d4e5-2222-4000-8000-000000000002",
+  primero_secundaria: "b2c3d4e5-2222-4000-8000-000000000003",
+  segundo_secundaria: "b2c3d4e5-2222-4000-8000-000000000004",
+};
+
+const SCHOOL_SUBJECTS = {
+  matematicas_1p: "c3d4e5f6-3333-4000-8000-000000000001",
+  espanol_1p: "c3d4e5f6-3333-4000-8000-000000000002",
+  ciencias_1p: "c3d4e5f6-3333-4000-8000-000000000003",
+  matematicas_2p: "c3d4e5f6-3333-4000-8000-000000000004",
+  matematicas_1s: "c3d4e5f6-3333-4000-8000-000000000005",
+  historia_1s: "c3d4e5f6-3333-4000-8000-000000000006",
+};
+
+// ─── Seed function ──────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log("🌱 Seed placeholder — add data here as modules are built.");
+  console.log("🌱 Seeding school-subjects module...");
+
+  // --- Academic Levels ---
+  const primaria = await prisma.academicLevel.upsert({
+    where: { name: "Primaria" },
+    update: {},
+    create: {
+      id: ACADEMIC_LEVELS.primaria,
+      name: "Primaria",
+      description: "Educación primaria básica (6 grados)",
+      status: true,
+    },
+  });
+
+  const secundaria = await prisma.academicLevel.upsert({
+    where: { name: "Secundaria" },
+    update: {},
+    create: {
+      id: ACADEMIC_LEVELS.secundaria,
+      name: "Secundaria",
+      description: "Educación secundaria básica (3 grados)",
+      status: true,
+    },
+  });
+
+  console.log(`  ✓ Academic levels: ${primaria.name}, ${secundaria.name}`);
+
+  // --- Education Levels ---
+  const primeroPrimaria = await prisma.educationLevel.upsert({
+    where: {
+      name_academicLevelId: {
+        name: "1° Primaria",
+        academicLevelId: primaria.id,
+      },
+    },
+    update: {},
+    create: {
+      id: EDUCATION_LEVELS.primero_primaria,
+      name: "1° Primaria",
+      description: "Primer grado de primaria",
+      academicLevelId: primaria.id,
+    },
+  });
+
+  const segundoPrimaria = await prisma.educationLevel.upsert({
+    where: {
+      name_academicLevelId: {
+        name: "2° Primaria",
+        academicLevelId: primaria.id,
+      },
+    },
+    update: {},
+    create: {
+      id: EDUCATION_LEVELS.segundo_primaria,
+      name: "2° Primaria",
+      description: "Segundo grado de primaria",
+      academicLevelId: primaria.id,
+    },
+  });
+
+  const primeroSecundaria = await prisma.educationLevel.upsert({
+    where: {
+      name_academicLevelId: {
+        name: "1° Secundaria",
+        academicLevelId: secundaria.id,
+      },
+    },
+    update: {},
+    create: {
+      id: EDUCATION_LEVELS.primero_secundaria,
+      name: "1° Secundaria",
+      description: "Primer grado de secundaria",
+      academicLevelId: secundaria.id,
+    },
+  });
+
+  const segundoSecundaria = await prisma.educationLevel.upsert({
+    where: {
+      name_academicLevelId: {
+        name: "2° Secundaria",
+        academicLevelId: secundaria.id,
+      },
+    },
+    update: {},
+    create: {
+      id: EDUCATION_LEVELS.segundo_secundaria,
+      name: "2° Secundaria",
+      description: "Segundo grado de secundaria",
+      academicLevelId: secundaria.id,
+    },
+  });
+
+  console.log(
+    `  ✓ Education levels: ${primeroPrimaria.name}, ${segundoPrimaria.name}, ${primeroSecundaria.name}, ${segundoSecundaria.name}`,
+  );
+
+  // --- School Subjects ---
+  const subjects = await Promise.all([
+    prisma.schoolSubject.upsert({
+      where: {
+        name_educationLevelId: {
+          name: "Matemáticas",
+          educationLevelId: primeroPrimaria.id,
+        },
+      },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.matematicas_1p,
+        name: "Matemáticas",
+        description: "Desarrollo del pensamiento lógico-matemático",
+        status: true,
+        academicLevelId: primaria.id,
+        educationLevelId: primeroPrimaria.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: {
+        name_educationLevelId: {
+          name: "Español",
+          educationLevelId: primeroPrimaria.id,
+        },
+      },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.espanol_1p,
+        name: "Español",
+        description: "Lectura, escritura y comunicación oral",
+        status: true,
+        academicLevelId: primaria.id,
+        educationLevelId: primeroPrimaria.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: {
+        name_educationLevelId: {
+          name: "Ciencias Naturales",
+          educationLevelId: primeroPrimaria.id,
+        },
+      },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.ciencias_1p,
+        name: "Ciencias Naturales",
+        description: "Exploración del mundo natural y sus fenómenos",
+        status: true,
+        academicLevelId: primaria.id,
+        educationLevelId: primeroPrimaria.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: {
+        name_educationLevelId: {
+          name: "Matemáticas",
+          educationLevelId: segundoPrimaria.id,
+        },
+      },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.matematicas_2p,
+        name: "Matemáticas",
+        description: "Aritmética, geometría y resolución de problemas",
+        status: true,
+        academicLevelId: primaria.id,
+        educationLevelId: segundoPrimaria.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: {
+        name_educationLevelId: {
+          name: "Matemáticas",
+          educationLevelId: primeroSecundaria.id,
+        },
+      },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.matematicas_1s,
+        name: "Matemáticas",
+        description: "Álgebra, funciones y pensamiento abstracto",
+        status: true,
+        academicLevelId: secundaria.id,
+        educationLevelId: primeroSecundaria.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: {
+        name_educationLevelId: {
+          name: "Historia",
+          educationLevelId: primeroSecundaria.id,
+        },
+      },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.historia_1s,
+        name: "Historia",
+        description: "Historia de México y del mundo",
+        status: true,
+        academicLevelId: secundaria.id,
+        educationLevelId: primeroSecundaria.id,
+      },
+    }),
+  ]);
+
+  console.log(`  ✓ School subjects: ${subjects.length} records`);
+  console.log("🌱 Seed completed successfully.");
 }
 
 main()

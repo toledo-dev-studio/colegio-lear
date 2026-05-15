@@ -7,6 +7,7 @@ import { errorHandler } from "./shared/middleware/error-handler.middleware";
 
 /* --- Module Routes --- */
 import healthRoutes from "./modules/health/health.routes";
+import schoolSubjectRoutes from "./modules/school-subjects/school-subject.routes";
 
 /** Create Express application */
 const app = express();
@@ -18,6 +19,7 @@ app.use(requestLogger);
 
 /* --- Routes --- */
 app.use(healthRoutes);
+app.use("/school-subjects", schoolSubjectRoutes);
 
 /* --- Swagger API Docs --- */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
