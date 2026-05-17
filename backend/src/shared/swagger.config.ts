@@ -133,6 +133,59 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
           },
         },
+        JobTitle: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Profesor de Matemáticas" },
+            description: {
+              type: "string",
+              example: "Docente encargado de impartir clases de matemáticas",
+            },
+            jobTitleType: {
+              type: "string",
+              enum: ["teacher", "administrative-staff"],
+              example: "teacher",
+            },
+            status: { type: "boolean", example: true },
+          },
+        },
+        CreateJobTitleDto: {
+          type: "object",
+          required: ["name", "description", "jobTitleType"],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+              example: "Coordinador Académico",
+            },
+            description: {
+              type: "string",
+              minLength: 1,
+              maxLength: 500,
+              example: "Responsable de coordinar actividades académicas",
+            },
+            jobTitleType: {
+              type: "string",
+              enum: ["teacher", "administrative-staff"],
+              example: "administrative-staff",
+            },
+          },
+        },
+        UpdateJobTitleDto: {
+          type: "object",
+          description:
+            "At least one field required (name, description, or jobTitleType).",
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            description: { type: "string", minLength: 1, maxLength: 500 },
+            jobTitleType: {
+              type: "string",
+              enum: ["teacher", "administrative-staff"],
+            },
+          },
+        },
         ErrorResponse: {
           type: "object",
           properties: {
