@@ -12,6 +12,7 @@ import academicLevelRoutes from "./modules/academic-levels/academic-level.routes
 import scholarshipRoutes from "./modules/scholarships/scholarship.routes";
 import paymentConceptRoutes from "./modules/payment-concepts/payment-concept.routes";
 import jobTitleRoutes from "./modules/job-titles/job-title.routes";
+import securityRoleRoutes from "./modules/security-roles/security-role.routes";
 
 /** Create Express application */
 const app = express();
@@ -28,6 +29,7 @@ app.use("/academic-levels", academicLevelRoutes);
 app.use("/scholarships", scholarshipRoutes);
 app.use("/payment-concepts", paymentConceptRoutes);
 app.use("/job-titles", jobTitleRoutes);
+app.use("/security-roles", securityRoleRoutes);
 
 /* --- Swagger API Docs --- */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

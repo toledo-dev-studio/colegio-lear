@@ -132,3 +132,32 @@ model JobTitle {
   @@map("job_titles")
   @@schema("core")
 }
+
+// ─── Security Role ──────────────────────────────────────────────────────────────
+
+model SecurityRole {
+  id          String                   @id @default(uuid()) @db.Uuid
+  name        String                   @unique @db.VarChar(100)
+  description String                   @db.VarChar(500)
+  status      Boolean                  @default(true)
+  permissions SecurityRolePermission[]
+
+  @@map("security_roles")
+  @@schema("core")
+}
+
+// ─── Security Role Permission ───────────────────────────────────────────────────
+
+model SecurityRolePermission {
+  id             String       @id @default(uuid()) @db.Uuid
+  securityRoleId String       @map("security_role_id") @db.Uuid
+  moduleKey      String       @map("module_key") @db.VarChar(50)
+  canRead        Boolean      @map("can_read")
+  canWrite       Boolean      @map("can_write")
+  canDelete      Boolean      @map("can_delete")
+  securityRole   SecurityRole @relation(fields: [securityRoleId], references: [id], onDelete: Cascade)
+
+  @@unique([securityRoleId, moduleKey])
+  @@map("security_role_permissions")
+  @@schema("core")
+}

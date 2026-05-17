@@ -186,6 +186,103 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
           },
         },
+        SecurityRole: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Administrador" },
+            description: {
+              type: "string",
+              example: "Rol con acceso completo al sistema",
+            },
+            status: { type: "boolean", example: true },
+          },
+        },
+        SecurityRoleDetail: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Administrador" },
+            description: {
+              type: "string",
+              example: "Rol con acceso completo al sistema",
+            },
+            status: { type: "boolean", example: true },
+            permissions: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/SecurityRolePermission",
+              },
+            },
+          },
+        },
+        SecurityRolePermission: {
+          type: "object",
+          properties: {
+            moduleKey: {
+              type: "string",
+              enum: [
+                "dashboard",
+                "my-account",
+                "my-classes",
+                "students",
+                "academic-years",
+                "announcements",
+                "academic-levels",
+                "school-subjects",
+                "scholarships",
+                "payment-concepts",
+                "employees",
+                "job-titles",
+                "security-roles",
+                "settings",
+              ],
+              example: "students",
+            },
+            canRead: { type: "boolean", example: true },
+            canWrite: { type: "boolean", example: true },
+            canDelete: { type: "boolean", example: false },
+          },
+        },
+        CreateSecurityRoleDto: {
+          type: "object",
+          required: ["name", "description", "permissions"],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+              example: "Coordinador",
+            },
+            description: {
+              type: "string",
+              minLength: 1,
+              maxLength: 500,
+              example: "Rol de coordinación académica",
+            },
+            permissions: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/SecurityRolePermission",
+              },
+            },
+          },
+        },
+        UpdateSecurityRoleDto: {
+          type: "object",
+          description:
+            "At least one field required (name, description, or permissions).",
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            description: { type: "string", minLength: 1, maxLength: 500 },
+            permissions: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/SecurityRolePermission",
+              },
+            },
+          },
+        },
         ErrorResponse: {
           type: "object",
           properties: {
