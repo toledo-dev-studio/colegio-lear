@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { getAnnouncementByIdActionAsync } from "../actions/get-announcement-by-id.action";
-import { createUpdateAnnouncementActionAsync } from "../actions/create-update-announcement.action";
+import { getAnnouncementByIdActionAsync } from "../actions/announcements/get-announcement-by-id.action";
+import { createUpdateAnnouncementActionAsync } from "../actions/announcements/create-update-announcement.action";
 import { GET_PAGED_ANNOUNCEMENTS_QUERY_KEY, GET_ANNOUNCEMENT_QUERY_KEY, GET_ANNOUNCEMENTS_QUERY_KEY } from "../lib/queries-key";
 
 export const useAnnouncement = (id: string) => {

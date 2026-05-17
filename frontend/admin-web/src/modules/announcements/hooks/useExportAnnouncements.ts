@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { stringToBooleanWithDefault } from "@/lib/utils";
 import { GET_ANNOUNCEMENTS_QUERY_KEY } from "../lib/queries-key";
-import { getAnnouncementsActionAsync } from "../actions/get-announcements.action";
+import { getAnnouncementsActionAsync } from "../actions/announcements/get-announcements.action";
 
 export const useExportAnnouncements = () => {
 

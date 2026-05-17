@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { stringToBooleanWithDefault } from "@/lib/utils";
 import type { Announcement } from "@/interfaces/entites/announcement";
+import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 
 interface Props {
     open: boolean;
@@ -42,8 +43,12 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
         searchParams.delete('query');
         searchParams.delete('name');
         searchParams.delete('status');
+        searchParams.delete('published-at');
+        searchParams.delete('expires-at');
         reset({
             name: undefined,
+            publishedAt: undefined,
+            expiresAt: undefined,
             status: true,
         });
         setSearchParams(searchParams);
@@ -91,26 +96,31 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
 
                             <div className="w-full">
                                 <label className="text-sm font-medium text-foreground mb-2 block">Entre fecha de publicación:</label>
-                                <div className="relative">
-                                    <Input
-                                        type="date"
-                                        {...register('publishedAt')}
-                                        placeholder="Fecha de publicación..."
-                                        className="pill-input w-full pl-8"
-                                    />
-                                </div>
+                                <Controller
+                                    name="publishedAt"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <CustomDatePicker
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                        />
+                                    )}
+                                />
                                 <p className="text-xs text-muted-foreground mt-1.5">Filtrado a partir de fecha de publicación seleccionada</p>
                             </div>
                             <div className="w-full">
                                 <label className="text-sm font-medium text-foreground mb-2 block">Hasta fecha de vencimiento:</label>
-                                <div className="relative">
-                                    <Input
-                                        type="date"
-                                        {...register('expiresAt')}
-                                        placeholder="Fecha de vencimiento..."
-                                        className="pill-input w-full pl-8"
-                                    />
-                                </div>
+
+                                <Controller
+                                    name="expiresAt"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <CustomDatePicker
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                        />
+                                    )}
+                                />
                                 <p className="text-xs text-muted-foreground mt-1.5">Filtrado hasta fecha de vencimiento seleccionada</p>
                             </div>
 
