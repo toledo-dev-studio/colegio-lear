@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { Pencil, Trash } from 'lucide-react'
+import { Pencil, RotateCcwKey, Trash } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
@@ -82,6 +82,14 @@ export const EmployeesTable = ({ data = [], isLoading, handleClickEditRow, handl
                                                 className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
                                                 onClick={() => handleClickEditRow(item)}>
                                                 <Pencil className="w-4 h-4" />
+                                            </Button>
+                                            <Button
+                                                aria-label="Restablecer password"
+                                                className="icon-btn-sm bg-green-700 text-white hover:bg-green-700/90"
+                                                onClick={() => {
+                                                    alert("In progress")
+                                                }}>
+                                                <RotateCcwKey className="w-4 h-4" />
                                             </Button>
                                             <Button
                                                 aria-label="Eliminar"

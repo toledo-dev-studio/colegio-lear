@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useEffect, useState } from "react";
 import { useEditor, EditorContent, type Editor, useEditorState } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Table } from "@tiptap/extension-table";
@@ -8,12 +8,11 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { TextStyle } from "@tiptap/extension-text-style";
 import {
   Bold, Italic, Underline as UnderlineIcon, List, ListOrdered,
-  Image as ImageIcon, Table as TableIcon, Type, Quote, Heading1, Heading2, Undo2, Redo2,
-  Link2Off,
+  Image as ImageIcon, Type, Quote, Heading1, Heading2, Undo2, Redo2,
   Link2,
-  ImageUp,
 } from "lucide-react";
 
+import { LinkModal } from "./components/LinkModal";
 import { FontSize } from "./extensions/FontSizeExtension";
 import { ResizableImage } from "./extensions/ResizableImageExtension";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
@@ -29,7 +28,8 @@ const DEFAULT_FONT_SIZE = "16px";
 const FONT_SIZES = ["14px", "16px", "18px", "24px", "32px"];
 
 export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el contenido...", testid = "tiptap-editor" }: TipTapEditorProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [linkModal, setLinkModal] = useState<{ open: boolean, type: "link" | "image-url" }>();
 
   const editor = useEditor({
     extensions: [
@@ -65,12 +65,17 @@ export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el 
   const editorState = useEditorState({
     editor,
     selector: ({ editor }) => ({
+      canUndo: editor.can().undo(),
+      canRedo: editor.can().redo(),
       isBold: editor.isActive("bold"),
       isItalic: editor.isActive("italic"),
       isUnderline: editor.isActive("underline"),
       isHeading1: editor.isActive("heading", { level: 1 }),
       isHeading2: editor.isActive("heading", { level: 2 }),
       isBlockquote: editor.isActive("blockquote"),
+      isActiveLink: editor.isActive("link"),
+      isBulletList: editor.isActive("bulletList"),
+      isOrderedList: editor.isActive("orderedList"),
       isEmpty: editor.isEmpty,
       hasContentNodes: editor.state.doc.childCount > 1,
       hasSelection: !editor.state.selection.empty,
@@ -78,7 +83,7 @@ export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el 
   });
 
   // Sync external value changes (e.g. when initialData loads after editor mount)
-  React.useEffect(() => {
+  useEffect(() => {
     if (!editor) return;
     if (value && value !== editor.getHTML()) {
       editor.commands.setContent(value, { emitUpdate: false });
@@ -87,54 +92,12 @@ export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el 
 
   if (!editor) return null;
 
-  const addLink = () => {
-    const previous = editor.getAttributes("link").href as string | undefined;
-
-    const url = window.prompt("URL del enlace:", previous || "https://");
-
-    if (!url) {
-      editor.chain().focus().unsetLink().run();
-      return;
-    }
-
-    editor.chain().focus().setLink({ href: url, target: "_blank" }).run();
-  };
-
-  const addImageByUrl = () => {
-    const url = window.prompt("URL de la imagen:", "https://");
-
-    if (!url) return;
-
-    const cleanUrl = url.trim();
-
-    if (!cleanUrl || cleanUrl === "https://") return;
-
-    if (url) editor.chain().focus().setImage({ src: url, alt: "Imagen" }).run();
-  };
-
-  const triggerUpload = () => fileInputRef.current?.click();
-
-  const handleFile = (file: File) => {
-    // Simulate upload to /public — keep the data URL as src.
-    const reader = new FileReader();
-    reader.onload = () => {
-      console.log('Cuando la imagen se termina de cargar');
-
-      const dataUrl = reader.result as string;
-      editor.chain().focus().setImage({ src: dataUrl, alt: file.name }).run();
-    };
-    reader.readAsDataURL(file);
-    console.log('Cargando imagen...');
-  };
-
-  // const insertTable = () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
-
   return (
     <div className="rounded-2xl border border-input bg-card overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary" data-testid={testid}>
       <Toolbar editor={editor}>
         <Group>
-          <ToolBtn onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} testid="tt-undo" label="Deshacer"><Undo2 className="w-4 h-4" /></ToolBtn>
-          <ToolBtn onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()} testid="tt-redo" label="Rehacer"><Redo2 className="w-4 h-4" /></ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().undo().run()} disabled={!editorState.canUndo} testid="tt-undo" label="Deshacer"><Undo2 className="w-4 h-4" /></ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().redo().run()} disabled={!editorState.canRedo} testid="tt-redo" label="Rehacer"><Redo2 className="w-4 h-4" /></ToolBtn>
         </Group>
         <Group>
           <ToolBtn active={editorState.isBold} onClick={() => editor.chain().focus().toggleBold().run()} testid="tt-bold" label="Negrita"><Bold className="w-4 h-4" /></ToolBtn>
@@ -149,21 +112,17 @@ export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el 
           <ToolBtn active={editorState.isBlockquote} onClick={() => editor.chain().focus().toggleBlockquote().run()} testid="tt-quote" label="Cita"><Quote className="w-4 h-4" /></ToolBtn>
         </Group>
         <Group>
-          <ToolBtn active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()} testid="tt-bullet" label="Viñetas"><List className="w-4 h-4" /></ToolBtn>
-          <ToolBtn active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()} testid="tt-ordered" label="Lista numerada"><ListOrdered className="w-4 h-4" /></ToolBtn>
+          <ToolBtn active={editorState.isBulletList} onClick={() => editor.chain().focus().toggleBulletList().run()} testid="tt-bullet" label="Viñetas"><List className="w-4 h-4" /></ToolBtn>
+          <ToolBtn active={editorState.isOrderedList} onClick={() => editor.chain().focus().toggleOrderedList().run()} testid="tt-ordered" label="Lista numerada"><ListOrdered className="w-4 h-4" /></ToolBtn>
         </Group>
         <Group>
           <FontSizePicker editor={editor} />
         </Group>
         <Group>
-          <ToolBtn onClick={addLink} active={editor.isActive("link")} disabled={!editorState.hasSelection} testid="tt-link" label="Insertar enlace">
-            {
-              editorState.hasSelection ? (<Link2 className="w-4 h-4" />) : (<Link2Off className="w-4 h-4" />)
-            }
+          <ToolBtn onClick={() => setLinkModal({ open: true, type: "link" })} active={editorState.isActiveLink} testid="tt-link" label="Insertar enlace">
+            <Link2 className="w-4 h-4" />
           </ToolBtn>
-          <ToolBtn onClick={addImageByUrl} testid="tt-img-url" label="Insertar imagen por URL"><ImageIcon className="w-4 h-4" /></ToolBtn>
-          <ToolBtn onClick={triggerUpload} testid="tt-img-upload" label="Cargar imagen"><ImageUp className="w-4 h-4" /></ToolBtn>
-          {/* <ToolBtn onClick={insertTable} testid="tt-table" label="Insertar tabla"><TableIcon className="w-4 h-4" /></ToolBtn> */}
+          <ToolBtn onClick={() => setLinkModal({ open: true, type: "image-url" })} testid="tt-img-url" label="Insertar imagen por URL"><ImageIcon className="w-4 h-4" /></ToolBtn>
         </Group>
       </Toolbar>
       <div className="border-t border-border bg-card">
@@ -174,17 +133,47 @@ export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el 
           )
         }
       </div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) handleFile(f);
-          e.target.value = "";
-        }}
-      />
+      {
+        linkModal !== undefined && linkModal.open && (
+          <>
+            {/* Modal to add link to content for a text*/}
+            <LinkModal
+              open={linkModal.type === "link"}
+              title="Enlace de acceso para la campaña:"
+              description="Agrea un enlace de acceso para la campaña"
+              inputLabel="Enlace de acceso:"
+              inputPlaceholder="https://..."
+              inputDefaultValue=""
+              isLoading={false}
+              handleClickCancel={() => {
+                editor.chain().focus().deleteSelection();
+                setLinkModal(undefined);
+              }}
+              handleClickConfirm={(link: string) => {
+                editor.chain().focus().setLink({ href: link, target: "_blank" }).run();
+                editor.chain().focus().deleteSelection();
+                setLinkModal(undefined);
+              }} />
+
+            {/* Modal to add link to content for an image */}
+            <LinkModal
+              open={linkModal.type === "image-url"}
+              title="Nueva imagen para la campaña:"
+              description="Agrea una nueva imagen para la campaña por medio de un enlace"
+              inputLabel="Enlace de la imagen:"
+              inputPlaceholder="https://..."
+              inputDefaultValue=""
+              isLoading={false}
+              handleClickCancel={() => setLinkModal(undefined)}
+              handleClickConfirm={(link: string) => {
+                editor.chain().focus().setImage({ src: link, alt: "Imagen" }).run();
+                editor.chain().focus().deleteSelection();
+                setLinkModal(undefined);
+              }} />
+          </>
+        )
+      }
+
     </div>
   );
 }
@@ -206,7 +195,7 @@ function ToolBtn({ children, onClick, active, disabled, testid, label }: { child
       data-testid={testid}
       aria-label={label}
       title={label}
-      className={`h-8 w-8 inline-flex items-center justify-center rounded-lg text-sm transition-colors ${active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-card"} disabled:opacity-40 disabled:cursor-not-allowed`}
+      className={`cursor-pointer h-8 w-8 inline-flex items-center justify-center rounded-lg text-sm transition-colors ${active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-card"} disabled:opacity-40 disabled:cursor-not-allowed`}
     >
       {children}
     </button>

@@ -119,7 +119,7 @@ export const ResizableImageView = ({ node, updateAttributes, selected, editor }:
                         contentEditable={false}
                         onMouseDown={(e) => e.stopPropagation()}
                         onClick={(e) => { e.stopPropagation(); setAspectLocked((v) => !v); }}
-                        title={aspectLocked ? "Aspect ratio bloqueado · click para liberar (Shift mientras arrastras para invertir)" : "Aspect ratio libre · click para bloquear"}
+                        title={aspectLocked ? "Click para liberar (Shift mientras arrastras para invertir)" : "Click para bloquear"}
                         data-testid="resizable-image-lock"
                         className={`absolute top-2 right-2 w-8 h-8 rounded-full bg-card/95 border border-border shadow flex items-center justify-center transition-opacity ${showHandles ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
                     >

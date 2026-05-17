@@ -149,3 +149,23 @@ export const formatFriendlyDateTime = (dateString: string): string => {
         minute: "2-digit"
     }).format(date);
 };
+
+/**
+ * Validate an URL string.
+ * @param urlString Url string to validate
+ * @returns Is valid URL
+ */
+export const isValidUrl = (urlString: string): boolean => {
+  try {
+    const url = new URL(urlString);
+    return url.protocol === "https:";
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Generate a new temporal unique identifier
+ * @returns Temporal unique identifier
+ */
+export const generateTemporalId = () => `new_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;

@@ -17,13 +17,9 @@ export const AnnouncementPage = () => {
   const { showLoading, hideLoading } = useLoaderStore();
 
   const handleSubmit = async (announcementLike: Partial<Announcement>) => {
-      console.log(announcementLike);
-      return;
-    
     try {
       showLoading('Guardando registro');
-      !announcementLike.id && (announcementLike.id = "new");
-
+      
       await mutation.mutateAsync(announcementLike, {
         onSuccess: (response) => {
           toast.success('Registro actualizado de forma exitosa');

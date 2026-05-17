@@ -1,3 +1,5 @@
+import type { Attachment } from "./attachment";
+
 export type AudienceType = { key: string, label: string };
 
 export interface Announcement {
@@ -6,10 +8,11 @@ export interface Announcement {
     description: string;
     audience: AudienceType[]; 
     content: string;
-    // attachements: { url: string, name: string, type: string }[];
     publishedAt: string; // Date - ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
     expiresAt: string; // Date - ISO string
     status: boolean;
+
+    attachments: Attachment[];
 }
 
 export const AUDIENCE: AudienceType[] = [
