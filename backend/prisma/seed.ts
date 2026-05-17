@@ -40,11 +40,19 @@ const SCHOLARSHIPS = {
   necesidad_economica: "d4e5f6a7-4444-4000-8000-000000000004",
 };
 
+const PAYMENT_CONCEPTS = {
+  inscripcion: "a1b2c3d4-1111-4000-8000-000000000001",
+  colegiatura_mensual: "a1b2c3d4-2222-4000-8000-000000000002",
+  material_didactico: "a1b2c3d4-3333-4000-8000-000000000003",
+  uniforme_escolar: "a1b2c3d4-4444-4000-8000-000000000004",
+  seguro_escolar: "a1b2c3d4-5555-4000-8000-000000000005",
+};
+
 // ─── Seed function ──────────────────────────────────────────────────────────────
 
 async function main() {
   console.log(
-    "🌱 Seeding academic-levels, school-subjects, and scholarships modules...",
+    "🌱 Seeding academic-levels, school-subjects, scholarships, and payment-concepts modules...",
   );
 
   // --- Academic Levels ---
@@ -319,6 +327,76 @@ async function main() {
 
   console.log(
     `  ✓ Scholarships: ${becaExcelencia.name}, ${becaDeportiva.name}, ${becaHermanos.name}, ${becaNecesidad.name}`,
+  );
+
+  // --- Payment Concepts ---
+  const inscripcion = await prisma.paymentConcept.upsert({
+    where: { id: PAYMENT_CONCEPTS.inscripcion },
+    update: {},
+    create: {
+      id: PAYMENT_CONCEPTS.inscripcion,
+      name: "Inscripción",
+      description: "Cuota de inscripción al ciclo escolar",
+      baseAmount: 3500.0,
+      allowRemission: true,
+      status: true,
+    },
+  });
+
+  const colegiaturaMensual = await prisma.paymentConcept.upsert({
+    where: { id: PAYMENT_CONCEPTS.colegiatura_mensual },
+    update: {},
+    create: {
+      id: PAYMENT_CONCEPTS.colegiatura_mensual,
+      name: "Colegiatura mensual",
+      description: "Pago mensual de colegiatura",
+      baseAmount: 4200.0,
+      allowRemission: true,
+      status: true,
+    },
+  });
+
+  const materialDidactico = await prisma.paymentConcept.upsert({
+    where: { id: PAYMENT_CONCEPTS.material_didactico },
+    update: {},
+    create: {
+      id: PAYMENT_CONCEPTS.material_didactico,
+      name: "Material didáctico",
+      description: "Costo de materiales educativos del ciclo",
+      baseAmount: 1800.0,
+      allowRemission: false,
+      status: true,
+    },
+  });
+
+  const uniformeEscolar = await prisma.paymentConcept.upsert({
+    where: { id: PAYMENT_CONCEPTS.uniforme_escolar },
+    update: {},
+    create: {
+      id: PAYMENT_CONCEPTS.uniforme_escolar,
+      name: "Uniforme escolar",
+      description: "Paquete completo de uniforme escolar",
+      baseAmount: 2500.0,
+      allowRemission: false,
+      status: true,
+    },
+  });
+
+  const seguroEscolar = await prisma.paymentConcept.upsert({
+    where: { id: PAYMENT_CONCEPTS.seguro_escolar },
+    update: {},
+    create: {
+      id: PAYMENT_CONCEPTS.seguro_escolar,
+      name: "Seguro escolar",
+      description: "Seguro de accidentes y gastos médicos escolares",
+      baseAmount: 950.0,
+      allowRemission: false,
+      status: true,
+    },
+  });
+
+  console.log(
+    `  ✓ Payment concepts: ${inscripcion.name}, ${colegiaturaMensual.name}, ${materialDidactico.name}, ${uniformeEscolar.name}, ${seguroEscolar.name}`,
   );
 
   console.log("🌱 Seed completed successfully.");
