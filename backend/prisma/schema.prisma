@@ -58,6 +58,19 @@ model SchoolSubject {
   @@schema("core")
 }
 
+// ─── Scholarship ────────────────────────────────────────────────────────────────
+
+model Scholarship {
+  id                 String  @id @default(uuid()) @db.Uuid
+  name               String  @unique @db.VarChar(100)
+  description        String  @db.VarChar(500)
+  discountPercentage Decimal @map("discount_percentage") @db.Decimal(5, 2)
+  status             Boolean @default(true)
+
+  @@map("scholarships")
+  @@schema("core")
+}
+
 // ─── View: School Subjects (read-only, enriched with level names) ───────────────
 
 view VSchoolSubject {

@@ -33,10 +33,19 @@ const SCHOOL_SUBJECTS = {
   historia_1s: "c3d4e5f6-3333-4000-8000-000000000006",
 };
 
+const SCHOLARSHIPS = {
+  excelencia_academica: "d4e5f6a7-4444-4000-8000-000000000001",
+  deportiva: "d4e5f6a7-4444-4000-8000-000000000002",
+  hermanos: "d4e5f6a7-4444-4000-8000-000000000003",
+  necesidad_economica: "d4e5f6a7-4444-4000-8000-000000000004",
+};
+
 // ─── Seed function ──────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log("🌱 Seeding academic-levels and school-subjects modules...");
+  console.log(
+    "🌱 Seeding academic-levels, school-subjects, and scholarships modules...",
+  );
 
   // --- Academic Levels ---
   const preescolar = await prisma.academicLevel.upsert({
@@ -254,6 +263,64 @@ async function main() {
   ]);
 
   console.log(`  ✓ School subjects: ${subjects.length} records`);
+
+  // --- Scholarships ---
+  const becaExcelencia = await prisma.scholarship.upsert({
+    where: { id: SCHOLARSHIPS.excelencia_academica },
+    update: {},
+    create: {
+      id: SCHOLARSHIPS.excelencia_academica,
+      name: "Beca Excelencia Académica",
+      description:
+        "Beca otorgada a estudiantes con promedio sobresaliente durante el ciclo escolar",
+      discountPercentage: 50,
+      status: true,
+    },
+  });
+
+  const becaDeportiva = await prisma.scholarship.upsert({
+    where: { id: SCHOLARSHIPS.deportiva },
+    update: {},
+    create: {
+      id: SCHOLARSHIPS.deportiva,
+      name: "Beca Deportiva",
+      description:
+        "Beca para estudiantes que representan al colegio en competencias deportivas oficiales",
+      discountPercentage: 30,
+      status: true,
+    },
+  });
+
+  const becaHermanos = await prisma.scholarship.upsert({
+    where: { id: SCHOLARSHIPS.hermanos },
+    update: {},
+    create: {
+      id: SCHOLARSHIPS.hermanos,
+      name: "Beca Hermanos",
+      description:
+        "Descuento aplicable cuando dos o más hermanos están inscritos en el colegio",
+      discountPercentage: 15,
+      status: true,
+    },
+  });
+
+  const becaNecesidad = await prisma.scholarship.upsert({
+    where: { id: SCHOLARSHIPS.necesidad_economica },
+    update: {},
+    create: {
+      id: SCHOLARSHIPS.necesidad_economica,
+      name: "Beca Necesidad Económica",
+      description:
+        "Beca de apoyo para familias que demuestran necesidad económica comprobable",
+      discountPercentage: 80,
+      status: true,
+    },
+  });
+
+  console.log(
+    `  ✓ Scholarships: ${becaExcelencia.name}, ${becaDeportiva.name}, ${becaHermanos.name}, ${becaNecesidad.name}`,
+  );
+
   console.log("🌱 Seed completed successfully.");
 }
 

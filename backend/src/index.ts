@@ -9,6 +9,7 @@ import { errorHandler } from "./shared/middleware/error-handler.middleware";
 import healthRoutes from "./modules/health/health.routes";
 import schoolSubjectRoutes from "./modules/school-subjects/school-subject.routes";
 import academicLevelRoutes from "./modules/academic-levels/academic-level.routes";
+import scholarshipRoutes from "./modules/scholarships/scholarship.routes";
 
 /** Create Express application */
 const app = express();
@@ -22,6 +23,7 @@ app.use(requestLogger);
 app.use(healthRoutes);
 app.use("/school-subjects", schoolSubjectRoutes);
 app.use("/academic-levels", academicLevelRoutes);
+app.use("/scholarships", scholarshipRoutes);
 
 /* --- Swagger API Docs --- */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
