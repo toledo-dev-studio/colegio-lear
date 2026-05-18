@@ -33,6 +33,9 @@ app.use(requestLogger);
 app.use(healthRoutes);
 app.use("/auth", authRoutes);
 
+/* --- Swagger API Docs --- */
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 /* --- Protected Routes (authentication required) --- */
 app.use(authenticate);
 app.use("/school-subjects", schoolSubjectRoutes);
@@ -42,9 +45,6 @@ app.use("/payment-concepts", paymentConceptRoutes);
 app.use("/job-titles", jobTitleRoutes);
 app.use("/security-roles", securityRoleRoutes);
 app.use("/employees", employeeRoutes);
-
-/* --- Swagger API Docs --- */
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /* --- Global Error Handler (must be last) --- */
 app.use(errorHandler);
