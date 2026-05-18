@@ -6,9 +6,9 @@
 declare namespace Express {
   interface Request {
     user?: {
-      employeeId: number;
+      employeeId: string;
       email: string;
-      profileId: number | null;
+      securityRoleId: string;
     };
   }
 }

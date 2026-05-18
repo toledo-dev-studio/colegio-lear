@@ -12,6 +12,11 @@ services:
       POSTGRES_DB: colegio_lear
     volumes:
       - colegio-lear-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   colegio-lear-backend-cli:
     container_name: 'colegio-lear-backend-cli'
@@ -23,6 +28,11 @@ services:
       - '3000:3000'
     volumes:
       - ./backend:/app:rw
+    depends_on:
+      colegio-lear-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@colegio-lear-db:5432/colegio_lear?schema=public"
       
   colegio-lear-admin-web-cli:
     container_name: 'colegio-lear-admin-web-cli'

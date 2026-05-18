@@ -5,14 +5,18 @@ import { UnauthorizedError } from "../errors/app-error";
 
 /** Shape of the JWT access token payload. */
 interface JwtPayload {
-  employeeId: number;
+  employeeId: string;
   email: string;
-  profileId: number | null;
+  securityRoleId: string;
 }
 
 /**
- * Express middleware that verifies the JWT access token from the Authorization header.
- * On success, attaches the decoded payload to `req.user`.
+ * Express middleware that verifies the JWT access token.
+ * Extraction priority:
+ *   1. Cookie `access_token` (set by login endpoint)
+ *   2. Authorization header with "Bearer " prefix (fallback for API clients)
+ *
+ * On success, attaches the decoded payload to `req.user` and calls next().
  * Throws UnauthorizedError for missing, expired, or invalid tokens.
  */
 export function authenticate(
@@ -20,21 +24,30 @@ export function authenticate(
   _res: Response,
   next: NextFunction,
 ): void {
-  const authHeader = req.headers.authorization;
+  // 1. Try cookie first
+  let token: string | undefined = req.cookies?.access_token;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  // 2. Fallback to Authorization header
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.slice(7);
+    }
+  }
+
+  // 3. No token found in either source
+  if (!token) {
     throw new UnauthorizedError("Access token is required");
   }
 
-  const token = authHeader.slice(7);
-
+  // 4. Verify token
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
 
     req.user = {
       employeeId: decoded.employeeId,
       email: decoded.email,
-      profileId: decoded.profileId,
+      securityRoleId: decoded.securityRoleId,
     };
 
     next();

@@ -1,202 +1,223 @@
+import { PrismaClient } from "../../generated/prisma/client";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import crypto from "crypto";
-
-import { prisma } from "../../shared/lib/prisma";
-import {
-  UnauthorizedError,
-  ForbiddenError,
-  NotFoundError,
-} from "../../shared/errors/app-error";
+import jwt, { type SignOptions } from "jsonwebtoken";
+import { UnauthorizedError } from "../../shared/errors/app-error";
 import { env } from "../../shared/config/env.config";
-import { AuthTokens, JwtPayload } from "./auth.types";
+import { logger } from "../../shared/lib/logger";
+import type { IMailService } from "../../shared/services/mail.service";
+import type { LoginResult, LoginResponse, JwtPayloadData } from "./auth.types";
 
 /**
- * Parse a duration string like "15m", "1h", "7d" into milliseconds.
- * Supported units: m (minutes), h (hours), d (days).
+ * Business logic layer for the Auth module.
+ * Handles login, forgot-password, change-password, and utility methods
+ * for password generation and JWT expiration parsing.
  */
-function parseDuration(duration: string): number {
-  const match = duration.match(/^(\d+)([mhd])$/);
-  if (!match) {
-    throw new Error(`Invalid duration format: "${duration}"`);
-  }
+export class AuthService {
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly mail: IMailService,
+  ) {}
 
-  const value = parseInt(match[1]!, 10);
-  const unit = match[2]!;
+  /**
+   * Authenticate an employee by username/email + password.
+   * Queries Employee by username OR email (case-insensitive), verifies password,
+   * generates JWT with { employeeId, email, securityRoleId }.
+   * Returns the signed token and employee data (without password) including
+   * securityRole with permissions and jobTitle.
+   *
+   * Throws UnauthorizedError for invalid credentials or inactive accounts.
+   * Uses the same generic message for "not found" and "wrong password" to prevent
+   * credential enumeration.
+   */
+  async login(identifier: string, password: string): Promise<LoginResult> {
+    // Find employee by username OR email (case-insensitive)
+    const employee = await this.prisma.employee.findFirst({
+      where: {
+        OR: [
+          { username: { equals: identifier, mode: "insensitive" } },
+          { email: { equals: identifier, mode: "insensitive" } },
+        ],
+      },
+      include: {
+        securityRole: { include: { permissions: true } },
+        jobTitle: true,
+      },
+    });
 
-  switch (unit) {
-    case "m":
-      return value * 60 * 1000;
-    case "h":
-      return value * 60 * 60 * 1000;
-    case "d":
-      return value * 24 * 60 * 60 * 1000;
-    default:
-      throw new Error(`Unsupported duration unit: "${unit}"`);
-  }
-}
+    // Generic error for not found (prevent credential enumeration)
+    if (!employee) {
+      throw new UnauthorizedError("Credenciales inválidas");
+    }
 
-/**
- * Generate a JWT access token for the given employee.
- * Signed with HS256, contains employeeId, email, and profileId claims.
- */
-function generateAccessToken(payload: JwtPayload): string {
-  // Cast is safe: env values like "15m", "1h", "7d" match the ms StringValue pattern
-  return jwt.sign(payload, env.JWT_SECRET, {
-    algorithm: "HS256",
-    expiresIn: env.JWT_ACCESS_EXPIRATION,
-  } as jwt.SignOptions);
-}
+    // Check if account is active
+    if (!employee.status) {
+      throw new UnauthorizedError("Cuenta deshabilitada");
+    }
 
-/**
- * Generate a cryptographically random refresh token string.
- */
-function generateRefreshToken(): string {
-  return crypto.randomUUID();
-}
+    // Verify password against bcrypt hash
+    const isPasswordValid = await bcrypt.compare(password, employee.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedError("Credenciales inválidas");
+    }
 
-/**
- * Authenticate an employee by email and password.
- * Returns a pair of access and refresh tokens on success.
- *
- * - Normalizes email to lowercase before lookup.
- * - Rejects inactive accounts with 403.
- * - Rejects invalid credentials with 401.
- * - Stores the refresh token in the database with an expiration date.
- */
-export async function login(
-  email: string,
-  password: string,
-): Promise<AuthTokens> {
-  const normalizedEmail = email.toLowerCase();
-
-  // Find employee by email, include passwordHash for comparison
-  const employee = await prisma.employee.findUnique({
-    where: { email: normalizedEmail },
-  });
-
-  if (!employee) {
-    throw new UnauthorizedError("Invalid credentials");
-  }
-
-  if (!employee.isActive) {
-    throw new ForbiddenError("Account is deactivated");
-  }
-
-  // Compare provided password against stored hash
-  const passwordMatch = await bcrypt.compare(password, employee.passwordHash);
-  if (!passwordMatch) {
-    throw new UnauthorizedError("Invalid credentials");
-  }
-
-  // Build JWT payload
-  const jwtPayload: JwtPayload = {
-    employeeId: employee.id,
-    email: employee.email,
-    profileId: employee.profileId,
-  };
-
-  const accessToken = generateAccessToken(jwtPayload);
-  const refreshToken = generateRefreshToken();
-
-  // Calculate refresh token expiration and store in DB
-  const refreshExpiresMs = parseDuration(env.JWT_REFRESH_EXPIRATION);
-  const expiresAt = new Date(Date.now() + refreshExpiresMs);
-
-  await prisma.refreshToken.create({
-    data: {
-      token: refreshToken,
+    // Build JWT payload
+    const payload: JwtPayloadData = {
       employeeId: employee.id,
-      expiresAt,
-    },
-  });
+      email: employee.email,
+      securityRoleId: employee.securityRoleId,
+    };
 
-  return { accessToken, refreshToken };
-}
+    // Sign JWT with configured secret and expiration
+    const token = jwt.sign(payload, env.JWT_SECRET, {
+      expiresIn: env.JWT_ACCESS_EXPIRATION,
+    } as SignOptions);
 
-/**
- * Rotate refresh tokens: validate the existing token, revoke it,
- * and issue a new access + refresh token pair.
- *
- * - Rejects revoked or missing tokens with 401.
- * - Rejects expired tokens with 401.
- * - Revokes the old token and creates a new one atomically.
- */
-export async function refreshTokens(refreshToken: string): Promise<AuthTokens> {
-  // Find the refresh token in DB, include the employee relation
-  const storedToken = await prisma.refreshToken.findUnique({
-    where: { token: refreshToken },
-    include: { employee: true },
-  });
+    // Build response object (exclude password, cast jobTitleType enum to string)
+    const loginResponse: LoginResponse = {
+      id: employee.id,
+      name: employee.name,
+      firstLastName: employee.firstLastName,
+      secondLastName: employee.secondLastName,
+      email: employee.email,
+      username: employee.username,
+      image: employee.image,
+      mustChangePassword: employee.mustChangePassword,
+      securityRole: {
+        id: employee.securityRole.id,
+        name: employee.securityRole.name,
+        permissions: employee.securityRole.permissions.map((p) => ({
+          moduleKey: p.moduleKey,
+          canRead: p.canRead,
+          canWrite: p.canWrite,
+          canDelete: p.canDelete,
+        })),
+      },
+      jobTitle: {
+        id: employee.jobTitle.id,
+        name: employee.jobTitle.name,
+        jobTitleType: String(employee.jobTitle.jobTitleType),
+      },
+    };
 
-  if (!storedToken || storedToken.isRevoked) {
-    throw new UnauthorizedError("Invalid refresh token");
+    return { token, employee: loginResponse };
   }
 
-  if (storedToken.expiresAt < new Date()) {
-    throw new UnauthorizedError("Session has expired");
+  /**
+   * Generate a temporary password, hash it, store it in DB, set mustChangePassword=true,
+   * and send the plain text password via email.
+   * Does nothing (silently) if the email doesn't match any employee — prevents account enumeration.
+   */
+  async forgotPassword(email: string): Promise<void> {
+    const employee = await this.prisma.employee.findFirst({
+      where: { email: { equals: email, mode: "insensitive" } },
+    });
+
+    // Silent return if not found (don't reveal account existence)
+    if (!employee) return;
+
+    // Generate 8-char alphanumeric temp password
+    const tempPassword = this.generateTempPassword();
+
+    // Hash and update in DB
+    const hashedPassword = await bcrypt.hash(
+      tempPassword,
+      env.BCRYPT_SALT_ROUNDS,
+    );
+    await this.prisma.employee.update({
+      where: { id: employee.id },
+      data: { password: hashedPassword, mustChangePassword: true },
+    });
+
+    // Send email (non-blocking — log errors but don't throw)
+    this.mail
+      .sendMail({
+        to: employee.email,
+        subject: "Recuperación de contraseña - Colegio Lear",
+        html: `<h1>Hola ${employee.name}</h1><p>Tu nueva contraseña temporal es: <strong>${tempPassword}</strong></p><p>Por favor, cámbiala al iniciar sesión.</p>`,
+      })
+      .catch((err) => {
+        logger.error("Failed to send forgot-password email", {
+          error: err,
+          employeeId: employee.id,
+        });
+      });
   }
 
-  const { employee } = storedToken;
+  /**
+   * Verify current password, hash new password, update DB, set mustChangePassword=false.
+   * Throws UnauthorizedError if current password doesn't match.
+   */
+  async changePassword(
+    employeeId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    const employee = await this.prisma.employee.findUnique({
+      where: { id: employeeId },
+      select: { id: true, password: true },
+    });
 
-  // Revoke the old token
-  await prisma.refreshToken.update({
-    where: { id: storedToken.id },
-    data: { isRevoked: true },
-  });
+    if (!employee) {
+      throw new UnauthorizedError("Credenciales inválidas");
+    }
 
-  // Generate new token pair
-  const jwtPayload: JwtPayload = {
-    employeeId: employee.id,
-    email: employee.email,
-    profileId: employee.profileId,
-  };
+    // Verify current password
+    const isCurrentValid = await bcrypt.compare(
+      currentPassword,
+      employee.password,
+    );
+    if (!isCurrentValid) {
+      throw new UnauthorizedError("La contraseña actual es incorrecta");
+    }
 
-  const newAccessToken = generateAccessToken(jwtPayload);
-  const newRefreshToken = generateRefreshToken();
-
-  // Store new refresh token in DB
-  const refreshExpiresMs = parseDuration(env.JWT_REFRESH_EXPIRATION);
-  const expiresAt = new Date(Date.now() + refreshExpiresMs);
-
-  await prisma.refreshToken.create({
-    data: {
-      token: newRefreshToken,
-      employeeId: employee.id,
-      expiresAt,
-    },
-  });
-
-  return { accessToken: newAccessToken, refreshToken: newRefreshToken };
-}
-
-/**
- * Assign a profile to an employee.
- * Verifies both the employee and profile exist before updating.
- */
-export async function assignProfile(
-  employeeId: number,
-  profileId: number,
-): Promise<void> {
-  // Verify employee exists
-  const employee = await prisma.employee.findUnique({
-    where: { id: employeeId },
-  });
-  if (!employee) {
-    throw new NotFoundError("Employee not found");
+    // Hash new password and update
+    const hashedNewPassword = await bcrypt.hash(
+      newPassword,
+      env.BCRYPT_SALT_ROUNDS,
+    );
+    await this.prisma.employee.update({
+      where: { id: employeeId },
+      data: { password: hashedNewPassword, mustChangePassword: false },
+    });
   }
 
-  // Verify profile exists
-  const profile = await prisma.profile.findUnique({
-    where: { id: profileId },
-  });
-  if (!profile) {
-    throw new NotFoundError("Profile not found");
+  /**
+   * Generate an 8-character alphanumeric random password.
+   * Characters: [a-zA-Z0-9]
+   */
+  generateTempPassword(): string {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
   }
 
-  // Update employee's profileId
-  await prisma.employee.update({
-    where: { id: employeeId },
-    data: { profileId },
-  });
+  /**
+   * Parse JWT expiration string (e.g. "15m", "1h", "7d") to milliseconds.
+   * Supports: s (seconds), m (minutes), h (hours), d (days).
+   * Returns 900000 (15 minutes) as default if format is unrecognized.
+   */
+  parseExpirationToMs(expiration: string): number {
+    const match = expiration.match(/^(\d+)([smhd])$/);
+    if (!match || !match[1] || !match[2]) return 900000; // default 15 minutes
+
+    const value = parseInt(match[1], 10);
+    const unit = match[2];
+
+    switch (unit) {
+      case "s":
+        return value * 1000;
+      case "m":
+        return value * 60 * 1000;
+      case "h":
+        return value * 60 * 60 * 1000;
+      case "d":
+        return value * 24 * 60 * 60 * 1000;
+      default:
+        return 900000;
+    }
+  }
 }

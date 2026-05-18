@@ -1,21 +1,33 @@
 import { z } from "zod";
 
-/** Schema for login request body */
+// ─── Schemas ────────────────────────────────────────────────────────────────
+
+/**
+ * Validates POST /auth/login body.
+ * - identifier: username or email (string, non-empty)
+ * - password: string, non-empty
+ */
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  password: z.string().min(1, "Password is required"),
+  identifier: z.string().min(1, "El identificador es requerido"),
+  password: z.string().min(1, "La contraseña es requerida"),
 });
 
-/** Schema for refresh token request body */
-export const refreshSchema = z.object({
-  refreshToken: z.string().min(1, "Refresh token is required"),
+/**
+ * Validates POST /auth/forgot-password body.
+ * - email: valid email format
+ */
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("El email no tiene un formato válido"),
 });
 
-/** Schema for assigning a profile to an employee */
-export const assignProfileSchema = z.object({
-  employeeId: z
-    .number()
-    .int()
-    .positive("Employee ID must be a positive integer"),
-  profileId: z.number().int().positive("Profile ID must be a positive integer"),
+/**
+ * Validates POST /auth/change-password body.
+ * - currentPassword: string, non-empty
+ * - newPassword: string, minimum 6 characters
+ */
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "La contraseña actual es requerida"),
+  newPassword: z
+    .string()
+    .min(6, "La nueva contraseña debe tener al menos 6 caracteres"),
 });
