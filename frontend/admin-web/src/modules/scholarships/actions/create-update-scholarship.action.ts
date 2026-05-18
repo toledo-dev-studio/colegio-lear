@@ -1,6 +1,5 @@
 import { api } from "@/api/client";
-
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
 
 export const CreateUpdateScholarshipActionAsync = async (scholarshipLike: Partial<Scholarship>): Promise<Scholarship> => {

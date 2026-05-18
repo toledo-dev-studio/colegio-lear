@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-
-import { downloadDataToCsvFile } from "@/lib/utils";
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { SecurityRolesTable } from "./components/SecurityRolesTable";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";

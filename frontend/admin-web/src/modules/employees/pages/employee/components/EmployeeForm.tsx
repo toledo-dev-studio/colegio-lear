@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Mail, Phone, Save, User, X } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
-import { isValidPhone } from '@/lib/utils';
+import { isValidPhone } from '@/lib/extensions/validators';
 import { Switch } from '@/shared/ui/switch';
 import { Button } from '@/shared/ui/button';
 import type { Employee } from '@/interfaces/entites/employee';

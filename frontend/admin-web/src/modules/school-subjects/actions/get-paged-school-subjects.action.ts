@@ -1,8 +1,7 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/extensions/promises";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
-
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
-import { sleep } from "@/lib/utils";
 
 interface Options {
     query?: string;

@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router"
 
-import { stringToBooleanWithDefault } from "@/lib/utils";
 import { GET_PAGED_EMPLOYEES_QUERY_KEY } from "../lib/queries-key";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getPagedEmployeesActionAsync } from "../actions/get-paged-employees.action";
 
 export const usePagedEmployees = () => {

@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 

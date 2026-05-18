@@ -1,9 +1,8 @@
 import { api } from "@/api/client";
-
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 
-export const CreateUpdateAcademicLevelAction = async (academicLevelLike: Partial<AcademicLevel>): Promise<AcademicLevel> => {
+export const createUpdateAcademicLevelAction = async (academicLevelLike: Partial<AcademicLevel>): Promise<AcademicLevel> => {
     await sleep();
 
     const { id } = academicLevelLike;

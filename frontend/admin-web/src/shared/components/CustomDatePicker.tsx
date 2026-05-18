@@ -10,7 +10,7 @@ import {
 } from "@/shared/ui/popover"
 import { es } from "date-fns/locale"
 import { CalendarClock, Search } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/extensions/utils"
 
 interface Props {
     value?: string // ISO string

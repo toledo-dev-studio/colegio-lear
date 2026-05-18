@@ -1,6 +1,6 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/extensions/promises";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { sleep } from "@/lib/utils";
 
 export const getAcademicLevelByIdAction = async (id: string): Promise<AcademicLevel> => {
     

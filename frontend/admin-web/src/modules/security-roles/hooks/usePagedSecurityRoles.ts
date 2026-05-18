@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/utils";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { GET_PAGED_SECURITY_ROLES_QUERY_KEY } from "../lib/queries-key";
 import { getPagedSecurityRolesActionAsync } from "../actions/get-paged-security-roles.action";
 

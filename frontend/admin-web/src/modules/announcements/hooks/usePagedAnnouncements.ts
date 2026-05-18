@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/utils";
 import { GET_PAGED_ANNOUNCEMENTS_QUERY_KEY } from "../lib/queries-key";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getPagedAnnouncementsActionAsync } from "../actions/announcements/get-paged-announcements.action";
 
 export const usePagedAnnouncements = () => {

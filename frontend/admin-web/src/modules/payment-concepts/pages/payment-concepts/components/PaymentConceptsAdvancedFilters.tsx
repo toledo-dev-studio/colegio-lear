@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { stringToBooleanWithDefault } from "@/lib/utils";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 
 interface Props {

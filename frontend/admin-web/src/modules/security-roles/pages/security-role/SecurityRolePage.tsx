@@ -20,11 +20,10 @@ export const SecurityRolePage = () => {
   const handleSubmit = async (securityRoleLike: Partial<SecurityRole>) => {
     try {
       showLoading('Guardando registro');
-      !securityRoleLike.id && (securityRoleLike.id = "new");
-
       await mutation.mutateAsync(securityRoleLike, {
         onSuccess: (response) => {
           toast.success('El registro se ah actualizado correctamente');
+          hideLoading();
           navigate(`/security-roles/${response.id}`);
         }
       });

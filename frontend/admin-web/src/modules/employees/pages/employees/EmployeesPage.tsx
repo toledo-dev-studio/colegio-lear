@@ -10,7 +10,7 @@ import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
 import { CustomPagination } from "@/shared/components/CustomPagination"
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { toast } from "sonner";
-import { downloadDataToCsvFile } from "@/lib/utils";
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { useDeleteEmployee } from "../../hooks/useDeleteEmployee";
 import { EmployeesAdvancedFilters } from "./components/EmployeesAdvancedFilters";

@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 
 export const getPaymentConceptByIdActionAsync = async (id: string): Promise<PaymentConcept> => {

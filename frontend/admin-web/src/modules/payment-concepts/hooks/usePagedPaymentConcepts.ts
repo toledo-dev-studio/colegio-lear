@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/utils";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY } from "../lib/queries-key";
 import { getPagedPaymentConceptsActionAsync } from "../actions/get-paged-payment-concepts.action";
 

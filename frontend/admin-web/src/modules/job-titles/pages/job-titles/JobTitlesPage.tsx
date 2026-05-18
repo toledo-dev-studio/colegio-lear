@@ -12,7 +12,7 @@ import { JobTitlesTable } from "./components/JobTitlesTable";
 import { useDeleteJobTitle } from "../../hooks/useDeleteJobTitle";
 import { useExportJobTitles } from "../../hooks/useExportJobTitles";
 import { JobTitlesAdvancedFilters } from "./components/JobTitlesAdvancedFilters";
-import { downloadDataToCsvFile } from "@/lib/utils";
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 
 export const JobTitlesPage = () => {

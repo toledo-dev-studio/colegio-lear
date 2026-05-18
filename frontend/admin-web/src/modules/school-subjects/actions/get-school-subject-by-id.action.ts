@@ -1,7 +1,6 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/extensions/promises";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
-
-import { sleep } from "@/lib/utils";
 
 export const getSchoolSubjectByIdActionAsync = async (id: string): Promise<SchoolSubject> => {
     if (!id)

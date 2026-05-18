@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router"
 
-import { getPagedSchoolSubjectsActionAsync } from "../actions/get-paged-school-subjects.action";
-import { stringToBooleanWithDefault } from "@/lib/utils";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { GET_PAGED_SCHOOL_SUBJECTS_QUERY_KEY } from "../lib/queries-key";
+import { getPagedSchoolSubjectsActionAsync } from "../actions/get-paged-school-subjects.action";
 
 export const usePagedSchoolSubjects = () => {
 

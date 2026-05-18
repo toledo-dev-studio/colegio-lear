@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { generateTemporalId } from "@/lib/utils";
+import { generateTemporalId } from "@/lib/extensions/utils";
 import { AttachmentCard } from "./AttachmentCard";
-import { extractFileExtension } from "@/lib/files";
+import { extractFileExtension } from "@/lib/extensions/attachments";
 import type { Attachment } from "@/interfaces/entites/attachment";
 import { CustomDragAndDrop } from "@/shared/components/CustomDragAndDrop";
 import { useAttachmentsForAnnouncement } from "@/modules/announcements/hooks/useAttachmentsForAnnouncement";
-import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/attachment.constants";
-import { promisePool } from "@/lib/promises";
+import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/constants/attachment.constants";
+import { promisePool } from "@/lib/extensions/promises";
 
 /**
  * Attachments — owner of all attachment business logic for announcement.

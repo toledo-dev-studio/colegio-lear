@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router";
 import { LayoutDashboard, Fingerprint, BookOpen, Users, CalendarDays, GraduationCap, Ruler, Telescope, Wallet, Megaphone, ShieldCheck, UserCog, LogOut, Briefcase } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/extensions/utils";
 import { CustomLogo } from "./CustomLogo";
 import type { Navbar } from "@/interfaces/components/navbar";
 import { ACADEMIC_LEVELS_MODULE, ACADEMIC_YEARS_MODULE, ANNOUNCEMENTS_MODULE, DASHBOARD_MODULE, EMPLOYEES_MODULE, JOB_TITLES_MODULE, MY_ACCOUNT_MODULE, MY_CLASSES_MODULE, PAYMENT_CONCEPTS_MODULE, SCHOLARSHIPS_MODULE, SCHOOL_SUBJECTS_MODULE, SECURITY_ROLES_MODULE, STUDENTS_MODULE } from "@/interfaces/components/modules";

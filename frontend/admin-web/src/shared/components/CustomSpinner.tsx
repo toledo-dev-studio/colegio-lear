@@ -1,5 +1,5 @@
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/extensions/utils";
 
 interface Props {
     className?: string,

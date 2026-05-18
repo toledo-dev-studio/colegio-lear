@@ -6,7 +6,7 @@ import { Save, X } from 'lucide-react';
 import { Input } from '@/shared/ui/input';
 import { Switch } from '@/shared/ui/switch';
 import { Button } from '@/shared/ui/button';
-import { generateTemporalId } from '@/lib/utils';
+import { generateTemporalId } from '@/lib/extensions/utils';
 import { CustomSpinner } from '@/shared/components/CustomSpinner';
 import { AUDIENCE, type Announcement } from '@/interfaces/entites/announcement';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';

@@ -11,7 +11,7 @@ import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { AcademicLevelsTable } from "./components/AcademicLevelsTable";
 import { useDeleteAcademicLevel } from "../../hooks/useDeleteAcademicLevel";
 import { useExportAcademicLevels } from "../../hooks/useExportAcademicLevels";
-import { downloadDataToCsvFile } from "@/lib/utils";
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { AcademicLevelsAdvancedFilters } from "./components/AcademicLevelsAdvancedFilters";
 

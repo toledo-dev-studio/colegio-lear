@@ -5,8 +5,8 @@ import { X } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { stringToBooleanWithDefault } from "@/lib/utils";
 import type { SecurityRole } from "@/interfaces/entites/security-role";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 
 interface Props {
     open: boolean;

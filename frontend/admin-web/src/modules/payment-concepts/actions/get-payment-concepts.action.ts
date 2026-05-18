@@ -1,7 +1,6 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/extensions/promises";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
-
-import { sleep } from "@/lib/utils";
 
 interface Options {
     query?: string;

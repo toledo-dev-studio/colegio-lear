@@ -1,9 +1,9 @@
 import { api } from "@/api/client";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
 import type { Announcement } from "@/interfaces/entites/announcement";
 
 export const createUpdateAnnouncementActionAsync = async (announcementLike: Partial<Announcement>): Promise<Announcement> => {
-    await sleep(500);
+    await sleep();
 
     const { id } = announcementLike;
 

@@ -1,10 +1,9 @@
 import { api } from "@/api/client";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 
-
 export const createUpdatePaymentConceptActionAsync = async (paymentConceptLike: Partial<PaymentConcept>): Promise<PaymentConcept> => {
-    await sleep(500);
+    await sleep();
 
     const { id } = paymentConceptLike;
 

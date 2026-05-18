@@ -1,7 +1,6 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/extensions/promises";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
-
-import { sleep } from "@/lib/utils";
 
 export const getScholarshipByIdActionAsync = async (id: string): Promise<Scholarship> => {
 

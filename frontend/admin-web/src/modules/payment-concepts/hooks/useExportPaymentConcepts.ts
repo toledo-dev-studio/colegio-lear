@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/utils";
 import { GET_PAYMENT_CONCEPTS_QUERY_KEY } from "../lib/queries-key";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getPaymentConceptsActionAsync } from "../actions/get-payment-concepts.action";
 
 export const useExportPaymentConcepts = () => {

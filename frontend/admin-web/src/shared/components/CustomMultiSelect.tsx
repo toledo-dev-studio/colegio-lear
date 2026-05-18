@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, X, Check, Users } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/extensions/utils";
 
 interface Option { key: string, label: string };
 

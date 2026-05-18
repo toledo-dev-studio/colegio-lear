@@ -1,4 +1,12 @@
 /**
+ * Simulate an async delay.
+ * Useful for mocking API response time during development.
+ * @param ms Number of milliseconds to wait.
+ * @returns Promise that resolves after the delay.
+ */
+export const sleep = (ms: number = 1000) => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
  * Generate a pool request for async actions
  * @param items Items to proccess as promises
  * @param limit Limit of requests at the same time

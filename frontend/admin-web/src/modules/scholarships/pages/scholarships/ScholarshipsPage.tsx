@@ -7,7 +7,7 @@ import { usePagedScholarships } from "../../hooks/usePagedScholarships";
 import { useExportScholarships } from "../../hooks/useExportScholarships";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { toast } from "sonner";
-import { downloadDataToCsvFile } from "@/lib/utils";
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { CustomPagination } from "@/shared/components/CustomPagination";
 import { ScholarshipsTable } from "./components/ScholarshipsTable";

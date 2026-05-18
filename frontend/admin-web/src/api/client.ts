@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost/api';
+import { VITE_COLEGIO_LEAR_API_URL } from '@/lib/constants/environment.constants';
+
+const baseURL = VITE_COLEGIO_LEAR_API_URL;
 
 const api = axios.create({
     baseURL: baseURL,

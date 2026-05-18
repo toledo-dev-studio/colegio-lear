@@ -1,14 +1,20 @@
 import { api } from "@/api/client";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
+import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
 interface Options {
     id?: string
 }
 
 export const deleteJobTitleByIdActionAsync = async ({ id }: Options): Promise<void> => {
-    if(!id) 
+    if (!id)
         return;
+
     await sleep();
+
+    if (VITE_ENVIRONMENT === "mockable")
+        return;
+
     await api.delete(`/job-titles/${id}`);
     return;
 }

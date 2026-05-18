@@ -1,7 +1,6 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/extensions/promises";
 import type { Announcement } from "@/interfaces/entites/announcement";
-
-import { sleep } from "@/lib/utils";
 
 interface Options {
     query?: string;

@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router"
 
-import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/utils";
 import { GET_PAGED_SCHOLARSHIPS_QUERY_KEY } from "../lib/queries-key";
 import { getPagedScholarshipsActionAsync } from "../actions/get-paged-scholarships.action";
+import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const usePagedScholarships = () => {
 

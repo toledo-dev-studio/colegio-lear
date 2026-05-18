@@ -5,12 +5,12 @@ import { useSearchParams } from "react-router";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { stringToBooleanWithDefault } from "@/lib/utils";
 import type { Employee } from "@/interfaces/entites/employee";
 import { useSearchInput } from "@/shared/hooks/useSearchInput";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
-import { useSecurityRolesForEmployees } from "@/modules/employees/hooks/useSecurityRolesForEmployees";
 import { useJobTitlesForEmployees } from "@/modules/employees/hooks/useJobTitlesForEmployees";
+import { useSecurityRolesForEmployees } from "@/modules/employees/hooks/useSecurityRolesForEmployees";
 import { GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY, GET_SECURITY_ROLES_FOR_EMPLOYEE_QUERY_KEY } from "@/modules/employees/lib/queries-key";
 
 interface Props {

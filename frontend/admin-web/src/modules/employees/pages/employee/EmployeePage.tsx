@@ -19,11 +19,10 @@ export const EmployeePage = () => {
   const handleSubmit = async (employeeLike: Partial<EmployeeFormData>) => {
     try {
       showLoading('Guardando registro');
-      !employeeLike.id && (employeeLike.id = "new");
-
       await mutation.mutateAsync(employeeLike, {
         onSuccess: (response) => {
           toast.success('Empleado actualizada correctamente');
+          hideLoading();
           navigate(`/employees/${response.id}`);
         }
       });
