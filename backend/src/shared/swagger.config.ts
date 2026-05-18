@@ -283,6 +283,52 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
           },
         },
+        LoginResponse: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Omar" },
+            firstLastName: { type: "string", example: "Trejo" },
+            secondLastName: { type: "string", example: "García" },
+            email: {
+              type: "string",
+              format: "email",
+              example: "omar.trejo@colegiolear.com",
+            },
+            username: { type: "string", example: "otrejo" },
+            image: {
+              type: "string",
+              nullable: true,
+              example: "employees/abc123.jpg",
+            },
+            mustChangePassword: { type: "boolean", example: false },
+            securityRole: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string", example: "Administrador" },
+                permissions: {
+                  type: "array",
+                  items: {
+                    $ref: "#/components/schemas/SecurityRolePermission",
+                  },
+                },
+              },
+            },
+            jobTitle: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string", example: "Profesor de Matemáticas" },
+                jobTitleType: {
+                  type: "string",
+                  enum: ["teacher", "administrative-staff"],
+                  example: "teacher",
+                },
+              },
+            },
+          },
+        },
         ErrorResponse: {
           type: "object",
           properties: {

@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import bcrypt from "bcrypt";
 
 const pool = new pg.Pool({ connectionString: process.env["DATABASE_URL"] });
 const adapter = new PrismaPg(pool, { schema: "core" });
@@ -397,6 +398,131 @@ async function main() {
 
   console.log(
     `  ✓ Payment concepts: ${inscripcion.name}, ${colegiaturaMensual.name}, ${materialDidactico.name}, ${uniformeEscolar.name}, ${seguroEscolar.name}`,
+  );
+
+  // --- Admin Security Role ---
+  const ADMIN_ROLE_ID = "d1000000-0000-0000-0000-000000000001";
+  const ALL_MODULE_KEYS = [
+    "dashboard",
+    "my-account",
+    "my-classes",
+    "students",
+    "academic-years",
+    "announcements",
+    "academic-levels",
+    "school-subjects",
+    "scholarships",
+    "payment-concepts",
+    "employees",
+    "job-titles",
+    "security-roles",
+    "settings",
+  ];
+
+  const adminRole = await prisma.securityRole.upsert({
+    where: { id: ADMIN_ROLE_ID },
+    update: {},
+    create: {
+      id: ADMIN_ROLE_ID,
+      name: "Administrador",
+      description: "Rol con acceso completo a todos los módulos del sistema",
+      status: true,
+    },
+  });
+
+  // Delete existing permissions and recreate (Sync_Completo)
+  await prisma.securityRolePermission.deleteMany({
+    where: { securityRoleId: adminRole.id },
+  });
+  await prisma.securityRolePermission.createMany({
+    data: ALL_MODULE_KEYS.map((moduleKey) => ({
+      securityRoleId: adminRole.id,
+      moduleKey,
+      canRead: true,
+      canWrite: true,
+      canDelete: true,
+    })),
+  });
+
+  console.log(
+    `  ✓ Admin role: ${adminRole.name} with ${ALL_MODULE_KEYS.length} permissions`,
+  );
+
+  // --- Admin Job Title ---
+  const ADMIN_JOB_TITLE_ID = "e1000000-0000-0000-0000-000000000001";
+  const adminJobTitle = await prisma.jobTitle.upsert({
+    where: { id: ADMIN_JOB_TITLE_ID },
+    update: {},
+    create: {
+      id: ADMIN_JOB_TITLE_ID,
+      name: "Director General",
+      description: "Dirección general del colegio",
+      jobTitleType: "administrative_staff",
+      status: true,
+    },
+  });
+
+  // --- Admin Employees ---
+  const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "10", 10);
+
+  // Admin 1
+  const admin1Name = process.env.ADMIN1_NAME || "Admin";
+  const admin1LastName = process.env.ADMIN1_LAST_NAME || "One";
+  const admin1Email = process.env.ADMIN1_EMAIL || "admin1@colegiolear.com";
+  const admin1Password = process.env.ADMIN1_PASSWORD || "Admin123!";
+  const admin1Username =
+    admin1Name.charAt(0).toLowerCase() +
+    admin1LastName.toLowerCase().replace(/\s/g, "");
+  const admin1HashedPassword = await bcrypt.hash(admin1Password, BCRYPT_ROUNDS);
+
+  await prisma.employee.upsert({
+    where: { email: admin1Email },
+    update: { password: admin1HashedPassword },
+    create: {
+      name: admin1Name,
+      firstLastName: admin1LastName,
+      secondLastName: "Admin",
+      phoneNumber: "0000000000",
+      email: admin1Email,
+      username: admin1Username,
+      password: admin1HashedPassword,
+      mustChangePassword: false,
+      status: true,
+      securityRoleId: adminRole.id,
+      jobTitleId: adminJobTitle.id,
+    },
+  });
+
+  // Admin 2
+  const admin2Name = process.env.ADMIN2_NAME || "Admin";
+  const admin2LastName = process.env.ADMIN2_LAST_NAME || "Two";
+  const admin2Email = process.env.ADMIN2_EMAIL || "admin2@colegiolear.com";
+  const admin2Password = process.env.ADMIN2_PASSWORD || "Admin456!";
+  const admin2Username =
+    admin2Name.charAt(0).toLowerCase() +
+    admin2LastName.toLowerCase().replace(/\s/g, "");
+  const admin2HashedPassword = await bcrypt.hash(admin2Password, BCRYPT_ROUNDS);
+
+  await prisma.employee.upsert({
+    where: { email: admin2Email },
+    update: { password: admin2HashedPassword },
+    create: {
+      name: admin2Name,
+      firstLastName: admin2LastName,
+      secondLastName: "Admin",
+      phoneNumber: "0000000000",
+      email: admin2Email,
+      username: admin2Username,
+      password: admin2HashedPassword,
+      mustChangePassword: false,
+      status: true,
+      securityRoleId: adminRole.id,
+      jobTitleId: adminJobTitle.id,
+    },
+  });
+
+  console.log(
+    `  ✓ Admin employees: ${admin1Username} (${admin1Email}), ${admin2Username} (${admin2Email})`,
   );
 
   console.log("🌱 Seed completed successfully.");

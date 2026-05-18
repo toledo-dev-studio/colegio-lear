@@ -38,6 +38,24 @@ interface EnvConfig {
   MAIL_USER: string;
   MAIL_PASSWORD: string;
 
+  // Cookie
+  COOKIE_SECURE: boolean;
+
+  // CORS
+  CORS_ORIGIN: string;
+
+  // Admin 1 Seed
+  ADMIN1_NAME: string;
+  ADMIN1_LAST_NAME: string;
+  ADMIN1_EMAIL: string;
+  ADMIN1_PASSWORD: string;
+
+  // Admin 2 Seed
+  ADMIN2_NAME: string;
+  ADMIN2_LAST_NAME: string;
+  ADMIN2_EMAIL: string;
+  ADMIN2_PASSWORD: string;
+
   // Frontend
   FRONTEND_URL: string;
 }
@@ -84,6 +102,24 @@ export const env: EnvConfig = {
   MAIL_PORT: parseInt(process.env.MAIL_PORT || "587", 10),
   MAIL_USER: process.env.MAIL_USER || "",
   MAIL_PASSWORD: process.env.MAIL_PASSWORD || "",
+
+  // Cookie
+  COOKIE_SECURE: process.env.COOKIE_SECURE === "true",
+
+  // CORS
+  CORS_ORIGIN: process.env.CORS_ORIGIN || "http://localhost:5173",
+
+  // Admin 1 Seed
+  ADMIN1_NAME: process.env.ADMIN1_NAME || "Admin",
+  ADMIN1_LAST_NAME: process.env.ADMIN1_LAST_NAME || "One",
+  ADMIN1_EMAIL: process.env.ADMIN1_EMAIL || "admin1@colegiolear.com",
+  ADMIN1_PASSWORD: process.env.ADMIN1_PASSWORD || "Admin123!",
+
+  // Admin 2 Seed
+  ADMIN2_NAME: process.env.ADMIN2_NAME || "Admin",
+  ADMIN2_LAST_NAME: process.env.ADMIN2_LAST_NAME || "Two",
+  ADMIN2_EMAIL: process.env.ADMIN2_EMAIL || "admin2@colegiolear.com",
+  ADMIN2_PASSWORD: process.env.ADMIN2_PASSWORD || "Admin456!",
 
   // Frontend
   FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:5173",

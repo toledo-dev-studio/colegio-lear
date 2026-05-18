@@ -167,19 +167,21 @@ model SecurityRolePermission {
 // ─── Employee ───────────────────────────────────────────────────────────────────
 
 model Employee {
-  id             String       @id @default(uuid()) @db.Uuid
-  name           String       @db.VarChar(100)
-  firstLastName  String       @map("first_last_name") @db.VarChar(100)
-  secondLastName String       @map("second_last_name") @db.VarChar(100)
-  phoneNumber    String       @map("phone_number") @db.VarChar(20)
-  email          String       @unique @db.VarChar(150)
-  username       String       @unique @db.VarChar(50)
-  image          String?      @db.VarChar(500)
-  status         Boolean      @default(true)
-  securityRoleId String       @map("security_role_id") @db.Uuid
-  jobTitleId     String       @map("job_title_id") @db.Uuid
-  securityRole   SecurityRole @relation(fields: [securityRoleId], references: [id], onDelete: Restrict)
-  jobTitle       JobTitle     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
+  id                 String       @id @default(uuid()) @db.Uuid
+  name               String       @db.VarChar(100)
+  firstLastName      String       @map("first_last_name") @db.VarChar(100)
+  secondLastName     String       @map("second_last_name") @db.VarChar(100)
+  phoneNumber        String       @map("phone_number") @db.VarChar(20)
+  email              String       @unique @db.VarChar(150)
+  username           String       @unique @db.VarChar(50)
+  password           String       @db.VarChar(255)
+  mustChangePassword Boolean      @default(false) @map("must_change_password")
+  image              String?      @db.VarChar(500)
+  status             Boolean      @default(true)
+  securityRoleId     String       @map("security_role_id") @db.Uuid
+  jobTitleId         String       @map("job_title_id") @db.Uuid
+  securityRole       SecurityRole @relation(fields: [securityRoleId], references: [id], onDelete: Restrict)
+  jobTitle           JobTitle     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
 
   @@map("employees")
   @@schema("core")
