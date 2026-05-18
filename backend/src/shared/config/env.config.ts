@@ -23,6 +23,23 @@ interface EnvConfig {
   SUPER_ADMIN_PASSWORD: string;
   SUPER_ADMIN_FIRST_NAME: string;
   SUPER_ADMIN_LAST_NAME: string;
+
+  // Storage
+  STORAGE_PROVIDER: string;
+  STORAGE_LOCAL_PATH: string;
+  AZURE_STORAGE_CONNECTION_STRING: string;
+  AZURE_STORAGE_CONTAINER: string;
+
+  // Mail
+  MAIL_PROVIDER: string;
+  MAIL_FROM: string;
+  MAIL_HOST: string;
+  MAIL_PORT: number;
+  MAIL_USER: string;
+  MAIL_PASSWORD: string;
+
+  // Frontend
+  FRONTEND_URL: string;
 }
 
 /**
@@ -52,6 +69,24 @@ export const env: EnvConfig = {
   SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD || "Admin123",
   SUPER_ADMIN_FIRST_NAME: process.env.SUPER_ADMIN_FIRST_NAME || "Super",
   SUPER_ADMIN_LAST_NAME: process.env.SUPER_ADMIN_LAST_NAME || "Admin",
+
+  // Storage
+  STORAGE_PROVIDER: process.env.STORAGE_PROVIDER || "local",
+  STORAGE_LOCAL_PATH: process.env.STORAGE_LOCAL_PATH || "./uploads",
+  AZURE_STORAGE_CONNECTION_STRING:
+    process.env.AZURE_STORAGE_CONNECTION_STRING || "",
+  AZURE_STORAGE_CONTAINER: process.env.AZURE_STORAGE_CONTAINER || "",
+
+  // Mail
+  MAIL_PROVIDER: process.env.MAIL_PROVIDER || "gmail",
+  MAIL_FROM: process.env.MAIL_FROM || "noreply@colegiolear.com",
+  MAIL_HOST: process.env.MAIL_HOST || "smtp.gmail.com",
+  MAIL_PORT: parseInt(process.env.MAIL_PORT || "587", 10),
+  MAIL_USER: process.env.MAIL_USER || "",
+  MAIL_PASSWORD: process.env.MAIL_PASSWORD || "",
+
+  // Frontend
+  FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:5173",
 };
 
 // Validate critical environment variables

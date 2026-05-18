@@ -13,6 +13,7 @@ import scholarshipRoutes from "./modules/scholarships/scholarship.routes";
 import paymentConceptRoutes from "./modules/payment-concepts/payment-concept.routes";
 import jobTitleRoutes from "./modules/job-titles/job-title.routes";
 import securityRoleRoutes from "./modules/security-roles/security-role.routes";
+import employeeRoutes from "./modules/employees/employee.routes";
 
 /** Create Express application */
 const app = express();
@@ -30,6 +31,7 @@ app.use("/scholarships", scholarshipRoutes);
 app.use("/payment-concepts", paymentConceptRoutes);
 app.use("/job-titles", jobTitleRoutes);
 app.use("/security-roles", securityRoleRoutes);
+app.use("/employees", employeeRoutes);
 
 /* --- Swagger API Docs --- */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
