@@ -498,6 +498,184 @@ const swaggerOptions: swaggerJsdoc.Options = {
           description:
             "Multipart/form-data body for updating an employee. All fields optional but at least one required.",
         },
+        Announcement: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Reunión de padres" },
+            description: {
+              type: "string",
+              example: "Reunión general de padres de familia",
+            },
+            audience: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  key: {
+                    type: "string",
+                    enum: ["administrative-staff", "teacher", "student"],
+                    example: "teacher",
+                  },
+                  label: { type: "string", example: "Docentes" },
+                },
+              },
+            },
+            content: {
+              type: "string",
+              example: "<p>Se convoca a reunión general...</p>",
+            },
+            publishedAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-06-15T00:00:00.000Z",
+            },
+            expiresAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-06-30T00:00:00.000Z",
+            },
+            status: { type: "boolean", example: true },
+          },
+        },
+        AnnouncementDetail: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Reunión de padres" },
+            description: {
+              type: "string",
+              example: "Reunión general de padres de familia",
+            },
+            audience: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  key: {
+                    type: "string",
+                    enum: ["administrative-staff", "teacher", "student"],
+                    example: "teacher",
+                  },
+                  label: { type: "string", example: "Docentes" },
+                },
+              },
+            },
+            content: {
+              type: "string",
+              example: "<p>Se convoca a reunión general...</p>",
+            },
+            publishedAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-06-15T00:00:00.000Z",
+            },
+            expiresAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-06-30T00:00:00.000Z",
+            },
+            status: { type: "boolean", example: true },
+            attachments: {
+              type: "array",
+              items: { $ref: "#/components/schemas/Attachment" },
+            },
+          },
+        },
+        Attachment: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            url: {
+              type: "string",
+              example: "announcements/abc123-document.pdf",
+            },
+            name: { type: "string", example: "document" },
+            extension: { type: "string", example: "pdf" },
+            relatedRecordId: { type: "string", format: "uuid" },
+          },
+        },
+        CreateAnnouncementDto: {
+          type: "object",
+          required: [
+            "name",
+            "description",
+            "audience",
+            "content",
+            "publishedAt",
+            "expiresAt",
+          ],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 1,
+              maxLength: 200,
+              example: "Reunión de padres",
+            },
+            description: {
+              type: "string",
+              minLength: 1,
+              maxLength: 500,
+              example: "Reunión general de padres de familia",
+            },
+            audience: {
+              type: "array",
+              minItems: 1,
+              items: {
+                type: "object",
+                required: ["key", "label"],
+                properties: {
+                  key: {
+                    type: "string",
+                    enum: ["administrative-staff", "teacher", "student"],
+                  },
+                  label: { type: "string" },
+                },
+              },
+            },
+            content: {
+              type: "string",
+              minLength: 1,
+              example: "<p>Se convoca a reunión general...</p>",
+            },
+            publishedAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-06-15T00:00:00.000Z",
+            },
+            expiresAt: {
+              type: "string",
+              format: "date-time",
+              example: "2025-06-30T00:00:00.000Z",
+            },
+          },
+        },
+        UpdateAnnouncementDto: {
+          type: "object",
+          description: "At least one field required. All fields are optional.",
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 200 },
+            description: { type: "string", minLength: 1, maxLength: 500 },
+            audience: {
+              type: "array",
+              minItems: 1,
+              items: {
+                type: "object",
+                properties: {
+                  key: {
+                    type: "string",
+                    enum: ["administrative-staff", "teacher", "student"],
+                  },
+                  label: { type: "string" },
+                },
+              },
+            },
+            content: { type: "string", minLength: 1 },
+            publishedAt: { type: "string", format: "date-time" },
+            expiresAt: { type: "string", format: "date-time" },
+            status: { type: "boolean" },
+          },
+        },
       },
     },
   },

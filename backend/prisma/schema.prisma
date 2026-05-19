@@ -186,3 +186,34 @@ model Employee {
   @@map("employees")
   @@schema("core")
 }
+
+// ─── Announcement ───────────────────────────────────────────────────────────────
+
+model Announcement {
+  id          String       @id @default(uuid()) @db.Uuid
+  name        String       @db.VarChar(200)
+  description String       @db.VarChar(500)
+  audience    Json
+  content     String       @db.Text
+  publishedAt DateTime     @map("published_at")
+  expiresAt   DateTime     @map("expires_at")
+  status      Boolean      @default(true)
+  attachments Attachment[]
+
+  @@map("announcements")
+  @@schema("core")
+}
+
+// ─── Attachment ─────────────────────────────────────────────────────────────────
+
+model Attachment {
+  id              String       @id @default(uuid()) @db.Uuid
+  url             String       @db.VarChar(500)
+  name            String       @db.VarChar(300)
+  extension       String       @db.VarChar(20)
+  relatedRecordId String       @map("related_record_id") @db.Uuid
+  announcement    Announcement @relation(fields: [relatedRecordId], references: [id], onDelete: Cascade)
+
+  @@map("attachments")
+  @@schema("core")
+}
