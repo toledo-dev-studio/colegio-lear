@@ -18,6 +18,8 @@ import jobTitleRoutes from "./modules/job-titles/job-title.routes";
 import securityRoleRoutes from "./modules/security-roles/security-role.routes";
 import employeeRoutes from "./modules/employees/employee.routes";
 import authRoutes from "./modules/auth/auth.routes";
+import announcementRoutes from "./modules/announcements/announcement.routes";
+import attachmentRoutes from "./modules/attachments/attachment.routes";
 
 /** Create Express application */
 const app = express();
@@ -45,6 +47,8 @@ app.use("/payment-concepts", paymentConceptRoutes);
 app.use("/job-titles", jobTitleRoutes);
 app.use("/security-roles", securityRoleRoutes);
 app.use("/employees", employeeRoutes);
+app.use("/announcements", announcementRoutes);
+app.use("/attachments", attachmentRoutes);
 
 /* --- Global Error Handler (must be last) --- */
 app.use(errorHandler);
