@@ -1,13 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "react-router"
 
-import { stringToBooleanWithDefault } from "@/lib/utils";
-import { GET_JOB_TITLES_QUERY_KEY } from "../lib/queries-key";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getJobTitlesActionAsync } from "../actions/get-job-titles.action";
 import type { JobTitleTypes } from "@/interfaces/entites/job-title.interface";
 
 export const useExportJobTitles = () => {
-
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -18,14 +16,12 @@ export const useExportJobTitles = () => {
     const jobTitleType = (searchParams.get('job-title-type')?.trim() as JobTitleTypes) || undefined;
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
-    return useQuery({
-        queryKey: [GET_JOB_TITLES_QUERY_KEY, { query, name, jobTitleType, status }],
-        queryFn: () => getJobTitlesActionAsync({
+    return useMutation({
+        mutationFn: () => getJobTitlesActionAsync({
             query,
             name,
             jobTitleType,
             status
         }),
-        enabled: false,
     });
 }

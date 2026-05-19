@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router"
 
+import { GET_ACADEMIC_LEVELS_QUERY_KEY } from "../../../lib/queries-key/academic-levels-queries-key";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getAcademicLevelsActionAsync } from "../actions/get-academic-levels.action";
-import { stringToBooleanWithDefault } from "@/lib/utils";
-import { GET_ACADEMIC_LEVELS_QUERY_KEY } from "../lib/queries-key";
 
 export const useExportAcademicLevels = () => {
 

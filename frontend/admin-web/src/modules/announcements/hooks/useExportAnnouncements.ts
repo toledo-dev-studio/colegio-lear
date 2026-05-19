@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/utils";
-import { GET_ANNOUNCEMENTS_QUERY_KEY } from "../lib/queries-key";
+import { GET_ANNOUNCEMENTS_QUERY_KEY } from "../../../lib/queries-key/announcements-queries-key";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getAnnouncementsActionAsync } from "../actions/announcements/get-announcements.action";
 
 export const useExportAnnouncements = () => {

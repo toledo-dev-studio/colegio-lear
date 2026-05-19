@@ -11,7 +11,7 @@ import {
     FileImageIcon,
 } from "lucide-react";
 import type { Attachment } from "@/interfaces/entites/attachment";
-import { DEFAULT_IMAGE_EXTENSIONS } from "@/lib/attachment.constants";
+import { DEFAULT_IMAGE_EXTENSIONS } from "@/lib/constants/attachment.constants";
 import { toast } from "sonner";
 
 interface Props {

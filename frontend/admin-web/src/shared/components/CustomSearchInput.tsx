@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Search, XCircle } from "lucide-react"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/extensions/utils";
 import { Input } from "../ui/input"
 import { CustomSpinner } from "./CustomSpinner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -58,6 +58,8 @@ export const CustomSearchInput = (props: Props) => {
                                 return;
                             if (isSearching)
                                 return;
+                            if(event.key === "Enter")
+                                event.preventDefault();
                             onSearch(inputRef.current?.value ?? "", event);
                         }}
                         className={

@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router"
 
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
+import { GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "../../../lib/queries-key/academic-levels-queries-key";
 import { getPagedAcademicLevelsActionAsync } from "../actions/get-paged-academic-levels.action";
-import { stringToBooleanWithDefault } from "@/lib/utils";
-import { GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "../lib/queries-key";
 
 export const usePagedAcademicLevels = () => {
 

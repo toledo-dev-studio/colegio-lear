@@ -1,6 +1,6 @@
 import { api } from "@/api/client";
-
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
+import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import type { JobTitle, JobTitleTypes } from "@/interfaces/entites/job-title.interface";
 
 interface Options {
@@ -13,7 +13,12 @@ interface Options {
 export const getJobTitlesActionAsync = async ({ query = '', name, jobTitleType, status }: Options): Promise<JobTitle[]> => {
     await sleep();
 
-    const { data } = await api.get<JobTitle[]>('/job-titles/job-titles.json', {
+    let endpoint = "/job-titles";
+
+    if (VITE_ENVIRONMENT === "mockable")
+        endpoint = "/job-titles/job-titles.json";
+
+    const { data } = await api.get<JobTitle[]>(endpoint, {
         params: {
             q: query,
             name,

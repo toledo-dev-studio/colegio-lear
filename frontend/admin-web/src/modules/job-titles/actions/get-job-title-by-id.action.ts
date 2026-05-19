@@ -1,34 +1,32 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/extensions/promises";
 import type { JobTitle } from "@/interfaces/entites/job-title.interface";
-import { sleep } from "@/lib/utils";
+import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
-export const getJobTitleByIdActionAsync = async (id: string): Promise<JobTitle> => {
-    
+export const getJobTitleByIdActionAsync = async (id?: string): Promise<JobTitle> => {
+    await sleep();
+
     if (!id)
         throw new Error('Id del puesto es requerido');
-    
+
     if (id === 'new') {
         return {
-            id: 'new',
+            id: undefined,
             name: '',
             description: '',
             status: true
         } as unknown as JobTitle;
     }
-    
-    await sleep();
 
-    // const { data } = await api.get<JobTitle>(`/job-titles/${id}`);
-    const { data } = await api.get<JobTitle[]>(`/job-titles/job-titles.json`);
-    
-    // DELETE THIS LOGIC
-    const jobTitle = data.find(item => item.id === id);
-    if (!jobTitle)
-        throw new Error('No se encontró el puesto de trabajo');
-    // DELETE THIS LOGIC
-
-    return {
-        ...jobTitle,
-        // data
+    if (VITE_ENVIRONMENT === "mockable") {
+        const { data } = await api.get<JobTitle[]>("/job-titles/job-titles.json");
+        const record = data.find(item => item.id === id);
+        if (!record)
+            throw new Error('No se encontró el registro solicitado');
+        return record;
     }
+
+    const { data } = await api.get<JobTitle>(`/job-titles/${id}`);
+
+    return data;
 }

@@ -2,18 +2,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner"
 
-import { downloadDataToCsvFile } from "@/lib/utils";
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { CustomPagination } from "@/shared/components/CustomPagination";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { usePagedPaymentConcepts } from "../../hooks/usePagedPaymentConcepts";
 import { useExportPaymentConcepts } from "../../hooks/useExportPaymentConcepts";
 import { PaymentConceptsTable } from "./components/PaymentConceptsTable";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 import { useDeletePaymentConcept } from "../../hooks/useDeletePaymentConcept";
 import { PaymentConceptsAdvancedFilters } from "./components/PaymentConceptsAdvancedFilters";
+import { useGetPagedPaymentConcepts } from "../../hooks/useGetPagedPaymentConcepts";
 
 export const PaymentConceptsPage = () => {
 
@@ -23,9 +23,9 @@ export const PaymentConceptsPage = () => {
   const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
   const [paymentConceptToDelete, setPaymentConceptToDelete] = useState<PaymentConcept | undefined>(undefined);
 
-  const { mutationDeletePaymentConcept } = useDeletePaymentConcept();
-  const { isLoading, data: { data: paymentConcepts = [], totalPages = 0 } = {} } = usePagedPaymentConcepts();
-  const { isFetching: isFetchingDataToExport, refetch: refetchDataToExport } = useExportPaymentConcepts();
+    const pagedPaymentConceptsQuery = useGetPagedPaymentConcepts();
+    const deletePaymentConceptMutation = useDeletePaymentConcept();
+    const exportPaymentConceptsMutation = useExportPaymentConcepts();
 
   const { showLoading, hideLoading } = useLoaderStore();
 
@@ -36,7 +36,7 @@ export const PaymentConceptsPage = () => {
   const handleClickExport = async () => {
     showLoading('Descargando información', 'Por favor espere...');
 
-    const { data } = await refetchDataToExport();
+    const data = await exportPaymentConceptsMutation.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
@@ -77,8 +77,7 @@ export const PaymentConceptsPage = () => {
   }
 
   const handleClickDelteJobTitle = async () => {
-    await mutationDeletePaymentConcept.mutateAsync(
-      { id: paymentConceptToDelete?.id ?? undefined },
+    await deletePaymentConceptMutation.mutateAsync({ id: paymentConceptToDelete?.id! },
       {
         onSuccess: () => {
           toast.success('Concepto de pago eliminado correctamente');
@@ -110,22 +109,22 @@ export const PaymentConceptsPage = () => {
             handleClickAdvancedFilters={handleClickAdvancedFilters}
             handleClickAdd={handleClickAdd}
             handleClickExport={handleClickExport}
-            disabledExport={isFetchingDataToExport}
+            disabledExport={exportPaymentConceptsMutation.isPending}
           />
 
           {/* Table content*/}
           <PaymentConceptsTable
-            data={paymentConcepts ?? []}
-            isLoading={isLoading}
+            data={pagedPaymentConceptsQuery.data?.data ?? []}
+            isLoading={pagedPaymentConceptsQuery.isLoading}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            !isLoading && (
+            (!pagedPaymentConceptsQuery.isLoading && pagedPaymentConceptsQuery.data?.data.length) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={totalPages} />
+                <CustomPagination totalPages={pagedPaymentConceptsQuery.data.totalPages} />
               </div>
             )
           }
@@ -137,7 +136,7 @@ export const PaymentConceptsPage = () => {
                 open={isOpenSingleDeleteModal}
                 title={`¿Estas seguro de eliminar el registro ${paymentConceptToDelete?.name}`}
                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={mutationDeletePaymentConcept.isPending}
+                isLoading={deletePaymentConceptMutation.isPending}
                 handleClickConfirm={handleClickDelteJobTitle}
                 handleClickCancel={handleClickCancelDelteJobTitle}
               />

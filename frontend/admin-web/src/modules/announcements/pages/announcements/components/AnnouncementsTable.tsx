@@ -3,8 +3,8 @@ import { Pencil, Trash } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
+import { formatFriendlyDate } from '@/lib/extensions/formatters';
 import type { Announcement } from '@/interfaces/entites/announcement';
-import { formatFriendlyDate } from '@/lib/utils';
 
 interface Props {
     data: Announcement[];

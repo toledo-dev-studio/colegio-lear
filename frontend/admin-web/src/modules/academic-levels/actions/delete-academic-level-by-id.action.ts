@@ -1,5 +1,5 @@
 import { api } from "@/api/client";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
 
 interface Options {
     id?: string

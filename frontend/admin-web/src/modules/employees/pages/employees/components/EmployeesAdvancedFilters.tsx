@@ -5,13 +5,12 @@ import { useSearchParams } from "react-router";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { stringToBooleanWithDefault } from "@/lib/utils";
 import type { Employee } from "@/interfaces/entites/employee";
-import { useSearchInput } from "@/shared/hooks/useSearchInput";
+import type { SecurityRole } from "@/interfaces/entites/security-role";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
-import { useSecurityRolesForEmployees } from "@/modules/employees/hooks/useSecurityRolesForEmployees";
-import { useJobTitlesForEmployees } from "@/modules/employees/hooks/useJobTitlesForEmployees";
-import { GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY, GET_SECURITY_ROLES_FOR_EMPLOYEE_QUERY_KEY } from "@/modules/employees/lib/queries-key";
+import { useSearchJobTitlesForEmployee } from "@/modules/employees/hooks/job-titles/useSearchJobTitlesForEmployee";
+import { useSearchSecurityRolesForEmployee } from "@/modules/employees/hooks/security-roles/useSearchSecurityRolesForEmployee";
 
 interface Props {
     open: boolean;
@@ -46,31 +45,11 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         }
     });
 
-    // Role assign configuration
-    const { query: rolesQuery, handleOnSearch: handleOnSearchRoles, handleOnOptionChange: handleOnOptionChangeRole, handleOnClearSelection: handleOnClearSelectionRole } = useSearchInput(
-        {
-            queryKey: GET_SECURITY_ROLES_FOR_EMPLOYEE_QUERY_KEY,
-            setValue: setValue,
-            fieldIdKey: 'securityRoleId',
-            fieldNameKey: 'securityRole.name',
-            propIdKey: 'id',
-            propNameKey: 'name'
-        }
-    );
-    const { data: roles, isFetching: isFetchingRoles } = useSecurityRolesForEmployees(rolesQuery);
+    // Security role assign configuration
+    const searchSecurityRolesForEmployee = useSearchSecurityRolesForEmployee();
 
-    // JobTitle assign configuration
-    const { query: jobTitlesQuery, handleOnSearch: handleOnSearchJobTitles, handleOnOptionChange: handleOnOptionChangeJobTitle, handleOnClearSelection: handleOnClearSelectionJobTitle } = useSearchInput(
-        {
-            queryKey: GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY,
-            setValue: setValue,
-            fieldIdKey: 'jobTitleId',
-            fieldNameKey: 'jobTitle.name',
-            propIdKey: 'id',
-            propNameKey: 'name'
-        }
-    );
-    const { data: jobTitles, isFetching: isFetchingJobTitles } = useJobTitlesForEmployees(jobTitlesQuery);
+    // Job title assign configuration
+    const searchJobTitlesForEmployee = useSearchJobTitlesForEmployee();
 
     if (!open)
         return null;
@@ -83,16 +62,8 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
         searchParams.delete('security-role-name');
         searchParams.delete('job-title-id');
         searchParams.delete('job-title-name');
-        reset({
-            name: '',
-            status: true,
-            securityRoleId: undefined,
-            securityRole: {
-                name: undefined
-            }
-        });
+        reset({});
         setSearchParams(searchParams);
-        handleOnClearSelectionRole();
         handleClickClose();
     }
 
@@ -143,11 +114,18 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                     defaultValue={watch('jobTitle.name')}
                                     selected={!!watch('jobTitleId')}
                                     placeholder="Busqueda de puesto de trabajo"
-                                    options={jobTitles?.data ?? []}
-                                    isSearching={isFetchingJobTitles}
-                                    onClearSelection={handleOnClearSelectionJobTitle}
-                                    onOptionChange={handleOnOptionChangeJobTitle}
-                                    onSearch={handleOnSearchJobTitles}
+                                    options={searchJobTitlesForEmployee.jobTitles ?? []}
+                                    isSearching={searchJobTitlesForEmployee.isPending}
+                                    onClearSelection={() => {
+                                        setValue("jobTitleId", undefined);
+                                        setValue("jobTitle.name", undefined);
+                                    }}
+                                    onOptionChange={(option: SecurityRole) => {
+                                        setValue("jobTitleId", option.id);
+                                        setValue("jobTitle.name", option.name);
+                                        searchJobTitlesForEmployee.clearSearchResult();
+                                    }}
+                                    onSearch={async (query) => searchJobTitlesForEmployee.searchAsync(query)}
                                 />
                             </div>
 
@@ -157,11 +135,18 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                     defaultValue={watch('securityRole.name')}
                                     selected={!!watch('securityRoleId')}
                                     placeholder="Busqueda de rol asignado"
-                                    options={roles?.data ?? []}
-                                    isSearching={isFetchingRoles}
-                                    onClearSelection={handleOnClearSelectionRole}
-                                    onOptionChange={handleOnOptionChangeRole}
-                                    onSearch={handleOnSearchRoles}
+                                    options={searchSecurityRolesForEmployee.securityRoles}
+                                    isSearching={searchSecurityRolesForEmployee.isPending}
+                                    onClearSelection={() => {
+                                        setValue("securityRoleId", undefined);
+                                        setValue("securityRole.name", undefined);
+                                    }}
+                                    onOptionChange={(option: SecurityRole) => {
+                                        setValue("securityRoleId", option.id);
+                                        setValue("securityRole.name", option.name);
+                                        searchSecurityRolesForEmployee.clearSearchResult();
+                                    }}
+                                    onSearch={async (query) => searchSecurityRolesForEmployee.searchAsync(query)}
                                 />
                             </div>
 

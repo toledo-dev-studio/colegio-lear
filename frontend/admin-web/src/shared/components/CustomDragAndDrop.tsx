@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { UploadCloudIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/extensions/utils";
 
 export interface Props {
     /** Whitelist of accepted file extensions, e.g. [".png", ".pdf"] */

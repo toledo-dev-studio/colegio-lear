@@ -1,35 +1,31 @@
 import { api } from "@/api/client";
+import { sleep } from "@/lib/extensions/promises";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
+import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
-import { sleep } from "@/lib/utils";
-
-export const getScholarshipByIdActionAsync = async (id: string): Promise<Scholarship> => {
+export const getScholarshipByIdActionAsync = async (id?: string): Promise<Scholarship> => {
+    await sleep();
 
     if (!id)
-        throw new Error('Id del puesto es requerido');
+        throw new Error('El identificador del registro es requerido');
 
     if (id === 'new') {
         return {
-            id: 'new',
+            id: undefined,
             name: '',
             description: '',
             status: true
         } as unknown as Scholarship;
     }
 
-    await sleep();
-
-    // const { data } = await api.get<Scholarship>(`/scholarships/${id}`);
-    const { data } = await api.get<Scholarship[]>(`/scholarships/scholarships.json`);
-
-    // DELETE THIS LOGIC
-    const scholarship = data.find(item => item.id === id);
-    if (!scholarship)
-        throw new Error('No se encontró la beca');
-    // DELETE THIS LOGIC
-
-    return {
-        ...scholarship,
-        // data
+    if (VITE_ENVIRONMENT === "mockable") {
+        const { data } = await api.get<Scholarship[]>(`/scholarships/scholarships.json`);
+        const record = data.find(item => item.id === id);
+        if (!record)
+            throw new Error('No se encontró el registro solicitado');
+        return record;
     }
+
+    const { data } = await api.get<Scholarship>(`/scholarships/${id}`);
+    return data;
 }

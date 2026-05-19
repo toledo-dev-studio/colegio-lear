@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/extensions/utils"
 import { Switch } from "@/shared/ui/switch"
 import { AVAILABLE_MODULES, type ModuleKeys } from "@/interfaces/components/modules"
 import type { SecurityRolePermission } from "@/interfaces/entites/security-role-permission";

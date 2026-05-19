@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { Switch } from '@/shared/ui/switch';
 import { Slider } from '@/shared/ui/slider';
 import type { Scholarship } from '@/interfaces/entites/scholarship';
-import { stringToBooleanWithDefault, stringToNumberWithDefault } from '@/lib/utils';
+import { stringToBooleanWithDefault, stringToNumberWithDefault } from '@/lib/extensions/datatypes';
 
 interface Props {
     open: boolean;

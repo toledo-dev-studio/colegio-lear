@@ -1,12 +1,10 @@
 import { useSearchParams } from "react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/utils";
-import { GET_PAYMENT_CONCEPTS_QUERY_KEY } from "../lib/queries-key";
 import { getPaymentConceptsActionAsync } from "../actions/get-payment-concepts.action";
+import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useExportPaymentConcepts = () => {
-
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -18,15 +16,13 @@ export const useExportPaymentConcepts = () => {
     const allowForgiveness = stringToBooleanWithDefault(searchParams.get('allowForgiveness'));
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
-    return useQuery({
-        queryKey: [GET_PAYMENT_CONCEPTS_QUERY_KEY, { query, name, amount, allowForgiveness, status }],
-        queryFn: () => getPaymentConceptsActionAsync({
+    return useMutation({
+        mutationFn: () => getPaymentConceptsActionAsync({
             query,
             name,
-            amount: isNaN(+amount) ? undefined : Number(amount),
+            amount: stringToNumberWithDefault(amount, undefined),
             allowForgiveness,
             status
         }),
-        enabled: false,
     });
 }

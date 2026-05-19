@@ -1,7 +1,8 @@
 import { api } from "@/api/client";
-import { generateTemporalId, sleep } from "@/lib/utils";
+import { generateTemporalId } from "@/lib/extensions/utils";
 import type { Attachment } from "@/interfaces/entites/attachment";
-import { extractFileExtension, sanitizeFileName } from "@/lib/files";
+import { extractFileExtension, sanitizeFileName } from "@/lib/extensions/attachments";
+import { sleep } from "@/lib/extensions/promises";
 
 export type Options = {
     announcementId: string;

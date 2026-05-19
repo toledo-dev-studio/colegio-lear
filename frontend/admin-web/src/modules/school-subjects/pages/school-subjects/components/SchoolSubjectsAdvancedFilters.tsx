@@ -7,14 +7,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { stringToBooleanWithDefault } from "@/lib/utils";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 import { useAcademicLevelForSchoolSubject } from "@/modules/school-subjects/hooks/useAcademicLevelForSchoolSubject";
 import { useEducationLevelForSchoolSubject } from "@/modules/school-subjects/hooks/useEducationLevelForSchoolSubject";
-import { GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY } from "@/modules/school-subjects/lib/queries-key";
+import { GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY } from "@/lib/queries-key/school-subjects-queries-key";
 
 interface Props {
     open: boolean;

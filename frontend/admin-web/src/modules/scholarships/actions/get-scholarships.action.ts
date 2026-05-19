@@ -1,7 +1,7 @@
 import { api } from "@/api/client";
-
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/extensions/promises";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
+import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
 interface Options {
     query?: string;
@@ -10,10 +10,15 @@ interface Options {
     discountPercentage?: number
 }
 
-export const getScholarshipsActionAsync = async ({ query = '', name, status, discountPercentage }: Options): Promise<Scholarship[]> => {
+export const getScholarshipsActionAsync = async ({ query, name, status, discountPercentage }: Options): Promise<Scholarship[]> => {
     await sleep();
 
-    const { data } = await api.get<Scholarship[]>('/scholarships/scholarships.json', {
+    let endpoint = "/scholarships";
+
+    if (VITE_ENVIRONMENT === "mockable")
+        endpoint = "/scholarships/scholarships.json";
+
+    const { data } = await api.get<Scholarship[]>(endpoint, {
         params: {
             q: query,
             name,

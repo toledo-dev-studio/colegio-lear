@@ -1,26 +1,24 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
-import { Mail, Phone, Save, User, X } from 'lucide-react';
+import { useEffect } from "react"
+import { Link } from "react-router";
+import { Controller, useForm } from "react-hook-form";
+import { Mail, Phone, Save, User, X } from "lucide-react";
 
-import { Input } from '@/shared/ui/input';
-import { isValidPhone } from '@/lib/utils';
-import { Switch } from '@/shared/ui/switch';
-import { Button } from '@/shared/ui/button';
-import type { Employee } from '@/interfaces/entites/employee';
-import { useSearchInput } from '@/shared/hooks/useSearchInput';
-import { CustomSpinner } from '@/shared/components/CustomSpinner';
-import { type SecurityRole } from '@/interfaces/entites/security-role';
-import { CustomSearchInput } from '@/shared/components/CustomSearchInput';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
-import { useSecurityRole } from '@/modules/security-roles/hooks/useSecurityRole';
-import { useJobTitlesForEmployees } from '@/modules/employees/hooks/useJobTitlesForEmployees';
-import { useSecurityRolesForEmployees } from '@/modules/employees/hooks/useSecurityRolesForEmployees';
-import { SecurityRolePermissionsGrid } from '@/modules/security-roles/components/SecurityRolePermissionsGrid';
-import { GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY, GET_SECURITY_ROLES_FOR_EMPLOYEE_QUERY_KEY } from '@/modules/employees/lib/queries-key';
-import { CustomFullScreenLoading } from '@/shared/components/CustomFullScreenLoading';
-import { CustomPhotoUploader } from '@/shared/components/CustomPhotoUploader';
-import type { EmployeeFormData } from '@/modules/employees/interfaces/employee-form';
+import { Input } from "@/shared/ui/input";
+import { isValidPhone } from "@/lib/extensions/validators";
+import { Switch } from "@/shared/ui/switch";
+import { Button } from "@/shared/ui/button";
+import type { Employee } from "@/interfaces/entites/employee";
+import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { type SecurityRole } from "@/interfaces/entites/security-role";
+import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { CustomPhotoUploader } from "@/shared/components/CustomPhotoUploader";
+import type { EmployeeFormData } from "@/modules/employees/interfaces/employee-form";
+import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
+import { SecurityRolePermissionsGrid } from "@/modules/security-roles/components/SecurityRolePermissionsGrid";
+import { useSearchJobTitlesForEmployee } from "@/modules/employees/hooks/job-titles/useSearchJobTitlesForEmployee";
+import { useSearchSecurityRolesForEmployee } from "@/modules/employees/hooks/security-roles/useSearchSecurityRolesForEmployee";
+import { useGetByIdSecurityRoleForEmployee } from "@/modules/employees/hooks/security-roles/useGetByIdSecurityRoleForEmployee";
 
 interface Props {
     employee?: Employee,
@@ -29,7 +27,7 @@ interface Props {
 }
 
 const maxSize = 5 * 1024 * 1024;
-const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
 
 export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
 
@@ -44,44 +42,18 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
         reset
     } = useForm<Partial<EmployeeFormData>>({
         defaultValues: employee,
-        mode: 'onChange'
+        mode: "onChange"
     });
-    const isNew = getValues('id') === "new";
-    const selectedSecurityRoleId = watch('securityRoleId');
-    const selectedJobTitleId = watch('jobTitleId');
-    const { isFetching: isFetchingSecurityRoleDetails, refetch: refetchSecurityRoleDetails } = useSecurityRole(selectedSecurityRoleId, false);
-    const [securityRoleDetails, setSecurityRoleDetails] = useState<SecurityRole | undefined>(undefined);
+    const isNew = getValues("id") === "new";
+    const selectedSecurityRoleId = watch("securityRoleId");
+    const selectedJobTitleId = watch("jobTitleId");
 
-    // Role assign configuration
-    const { query: securityRolesQuery, handleOnSearch: handleOnSearchSecurityRoles, handleOnOptionChange: handleOnOptionChangeSecurityRole, handleOnClearSelection: handleOnClearSelectionSecurityRole } = useSearchInput(
-        {
-            queryKey: GET_SECURITY_ROLES_FOR_EMPLOYEE_QUERY_KEY,
-            setValue: setValue,
-            fieldIdKey: 'securityRoleId',
-            fieldNameKey: 'securityRole.name',
-            propIdKey: 'id',
-            propNameKey: 'name'
-        }
-    );
-    const { data: securityRoles, isFetching: isFetchingSecurityRoles } = useSecurityRolesForEmployees(securityRolesQuery);
+    // Job title assign configuration
+    const searchJobTitlesForEmployee = useSearchJobTitlesForEmployee();
 
-    // JobTitle assign configuration
-    const { query: jobTitlesQuery, handleOnSearch: handleOnSearchJobTitles, handleOnOptionChange: handleOnOptionChangeJobTitle, handleOnClearSelection: handleOnClearSelectionJobTitle } = useSearchInput(
-        {
-            queryKey: GET_JOB_TITLES_FOR_EMPLOYEE_QUERY_KEY,
-            setValue: setValue,
-            fieldIdKey: 'jobTitleId',
-            fieldNameKey: 'jobTitle.name',
-            propIdKey: 'id',
-            propNameKey: 'name'
-        }
-    );
-    const { data: jobTitles, isFetching: isFetchingJobTitles } = useJobTitlesForEmployees(jobTitlesQuery);
-
-    const getSecurityRoleDetails = async () => {
-        const { data } = await refetchSecurityRoleDetails();
-        setSecurityRoleDetails(data);
-    }
+    // Security role assign configuration
+    const searchSecurityRolesForEmployee = useSearchSecurityRolesForEmployee();
+    const getByIdSecurityRoleForEmployee = useGetByIdSecurityRoleForEmployee();
 
     useEffect(() => {
         if (employee)
@@ -89,11 +61,14 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
     }, [employee]);
 
     useEffect(() => {
-        if (!selectedSecurityRoleId) {
-            setSecurityRoleDetails(undefined);
-            return;
+        const getSecurityRoleById = async () => {
+            if (!selectedSecurityRoleId) {
+                getByIdSecurityRoleForEmployee.setSecurityRole(undefined);
+                return;
+            }
+            await getByIdSecurityRoleForEmployee.searchAsync(selectedSecurityRoleId);
         }
-        getSecurityRoleDetails();
+        getSecurityRoleById();
     }, [selectedSecurityRoleId])
 
     return (
@@ -109,8 +84,8 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             <TooltipTrigger>
                                 <Switch
                                     size="default"
-                                    checked={watch('status') ?? false}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
+                                    checked={watch("status") ?? false}
+                                    onCheckedChange={(checked) => setValue("status", checked)} />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Estatus del registro</p>
@@ -139,13 +114,13 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                                             field.onChange(file);
                                             field.onBlur();
                                         }} />
-                                {
-                                    errors.file && (
-                                        <p className="text-red-500 text-center text-sm mt-2">
-                                            {errors.file.message}
-                                        </p>
-                                    )
-                                }
+                                    {
+                                        errors.file && (
+                                            <p className="text-red-500 text-center text-sm mt-2">
+                                                {errors.file.message}
+                                            </p>
+                                        )
+                                    }
                                 </div>
                             </>
                         )}
@@ -158,7 +133,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             </label>
                             <Input
                                 type="text"
-                                {...register('name', { required: true })}
+                                {...register("name", { required: true })}
                                 placeholder="Nombre"
                                 className="pill-input w-full pl-8" />
                             {
@@ -175,7 +150,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             </label>
                             <Input
                                 type="text"
-                                {...register('firstLastName', { required: true })}
+                                {...register("firstLastName", { required: true })}
                                 placeholder="Apellido paterno"
                                 className="pill-input w-full pl-8" />
                         </div>
@@ -185,7 +160,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             </label>
                             <Input
                                 type="text"
-                                {...register('secondLastName')}
+                                {...register("secondLastName")}
                                 placeholder="Apellido materno"
                                 className="pill-input w-full pl-8" />
                         </div>
@@ -197,7 +172,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                                 <Phone className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
                                     type="number"
-                                    {...register('phoneNumber', { required: true, validate: (value) => isValidPhone(value) })}
+                                    {...register("phoneNumber", { required: true, validate: (value) => isValidPhone(value) })}
                                     placeholder="+52 (55) 1234-5678"
                                     maxLength={10}
                                     className="pill-input w-full pl-8 pr-13" />
@@ -205,7 +180,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             {
                                 errors.phoneNumber && (
                                     <p className="text-red-500 text-sm mt-2">
-                                        {errors.phoneNumber.message || 'El número de teléfono del empleado es obligatorio'}
+                                        {errors.phoneNumber.message || "El número de teléfono del empleado es obligatorio"}
                                     </p>
                                 )
                             }
@@ -230,7 +205,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             <Mail className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input
                                 type="email"
-                                {...register('email', { required: true })}
+                                {...register("email", { required: true })}
                                 placeholder="usuario@dominio.com"
                                 className="pill-input w-full pl-8 pr-13" />
                         </div>
@@ -252,7 +227,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             <User className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input
                                 type="text"
-                                {...register('username', { required: isNew })}
+                                {...register("username", { required: isNew })}
                                 disabled={!isNew}
                                 placeholder="Nombre de usuario"
                                 className="pill-input w-full pl-8 pr-13" />
@@ -271,15 +246,22 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             Puesto de trabajo <span className="text-destructive">*</span>:
                         </label>
                         <CustomSearchInput
-                            {...register('jobTitleId', { required: true })}
-                            defaultValue={watch('jobTitle.name')}
+                            {...register("jobTitleId", { required: true })}
+                            defaultValue={watch("jobTitle.name")}
                             selected={!!selectedJobTitleId}
                             placeholder="Busqueda de puesto de trabajo"
-                            options={jobTitles?.data ?? []}
-                            isSearching={isFetchingJobTitles}
-                            onClearSelection={handleOnClearSelectionJobTitle}
-                            onOptionChange={handleOnOptionChangeJobTitle}
-                            onSearch={handleOnSearchJobTitles}
+                            options={searchJobTitlesForEmployee.jobTitles ?? []}
+                            isSearching={searchJobTitlesForEmployee.isPending}
+                            onClearSelection={() => {
+                                setValue("jobTitleId", undefined);
+                                setValue("jobTitle.name", undefined);
+                            }}
+                            onOptionChange={async (option: SecurityRole) => {
+                                setValue("jobTitleId", option.id);
+                                setValue("jobTitle.name", option.name);
+                                searchJobTitlesForEmployee.clearSearchResult();
+                            }}
+                            onSearch={async (query) => searchJobTitlesForEmployee.searchAsync(query)}
                         />
                         {
                             (errors.jobTitleId && !selectedJobTitleId) && (
@@ -295,15 +277,22 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             Rol por asignar <span className="text-destructive">*</span>:
                         </label>
                         <CustomSearchInput
-                            {...register('securityRoleId', { required: true })}
-                            defaultValue={watch('securityRole.name')}
+                            {...register("securityRoleId", { required: true })}
+                            defaultValue={watch("securityRole.name")}
                             selected={!!selectedSecurityRoleId}
-                            placeholder="Busqueda de rol por asignar"
-                            options={securityRoles?.data ?? []}
-                            isSearching={isFetchingSecurityRoles}
-                            onClearSelection={handleOnClearSelectionSecurityRole}
-                            onOptionChange={handleOnOptionChangeSecurityRole}
-                            onSearch={handleOnSearchSecurityRoles}
+                            placeholder="Busqueda de rol asignado"
+                            options={searchSecurityRolesForEmployee.securityRoles}
+                            isSearching={searchSecurityRolesForEmployee.isPending}
+                            onClearSelection={() => {
+                                setValue("securityRoleId", undefined);
+                                setValue("securityRole.name", undefined);
+                            }}
+                            onOptionChange={(option: SecurityRole) => {
+                                setValue("securityRoleId", option.id);
+                                setValue("securityRole.name", option.name);
+                                searchSecurityRolesForEmployee.clearSearchResult();
+                            }}
+                            onSearch={async (query) => searchSecurityRolesForEmployee.searchAsync(query)}
                         />
                         {
                             (errors.securityRoleId && !selectedSecurityRoleId) && (
@@ -328,10 +317,10 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                         }
                         <div className="w-full relative my-10">
                             {
-                                isFetchingSecurityRoleDetails && (<CustomFullScreenLoading title="Cargando privilegios" subtitle="Cargando privilegios del rol de seguridad seleccionado" className="relative" />)
+                                getByIdSecurityRoleForEmployee.isPending && (<CustomFullScreenLoading title="Cargando privilegios" subtitle="Cargando privilegios del rol de seguridad seleccionado" className="relative" />)
                             }
                             {
-                                securityRoleDetails && (<SecurityRolePermissionsGrid disabled={true} permissions={securityRoleDetails.permissions ?? []}></SecurityRolePermissionsGrid>)
+                                getByIdSecurityRoleForEmployee.securityRole && (<SecurityRolePermissionsGrid disabled={true} permissions={getByIdSecurityRoleForEmployee.securityRole.permissions ?? []}></SecurityRolePermissionsGrid>)
                             }
                         </div>
                     </div>

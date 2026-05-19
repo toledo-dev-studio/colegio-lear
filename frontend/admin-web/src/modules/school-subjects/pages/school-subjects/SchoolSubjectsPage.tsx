@@ -8,7 +8,7 @@ import { usePagedSchoolSubjects } from "../../hooks/usePagedSchoolSubjects";
 import { CustomPagination } from "@/shared/components/CustomPagination";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { useExportSchoolSubjects } from "../../hooks/useExportSchoolSubjects";
-import { downloadDataToCsvFile } from "@/lib/utils";
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { SchoolSubjectsTable } from "./components/SchoolSubjectsTable";
 import { SchoolSubjectsAdvancedFilters } from "./components/SchoolSubjectsAdvancedFilters";

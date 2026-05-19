@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY } from "../lib/queries-key";
+import { GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY } from "../../../lib/queries-key/school-subjects-queries-key";
 import { getPagedEducationLevelsActionAsync } from "@/modules/academic-levels/actions/get-paged-education-levels.action";
 
 export const useEducationLevelForSchoolSubject = (academicLevelId?: string, query?: string) => {

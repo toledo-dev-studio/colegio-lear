@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner"
 
-import { downloadDataToCsvFile } from "@/lib/utils";
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { CustomPagination } from "@/shared/components/CustomPagination";

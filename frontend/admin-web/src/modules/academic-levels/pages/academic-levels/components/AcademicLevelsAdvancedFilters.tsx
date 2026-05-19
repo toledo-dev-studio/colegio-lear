@@ -2,12 +2,12 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import { X } from "lucide-react";
 
-
-import { Button } from "@/shared/ui/button";
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { stringToBooleanWithDefault } from "@/lib/utils";
+import type { AcademicLevel } from "@/interfaces/entites/academic-level";
+import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
+
 
 interface Props {
     open: boolean;

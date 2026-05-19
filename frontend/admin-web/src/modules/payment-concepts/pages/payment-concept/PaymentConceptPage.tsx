@@ -1,31 +1,30 @@
-import { toast } from "sonner";
 import { Navigate, useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { usePaymentConcept } from "../../hooks/usePaymentConcept";
 import { PaymentConceptForm } from "./components/PaymentConceptForm";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
+import { useGetByIdPaymentConcept } from "../../hooks/useGetByIdPaymentConcept";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
+import { useCreateUpdatePaymentConcept } from "../../hooks/useCreateUpdatePaymentConcept";
 
 export const PaymentConceptPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const title = id === "new" ? 'Registro de concepto de pago' : 'Edición de concepto de pago';
-  const { isLoading, isError, data: paymentConcept, mutation } = usePaymentConcept(id || '');
   const { showLoading, hideLoading } = useLoaderStore();
+  const paymentConceptQuery = useGetByIdPaymentConcept(id || "");
+  const createUpdatePaymentConceptMutation = useCreateUpdatePaymentConcept();
+  const title = id === "new" ? 'Registro de concepto de pago' : 'Edición de concepto de pago';
 
   const handleSubmit = async (paymentConceptLike: Partial<PaymentConcept>) => {
-    console.log(paymentConceptLike);
-    
     try {
       showLoading('Guardando registro');
-      !paymentConceptLike.id && (paymentConceptLike.id = "new");
-
-      await mutation.mutateAsync(paymentConceptLike, {
+      await createUpdatePaymentConceptMutation.mutateAsync(paymentConceptLike, {
         onSuccess: (response) => {
           toast.success('Registro actualizado de forma exitosa');
+          hideLoading();
           navigate(`/payment-concepts/${response.id}`);
         }
       });
@@ -36,12 +35,12 @@ export const PaymentConceptPage = () => {
     }
   }
 
-  if (isError) {
+  if (paymentConceptQuery.isError) {
     toast.error("No fue posible obtener la información del registro seleccionado");
     return <Navigate to="/payment-concepts" />;
   }
 
-  if (isLoading) {
+  if (paymentConceptQuery.isLoading) {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">
@@ -62,8 +61,8 @@ export const PaymentConceptPage = () => {
           <div className="flex flex-col min-h-full gap-8 mt-14">
 
             <PaymentConceptForm
-              paymentConcept={paymentConcept}
-              isSubmitting={mutation.isPending}
+              paymentConcept={paymentConceptQuery.data}
+              isSubmitting={createUpdatePaymentConceptMutation.isPending}
               onSubmit={handleSubmit}
             />
 

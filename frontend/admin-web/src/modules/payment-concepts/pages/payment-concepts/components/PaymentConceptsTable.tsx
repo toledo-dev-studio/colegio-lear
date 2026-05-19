@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import { Pencil, Trash } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/badge';
-import { formatMoney } from '@/lib/utils';
+import { formatMoney } from '@/lib/extensions/formatters';
 import { Button } from '@/shared/ui/button';
 import type { PaymentConcept } from '@/interfaces/entites/payment-concept';
 
