@@ -12,10 +12,10 @@ interface Options {
     status?: boolean,
 }
 
-export const getPagedSecurityRolesActionAsync = async ({ query = '', page = 1, pageSize = 1, name, status }: Options): Promise<PagedResponse<SecurityRole>> => {
+export const getPagedSecurityRolesActionAsync = async ({ query, page = 1, pageSize = 1, name, status }: Options): Promise<PagedResponse<SecurityRole>> => {
     await sleep();
 
-    let endpoint = "/security-roles";
+    let endpoint = "/security-roles/paged";
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/security-roles/paged-security-roles.json";

@@ -58,6 +58,8 @@ export const CustomSearchInput = (props: Props) => {
                                 return;
                             if (isSearching)
                                 return;
+                            if(event.key === "Enter")
+                                event.preventDefault();
                             onSearch(inputRef.current?.value ?? "", event);
                         }}
                         className={

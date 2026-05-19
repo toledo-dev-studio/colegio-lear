@@ -14,7 +14,7 @@ import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 import { useAcademicLevelForSchoolSubject } from "@/modules/school-subjects/hooks/useAcademicLevelForSchoolSubject";
 import { useEducationLevelForSchoolSubject } from "@/modules/school-subjects/hooks/useEducationLevelForSchoolSubject";
-import { GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY } from "@/modules/school-subjects/lib/queries-key";
+import { GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY } from "@/lib/queries-key/school-subjects-queries-key";
 
 interface Props {
     open: boolean;

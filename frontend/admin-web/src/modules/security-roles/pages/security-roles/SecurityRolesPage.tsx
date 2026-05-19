@@ -8,10 +8,10 @@ import { SecurityRolesTable } from "./components/SecurityRolesTable";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import type { SecurityRole } from "@/interfaces/entites/security-role";
 import { CustomPagination } from "@/shared/components/CustomPagination";
-import { usePagedSecurityRoles } from "../../hooks/usePagedSecurityRoles";
 import { useDeleteSecurityRole } from "../../hooks/useDeleteSecurityRole";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { useExportSecurityRoles } from "../../hooks/useExportSecurityRoles";
+import { useGetPagedSecurityRoles } from "../../hooks/useGetPagedSecurityRoles";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { SecurityRolesAdvancedFilters } from "./components/SecurityRolesAdvancedFilters";
 
@@ -23,9 +23,9 @@ export const SecurityRolesPage = () => {
     const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
     const [securityRoleToDelete, setSecurityRoleToDelete] = useState<SecurityRole | undefined>(undefined);
 
-    const { mutationDeleteSecurityRole } = useDeleteSecurityRole();
-    const { isLoading, data: { data: roles = [], totalPages = 0 } = {} } = usePagedSecurityRoles();
-    const { isFetching: isFetchingDataToExport, refetch: refetchDataToExport } = useExportSecurityRoles();
+    const pagedSecurityRolesQuery = useGetPagedSecurityRoles();
+    const deleteSecurityRoleMutation = useDeleteSecurityRole();
+    const exportSecurityRolesMutation = useExportSecurityRoles();
 
     const { showLoading, hideLoading } = useLoaderStore();
 
@@ -39,8 +39,8 @@ export const SecurityRolesPage = () => {
 
     const handleClickExport = async () => {
         showLoading('Descargando información', 'Por favor espere...');
-
-        const { data } = await refetchDataToExport();
+        
+        const data = await exportSecurityRolesMutation.mutateAsync();
 
         if (!data || !Array.isArray(data)) {
             hideLoading();
@@ -74,8 +74,7 @@ export const SecurityRolesPage = () => {
     }
 
     const handleClickDelte = async () => {
-        await mutationDeleteSecurityRole.mutateAsync(
-            { id: securityRoleToDelete?.id ?? undefined },
+        await deleteSecurityRoleMutation.mutateAsync({ id: securityRoleToDelete?.id! },
             {
                 onSuccess: () => {
                     toast.success('Rol de seguridad eliminado correctamente');
@@ -108,22 +107,22 @@ export const SecurityRolesPage = () => {
                         handleClickAdvancedFilters={handleClickAdvancedFilters}
                         handleClickAdd={handleClickAdd}
                         handleClickExport={handleClickExport}
-                        disabledExport={isFetchingDataToExport}
+                        disabledExport={exportSecurityRolesMutation.isPending}
                     />
 
                     {/* Table content*/}
                     <SecurityRolesTable
-                        data={roles ?? []}
-                        isLoading={isLoading}
+                        data={pagedSecurityRolesQuery.data?.data ?? []}
+                        isLoading={pagedSecurityRolesQuery.isLoading}
                         handleClickEditRow={handleClickEditRow}
                         handleClickDeleteRow={handleClickDeleteRow}
                     />
 
                     {/* Pagination top element */}
                     {
-                        !isLoading && (
+                        (!pagedSecurityRolesQuery.isLoading && pagedSecurityRolesQuery.data?.data.length) && (
                             <div className="flex items-center justify-center my-8">
-                                <CustomPagination totalPages={totalPages} />
+                                <CustomPagination totalPages={pagedSecurityRolesQuery.data?.totalPages ?? 0} />
                             </div>
                         )
                     }
@@ -135,7 +134,7 @@ export const SecurityRolesPage = () => {
                                 open={isOpenSingleDeleteModal}
                                 title={`¿Estas seguro de eliminar el registro ${securityRoleToDelete?.name}`}
                                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                                isLoading={mutationDeleteSecurityRole.isPending}
+                                isLoading={deleteSecurityRoleMutation.isPending}
                                 handleClickConfirm={handleClickDelte}
                                 handleClickCancel={handleClickCancelDelte}
                             />

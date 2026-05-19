@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 import { EmployeesTable } from "./components/EmployeesTable"
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import type { Employee } from "@/interfaces/entites/employee";
-import { usePagedEmployees } from "../../hooks/usePagedEmployees";
-import { useExportEmployees } from "../../hooks/useExportEmployees";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
-import { CustomPagination } from "@/shared/components/CustomPagination"
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
-import { toast } from "sonner";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import type { Employee } from "@/interfaces/entites/employee";
+import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
+import { CustomPagination } from "@/shared/components/CustomPagination";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { useDeleteEmployee } from "../../hooks/useDeleteEmployee";
+import { useDeleteEmployee } from "../../hooks/employees/useDeleteEmployee";
+import { useExportEmployees } from "../../hooks/employees/useExportEmployees";
 import { EmployeesAdvancedFilters } from "./components/EmployeesAdvancedFilters";
+import { useGetPagedEmployees } from "../../hooks/employees/useGetPagedEmployees";
+import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 
 export const EmployeesPage = () => {
 
@@ -22,13 +22,13 @@ export const EmployeesPage = () => {
   const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
   const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | undefined>(undefined);
-
-  const { mutationDeleteEmployee } = useDeleteEmployee();
-  const { isLoading, data: { data: employees = [], totalPages = 0 } = {} } = usePagedEmployees();
-  const { isFetching: isFetchingDataToExport, refetch: refetchDataToExport } = useExportEmployees();
-
+  
   const { showLoading, hideLoading } = useLoaderStore();
 
+  const pagedEmployeesQuery = useGetPagedEmployees();
+  const deleteEmployeeMutation = useDeleteEmployee();
+  const exportEmployeesMutation = useExportEmployees();
+  
   const handleClickAdd = () => {
     navigate('/employees/new');
   }
@@ -36,7 +36,7 @@ export const EmployeesPage = () => {
   const handleClickExport = async () => {
     showLoading('Descargando información', 'Por favor espere...');
 
-    const { data } = await refetchDataToExport();
+    const data = await exportEmployeesMutation.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
@@ -79,8 +79,7 @@ export const EmployeesPage = () => {
   }
 
   const handleClickDelteEmployee = async () => {
-    await mutationDeleteEmployee.mutateAsync(
-      { id: employeeToDelete?.id ?? undefined },
+    await deleteEmployeeMutation.mutateAsync({ id: employeeToDelete?.id! },
       {
         onSuccess: () => {
           toast.success('Empleado eliminada correctamente');
@@ -112,22 +111,22 @@ export const EmployeesPage = () => {
             handleClickAdvancedFilters={handleClickAdvancedFilters}
             handleClickAdd={handleClickAdd}
             handleClickExport={handleClickExport}
-            disabledExport={isFetchingDataToExport}
+            disabledExport={exportEmployeesMutation.isPending}
           />
 
           {/* Table content*/}
           <EmployeesTable
-            data={employees ?? []}
-            isLoading={isLoading}
+            data={pagedEmployeesQuery.data?.data ?? []}
+            isLoading={pagedEmployeesQuery.isLoading}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            !isLoading && (
+            (!pagedEmployeesQuery.isLoading && pagedEmployeesQuery.data?.data.length) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={totalPages} />
+                <CustomPagination totalPages={pagedEmployeesQuery.data?.totalPages ?? 0} />
               </div>
             )
           }
@@ -138,7 +137,7 @@ export const EmployeesPage = () => {
                 open={isOpenSingleDeleteModal}
                 title={`¿Estas seguro de eliminar el registro ${employeeToDelete.email}`}
                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={mutationDeleteEmployee.isPending}
+                isLoading={deleteEmployeeMutation.isPending}
                 handleClickConfirm={handleClickDelteEmployee}
                 handleClickCancel={handleClickCancelDelteEmployee}
               />

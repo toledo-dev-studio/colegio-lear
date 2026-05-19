@@ -4,9 +4,8 @@ import type { Employee } from "@/interfaces/entites/employee";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
 export const getEmployeeByIdActionAsync = async (id: string): Promise<Employee> => {
-    if (!id)
-        throw new Error('Id del empleado es requerido');
-
+    await sleep();
+    
     if (id === "new") {
         return {
             id: undefined,
@@ -22,8 +21,6 @@ export const getEmployeeByIdActionAsync = async (id: string): Promise<Employee> 
             jobTitleId: "",
         } as unknown as Employee;
     }
-
-    await sleep();
 
     if (VITE_ENVIRONMENT === "mockable") {
         const { data } = await api.get<Employee[]>(`/employees/employees.json`);

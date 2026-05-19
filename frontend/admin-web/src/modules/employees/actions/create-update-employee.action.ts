@@ -4,7 +4,6 @@ import { generateTemporalId } from "@/lib/extensions/utils";
 import type { Employee } from "@/interfaces/entites/employee";
 import type { EmployeeFormData } from "../interfaces/employee-form";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { Attachment } from "@/interfaces/entites/attachment";
 
 export const createUpdateEmployeeActionAsync = async (employeeLike: Partial<EmployeeFormData>): Promise<Employee> => {
     await sleep();
@@ -13,37 +12,20 @@ export const createUpdateEmployeeActionAsync = async (employeeLike: Partial<Empl
     const isCreating = id === undefined;
 
     if (VITE_ENVIRONMENT === "mockable") {
-        delete employeeLike.id;
-        return {
-            id: isCreating ? generateTemporalId() : id,
-            ...employeeLike,
-        } as Employee;
+        employeeLike.id = isCreating ? generateTemporalId() : id;
+        return employeeLike as Employee;
     }
 
-    // If is a new record, set a temporal unique identifier to backend identify the avatar resource to link to the new record
-    
-    // if (isCreating && employeeLike.file) {
-    //     const formData = new FormData();
-    // formData.append('file', employeeLike.file);
-    // }
-    //     employeeLike.id == generateTemporalId();
-
-    // if (employeeLike.file) {
-
-
-    //     await api<Attachment>({
-    //         url: `attachments/employee/avatar/${employeeLike.id}`,
-    //         method: 'POST',
-    //         data: formData
-    //     });
-    // }
+    let fileFormData = new FormData();
+    if (employeeLike.file)
+        fileFormData.append('file', employeeLike.file);
 
     const { data } = await api<Employee>({
-        url: `/employees/${id}`,
+        url: isCreating ? "/employees" : `/employees/${id}`,
         method: isCreating ? 'POST' : 'PATCH',
         data: {
             ...employeeLike,
-            file: isCreating
+            file: employeeLike.file ? fileFormData : undefined
         }
     });
 

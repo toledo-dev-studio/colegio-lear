@@ -1,6 +1,7 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
+import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 
 interface Options {
@@ -15,14 +16,19 @@ interface Options {
 export const getPagedScholarshipsActionAsync = async (props: Options): Promise<PagedResponse<Scholarship>> => {
     await sleep();
 
-    const { 
-        query = '', 
-        page = 1, 
+    const {
+        query,
+        page = 1,
         pageSize = 1,
         name,
         status,
-        discountPercentage, 
+        discountPercentage,
     } = props;
+
+    let endpoint = "/scholarships/paged";
+
+    if (VITE_ENVIRONMENT === "mockable")
+        endpoint = "/scholarships/paged-scholarships.json";
 
     const { data } = await api.get<PagedResponse<Scholarship>>('/scholarships/paged-scholarships.json', {
         params: {

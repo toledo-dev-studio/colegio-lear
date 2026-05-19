@@ -1,21 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { deletePaymentConceptByIdActionAsync } from "../actions/delete-payment-concept-by-id.action";
-import { GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY, GET_PAYMENT_CONCEPTS_QUERY_KEY } from "../lib/queries-key";
+import { GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY, GET_PAYMENT_CONCEPT_QUERY_KEY } from "@/lib/queries-key/payment-concepts-queries-key";
 
 export const useDeletePaymentConcept = () => {
-
     const queryClient = useQueryClient();
 
-    return {
-        mutationDeletePaymentConcept: useMutation({
-            mutationFn: deletePaymentConceptByIdActionAsync,
-            onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: [GET_PAYMENT_CONCEPTS_QUERY_KEY] });
-                queryClient.invalidateQueries({ queryKey: [GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY] });
+    return useMutation({
+        mutationFn: deletePaymentConceptByIdActionAsync,
+        onSuccess: (id: string) => {
+            // Remove query for single query
+            queryClient.removeQueries({ queryKey: [GET_PAYMENT_CONCEPT_QUERY_KEY, { id: id }] });
 
-                queryClient.refetchQueries({ queryKey: [GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY] })
-            },
-        })
-    }
+            // Invalid cache for useQueries, on invalid queries refetch is auto
+            queryClient.invalidateQueries({ queryKey: [GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY] });
+        },
+    });
 }

@@ -1,13 +1,13 @@
-import { Link } from 'react-router'
-import { Pencil, Trash } from 'lucide-react'
+import { Link } from "react-router"
+import { Pencil, Trash } from "lucide-react"
 
-import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
-import type { SecurityRole } from '@/interfaces/entites/security-role'
+import { Badge } from "@/shared/ui/badge"
+import { Button } from "@/shared/ui/button"
+import type { SecurityRole } from "@/interfaces/entites/security-role"
 
 interface Props {
-    data: SecurityRole[];
     isLoading: boolean;
+    data: SecurityRole[];
     handleClickEditRow: (item: SecurityRole) => void;
     handleClickDeleteRow: (item: SecurityRole) => void;
 }
@@ -21,14 +21,6 @@ export const SecurityRolesTable = ({ data = [], isLoading, handleClickEditRow, h
                     <thead>
                         {/* Columns */}
                         <tr>
-                            {/* 
-                            <th className="column checkbox-column">
-                                <Checkbox
-                                    id="select-all-checkbox"
-                                    name="select-all-checkbox"
-                                />
-                            </th>
-                            */}
                             <th className="column">Nombre</th>
                             <th className="column">Descripción</th>
                             <th className="column">Estado</th>
@@ -63,18 +55,6 @@ export const SecurityRolesTable = ({ data = [], isLoading, handleClickEditRow, h
                         {
                             data.map((item) => (
                                 <tr key={item.id} className="hover:bg-muted/40 transition-colors">
-
-                                    {/* Checkbox */}
-                                    {/* 
-                                    <td className="row">
-                                        <Checkbox
-                                            id={item.id}
-                                            name={item.name}
-                                            onCheckedChange={(selected) => handleToggleSelection(item, selected)}
-                                        />
-                                    </td> 
-                                    */}
-
                                     {/* Row data */}
                                     <td className="row">
                                         <Link to={`/security-roles/${item.id}`}>
@@ -87,7 +67,7 @@ export const SecurityRolesTable = ({ data = [], isLoading, handleClickEditRow, h
                                     <td className="row">
                                         <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
                                             {
-                                                item.status ? 'Activo' : 'Inactivo'
+                                                item.status ? "Activo" : "Inactivo"
                                             }
                                         </Badge>
                                     </td>
@@ -110,7 +90,6 @@ export const SecurityRolesTable = ({ data = [], isLoading, handleClickEditRow, h
                                 </tr>
                             ))
                         }
-
                     </tbody>
                 </table>
             </div>

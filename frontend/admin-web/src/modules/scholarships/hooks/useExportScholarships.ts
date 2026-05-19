@@ -1,12 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router"
+import { useSearchParams } from "react-router";
+import { useMutation } from "@tanstack/react-query";
 
-import { GET_SCHOLARSHIPS_QUERY_KEY } from "../lib/queries-key";
 import { getScholarshipsActionAsync } from "../actions/get-scholarships.action";
 import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useExportScholarships = () => {
-
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -17,14 +15,12 @@ export const useExportScholarships = () => {
     const status = stringToBooleanWithDefault(searchParams.get('status'));
     const discountPercentage = stringToNumberWithDefault(searchParams.get('discount-percentage'));
 
-    return useQuery({
-        queryKey: [GET_SCHOLARSHIPS_QUERY_KEY, { query, name, status, discountPercentage }],
-        queryFn: () => getScholarshipsActionAsync({
+    return useMutation({
+        mutationFn: () => getScholarshipsActionAsync({
             query,
             name,
             status,
             discountPercentage
         }),
-        enabled: false,
     });
 }

@@ -1,29 +1,31 @@
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
-import { useScholarship } from "../../hooks/useScholarship";
+
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { ScholarshipForm } from "./components/ScholarshipForm";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { ScholarshipForm } from "./components/ScholarshipForm";
+import { useGetByIdScholarship } from "../../hooks/useGetByIdScholarship";
+import { useCreateUpdateScholarship } from "../../hooks/useCreateUpdateScholarship";
+import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 
 export const ScholarshipPage = () => {
 
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const title = id === "new" ? 'Registro de beca escolar' : 'Edición de beca escolar';
-  const { isLoading, isError, data: scholarship, mutation } = useScholarship(id || '');
   const { showLoading, hideLoading } = useLoaderStore();
+  const scholarshipQuery = useGetByIdScholarship(id || "");
+  const createUpdateScholarshipMutation = useCreateUpdateScholarship();
+  const title = id === "new" ? 'Registro de beca escolar' : 'Edición de beca escolar';
 
   const handleSubmit = async (scholarshipLike: Partial<Scholarship>) => {
     try {
       showLoading('Guardando registro');
-      !scholarshipLike.id && (scholarshipLike.id = "new");
-
-      await mutation.mutateAsync(scholarshipLike, {
+      await createUpdateScholarshipMutation.mutateAsync(scholarshipLike, {
         onSuccess: (response) => {
           toast.success('Beca escolar actualizada correctamente');
+          hideLoading();
           navigate(`/scholarships/${response.id}`);
         }
       });
@@ -34,12 +36,12 @@ export const ScholarshipPage = () => {
     }
   }
 
-  if (isError) {
+  if (scholarshipQuery.isError) {
     toast.error("No fue posible obtener la información de la beca escolar");
     return <Navigate to="/scholarships" />;
   }
 
-  if (isLoading) {
+  if (scholarshipQuery.isLoading) {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">
@@ -60,8 +62,8 @@ export const ScholarshipPage = () => {
           <div className="flex flex-col min-h-full gap-8 mt-14">
 
             <ScholarshipForm
-              scholarship={scholarship}
-              isSubmitting={mutation.isPending}
+              scholarship={scholarshipQuery.data}
+              isSubmitting={createUpdateScholarshipMutation.isPending}
               onSubmit={handleSubmit}
             />
 

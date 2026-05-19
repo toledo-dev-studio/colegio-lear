@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { GET_SCHOOL_SUBJECTS_QUERY_KEY } from "../lib/queries-key";
+import { GET_SCHOOL_SUBJECTS_QUERY_KEY } from "../../../lib/queries-key/school-subjects-queries-key";
 import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getSchoolSubjectsActionAsync } from "../actions/get-school-subjects.action";
 

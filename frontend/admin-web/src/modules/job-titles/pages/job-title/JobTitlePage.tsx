@@ -1,26 +1,27 @@
 import { Navigate, useNavigate, useParams } from "react-router"
 import { toast } from "sonner";
 
-import { useJobTitle } from "../../hooks/useJobTitle";
 import { JobTitleForm } from "./components/JobTitleForm";
+import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useGetByIdJobTitle } from "../../hooks/useGetByIdJobTitle";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
 import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import { useCreateUpdateJobTitle } from "../../hooks/useCreateUpdateJobTitle";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
 
 export const JobTitlePage = () => {
-
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const title = id === "new" ? 'Registro de puesto de trabajo' : 'Edición de puesto de trabajo';
-  const { isLoading, isError, data: jobTitle, mutation } = useJobTitle(id || '');
   const { showLoading, hideLoading } = useLoaderStore();
+  const jobTitleQuery = useGetByIdJobTitle(id || "");
+  const createUpdateJobTitleMutation = useCreateUpdateJobTitle();
+  const title = id === "new" ? 'Registro de puesto de trabajo' : 'Edición de puesto de trabajo';
 
   const handleSubmit = async (jobTitleLike: Partial<JobTitle>) => {
     try {
       showLoading('Guardando registro');
-      await mutation.mutateAsync(jobTitleLike, {
+      await createUpdateJobTitleMutation.mutateAsync(jobTitleLike, {
         onSuccess: (response) => {
           toast.success('Puesto de trabajo actualizado correctamente');
           hideLoading();
@@ -34,12 +35,12 @@ export const JobTitlePage = () => {
     }
   }
 
-  if (isError) {
+  if (jobTitleQuery.isError) {
     toast.error("No fue posible obtener la información del puesto de trabajo");
     return <Navigate to="/job-titles" />;
   }
 
-  if (isLoading) {
+  if (jobTitleQuery.isLoading) {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">
@@ -60,8 +61,8 @@ export const JobTitlePage = () => {
           <div className="flex flex-col min-h-full gap-8 mt-14">
 
             <JobTitleForm
-              jobTitle={jobTitle}
-              isSubmitting={mutation.isPending}
+              jobTitle={jobTitleQuery.data}
+              isSubmitting={createUpdateJobTitleMutation.isPending}
               onSubmit={handleSubmit}
             />
 

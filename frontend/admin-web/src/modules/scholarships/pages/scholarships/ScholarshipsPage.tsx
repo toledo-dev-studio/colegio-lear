@@ -1,30 +1,30 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
+
+import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { ScholarshipsTable } from "./components/ScholarshipsTable";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
-import { useState } from "react";
-import { useDeleteScholarship } from "../../hooks/useDeleteScholarships";
-import { useNavigate } from "react-router";
-import { usePagedScholarships } from "../../hooks/usePagedScholarships";
-import { useExportScholarships } from "../../hooks/useExportScholarships";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { toast } from "sonner";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { CustomPagination } from "@/shared/components/CustomPagination";
-import { ScholarshipsTable } from "./components/ScholarshipsTable";
+import { useDeleteScholarship } from "../../hooks/useDeleteScholarships";
+import { useExportScholarships } from "../../hooks/useExportScholarships";
+import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
+import { useGetPagedScholarships } from "../../hooks/useGetPagedScholarships";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { ScholarshipsAdvancedFilters } from "./components/ScholarshipsAdvancedFilters";
 
 export const ScholarshipsPage = () => {
-
     const navigate = useNavigate();
 
     const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
     const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
     const [scholarshipToDelete, setScholarshipToDelete] = useState<Scholarship | undefined>(undefined);
 
-    const { deleteScholarship } = useDeleteScholarship();
-    const { isLoading, data: { data: scholarships = [], totalPages = 0 } = {} } = usePagedScholarships();
-    const { isFetching: isFetchingDataToExport, refetch: refetchDataToExport } = useExportScholarships();
+    const pagedScholarshipsQuery = useGetPagedScholarships();
+    const deleteScholarshipMutation = useDeleteScholarship();
+    const exportScholarshipsMutation = useExportScholarships();
 
     const { showLoading, hideLoading } = useLoaderStore();
 
@@ -35,7 +35,7 @@ export const ScholarshipsPage = () => {
     const handleClickExport = async () => {
         showLoading('Descargando información', 'Por favor espere...');
 
-        const { data } = await refetchDataToExport();
+        const data = await exportScholarshipsMutation.mutateAsync();
 
         if (!data || !Array.isArray(data)) {
             hideLoading();
@@ -75,8 +75,7 @@ export const ScholarshipsPage = () => {
     }
 
     const handleClickDelteScholarship = async () => {
-        await deleteScholarship.mutateAsync(
-            { id: scholarshipToDelete?.id ?? undefined },
+        await deleteScholarshipMutation.mutateAsync({ id: scholarshipToDelete?.id! },
             {
                 onSuccess: () => {
                     toast.success('Beca escolar eliminada correctamente');
@@ -108,22 +107,22 @@ export const ScholarshipsPage = () => {
                         handleClickAdvancedFilters={handleClickAdvancedFilters}
                         handleClickAdd={handleClickAdd}
                         handleClickExport={handleClickExport}
-                        disabledExport={isFetchingDataToExport}
+                        disabledExport={exportScholarshipsMutation.isPending}
                     />
 
                     {/* Table content*/}
                     <ScholarshipsTable
-                        data={scholarships ?? []}
-                        isLoading={isLoading}
+                        data={pagedScholarshipsQuery.data?.data ?? []}
+                        isLoading={pagedScholarshipsQuery.isLoading}
                         handleClickEditRow={handleClickEditRow}
                         handleClickDeleteRow={handleClickDeleteRow}
                     />
 
                     {/* Pagination top element */}
                     {
-                        (!isLoading && scholarships.length > 0) && (
+                        (!pagedScholarshipsQuery.isLoading && pagedScholarshipsQuery.data?.data.length) && (
                             <div className="flex items-center justify-center my-8">
-                                <CustomPagination totalPages={totalPages} />
+                                <CustomPagination totalPages={pagedScholarshipsQuery.data.totalPages} />
                             </div>
                         )
                     }
@@ -132,7 +131,7 @@ export const ScholarshipsPage = () => {
                         open={isOpenSingleDeleteModal}
                         title={`¿Estas seguro de eliminar el registro ${scholarshipToDelete?.name}`}
                         message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                        isLoading={deleteScholarship.isPending}
+                        isLoading={deleteScholarshipMutation.isPending}
                         handleClickConfirm={handleClickDelteScholarship}
                         handleClickCancel={handleClickCancelDelteScholarship}
                     />

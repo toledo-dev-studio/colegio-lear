@@ -1,16 +1,16 @@
-import { useEffect } from 'react'
-import { Save, X } from 'lucide-react';
-import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { useEffect } from "react"
+import { Save, X } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
-import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
-import { Switch } from '@/shared/ui/switch';
-import { Textarea } from '@/shared/ui/textarea';
-import { CustomSpinner } from '@/shared/components/CustomSpinner';
-import type { JobTitle } from '@/interfaces/entites/job-title.interface'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Switch } from "@/shared/ui/switch";
+import { Textarea } from "@/shared/ui/textarea";
+import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import type { JobTitle } from "@/interfaces/entites/job-title.interface"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 interface Props {
     jobTitle?: JobTitle,
@@ -31,7 +31,7 @@ export const JobTitleForm = ({ jobTitle, isSubmitting, onSubmit }: Props) => {
     }, [jobTitle])
 
     const handleClickCancel = () => {
-        navigate('/job-titles');
+        navigate("/job-titles");
     }
 
     return (
@@ -47,8 +47,8 @@ export const JobTitleForm = ({ jobTitle, isSubmitting, onSubmit }: Props) => {
                             <TooltipTrigger>
                                 <Switch
                                     size="default"
-                                    checked={watch('status') ?? false}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
+                                    checked={watch("status") ?? false}
+                                    onCheckedChange={(checked) => setValue("status", checked)} />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Estatus del registro</p>
@@ -66,7 +66,7 @@ export const JobTitleForm = ({ jobTitle, isSubmitting, onSubmit }: Props) => {
                         </label>
                         <Input
                             type="text"
-                            {...register('name', { required: true })}
+                            {...register("name", { required: true })}
                             placeholder="Escribe el puesto..."
                             className="pill-input w-full pl-8" />
                         {
@@ -84,11 +84,11 @@ export const JobTitleForm = ({ jobTitle, isSubmitting, onSubmit }: Props) => {
                         </label>
                         <Controller
                             control={control}
-                            name='jobTitleType'
+                            name="jobTitleType"
                             rules={{ required: true }}
                             render={({ field }) => (
                                 <Select
-                                    value={field.value}
+                                    value={field.value ?? ""}
                                     onValueChange={field.onChange}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Selecciona un puesto de trabajo">
@@ -118,8 +118,8 @@ export const JobTitleForm = ({ jobTitle, isSubmitting, onSubmit }: Props) => {
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-3 block">Descripción del puesto de trabajo:</label>
                         <Textarea
-                            {...register('description')}
-                            defaultValue={getValues('description')}
+                            {...register("description")}
+                            defaultValue={getValues("description")}
                             placeholder="Descripción el puesto..."
                             className="pill-input w-full pl-8" />
                     </div>

@@ -1,12 +1,11 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { GET_PAGED_SECURITY_ROLES_QUERY_KEY } from "../lib/queries-key";
 import { getPagedSecurityRolesActionAsync } from "../actions/get-paged-security-roles.action";
+import { GET_PAGED_SECURITY_ROLES_QUERY_KEY } from "@/lib/queries-key/security-roles-queries-key";
+import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
-export const usePagedSecurityRoles = () => {
-
+export const useGetPagedSecurityRoles = () => {
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -22,8 +21,8 @@ export const usePagedSecurityRoles = () => {
         queryKey: [GET_PAGED_SECURITY_ROLES_QUERY_KEY, { query, page, pageSize, name, status }],
         queryFn: () => getPagedSecurityRolesActionAsync({
             query,
-            page: isNaN(+page) ? 1 : Number(page),
-            pageSize: isNaN(+pageSize) ? 1 : Number(pageSize),
+            page: stringToNumberWithDefault(page, 1),
+            pageSize: stringToNumberWithDefault(pageSize, 1),
             name,
             status,
         }),

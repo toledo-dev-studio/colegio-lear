@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { getAcademicLevelByIdAction } from "../actions/get-academic-level-by-id.action";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { createUpdateAcademicLevelAction } from "../actions/create-update-academic-level.action";
-import { GET_ACADEMIC_LEVEL_QUERY_KEY, GET_ACADEMIC_LEVELS_QUERY_KEY, GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "../lib/queries-key";
+import { GET_ACADEMIC_LEVEL_QUERY_KEY, GET_ACADEMIC_LEVELS_QUERY_KEY, GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "../../../lib/queries-key/academic-levels-queries-key";
 
 export const useAcademicLevel = (id: string) => {
 

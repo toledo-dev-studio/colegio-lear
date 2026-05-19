@@ -1,12 +1,11 @@
+import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router"
 
-import { GET_PAGED_SCHOLARSHIPS_QUERY_KEY } from "../lib/queries-key";
 import { getPagedScholarshipsActionAsync } from "../actions/get-paged-scholarships.action";
+import { GET_PAGED_SCHOLARSHIPS_QUERY_KEY } from "@/lib/queries-key/scholarships-queries-key";
 import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
-export const usePagedScholarships = () => {
-
+export const useGetPagedScholarships = () => {
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -23,8 +22,8 @@ export const usePagedScholarships = () => {
         queryKey: [GET_PAGED_SCHOLARSHIPS_QUERY_KEY, { query, page, pageSize, name, status, discountPercentage }],
         queryFn: () => getPagedScholarshipsActionAsync({
             query,
-            page: isNaN(+page) ? 1 : Number(page),
-            pageSize: isNaN(+pageSize) ? 1 : Number(pageSize),
+            page: stringToNumberWithDefault(page, 1),
+            pageSize: stringToNumberWithDefault(pageSize, 1),
             name,
             status,
             discountPercentage,

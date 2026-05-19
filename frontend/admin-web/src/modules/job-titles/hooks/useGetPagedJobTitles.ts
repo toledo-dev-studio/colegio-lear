@@ -1,13 +1,12 @@
+import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router"
 
-import { GET_PAGED_JOB_TITLES_QUERY_KEY } from "../lib/queries-key";
-import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import type { JobTitleTypes } from "@/interfaces/entites/job-title.interface";
 import { getPagedJobTitlesActionAsync } from "../actions/get-paged-job-titles.action";
+import { GET_PAGED_JOB_TITLES_QUERY_KEY } from "@/lib/queries-key/job-titles-queries-key";
+import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
-export const usePagedJobTitles = () => {
-
+export const useGetPagedJobTitles = () => {
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -24,8 +23,8 @@ export const usePagedJobTitles = () => {
         queryKey: [GET_PAGED_JOB_TITLES_QUERY_KEY, { query, page, pageSize, name, jobTitleType, status, }],
         queryFn: () => getPagedJobTitlesActionAsync({
             query,
-            page: isNaN(+page) ? 1 : Number(page),
-            pageSize: isNaN(+pageSize) ? 1 : Number(pageSize),
+            page: stringToNumberWithDefault(page, 1),
+            pageSize: stringToNumberWithDefault(pageSize, 1),
             name, 
             jobTitleType,
             status,

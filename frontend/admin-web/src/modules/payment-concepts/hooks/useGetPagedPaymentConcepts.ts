@@ -1,12 +1,11 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY } from "../lib/queries-key";
 import { getPagedPaymentConceptsActionAsync } from "../actions/get-paged-payment-concepts.action";
+import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
+import { GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY } from "@/lib/queries-key/payment-concepts-queries-key";
 
-export const usePagedPaymentConcepts = () => {
-
+export const useGetPagedPaymentConcepts = () => {
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -24,10 +23,10 @@ export const usePagedPaymentConcepts = () => {
         queryKey: [GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY, { query, page, pageSize, name, amount, allowForgiveness, status, }],
         queryFn: () => getPagedPaymentConceptsActionAsync({
             query,
-            page: isNaN(+page) ? 1 : Number(page),
-            pageSize: isNaN(+pageSize) ? 1 : Number(pageSize),
+            page: stringToNumberWithDefault(page, 1),
+            pageSize: stringToNumberWithDefault(pageSize, 1),
             name, 
-            amount: isNaN(+amount) ? undefined : Number(amount), 
+            amount: stringToNumberWithDefault(amount, undefined), 
             allowForgiveness,
             status,
         }),

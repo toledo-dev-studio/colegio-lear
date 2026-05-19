@@ -9,7 +9,7 @@ interface Options {
     status?: boolean
 }
 
-export const getSecurityRolesActionAsync = async ({ query = '', name, status }: Options): Promise<SecurityRole[]> => {
+export const getSecurityRolesActionAsync = async ({ query, name, status }: Options): Promise<SecurityRole[]> => {
     await sleep();
 
     let endpoint = "/security-roles";

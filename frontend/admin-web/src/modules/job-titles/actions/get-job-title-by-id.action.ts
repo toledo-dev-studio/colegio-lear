@@ -3,7 +3,8 @@ import { sleep } from "@/lib/extensions/promises";
 import type { JobTitle } from "@/interfaces/entites/job-title.interface";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
-export const getJobTitleByIdActionAsync = async (id: string): Promise<JobTitle> => {
+export const getJobTitleByIdActionAsync = async (id?: string): Promise<JobTitle> => {
+    await sleep();
 
     if (!id)
         throw new Error('Id del puesto es requerido');
@@ -16,8 +17,6 @@ export const getJobTitleByIdActionAsync = async (id: string): Promise<JobTitle> 
             status: true
         } as unknown as JobTitle;
     }
-
-    await sleep();
 
     if (VITE_ENVIRONMENT === "mockable") {
         const { data } = await api.get<JobTitle[]>("/job-titles/job-titles.json");

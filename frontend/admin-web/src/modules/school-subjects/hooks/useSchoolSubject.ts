@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getSchoolSubjectByIdActionAsync } from "../actions/get-school-subject-by-id.action";
 import { createUpdateSchoolSubjectActionAsync } from "../actions/create-update-school-subject.action";
-import { GET_PAGED_SCHOOL_SUBJECTS_QUERY_KEY, GET_SCHOOL_SUBJECT_QUERY_KEY, GET_SCHOOL_SUBJECTS_QUERY_KEY } from "../lib/queries-key";
+import { GET_PAGED_SCHOOL_SUBJECTS_QUERY_KEY, GET_SCHOOL_SUBJECT_QUERY_KEY, GET_SCHOOL_SUBJECTS_QUERY_KEY } from "../../../lib/queries-key/school-subjects-queries-key";
 
 export const useSchoolSubject = (id: string) => {
 

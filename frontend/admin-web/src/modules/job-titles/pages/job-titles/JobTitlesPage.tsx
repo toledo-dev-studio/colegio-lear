@@ -1,31 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon"
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
-import { usePagedJobTitles } from "../../hooks/usePagedJobTitles";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { JobTitlesTable } from "./components/JobTitlesTable";
-import { useDeleteJobTitle } from "../../hooks/useDeleteJobTitle";
-import { useExportJobTitles } from "../../hooks/useExportJobTitles";
-import { JobTitlesAdvancedFilters } from "./components/JobTitlesAdvancedFilters";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useDeleteJobTitle } from "../../hooks/useDeleteJobTitle";
+import { useExportJobTitles } from "../../hooks/useExportJobTitles";
+import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
+import { useGetPagedJobTitles } from "../../hooks/useGetPagedJobTitles";
+import { CustomPagination } from "@/shared/components/CustomPagination";
+import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
+import { JobTitlesAdvancedFilters } from "./components/JobTitlesAdvancedFilters";
+import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 
 export const JobTitlesPage = () => {
-
   const navigate = useNavigate();
 
   const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
   const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
   const [jobTitleToDelete, setJobTitleToDelete] = useState<JobTitle | undefined>(undefined);
 
-  const { deleteJobTitle } = useDeleteJobTitle();
-  const { isLoading, data: { data: jobTitles = [], totalPages = 0 } = {} } = usePagedJobTitles();
-  const { isFetching: isFetchingDataToExport, refetch: refetchDataToExport } = useExportJobTitles();
+  const pagedJobTitlesQuery = useGetPagedJobTitles();
+  const deleteJobTitleMutation = useDeleteJobTitle();
+  const exportJobTitleMutation = useExportJobTitles();
 
   const { showLoading, hideLoading } = useLoaderStore();
 
@@ -36,7 +35,7 @@ export const JobTitlesPage = () => {
   const handleClickExport = async () => {
     showLoading('Descargando información', 'Por favor espere...');
 
-    const { data } = await refetchDataToExport();
+    const data = await exportJobTitleMutation.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
@@ -75,8 +74,7 @@ export const JobTitlesPage = () => {
   }
 
   const handleClickDelteJobTitle = async () => {
-    await deleteJobTitle.mutateAsync(
-      { id: jobTitleToDelete?.id ?? undefined },
+    await deleteJobTitleMutation.mutateAsync({ id: jobTitleToDelete?.id! },
       {
         onSuccess: () => {
           toast.success('Puesto de trabajo eliminado correctamente');
@@ -108,22 +106,22 @@ export const JobTitlesPage = () => {
             handleClickAdvancedFilters={handleClickAdvancedFilters}
             handleClickAdd={handleClickAdd}
             handleClickExport={handleClickExport}
-            disabledExport={isFetchingDataToExport}
+            disabledExport={exportJobTitleMutation.isPending}
           />
 
           {/* Table content*/}
           <JobTitlesTable
-            jobTitles={jobTitles ?? []}
-            isLoading={isLoading}
+            jobTitles={pagedJobTitlesQuery.data?.data ?? []}
+            isLoading={pagedJobTitlesQuery.isLoading}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            !isLoading && (
+            (!pagedJobTitlesQuery.isLoading && pagedJobTitlesQuery.data?.data.length) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={totalPages} />
+                <CustomPagination totalPages={pagedJobTitlesQuery.data?.totalPages ?? 0} />
               </div>
             )
           }
@@ -135,7 +133,7 @@ export const JobTitlesPage = () => {
                 open={isOpenSingleDeleteModal}
                 title={`¿Estas seguro de eliminar el registro ${jobTitleToDelete?.name}`}
                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={deleteJobTitle.isPending}
+                isLoading={deleteJobTitleMutation.isPending}
                 handleClickConfirm={handleClickDelteJobTitle}
                 handleClickCancel={handleClickCancelDelteJobTitle}
               />

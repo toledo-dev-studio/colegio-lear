@@ -94,7 +94,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                     name='jobTitleType'
                                     render={({ field }) => (
                                         <Select
-                                            value={field.value}
+                                            value={field.value ?? ""}
                                             onValueChange={field.onChange}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Selecciona un puesto de trabajo">

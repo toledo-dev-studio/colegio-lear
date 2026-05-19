@@ -1,12 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "react-router"
 
-import { GET_EMPLOYEES_QUERY_KEY } from "../lib/queries-key";
 import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { getEmployeesActionAsync } from "../actions/get-employees.action";
+import { getEmployeesActionAsync } from "../../actions/get-employees.action";
 
 export const useExportEmployees = () => {
-
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -18,15 +16,13 @@ export const useExportEmployees = () => {
     const roleId = searchParams.get('security-role-id') || undefined;
     const jobTitleId = searchParams.get('job-title-id') || undefined;
 
-    return useQuery({
-        queryKey: [GET_EMPLOYEES_QUERY_KEY, { query, name, status, roleId, jobTitleId }],
-        queryFn: () => getEmployeesActionAsync({
+    return useMutation({
+        mutationFn: () => getEmployeesActionAsync({
             query,
             name,
             status,
             roleId,
             jobTitleId
         }),
-        enabled: false,
     });
 }

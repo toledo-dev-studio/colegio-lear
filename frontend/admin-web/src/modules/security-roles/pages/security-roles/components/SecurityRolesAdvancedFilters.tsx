@@ -18,8 +18,8 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
 
     const [searchParams, setSearchParams] = useSearchParams();
     const securityRoleLikeFilter: Partial<SecurityRole> = {
-        name: searchParams.get('name') ?? '',
-        status: stringToBooleanWithDefault(searchParams.get('status'))
+        name: searchParams.get("name") ?? "",
+        status: stringToBooleanWithDefault(searchParams.get("status"))
     };
 
     const {
@@ -36,17 +36,17 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
         return null;
 
     const handleClickClearFilters = () => {
-        searchParams.delete('query');
-        searchParams.delete('name');
-        searchParams.delete('status');
-        reset({ name: '', status: true });
+        searchParams.delete("query");
+        searchParams.delete("name");
+        searchParams.delete("status");
+        reset({ name: "", status: true });
         setSearchParams(searchParams);
         handleClickClose();
     }
 
     const handleSubmitForm = (filter: Partial<SecurityRole>) => {
-        searchParams.set('status', `${filter.status}`);
-        filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
+        searchParams.set("status", `${filter.status}`);
+        filter.name ? searchParams.set("name", filter.name) : searchParams.delete("name");
         setSearchParams(searchParams);
         handleClickClose();
     }
@@ -72,7 +72,7 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
                                 <div className="relative">
                                     <Input
                                         type="text"
-                                        {...register('name')}
+                                        {...register("name")}
                                         placeholder="Nombre del rol de seguridad..."
                                         className="pill-input w-full pl-8"
                                     />
@@ -83,8 +83,8 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
                                 <label className="text-sm font-medium text-foreground mb-2 block">Estatus:</label>
                                 <Switch
                                     size="default"
-                                    checked={watch('status')}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
+                                    checked={watch("status")}
+                                    onCheckedChange={(checked) => setValue("status", checked)} />
                             </div>
                         </div>
                     </div>
