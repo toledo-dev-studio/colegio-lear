@@ -1,16 +1,6 @@
 import { Response } from "express";
 
 /**
- * Pagination metadata included in paginated success responses.
- */
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-}
-
-/**
  * Field-level error detail included in error responses.
  */
 export interface FieldError {
@@ -20,40 +10,51 @@ export interface FieldError {
 
 /**
  * Send a standard success response.
- * Format: { code, message, data }
+ * Format: { data }
  */
 export function sendSuccess(
   res: Response,
-  data: object | null,
-  message: string,
+  data: unknown,
   code: number = 200,
 ): void {
-  res.status(code).json({ code, message, data });
+  res.status(code).json({ data });
 }
 
 /**
  * Send a paginated success response.
- * Format: { code, message, data, pagination }
+ * Format: { data, totalPages, currentPage, itemsCount }
+ * Matches the frontend PagedResponse<T> interface.
  */
 export function sendPaginatedSuccess(
   res: Response,
   data: unknown[],
-  pagination: PaginationMeta,
-  message: string,
-  code: number = 200,
+  totalPages: number,
+  currentPage: number,
+  itemsCount: number,
 ): void {
-  res.status(code).json({ code, message, data, pagination });
+  res.status(200).json({ data, totalPages, currentPage, itemsCount });
+}
+
+/**
+ * Send a 204 No Content response (for DELETE operations).
+ */
+export function sendNoContent(res: Response): void {
+  res.status(204).send();
 }
 
 /**
  * Send a standard error response.
- * Format: { code, message, details }
+ * Format: { error, details? }
  */
 export function sendError(
   res: Response,
-  message: string,
+  error: string,
   code: number,
   details?: FieldError[] | null,
 ): void {
-  res.status(code).json({ code, message, details: details ?? null });
+  const body: { error: string; details?: FieldError[] } = { error };
+  if (details && details.length > 0) {
+    body.details = details;
+  }
+  res.status(code).json(body);
 }

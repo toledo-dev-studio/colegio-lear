@@ -225,23 +225,8 @@ router.patch(
  *     parameters:
  *       - $ref: '#/components/parameters/IdParam'
  *     responses:
- *       200:
- *         description: School subject deactivated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Materia desactivada correctamente
- *                 data:
- *                   type: object
- *                   nullable: true
- *                   example: null
+ *       204:
+ *         description: Eliminado correctamente (No Content)
  *       400:
  *         description: Invalid UUID format
  *       404:

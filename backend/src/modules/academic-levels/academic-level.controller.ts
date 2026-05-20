@@ -3,6 +3,7 @@ import { AcademicLevelService } from "./academic-level.service";
 import { prisma } from "../../shared/lib/prisma";
 import {
   sendSuccess,
+  sendNoContent,
   sendPaginatedSuccess,
 } from "../../shared/helpers/response.helper";
 import { parsePagination } from "../../shared/helpers/pagination.helper";
@@ -59,7 +60,7 @@ export async function findAll(req: Request, res: Response): Promise<void> {
 
   const data = await service.findAll(filters);
 
-  sendSuccess(res, data, "Academic levels retrieved");
+  sendSuccess(res, data);
 }
 
 /**
@@ -81,13 +82,9 @@ export async function findAllPaged(req: Request, res: Response): Promise<void> {
   sendPaginatedSuccess(
     res,
     result.data,
-    {
-      page: result.currentPage,
-      limit: pageSize,
-      total: result.itemsCount,
-      totalPages: result.totalPages,
-    },
-    "Academic levels retrieved",
+    result.totalPages,
+    result.currentPage,
+    result.itemsCount,
   );
 }
 
@@ -100,7 +97,7 @@ export async function findById(req: Request, res: Response): Promise<void> {
 
   const data = await service.findById(id);
 
-  sendSuccess(res, data, "Academic level retrieved");
+  sendSuccess(res, data);
 }
 
 /**
@@ -110,7 +107,7 @@ export async function findById(req: Request, res: Response): Promise<void> {
 export async function create(req: Request, res: Response): Promise<void> {
   const data = await service.create(req.body);
 
-  sendSuccess(res, data, "Academic level created", 201);
+  sendSuccess(res, data, 201);
 }
 
 /**
@@ -122,7 +119,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
   const data = await service.update(id, req.body);
 
-  sendSuccess(res, data, "Academic level updated");
+  sendSuccess(res, data);
 }
 
 /**
@@ -134,7 +131,7 @@ export async function softDelete(req: Request, res: Response): Promise<void> {
 
   await service.softDelete(id);
 
-  sendSuccess(res, null, "Nivel académico desactivado correctamente");
+  sendNoContent(res);
 }
 
 /**
@@ -159,12 +156,8 @@ export async function findEducationLevelsPaged(
   sendPaginatedSuccess(
     res,
     result.data,
-    {
-      page: result.currentPage,
-      limit: pageSize,
-      total: result.itemsCount,
-      totalPages: result.totalPages,
-    },
-    "Education levels retrieved",
+    result.totalPages,
+    result.currentPage,
+    result.itemsCount,
   );
 }

@@ -107,21 +107,8 @@ router.post(
  *           format: uuid
  *         description: Attachment UUID
  *     responses:
- *       200:
- *         description: Attachment deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Archivo adjunto eliminado correctamente
- *                 data:
- *                   type: "null"
+ *       204:
+ *         description: Eliminado correctamente (No Content)
  *       400:
  *         description: Invalid UUID format
  *       404:

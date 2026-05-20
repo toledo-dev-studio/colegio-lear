@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import { AttachmentService } from "./attachment.service";
 import { prisma } from "../../shared/lib/prisma";
 import { storageService } from "../../shared/services/storage.service";
-import { sendSuccess } from "../../shared/helpers/response.helper";
+import {
+  sendSuccess,
+  sendNoContent,
+} from "../../shared/helpers/response.helper";
 import { ValidationError } from "../../shared/errors/app-error";
 import type { FileUpload } from "./attachment.types";
 
@@ -48,7 +51,7 @@ export async function upload(req: Request, res: Response): Promise<void> {
 
   const data = await service.upload(announcementId, file);
 
-  sendSuccess(res, data, "Archivo adjunto subido correctamente", 201);
+  sendSuccess(res, data, 201);
 }
 
 /**
@@ -63,5 +66,5 @@ export async function remove(req: Request, res: Response): Promise<void> {
 
   await service.delete(announcementId, attachmentId);
 
-  sendSuccess(res, null, "Archivo adjunto eliminado correctamente");
+  sendNoContent(res);
 }

@@ -32,14 +32,14 @@ function buildCookieOptions(): CookieConfig {
  * Sets the access_token HttpOnly cookie and returns employee data.
  */
 export async function login(req: Request, res: Response): Promise<void> {
-  const { identifier, password } = req.body;
-  const result = await service.login(identifier, password);
+  const { username, password } = req.body;
+  const result = await service.login(username, password);
 
   // Set HttpOnly cookie with JWT
   const cookieOptions = buildCookieOptions();
   res.cookie("access_token", result.token, cookieOptions);
 
-  sendSuccess(res, result.employee, "Login exitoso");
+  sendSuccess(res, result.employee);
 }
 
 /**
@@ -50,7 +50,7 @@ export async function logout(_req: Request, res: Response): Promise<void> {
   const cookieOptions = buildCookieOptions();
   res.clearCookie("access_token", { ...cookieOptions, maxAge: 0 });
 
-  sendSuccess(res, null, "Sesión cerrada correctamente");
+  sendSuccess(res, null);
 }
 
 /**
@@ -62,29 +62,24 @@ export async function forgotPassword(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const { email } = req.body;
-  await service.forgotPassword(email);
+  const { username } = req.body;
+  await service.forgotPassword(username);
 
-  sendSuccess(
-    res,
-    null,
-    "Se envió un correo con instrucciones para recuperar tu contraseña",
-  );
+  sendSuccess(res, null);
 }
 
 /**
  * POST /auth/change-password
- * Changes the authenticated employee's password.
- * Requires an active session (auth middleware must run before this handler).
+ * Changes the employee's password using the reset token + 6-digit code.
+ * Public endpoint — no session required.
  */
 export async function changePassword(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const { currentPassword, newPassword } = req.body;
-  const employeeId = req.user!.employeeId;
+  const { token, code, password } = req.body;
 
-  await service.changePassword(employeeId, currentPassword, newPassword);
+  await service.changePassword(token, code, password);
 
-  sendSuccess(res, null, "Contraseña actualizada correctamente");
+  sendSuccess(res, null);
 }
