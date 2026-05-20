@@ -299,21 +299,8 @@ router.patch(
  *           format: uuid
  *         description: Announcement UUID
  *     responses:
- *       200:
- *         description: Announcement deactivated
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Comunicado desactivado correctamente
- *                 data:
- *                   type: "null"
+ *       204:
+ *         description: Eliminado correctamente (No Content)
  *       400:
  *         description: Invalid UUID format
  *       404:

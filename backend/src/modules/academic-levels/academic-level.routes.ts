@@ -351,21 +351,8 @@ router.patch(
  *           format: uuid
  *         description: Academic level UUID
  *     responses:
- *       200:
- *         description: Academic level deactivated
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Nivel académico desactivado correctamente
- *                 data:
- *                   type: "null"
+ *       204:
+ *         description: Eliminado correctamente (No Content)
  *       400:
  *         description: Invalid UUID format
  *       404:
