@@ -23,7 +23,7 @@ export const PaymentConceptPage = () => {
       showLoading('Guardando registro');
       await createUpdatePaymentConceptMutation.mutateAsync(paymentConceptLike, {
         onSuccess: (response) => {
-          toast.success('Registro actualizado de forma exitosa');
+          toast.success('Registro actualizado de forma exitosa', { position: "top-right" });
           hideLoading();
           navigate(`/payment-concepts/${response.id}`);
         }
@@ -31,12 +31,12 @@ export const PaymentConceptPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar el registro seleccionado');
+      toast.error('Ocurrio un error al tratar de actualizar el registro seleccionado', { position: "top-right" });
     }
   }
 
   if (paymentConceptQuery.isError) {
-    toast.error("No fue posible obtener la información del registro seleccionado");
+    toast.error("No fue posible obtener la información del registro seleccionado", { position: "top-right" });
     return <Navigate to="/payment-concepts" />;
   }
 

@@ -17,9 +17,9 @@ interface Options {
 export const getPagedPaymentConceptsActionAsync = async (props: Options): Promise<PagedResponse<PaymentConcept>> => {
     await sleep();
 
-    const { query = '', page = 1, pageSize = 1, name, amount, allowForgiveness, status } = props;
+    const { query, page = 1, pageSize = 1, name, amount, allowForgiveness, status } = props;
 
-    let endpoint = "payment-concepts";
+    let endpoint = "payment-concepts/paged";
     
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/payment-concepts/paged-payment-concepts.json";

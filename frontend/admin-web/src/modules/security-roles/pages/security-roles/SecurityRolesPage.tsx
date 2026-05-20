@@ -44,7 +44,7 @@ export const SecurityRolesPage = () => {
 
         if (!data || !Array.isArray(data)) {
             hideLoading();
-            toast.info('No se cuenta con información para descargar');
+            toast.info('No se cuenta con información para descargar', { position: "top-right" });
             return;
         }
 
@@ -77,13 +77,13 @@ export const SecurityRolesPage = () => {
         await deleteSecurityRoleMutation.mutateAsync({ id: securityRoleToDelete?.id! },
             {
                 onSuccess: () => {
-                    toast.success('Rol de seguridad eliminado correctamente');
+                    toast.success('Rol de seguridad eliminado correctamente', { position: "top-right" });
                     setSecurityRoleToDelete(undefined);
                     setIsOpenSingleDeleteModal(false);
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error('Ocurrio un error al tratar de eliminar el rol de seguridad');
+                    toast.error('Ocurrio un error al tratar de eliminar el rol de seguridad', { position: "top-right" });
                 }
             }
         );

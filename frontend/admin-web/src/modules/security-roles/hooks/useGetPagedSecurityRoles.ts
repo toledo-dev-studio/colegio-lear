@@ -10,8 +10,8 @@ export const useGetPagedSecurityRoles = () => {
 
     // Main query filters
     const query = searchParams.get('query')?.trim() || '';
-    const page = searchParams.get('page') || '1';
-    const pageSize = searchParams.get('pageSize') || '10';
+    const page = stringToNumberWithDefault(searchParams.get('page'), 1);
+    const pageSize = stringToNumberWithDefault(searchParams.get('pageSize'), 10);
     
     // Advanced query filters
     const name = searchParams.get('name')?.trim() || '';
@@ -21,8 +21,8 @@ export const useGetPagedSecurityRoles = () => {
         queryKey: [GET_PAGED_SECURITY_ROLES_QUERY_KEY, { query, page, pageSize, name, status }],
         queryFn: () => getPagedSecurityRolesActionAsync({
             query,
-            page: stringToNumberWithDefault(page, 1),
-            pageSize: stringToNumberWithDefault(pageSize, 1),
+            page,
+            pageSize,
             name,
             status,
         }),

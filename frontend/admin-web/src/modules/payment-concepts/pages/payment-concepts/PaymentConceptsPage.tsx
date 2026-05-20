@@ -40,7 +40,7 @@ export const PaymentConceptsPage = () => {
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
-      toast.info('No se cuenta con información para descargar');
+      toast.info('No se cuenta con información para descargar', { position: "top-right" });
       return;
     }
 
@@ -80,13 +80,13 @@ export const PaymentConceptsPage = () => {
     await deletePaymentConceptMutation.mutateAsync({ id: paymentConceptToDelete?.id! },
       {
         onSuccess: () => {
-          toast.success('Concepto de pago eliminado correctamente');
+          toast.success('Concepto de pago eliminado correctamente', { position: "top-right" });
           setPaymentConceptToDelete(undefined);
           setIsOpenSingleDeleteModal(false);
         },
         onError: (error) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el concepto de pago');
+          toast.error('Ocurrio un error al tratar de eliminar el concepto de pago', { position: "top-right" });
         }
       }
     );

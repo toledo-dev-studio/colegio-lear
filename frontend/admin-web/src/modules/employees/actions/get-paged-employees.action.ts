@@ -15,20 +15,11 @@ interface Options {
 }
 
 export const getPagedEmployeesActionAsync = async (options: Options): Promise<PagedResponse<Employee>> => {
-
-    const {
-        query = '',
-        page = 1,
-        pageSize = 1,
-        name,
-        status,
-        roleId,
-        jobTitleId,
-    } = options;
-
     await sleep();
 
-    let endpoint = "/employees";
+    const { query, page = 1, pageSize = 1, name, status, roleId, jobTitleId } = options;
+
+    let endpoint = "/employees/paged";
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/employees/paged-employees.json";

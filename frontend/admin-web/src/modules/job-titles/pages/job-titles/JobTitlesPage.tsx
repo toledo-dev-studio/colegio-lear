@@ -39,7 +39,7 @@ export const JobTitlesPage = () => {
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
-      toast.info('No se cuenta con información para descargar');
+      toast.info('No se cuenta con información para descargar', { position: "top-right" });
       return;
     }
 
@@ -77,13 +77,13 @@ export const JobTitlesPage = () => {
     await deleteJobTitleMutation.mutateAsync({ id: jobTitleToDelete?.id! },
       {
         onSuccess: () => {
-          toast.success('Puesto de trabajo eliminado correctamente');
+          toast.success('Puesto de trabajo eliminado correctamente', { position: "top-right" });
           setJobTitleToDelete(undefined);
           setIsOpenSingleDeleteModal(false);
         },
         onError: (error) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el puesto de trabajo');
+          toast.error('Ocurrio un error al tratar de eliminar el puesto de trabajo', { position: "top-right" });
         }
       }
     );

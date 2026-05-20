@@ -10,12 +10,12 @@ export const useGetPagedPaymentConcepts = () => {
 
     // Main query filters
     const query = searchParams.get('query')?.trim() || '';
-    const page = searchParams.get('page') || '1';
-    const pageSize = searchParams.get('pageSize') || '10';
+    const page = stringToNumberWithDefault(searchParams.get('page'), 1);
+    const pageSize = stringToNumberWithDefault(searchParams.get('pageSize'), 10);
 
     // Advanced query filters
     const name = searchParams.get('name')?.trim() || '';
-    const amount = searchParams.get('amount')?.trim() || '';
+    const amount = stringToNumberWithDefault(searchParams.get('amount')?.trim(), undefined);
     const allowForgiveness = stringToBooleanWithDefault(searchParams.get('allowForgiveness'));
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
@@ -23,10 +23,10 @@ export const useGetPagedPaymentConcepts = () => {
         queryKey: [GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY, { query, page, pageSize, name, amount, allowForgiveness, status, }],
         queryFn: () => getPagedPaymentConceptsActionAsync({
             query,
-            page: stringToNumberWithDefault(page, 1),
-            pageSize: stringToNumberWithDefault(pageSize, 1),
+            page,
+            pageSize,
             name, 
-            amount: stringToNumberWithDefault(amount, undefined), 
+            amount,
             allowForgiveness,
             status,
         }),

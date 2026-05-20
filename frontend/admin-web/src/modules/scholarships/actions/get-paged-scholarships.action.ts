@@ -16,14 +16,7 @@ interface Options {
 export const getPagedScholarshipsActionAsync = async (props: Options): Promise<PagedResponse<Scholarship>> => {
     await sleep();
 
-    const {
-        query,
-        page = 1,
-        pageSize = 1,
-        name,
-        status,
-        discountPercentage,
-    } = props;
+    const { query, page = 1, pageSize = 1, name, status, discountPercentage } = props;
 
     let endpoint = "/scholarships/paged";
 

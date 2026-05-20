@@ -22,6 +22,7 @@ export const useSearchJobTitlesForEmployee = () => {
             }
         });
     }
+    
     return {
         jobTitles,
         isPending: mutation.isPending,

@@ -40,7 +40,7 @@ export const EmployeesPage = () => {
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
-      toast.info('No se cuenta con información para descargar');
+      toast.info('No se cuenta con información para descargar', { position: "top-right" });
       return;
     }
 
@@ -82,13 +82,13 @@ export const EmployeesPage = () => {
     await deleteEmployeeMutation.mutateAsync({ id: employeeToDelete?.id! },
       {
         onSuccess: () => {
-          toast.success('Empleado eliminada correctamente');
+          toast.success('Empleado eliminada correctamente', { position: "top-right" });
           setEmployeeToDelete(undefined);
           setIsOpenSingleDeleteModal(false);
         },
         onError: (error: any) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el empleado');
+          toast.error('Ocurrio un error al tratar de eliminar el empleado', { position: "top-right" });
         }
       }
     );

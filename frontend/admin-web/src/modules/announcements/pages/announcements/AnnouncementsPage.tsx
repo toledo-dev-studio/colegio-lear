@@ -3,17 +3,17 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner"
 
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { usePagedAnnouncements } from "../../hooks/usePagedAnnouncements";
-import { useExportAnnouncements } from "../../hooks/useExportAnnouncements";
 import { AnnouncementsTable } from "./components/AnnouncementsTable";
 import type { Announcement } from "@/interfaces/entites/announcement";
-import { useDeleteAnnouncement } from "../../hooks/useDeleteAnnouncement";
+import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
+import { CustomPagination } from "@/shared/components/CustomPagination";
+import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
+import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
+import { useDeleteAnnouncement } from "../../hooks/announcements/useDeleteAnnouncement";
 import { AnnouncementsAdvancedFilters } from "./components/AnnouncementsAdvancedFilters";
+import { useExportAnnouncements } from "../../hooks/announcements/useExportAnnouncements";
+import { useGetPagedAnnouncements } from "../../hooks/announcements/useGetPagedAnnouncements";
 
 export const AnnouncementsPage = () => {
 
@@ -21,39 +21,39 @@ export const AnnouncementsPage = () => {
 
   const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
   const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
-  const [AnnouncementToDelete, setAnnouncementToDelete] = useState<Announcement | undefined>(undefined);
+  const [announcementToDelete, setAnnouncementToDelete] = useState<Announcement | undefined>(undefined);
 
-  const { mutationDeleteAnnouncement } = useDeleteAnnouncement();
-  const { isLoading, data: { data: Announcements = [], totalPages = 0 } = {} } = usePagedAnnouncements();
-  const { isFetching: isFetchingDataToExport, refetch: refetchDataToExport } = useExportAnnouncements();
+  const pagedAnnouncementsQuery = useGetPagedAnnouncements();
+  const deleteAnnouncementMutation = useDeleteAnnouncement();
+  const exportAnnouncementsMutation = useExportAnnouncements();
 
   const { showLoading, hideLoading } = useLoaderStore();
 
   const handleClickAdd = () => {
-    navigate('/announcements/new');
+    navigate("/announcements/new");
   }
 
   const handleClickExport = async () => {
-    showLoading('Descargando información', 'Por favor espere...');
+    showLoading("Descargando información", "Por favor espere...");
 
-    const { data } = await refetchDataToExport();
+    const data = await exportAnnouncementsMutation.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
-      toast.info('No se cuenta con información para descargar');
+      toast.info("No se cuenta con información para descargar", { position: "top-right" });
       return;
     }
 
     const headers = [
-      { label: 'Id', key: 'id' },
-      { label: 'Nombre', key: 'name' },
-      { label: 'Descripción', key: 'description' },
-      { label: 'Fecha de publicación', key: 'publishedAt' },
-      { label: 'Fecha de expiración', key: 'expiresAt' },
-      { label: 'Estado', key: 'status' }
+      { label: "Id", key: "id" },
+      { label: "Nombre", key: "name" },
+      { label: "Descripción", key: "description" },
+      { label: "Fecha de publicación", key: "publishedAt" },
+      { label: "Fecha de expiración", key: "expiresAt" },
+      { label: "Estado", key: "status" }
     ];
 
-    downloadDataToCsvFile('Campañas & comunicados', headers, data);
+    downloadDataToCsvFile("Campañas & comunicados", headers, data);
 
     setTimeout(() => hideLoading(), 500);
   }
@@ -77,17 +77,16 @@ export const AnnouncementsPage = () => {
   }
 
   const handleClickDelteJobTitle = async () => {
-    await mutationDeleteAnnouncement.mutateAsync(
-      { id: AnnouncementToDelete?.id ?? undefined },
+    await deleteAnnouncementMutation.mutateAsync(announcementToDelete?.id!,
       {
         onSuccess: () => {
-          toast.success('Concepto de pago eliminado correctamente');
+          toast.success("Concepto de pago eliminado correctamente", { position: "top-right" });
           setAnnouncementToDelete(undefined);
           setIsOpenSingleDeleteModal(false);
         },
         onError: (error) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el concepto de pago');
+          toast.error("Ocurrio un error al tratar de eliminar el concepto de pago", { position: "top-right" });
         }
       }
     );
@@ -110,34 +109,34 @@ export const AnnouncementsPage = () => {
             handleClickAdvancedFilters={handleClickAdvancedFilters}
             handleClickAdd={handleClickAdd}
             handleClickExport={handleClickExport}
-            disabledExport={isFetchingDataToExport}
+            disabledExport={exportAnnouncementsMutation.isPending}
           />
 
           {/* Table content*/}
           <AnnouncementsTable
-            data={Announcements ?? []}
-            isLoading={isLoading}
+            data={pagedAnnouncementsQuery.data?.data ?? []}
+            isLoading={pagedAnnouncementsQuery.isLoading}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            !isLoading && (
+            (!pagedAnnouncementsQuery.isLoading && pagedAnnouncementsQuery.data?.data.length) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={totalPages} />
+                <CustomPagination totalPages={pagedAnnouncementsQuery.data.totalPages} />
               </div>
             )
           }
 
           {/* Delete single record modal */}
           {
-            AnnouncementToDelete && (
+            announcementToDelete && (
               <CustomDeleteModal
                 open={isOpenSingleDeleteModal}
-                title={`¿Estas seguro de eliminar el registro ${AnnouncementToDelete?.name}`}
+                title={`¿Estas seguro de eliminar el registro ${announcementToDelete?.name}`}
                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={mutationDeleteAnnouncement.isPending}
+                isLoading={deleteAnnouncementMutation.isPending}
                 handleClickConfirm={handleClickDelteJobTitle}
                 handleClickCancel={handleClickCancelDelteJobTitle}
               />

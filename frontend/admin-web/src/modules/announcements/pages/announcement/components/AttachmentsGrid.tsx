@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { generateTemporalId } from "@/lib/extensions/utils";
 import { AttachmentCard } from "./AttachmentCard";
-import { extractFileExtension } from "@/lib/extensions/attachments";
-import type { Attachment } from "@/interfaces/entites/attachment";
-import { CustomDragAndDrop } from "@/shared/components/CustomDragAndDrop";
-import { useAttachmentsForAnnouncement } from "@/modules/announcements/hooks/useAttachmentsForAnnouncement";
-import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/constants/attachment.constants";
 import { promisePool } from "@/lib/extensions/promises";
+import { generateTemporalId } from "@/lib/extensions/utils";
+import type { Attachment } from "@/interfaces/entites/attachment";
+import { extractFileExtension } from "@/lib/extensions/attachments";
+import { CustomDragAndDrop } from "@/shared/components/CustomDragAndDrop";
+import { useAttachmentsForAnnouncement } from "@/modules/announcements/hooks/attachments/useAttachmentsForAnnouncement";
+import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/constants/attachment.constants";
 
 /**
  * Attachments — owner of all attachment business logic for announcement.
@@ -52,25 +52,21 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
     const [deletingIds, setDeletingIds] = useState<string[]>([]);
     const { attachmentsMutation } = useAttachmentsForAnnouncement();
 
-    // Use refs so async callbacks always read the freshest value/uploading
-    const valueRef = useRef(attachments);
-
-    useEffect(() => {
-        valueRef.current = attachments;
-    }, [attachments]);
-
     // Revoke object URLs on unmount to avoid leaks
-    useEffect(() => uploadingAttachments.forEach((u) => u.previewUrl && URL.revokeObjectURL(u.previewUrl)), []);
+    useEffect(() => {
+        return () => {
+            uploadingAttachments.forEach((u) => u.previewUrl && URL.revokeObjectURL(u.previewUrl))
+        }
+    }, []);
 
     /**
      * Event to detect if any file is duplicated by name.
      */
     const isDuplicate = useCallback((file: File): boolean => {
-        const current = valueRef.current;
-        return current.some(
+        return attachments.some(
             (a) => a.name.toLowerCase() === file.name.toLowerCase(),
         );
-    }, [],);
+    }, [attachments],);
 
     /**
      * Event handler executed when files where selected.
@@ -87,19 +83,19 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
 
             // File has an invalid extension?
             if (!(acceptedExtensions.map((e) => e.toLowerCase()).includes(`.${fileExtension}`.toLowerCase()))) {
-                toast.error(`El archivo "${file.name}" no cuenta con un formato válido.`);
+                toast.error(`El archivo "${file.name}" no cuenta con un formato válido.`, { position: "top-right" });
                 return;
             }
 
             // File size is bigger than available size?
             if (file.size > MAX_FILE_SIZE_BYTES) {
-                toast.error(`El archivo "${file.name}" supera el límite de 10MB.`);
+                toast.error(`El archivo "${file.name}" supera el límite de 10MB.`, { position: "top-right" });
                 return;
             }
 
             // A file with same name already exists?
             if (isDuplicate(file)) {
-                toast.error(`Ya se encuentra cargado un archivo con el nombre "${file.name}".`);
+                toast.error(`Ya se encuentra cargado un archivo con el nombre "${file.name}".`, { position: "top-right" });
                 return;
             }
 
@@ -125,11 +121,11 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
             try {
                 const attachment = await attachmentsMutation.upload.mutateAsync({ announcementId, file });
                 onChange((prev) => [...(prev ?? []), attachment]);
-                toast.success(`Archivo "${name}" cargado correctamente.`);
+                toast.success(`Archivo "${name}" cargado correctamente.`, { position: "top-right" });
                 return attachment;
             } catch (error) {
                 console.warn(error);
-                toast.error(`Ocurrio un error al tratar de cargar el archivo "${name}".`);
+                toast.error(`Ocurrio un error al tratar de cargar el archivo "${name}".`, { position: "top-right" });
             } finally {
                 setUploadingAttachments((prev) => prev.filter((u) => u.id !== id));
                 if (previewUrl)
@@ -148,9 +144,9 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
         try {
             await attachmentsMutation.remove.mutateAsync({ announcementId: announcementId, attachmentId: attachment.id });
             onChange((prev) => prev.filter((a) => a.id !== attachment.id));
-            toast.success(`Archivo "${attachment.name}" eliminado correctamente.`);
+            toast.success(`Archivo "${attachment.name}" eliminado correctamente.`, { position: "top-right" });
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : "No fue posible eliminar el archivo seleccionado.");
+            toast.error(err instanceof Error ? err.message : "No fue posible eliminar el archivo seleccionado.", { position: "top-right" });
         } finally {
             setDeletingIds((prev) => prev.filter((id) => id !== attachment.id));
         }

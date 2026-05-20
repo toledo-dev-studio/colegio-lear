@@ -1,18 +1,17 @@
+import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router"
 
-import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "../../../lib/queries-key/academic-levels-queries-key";
 import { getPagedAcademicLevelsActionAsync } from "../actions/get-paged-academic-levels.action";
+import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
+import { GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "@/lib/queries-key/academic-levels-queries-key";
 
-export const usePagedAcademicLevels = () => {
-
+export const useGetPagedAcademicLevels = () => {
     const [searchParams] = useSearchParams();
 
     // Main query params
     const query = searchParams.get('query')?.trim() || '';
-    const page = searchParams.get('page') || '1';
-    const pageSize = searchParams.get('pageSize') || '10';
+    const page = stringToNumberWithDefault(searchParams.get('page'), 1);
+    const pageSize = stringToNumberWithDefault(searchParams.get('pageSize'), 10);
 
     // Advanced query params
     const name = searchParams.get('name')?.trim() || '';
@@ -22,9 +21,9 @@ export const usePagedAcademicLevels = () => {
         queryKey: [GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY, { query, page, pageSize, name, status }],
         queryFn: () => getPagedAcademicLevelsActionAsync({
             query,
-            page: isNaN(+page) ? 1 : Number(page),
-            pageSize: isNaN(+pageSize) ? 1 : Number(pageSize),
-            name, 
+            page,
+            pageSize,
+            name,
             status,
         }),
     });
