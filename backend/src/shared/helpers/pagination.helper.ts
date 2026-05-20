@@ -1,4 +1,3 @@
-import { PaginationMeta } from "./response.helper";
 import { ValidationError } from "../errors/app-error";
 
 /**
@@ -7,6 +6,16 @@ import { ValidationError } from "../errors/app-error";
 export interface PaginationParams {
   page: number;
   limit: number;
+}
+
+/**
+ * Pagination metadata returned by buildPaginationMeta.
+ */
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 
 /** Maximum allowed value for the limit parameter. */

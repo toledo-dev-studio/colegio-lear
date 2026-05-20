@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { authenticate } from "../../shared/middleware/auth.middleware";
 import { validate } from "../../shared/middleware/validate.middleware";
 import {
   loginSchema,
@@ -190,7 +189,6 @@ router.post(
  */
 router.post(
   "/change-password",
-  authenticate,
   validate(changePasswordSchema, "body"),
   changePassword,
 );

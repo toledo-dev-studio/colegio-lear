@@ -5,6 +5,7 @@ import { storageService } from "../../shared/services/storage.service";
 import { mailService } from "../../shared/services/mail.service";
 import {
   sendSuccess,
+  sendNoContent,
   sendPaginatedSuccess,
 } from "../../shared/helpers/response.helper";
 import { ValidationError } from "../../shared/errors/app-error";
@@ -69,7 +70,7 @@ export async function findAll(req: Request, res: Response): Promise<void> {
 
   const data = await service.findAll(filters);
 
-  sendSuccess(res, data, "Employees retrieved successfully");
+  sendSuccess(res, data);
 }
 
 /**
@@ -88,13 +89,9 @@ export async function findAllPaged(req: Request, res: Response): Promise<void> {
   sendPaginatedSuccess(
     res,
     result.data,
-    {
-      page: result.currentPage,
-      limit: pageSize,
-      total: result.itemsCount,
-      totalPages: result.totalPages,
-    },
-    "Employees retrieved successfully",
+    result.totalPages,
+    result.currentPage,
+    result.itemsCount,
   );
 }
 
@@ -107,7 +104,7 @@ export async function findById(req: Request, res: Response): Promise<void> {
 
   const data = await service.findById(id);
 
-  sendSuccess(res, data, "Employee retrieved successfully");
+  sendSuccess(res, data);
 }
 
 /**
@@ -121,7 +118,7 @@ export async function create(req: Request, res: Response): Promise<void> {
 
   const data = await service.create(req.body, file);
 
-  sendSuccess(res, data, "Employee created successfully", 201);
+  sendSuccess(res, data, 201);
 }
 
 /**
@@ -146,7 +143,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
   const data = await service.update(id, req.body, file);
 
-  sendSuccess(res, data, "Employee updated successfully");
+  sendSuccess(res, data);
 }
 
 /**
@@ -158,5 +155,5 @@ export async function softDelete(req: Request, res: Response): Promise<void> {
 
   await service.softDelete(id);
 
-  sendSuccess(res, null, "Empleado desactivado correctamente");
+  sendNoContent(res);
 }

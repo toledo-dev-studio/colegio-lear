@@ -3,6 +3,7 @@ import { AnnouncementService } from "./announcement.service";
 import { prisma } from "../../shared/lib/prisma";
 import {
   sendSuccess,
+  sendNoContent,
   sendPaginatedSuccess,
 } from "../../shared/helpers/response.helper";
 import type { AnnouncementFilters } from "./announcement.types";
@@ -41,7 +42,7 @@ export async function getAll(req: Request, res: Response): Promise<void> {
 
   const data = await service.findAll(filters);
 
-  sendSuccess(res, data, "Announcements retrieved");
+  sendSuccess(res, data);
 }
 
 /**
@@ -63,13 +64,9 @@ export async function getAllPaged(req: Request, res: Response): Promise<void> {
   sendPaginatedSuccess(
     res,
     result.data,
-    {
-      page: result.currentPage,
-      limit: pageSize,
-      total: result.itemsCount,
-      totalPages: result.totalPages,
-    },
-    "Announcements retrieved",
+    result.totalPages,
+    result.currentPage,
+    result.itemsCount,
   );
 }
 
@@ -82,7 +79,7 @@ export async function getById(req: Request, res: Response): Promise<void> {
 
   const data = await service.findById(id);
 
-  sendSuccess(res, data, "Announcement retrieved");
+  sendSuccess(res, data);
 }
 
 /**
@@ -92,7 +89,7 @@ export async function getById(req: Request, res: Response): Promise<void> {
 export async function create(req: Request, res: Response): Promise<void> {
   const data = await service.create(req.body);
 
-  sendSuccess(res, data, "Announcement created", 201);
+  sendSuccess(res, data, 201);
 }
 
 /**
@@ -104,7 +101,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
   const data = await service.update(id, req.body);
 
-  sendSuccess(res, data, "Announcement updated");
+  sendSuccess(res, data);
 }
 
 /**
@@ -116,5 +113,5 @@ export async function remove(req: Request, res: Response): Promise<void> {
 
   await service.softDelete(id);
 
-  sendSuccess(res, null, "Comunicado desactivado correctamente");
+  sendNoContent(res);
 }
