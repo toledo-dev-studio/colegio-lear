@@ -139,7 +139,7 @@ model JobTitle {
 model SecurityRole {
   id          String                   @id @default(uuid()) @db.Uuid
   name        String                   @unique @db.VarChar(100)
-  description String                   @db.VarChar(500)
+  description String?                   @db.VarChar(500)
   status      Boolean                  @default(true)
   permissions SecurityRolePermission[]
   employees   Employee[]

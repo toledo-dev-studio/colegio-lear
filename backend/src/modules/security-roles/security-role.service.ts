@@ -175,9 +175,11 @@ export class SecurityRoleService {
         },
       });
 
-      if (dto.permissions.length > 0) {
+      const permissions = dto.permissions ?? [];
+
+      if (permissions.length > 0) {
         await tx.securityRolePermission.createMany({
-          data: dto.permissions.map((p) => ({
+          data: permissions.map((p) => ({
             securityRoleId: role.id,
             moduleKey: p.moduleKey,
             canRead: p.canRead,

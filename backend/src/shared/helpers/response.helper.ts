@@ -17,7 +17,7 @@ export function sendSuccess(
   data: unknown,
   code: number = 200,
 ): void {
-  res.status(code).json({ data });
+  res.status(code).json(data);
 }
 
 /**

@@ -11,9 +11,9 @@ const prisma = new PrismaClient({ adapter });
 // ─── Fixed UUIDs for deterministic seed data ────────────────────────────────────
 
 const ACADEMIC_LEVELS = {
-  preescolar: "a1000000-0000-0000-0000-000000000001",
-  primaria: "a1000000-0000-0000-0000-000000000002",
-  secundaria: "a1000000-0000-0000-0000-000000000003",
+  preescolar: "a1000000-0000-4000-8000-000000000001",
+  primaria: "a1000000-0000-4000-8000-000000000002",
+  secundaria: "a1000000-0000-4000-8000-000000000003",
 };
 
 const EDUCATION_LEVELS = {
@@ -401,7 +401,7 @@ async function main() {
   );
 
   // --- Admin Security Role ---
-  const ADMIN_ROLE_ID = "d1000000-0000-0000-0000-000000000001";
+  const ADMIN_ROLE_ID = "d1000000-0000-4000-8000-000000000001";
   const ALL_MODULE_KEYS = [
     "dashboard",
     "my-account",
