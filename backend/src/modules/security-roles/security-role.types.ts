@@ -29,7 +29,7 @@ export interface SecurityRoleFilters {
 export interface SecurityRoleRecord {
   id: string;
   name: string;
-  description: string;
+  description?: string | null;
   status: boolean;
 }
 
@@ -45,9 +45,9 @@ export interface SecurityRolePermissionView {
 export interface SecurityRoleDetail {
   id: string;
   name: string;
-  description: string;
+  description?: string | null;
   status: boolean;
-  permissions: SecurityRolePermissionView[];
+  permissions?: SecurityRolePermissionView[];
 }
 
 /** Input DTO for a single permission entry */

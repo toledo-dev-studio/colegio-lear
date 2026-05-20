@@ -97,7 +97,14 @@ export const securityRolePagedQuerySchema = securityRoleFiltersSchema.extend({
  * - permissions: array of permission objects with unique moduleKeys
  */
 export const createSecurityRoleSchema = z.object({
-  name: nonBlankString(100)
+  name: nonBlankString(100),
+  description: nonBlankString(500).optional(),
+  permissions: z
+    .array(permissionSchema)
+    .refine(
+      (perms) => new Set(perms.map((p) => p.moduleKey)).size === perms.length,
+      { message: "Duplicate moduleKey values are not allowed" },
+    ).optional(),
 });
 
 /**

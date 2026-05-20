@@ -16,7 +16,7 @@ import {
   softDelete,
 } from "./security-role.controller";
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * @openapi
