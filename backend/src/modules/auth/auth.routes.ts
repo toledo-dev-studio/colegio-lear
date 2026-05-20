@@ -21,7 +21,7 @@ const router = Router();
  *     tags:
  *       - Auth
  *     summary: Login de empleado
- *     description: Autentica un empleado por username o email y contraseña. Establece una cookie HttpOnly con el JWT de acceso.
+ *     description: Autentica un empleado por username o email y contraseña. Establece una cookie HttpOnly con el JWT de acceso (sliding expiration).
  *     requestBody:
  *       required: true
  *       content:
@@ -29,17 +29,17 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - identifier
+ *               - username
  *               - password
  *             properties:
- *               identifier:
+ *               username:
  *                 type: string
  *                 description: Username o email del empleado
  *                 example: "otrejo"
  *               password:
  *                 type: string
  *                 description: Contraseña del empleado
- *                 example: "miPassword123"
+ *                 example: "Admin123!"
  *     responses:
  *       200:
  *         description: Login exitoso. Retorna datos del empleado y establece cookie access_token.
@@ -48,16 +48,10 @@ const router = Router();
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Login exitoso
  *                 data:
  *                   $ref: '#/components/schemas/LoginResponse'
  *       400:
- *         description: Error de validación (campos vacíos o formato inválido)
+ *         description: Error de validación
  *       401:
  *         description: Credenciales inválidas o cuenta deshabilitada
  */
@@ -79,12 +73,6 @@ router.post("/login", validate(loginSchema, "body"), login);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Sesión cerrada correctamente
  *                 data:
  *                   type: "null"
  */
@@ -97,7 +85,7 @@ router.post("/logout", logout);
  *     tags:
  *       - Auth
  *     summary: Recuperación de contraseña
- *     description: Genera una contraseña temporal y la envía por correo electrónico. Siempre responde con 200 independientemente de si el email existe o no.
+ *     description: Envía un email con un código de 6 dígitos y un link con token JWT para cambiar la contraseña. Siempre responde 200 sin importar si el usuario existe.
  *     requestBody:
  *       required: true
  *       content:
@@ -105,31 +93,24 @@ router.post("/logout", logout);
  *           schema:
  *             type: object
  *             required:
- *               - email
+ *               - username
  *             properties:
- *               email:
+ *               username:
  *                 type: string
- *                 format: email
- *                 description: Email del empleado registrado
- *                 example: "empleado@colegiolear.edu.mx"
+ *                 description: Username o email del empleado
+ *                 example: "otrejo"
  *     responses:
  *       200:
- *         description: Correo enviado con instrucciones (respuesta idéntica sin importar si el email existe)
+ *         description: Correo enviado (respuesta idéntica sin importar si el usuario existe)
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Se envió un correo con instrucciones para recuperar tu contraseña
  *                 data:
  *                   type: "null"
  *       400:
- *         description: Error de validación (email con formato inválido)
+ *         description: Error de validación
  */
 router.post(
   "/forgot-password",
@@ -143,10 +124,8 @@ router.post(
  *   post:
  *     tags:
  *       - Auth
- *     summary: Cambio de contraseña
- *     description: Cambia la contraseña del empleado autenticado. Requiere sesión activa (JWT válido en cookie o header).
- *     security:
- *       - cookieAuth: []
+ *     summary: Cambio de contraseña con código de verificación
+ *     description: Cambia la contraseña usando el token del link del email + el código de 6 dígitos. Endpoint público (no requiere sesión).
  *     requestBody:
  *       required: true
  *       content:
@@ -154,17 +133,27 @@ router.post(
  *           schema:
  *             type: object
  *             required:
- *               - currentPassword
- *               - newPassword
+ *               - token
+ *               - code
+ *               - password
+ *               - confirmPassword
  *             properties:
- *               currentPassword:
+ *               token:
  *                 type: string
- *                 description: Contraseña actual del empleado
- *                 example: "miPasswordActual"
- *               newPassword:
+ *                 description: JWT token recibido en el query param del link del email
+ *                 example: "eyJhbGciOiJIUzI1NiIs..."
+ *               code:
+ *                 type: string
+ *                 description: Código de 6 dígitos recibido por email
+ *                 example: "847291"
+ *               password:
  *                 type: string
  *                 minLength: 6
  *                 description: Nueva contraseña (mínimo 6 caracteres)
+ *                 example: "miNuevaPassword123"
+ *               confirmPassword:
+ *                 type: string
+ *                 description: Confirmación de la nueva contraseña (debe coincidir)
  *                 example: "miNuevaPassword123"
  *     responses:
  *       200:
@@ -174,18 +163,12 @@ router.post(
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Contraseña actualizada correctamente
  *                 data:
  *                   type: "null"
  *       400:
- *         description: Error de validación (contraseña nueva muy corta o campos vacíos)
+ *         description: Error de validación (código incorrecto, contraseñas no coinciden, etc.)
  *       401:
- *         description: Token no proporcionado, expirado, inválido, o contraseña actual incorrecta
+ *         description: Token inválido o expirado, código incorrecto
  */
 router.post(
   "/change-password",
