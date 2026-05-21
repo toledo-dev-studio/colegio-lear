@@ -1,4 +1,4 @@
 export interface AuthCredentials {
-    identifier: string;
+    username: string;
     password: string
 }

@@ -112,17 +112,17 @@ export const ScholarshipsPage = () => {
 
                     {/* Table content*/}
                     <ScholarshipsTable
-                        data={pagedScholarshipsQuery.data?.data ?? []}
-                        isLoading={pagedScholarshipsQuery.isLoading}
+                        data={pagedScholarshipsQuery.data}
+                        isLoading={pagedScholarshipsQuery.isFetching}
                         handleClickEditRow={handleClickEditRow}
                         handleClickDeleteRow={handleClickDeleteRow}
                     />
 
                     {/* Pagination top element */}
                     {
-                        (!pagedScholarshipsQuery.isLoading && pagedScholarshipsQuery.data?.data.length) && (
+                        (!pagedScholarshipsQuery.isFetching && pagedScholarshipsQuery.itemsCount > 0) && (
                             <div className="flex items-center justify-center my-8">
-                                <CustomPagination totalPages={pagedScholarshipsQuery.data.totalPages} />
+                                <CustomPagination totalPages={pagedScholarshipsQuery.totalPages} />
                             </div>
                         )
                     }

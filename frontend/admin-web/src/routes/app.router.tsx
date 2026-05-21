@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter } from "react-router";
 
 import authRouter from "@/modules/auth/routes/auth.router";
 import academicLevelsRouter from "@/modules/academic-levels/routes/academic-levels.router";
@@ -11,6 +11,9 @@ import securityRolesRouter from "@/modules/security-roles/routes/security-roles.
 import paymentConceptsRouter from "@/modules/payment-concepts/routes/payment-concepts.router";
 import myAccountRouter from "@/modules/my-account/routes/my-account.router";
 import announcementsRouter from "@/modules/announcements/routes/announcements.router";
+import { NotFoundPage } from "@/shared/pages/NotFoundPage";
+import { ForbiddenRoute } from "./protected.router";
+import { ForbiddenPage } from "@/shared/pages/ForbiddenPage";
 
 export const appRouter = createBrowserRouter([
     /** auth */
@@ -37,8 +40,18 @@ export const appRouter = createBrowserRouter([
     jobTitlesRouter,
     /** security-roles */
     securityRolesRouter,
+
+    /** Forbidden page */
+    {
+        path: "forbidden",
+        element:
+            <ForbiddenRoute>
+                <ForbiddenPage />
+            </ForbiddenRoute>
+    },
+    /** 404 not found page */
     {
         path: '*',
-        element: <Navigate to='/auth/login' />
+        element: <NotFoundPage />
     }
 ]);

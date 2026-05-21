@@ -29,28 +29,28 @@ export const JobTitlesPage = () => {
   const { showLoading, hideLoading } = useLoaderStore();
 
   const handleClickAdd = () => {
-    navigate('/job-titles/new');
+    navigate("/job-titles/new");
   }
 
   const handleClickExport = async () => {
-    showLoading('Descargando información', 'Por favor espere...');
+    showLoading("Descargando información", "Por favor espere...");
 
     const data = await exportJobTitleMutation.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
-      toast.info('No se cuenta con información para descargar', { position: "top-right" });
+      toast.info("No se cuenta con información para descargar", { position: "top-right" });
       return;
     }
 
     const headers = [
-      { label: 'Id', key: 'id' },
-      { label: 'Nombre', key: 'name' },
-      { label: 'Descripción', key: 'description' },
-      { label: 'Estado', key: 'status' }
+      { label: "Id", key: "id" },
+      { label: "Nombre", key: "name" },
+      { label: "Descripción", key: "description" },
+      { label: "Estado", key: "status" }
     ];
 
-    downloadDataToCsvFile('Puestos de trabajo', headers, data);
+    downloadDataToCsvFile("Puestos de trabajo", headers, data);
 
     setTimeout(() => hideLoading(), 500);
   }
@@ -77,13 +77,13 @@ export const JobTitlesPage = () => {
     await deleteJobTitleMutation.mutateAsync({ id: jobTitleToDelete?.id! },
       {
         onSuccess: () => {
-          toast.success('Puesto de trabajo eliminado correctamente', { position: "top-right" });
+          toast.success("Puesto de trabajo eliminado correctamente", { position: "top-right" });
           setJobTitleToDelete(undefined);
           setIsOpenSingleDeleteModal(false);
         },
         onError: (error) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el puesto de trabajo', { position: "top-right" });
+          toast.error("Ocurrio un error al tratar de eliminar el puesto de trabajo", { position: "top-right" });
         }
       }
     );
@@ -111,17 +111,17 @@ export const JobTitlesPage = () => {
 
           {/* Table content*/}
           <JobTitlesTable
-            jobTitles={pagedJobTitlesQuery.data?.data ?? []}
-            isLoading={pagedJobTitlesQuery.isLoading}
+            data={pagedJobTitlesQuery.data}
+            isLoading={pagedJobTitlesQuery.isFetching}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            (!pagedJobTitlesQuery.isLoading && pagedJobTitlesQuery.data?.data.length) && (
+            (!pagedJobTitlesQuery.isFetching && pagedJobTitlesQuery.itemsCount > 0) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedJobTitlesQuery.data?.totalPages ?? 0} />
+                <CustomPagination totalPages={pagedJobTitlesQuery.totalPages} />
               </div>
             )
           }

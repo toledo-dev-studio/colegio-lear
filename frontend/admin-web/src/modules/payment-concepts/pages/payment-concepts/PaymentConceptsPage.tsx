@@ -114,17 +114,17 @@ export const PaymentConceptsPage = () => {
 
           {/* Table content*/}
           <PaymentConceptsTable
-            data={pagedPaymentConceptsQuery.data?.data ?? []}
-            isLoading={pagedPaymentConceptsQuery.isLoading}
+            data={pagedPaymentConceptsQuery.data}
+            isLoading={pagedPaymentConceptsQuery.isFetching}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            (!pagedPaymentConceptsQuery.isLoading && pagedPaymentConceptsQuery.data?.data.length) && (
+            (!pagedPaymentConceptsQuery.isFetching && pagedPaymentConceptsQuery.itemsCount > 0) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedPaymentConceptsQuery.data.totalPages} />
+                <CustomPagination totalPages={pagedPaymentConceptsQuery.totalPages} />
               </div>
             )
           }

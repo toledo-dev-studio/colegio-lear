@@ -315,6 +315,9 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                         {
                             !selectedSecurityRoleId && (<p className="text-center text-muted-foreground mt-8">Seleccione un rol de seguridad para visualizar sus privilegios</p>)
                         }
+                        {
+                            (getByIdSecurityRoleForEmployee.isError && selectedSecurityRoleId) && (<p className="text-center text-muted-foreground mt-8">No fue posible obtener los detalles del rol de seguridad seleccionado</p>)
+                        }
                         <div className="w-full relative my-10">
                             {
                                 getByIdSecurityRoleForEmployee.isPending && (<CustomFullScreenLoading title="Cargando privilegios" subtitle="Cargando privilegios del rol de seguridad seleccionado" className="relative" />)

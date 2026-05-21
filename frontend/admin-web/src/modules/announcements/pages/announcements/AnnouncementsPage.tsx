@@ -114,17 +114,17 @@ export const AnnouncementsPage = () => {
 
           {/* Table content*/}
           <AnnouncementsTable
-            data={pagedAnnouncementsQuery.data?.data ?? []}
-            isLoading={pagedAnnouncementsQuery.isLoading}
+            data={pagedAnnouncementsQuery.data}
+            isLoading={pagedAnnouncementsQuery.isFetching}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            (!pagedAnnouncementsQuery.isLoading && pagedAnnouncementsQuery.data?.data.length) && (
+            (!pagedAnnouncementsQuery.isFetching && pagedAnnouncementsQuery.itemsCount > 0) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedAnnouncementsQuery.data.totalPages} />
+                <CustomPagination totalPages={pagedAnnouncementsQuery.totalPages} />
               </div>
             )
           }

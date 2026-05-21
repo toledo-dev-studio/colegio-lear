@@ -1,30 +1,33 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
+import { AuthenticatedRoute } from "@/routes/protected.router";
 import { AnnouncementPage } from "../pages/announcement/AnnouncementPage";
 import { AnnouncementsPage } from "../pages/announcements/AnnouncementsPage";
 
-const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
-const AnnouncementsLayout = lazy(() => import('@/modules/announcements/layout/AnnouncementsLayout'));
+const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const AnnouncementsLayout = lazy(() => import("@/modules/announcements/layout/AnnouncementsLayout"));
 
 export const announcementsRouter: RouteObject = {
-    path: '/announcements',
+    path: "/announcements",
     element:
-        <SystemLayout>
-            <AnnouncementsLayout />
-        </SystemLayout>,
+        <AuthenticatedRoute moduleKey="announcements">
+            <SystemLayout>
+                <AnnouncementsLayout />
+            </SystemLayout>
+        </AuthenticatedRoute>,
     children: [
         {
-            path: '',
+            path: "",
             element: <AnnouncementsPage />
         },
         {
-            path: ':id',
+            path: ":id",
             element: <AnnouncementPage />
         },
         {
-            path: '*',
-            element: <Navigate to='/announcements' />
+            path: "*",
+            element: <Navigate to="/announcements" />
         }
     ]
 };

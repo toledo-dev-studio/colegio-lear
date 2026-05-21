@@ -1,8 +1,13 @@
 import { create } from "zustand";
 
 import { loginActionAsync } from "../actions/login.action";
+import { logoutActionAsync } from "../actions/logout.action";
 import type { Employee } from "@/interfaces/entites/employee";
 import type { AuthCredentials } from "../interfaces/auth-credentials";
+import { meActionAsync } from "../actions/me.action";
+import type { ModuleKeys } from "@/interfaces/components/modules";
+import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import type { SecurityRolePermission } from "@/interfaces/entites/security-role-permission";
 
 type AuthStatus = "authenticated" | "not-authenticated" | "checking";
 
@@ -10,10 +15,13 @@ type AuthState = {
     // Properties
     user: Employee | null,
     authStatus: AuthStatus,
+    permissions: SecurityRolePermission[],
 
     // Actions
-    login: (credentials: Partial<AuthCredentials>) => Promise<boolean>,
-    logout: () => void,
+    checkPermission: (moduleKey: ModuleKeys, permission: "can-read" | "can-write" | "can-delete") => boolean,
+    checkAuthStatus: () => Promise<boolean>,
+    login: (credentials: AuthCredentials) => Promise<boolean>,
+    logout: () => Promise<void>,
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => (
@@ -21,25 +29,57 @@ export const useAuthStore = create<AuthState>()((set, get) => (
         // Properties
         user: null,
         authStatus: "checking",
+        permissions: [],
 
         // Actions
-        login: async (credentials: Partial<AuthCredentials>) => {
+        checkPermission: (moduleKey: ModuleKeys, permission: "can-read" | "can-write" | "can-delete") => {
+            const user = get().user;
+            console.log(moduleKey, permission, user);
+            return true;
+        },
+        checkAuthStatus: async () => {
+            const user = get().user;
+            if (user) {
+                set({ user: user, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
+                return true;
+            }
+            else
+                set({ user: null, authStatus: "not-authenticated", permissions: [] });
+            return false;
+
+            const { showLoading, hideLoading } = useLoaderStore.getState();
             try {
-                const user = await loginActionAsync(credentials);
-                sessionStorage.setItem("colegio-learn-auth", JSON.stringify(user));
-                set({ user: user, authStatus: "authenticated" });
+                showLoading();
+                const user = await meActionAsync();
+                set({ user: user, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
                 return true;
             } catch (error) {
                 console.warn(error);
-                set({ user: null, authStatus: "not-authenticated" });
-                sessionStorage.removeItem("colegio-learn-auth");
+                set({ user: null, authStatus: "not-authenticated", permissions: [] });
+                return false;
+            } finally {
+                hideLoading();
+            }
+        },
+        login: async (credentials: AuthCredentials) => {
+            try {
+                const user = await loginActionAsync(credentials);
+                set({ user: user, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
+                return true;
+            } catch (error) {
+                console.warn(error);
+                set({ user: null, authStatus: "not-authenticated", permissions: [] });
                 return false;
             }
         },
-        logout: () => {
-            set({ user: null, authStatus: "not-authenticated" });
-            sessionStorage.removeItem("colegio-learn-auth");
-            console.log("logout...");
+        logout: async () => {
+            try {
+                await logoutActionAsync();
+            } catch (error) {
+                console.warn(error);
+            } finally {
+                set({ user: null, authStatus: "not-authenticated", permissions: [] });
+            }
         }
     }
 ));

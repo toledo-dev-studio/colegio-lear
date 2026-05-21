@@ -19,7 +19,7 @@ export const useGetPagedSchoolSubjects = () => {
     const academicLevelId = searchParams.get("academic-level-id") || undefined;
     const educationLevelId = searchParams.get("education-level-id") || undefined;
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: [GET_PAGED_SCHOOL_SUBJECTS_QUERY_KEY, { query, page, pageSize, name, status, academicLevelId, educationLevelId }],
         queryFn: () => getPagedSchoolSubjectsActionAsync({
             query,
@@ -31,4 +31,12 @@ export const useGetPagedSchoolSubjects = () => {
             educationLevelId,
         }),
     });
+
+    return {
+        ...queryResult,
+        data: queryResult.data?.data ?? [],
+        totalPages: queryResult.data?.totalPages ?? 0,
+        currentPage: queryResult.data?.currentPage ?? 0,
+        itemsCount: queryResult.data?.itemsCount ?? 0
+    }
 }

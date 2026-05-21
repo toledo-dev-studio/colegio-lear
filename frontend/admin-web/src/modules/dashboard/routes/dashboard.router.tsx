@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
 import { DashboardPage } from "../pages/DashboardPage";
+import { AuthenticatedRoute } from "@/routes/protected.router";
 
 const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
 const DashboardLayout = lazy(() => import('@/modules/dashboard/layout/DashboardLayout'));
@@ -9,9 +10,11 @@ const DashboardLayout = lazy(() => import('@/modules/dashboard/layout/DashboardL
 export const dashboardRouter: RouteObject = {
     path: '/dashboard',
     element:
-        <SystemLayout>
-            <DashboardLayout />
-        </SystemLayout>,
+        <AuthenticatedRoute moduleKey="dashboard">
+            <SystemLayout>
+                <DashboardLayout />
+            </SystemLayout>
+        </AuthenticatedRoute>,
     children: [
         {
             path: '',

@@ -19,7 +19,7 @@ export const useGetPagedEmployees = () => {
     const roleId = searchParams.get('security-role-id') || undefined;
     const jobTitleId = searchParams.get('job-title-id') || undefined;
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY, { query, page, pageSize, name, status, roleId, jobTitleId, }],
         queryFn: () => getPagedEmployeesActionAsync({
             query,
@@ -31,4 +31,12 @@ export const useGetPagedEmployees = () => {
             jobTitleId,
         }),
     });
+
+    return {
+        ...queryResult,
+        data: queryResult.data?.data ?? [],
+        totalPages: queryResult.data?.totalPages ?? 0,
+        currentPage: queryResult.data?.currentPage ?? 0,
+        itemsCount: queryResult.data?.itemsCount ?? 0
+    }
 }

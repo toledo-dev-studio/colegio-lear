@@ -18,7 +18,7 @@ export const useGetPagedScholarships = () => {
     const status = stringToBooleanWithDefault(searchParams.get('status'));
     const discountPercentage = stringToNumberWithDefault(searchParams.get('discount-percentage'));
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: [GET_PAGED_SCHOLARSHIPS_QUERY_KEY, { query, page, pageSize, name, status, discountPercentage }],
         queryFn: () => getPagedScholarshipsActionAsync({
             query,
@@ -29,4 +29,12 @@ export const useGetPagedScholarships = () => {
             discountPercentage,
         }),
     });
+
+    return {
+        ...queryResult,
+        data: queryResult.data?.data ?? [],
+        totalPages: queryResult.data?.totalPages ?? 0,
+        currentPage: queryResult.data?.currentPage ?? 0,
+        itemsCount: queryResult.data?.itemsCount ?? 0
+    }
 }

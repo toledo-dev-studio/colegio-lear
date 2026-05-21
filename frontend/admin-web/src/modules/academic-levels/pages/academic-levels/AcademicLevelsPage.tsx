@@ -112,17 +112,17 @@ export const AcademicLevelsPage = () => {
 
           {/* Table content*/}
           <AcademicLevelsTable
-            academicLevels={pagedAcademicLevelsQuery.data?.data ?? []}
-            isLoading={pagedAcademicLevelsQuery.isLoading}
+            data={pagedAcademicLevelsQuery.data}
+            isLoading={pagedAcademicLevelsQuery.isFetching}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            (!pagedAcademicLevelsQuery.isLoading && pagedAcademicLevelsQuery.data?.data.length) && (
+            (!pagedAcademicLevelsQuery.isFetching && pagedAcademicLevelsQuery.itemsCount > 0) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedAcademicLevelsQuery.data.totalPages ?? 0} />
+                <CustomPagination totalPages={pagedAcademicLevelsQuery.totalPages} />
               </div>
             )
           }

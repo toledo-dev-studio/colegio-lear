@@ -17,14 +17,14 @@ export const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<Partial<AuthCredentials>>({
-        defaultValues: { identifier: undefined, password: undefined }
+    const { register, handleSubmit, formState: { errors } } = useForm<AuthCredentials>({
+        defaultValues: { username: undefined, password: undefined }
     });
 
     const { login } = useAuthStore();
     const { showLoading, hideLoading } = useLoaderStore();
 
-    const onSubmit = async (credentials: Partial<AuthCredentials>) => {
+    const onSubmit = async (credentials: AuthCredentials) => {
         setIsLoading(true);
         showLoading("Iniciando sesión");
 
@@ -65,7 +65,7 @@ export const LoginPage = () => {
                             <div className="relative">
                                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
-                                    {...register("identifier", { required: true })}
+                                    {...register("username", { required: true })}
                                     type="text"
                                     defaultValue="aone"
                                     placeholder="correo@colegio.com"
@@ -74,7 +74,7 @@ export const LoginPage = () => {
                                 />
                             </div>
                             {
-                                errors.identifier && (
+                                errors.username && (
                                     <p className="text-red-500 text-sm mt-2">
                                         Usuario / correo electrónico es obligatorio para el inicio de sesión
                                     </p>

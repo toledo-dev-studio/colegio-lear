@@ -19,16 +19,24 @@ export const useGetPagedPaymentConcepts = () => {
     const allowForgiveness = stringToBooleanWithDefault(searchParams.get('allowForgiveness'));
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: [GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY, { query, page, pageSize, name, amount, allowForgiveness, status, }],
         queryFn: () => getPagedPaymentConceptsActionAsync({
             query,
             page,
             pageSize,
-            name, 
+            name,
             amount,
             allowForgiveness,
             status,
         }),
     });
+
+    return {
+        ...queryResult,
+        data: queryResult.data?.data ?? [],
+        totalPages: queryResult.data?.totalPages ?? 0,
+        currentPage: queryResult.data?.currentPage ?? 0,
+        itemsCount: queryResult.data?.itemsCount ?? 0
+    }
 }

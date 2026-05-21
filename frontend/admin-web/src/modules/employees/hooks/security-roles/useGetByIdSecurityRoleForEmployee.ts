@@ -12,7 +12,7 @@ export const useGetByIdSecurityRoleForEmployee = () => {
     });
 
     const searchAsync = async (id: string) => {
-        mutation.mutateAsync(id, {
+        return mutation.mutateAsync(id, {
             onSuccess: (response: SecurityRole) => {
                 setSecurityRole(response);
             },
@@ -24,6 +24,7 @@ export const useGetByIdSecurityRoleForEmployee = () => {
 
     return {
         securityRole,
+        isError: mutation.isError,
         isPending: mutation.isPending,
         searchAsync,
         setSecurityRole,

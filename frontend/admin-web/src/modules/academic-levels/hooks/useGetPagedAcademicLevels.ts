@@ -17,7 +17,7 @@ export const useGetPagedAcademicLevels = () => {
     const name = searchParams.get('name')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: [GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY, { query, page, pageSize, name, status }],
         queryFn: () => getPagedAcademicLevelsActionAsync({
             query,
@@ -27,4 +27,12 @@ export const useGetPagedAcademicLevels = () => {
             status,
         }),
     });
+
+    return {
+        ...queryResult,
+        data: queryResult.data?.data ?? [],
+        totalPages: queryResult.data?.totalPages ?? 0,
+        currentPage: queryResult.data?.currentPage ?? 0,
+        itemsCount: queryResult.data?.itemsCount ?? 0
+    }
 }

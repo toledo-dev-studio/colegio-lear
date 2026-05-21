@@ -1,46 +1,11 @@
 import { Link, useLocation } from "react-router";
-import { LayoutDashboard, Fingerprint, BookOpen, Users, CalendarDays, GraduationCap, Ruler, Telescope, Wallet, Megaphone, ShieldCheck, UserCog, LogOut, Briefcase } from "lucide-react";
+import { LogOut } from "lucide-react";
 
-import { cn } from "@/lib/extensions/utils";
 import { CustomLogo } from "./CustomLogo";
-import type { Navbar } from "@/interfaces/components/navbar";
-import { ACADEMIC_LEVELS_MODULE, ACADEMIC_YEARS_MODULE, ANNOUNCEMENTS_MODULE, DASHBOARD_MODULE, EMPLOYEES_MODULE, JOB_TITLES_MODULE, MY_ACCOUNT_MODULE, MY_CLASSES_MODULE, PAYMENT_CONCEPTS_MODULE, SCHOLARSHIPS_MODULE, SCHOOL_SUBJECTS_MODULE, SECURITY_ROLES_MODULE, STUDENTS_MODULE } from "@/interfaces/components/modules";
-
-const navbar: Navbar[] = [
-  {
-    title: "Accesos rápidos",
-    items: [
-      { module: DASHBOARD_MODULE, icon: LayoutDashboard, testId: "nav-dashboard" },
-      { module: MY_ACCOUNT_MODULE, icon: Fingerprint, testId: "nav-my-account" },
-      { module: MY_CLASSES_MODULE, icon: BookOpen, testId: "nav-my-classes" },
-    ],
-  },
-  {
-    title: "Seguimiento escolar",
-    items: [
-      { module: STUDENTS_MODULE, icon: Users, testId: "nav-students" },
-      { module: ACADEMIC_YEARS_MODULE, icon: CalendarDays, testId: "nav-academic-years" },
-      { module: ANNOUNCEMENTS_MODULE, icon: Megaphone, testId: "nav-announcements" },
-    ],
-  },
-  {
-    title: "Configuración escolar",
-    items: [
-      { module: ACADEMIC_LEVELS_MODULE, icon: Ruler, testId: "nav-academic-levels" },
-      { module: SCHOOL_SUBJECTS_MODULE, icon: GraduationCap, testId: "nav-school-subjects" },
-      { module: SCHOLARSHIPS_MODULE, icon: Telescope, testId: "nav-scholarships" },
-      { module: PAYMENT_CONCEPTS_MODULE, icon: Wallet, testId: "nav-payment-concepts" },
-    ],
-  },
-  {
-    title: "Seguridad",
-    items: [
-      { module: EMPLOYEES_MODULE, icon: UserCog, testId: "nav-employees" },
-      { module: JOB_TITLES_MODULE, icon: Briefcase, testId: "nav-job-titles" },
-      { module: SECURITY_ROLES_MODULE, icon: ShieldCheck, testId: "nav-security-roles" },
-    ],
-  },
-];
+import { cn } from "@/lib/extensions/utils";
+import { NAVBAR } from "@/lib/constants/navbar.constant";
+import { useAuthStore } from "@/modules/auth/stores/auth.store";
+import { filterNavbarByPermissions } from "@/lib/helpers/navbar.helper";
 
 interface Props {
   isOpenSidebar: boolean;
@@ -51,6 +16,8 @@ interface Props {
 export const CustomSidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) => {
 
   const { pathname } = useLocation();
+  const { permissions } = useAuthStore();
+  const navbar = filterNavbarByPermissions(NAVBAR, permissions);
 
   const isActiveRoute = (to?: string) => {
     if (pathname.includes(to || "")) return true;
@@ -85,7 +52,7 @@ export const CustomSidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) =
                           <Link
                             to={`/${item.module.key}`}
                             data-testid={item.testId}
-                            onClick={isOpenSidebar ? toggleSidebar : ()=>{}}
+                            onClick={isOpenSidebar ? toggleSidebar : () => { }}
                             className={
                               cn("flex items-center gap-3 px-5 py-4 rounded-md text-sm font-medium transition-all",
                                 isActiveRoute(item.module.key) ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted")

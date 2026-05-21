@@ -2,29 +2,32 @@ import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
 import SystemLayout from "@/shared/layout/SystemLayout";
+import { AuthenticatedRoute } from "@/routes/protected.router";
 import { AcademicLevelPage } from "../pages/academic-level/AcademicLevelPage";
 import { AcademicLevelsPage } from "../pages/academic-levels/AcademicLevelsPage";
 
-const AcademicLevelsLayout = lazy(() => import('@/modules/academic-levels/layout/AcademicLevelsLayout'));
+const AcademicLevelsLayout = lazy(() => import("@/modules/academic-levels/layout/AcademicLevelsLayout"));
 
 export const academicLevelsRouter: RouteObject = {
-    path: '/academic-levels',
+    path: "/academic-levels",
     element:
-        <SystemLayout>
-            <AcademicLevelsLayout />
-        </SystemLayout>,
+        <AuthenticatedRoute moduleKey="academic-levels">
+            <SystemLayout>
+                <AcademicLevelsLayout />
+            </SystemLayout>
+        </AuthenticatedRoute>,
     children: [
         {
-            path: '',
+            path: "",
             element: <AcademicLevelsPage />
         },
         {
-            path: ':id',
+            path: ":id",
             element: <AcademicLevelPage />
         },
         {
-            path: '*',
-            element: <Navigate to='/academic-levels' />
+            path: "*",
+            element: <Navigate to="/academic-levels" />
         }
     ]
 }

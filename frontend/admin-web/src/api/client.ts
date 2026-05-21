@@ -9,11 +9,16 @@ const api = axios.create({
     withCredentials: true,
 });
 
-// api.interceptors.request.use((config) => {
-//     const token = localStorage.getItem('token');
-//     if (token)
-//         config.headers.Authorization = `Bearer ${token}`;
-//     return config;
-// });
+// Interceptor for 401 response code (the cookie is removed automatically by backend)
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Redirect to login
+            window.location.href = "/auth/login";
+        }
+        return Promise.reject(error);
+    }
+);
 
 export { api };

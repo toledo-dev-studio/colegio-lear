@@ -114,17 +114,17 @@ export const SchoolSubjectsPage = () => {
 
           {/* Table content*/}
           <SchoolSubjectsTable
-            schoolSubjects={pagedSchoolSubjectsQuery.data?.data ?? []}
-            isLoading={pagedSchoolSubjectsQuery.isLoading}
+            data={pagedSchoolSubjectsQuery.data}
+            isLoading={pagedSchoolSubjectsQuery.isFetching}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            (!pagedSchoolSubjectsQuery.isLoading && pagedSchoolSubjectsQuery.data?.data.length) && (
+            (!pagedSchoolSubjectsQuery.isFetching && pagedSchoolSubjectsQuery.itemsCount > 0) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedSchoolSubjectsQuery.data.totalPages ?? 0} />
+                <CustomPagination totalPages={pagedSchoolSubjectsQuery.totalPages} />
               </div>
             )
           }

@@ -19,15 +19,23 @@ export const useGetPagedJobTitles = () => {
     const jobTitleType = (searchParams.get('job-title-type')?.trim() as JobTitleTypes) || undefined;
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: [GET_PAGED_JOB_TITLES_QUERY_KEY, { query, page, pageSize, name, jobTitleType, status, }],
         queryFn: () => getPagedJobTitlesActionAsync({
             query,
             page,
             pageSize,
-            name, 
+            name,
             jobTitleType,
             status,
         }),
     });
+
+    return {
+        ...queryResult,
+        data: queryResult.data?.data ?? [],
+        totalPages: queryResult.data?.totalPages ?? 0,
+        currentPage: queryResult.data?.currentPage ?? 0,
+        itemsCount: queryResult.data?.itemsCount ?? 0
+    }
 }
