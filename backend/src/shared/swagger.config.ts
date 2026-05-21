@@ -176,7 +176,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         UpdateJobTitleDto: {
           type: "object",
           description:
-            "At least one field required (name, description, or jobTitleType).",
+            "At least one field required (name, description, jobTitleType, or status).",
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
             description: { type: "string", minLength: 1, maxLength: 500 },
@@ -184,6 +184,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               type: "string",
               enum: ["teacher", "administrative-staff"],
             },
+            status: { type: "boolean" },
           },
         },
         SecurityRole: {
@@ -271,10 +272,11 @@ const swaggerOptions: swaggerJsdoc.Options = {
         UpdateSecurityRoleDto: {
           type: "object",
           description:
-            "At least one field required (name, description, or permissions).",
+            "At least one field required (name, description, status, or permissions).",
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
             description: { type: "string", minLength: 1, maxLength: 500 },
+            status: { type: "boolean" },
             permissions: {
               type: "array",
               items: {
@@ -489,6 +491,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             email: { type: "string", format: "email", maxLength: 150 },
             securityRoleId: { type: "string", format: "uuid" },
             jobTitleId: { type: "string", format: "uuid" },
+            status: { type: "boolean" },
             file: {
               type: "string",
               format: "binary",
