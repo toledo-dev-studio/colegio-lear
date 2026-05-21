@@ -30,6 +30,9 @@ export const getPagedSecurityRolesActionAsync = async ({ query, page = 1, pageSi
         }
     });
 
+    console.log(data);
+    
+
     return {
         ...data
     };

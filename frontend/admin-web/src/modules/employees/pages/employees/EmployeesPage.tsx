@@ -22,13 +22,13 @@ export const EmployeesPage = () => {
   const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
   const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | undefined>(undefined);
-  
+
   const { showLoading, hideLoading } = useLoaderStore();
 
   const pagedEmployeesQuery = useGetPagedEmployees();
   const deleteEmployeeMutation = useDeleteEmployee();
   const exportEmployeesMutation = useExportEmployees();
-  
+
   const handleClickAdd = () => {
     navigate('/employees/new');
   }
@@ -40,7 +40,7 @@ export const EmployeesPage = () => {
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
-      toast.info('No se cuenta con información para descargar');
+      toast.info('No se cuenta con información para descargar', { position: "top-right" });
       return;
     }
 
@@ -82,13 +82,13 @@ export const EmployeesPage = () => {
     await deleteEmployeeMutation.mutateAsync({ id: employeeToDelete?.id! },
       {
         onSuccess: () => {
-          toast.success('Empleado eliminada correctamente');
+          toast.success('Empleado eliminada correctamente', { position: "top-right" });
           setEmployeeToDelete(undefined);
           setIsOpenSingleDeleteModal(false);
         },
         onError: (error: any) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el empleado');
+          toast.error('Ocurrio un error al tratar de eliminar el empleado', { position: "top-right" });
         }
       }
     );
@@ -116,17 +116,17 @@ export const EmployeesPage = () => {
 
           {/* Table content*/}
           <EmployeesTable
-            data={pagedEmployeesQuery.data?.data ?? []}
-            isLoading={pagedEmployeesQuery.isLoading}
+            data={pagedEmployeesQuery.data}
+            isLoading={pagedEmployeesQuery.isFetching}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            (!pagedEmployeesQuery.isLoading && pagedEmployeesQuery.data?.data.length) && (
+            (!pagedEmployeesQuery.isFetching && pagedEmployeesQuery.itemsCount > 0) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedEmployeesQuery.data?.totalPages ?? 0} />
+                <CustomPagination totalPages={pagedEmployeesQuery.totalPages} />
               </div>
             )
           }
@@ -143,7 +143,6 @@ export const EmployeesPage = () => {
               />
             )
           }
-
 
           {
             isOpenAdvancedFiltersPanel && (

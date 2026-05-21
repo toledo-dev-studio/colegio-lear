@@ -10,7 +10,6 @@ import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoa
 import { useCreateUpdateSecurityRole } from "../../hooks/useCreateUpdateSecurityRole";
 
 export const SecurityRolePage = () => {
-
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -24,7 +23,7 @@ export const SecurityRolePage = () => {
       showLoading('Guardando registro');
       await createUpdateSecurityRoleMutation.mutateAsync(securityRoleLike, {
         onSuccess: (response) => {
-          toast.success('El registro se ah actualizado correctamente');
+          toast.success('El registro se ah actualizado correctamente', { position: "top-right" });
           hideLoading();
           navigate(`/security-roles/${response.id}`);
         }
@@ -32,12 +31,12 @@ export const SecurityRolePage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar el registro');
+      toast.error('Ocurrio un error al tratar de actualizar el registro', { position: "top-right" });
     }
   }
 
   if (securityRoleQuery.isError) {
-    toast.error("No fue posible obtener la información del registro seleccionado");
+    toast.error("No fue posible obtener la información del registro seleccionado", { position: "top-right" });
     return <Navigate to="/security-roles" />;
   }
 

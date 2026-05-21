@@ -1,12 +1,10 @@
 import { useSearchParams } from "react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
-import { GET_ANNOUNCEMENTS_QUERY_KEY } from "../../../lib/queries-key/announcements-queries-key";
 import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { getAnnouncementsActionAsync } from "../actions/announcements/get-announcements.action";
+import { getAnnouncementsActionAsync } from "../../actions/announcements/get-announcements.action";
 
 export const useExportAnnouncements = () => {
-
     const [searchParams] = useSearchParams();
 
     // Main query filters
@@ -18,15 +16,13 @@ export const useExportAnnouncements = () => {
     const expiresAt = searchParams.get('expires-at')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
-    return useQuery({
-        queryKey: [GET_ANNOUNCEMENTS_QUERY_KEY, { query, name, publishedAt, expiresAt, status }],
-        queryFn: () => getAnnouncementsActionAsync({
+    return useMutation({
+        mutationFn: () => getAnnouncementsActionAsync({
             query,
             name,
-            publishedAt, 
+            publishedAt,
             expiresAt,
             status
         }),
-        enabled: false,
     });
 }

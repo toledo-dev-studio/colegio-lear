@@ -7,13 +7,13 @@ export const getSecurityRoleByIdActionAsync = async (id?: string): Promise<Secur
     await sleep();
 
     if (!id)
-        throw new Error('El identificador del registro es requerido');
+        throw new Error("El identificador del registro es requerido");
 
-    if (id === 'new') {
+    if (id === "new") {
         return {
             id: undefined,
-            name: '',
-            description: '',
+            name: "",
+            description: "",
             status: true
         } as unknown as SecurityRole;
     }
@@ -22,11 +22,14 @@ export const getSecurityRoleByIdActionAsync = async (id?: string): Promise<Secur
         const { data } = await api.get<SecurityRole[]>("/security-roles/security-roles.json");
         const record = data.find(item => item.id === id);
         if (!record)
-            throw new Error('No se encontró el registro solicitado');
+            throw new Error("No se encontró el registro solicitado");
         return record;
     }
 
     const { data } = await api.get<SecurityRole>(`/security-roles/${id}`);
 
-    return data
+    console.log(data);
+    
+
+    return data;
 }

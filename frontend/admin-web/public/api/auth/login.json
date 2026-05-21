@@ -1,0 +1,105 @@
+{
+    "id": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+    "name": "Admin",
+    "firstLastName": "One",
+    "secondLastName": "Admin",
+    "email": "admin1@colegiolear.com",
+    "username": "aone",
+    "image": null,
+    "mustChangePassword": false,
+    "securityRole": {
+        "id": "d1000000-0000-0000-0000-000000000001",
+        "name": "Administrador",
+        "permissions": [
+            {
+                "moduleKey": "dashboard",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "my-account",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "my-classes",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "students",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "academic-years",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "announcements",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "academic-levels",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "school-subjects",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "scholarships",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "payment-concepts",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "employees",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "job-titles",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "security-roles",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            },
+            {
+                "moduleKey": "settings",
+                "canRead": true,
+                "canWrite": true,
+                "canDelete": true
+            }
+        ]
+    },
+    "jobTitle": {
+        "id": "e1000000-0000-0000-0000-000000000001",
+        "name": "Director General",
+        "jobTitleType": "administrative_staff"
+    }
+}

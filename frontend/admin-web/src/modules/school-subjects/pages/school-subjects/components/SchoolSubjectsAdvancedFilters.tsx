@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { X } from "lucide-react";
-import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
-import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
@@ -12,9 +10,8 @@ import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
-import { useAcademicLevelForSchoolSubject } from "@/modules/school-subjects/hooks/useAcademicLevelForSchoolSubject";
-import { useEducationLevelForSchoolSubject } from "@/modules/school-subjects/hooks/useEducationLevelForSchoolSubject";
-import { GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY } from "@/lib/queries-key/school-subjects-queries-key";
+import { useSearchAcademicLevelsForSchoolSubject } from "@/modules/school-subjects/hooks/academic-levels/useSearchAcademicLevelsForSchoolSubject";
+import { useSearchEducationLevelsForSchoolSubject } from "@/modules/school-subjects/hooks/education-levels/useSearchEducationLevelsForSchoolSubject";
 
 interface Props {
     open: boolean;
@@ -25,7 +22,6 @@ interface Props {
 export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
 
     // Main hooks
-    const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
 
     // Form config
@@ -50,15 +46,13 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
         }
     });
     const selectedAcademicLevel = watch('academicLevelId');
-    const selectedEducationLevel = watch('educationLevelId');
+    const selectedEducationLevel = watch("educationLevelId");
 
-    // Academic levels states
-    const [academicLevelsQuery, setAcademicLevelsQuery] = useState<string>("");
-    const { data: academicLevels, isFetching: isFetchingAcademicLevels } = useAcademicLevelForSchoolSubject(academicLevelsQuery);
+    // Academic levels assign configuration
+    const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevelsForSchoolSubject();
 
-    // Education levels state
-    const [educationLevelsQuery, setEducationLevelsQuery] = useState<string>("");
-    const { data: educationLevels, isFetching: isFetchingEducationLevels } = useEducationLevelForSchoolSubject(`${selectedAcademicLevel}`, educationLevelsQuery);
+    // Education levels assign configuration
+    const searchEducationLevelsForSchoolSubject = useSearchEducationLevelsForSchoolSubject();
 
     if (!open)
         return null;
@@ -71,20 +65,8 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
         searchParams.delete('academic-level-name');
         searchParams.delete('education-level-id');
         searchParams.delete('education-level-name');
-        reset({
-            name: '',
-            status: true,
-            academicLevelId: undefined,
-            academicLevel: {
-                name: undefined
-            },
-            educationLevelId: undefined,
-            educationLevel: {
-                name: undefined
-            }
-        });
+        reset({});
         setSearchParams(searchParams);
-        handleOnClearSelectionForAcademicLevel();
         handleClickClose();
     }
 
@@ -97,47 +79,6 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
         filter.educationLevel?.name ? searchParams.set('education-level-name', filter.educationLevel?.name) : searchParams.delete('education-level-name');
         setSearchParams(searchParams);
         handleClickClose();
-    }
-
-    const handleOnSearchForAcademicLevel = (query: string) => {
-        queryClient.removeQueries({ queryKey: [GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, academicLevelsQuery] });
-        queryClient.setQueryData([GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, academicLevelsQuery], []);
-        setAcademicLevelsQuery(query);
-    }
-
-    const handleOnOptionChangeForAcademicLevel = (option: AcademicLevel) => {
-        // Clear data from useQuery
-        queryClient.setQueryData([GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, academicLevelsQuery], []);
-        setValue('academicLevelId', option.id);
-        setValue('academicLevel.name', option.name);
-    }
-
-    const handleOnClearSelectionForAcademicLevel = () => {
-        queryClient.setQueryData([GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, academicLevelsQuery], []);
-        setValue('academicLevelId', undefined);
-        setValue('academicLevel.name', undefined);
-        setEducationLevelsQuery("");
-        handleOnClearSelectionForEducationLevel();
-    }
-
-    const handleOnSearchForEducationLevel = async (query: string) => {
-        queryClient.removeQueries({ queryKey: [GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, `${selectedAcademicLevel}`, educationLevelsQuery] });
-        queryClient.setQueryData([GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, `${selectedAcademicLevel}`, educationLevelsQuery], []);
-        setEducationLevelsQuery(query);
-    }
-
-    const handleOnOptionChangeForEducationLevel = (option: EducationLevel) => {
-        // Clear data from useQuery
-        queryClient.setQueryData([GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, `${selectedAcademicLevel}`, educationLevelsQuery], []);
-        setValue('educationLevelId', option.id);
-        setValue('educationLevel.name', option.name);
-    }
-
-    const handleOnClearSelectionForEducationLevel = () => {
-        queryClient.setQueryData([GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, `${selectedAcademicLevel}`, educationLevelsQuery], []);
-        setValue('educationLevelId', undefined);
-        setValue('educationLevel.name', undefined);
-        setEducationLevelsQuery("");
     }
 
     return (
@@ -172,29 +113,50 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico:</label>
                                 <CustomSearchInput
-                                    defaultValue={watch('academicLevel.name')}
+                                    {...register("academicLevelId")}
+                                    defaultValue={watch("academicLevel.name")}
                                     selected={!!selectedAcademicLevel}
-                                    placeholder="Busqueda de nivel acádemico"
-                                    options={academicLevels?.data ?? []}
-                                    isSearching={isFetchingAcademicLevels}
-                                    onClearSelection={handleOnClearSelectionForAcademicLevel}
-                                    onOptionChange={handleOnOptionChangeForAcademicLevel}
-                                    onSearch={handleOnSearchForAcademicLevel}
+                                    placeholder="Busqueda de nivel académico"
+                                    options={searchAcademicLevelsForSchoolSubject.academicLevels ?? []}
+                                    isSearching={searchAcademicLevelsForSchoolSubject.isPending}
+                                    onClearSelection={() => {
+                                        setValue("academicLevelId", undefined);
+                                        setValue("academicLevel.name", undefined);
+                                        setValue("educationLevelId", undefined);
+                                        setValue("educationLevel.name", undefined);
+                                    }}
+                                    onOptionChange={async (option: AcademicLevel) => {
+                                        setValue("academicLevelId", option.id);
+                                        setValue("academicLevel.name", option.name);
+                                        searchAcademicLevelsForSchoolSubject.clearSearchResult();
+                                    }}
+                                    onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync(query)}
                                 />
                             </div>
 
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo:</label>
                                 <CustomSearchInput
-                                    defaultValue={watch('educationLevel.name')}
+                                    {...register("educationLevelId")}
+                                    defaultValue={watch("educationLevel.name")}
                                     selected={!!selectedEducationLevel}
                                     disabled={!selectedAcademicLevel}
                                     placeholder="Busqueda de nivel educativo"
-                                    options={educationLevels?.data ?? []}
-                                    isSearching={isFetchingEducationLevels}
-                                    onClearSelection={handleOnClearSelectionForEducationLevel}
-                                    onOptionChange={handleOnOptionChangeForEducationLevel}
-                                    onSearch={handleOnSearchForEducationLevel}
+                                    options={searchEducationLevelsForSchoolSubject.educationLevels ?? []}
+                                    isSearching={searchEducationLevelsForSchoolSubject.isPending}
+                                    onClearSelection={() => {
+                                        setValue("educationLevelId", undefined);
+                                        setValue("educationLevel.name", undefined);
+                                    }}
+                                    onOptionChange={async (option: EducationLevel) => {
+                                        setValue("educationLevelId", option.id);
+                                        setValue("educationLevel.name", option.name);
+                                        searchEducationLevelsForSchoolSubject.clearSearchResult();
+                                    }}
+                                    onSearch={async (query) => searchEducationLevelsForSchoolSubject.searchAsync({
+                                        academicLevelId: selectedAcademicLevel!,
+                                        query
+                                    })}
                                 />
                             </div>
 

@@ -1,24 +1,28 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
-import { MyAccountPage } from "../pages/MyAccountPage";
 
-const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
-const MyAccountLayout = lazy(() => import('@/modules/my-account/layout/MyAccountLayout'));
+import { MyAccountPage } from "../pages/MyAccountPage";
+import { AuthenticatedRoute } from "@/routes/protected.router";
+
+const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const MyAccountLayout = lazy(() => import("@/modules/my-account/layout/MyAccountLayout"));
 
 export const myAccountRouter: RouteObject = {
-    path: '/my-account',
+    path: "/my-account",
     element:
-        <SystemLayout>
-            <MyAccountLayout />
-        </SystemLayout>,
+        <AuthenticatedRoute moduleKey="my-account">
+            <SystemLayout>
+                <MyAccountLayout />
+            </SystemLayout>
+        </AuthenticatedRoute>,
     children: [
         {
-            path: '',
+            path: "",
             element: <MyAccountPage />
         },
         {
-            path: '*',
-            element: <Navigate to='/my-account' />
+            path: "*",
+            element: <Navigate to="/my-account" />
         }
     ]
 }

@@ -39,7 +39,7 @@ export const ScholarshipsPage = () => {
 
         if (!data || !Array.isArray(data)) {
             hideLoading();
-            toast.info('No se cuenta con información para descargar');
+            toast.info('No se cuenta con información para descargar', { position: "top-right" });
             return;
         }
 
@@ -78,13 +78,13 @@ export const ScholarshipsPage = () => {
         await deleteScholarshipMutation.mutateAsync({ id: scholarshipToDelete?.id! },
             {
                 onSuccess: () => {
-                    toast.success('Beca escolar eliminada correctamente');
+                    toast.success('Beca escolar eliminada correctamente', { position: "top-right" });
                     setScholarshipToDelete(undefined);
                     setIsOpenSingleDeleteModal(false);
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error('Ocurrio un error al tratar de eliminar la beca escolar');
+                    toast.error('Ocurrio un error al tratar de eliminar la beca escolar', { position: "top-right" });
                 }
             }
         );
@@ -112,17 +112,17 @@ export const ScholarshipsPage = () => {
 
                     {/* Table content*/}
                     <ScholarshipsTable
-                        data={pagedScholarshipsQuery.data?.data ?? []}
-                        isLoading={pagedScholarshipsQuery.isLoading}
+                        data={pagedScholarshipsQuery.data}
+                        isLoading={pagedScholarshipsQuery.isFetching}
                         handleClickEditRow={handleClickEditRow}
                         handleClickDeleteRow={handleClickDeleteRow}
                     />
 
                     {/* Pagination top element */}
                     {
-                        (!pagedScholarshipsQuery.isLoading && pagedScholarshipsQuery.data?.data.length) && (
+                        (!pagedScholarshipsQuery.isFetching && pagedScholarshipsQuery.itemsCount > 0) && (
                             <div className="flex items-center justify-center my-8">
-                                <CustomPagination totalPages={pagedScholarshipsQuery.data.totalPages} />
+                                <CustomPagination totalPages={pagedScholarshipsQuery.totalPages} />
                             </div>
                         )
                     }

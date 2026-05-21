@@ -23,7 +23,7 @@ export const EmployeePage = () => {
       showLoading("Guardando registro");
       await createUpdateEmployeeMutation.mutateAsync(employeeLike, {
         onSuccess: (response) => {
-          toast.success("Empleado actualizada correctamente");
+          toast.success("Empleado actualizada correctamente", { position: "top-right" });
           hideLoading();
           navigate(`/employees/${response.id}`);
         }
@@ -31,12 +31,12 @@ export const EmployeePage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error("Ocurrio un error al tratar de actualizar el empleado");
+      toast.error("Ocurrio un error al tratar de actualizar el empleado", { position: "top-right" });
     }
   }
 
   if (employeeQuery.isError) {
-    toast.error("No fue posible obtener la información del empleado");
+    toast.error("No fue posible obtener la información del empleado", { position: "top-right" });
     return <Navigate to="/employees" />;
   }
 

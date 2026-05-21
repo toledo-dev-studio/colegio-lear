@@ -24,7 +24,7 @@ export const ScholarshipPage = () => {
       showLoading('Guardando registro');
       await createUpdateScholarshipMutation.mutateAsync(scholarshipLike, {
         onSuccess: (response) => {
-          toast.success('Beca escolar actualizada correctamente');
+          toast.success('Beca escolar actualizada correctamente', { position: "top-right" });
           hideLoading();
           navigate(`/scholarships/${response.id}`);
         }
@@ -32,12 +32,12 @@ export const ScholarshipPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar la beca escolar');
+      toast.error('Ocurrio un error al tratar de actualizar la beca escolar', { position: "top-right" });
     }
   }
 
   if (scholarshipQuery.isError) {
-    toast.error("No fue posible obtener la información de la beca escolar");
+    toast.error("No fue posible obtener la información de la beca escolar", { position: "top-right" });
     return <Navigate to="/scholarships" />;
   }
 

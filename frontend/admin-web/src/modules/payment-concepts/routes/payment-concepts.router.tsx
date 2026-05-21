@@ -1,29 +1,33 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
-import { PaymentConceptsPage } from "../pages/payment-concepts/PaymentConceptsPage";
-import { PaymentConceptPage } from "../pages/payment-concept/PaymentConceptPage";
 
-const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
-const PaymentConceptsLayout = lazy(() => import('@/modules/payment-concepts/layout/PaymentConceptsLayout'));
+import { AuthenticatedRoute } from "@/routes/protected.router";
+import { PaymentConceptPage } from "../pages/payment-concept/PaymentConceptPage";
+import { PaymentConceptsPage } from "../pages/payment-concepts/PaymentConceptsPage";
+
+const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const PaymentConceptsLayout = lazy(() => import("@/modules/payment-concepts/layout/PaymentConceptsLayout"));
 
 export const paymentConceptsRouter: RouteObject = {
-    path: '/payment-concepts',
+    path: "/payment-concepts",
     element:
-        <SystemLayout>
-            <PaymentConceptsLayout />
-        </SystemLayout>,
+        <AuthenticatedRoute moduleKey="payment-concepts">
+            <SystemLayout>
+                <PaymentConceptsLayout />
+            </SystemLayout>
+        </AuthenticatedRoute>,
     children: [
         {
-            path: '',
+            path: "",
             element: <PaymentConceptsPage />
         },
         {
-            path: ':id',
+            path: ":id",
             element: <PaymentConceptPage />
         },
         {
-            path: '*',
-            element: <Navigate to='/payment-concepts' />
+            path: "*",
+            element: <Navigate to="/payment-concepts" />
         }
     ]
 }

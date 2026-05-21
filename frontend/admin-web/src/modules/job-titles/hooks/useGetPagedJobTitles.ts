@@ -11,23 +11,31 @@ export const useGetPagedJobTitles = () => {
 
     // Main query filters
     const query = searchParams.get('query')?.trim() || '';
-    const page = searchParams.get('page') || '1';
-    const pageSize = searchParams.get('pageSize') || '10';
+    const page = stringToNumberWithDefault(searchParams.get('page'), 1);
+    const pageSize = stringToNumberWithDefault(searchParams.get('pageSize'), 10);
 
     // Advanced query filters
     const name = searchParams.get('name')?.trim() || '';
     const jobTitleType = (searchParams.get('job-title-type')?.trim() as JobTitleTypes) || undefined;
     const status = stringToBooleanWithDefault(searchParams.get('status'));
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: [GET_PAGED_JOB_TITLES_QUERY_KEY, { query, page, pageSize, name, jobTitleType, status, }],
         queryFn: () => getPagedJobTitlesActionAsync({
             query,
-            page: stringToNumberWithDefault(page, 1),
-            pageSize: stringToNumberWithDefault(pageSize, 1),
-            name, 
+            page,
+            pageSize,
+            name,
             jobTitleType,
             status,
         }),
     });
+
+    return {
+        ...queryResult,
+        data: queryResult.data?.data ?? [],
+        totalPages: queryResult.data?.totalPages ?? 0,
+        currentPage: queryResult.data?.currentPage ?? 0,
+        itemsCount: queryResult.data?.itemsCount ?? 0
+    }
 }

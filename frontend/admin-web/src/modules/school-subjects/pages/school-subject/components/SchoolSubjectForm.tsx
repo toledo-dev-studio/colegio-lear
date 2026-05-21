@@ -1,22 +1,20 @@
-import { Save, X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { Save, X } from "lucide-react";
 
-import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
-import { Switch } from '@/shared/ui/switch';
-import { Textarea } from '@/shared/ui/textarea';
-import { CustomSpinner } from '@/shared/components/CustomSpinner';
-import type { SchoolSubject } from '@/interfaces/entites/school-subject'
-import type { AcademicLevel } from '@/interfaces/entites/academic-level';
-import { CustomSearchInput } from '@/shared/components/CustomSearchInput';
-import type { EducationLevel } from '@/interfaces/entites/education-level';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
-import { useAcademicLevelForSchoolSubject } from '@/modules/school-subjects/hooks/useAcademicLevelForSchoolSubject';
-import { useEducationLevelForSchoolSubject } from '@/modules/school-subjects/hooks/useEducationLevelForSchoolSubject';
-import { GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY } from '@/lib/queries-key/school-subjects-queries-key';
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Switch } from "@/shared/ui/switch";
+import { Textarea } from "@/shared/ui/textarea";
+import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import type { SchoolSubject } from "@/interfaces/entites/school-subject"
+import type { AcademicLevel } from "@/interfaces/entites/academic-level";
+import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import type { EducationLevel } from "@/interfaces/entites/education-level";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { useSearchAcademicLevelsForSchoolSubject } from "@/modules/school-subjects/hooks/academic-levels/useSearchAcademicLevelsForSchoolSubject";
+import { useSearchEducationLevelsForSchoolSubject } from "@/modules/school-subjects/hooks/education-levels/useSearchEducationLevelsForSchoolSubject";
 
 interface Props {
     schoolSubject?: SchoolSubject,
@@ -26,7 +24,6 @@ interface Props {
 
 export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Props) => {
 
-    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const {
         register,
@@ -39,17 +36,14 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
     } = useForm<Partial<SchoolSubject>>({
         defaultValues: schoolSubject
     });
+    const selectedAcademicLevel = watch("academicLevelId");
+    const selectedEducationLevel = watch("educationLevelId");
 
-    const selectedAcademicLevel = watch('academicLevelId');
-    const selectedEducationLevel = watch('educationLevelId');
+    // Academic levels assign configuration
+    const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevelsForSchoolSubject();
 
-    // Academic levels states
-    const [academicLevelsQuery, setAcademicLevelsQuery] = useState<string>("");
-    const { data: academicLevels, isFetching: isFetchingAcademicLevels } = useAcademicLevelForSchoolSubject(academicLevelsQuery);
-
-    // Education levels state
-    const [educationLevelsQuery, setEducationLevelsQuery] = useState<string>("");
-    const { data: educationLevels, isFetching: isFetchingEducationLevels } = useEducationLevelForSchoolSubject(`${selectedAcademicLevel}`, educationLevelsQuery);
+    // Education levels assign configuration
+    const searchEducationLevelsForSchoolSubject = useSearchEducationLevelsForSchoolSubject();
 
     useEffect(() => {
         if (schoolSubject)
@@ -57,48 +51,7 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
     }, [schoolSubject])
 
     const handleClickCancel = () => {
-        navigate('/school-subjects');
-    }
-
-    const handleOnSearchForAcademicLevel = (query: string) => {
-        queryClient.removeQueries({ queryKey: [GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, academicLevelsQuery] });
-        queryClient.setQueryData([GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, academicLevelsQuery], []);
-        setAcademicLevelsQuery(query);
-    }
-
-    const handleOnOptionChangeForAcademicLevel = (option: AcademicLevel) => {
-        // Clear data from useQuery
-        queryClient.setQueryData([GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, academicLevelsQuery], []);
-        setValue('academicLevelId', option.id, { shouldTouch: true });
-        setValue('academicLevel.name', option.name);
-    }
-
-    const handleOnClearSelectionForAcademicLevel = () => {
-        queryClient.setQueryData([GET_ACADEMIC_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, academicLevelsQuery], []);
-        setValue('academicLevelId', undefined);
-        setValue('academicLevel.name', undefined);
-        setEducationLevelsQuery("");
-        handleOnClearSelectionForEducationLevel();
-    }
-
-    const handleOnSearchForEducationLevel = async (query: string) => {
-        queryClient.removeQueries({ queryKey: [GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, `${selectedAcademicLevel}`, educationLevelsQuery] });
-        queryClient.setQueryData([GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, `${selectedAcademicLevel}`, educationLevelsQuery], []);
-        setEducationLevelsQuery(query);
-    }
-
-    const handleOnOptionChangeForEducationLevel = (option: EducationLevel) => {
-        // Clear data from useQuery
-        queryClient.setQueryData([GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, `${selectedAcademicLevel}`, educationLevelsQuery], []);
-        setValue('educationLevelId', option.id, { shouldTouch: true });
-        setValue('educationLevel.name', option.name);
-    }
-
-    const handleOnClearSelectionForEducationLevel = () => {
-        queryClient.setQueryData([GET_EDUCATION_LEVELS_FOR_SCHOOL_SUBJECT_QUERY_KEY, `${selectedAcademicLevel}`, educationLevelsQuery], []);
-        setValue('educationLevelId', undefined);
-        setValue('educationLevel.name', undefined);
-        setEducationLevelsQuery("");
+        navigate("/school-subjects");
     }
 
     return (
@@ -114,8 +67,8 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                             <TooltipTrigger>
                                 <Switch
                                     size="default"
-                                    checked={watch('status') ?? false}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
+                                    checked={watch("status") ?? false}
+                                    onCheckedChange={(checked) => setValue("status", checked)} />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Estatus del registro</p>
@@ -133,7 +86,7 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                         </label>
                         <Input
                             type="text"
-                            {...register('name', { required: true })}
+                            {...register("name", { required: true })}
                             placeholder="Escribe la materia..."
                             className="pill-input w-full pl-8" />
                         {
@@ -148,15 +101,24 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico <span className="text-destructive">*</span>:</label>
                         <CustomSearchInput
-                            {...register('academicLevelId', { required: true })}
-                            defaultValue={watch('academicLevel.name')}
+                            {...register("academicLevelId", { required: true })}
+                            defaultValue={watch("academicLevel.name")}
                             selected={!!selectedAcademicLevel}
-                            placeholder="Busqueda de nivel acádemico"
-                            options={academicLevels?.data ?? []}
-                            isSearching={isFetchingAcademicLevels}
-                            onClearSelection={handleOnClearSelectionForAcademicLevel}
-                            onOptionChange={handleOnOptionChangeForAcademicLevel}
-                            onSearch={handleOnSearchForAcademicLevel}
+                            placeholder="Busqueda de nivel académico"
+                            options={searchAcademicLevelsForSchoolSubject.academicLevels ?? []}
+                            isSearching={searchAcademicLevelsForSchoolSubject.isPending}
+                            onClearSelection={() => {
+                                setValue("academicLevelId", undefined);
+                                setValue("academicLevel.name", undefined);
+                                setValue("educationLevelId", undefined);
+                                setValue("educationLevel.name", undefined);
+                            }}
+                            onOptionChange={async (option: AcademicLevel) => {
+                                setValue("academicLevelId", option.id);
+                                setValue("academicLevel.name", option.name);
+                                searchAcademicLevelsForSchoolSubject.clearSearchResult();
+                            }}
+                            onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync(query)}
                         />
                         {
                             (errors.academicLevelId && !selectedAcademicLevel) && (
@@ -170,16 +132,26 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo <span className="text-destructive">*</span>:</label>
                         <CustomSearchInput
-                            {...register('educationLevelId', { required: true })}
-                            defaultValue={watch('educationLevel.name')}
+                            {...register("educationLevelId", { required: true })}
+                            defaultValue={watch("educationLevel.name")}
                             selected={!!selectedEducationLevel}
                             disabled={!selectedAcademicLevel}
                             placeholder="Busqueda de nivel educativo"
-                            options={educationLevels?.data ?? []}
-                            isSearching={isFetchingEducationLevels}
-                            onClearSelection={handleOnClearSelectionForEducationLevel}
-                            onOptionChange={handleOnOptionChangeForEducationLevel}
-                            onSearch={handleOnSearchForEducationLevel}
+                            options={searchEducationLevelsForSchoolSubject.educationLevels ?? []}
+                            isSearching={searchEducationLevelsForSchoolSubject.isPending}
+                            onClearSelection={() => {
+                                setValue("educationLevelId", undefined);
+                                setValue("educationLevel.name", undefined);
+                            }}
+                            onOptionChange={async (option: EducationLevel) => {
+                                setValue("educationLevelId", option.id);
+                                setValue("educationLevel.name", option.name);
+                                searchEducationLevelsForSchoolSubject.clearSearchResult();
+                            }}
+                            onSearch={async (query) => searchEducationLevelsForSchoolSubject.searchAsync({
+                                academicLevelId: selectedAcademicLevel!,
+                                query
+                            })}
                         />
                         {
                             (errors.educationLevelId && !selectedEducationLevel) && (
@@ -193,8 +165,8 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-3 block">Descripción de la materia escolar:</label>
                         <Textarea
-                            {...register('description')}
-                            defaultValue={getValues('description')}
+                            {...register("description")}
+                            defaultValue={getValues("description")}
                             placeholder="Descripción de la materia..."
                             className="pill-input w-full pl-8" />
                     </div>

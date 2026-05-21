@@ -1,14 +1,19 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import type { Announcement } from "@/interfaces/entites/announcement";
+import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import { generateTemporalId } from "@/lib/extensions/utils";
 
-export const getAnnouncementByIdActionAsync = async (id: string): Promise<Announcement> => {
+export const getAnnouncementByIdActionAsync = async (id?: string): Promise<Announcement> => {
+    await sleep();
+
     if (!id)
-        throw new Error('Id del registro es requerido');
+        throw new Error("El identificador del registro es requerido");
 
-    if(id === "new") {
+    if (id === "new") {
         return {
-            id: "new",
+            // Required generate a temporal id to upload files without announcement record created previously
+            id: generateTemporalId(),
             name: "",
             description: "",
             content: "",
@@ -17,22 +22,18 @@ export const getAnnouncementByIdActionAsync = async (id: string): Promise<Announ
             audience: [],
             attachments: [],
             status: true,
-        }
+        } as unknown as Announcement;
     }
 
-    await sleep();
+    if (VITE_ENVIRONMENT === "mockable") {
+        const { data } = await api.get<Announcement[]>("/announcements/announcements.json");
+        const record = data.find(item => item.id === id);
+        if (!record)
+            throw new Error("No se encontró el registro solicitado");
+        return record;
+    }
 
-    // const { data } = await api.get<Announcement>(`/announcements/${id}.json`);
+    const { data } = await api.get<Announcement>(`/announcements/${id}`);
 
-    const { data } = await api.get<Announcement[]>(`/announcements/announcements.json`);
-        
-        // DELETE THIS LOGIC
-        const response = data.find(item => item.id === id);
-        if (!response)
-            throw new Error('No fue posible identificar el registro solicitado');
-        // DELETE THIS LOGIC
-
-    return {
-        ...response
-    };
+    return data;
 }

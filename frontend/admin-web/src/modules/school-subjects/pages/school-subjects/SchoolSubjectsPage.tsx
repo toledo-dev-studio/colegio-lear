@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon"
-import { usePagedSchoolSubjects } from "../../hooks/usePagedSchoolSubjects";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { useExportSchoolSubjects } from "../../hooks/useExportSchoolSubjects";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { SchoolSubjectsTable } from "./components/SchoolSubjectsTable";
-import { SchoolSubjectsAdvancedFilters } from "./components/SchoolSubjectsAdvancedFilters";
-import { useDeleteSchoolSubject } from "../../hooks/useDeleteSchoolSubject";
+import { CustomPagination } from "@/shared/components/CustomPagination";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
+import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
+import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
+import { SchoolSubjectsAdvancedFilters } from "./components/SchoolSubjectsAdvancedFilters";
+import { useDeleteSchoolSubject } from "../../hooks/school-subjects/useDeleteSchoolSubject";
+import { useExportSchoolSubjects } from "../../hooks/school-subjects/useExportSchoolSubjects";
+import { useGetPagedSchoolSubjects } from "../../hooks/school-subjects/useGetPagedSchoolSubjects";
 
 export const SchoolSubjectsPage = () => {
 
@@ -23,9 +23,9 @@ export const SchoolSubjectsPage = () => {
   const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
   const [schoolSubjectToDelete, setSchoolSubjectToDelete] = useState<SchoolSubject | undefined>(undefined);
 
-  const { deleteSchoolSubject } = useDeleteSchoolSubject();
-  const { isLoading, data: { data: schoolSubjects = [], totalPages = 0 } = {} } = usePagedSchoolSubjects();
-  const { isFetching: isFetchingDataToExport, refetch: refetchDataToExport } = useExportSchoolSubjects();
+  const pagedSchoolSubjectsQuery = useGetPagedSchoolSubjects();
+  const deleteSchoolSubjectMutation = useDeleteSchoolSubject();
+  const exportSchoolSubjectsMutation = useExportSchoolSubjects();
 
   const { showLoading, hideLoading } = useLoaderStore();
 
@@ -36,11 +36,11 @@ export const SchoolSubjectsPage = () => {
   const handleClickExport = async () => {
     showLoading('Descargando información', 'Por favor espere...');
 
-    const { data } = await refetchDataToExport();
+    const data = await exportSchoolSubjectsMutation.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
-      toast.info('No se cuenta con información para descargar');
+      toast.info('No se cuenta con información para descargar', { position: "top-right" });
       return;
     }
 
@@ -50,7 +50,7 @@ export const SchoolSubjectsPage = () => {
       { label: 'Descripción', key: 'description' },
       { label: 'Estado', key: 'status' },
       { label: 'Nivel Académico', key: 'academicLevel.name' },
-      { label: 'Grado Educativo', key: 'educationLevelId.name' }
+      { label: 'Grado Educativo', key: 'educationLevel.name' }
     ];
 
     downloadDataToCsvFile('Materias escolares', headers, data);
@@ -77,17 +77,16 @@ export const SchoolSubjectsPage = () => {
   }
 
   const handleClickDelteSchoolSubject = async () => {
-    await deleteSchoolSubject.mutateAsync(
-      { id: schoolSubjectToDelete?.id ?? undefined },
+    await deleteSchoolSubjectMutation.mutateAsync(schoolSubjectToDelete?.id!,
       {
         onSuccess: () => {
-          toast.success('Materia escolar eliminada correctamente');
+          toast.success('Materia escolar eliminada correctamente', { position: "top-right" });
           setSchoolSubjectToDelete(undefined);
           setIsOpenSingleDeleteModal(false);
         },
         onError: (error: any) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar la materia escolar');
+          toast.error('Ocurrio un error al tratar de eliminar la materia escolar', { position: "top-right" });
         }
       }
     );
@@ -110,22 +109,22 @@ export const SchoolSubjectsPage = () => {
             handleClickAdvancedFilters={handleClickAdvancedFilters}
             handleClickAdd={handleClickAdd}
             handleClickExport={handleClickExport}
-            disabledExport={isFetchingDataToExport}
+            disabledExport={exportSchoolSubjectsMutation.isPending}
           />
 
           {/* Table content*/}
           <SchoolSubjectsTable
-            schoolSubjects={schoolSubjects ?? []}
-            isLoading={isLoading}
+            data={pagedSchoolSubjectsQuery.data}
+            isLoading={pagedSchoolSubjectsQuery.isFetching}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            !isLoading && (
+            (!pagedSchoolSubjectsQuery.isFetching && pagedSchoolSubjectsQuery.itemsCount > 0) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={totalPages} />
+                <CustomPagination totalPages={pagedSchoolSubjectsQuery.totalPages} />
               </div>
             )
           }
@@ -134,7 +133,7 @@ export const SchoolSubjectsPage = () => {
             open={isOpenSingleDeleteModal}
             title={`¿Estas seguro de eliminar el registro ${schoolSubjectToDelete?.name}`}
             message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-            isLoading={deleteSchoolSubject.isPending}
+            isLoading={deleteSchoolSubjectMutation.isPending}
             handleClickConfirm={handleClickDelteSchoolSubject}
             handleClickCancel={handleClickCancelDelteSchoolSubject}
           />

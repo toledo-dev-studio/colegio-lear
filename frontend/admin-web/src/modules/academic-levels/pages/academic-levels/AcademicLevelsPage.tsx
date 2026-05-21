@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon"
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { usePagedAcademicLevels } from "../../hooks/usePagedAcademicLevels";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { AcademicLevelsTable } from "./components/AcademicLevelsTable";
-import { useDeleteAcademicLevel } from "../../hooks/useDeleteAcademicLevel";
-import { useExportAcademicLevels } from "../../hooks/useExportAcademicLevels";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
+import { AcademicLevelsTable } from "./components/AcademicLevelsTable";
+import { CustomPagination } from "@/shared/components/CustomPagination";
+import type { AcademicLevel } from "@/interfaces/entites/academic-level";
+import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
+import { useDeleteAcademicLevel } from "../../hooks/useDeleteAcademicLevel";
+import { useExportAcademicLevels } from "../../hooks/useExportAcademicLevels";
+import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
+import { useGetPagedAcademicLevels } from "../../hooks/useGetPagedAcademicLevels";
 import { AcademicLevelsAdvancedFilters } from "./components/AcademicLevelsAdvancedFilters";
 
 export const AcademicLevelsPage = () => {
@@ -23,35 +23,35 @@ export const AcademicLevelsPage = () => {
   const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
   const [academicLevelToDelete, setAcademicLevelToDelete] = useState<AcademicLevel | undefined>(undefined);
 
-  const { deleteAcademicLevel } = useDeleteAcademicLevel();
-  const { isLoading, data: { data: academicLevels = [], totalPages = 0 } = {} } = usePagedAcademicLevels();
-  const { isFetching: isFetchingDataToExport, refetch: refetchDataToExport } = useExportAcademicLevels();
+  const pagedAcademicLevelsQuery = useGetPagedAcademicLevels();
+  const deleteAcademicLevelMutation = useDeleteAcademicLevel();
+  const exportAcademicLevelsMutation = useExportAcademicLevels();
 
   const { showLoading, hideLoading } = useLoaderStore();
 
   const handleClickAdd = () => {
-    navigate('/academic-levels/new');
+    navigate("/academic-levels/new");
   }
 
   const handleClickExport = async () => {
-    showLoading('Descargando información', 'Por favor espere...');
+    showLoading("Descargando información", "Por favor espere...");
 
-    const { data } = await refetchDataToExport();
+    const data = await exportAcademicLevelsMutation.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
       hideLoading();
-      toast.info('No se cuenta con información para descargar');
+      toast.info("No se cuenta con información para descargar", { position: "top-right" });
       return;
     }
 
     const headers = [
-      { label: 'Id', key: 'id' },
-      { label: 'Nombre', key: 'name' },
-      { label: 'Descripción', key: 'description' },
-      { label: 'Estado', key: 'status' }
+      { label: "Id", key: "id" },
+      { label: "Nombre", key: "name" },
+      { label: "Descripción", key: "description" },
+      { label: "Estado", key: "status" }
     ];
 
-    downloadDataToCsvFile('Niveles académicos', headers, data);
+    downloadDataToCsvFile("Niveles académicos", headers, data);
 
     setTimeout(() => hideLoading(), 500);
   }
@@ -75,17 +75,16 @@ export const AcademicLevelsPage = () => {
   }
 
   const handleClickDelteAcademicLevel = async () => {
-    await deleteAcademicLevel.mutateAsync(
-      { id: academicLevelToDelete?.id ?? undefined },
+    await deleteAcademicLevelMutation.mutateAsync({ id: academicLevelToDelete?.id! },
       {
         onSuccess: () => {
-          toast.success('Nivel académico eliminado correctamente');
+          toast.success("Nivel académico eliminado correctamente", { position: "top-right" });
           setAcademicLevelToDelete(undefined);
           setIsOpenSingleDeleteModal(false);
         },
         onError: (error) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el nivel académico');
+          toast.error("Ocurrio un error al tratar de eliminar el nivel académico", { position: "top-right" });
         }
       }
     );
@@ -108,22 +107,22 @@ export const AcademicLevelsPage = () => {
             handleClickAdvancedFilters={handleClickAdvancedFilters}
             handleClickAdd={handleClickAdd}
             handleClickExport={handleClickExport}
-            disabledExport={isFetchingDataToExport}
+            disabledExport={exportAcademicLevelsMutation.isPending}
           />
 
           {/* Table content*/}
           <AcademicLevelsTable
-            academicLevels={academicLevels ?? []}
-            isLoading={isLoading}
+            data={pagedAcademicLevelsQuery.data}
+            isLoading={pagedAcademicLevelsQuery.isFetching}
             handleClickEditRow={handleClickEditRow}
             handleClickDeleteRow={handleClickDeleteRow}
           />
 
           {/* Pagination top element */}
           {
-            !isLoading && (
+            (!pagedAcademicLevelsQuery.isFetching && pagedAcademicLevelsQuery.itemsCount > 0) && (
               <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={totalPages} />
+                <CustomPagination totalPages={pagedAcademicLevelsQuery.totalPages} />
               </div>
             )
           }
@@ -132,7 +131,7 @@ export const AcademicLevelsPage = () => {
             open={isOpenSingleDeleteModal}
             title={`¿Estas seguro de eliminar el registro ${academicLevelToDelete?.name}`}
             message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-            isLoading={deleteAcademicLevel.isPending}
+            isLoading={deleteAcademicLevelMutation.isPending}
             handleClickConfirm={handleClickDelteAcademicLevel}
             handleClickCancel={handleClickCancelDelteAcademicLevel}
           />

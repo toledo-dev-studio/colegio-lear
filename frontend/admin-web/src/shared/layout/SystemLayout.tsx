@@ -1,17 +1,23 @@
 import { useState, type PropsWithChildren } from "react";
 
 import { CustomNavbar } from "@/shared/components/CustomNabvar";
+import { useAuthStore } from "@/modules/auth/stores/auth.store";
 import { CustomSidebar } from "@/shared/components/CustomSidebar";
+import { useLoaderStore } from "../stores/LoaderStore";
 
 export const SystemLayout = ({ children }: PropsWithChildren) => {
   const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(false);
+  const { logout } = useAuthStore();
+  const { showLoading, hideLoading } = useLoaderStore();
 
   const handleToggleSidebar = () => {
     setIsOpenSidebar(!isOpenSidebar);
   }
 
-  const handleLogout = () => {
-    console.log("Cerrar sesión");
+  const handleLogout = async () => {
+    showLoading("Cerrando sesión", "Por favor espere...");
+    await logout();
+    hideLoading();
   }
 
   return (

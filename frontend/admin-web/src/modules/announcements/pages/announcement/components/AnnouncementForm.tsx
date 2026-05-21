@@ -1,20 +1,19 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
-import { Save, X } from 'lucide-react';
+import { useEffect } from "react";
+import { Link } from "react-router";
+import { Controller, useForm } from "react-hook-form";
+import { Save, X } from "lucide-react";
 
-import { Input } from '@/shared/ui/input';
-import { Switch } from '@/shared/ui/switch';
-import { Button } from '@/shared/ui/button';
-import { generateTemporalId } from '@/lib/extensions/utils';
-import { CustomSpinner } from '@/shared/components/CustomSpinner';
-import { AUDIENCE, type Announcement } from '@/interfaces/entites/announcement';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
-import { Textarea } from '@/shared/ui/textarea';
-import { CustomMultiSelect } from '@/shared/components/CustomMultiSelect';
-import { CustomDatePicker } from '@/shared/components/CustomDatePicker';
-import { CustomTipTapEditor } from '@/shared/components/custom-text-editor/CustomTipTapEditor';
-import { AttachmentsGrid } from './AttachmentsGrid';
+import { Input } from "@/shared/ui/input";
+import { Switch } from "@/shared/ui/switch";
+import { Button } from "@/shared/ui/button";
+import { Textarea } from "@/shared/ui/textarea";
+import { AttachmentsGrid } from "./AttachmentsGrid";
+import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
+import { CustomMultiSelect } from "@/shared/components/CustomMultiSelect";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { AUDIENCE, type Announcement } from "@/interfaces/entites/announcement";
+import { CustomTipTapEditor } from "@/shared/components/custom-text-editor/CustomTipTapEditor";
 
 interface Props {
     announcement?: Announcement,
@@ -35,16 +34,18 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
         reset
     } = useForm<Partial<Announcement>>({
         defaultValues: {
-            /** Required generate a temporal id to identify new attachments for a new announcement record for backend files management */
-            id: (!announcement?.id) ? generateTemporalId() : announcement.id,
-            ...announcement
+            ...announcement,
         }
     });
 
     useEffect(() => {
-        if (announcement)
-            reset(announcement);
-    }, [announcement]);
+        if (!announcement)
+            return;
+        reset({
+            ...announcement,
+            attachments: announcement.attachments ?? []
+        });
+    }, [announcement?.id]);
 
     return (
         <>
@@ -61,8 +62,8 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                                 <TooltipTrigger>
                                     <Switch
                                         size="default"
-                                        checked={watch('status') ?? false}
-                                        onCheckedChange={(checked) => setValue('status', checked)} />
+                                        checked={watch("status") ?? false}
+                                        onCheckedChange={(checked) => setValue("status", checked)} />
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>Estatus del registro</p>
@@ -79,7 +80,7 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                             </label>
                             <Input
                                 type="text"
-                                {...register('name', { required: true })}
+                                {...register("name", { required: true })}
                                 placeholder="Nombre del campaña..."
                                 className="pill-input w-full pl-8" />
                             {
@@ -99,7 +100,7 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                                 control={control}
                                 rules={{ validate: (v) => (v && v.length > 0) || "Selecciona al menos una audiencia" }}
                                 render={({ field }) => (
-                                    <CustomMultiSelect placeholder='Selecciona la audiencia...' availableOptions={AUDIENCE} value={field.value || []} onChange={field.onChange} />
+                                    <CustomMultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE} value={field.value || []} onChange={field.onChange} />
                                 )}
                             />
                             {errors.audience && <p className="text-red-500 text-sm mt-2">{errors.audience.message as string}</p>}
@@ -154,8 +155,8 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                         <div className="w-full">
                             <label className="text-sm font-medium text-foreground mb-3 block">Descripción del campaña:</label>
                             <Textarea
-                                {...register('description')}
-                                defaultValue={getValues('description')}
+                                {...register("description")}
+                                defaultValue={getValues("description")}
                                 placeholder="Descripción del registro..."
                                 className="pill-input w-full pl-8" />
                         </div>
@@ -204,7 +205,7 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                                         return text.length > 0 || "El contenido de la campaña no puede estar vacío";
                                     },
                                 }}
-                                render={({ field }) => <CustomTipTapEditor value={field.value ?? ''} onChange={field.onChange} />}
+                                render={({ field }) => <CustomTipTapEditor value={field.value ?? ""} onChange={field.onChange} />}
                             />
                             {
                                 errors.content && (

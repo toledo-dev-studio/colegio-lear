@@ -4,4 +4,3 @@ export interface PagedResponse<T> {
     currentPage: number;
     itemsCount: number;
 }
-

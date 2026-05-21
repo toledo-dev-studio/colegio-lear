@@ -23,7 +23,7 @@ export const JobTitlePage = () => {
       showLoading('Guardando registro');
       await createUpdateJobTitleMutation.mutateAsync(jobTitleLike, {
         onSuccess: (response) => {
-          toast.success('Puesto de trabajo actualizado correctamente');
+          toast.success('Puesto de trabajo actualizado correctamente', { position: "top-right" });
           hideLoading();
           navigate(`/job-titles/${response.id}`);
         }
@@ -31,12 +31,12 @@ export const JobTitlePage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar el puesto de trabajo');
+      toast.error('Ocurrio un error al tratar de actualizar el puesto de trabajo', { position: "top-right" });
     }
   }
 
   if (jobTitleQuery.isError) {
-    toast.error("No fue posible obtener la información del puesto de trabajo");
+    toast.error("No fue posible obtener la información del puesto de trabajo", { position: "top-right" });
     return <Navigate to="/job-titles" />;
   }
 

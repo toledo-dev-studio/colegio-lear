@@ -13,10 +13,10 @@ interface Options {
     status?: boolean,
 }
 
-export const getPagedJobTitlesActionAsync = async ({ query = '', page = 1, pageSize = 1, name, jobTitleType, status, }: Options): Promise<PagedResponse<JobTitle>> => {
+export const getPagedJobTitlesActionAsync = async ({ query, page = 1, pageSize = 1, name, jobTitleType, status, }: Options): Promise<PagedResponse<JobTitle>> => {
     await sleep();
 
-    let endpoint = "/job-titles";
+    let endpoint = "/job-titles/paged";
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/job-titles/paged-job-titles.json";

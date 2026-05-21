@@ -2,29 +2,32 @@ import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
 import { JobTitlePage } from "../pages/job-title/JobTitlePage";
+import { AuthenticatedRoute } from "@/routes/protected.router";
 import { JobTitlesPage } from "../pages/job-titles/JobTitlesPage";
 
-const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
-const JobTitlesLayout = lazy(() => import('@/modules/job-titles/layout/JobTitlesLayout'));
+const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const JobTitlesLayout = lazy(() => import("@/modules/job-titles/layout/JobTitlesLayout"));
 
 export const jobTitlesRouter: RouteObject = {
-    path: '/job-titles',
+    path: "/job-titles",
     element:
-        <SystemLayout>
-            <JobTitlesLayout />
-        </SystemLayout>,
+        <AuthenticatedRoute moduleKey="job-titles">
+            <SystemLayout>
+                <JobTitlesLayout />
+            </SystemLayout>
+        </AuthenticatedRoute>,
     children: [
         {
-            path: '',
+            path: "",
             element: <JobTitlesPage />
         },
         {
-            path: ':id',
+            path: ":id",
             element: <JobTitlePage />
         },
         {
-            path: '*',
-            element: <Navigate to='/job-titles' />
+            path: "*",
+            element: <Navigate to="/job-titles" />
         }
     ]
 }

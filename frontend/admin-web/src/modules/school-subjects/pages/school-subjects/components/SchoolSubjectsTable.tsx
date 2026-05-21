@@ -6,13 +6,13 @@ import { Button } from '@/shared/ui/button'
 import type { SchoolSubject } from '@/interfaces/entites/school-subject';
 
 interface Props {
-    schoolSubjects: SchoolSubject[];
+    data: SchoolSubject[];
     isLoading: boolean;
     handleClickEditRow: (schoolSubject: SchoolSubject) => void;
     handleClickDeleteRow: (schoolSubject: SchoolSubject) => void;
 }
 
-export const SchoolSubjectsTable = ({ schoolSubjects = [], isLoading, handleClickEditRow, handleClickDeleteRow }: Props) => {
+export const SchoolSubjectsTable = ({ data = [], isLoading, handleClickEditRow, handleClickDeleteRow }: Props) => {
 
     return (
         <>
@@ -43,7 +43,7 @@ export const SchoolSubjectsTable = ({ schoolSubjects = [], isLoading, handleClic
 
                         {/* No content */}
                         {
-                            (!schoolSubjects.length && !isLoading) && (
+                            (!data.length && !isLoading) && (
                                 <tr>
                                     <td colSpan={6} className="no-content-row">
                                         No se encontraron registros.
@@ -55,44 +55,46 @@ export const SchoolSubjectsTable = ({ schoolSubjects = [], isLoading, handleClic
 
                         {/* Content */}
                         {
-                            schoolSubjects.map((item) => (
-                                <tr key={item.id} className="hover:bg-muted/40 transition-colors">
-                                    {/* Row data */}
-                                    <td className="row">
-                                        <Link to={`/school-subjects/${item.id}`}>
-                                            <span className="text-primary">
-                                                {item.name}
-                                            </span>
-                                        </Link>
-                                    </td>
-                                    <td className="row">{item.description}</td>
-                                    <td className="row">{item.academicLevel?.name}</td>
-                                    <td className="row">{item.educationLevel?.name}</td>
-                                    <td className="row">
-                                        <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
-                                            {
-                                                item.status ? 'Activo' : 'Inactivo'
-                                            }
-                                        </Badge>
-                                    </td>
-                                    <td className="row">
-                                        <div className="flex flex-row gap-4">
-                                            <Button
-                                                aria-label="Editar"
-                                                className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
-                                                onClick={() => handleClickEditRow(item)}>
-                                                <Pencil className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                aria-label="Eliminar"
-                                                className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
-                                                onClick={() => handleClickDeleteRow(item)}>
-                                                <Trash className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
+                            (data.length > 0 && !isLoading) && (
+                                data.map((item) => (
+                                    <tr key={item.id} className="hover:bg-muted/40 transition-colors">
+                                        {/* Row data */}
+                                        <td className="row">
+                                            <Link to={`/school-subjects/${item.id}`}>
+                                                <span className="text-primary">
+                                                    {item.name}
+                                                </span>
+                                            </Link>
+                                        </td>
+                                        <td className="row">{item.description}</td>
+                                        <td className="row">{item.academicLevel?.name}</td>
+                                        <td className="row">{item.educationLevel?.name}</td>
+                                        <td className="row">
+                                            <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
+                                                {
+                                                    item.status ? 'Activo' : 'Inactivo'
+                                                }
+                                            </Badge>
+                                        </td>
+                                        <td className="row">
+                                            <div className="flex flex-row gap-4">
+                                                <Button
+                                                    aria-label="Editar"
+                                                    className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
+                                                    onClick={() => handleClickEditRow(item)}>
+                                                    <Pencil className="w-4 h-4" />
+                                                </Button>
+                                                <Button
+                                                    aria-label="Eliminar"
+                                                    className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
+                                                    onClick={() => handleClickDeleteRow(item)}>
+                                                    <Trash className="w-4 h-4" />
+                                                </Button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )
                         }
 
                     </tbody>

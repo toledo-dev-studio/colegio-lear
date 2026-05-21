@@ -1,30 +1,33 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
-import { SecurityRolesPage } from "../pages/security-roles/SecurityRolesPage";
+import { AuthenticatedRoute } from "@/routes/protected.router";
 import { SecurityRolePage } from "../pages/security-role/SecurityRolePage";
+import { SecurityRolesPage } from "../pages/security-roles/SecurityRolesPage";
 
-const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
-const SecurityRolesLayout = lazy(() => import('@/modules/security-roles/layout/SecurityRolesLayout'));
+const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const SecurityRolesLayout = lazy(() => import("@/modules/security-roles/layout/SecurityRolesLayout"));
 
 export const securityRolesRouter: RouteObject = {
-    path: '/security-roles',
+    path: "/security-roles",
     element:
-        <SystemLayout>
-            <SecurityRolesLayout />
-        </SystemLayout>,
+        <AuthenticatedRoute moduleKey="security-roles">
+            <SystemLayout>
+                <SecurityRolesLayout />
+            </SystemLayout>
+        </AuthenticatedRoute>,
     children: [
         {
-            path: '',
+            path: "",
             element: <SecurityRolesPage />
         },
         {
-            path: ':id',
+            path: ":id",
             element: <SecurityRolePage />
         },
         {
-            path: '*',
-            element: <Navigate to='/security-roles' />
+            path: "*",
+            element: <Navigate to="/security-roles" />
         }
     ]
 }

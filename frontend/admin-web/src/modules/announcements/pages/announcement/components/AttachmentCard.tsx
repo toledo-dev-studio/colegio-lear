@@ -52,10 +52,10 @@ export const AttachmentCard = ({ attachment, isUploading, isDeleting, previewUrl
         try {
             setCopied(true);
             await navigator.clipboard.writeText(attachment.url);
-            toast.success("URL del adjunto copiada al portapapeles");
+            toast.success("URL del adjunto copiada al portapapeles", { position: "top-right" });
             window.setTimeout(() => setCopied(false), 1400);
         } catch {
-            toast.error("No se pudo copiar la URL del adjunto");
+            toast.error("No se pudo copiar la URL del adjunto", { position: "top-right" });
         }
     }, []);
 
@@ -115,7 +115,7 @@ export const AttachmentCard = ({ attachment, isUploading, isDeleting, previewUrl
                             onClick={handleCopyUrl}
                             title="Copiar URL"
                             aria-label="Copiar URL"
-                            className="w-8 h-8 rounded-full bg-card/95 backdrop-blur border border-border shadow flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+                            className="cursor-pointer w-8 h-8 rounded-full bg-card/95 backdrop-blur border border-border shadow flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
                         >
                             {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                         </button>
@@ -127,7 +127,7 @@ export const AttachmentCard = ({ attachment, isUploading, isDeleting, previewUrl
                             }}
                             title="Eliminar archivo"
                             aria-label="Eliminar archivo"
-                            className="w-8 h-8 rounded-full bg-card/95 backdrop-blur border border-border shadow flex items-center justify-center text-muted-foreground hover:text-destructive hover:border-destructive/40 transition-colors">
+                            className="cursor-pointer w-8 h-8 rounded-full bg-card/95 backdrop-blur border border-border shadow flex items-center justify-center text-muted-foreground hover:text-destructive hover:border-destructive/40 transition-colors">
                             <Trash2 className="w-3.5 h-3.5" />
                         </button>
                     </div>

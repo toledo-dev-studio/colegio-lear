@@ -1,5 +1,5 @@
+import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import { useSearchParams } from "react-router"
 
 import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getSecurityRolesActionAsync } from "../actions/get-security-roles.action";

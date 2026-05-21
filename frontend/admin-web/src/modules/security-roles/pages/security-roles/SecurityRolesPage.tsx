@@ -38,30 +38,30 @@ export const SecurityRolesPage = () => {
     }
 
     const handleClickExport = async () => {
-        showLoading('Descargando información', 'Por favor espere...');
+        showLoading("Descargando información", "Por favor espere...");
         
         const data = await exportSecurityRolesMutation.mutateAsync();
 
         if (!data || !Array.isArray(data)) {
             hideLoading();
-            toast.info('No se cuenta con información para descargar');
+            toast.info("No se cuenta con información para descargar", { position: "top-right" });
             return;
         }
 
         const headers = [
-            { label: 'Id', key: 'id' },
-            { label: 'Nombre', key: 'name' },
-            { label: 'Descripción', key: 'description' },
-            { label: 'Estado', key: 'status' }
+            { label: "Id", key: "id" },
+            { label: "Nombre", key: "name" },
+            { label: "Descripción", key: "description" },
+            { label: "Estado", key: "status" }
         ];
 
-        downloadDataToCsvFile('Roles de seguridad', headers, data);
+        downloadDataToCsvFile("Roles de seguridad", headers, data);
 
         setTimeout(() => hideLoading(), 500);
     }
 
     const handleClickAdd = () => {
-        navigate('/security-roles/new');
+        navigate("/security-roles/new");
     }
 
     const handleClickEditRow = (item: SecurityRole) => {
@@ -77,13 +77,13 @@ export const SecurityRolesPage = () => {
         await deleteSecurityRoleMutation.mutateAsync({ id: securityRoleToDelete?.id! },
             {
                 onSuccess: () => {
-                    toast.success('Rol de seguridad eliminado correctamente');
+                    toast.success("Rol de seguridad eliminado correctamente", { position: "top-right" });
                     setSecurityRoleToDelete(undefined);
                     setIsOpenSingleDeleteModal(false);
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error('Ocurrio un error al tratar de eliminar el rol de seguridad');
+                    toast.error("Ocurrio un error al tratar de eliminar el rol de seguridad", { position: "top-right" });
                 }
             }
         );
@@ -112,17 +112,17 @@ export const SecurityRolesPage = () => {
 
                     {/* Table content*/}
                     <SecurityRolesTable
-                        data={pagedSecurityRolesQuery.data?.data ?? []}
-                        isLoading={pagedSecurityRolesQuery.isLoading}
+                        data={pagedSecurityRolesQuery.data}
+                        isLoading={pagedSecurityRolesQuery.isFetching}
                         handleClickEditRow={handleClickEditRow}
                         handleClickDeleteRow={handleClickDeleteRow}
                     />
 
                     {/* Pagination top element */}
                     {
-                        (!pagedSecurityRolesQuery.isLoading && pagedSecurityRolesQuery.data?.data.length) && (
+                        (!pagedSecurityRolesQuery.isFetching && pagedSecurityRolesQuery.itemsCount > 0) && (
                             <div className="flex items-center justify-center my-8">
-                                <CustomPagination totalPages={pagedSecurityRolesQuery.data?.totalPages ?? 0} />
+                                <CustomPagination totalPages={pagedSecurityRolesQuery.totalPages} />
                             </div>
                         )
                     }

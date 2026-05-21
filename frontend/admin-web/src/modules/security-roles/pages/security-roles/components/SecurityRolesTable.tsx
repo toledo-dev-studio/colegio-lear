@@ -50,45 +50,46 @@ export const SecurityRolesTable = ({ data = [], isLoading, handleClickEditRow, h
                             )
                         }
 
-
                         {/* Content */}
                         {
-                            data.map((item) => (
-                                <tr key={item.id} className="hover:bg-muted/40 transition-colors">
-                                    {/* Row data */}
-                                    <td className="row">
-                                        <Link to={`/security-roles/${item.id}`}>
-                                            <span className="text-primary">
-                                                {item.name}
-                                            </span>
-                                        </Link>
-                                    </td>
-                                    <td className="row">{item.description}</td>
-                                    <td className="row">
-                                        <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
-                                            {
-                                                item.status ? "Activo" : "Inactivo"
-                                            }
-                                        </Badge>
-                                    </td>
-                                    <td className="row">
-                                        <div className="flex flex-row gap-4">
-                                            <Button
-                                                aria-label="Editar"
-                                                className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
-                                                onClick={() => handleClickEditRow(item)}>
-                                                <Pencil className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                aria-label="Eliminar"
-                                                className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
-                                                onClick={() => handleClickDeleteRow(item)}>
-                                                <Trash className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
+                            (data.length > 0 && !isLoading) && (
+                                data.map((item) => (
+                                    <tr key={item.id} className="hover:bg-muted/40 transition-colors">
+                                        {/* Row data */}
+                                        <td className="row">
+                                            <Link to={`/security-roles/${item.id}`}>
+                                                <span className="text-primary">
+                                                    {item.name}
+                                                </span>
+                                            </Link>
+                                        </td>
+                                        <td className="row">{item.description}</td>
+                                        <td className="row">
+                                            <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
+                                                {
+                                                    item.status ? "Activo" : "Inactivo"
+                                                }
+                                            </Badge>
+                                        </td>
+                                        <td className="row">
+                                            <div className="flex flex-row gap-4">
+                                                <Button
+                                                    aria-label="Editar"
+                                                    className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
+                                                    onClick={() => handleClickEditRow(item)}>
+                                                    <Pencil className="w-4 h-4" />
+                                                </Button>
+                                                <Button
+                                                    aria-label="Eliminar"
+                                                    className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
+                                                    onClick={() => handleClickDeleteRow(item)}>
+                                                    <Trash className="w-4 h-4" />
+                                                </Button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )
                         }
                     </tbody>
                 </table>

@@ -6,13 +6,13 @@ import { Button } from '@/shared/ui/button'
 import type { JobTitle } from '@/interfaces/entites/job-title.interface'
 
 interface Props {
-    jobTitles: JobTitle[];
+    data: JobTitle[];
     isLoading: boolean;
     handleClickEditRow: (jobTitle: JobTitle) => void;
     handleClickDeleteRow: (jobTitle: JobTitle) => void;
 }
 
-export const JobTitlesTable = ({ jobTitles = [], isLoading, handleClickEditRow, handleClickDeleteRow }: Props) => {
+export const JobTitlesTable = ({ data = [], isLoading, handleClickEditRow, handleClickDeleteRow }: Props) => {
 
     return (
         <>
@@ -21,14 +21,6 @@ export const JobTitlesTable = ({ jobTitles = [], isLoading, handleClickEditRow, 
                     <thead>
                         {/* Columns */}
                         <tr>
-                            {/* 
-                            <th className="column checkbox-column">
-                                <Checkbox
-                                    id="select-all-checkbox"
-                                    name="select-all-checkbox"
-                                />
-                            </th>
-                            */}
                             <th className="column">Nombre</th>
                             <th className="column">Tipo de puesto de trabajo</th>
                             <th className="column">Descripción</th>
@@ -50,7 +42,7 @@ export const JobTitlesTable = ({ jobTitles = [], isLoading, handleClickEditRow, 
 
                         {/* No content */}
                         {
-                            (!jobTitles.length && !isLoading) && (
+                            (!data.length && !isLoading) && (
                                 <tr>
                                     <td colSpan={5} className="no-content-row">
                                         No se encontraron registros.
@@ -59,66 +51,54 @@ export const JobTitlesTable = ({ jobTitles = [], isLoading, handleClickEditRow, 
                             )
                         }
 
-
                         {/* Content */}
                         {
-                            jobTitles.map((item) => (
-                                <tr key={item.id} className="hover:bg-muted/40 transition-colors">
-
-                                    {/* Checkbox */}
-                                    {/* 
-                                    <td className="row">
-                                        <Checkbox
-                                            id={item.id}
-                                            name={item.name}
-                                            onCheckedChange={(selected) => handleToggleSelection(item, selected)}
-                                        />
-                                    </td> 
-                                    */}
-
-                                    {/* Row data */}
-                                    <td className="row">
-                                        <Link to={`/job-titles/${item.id}`}>
-                                            <span className="text-primary">
-                                                {item.name}
-                                            </span>
-                                        </Link>
-                                    </td>
-                                    <td className="row">
-                                        {
-                                            item.jobTitleType === 'administrative-staff'
-                                                ? 'Administrativo'
-                                                : 'Docente'
-                                        }
-                                    </td>
-                                    <td className="row">{item.description}</td>
-                                    <td className="row">
-                                        <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
+                            (data.length > 0 && !isLoading) && (
+                                data.map((item) => (
+                                    <tr key={item.id} className="hover:bg-muted/40 transition-colors">
+                                        {/* Row data */}
+                                        <td className="row">
+                                            <Link to={`/job-titles/${item.id}`}>
+                                                <span className="text-primary">
+                                                    {item.name}
+                                                </span>
+                                            </Link>
+                                        </td>
+                                        <td className="row">
                                             {
-                                                item.status ? 'Activo' : 'Inactivo'
+                                                item.jobTitleType === 'administrative-staff'
+                                                    ? 'Administrativo'
+                                                    : 'Docente'
                                             }
-                                        </Badge>
-                                    </td>
-                                    <td className="row">
-                                        <div className="flex flex-row gap-4">
-                                            <Button
-                                                aria-label="Editar"
-                                                className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
-                                                onClick={() => handleClickEditRow(item)}>
-                                                <Pencil className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                aria-label="Eliminar"
-                                                className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
-                                                onClick={() => handleClickDeleteRow(item)}>
-                                                <Trash className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
+                                        </td>
+                                        <td className="row">{item.description}</td>
+                                        <td className="row">
+                                            <Badge variant={item.status ? "success" : "destructive"} className="py-4 px-6">
+                                                {
+                                                    item.status ? 'Activo' : 'Inactivo'
+                                                }
+                                            </Badge>
+                                        </td>
+                                        <td className="row">
+                                            <div className="flex flex-row gap-4">
+                                                <Button
+                                                    aria-label="Editar"
+                                                    className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
+                                                    onClick={() => handleClickEditRow(item)}>
+                                                    <Pencil className="w-4 h-4" />
+                                                </Button>
+                                                <Button
+                                                    aria-label="Eliminar"
+                                                    className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
+                                                    onClick={() => handleClickDeleteRow(item)}>
+                                                    <Trash className="w-4 h-4" />
+                                                </Button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )
                         }
-
                     </tbody>
                 </table>
             </div>

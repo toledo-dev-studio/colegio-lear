@@ -1,26 +1,49 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router"
-import { Eye, EyeOff, GraduationCap, Lock, LogIn, Mail } from "lucide-react"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
+import { Eye, EyeOff, GraduationCap, Lock, LogIn, Mail } from "lucide-react";
+import { toast } from "sonner";
 
-import { Button } from "@/shared/ui/button"
-import { Input } from "@/shared/ui/input"
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { useAuthStore } from "../../stores/auth.store";
+import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import background from "@/assets/images/login-background.jpg";
+import type { AuthCredentials } from "../../interfaces/auth-credentials";
 
 export const LoginPage = () => {
-    const navigate = useNavigate();
-    const [form, setForm] = useState({ email: "admin@learn.com", password: "admin123" });
-    const [show, setShow] = useState(false);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        navigate("/dashboard");
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const { register, handleSubmit, formState: { errors } } = useForm<AuthCredentials>({
+        defaultValues: { username: undefined, password: undefined }
+    });
+
+    const { login } = useAuthStore();
+    const { showLoading, hideLoading } = useLoaderStore();
+
+    const onSubmit = async (credentials: AuthCredentials) => {
+        setIsLoading(true);
+        showLoading("Iniciando sesión");
+
+        const isSuccess = await login(credentials);
+
+        setIsLoading(false);
+        hideLoading();
+
+        if (isSuccess) {
+            navigate("/dashboard");
+            return;
+        }
+
+        toast.error('Correo y/o contraseña no validos', { position: "top-right" });
     }
 
     return (
         <>
-            <div className="relative flex-1 flex items-center justify-center p-6 sm:p-12 bg-cover bg-center after:absolute after:inset-0 after:bg-black/40 after:content-['']" style={{backgroundImage: `url(${background})`}}>
+            <div className="relative flex-1 flex items-center justify-center p-6 sm:p-12 bg-cover bg-center after:absolute after:inset-0 after:bg-black/40 after:content-['']" style={{ backgroundImage: `url(${background})` }}>
                 <div className="w-full max-w-xl border border-white-400 shadow-md rounded-lg p-12 bg-card z-10">
                     <div className="lg:hidden flex items-center gap-3 mb-8">
                         <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center">
@@ -36,39 +59,51 @@ export const LoginPage = () => {
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-5" data-testid="login-form">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" data-testid="login-form">
                         <div>
-                            <label className="text-sm font-medium text-foreground mb-2 block">Correo electrónico</label>
+                            <label className="text-sm font-medium text-foreground mb-2 block">Usuario / correo electrónico:</label>
                             <div className="relative">
                                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
-                                    data-testid="login-email-input"
-                                    type="email"
-                                    value={form.email}
-                                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                    {...register("username", { required: true })}
+                                    type="text"
+                                    defaultValue="aone"
                                     placeholder="correo@colegio.com"
                                     className="pill-input w-full pl-12"
                                     required
                                 />
                             </div>
+                            {
+                                errors.username && (
+                                    <p className="text-red-500 text-sm mt-2">
+                                        Usuario / correo electrónico es obligatorio para el inicio de sesión
+                                    </p>
+                                )
+                            }
                         </div>
                         <div>
-                            <label className="text-sm font-medium text-foreground mb-2 block">Contraseña</label>
+                            <label className="text-sm font-medium text-foreground mb-2 block">Contraseña:</label>
                             <div className="relative">
                                 <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                 <Input
-                                    data-testid="login-password-input"
-                                    type={show ? "text" : "password"}
-                                    value={form.password}
-                                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                                    {...register("password", { required: true })}
+                                    type={showPassword ? "text" : "password"}
+                                    defaultValue="Admin123!"
                                     placeholder="••••••••"
                                     className="pill-input w-full pl-12 pr-12"
                                     required
                                 />
-                                <button type="button" onClick={() => setShow(s => !s)} className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                                    {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                <button type="button" onClick={() => setShowPassword(prev => !prev)} className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
+                            {
+                                errors.password && (
+                                    <p className="text-red-500 text-sm mt-2">
+                                        La contraseña es obligatoria para el inicio de sesión
+                                    </p>
+                                )
+                            }
                             <div className="w-full text-right mt-4">
                                 <Link to="/auth/forgot-password">
                                     <span className="w-full text-right text-sm text-muted-foreground hover:text-primary">
@@ -78,15 +113,13 @@ export const LoginPage = () => {
                             </div>
                         </div>
 
-                        {error && <p className="text-sm text-destructive" data-testid="login-error">{error}</p>}
-
                         <Button
                             type="submit"
-                            disabled={loading}
+                            disabled={isLoading}
                             data-testid="login-submit-button"
                             className="pill-btn-primary w-full justify-center py-3 mt-3"
                         >
-                            {loading ? "Ingresando..." : "Iniciar sesión"}
+                            {isLoading ? "Ingresando..." : "Iniciar sesión"}
                             <LogIn className="w-8 h-8 ml-2" />
                         </Button>
                         <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">

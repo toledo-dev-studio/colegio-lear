@@ -10,23 +10,31 @@ export const useGetPagedScholarships = () => {
 
     // Main query filters
     const query = searchParams.get('query')?.trim() || '';
-    const page = searchParams.get('page') || '1';
-    const pageSize = searchParams.get('pageSize') || '10';
+    const page = stringToNumberWithDefault(searchParams.get('page'), 1);
+    const pageSize = stringToNumberWithDefault(searchParams.get('pageSize'), 10);
 
     // Advanced query filters
     const name = searchParams.get('name')?.trim() || '';
     const status = stringToBooleanWithDefault(searchParams.get('status'));
     const discountPercentage = stringToNumberWithDefault(searchParams.get('discount-percentage'));
 
-    return useQuery({
+    const queryResult = useQuery({
         queryKey: [GET_PAGED_SCHOLARSHIPS_QUERY_KEY, { query, page, pageSize, name, status, discountPercentage }],
         queryFn: () => getPagedScholarshipsActionAsync({
             query,
-            page: stringToNumberWithDefault(page, 1),
-            pageSize: stringToNumberWithDefault(pageSize, 1),
+            page,
+            pageSize,
             name,
             status,
             discountPercentage,
         }),
     });
+
+    return {
+        ...queryResult,
+        data: queryResult.data?.data ?? [],
+        totalPages: queryResult.data?.totalPages ?? 0,
+        currentPage: queryResult.data?.currentPage ?? 0,
+        itemsCount: queryResult.data?.itemsCount ?? 0
+    }
 }
