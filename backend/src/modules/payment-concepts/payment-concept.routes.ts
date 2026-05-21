@@ -25,7 +25,7 @@ const router = Router();
  *     tags:
  *       - Payment Concepts
  *     summary: List all payment concepts
- *     description: Returns all payment concepts with optional filters (q, name, status, allowRemission, baseAmount, minAmount, maxAmount). Filters are combined with AND logic.
+ *     description: Returns all payment concepts with optional filters (q, name, status, allowRemission, baseAmount, minAmount, maxAmount).
  *     parameters:
  *       - $ref: '#/components/parameters/PaymentConceptFilterQ'
  *       - $ref: '#/components/parameters/PaymentConceptFilterName'
@@ -40,18 +40,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Payment concepts retrieved successfully
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/PaymentConceptRecord'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/PaymentConceptRecord'
  *       400:
  *         description: Validation error
  */
@@ -64,7 +55,7 @@ router.get("/", validate(paymentConceptFiltersSchema, "query"), findAll);
  *     tags:
  *       - Payment Concepts
  *     summary: List payment concepts with pagination
- *     description: Returns a paginated list of payment concepts with optional filters and pagination parameters.
+ *     description: Returns a paginated list of payment concepts with optional filters.
  *     parameters:
  *       - $ref: '#/components/parameters/PaymentConceptFilterQ'
  *       - $ref: '#/components/parameters/PaymentConceptFilterName'
@@ -83,18 +74,19 @@ router.get("/", validate(paymentConceptFiltersSchema, "query"), findAll);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Payment concepts retrieved successfully
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/PaymentConceptRecord'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 3
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 25
  *       400:
  *         description: Validation error
  */
@@ -120,16 +112,7 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Payment concept retrieved successfully
- *                 data:
- *                   $ref: '#/components/schemas/PaymentConceptRecord'
+ *               $ref: '#/components/schemas/PaymentConceptRecord'
  *       400:
  *         description: Invalid UUID format
  *       404:
@@ -144,7 +127,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *     tags:
  *       - Payment Concepts
  *     summary: Create a new payment concept
- *     description: Creates a new payment concept with the provided data. Validates uniqueness of name (case-insensitive).
+ *     description: Creates a new payment concept. Validates uniqueness of name (case-insensitive).
  *     requestBody:
  *       required: true
  *       content:
@@ -157,16 +140,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Payment concept created successfully
- *                 data:
- *                   $ref: '#/components/schemas/PaymentConceptRecord'
+ *               $ref: '#/components/schemas/PaymentConceptRecord'
  *       400:
  *         description: Validation error
  *       409:
@@ -196,16 +170,7 @@ router.post("/", validate(createPaymentConceptSchema, "body"), create);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Payment concept updated successfully
- *                 data:
- *                   $ref: '#/components/schemas/PaymentConceptRecord'
+ *               $ref: '#/components/schemas/PaymentConceptRecord'
  *       400:
  *         description: Validation error or empty body
  *       404:
@@ -227,7 +192,7 @@ router.patch(
  *     tags:
  *       - Payment Concepts
  *     summary: Soft delete a payment concept
- *     description: Sets the payment concept status to inactive (soft delete). Returns 409 if already inactive.
+ *     description: Sets the payment concept status to inactive (soft delete).
  *     parameters:
  *       - $ref: '#/components/parameters/PaymentConceptIdParam'
  *     responses:

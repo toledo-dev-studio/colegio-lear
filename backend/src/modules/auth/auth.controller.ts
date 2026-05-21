@@ -83,3 +83,15 @@ export async function changePassword(
 
   sendSuccess(res, null);
 }
+
+/**
+ * GET /auth/me
+ * Returns the authenticated employee's profile data.
+ * Requires a valid access_token cookie (or Authorization header).
+ * The authenticate middleware already validated the token and set req.user.
+ */
+export async function me(req: Request, res: Response): Promise<void> {
+  const { employeeId } = req.user!;
+  const employee = await service.getMe(employeeId);
+  sendSuccess(res, employee);
+}

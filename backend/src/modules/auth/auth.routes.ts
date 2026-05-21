@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authenticate } from "../../shared/middleware/auth.middleware";
 import {
   loginSchema,
   forgotPasswordSchema,
@@ -10,6 +11,7 @@ import {
   logout,
   forgotPassword,
   changePassword,
+  me,
 } from "./auth.controller";
 
 const router = Router();
@@ -175,5 +177,25 @@ router.post(
   validate(changePasswordSchema, "body"),
   changePassword,
 );
+
+/**
+ * @openapi
+ * /auth/me:
+ *   get:
+ *     tags:
+ *       - Auth
+ *     summary: Obtener perfil del empleado autenticado
+ *     description: Retorna los datos completos del empleado autenticado, incluyendo rol de seguridad con permisos y puesto de trabajo. Requiere cookie access_token válida (o header Authorization Bearer).
+ *     responses:
+ *       200:
+ *         description: Datos del empleado autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ *       401:
+ *         description: Token ausente, inválido o expirado
+ */
+router.get("/me", authenticate, me);
 
 export default router;

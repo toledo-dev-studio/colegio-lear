@@ -204,6 +204,52 @@ export class AuthService {
   }
 
   /**
+   * Return the authenticated employee's profile data.
+   * Fetches the full employee record by ID including securityRole (with permissions)
+   * and jobTitle. Returns the same shape as LoginResponse.
+   * Throws UnauthorizedError if the employee no longer exists or is inactive.
+   */
+  async getMe(employeeId: string): Promise<LoginResponse> {
+    const employee = await this.prisma.employee.findUnique({
+      where: { id: employeeId },
+      include: {
+        securityRole: { include: { permissions: true } },
+        jobTitle: true,
+      },
+    });
+
+    if (!employee || !employee.status) {
+      throw new UnauthorizedError("Empleado no encontrado o inactivo");
+    }
+
+    return {
+      id: employee.id,
+      name: employee.name,
+      firstLastName: employee.firstLastName,
+      secondLastName: employee.secondLastName,
+      email: employee.email,
+      username: employee.username,
+      image: employee.image,
+      mustChangePassword: employee.mustChangePassword,
+      securityRole: {
+        id: employee.securityRole.id,
+        name: employee.securityRole.name,
+        permissions: employee.securityRole.permissions.map((p) => ({
+          moduleKey: p.moduleKey,
+          canRead: p.canRead,
+          canWrite: p.canWrite,
+          canDelete: p.canDelete,
+        })),
+      },
+      jobTitle: {
+        id: employee.jobTitle.id,
+        name: employee.jobTitle.name,
+        jobTitleType: String(employee.jobTitle.jobTitleType),
+      },
+    };
+  }
+
+  /**
    * Generate an 8-character alphanumeric random password.
    * Characters: [a-zA-Z0-9]
    */

@@ -57,18 +57,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Job titles retrieved
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/JobTitle'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/JobTitle'
  */
 router.get("/", validate(jobTitleFiltersSchema, "query"), findAll);
 
@@ -128,17 +119,19 @@ router.get("/", validate(jobTitleFiltersSchema, "query"), findAll);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/JobTitle'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 3
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 25
  *       400:
  *         description: Invalid pagination parameters
  */
@@ -164,16 +157,7 @@ router.get("/paged", validate(jobTitlePagedQuerySchema, "query"), findAllPaged);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Puesto creado correctamente
- *                 data:
- *                   $ref: '#/components/schemas/JobTitle'
+ *               $ref: '#/components/schemas/JobTitle'
  *       400:
  *         description: Validation error
  *       409:
@@ -203,15 +187,7 @@ router.post("/", validate(createJobTitleSchema, "body"), create);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/JobTitle'
+ *               $ref: '#/components/schemas/JobTitle'
  *       400:
  *         description: Invalid UUID format
  *       404:
@@ -247,15 +223,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/JobTitle'
+ *               $ref: '#/components/schemas/JobTitle'
  *       400:
  *         description: Validation error or empty body
  *       404:

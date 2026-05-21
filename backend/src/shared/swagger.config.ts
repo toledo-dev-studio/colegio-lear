@@ -676,6 +676,177 @@ const swaggerOptions: swaggerJsdoc.Options = {
             status: { type: "boolean" },
           },
         },
+        // ─── Scholarships ───────────────────────────────────────────────────────
+        ScholarshipRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Beca de excelencia" },
+            description: {
+              type: "string",
+              example: "Beca para alumnos con promedio mayor a 9.5",
+            },
+            discountPercentage: {
+              type: "number",
+              format: "float",
+              example: 50,
+            },
+            status: { type: "boolean", example: true },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        CreateScholarshipBody: {
+          type: "object",
+          required: ["name", "description", "discountPercentage"],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+              example: "Beca de excelencia",
+            },
+            description: {
+              type: "string",
+              minLength: 1,
+              maxLength: 500,
+              example: "Beca para alumnos con promedio mayor a 9.5",
+            },
+            discountPercentage: {
+              type: "number",
+              minimum: 0,
+              maximum: 100,
+              example: 50,
+            },
+            status: { type: "boolean", example: true },
+          },
+        },
+        UpdateScholarshipBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            description: { type: "string", minLength: 1, maxLength: 500 },
+            discountPercentage: {
+              type: "number",
+              minimum: 0,
+              maximum: 100,
+            },
+            status: { type: "boolean" },
+          },
+        },
+        // ─── Payment Concepts ───────────────────────────────────────────────────
+        PaymentConceptRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Colegiatura mensual" },
+            description: {
+              type: "string",
+              example: "Pago mensual de colegiatura",
+            },
+            baseAmount: { type: "number", format: "float", example: 1500 },
+            allowRemission: { type: "boolean", example: true },
+            status: { type: "boolean", example: true },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        CreatePaymentConceptBody: {
+          type: "object",
+          required: ["name", "description", "baseAmount"],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+              example: "Colegiatura mensual",
+            },
+            description: {
+              type: "string",
+              minLength: 1,
+              maxLength: 500,
+              example: "Pago mensual de colegiatura",
+            },
+            baseAmount: {
+              type: "number",
+              minimum: 0,
+              example: 1500,
+            },
+            allowRemission: { type: "boolean", example: true },
+            status: { type: "boolean", example: true },
+          },
+        },
+        UpdatePaymentConceptBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            description: { type: "string", minLength: 1, maxLength: 500 },
+            baseAmount: { type: "number", minimum: 0 },
+            allowRemission: { type: "boolean" },
+            status: { type: "boolean" },
+          },
+        },
+        // ─── School Subjects ────────────────────────────────────────────────────
+        SubjectView: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Matemáticas" },
+            description: {
+              type: "string",
+              example: "Materia de matemáticas básicas",
+            },
+            status: { type: "boolean", example: true },
+            academicLevelId: { type: "string", format: "uuid" },
+            educationLevelId: { type: "string", format: "uuid" },
+            academicLevel: { $ref: "#/components/schemas/AcademicLevel" },
+            educationLevel: { $ref: "#/components/schemas/EducationLevel" },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" },
+          },
+        },
+        SchoolSubjectRecord: {
+          $ref: "#/components/schemas/SubjectView",
+        },
+        CreateSchoolSubjectBody: {
+          type: "object",
+          required: [
+            "name",
+            "description",
+            "academicLevelId",
+            "educationLevelId",
+          ],
+          properties: {
+            name: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+              example: "Matemáticas",
+            },
+            description: {
+              type: "string",
+              minLength: 1,
+              maxLength: 500,
+              example: "Materia de matemáticas básicas",
+            },
+            academicLevelId: { type: "string", format: "uuid" },
+            educationLevelId: { type: "string", format: "uuid" },
+            status: { type: "boolean", example: true },
+          },
+        },
+        UpdateSchoolSubjectBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            description: { type: "string", minLength: 1, maxLength: 500 },
+            academicLevelId: { type: "string", format: "uuid" },
+            educationLevelId: { type: "string", format: "uuid" },
+            status: { type: "boolean" },
+          },
+        },
       },
     },
   },

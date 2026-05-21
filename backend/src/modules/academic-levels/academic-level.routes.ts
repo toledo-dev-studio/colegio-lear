@@ -53,18 +53,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Academic levels retrieved
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/AcademicLevel'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AcademicLevel'
  */
 router.get("/", validate(academicLevelFiltersSchema, "query"), findAll);
 
@@ -118,17 +109,19 @@ router.get("/", validate(academicLevelFiltersSchema, "query"), findAll);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/AcademicLevel'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 3
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 25
  *       400:
  *         description: Invalid pagination parameters
  */
@@ -188,17 +181,19 @@ router.get(
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/EducationLevel'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 2
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 12
  *       400:
  *         description: Invalid parameters
  */
@@ -228,16 +223,7 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Academic level created
- *                 data:
- *                   $ref: '#/components/schemas/AcademicLevelDetail'
+ *               $ref: '#/components/schemas/AcademicLevelDetail'
  *       400:
  *         description: Validation error
  *       409:
@@ -267,15 +253,7 @@ router.post("/", validate(createAcademicLevelSchema, "body"), create);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/AcademicLevelDetail'
+ *               $ref: '#/components/schemas/AcademicLevelDetail'
  *       400:
  *         description: Invalid UUID format
  *       404:
@@ -311,15 +289,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/AcademicLevelDetail'
+ *               $ref: '#/components/schemas/AcademicLevelDetail'
  *       400:
  *         description: Validation error or empty body
  *       404:

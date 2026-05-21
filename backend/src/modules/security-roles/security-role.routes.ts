@@ -51,18 +51,9 @@ const router: Router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Security roles retrieved
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/SecurityRole'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/SecurityRole'
  */
 router.get("/", validate(securityRoleFiltersSchema, "query"), findAll);
 
@@ -116,17 +107,19 @@ router.get("/", validate(securityRoleFiltersSchema, "query"), findAll);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/SecurityRole'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 3
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 25
  *       400:
  *         description: Invalid pagination parameters
  */
@@ -156,16 +149,7 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Rol creado correctamente
- *                 data:
- *                   $ref: '#/components/schemas/SecurityRoleDetail'
+ *               $ref: '#/components/schemas/SecurityRoleDetail'
  *       400:
  *         description: Validation error
  *       409:
@@ -195,15 +179,7 @@ router.post("/", validate(createSecurityRoleSchema, "body"), create);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/SecurityRoleDetail'
+ *               $ref: '#/components/schemas/SecurityRoleDetail'
  *       400:
  *         description: Invalid UUID format
  *       404:
@@ -239,15 +215,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/SecurityRoleDetail'
+ *               $ref: '#/components/schemas/SecurityRoleDetail'
  *       400:
  *         description: Validation error or empty body
  *       404:

@@ -63,18 +63,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Announcements retrieved
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Announcement'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Announcement'
  */
 router.get("/", validate(announcementFiltersSchema, "query"), getAll);
 
@@ -140,17 +131,19 @@ router.get("/", validate(announcementFiltersSchema, "query"), getAll);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Announcement'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 3
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 25
  *       400:
  *         description: Invalid pagination parameters
  */
@@ -167,7 +160,7 @@ router.get(
  *     tags:
  *       - Announcements
  *     summary: Create a new announcement
- *     description: Creates a new announcement with the provided data. Status defaults to true.
+ *     description: Creates a new announcement. Status defaults to true.
  *     requestBody:
  *       required: true
  *       content:
@@ -180,16 +173,7 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Announcement created
- *                 data:
- *                   $ref: '#/components/schemas/Announcement'
+ *               $ref: '#/components/schemas/Announcement'
  *       400:
  *         description: Validation error
  */
@@ -217,15 +201,7 @@ router.post("/", validate(createAnnouncementSchema, "body"), create);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/AnnouncementDetail'
+ *               $ref: '#/components/schemas/AnnouncementDetail'
  *       400:
  *         description: Invalid UUID format
  *       404:
@@ -261,15 +237,7 @@ router.get("/:id", validate(idParamSchema, "params"), getById);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/Announcement'
+ *               $ref: '#/components/schemas/Announcement'
  *       400:
  *         description: Validation error or empty body
  *       404:

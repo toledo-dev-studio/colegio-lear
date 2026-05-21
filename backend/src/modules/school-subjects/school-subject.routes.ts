@@ -25,7 +25,7 @@ const router = Router();
  *     tags:
  *       - School Subjects
  *     summary: List all school subjects
- *     description: Returns all school subjects with optional filters (q, name, status, academicLevelId, educationLevelId). Filters are combined with AND logic.
+ *     description: Returns all school subjects with optional filters (q, name, status, academicLevelId, educationLevelId).
  *     parameters:
  *       - $ref: '#/components/parameters/SubjectFilterQ'
  *       - $ref: '#/components/parameters/SubjectFilterName'
@@ -38,18 +38,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Success
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/SubjectView'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/SubjectView'
  *       400:
  *         description: Validation error
  */
@@ -62,7 +53,7 @@ router.get("/", validate(subjectFiltersSchema, "query"), findAll);
  *     tags:
  *       - School Subjects
  *     summary: List school subjects with pagination
- *     description: Returns a paginated list of school subjects with optional filters and pagination parameters.
+ *     description: Returns a paginated list of school subjects with optional filters.
  *     parameters:
  *       - $ref: '#/components/parameters/SubjectFilterQ'
  *       - $ref: '#/components/parameters/SubjectFilterName'
@@ -79,18 +70,19 @@ router.get("/", validate(subjectFiltersSchema, "query"), findAll);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Success
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/SubjectView'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 3
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 25
  *       400:
  *         description: Validation error
  */
@@ -112,16 +104,7 @@ router.get("/paged", validate(pagedQuerySchema, "query"), findAllPaged);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Success
- *                 data:
- *                   $ref: '#/components/schemas/SubjectView'
+ *               $ref: '#/components/schemas/SubjectView'
  *       400:
  *         description: Invalid UUID format
  *       404:
@@ -136,7 +119,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *     tags:
  *       - School Subjects
  *     summary: Create a new school subject
- *     description: Creates a new school subject with the provided data. Validates uniqueness of name within the same education level.
+ *     description: Creates a new school subject. Validates uniqueness of name within the same education level.
  *     requestBody:
  *       required: true
  *       content:
@@ -149,16 +132,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: School subject created
- *                 data:
- *                   $ref: '#/components/schemas/SchoolSubjectRecord'
+ *               $ref: '#/components/schemas/SchoolSubjectRecord'
  *       400:
  *         description: Validation error
  *       404:
@@ -190,16 +164,7 @@ router.post("/", validate(createSchoolSubjectSchema, "body"), create);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: School subject updated
- *                 data:
- *                   $ref: '#/components/schemas/SchoolSubjectRecord'
+ *               $ref: '#/components/schemas/SchoolSubjectRecord'
  *       400:
  *         description: Validation error or empty body
  *       404:
@@ -221,7 +186,7 @@ router.patch(
  *     tags:
  *       - School Subjects
  *     summary: Soft delete a school subject
- *     description: Sets the school subject status to inactive (soft delete). Returns 409 if already inactive.
+ *     description: Sets the school subject status to inactive (soft delete).
  *     parameters:
  *       - $ref: '#/components/parameters/IdParam'
  *     responses:

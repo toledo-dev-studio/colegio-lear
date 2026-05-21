@@ -42,7 +42,6 @@ const upload = multer({
   },
 });
 
-/** Middleware for single optional file upload with field name "file" */
 const uploadSingle = upload.single("file");
 
 // ─── Router ─────────────────────────────────────────────────────────────────────
@@ -94,18 +93,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Employees retrieved successfully
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Employee'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Employee'
  */
 router.get("/", validate(employeeFiltersSchema, "query"), findAll);
 
@@ -116,7 +106,7 @@ router.get("/", validate(employeeFiltersSchema, "query"), findAll);
  *     tags:
  *       - Employees
  *     summary: List employees with pagination
- *     description: Returns a paginated list of employees matching the optional query filters. Includes nested jobTitle and securityRole (without permissions).
+ *     description: Returns a paginated list of employees. Includes nested jobTitle and securityRole (without permissions).
  *     parameters:
  *       - in: query
  *         name: q
@@ -171,17 +161,19 @@ router.get("/", validate(employeeFiltersSchema, "query"), findAll);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Employee'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 3
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 25
  *       400:
  *         description: Invalid pagination parameters
  */
@@ -194,7 +186,7 @@ router.get("/paged", validate(employeePagedQuerySchema, "query"), findAllPaged);
  *     tags:
  *       - Employees
  *     summary: Create a new employee
- *     description: Creates a new employee with the provided data and optional image file. Generates a username automatically and sends an invitation email.
+ *     description: Creates a new employee with optional image. Generates username automatically and sends an invitation email.
  *     requestBody:
  *       required: true
  *       content:
@@ -216,49 +208,28 @@ router.get("/paged", validate(employeePagedQuerySchema, "query"), findAllPaged);
  *                 description: Optional employee image (jpeg, png, webp, gif; max 5MB)
  *               name:
  *                 type: string
- *                 maxLength: 100
- *                 description: Employee first name
  *               firstLastName:
  *                 type: string
- *                 maxLength: 100
- *                 description: Employee first last name
  *               secondLastName:
  *                 type: string
- *                 maxLength: 100
- *                 description: Employee second last name
  *               phoneNumber:
  *                 type: string
- *                 maxLength: 20
- *                 description: Employee phone number
  *               email:
  *                 type: string
  *                 format: email
- *                 maxLength: 150
- *                 description: Employee email address (must be unique)
  *               securityRoleId:
  *                 type: string
  *                 format: uuid
- *                 description: UUID of the security role to assign
  *               jobTitleId:
  *                 type: string
  *                 format: uuid
- *                 description: UUID of the job title to assign
  *     responses:
  *       201:
  *         description: Employee created successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Employee created successfully
- *                 data:
- *                   $ref: '#/components/schemas/EmployeeDetail'
+ *               $ref: '#/components/schemas/EmployeeDetail'
  *       400:
  *         description: Validation error
  *       409:
@@ -273,7 +244,7 @@ router.post("/", uploadSingle, validate(createEmployeeSchema, "body"), create);
  *     tags:
  *       - Employees
  *     summary: Get employee by ID
- *     description: Returns a single employee by its UUID, including nested jobTitle and securityRole with permissions.
+ *     description: Returns a single employee including nested jobTitle and securityRole with permissions.
  *     parameters:
  *       - in: path
  *         name: id
@@ -288,15 +259,7 @@ router.post("/", uploadSingle, validate(createEmployeeSchema, "body"), create);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/EmployeeDetail'
+ *               $ref: '#/components/schemas/EmployeeDetail'
  *       400:
  *         description: Invalid UUID format
  *       404:
@@ -333,48 +296,28 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *                 description: Optional new employee image (jpeg, png, webp, gif; max 5MB)
  *               name:
  *                 type: string
- *                 maxLength: 100
- *                 description: Employee first name
  *               firstLastName:
  *                 type: string
- *                 maxLength: 100
- *                 description: Employee first last name
  *               secondLastName:
  *                 type: string
- *                 maxLength: 100
- *                 description: Employee second last name
  *               phoneNumber:
  *                 type: string
- *                 maxLength: 20
- *                 description: Employee phone number
  *               email:
  *                 type: string
  *                 format: email
- *                 maxLength: 150
- *                 description: Employee email address (must be unique)
  *               securityRoleId:
  *                 type: string
  *                 format: uuid
- *                 description: UUID of the security role to assign
  *               jobTitleId:
  *                 type: string
  *                 format: uuid
- *                 description: UUID of the job title to assign
  *     responses:
  *       200:
  *         description: Employee updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                 data:
- *                   $ref: '#/components/schemas/EmployeeDetail'
+ *               $ref: '#/components/schemas/EmployeeDetail'
  *       400:
  *         description: Validation error or empty body
  *       404:

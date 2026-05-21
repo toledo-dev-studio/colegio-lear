@@ -7,8 +7,6 @@ import {
 } from "./attachment.schema";
 import { upload as uploadHandler, remove } from "./attachment.controller";
 
-// ─── Multer Configuration ───────────────────────────────────────────────────────
-
 /**
  * In-memory storage — file is available as req.file.buffer.
  * Limits file size to 10MB. No MIME type restriction (announcements
@@ -19,10 +17,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-/** Middleware for single file upload with field name "file" */
 const uploadSingle = upload.single("file");
-
-// ─── Router ─────────────────────────────────────────────────────────────────────
 
 const router = Router();
 
@@ -61,16 +56,7 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Archivo adjunto subido correctamente
- *                 data:
- *                   $ref: '#/components/schemas/Attachment'
+ *               $ref: '#/components/schemas/Attachment'
  *       400:
  *         description: Validation error (invalid UUID or missing file)
  *       404:

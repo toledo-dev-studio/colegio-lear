@@ -37,18 +37,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Scholarships retrieved successfully
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/ScholarshipRecord'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ScholarshipRecord'
  *       400:
  *         description: Validation error
  */
@@ -77,18 +68,19 @@ router.get("/", validate(scholarshipFiltersSchema, "query"), findAll);
  *             schema:
  *               type: object
  *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Scholarships retrieved successfully
  *                 data:
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/ScholarshipRecord'
- *                 pagination:
- *                   $ref: '#/components/schemas/PaginationMeta'
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 3
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsCount:
+ *                   type: integer
+ *                   example: 25
  *       400:
  *         description: Validation error
  */
@@ -114,16 +106,7 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Scholarship retrieved successfully
- *                 data:
- *                   $ref: '#/components/schemas/ScholarshipRecord'
+ *               $ref: '#/components/schemas/ScholarshipRecord'
  *       400:
  *         description: Invalid UUID format
  *       404:
@@ -151,16 +134,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Scholarship created successfully
- *                 data:
- *                   $ref: '#/components/schemas/ScholarshipRecord'
+ *               $ref: '#/components/schemas/ScholarshipRecord'
  *       400:
  *         description: Validation error
  *       409:
@@ -190,16 +164,7 @@ router.post("/", validate(createScholarshipSchema, "body"), create);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 code:
- *                   type: integer
- *                   example: 200
- *                 message:
- *                   type: string
- *                   example: Scholarship updated successfully
- *                 data:
- *                   $ref: '#/components/schemas/ScholarshipRecord'
+ *               $ref: '#/components/schemas/ScholarshipRecord'
  *       400:
  *         description: Validation error or empty body
  *       404:
