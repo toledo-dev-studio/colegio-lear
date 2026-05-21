@@ -13,7 +13,7 @@ export interface JobTitleFilters {
 export interface JobTitleRecord {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   jobTitleType: JobTitleTypes;
   status: boolean;
 }
@@ -29,7 +29,7 @@ export interface PagedResult<T> {
 /** Input DTO for creating a job title */
 export interface CreateJobTitleDto {
   name: string;
-  description: string;
+  description?: string;
   jobTitleType: JobTitleTypes;
 }
 
@@ -38,4 +38,5 @@ export interface UpdateJobTitleDto {
   name?: string;
   description?: string;
   jobTitleType?: JobTitleTypes;
+  status?: boolean;
 }

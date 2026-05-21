@@ -155,7 +155,7 @@ export const scholarshipPagedQuerySchema = scholarshipFiltersSchema.extend({
  */
 export const createScholarshipSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500),
+  description: nonBlankString(500).optional(),
   discountPercentage: z
     .number({ message: "discountPercentage must be a number" })
     .min(0, "discountPercentage must be at least 0")
@@ -198,6 +198,7 @@ export const updateScholarshipSchema = z
       .min(0, "discountPercentage must be at least 0")
       .max(100, "discountPercentage must be at most 100")
       .optional(),
+    status: z.boolean({ message: "status must be a boolean" }).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",

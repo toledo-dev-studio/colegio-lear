@@ -31,7 +31,7 @@ export class SecurityRoleService {
   private buildWhereClause(
     filters: SecurityRoleFilters,
   ): Record<string, unknown> {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { isDeleted: false };
     const andConditions: unknown[] = [];
 
     // Full-text search across name and description (OR logic, case-insensitive)
@@ -274,12 +274,11 @@ export class SecurityRoleService {
   }
 
   /**
-   * Soft delete: sets status = false without removing the record.
+   * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the role does not exist.
-   * Throws ConflictError if the role is already inactive.
+   * Throws ConflictError if the role is already deleted.
    */
   async softDelete(id: string): Promise<void> {
-    // Verify role exists
     const existing = await this.prisma.securityRole.findUnique({
       where: { id },
     });
@@ -288,15 +287,13 @@ export class SecurityRoleService {
       throw new NotFoundError("Rol no encontrado");
     }
 
-    // Verify status is true (not already inactive)
-    if (!existing.status) {
-      throw new ConflictError("El rol ya está inactivo");
+    if (existing.isDeleted) {
+      throw new ConflictError("El rol ya fue eliminado");
     }
 
-    // Set status to false
     await this.prisma.securityRole.update({
       where: { id },
-      data: { status: false },
+      data: { isDeleted: true },
     });
   }
 }

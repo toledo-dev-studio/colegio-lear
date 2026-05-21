@@ -194,7 +194,7 @@ export const paymentConceptPagedQuerySchema =
  */
 export const createPaymentConceptSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500),
+  description: nonBlankString(500).optional(),
   baseAmount: z
     .number({ message: "baseAmount must be a number" })
     .min(0.01, "baseAmount must be at least 0.01")
@@ -246,6 +246,7 @@ export const updatePaymentConceptSchema = z
     allowRemission: z
       .boolean({ message: "allowRemission must be a boolean" })
       .optional(),
+    status: z.boolean({ message: "status must be a boolean" }).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",

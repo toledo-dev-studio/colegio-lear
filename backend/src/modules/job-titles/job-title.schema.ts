@@ -66,7 +66,7 @@ export const jobTitlePagedQuerySchema = jobTitleFiltersSchema.extend({
  */
 export const createJobTitleSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500),
+  description: nonBlankString(500).optional(),
   jobTitleType: z.enum(["teacher", "administrative-staff"]),
 });
 
@@ -80,6 +80,7 @@ export const updateJobTitleSchema = z
     name: nonBlankString(100).optional(),
     description: nonBlankString(500).optional(),
     jobTitleType: z.enum(["teacher", "administrative-staff"]).optional(),
+    status: z.boolean({ message: "status must be a boolean" }).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",

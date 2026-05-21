@@ -34,7 +34,7 @@ export class AnnouncementService {
   private buildWhereClause(
     filters: AnnouncementFilters,
   ): Record<string, unknown> {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { isDeleted: false };
     const andConditions: unknown[] = [];
 
     // Full-text search across name and description
@@ -154,7 +154,7 @@ export class AnnouncementService {
     const created = await this.prisma.announcement.create({
       data: {
         name: dto.name,
-        description: dto.description,
+        description: dto.description ?? null,
         audience: JSON.parse(JSON.stringify(dto.audience)),
         content: dto.content,
         publishedAt: new Date(dto.publishedAt),
@@ -209,12 +209,11 @@ export class AnnouncementService {
   }
 
   /**
-   * Soft delete: sets status = false without removing the record.
+   * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the announcement does not exist.
-   * Throws ConflictError if the announcement is already inactive.
+   * Throws ConflictError if the announcement is already deleted.
    */
   async softDelete(id: string): Promise<void> {
-    // Verify announcement exists
     const existing = await this.prisma.announcement.findUnique({
       where: { id },
     });
@@ -223,15 +222,13 @@ export class AnnouncementService {
       throw new NotFoundError("Comunicado no encontrado");
     }
 
-    // Verify not already inactive
-    if (!existing.status) {
-      throw new ConflictError("El comunicado ya está inactivo");
+    if (existing.isDeleted) {
+      throw new ConflictError("El comunicado ya fue eliminado");
     }
 
-    // Set status to false
     await this.prisma.announcement.update({
       where: { id },
-      data: { status: false },
+      data: { isDeleted: true },
     });
   }
 }

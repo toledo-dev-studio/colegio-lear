@@ -28,7 +28,7 @@ export class ScholarshipService {
    * The `q` filter searches both `name` and `description` with OR logic (case-insensitive).
    */
   private buildWhereClause(filters: ScholarshipFilters) {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { isDeleted: false };
     const andConditions: unknown[] = [];
 
     // Full-text search across name and description (case-insensitive contains)
@@ -157,11 +157,10 @@ export class ScholarshipService {
       throw new ConflictError("A scholarship with this name already exists");
     }
 
-    // Create the record with status = true
     const created = await this.prisma.scholarship.create({
       data: {
         name: dto.name,
-        description: dto.description,
+        description: dto.description ?? null,
         discountPercentage: dto.discountPercentage,
         status: true,
       },
@@ -212,12 +211,11 @@ export class ScholarshipService {
   }
 
   /**
-   * Soft delete: sets status = false without removing the record.
+   * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the scholarship does not exist.
-   * Throws ConflictError if the scholarship is already inactive.
+   * Throws ConflictError if the scholarship is already deleted.
    */
   async softDelete(id: string): Promise<void> {
-    // Verify scholarship exists
     const existing = await this.prisma.scholarship.findUnique({
       where: { id },
     });
@@ -226,15 +224,13 @@ export class ScholarshipService {
       throw new NotFoundError("Scholarship not found");
     }
 
-    // Verify status is true (not already inactive)
-    if (!existing.status) {
-      throw new ConflictError("Scholarship is already inactive");
+    if (existing.isDeleted) {
+      throw new ConflictError("Scholarship is already deleted");
     }
 
-    // Set status to false
     await this.prisma.scholarship.update({
       where: { id },
-      data: { status: false },
+      data: { isDeleted: true },
     });
   }
 }

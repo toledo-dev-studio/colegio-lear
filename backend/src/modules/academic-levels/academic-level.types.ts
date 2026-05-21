@@ -13,7 +13,7 @@ export interface AcademicLevelFilters {
 export interface AcademicLevelView {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   status: boolean;
 }
 
@@ -33,7 +33,7 @@ export interface EducationLevelView {
 export interface AcademicLevelDetail {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   status: boolean;
   educationLevels: EducationLevelView[];
 }
@@ -63,7 +63,7 @@ export interface PagedResult<T> {
  */
 export interface CreateAcademicLevelDto {
   name: string;
-  description: string;
+  description?: string;
   educationLevels?: EducationLevelInput[];
 }
 
@@ -94,6 +94,6 @@ export interface EducationLevelInput {
 export interface AcademicLevelRecord {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   status: boolean;
 }

@@ -24,7 +24,7 @@ export class SchoolSubjectService {
    * The `q` filter searches both `name` and `description` with OR logic (case-insensitive).
    */
   private buildWhereClause(filters: SubjectFilters) {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { isDeleted: false };
     const andConditions: unknown[] = [];
 
     // Full-text search across name and description
@@ -178,11 +178,10 @@ export class SchoolSubjectService {
       );
     }
 
-    // Create the record with status = true
     const created = await this.prisma.schoolSubject.create({
       data: {
         name: dto.name,
-        description: dto.description,
+        description: dto.description ?? null,
         status: true,
         academicLevelId: dto.academicLevelId,
         educationLevelId: dto.educationLevelId,
@@ -263,12 +262,11 @@ export class SchoolSubjectService {
   }
 
   /**
-   * Soft delete: sets status = false without removing the record.
+   * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the subject does not exist.
-   * Throws ConflictError if the subject is already inactive.
+   * Throws ConflictError if the subject is already deleted.
    */
   async softDelete(id: string): Promise<void> {
-    // Verify subject exists
     const existing = await this.prisma.schoolSubject.findUnique({
       where: { id },
     });
@@ -277,15 +275,13 @@ export class SchoolSubjectService {
       throw new NotFoundError("School subject not found");
     }
 
-    // Verify status is true (not already inactive)
-    if (!existing.status) {
-      throw new ConflictError("School subject is already inactive");
+    if (existing.isDeleted) {
+      throw new ConflictError("School subject is already deleted");
     }
 
-    // Set status to false
     await this.prisma.schoolSubject.update({
       where: { id },
-      data: { status: false },
+      data: { isDeleted: true },
     });
   }
 }

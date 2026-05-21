@@ -62,7 +62,7 @@ export const idParamSchema = z.object({
 export const createAnnouncementSchema = z
   .object({
     name: nonBlankString(200),
-    description: nonBlankString(500),
+    description: nonBlankString(500).optional(),
     audience: z
       .array(audienceItemSchema)
       .min(1, "audience must have at least 1 element"),

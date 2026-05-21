@@ -33,7 +33,7 @@ export class AcademicLevelService {
   private buildWhereClause(
     filters: AcademicLevelFilters,
   ): Record<string, unknown> {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { isDeleted: false };
     const andConditions: unknown[] = [];
 
     // Full-text search across name and description
@@ -222,11 +222,10 @@ export class AcademicLevelService {
       );
     }
 
-    // Create the academic level with nested education levels in a transaction
     const created = await this.prisma.academicLevel.create({
       data: {
         name: dto.name,
-        description: dto.description,
+        description: dto.description ?? null,
         status: true,
         ...(dto.educationLevels && dto.educationLevels.length > 0
           ? {
@@ -370,12 +369,11 @@ export class AcademicLevelService {
   }
 
   /**
-   * Soft delete: sets status = false without removing the record.
+   * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the academic level does not exist.
-   * Throws ConflictError if the academic level is already inactive.
+   * Throws ConflictError if the academic level is already deleted.
    */
   async softDelete(id: string): Promise<void> {
-    // Verify academic level exists
     const existing = await this.prisma.academicLevel.findUnique({
       where: { id },
     });
@@ -384,15 +382,13 @@ export class AcademicLevelService {
       throw new NotFoundError("Academic level not found");
     }
 
-    // Verify status is true (not already inactive)
-    if (!existing.status) {
-      throw new ConflictError("Academic level is already inactive");
+    if (existing.isDeleted) {
+      throw new ConflictError("Academic level is already deleted");
     }
 
-    // Set status to false
     await this.prisma.academicLevel.update({
       where: { id },
-      data: { status: false },
+      data: { isDeleted: true },
     });
   }
 

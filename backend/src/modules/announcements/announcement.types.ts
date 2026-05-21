@@ -24,7 +24,7 @@ export interface AnnouncementFilters {
 export interface AnnouncementRecord {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   audience: AudienceItem[];
   content: string;
   publishedAt: Date;
@@ -56,7 +56,7 @@ export interface AnnouncementDetail extends AnnouncementRecord {
  */
 export interface CreateAnnouncementDto {
   name: string;
-  description: string;
+  description?: string;
   audience: AudienceItem[];
   content: string;
   publishedAt: string;

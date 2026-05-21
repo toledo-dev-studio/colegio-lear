@@ -108,7 +108,7 @@ const educationLevelInputSchema = z.object({
  */
 export const createAcademicLevelSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500),
+  description: nonBlankString(500).optional(),
   educationLevels: z.array(educationLevelInputSchema).optional(),
 });
 

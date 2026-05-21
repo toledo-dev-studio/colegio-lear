@@ -43,7 +43,7 @@ function toFrontendJobTitleType(value: JobTitleType): JobTitleTypes {
 function toJobTitleRecord(row: {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   jobTitleType: JobTitleType;
   status: boolean;
 }): JobTitleRecord {
@@ -71,7 +71,7 @@ export class JobTitleService {
    * The `jobTitleType` filter maps the frontend string to the Prisma enum value.
    */
   buildWhereClause(filters: JobTitleFilters): Record<string, unknown> {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { isDeleted: false };
     const andConditions: unknown[] = [];
 
     // Full-text search across name and description (OR logic, case-insensitive)
@@ -190,7 +190,7 @@ export class JobTitleService {
     const created = await this.prisma.jobTitle.create({
       data: {
         name: dto.name,
-        description: dto.description,
+        description: dto.description ?? null,
         jobTitleType: toPrismaJobTitleType(dto.jobTitleType),
         status: true,
       },
@@ -238,6 +238,7 @@ export class JobTitleService {
     if (dto.jobTitleType !== undefined) {
       updateData.jobTitleType = toPrismaJobTitleType(dto.jobTitleType);
     }
+    if (dto.status !== undefined) updateData.status = dto.status;
 
     const updated = await this.prisma.jobTitle.update({
       where: { id },
@@ -248,29 +249,24 @@ export class JobTitleService {
   }
 
   /**
-   * Soft delete: sets status = false without removing the record.
+   * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the job title does not exist.
-   * Throws ConflictError if the job title is already inactive.
+   * Throws ConflictError if the job title is already deleted.
    */
   async softDelete(id: string): Promise<void> {
-    // Verify job title exists
-    const existing = await this.prisma.jobTitle.findUnique({
-      where: { id },
-    });
+    const existing = await this.prisma.jobTitle.findUnique({ where: { id } });
 
     if (!existing) {
       throw new NotFoundError("Puesto no encontrado");
     }
 
-    // Verify status is true (not already inactive)
-    if (!existing.status) {
-      throw new ConflictError("El puesto ya está inactivo");
+    if (existing.isDeleted) {
+      throw new ConflictError("El puesto ya fue eliminado");
     }
 
-    // Set status to false
     await this.prisma.jobTitle.update({
       where: { id },
-      data: { status: false },
+      data: { isDeleted: true },
     });
   }
 }

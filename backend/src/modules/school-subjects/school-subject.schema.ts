@@ -168,7 +168,7 @@ export const pagedQuerySchema = subjectFiltersSchema.extend({
  */
 export const createSchoolSubjectSchema = z.object({
   name: nonBlankString(150),
-  description: nonBlankString(500),
+  description: nonBlankString(500).optional(),
   academicLevelId: z
     .string()
     .uuid({ message: "academicLevelId must be a valid UUID" }),

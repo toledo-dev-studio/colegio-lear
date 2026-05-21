@@ -48,10 +48,7 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   $ref: '#/components/schemas/LoginResponse'
+ *               $ref: '#/components/schemas/LoginResponse'
  *       400:
  *         description: Error de validación
  *       401:
@@ -73,10 +70,7 @@ router.post("/login", validate(loginSchema, "body"), login);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: "null"
+ *               type: "null"
  */
 router.post("/logout", logout);
 
@@ -107,10 +101,7 @@ router.post("/logout", logout);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: "null"
+ *               type: "null"
  *       400:
  *         description: Error de validación
  */
@@ -163,10 +154,7 @@ router.post(
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: "null"
+ *               type: "null"
  *       400:
  *         description: Error de validación (código incorrecto, contraseñas no coinciden, etc.)
  *       401:

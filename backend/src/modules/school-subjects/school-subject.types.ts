@@ -11,7 +11,7 @@ export interface SubjectFilters {
 export interface SubjectView {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   status: boolean;
   academicLevelId: string;
   academicLevel: {
@@ -36,7 +36,7 @@ export interface PagedResult<T> {
 /** Input DTO for creating a subject */
 export interface CreateSchoolSubjectDto {
   name: string;
-  description: string;
+  description?: string;
   academicLevelId: string;
   educationLevelId: string;
 }
@@ -54,7 +54,7 @@ export interface UpdateSchoolSubjectDto {
 export interface SchoolSubjectRecord {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   status: boolean;
   academicLevelId: string;
   educationLevelId: string;

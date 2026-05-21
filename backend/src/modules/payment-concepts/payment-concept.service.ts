@@ -28,7 +28,7 @@ export class PaymentConceptService {
    * The `q` filter searches both `name` and `description` with OR logic (case-insensitive).
    */
   private buildWhereClause(filters: PaymentConceptFilters) {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { isDeleted: false };
     const andConditions: unknown[] = [];
 
     // Full-text search across name and description (case-insensitive contains)
@@ -177,11 +177,10 @@ export class PaymentConceptService {
       );
     }
 
-    // Create the record with status = true and allowRemission defaulting to false
     const created = await this.prisma.paymentConcept.create({
       data: {
         name: dto.name,
-        description: dto.description,
+        description: dto.description ?? null,
         baseAmount: dto.baseAmount,
         allowRemission: dto.allowRemission ?? false,
         status: true,
@@ -235,12 +234,11 @@ export class PaymentConceptService {
   }
 
   /**
-   * Soft delete: sets status = false without removing the record.
+   * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the payment concept does not exist.
-   * Throws ConflictError if the payment concept is already inactive.
+   * Throws ConflictError if the payment concept is already deleted.
    */
   async softDelete(id: string): Promise<void> {
-    // Verify payment concept exists
     const existing = await this.prisma.paymentConcept.findUnique({
       where: { id },
     });
@@ -249,15 +247,13 @@ export class PaymentConceptService {
       throw new NotFoundError("Payment concept not found");
     }
 
-    // Verify status is true (not already inactive)
-    if (!existing.status) {
-      throw new ConflictError("Payment concept is already inactive");
+    if (existing.isDeleted) {
+      throw new ConflictError("Payment concept is already deleted");
     }
 
-    // Set status to false
     await this.prisma.paymentConcept.update({
       where: { id },
-      data: { status: false },
+      data: { isDeleted: true },
     });
   }
 }

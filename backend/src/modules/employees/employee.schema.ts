@@ -80,7 +80,7 @@ export const employeePagedQuerySchema = employeeFiltersSchema.extend({
 export const createEmployeeSchema = z.object({
   name: nonBlankString(100),
   firstLastName: nonBlankString(100),
-  secondLastName: nonBlankString(100),
+  secondLastName: nonBlankString(100).optional(),
   phoneNumber: nonBlankString(20),
   email: z
     .string()
@@ -116,4 +116,5 @@ export const updateEmployeeSchema = z.object({
     .string()
     .uuid({ message: "jobTitleId must be a valid UUID" })
     .optional(),
+  status: z.boolean({ message: "status must be a boolean" }).optional(),
 });

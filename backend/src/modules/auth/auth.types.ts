@@ -27,7 +27,7 @@ export interface LoginResponse {
   id: string;
   name: string;
   firstLastName: string;
-  secondLastName: string;
+  secondLastName: string | null;
   email: string;
   username: string;
   image: string | null;

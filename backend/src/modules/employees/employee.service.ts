@@ -47,7 +47,7 @@ export class EmployeeService {
    * The `q` filter searches name, firstLastName, secondLastName, or email (OR logic, case-insensitive).
    */
   private buildWhereClause(filters: EmployeeFilters): Record<string, unknown> {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = { isDeleted: false };
     const andConditions: unknown[] = [];
 
     // Full-text search across name, firstLastName, secondLastName, email (OR logic, case-insensitive)
@@ -311,15 +311,25 @@ export class EmployeeService {
       });
     }
 
+    // Generate temporary password for the new employee
+    const bcrypt = await import("bcrypt");
+    const tempPassword = Math.random().toString(36).slice(-8);
+    const hashedPassword = await bcrypt.default.hash(
+      tempPassword,
+      env.BCRYPT_SALT_ROUNDS,
+    );
+
     // Create the employee record
     const created = await this.prisma.employee.create({
       data: {
         name: dto.name,
         firstLastName: dto.firstLastName,
-        secondLastName: dto.secondLastName,
+        secondLastName: dto.secondLastName ?? null,
         phoneNumber: dto.phoneNumber,
         email: dto.email,
         username,
+        password: hashedPassword,
+        mustChangePassword: true,
         image,
         status: true,
         securityRoleId: dto.securityRoleId,
@@ -338,7 +348,7 @@ export class EmployeeService {
       .sendMail({
         to: dto.email,
         subject: "Bienvenido a Colegio Lear",
-        html: `<h1>Hola ${dto.name}</h1><p>Tu usuario es: <strong>${username}</strong></p><p><a href="${env.FRONTEND_URL}">Acceder a la plataforma</a></p>`,
+        html: `<h1>Hola ${dto.name}</h1><p>Tu usuario es: <strong>${username}</strong></p><p>Tu contraseña temporal es: <strong>${tempPassword}</strong></p><p>Al iniciar sesión se te pedirá cambiarla.</p><p><a href="${env.FRONTEND_URL}">Acceder a la plataforma</a></p>`,
       })
       .catch((err) => {
         logger.error("Failed to send invitation email", {
@@ -409,6 +419,7 @@ export class EmployeeService {
     if (dto.securityRoleId !== undefined)
       updateData.securityRoleId = dto.securityRoleId;
     if (dto.jobTitleId !== undefined) updateData.jobTitleId = dto.jobTitleId;
+    if (dto.status !== undefined) updateData.status = dto.status;
     if (image !== undefined) updateData.image = image;
 
     // Update the record
@@ -427,29 +438,24 @@ export class EmployeeService {
   }
 
   /**
-   * Soft delete: sets status = false without removing the record.
+   * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the employee does not exist.
-   * Throws ConflictError if the employee is already inactive.
+   * Throws ConflictError if the employee is already deleted.
    */
   async softDelete(id: string): Promise<void> {
-    // Verify employee exists
-    const existing = await this.prisma.employee.findUnique({
-      where: { id },
-    });
+    const existing = await this.prisma.employee.findUnique({ where: { id } });
 
     if (!existing) {
       throw new NotFoundError("Empleado no encontrado");
     }
 
-    // Verify status is true (not already inactive)
-    if (!existing.status) {
-      throw new ConflictError("El empleado ya está inactivo");
+    if (existing.isDeleted) {
+      throw new ConflictError("El empleado ya fue eliminado");
     }
 
-    // Set status to false
     await this.prisma.employee.update({
       where: { id },
-      data: { status: false },
+      data: { isDeleted: true },
     });
   }
 }

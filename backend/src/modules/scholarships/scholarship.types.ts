@@ -10,7 +10,7 @@ export interface ScholarshipFilters {
 export interface ScholarshipRecord {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   discountPercentage: number;
   status: boolean;
 }
@@ -26,7 +26,7 @@ export interface PagedResult<T> {
 /** Input DTO for creating a scholarship */
 export interface CreateScholarshipDto {
   name: string;
-  description: string;
+  description?: string;
   discountPercentage: number;
 }
 
@@ -35,4 +35,5 @@ export interface UpdateScholarshipDto {
   name?: string;
   description?: string;
   discountPercentage?: number;
+  status?: boolean;
 }

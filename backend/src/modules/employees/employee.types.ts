@@ -11,7 +11,7 @@ export interface EmployeeFilters {
 export interface EmployeeJobTitle {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   jobTitleType: string;
   status: boolean;
 }
@@ -20,7 +20,7 @@ export interface EmployeeJobTitle {
 export interface EmployeeSecurityRoleBasic {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   status: boolean;
 }
 
@@ -42,7 +42,7 @@ export interface EmployeeRecord {
   id: string;
   name: string;
   firstLastName: string;
-  secondLastName: string;
+  secondLastName: string | null;
   phoneNumber: string;
   email: string;
   username: string;
@@ -59,7 +59,7 @@ export interface EmployeeDetail {
   id: string;
   name: string;
   firstLastName: string;
-  secondLastName: string;
+  secondLastName: string | null;
   phoneNumber: string;
   email: string;
   username: string;
@@ -82,7 +82,7 @@ export interface FileUpload {
 export interface CreateEmployeeDto {
   name: string;
   firstLastName: string;
-  secondLastName: string;
+  secondLastName?: string;
   phoneNumber: string;
   email: string;
   securityRoleId: string;
@@ -98,6 +98,7 @@ export interface UpdateEmployeeDto {
   email?: string;
   securityRoleId?: string;
   jobTitleId?: string;
+  status?: boolean;
 }
 
 /** Result of a paginated query */

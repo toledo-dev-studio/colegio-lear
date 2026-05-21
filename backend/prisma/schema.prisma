@@ -17,8 +17,9 @@ datasource db {
 model AcademicLevel {
   id              String           @id @default(uuid()) @db.Uuid
   name            String           @unique @db.VarChar(100)
-  description     String           @db.VarChar(500)
+  description     String?          @db.VarChar(500)
   status          Boolean          @default(true)
+  isDeleted       Boolean          @default(false) @map("is_deleted")
   educationLevels EducationLevel[]
   schoolSubjects  SchoolSubject[]
 
@@ -46,8 +47,9 @@ model EducationLevel {
 model SchoolSubject {
   id               String         @id @default(uuid()) @db.Uuid
   name             String         @db.VarChar(150)
-  description      String         @db.VarChar(500)
+  description      String?        @db.VarChar(500)
   status           Boolean        @default(true)
+  isDeleted        Boolean        @default(false) @map("is_deleted")
   academicLevelId  String         @map("academic_level_id") @db.Uuid
   educationLevelId String         @map("education_level_id") @db.Uuid
   academicLevel    AcademicLevel  @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
@@ -63,9 +65,10 @@ model SchoolSubject {
 model Scholarship {
   id                 String  @id @default(uuid()) @db.Uuid
   name               String  @unique @db.VarChar(100)
-  description        String  @db.VarChar(500)
+  description        String? @db.VarChar(500)
   discountPercentage Decimal @map("discount_percentage") @db.Decimal(5, 2)
   status             Boolean @default(true)
+  isDeleted          Boolean @default(false) @map("is_deleted")
 
   @@map("scholarships")
   @@schema("core")
@@ -76,10 +79,11 @@ model Scholarship {
 model PaymentConcept {
   id             String  @id @default(uuid()) @db.Uuid
   name           String  @unique @db.VarChar(100)
-  description    String  @db.VarChar(500)
+  description    String? @db.VarChar(500)
   baseAmount     Decimal @map("base_amount") @db.Decimal(10, 2)
   allowRemission Boolean @default(false) @map("allow_remission")
   status         Boolean @default(true)
+  isDeleted      Boolean @default(false) @map("is_deleted")
 
   @@map("payment_concepts")
   @@schema("core")
@@ -125,9 +129,10 @@ enum JobTitleType {
 model JobTitle {
   id           String       @id @default(uuid()) @db.Uuid
   name         String       @unique @db.VarChar(100)
-  description  String       @db.VarChar(500)
+  description  String?      @db.VarChar(500)
   jobTitleType JobTitleType @map("job_title_type")
   status       Boolean      @default(true)
+  isDeleted    Boolean      @default(false) @map("is_deleted")
   employees    Employee[]
 
   @@map("job_titles")
@@ -139,8 +144,9 @@ model JobTitle {
 model SecurityRole {
   id          String                   @id @default(uuid()) @db.Uuid
   name        String                   @unique @db.VarChar(100)
-  description String?                   @db.VarChar(500)
+  description String?                  @db.VarChar(500)
   status      Boolean                  @default(true)
+  isDeleted   Boolean                  @default(false) @map("is_deleted")
   permissions SecurityRolePermission[]
   employees   Employee[]
 
@@ -170,7 +176,7 @@ model Employee {
   id                 String       @id @default(uuid()) @db.Uuid
   name               String       @db.VarChar(100)
   firstLastName      String       @map("first_last_name") @db.VarChar(100)
-  secondLastName     String       @map("second_last_name") @db.VarChar(100)
+  secondLastName     String?      @map("second_last_name") @db.VarChar(100)
   phoneNumber        String       @map("phone_number") @db.VarChar(20)
   email              String       @unique @db.VarChar(150)
   username           String       @unique @db.VarChar(50)
@@ -178,6 +184,7 @@ model Employee {
   mustChangePassword Boolean      @default(false) @map("must_change_password")
   image              String?      @db.VarChar(500)
   status             Boolean      @default(true)
+  isDeleted          Boolean      @default(false) @map("is_deleted")
   securityRoleId     String       @map("security_role_id") @db.Uuid
   jobTitleId         String       @map("job_title_id") @db.Uuid
   securityRole       SecurityRole @relation(fields: [securityRoleId], references: [id], onDelete: Restrict)
@@ -192,12 +199,13 @@ model Employee {
 model Announcement {
   id          String       @id @default(uuid()) @db.Uuid
   name        String       @db.VarChar(200)
-  description String       @db.VarChar(500)
+  description String?      @db.VarChar(500)
   audience    Json
   content     String       @db.Text
   publishedAt DateTime     @map("published_at")
   expiresAt   DateTime     @map("expires_at")
   status      Boolean      @default(true)
+  isDeleted   Boolean      @default(false) @map("is_deleted")
   attachments Attachment[]
 
   @@map("announcements")
