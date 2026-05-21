@@ -16,6 +16,7 @@ import {
   create,
   update,
   softDelete,
+  resendInvitation,
 } from "./employee.controller";
 
 // ─── Multer Configuration ───────────────────────────────────────────────────────
@@ -196,7 +197,6 @@ router.get("/paged", validate(employeePagedQuerySchema, "query"), findAllPaged);
  *             required:
  *               - name
  *               - firstLastName
- *               - secondLastName
  *               - phoneNumber
  *               - email
  *               - securityRoleId
@@ -340,7 +340,7 @@ router.patch(
  *     tags:
  *       - Employees
  *     summary: Soft delete an employee
- *     description: Sets the employee status to false (logical deletion). Does not remove the record.
+ *     description: Sets the employee isDeleted to true (logical deletion). Does not remove the record.
  *     parameters:
  *       - in: path
  *         name: id
@@ -357,8 +357,42 @@ router.patch(
  *       404:
  *         description: Employee not found
  *       409:
- *         description: Employee is already inactive
+ *         description: Employee is already deleted
  */
 router.delete("/:id", validate(idParamSchema, "params"), softDelete);
+
+/**
+ * @openapi
+ * /employees/{id}/resend-invitation:
+ *   post:
+ *     tags:
+ *       - Employees
+ *     summary: Resend invitation email
+ *     description: Regenerates a temporary password and resends the invitation email to the employee.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Employee UUID
+ *     responses:
+ *       200:
+ *         description: Invitation email resent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: "null"
+ *       400:
+ *         description: Invalid UUID format
+ *       404:
+ *         description: Employee not found
+ */
+router.post(
+  "/:id/resend-invitation",
+  validate(idParamSchema, "params"),
+  resendInvitation,
+);
 
 export default router;

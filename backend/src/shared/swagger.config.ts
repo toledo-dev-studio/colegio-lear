@@ -33,6 +33,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Primaria" },
             description: {
               type: "string",
+              nullable: true,
               example: "Educación primaria básica",
             },
             status: { type: "boolean", example: true },
@@ -45,6 +46,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Primaria" },
             description: {
               type: "string",
+              nullable: true,
               example: "Educación primaria básica",
             },
             status: { type: "boolean", example: true },
@@ -69,7 +71,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateAcademicLevelDto: {
           type: "object",
-          required: ["name", "description"],
+          required: ["name"],
           properties: {
             name: {
               type: "string",
@@ -140,6 +142,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Profesor de Matemáticas" },
             description: {
               type: "string",
+              nullable: true,
               example: "Docente encargado de impartir clases de matemáticas",
             },
             jobTitleType: {
@@ -152,7 +155,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateJobTitleDto: {
           type: "object",
-          required: ["name", "description", "jobTitleType"],
+          required: ["name", "jobTitleType"],
           properties: {
             name: {
               type: "string",
@@ -194,6 +197,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Administrador" },
             description: {
               type: "string",
+              nullable: true,
               example: "Rol con acceso completo al sistema",
             },
             status: { type: "boolean", example: true },
@@ -206,6 +210,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Administrador" },
             description: {
               type: "string",
+              nullable: true,
               example: "Rol con acceso completo al sistema",
             },
             status: { type: "boolean", example: true },
@@ -247,7 +252,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateSecurityRoleDto: {
           type: "object",
-          required: ["name", "description", "permissions"],
+          required: ["name"],
           properties: {
             name: {
               type: "string",
@@ -291,7 +296,11 @@ const swaggerOptions: swaggerJsdoc.Options = {
             id: { type: "string", format: "uuid" },
             name: { type: "string", example: "Omar" },
             firstLastName: { type: "string", example: "Trejo" },
-            secondLastName: { type: "string", example: "García" },
+            secondLastName: {
+              type: "string",
+              nullable: true,
+              example: "García",
+            },
             email: {
               type: "string",
               format: "email",
@@ -334,8 +343,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         ErrorResponse: {
           type: "object",
           properties: {
-            code: { type: "integer", example: 400 },
-            message: { type: "string", example: "Validation failed" },
+            error: { type: "string", example: "Validation failed" },
             details: {
               type: "array",
               nullable: true,
@@ -355,7 +363,11 @@ const swaggerOptions: swaggerJsdoc.Options = {
             id: { type: "string", format: "uuid" },
             name: { type: "string", example: "Omar" },
             firstLastName: { type: "string", example: "Trejo" },
-            secondLastName: { type: "string", example: "García" },
+            secondLastName: {
+              type: "string",
+              nullable: true,
+              example: "García",
+            },
             phoneNumber: { type: "string", example: "5551234567" },
             email: {
               type: "string",
@@ -392,7 +404,11 @@ const swaggerOptions: swaggerJsdoc.Options = {
             id: { type: "string", format: "uuid" },
             name: { type: "string", example: "Omar" },
             firstLastName: { type: "string", example: "Trejo" },
-            secondLastName: { type: "string", example: "García" },
+            secondLastName: {
+              type: "string",
+              nullable: true,
+              example: "García",
+            },
             phoneNumber: { type: "string", example: "5551234567" },
             email: {
               type: "string",
@@ -434,7 +450,6 @@ const swaggerOptions: swaggerJsdoc.Options = {
           required: [
             "name",
             "firstLastName",
-            "secondLastName",
             "phoneNumber",
             "email",
             "securityRoleId",
@@ -508,6 +523,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Reunión de padres" },
             description: {
               type: "string",
+              nullable: true,
               example: "Reunión general de padres de familia",
             },
             audience: {
@@ -548,6 +564,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Reunión de padres" },
             description: {
               type: "string",
+              nullable: true,
               example: "Reunión general de padres de familia",
             },
             audience: {
@@ -600,14 +617,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateAnnouncementDto: {
           type: "object",
-          required: [
-            "name",
-            "description",
-            "audience",
-            "content",
-            "publishedAt",
-            "expiresAt",
-          ],
+          required: ["name", "audience", "content", "publishedAt", "expiresAt"],
           properties: {
             name: {
               type: "string",
@@ -687,6 +697,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Beca de excelencia" },
             description: {
               type: "string",
+              nullable: true,
               example: "Beca para alumnos con promedio mayor a 9.5",
             },
             discountPercentage: {
@@ -701,7 +712,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateScholarshipBody: {
           type: "object",
-          required: ["name", "description", "discountPercentage"],
+          required: ["name", "discountPercentage"],
           properties: {
             name: {
               type: "string",
@@ -746,6 +757,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Colegiatura mensual" },
             description: {
               type: "string",
+              nullable: true,
               example: "Pago mensual de colegiatura",
             },
             baseAmount: { type: "number", format: "float", example: 1500 },
@@ -757,7 +769,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreatePaymentConceptBody: {
           type: "object",
-          required: ["name", "description", "baseAmount"],
+          required: ["name", "baseAmount"],
           properties: {
             name: {
               type: "string",
@@ -799,6 +811,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             name: { type: "string", example: "Matemáticas" },
             description: {
               type: "string",
+              nullable: true,
               example: "Materia de matemáticas básicas",
             },
             status: { type: "boolean", example: true },
@@ -815,12 +828,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateSchoolSubjectBody: {
           type: "object",
-          required: [
-            "name",
-            "description",
-            "academicLevelId",
-            "educationLevelId",
-          ],
+          required: ["name", "academicLevelId", "educationLevelId"],
           properties: {
             name: {
               type: "string",

@@ -81,12 +81,13 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-  "identifier": "aone",
-  "password": "Admin123!"
+  "username": "sadmin",
+  "password": "SuperAdmin123!"
 }
 ```
 
-> The login sets an HttpOnly cookie `access_token`. All other endpoints require this cookie.
+> The login sets an HttpOnly cookie `access_token`. All other endpoints require this cookie (sent automatically by the browser).
+> The field `username` accepts either the username or email.
 
 ---
 
@@ -110,21 +111,66 @@ Content-Type: application/json
 
 Copy `backend/.env.example` to `backend/.env` and configure:
 
-| Variable           | Default                  | Description                      |
-| ------------------ | ------------------------ | -------------------------------- |
-| `DATABASE_URL`     | (required)               | PostgreSQL connection string     |
-| `JWT_SECRET`       | (required)               | Secret for signing JWT tokens    |
-| `PORT`             | `3000`                   | Server port                      |
-| `CORS_ORIGIN`      | `http://localhost:5173`  | Frontend URL for CORS            |
-| `COOKIE_SECURE`    | `false`                  | Set `true` in production (HTTPS) |
-| `STORAGE_PROVIDER` | `local`                  | `local` or `azure`               |
-| `MAIL_PROVIDER`    | `gmail`                  | `gmail` or `smtp`                |
-| `ADMIN1_EMAIL`     | `admin1@colegiolear.com` | Admin 1 email                    |
-| `ADMIN1_PASSWORD`  | `Admin123!`              | Admin 1 password                 |
-| `ADMIN2_EMAIL`     | `admin2@colegiolear.com` | Admin 2 email                    |
-| `ADMIN2_PASSWORD`  | `Admin456!`              | Admin 2 password                 |
+| Variable                | Default                      | Description                                 |
+| ----------------------- | ---------------------------- | ------------------------------------------- |
+| `DATABASE_URL`          | (required)                   | PostgreSQL connection string                |
+| `JWT_SECRET`            | (required)                   | Secret for signing JWT tokens               |
+| `JWT_ACCESS_EXPIRATION` | `15m`                        | JWT expiration (e.g. 15m, 1h, 7d)           |
+| `PORT`                  | `3000`                       | Server port                                 |
+| `CORS_ORIGIN`           | `http://localhost:5173`      | Frontend URL for CORS                       |
+| `FRONTEND_URL`          | `http://localhost:5173`      | Frontend URL used in emails (links/buttons) |
+| `COOKIE_SECURE`         | `false`                      | Set `true` in production (HTTPS)            |
+| `BCRYPT_SALT_ROUNDS`    | `10`                         | Bcrypt hashing rounds                       |
+| `STORAGE_PROVIDER`      | `local`                      | `local` or `azure`                          |
+| `MAIL_HOST`             | `smtp.gmail.com`             | SMTP host                                   |
+| `MAIL_PORT`             | `587`                        | SMTP port                                   |
+| `MAIL_USER`             | (required)                   | Email address for sending                   |
+| `MAIL_PASSWORD`         | (required)                   | App Password (see Gmail setup below)        |
+| `ADMIN1_NAME`           | `Super`                      | SuperAdmin first name                       |
+| `ADMIN1_LAST_NAME`      | `Admin`                      | SuperAdmin last name                        |
+| `ADMIN1_EMAIL`          | `superadmin@colegiolear.com` | SuperAdmin email                            |
+| `ADMIN1_PASSWORD`       | `SuperAdmin123!`             | SuperAdmin password                         |
+| `ADMIN2_NAME`           | `Admin`                      | Admin first name                            |
+| `ADMIN2_LAST_NAME`      | `Two`                        | Admin last name                             |
+| `ADMIN2_EMAIL`          | `admin2@colegiolear.com`     | Admin email                                 |
+| `ADMIN2_PASSWORD`       | `Admin456!`                  | Admin password                              |
 
 > When running inside Docker, `DATABASE_URL` is automatically set to connect to the `colegio-lear-db` container.
+
+---
+
+## Gmail SMTP Setup (Required for emails)
+
+The backend sends emails for: employee invitation, resend invitation, and password recovery. It uses Gmail SMTP by default.
+
+### Steps to configure:
+
+1. **Enable 2-Step Verification** on your Google account:
+   - Go to https://myaccount.google.com/security
+   - Under "Signing in to Google", enable **2-Step Verification**
+
+2. **Generate an App Password**:
+   - Go to https://myaccount.google.com/apppasswords
+   - Select app: **Mail**
+   - Select device: **Other** (write "Colegio Lear")
+   - Click **Generate**
+   - Copy the 16-character password (e.g. `abcd efgh ijkl mnop`)
+
+3. **Configure your `.env`**:
+   ```env
+   MAIL_HOST=smtp.gmail.com
+   MAIL_PORT=587
+   MAIL_USER=your-email@gmail.com
+   MAIL_PASSWORD=abcdefghijklmnop
+   ```
+   > Use the App Password WITHOUT spaces. Do NOT use your regular Gmail password.
+
+### Important notes:
+
+- The App Password only works if 2-Step Verification is enabled
+- If you see error `535-5.7.8 Username and Password not accepted`, your App Password is wrong or 2FA is not enabled
+- Each developer needs their own App Password (it's tied to the Google account)
+- For production, switch to a dedicated SMTP service (configured via `MAIL_HOST`/`MAIL_PORT`)
 
 ---
 
@@ -144,14 +190,16 @@ For API testing tools (Postman, Insomnia), enable "Send cookies" or use the `Aut
 
 Running `npx prisma db seed` creates:
 
+- 2 Security Roles:
+  - **SuperAdmin** — full access to all modules (including security-roles management)
+  - **Administrador** — full access except write/delete on security-roles
+- 3 Job Titles (Director General, Coordinador Académico, Docente)
+- 2 Admin Employees (credentials from env vars: ADMIN1 = SuperAdmin, ADMIN2 = Admin)
 - 3 Academic Levels (Preescolar, Primaria, Secundaria)
 - 6 Education Levels
 - 6 School Subjects
 - 4 Scholarships
 - 5 Payment Concepts
-- 1 Security Role "Administrador" (full access to all 14 modules)
-- 1 Job Title "Director General"
-- 2 Admin Employees (credentials from env vars)
 
 ---
 

@@ -5,6 +5,7 @@ import { UnauthorizedError } from "../../shared/errors/app-error";
 import { env } from "../../shared/config/env.config";
 import { logger } from "../../shared/lib/logger";
 import type { IMailService } from "../../shared/services/mail.service";
+import { forgotPasswordEmail } from "../../shared/templates/email.templates";
 import type { LoginResult, LoginResponse, JwtPayloadData } from "./auth.types";
 
 /**
@@ -144,7 +145,11 @@ export class AuthService {
       .sendMail({
         to: employee.email,
         subject: "Recuperación de contraseña - Colegio Lear",
-        html: `<h1>Hola ${employee.name}</h1><p>Tu código de verificación es: <strong>${code}</strong></p><p>Haz clic en el siguiente enlace para cambiar tu contraseña:</p><p><a href="${resetLink}">Cambiar contraseña</a></p><p>Este código expira en 10 minutos.</p>`,
+        html: forgotPasswordEmail({
+          name: employee.name,
+          code,
+          resetLink,
+        }),
       })
       .catch((err) => {
         logger.error("Failed to send forgot-password email", {

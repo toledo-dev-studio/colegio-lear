@@ -25,6 +25,10 @@ import {
 } from "../../shared/helpers/pagination.helper";
 import type { IStorageService } from "../../shared/services/storage.service";
 import type { IMailService } from "../../shared/services/mail.service";
+import {
+  invitationEmail,
+  resendInvitationEmail,
+} from "../../shared/templates/email.templates";
 import { logger } from "../../shared/lib/logger";
 import { env } from "../../shared/config/env.config";
 
@@ -348,7 +352,12 @@ export class EmployeeService {
       .sendMail({
         to: dto.email,
         subject: "Bienvenido a Colegio Lear",
-        html: `<h1>Hola ${dto.name}</h1><p>Tu usuario es: <strong>${username}</strong></p><p>Tu contraseña temporal es: <strong>${tempPassword}</strong></p><p>Al iniciar sesión se te pedirá cambiarla.</p><p><a href="${env.FRONTEND_URL}">Acceder a la plataforma</a></p>`,
+        html: invitationEmail({
+          name: dto.name,
+          username,
+          tempPassword,
+          frontendUrl: env.FRONTEND_URL,
+        }),
       })
       .catch((err) => {
         logger.error("Failed to send invitation email", {
@@ -456,6 +465,45 @@ export class EmployeeService {
     await this.prisma.employee.update({
       where: { id },
       data: { isDeleted: true },
+    });
+  }
+
+  /**
+   * Resend invitation email: generates a new temporary password,
+   * hashes it, updates the employee record, and sends the invitation email.
+   * Throws NotFoundError if the employee does not exist.
+   */
+  async resendInvitation(id: string): Promise<void> {
+    const employee = await this.prisma.employee.findUnique({ where: { id } });
+
+    if (!employee) {
+      throw new NotFoundError("Empleado no encontrado");
+    }
+
+    // Generate new temporary password
+    const bcrypt = await import("bcrypt");
+    const tempPassword = Math.random().toString(36).slice(-8);
+    const hashedPassword = await bcrypt.default.hash(
+      tempPassword,
+      env.BCRYPT_SALT_ROUNDS,
+    );
+
+    // Update password and set mustChangePassword
+    await this.prisma.employee.update({
+      where: { id },
+      data: { password: hashedPassword, mustChangePassword: true },
+    });
+
+    // Send invitation email
+    await this.mail.sendMail({
+      to: employee.email,
+      subject: "Invitación a Colegio Lear - Reenvío",
+      html: resendInvitationEmail({
+        name: employee.name,
+        username: employee.username,
+        tempPassword,
+        frontendUrl: env.FRONTEND_URL,
+      }),
     });
   }
 }

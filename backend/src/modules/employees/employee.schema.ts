@@ -80,7 +80,12 @@ export const employeePagedQuerySchema = employeeFiltersSchema.extend({
 export const createEmployeeSchema = z.object({
   name: nonBlankString(100),
   firstLastName: nonBlankString(100),
-  secondLastName: nonBlankString(100).optional(),
+  secondLastName: z
+    .string()
+    .transform((val) => val.trim())
+    .transform((val) => (val === "" ? undefined : val))
+    .pipe(z.string().max(100, "Must be at most 100 characters").optional())
+    .optional(),
   phoneNumber: nonBlankString(20),
   email: z
     .string()
@@ -101,7 +106,12 @@ export const createEmployeeSchema = z.object({
 export const updateEmployeeSchema = z.object({
   name: nonBlankString(100).optional(),
   firstLastName: nonBlankString(100).optional(),
-  secondLastName: nonBlankString(100).optional(),
+  secondLastName: z
+    .string()
+    .transform((val) => val.trim())
+    .transform((val) => (val === "" ? undefined : val))
+    .pipe(z.string().max(100, "Must be at most 100 characters").optional())
+    .optional(),
   phoneNumber: nonBlankString(20).optional(),
   email: z
     .string()

@@ -148,7 +148,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
 /**
  * DELETE /employees/:id
- * Soft-deletes an employee by setting status to false.
+ * Soft-deletes an employee by setting isDeleted to true.
  */
 export async function softDelete(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };
@@ -156,4 +156,19 @@ export async function softDelete(req: Request, res: Response): Promise<void> {
   await service.softDelete(id);
 
   sendNoContent(res);
+}
+
+/**
+ * POST /employees/:id/resend-invitation
+ * Regenerates a temporary password and resends the invitation email.
+ */
+export async function resendInvitation(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { id } = req.params as { id: string };
+
+  await service.resendInvitation(id);
+
+  sendSuccess(res, 204);
 }
