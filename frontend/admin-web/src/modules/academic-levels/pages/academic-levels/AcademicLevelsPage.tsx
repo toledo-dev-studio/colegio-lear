@@ -14,6 +14,7 @@ import { useExportAcademicLevels } from "../../hooks/useExportAcademicLevels";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { useGetPagedAcademicLevels } from "../../hooks/useGetPagedAcademicLevels";
 import { AcademicLevelsAdvancedFilters } from "./components/AcademicLevelsAdvancedFilters";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const AcademicLevelsPage = () => {
 
@@ -97,6 +98,13 @@ export const AcademicLevelsPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Configuración escolar" },
+            { label: "Niveles académicos", to: "/academic-levels" },
+          ]} />
+        </div>
 
         <CustomPageTitle title="Niveles académicos" subtitle="Gestiona los niveles académicos disponibles en la organización" />
 

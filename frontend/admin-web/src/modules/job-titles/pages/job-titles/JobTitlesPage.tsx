@@ -14,6 +14,7 @@ import type { JobTitle } from "@/interfaces/entites/job-title.interface";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { JobTitlesAdvancedFilters } from "./components/JobTitlesAdvancedFilters";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const JobTitlesPage = () => {
   const navigate = useNavigate();
@@ -96,6 +97,13 @@ export const JobTitlesPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Seguridad" },
+            { label: "Puestos de trabajo", to: "/job-titles" },
+          ]} />
+        </div>
 
         <CustomPageTitle title="Puestos de trabajo" subtitle="Gestiona los puestos de trabajo disponibles en la organización" />
 

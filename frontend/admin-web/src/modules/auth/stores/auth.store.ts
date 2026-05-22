@@ -11,13 +11,15 @@ import type { SecurityRolePermission } from "@/interfaces/entites/security-role-
 
 type AuthStatus = "authenticated" | "not-authenticated" | "checking";
 
-type AuthState = {
+export type AuthState = {
     // Properties
     user: Employee | null,
     authStatus: AuthStatus,
     permissions: SecurityRolePermission[],
 
     // Actions
+    setUser: (user: Employee) => void,
+    clearSession: () => void,
     checkPermission: (moduleKey: ModuleKeys, permission: "can-read" | "can-write" | "can-delete") => boolean,
     checkAuthStatus: () => Promise<boolean>,
     login: (credentials: AuthCredentials) => Promise<boolean>,
@@ -32,30 +34,29 @@ export const useAuthStore = create<AuthState>()((set, get) => (
         permissions: [],
 
         // Actions
+        setUser: (user: Employee) => set({ user: user }),
+        clearSession: () => {
+            set({
+                user: null,
+                authStatus: "not-authenticated",
+                permissions: [],
+            });
+        },
         checkPermission: (moduleKey: ModuleKeys, permission: "can-read" | "can-write" | "can-delete") => {
             const user = get().user;
             console.log(moduleKey, permission, user);
             return true;
         },
         checkAuthStatus: async () => {
-            const user = get().user;
-            if (user) {
-                set({ user: user, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
-                return true;
-            }
-            else
-                set({ user: null, authStatus: "not-authenticated", permissions: [] });
-            return false;
-
             const { showLoading, hideLoading } = useLoaderStore.getState();
             try {
-                showLoading();
+                showLoading("Validando credenciales");
                 const user = await meActionAsync();
                 set({ user: user, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
                 return true;
             } catch (error) {
                 console.warn(error);
-                set({ user: null, authStatus: "not-authenticated", permissions: [] });
+                get().clearSession();
                 return false;
             } finally {
                 hideLoading();
@@ -68,7 +69,7 @@ export const useAuthStore = create<AuthState>()((set, get) => (
                 return true;
             } catch (error) {
                 console.warn(error);
-                set({ user: null, authStatus: "not-authenticated", permissions: [] });
+                get().clearSession();
                 return false;
             }
         },
@@ -78,7 +79,7 @@ export const useAuthStore = create<AuthState>()((set, get) => (
             } catch (error) {
                 console.warn(error);
             } finally {
-                set({ user: null, authStatus: "not-authenticated", permissions: [] });
+                get().clearSession();
             }
         }
     }

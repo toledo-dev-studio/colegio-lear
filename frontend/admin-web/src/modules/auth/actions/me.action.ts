@@ -11,7 +11,7 @@ export const meActionAsync = async (): Promise<Employee> => {
         return data;
     }
     
-    const { data } = await api.post<Employee>("/auth/me");
+    const { data } = await api.get<Employee>("/auth/me");
 
     return data;
 }

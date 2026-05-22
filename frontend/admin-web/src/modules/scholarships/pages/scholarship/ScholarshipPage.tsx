@@ -5,6 +5,7 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { ScholarshipForm } from "./components/ScholarshipForm";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 import { useGetByIdScholarship } from "../../hooks/useGetByIdScholarship";
 import { useCreateUpdateScholarship } from "../../hooks/useCreateUpdateScholarship";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
@@ -54,6 +55,15 @@ export const ScholarshipPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Configuración escolar" },
+            { label: "Becas escolares", to: "/scholarships" },
+            { label: id === "new" ? "Nueva beca escolar" : scholarshipQuery.data?.name || "Edición de beca escolar" },
+          ]} />
+        </div>
+
         <CustomPageTitle
           title={title}
           subtitle="Getiona la información de la beca escolar que estará disponible en el colegio" />

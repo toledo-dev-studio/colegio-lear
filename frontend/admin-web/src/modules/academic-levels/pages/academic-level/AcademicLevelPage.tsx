@@ -8,6 +8,7 @@ import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { useGetByIdAcademicLevel } from "../../hooks/useGetByIdAcademicLevel";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdateAcademicLevel } from "../../hooks/useCreateUpdateAcademicLevel";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const AcademicLevelPage = () => {
     const navigate = useNavigate();
@@ -53,6 +54,15 @@ export const AcademicLevelPage = () => {
     return (
         <>
             <div className="w-full py-12 px-10 lg:px-15">
+
+                <div className="mb-10">
+                    <CustomBreadcrumb items={[
+                        { label: "Configuración escolar" },
+                        { label: "Niveles academicos", to: "/academic-levels" },
+                        { label: id === "new" ? "Nuevo nivel académico" : academicLevelQuery.data?.name || "Edición de nivel académico" },
+                    ]} />
+                </div>
+
                 <CustomPageTitle
                     title={title}
                     subtitle="Gestiona la información del nivel académico para que este disponible en el sistema" />

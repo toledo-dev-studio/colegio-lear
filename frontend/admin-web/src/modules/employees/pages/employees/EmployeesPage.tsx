@@ -14,6 +14,7 @@ import { useExportEmployees } from "../../hooks/employees/useExportEmployees";
 import { EmployeesAdvancedFilters } from "./components/EmployeesAdvancedFilters";
 import { useGetPagedEmployees } from "../../hooks/employees/useGetPagedEmployees";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const EmployeesPage = () => {
 
@@ -101,6 +102,13 @@ export const EmployeesPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Seguridad" },
+            { label: "Empleados", to: "/employees" }
+          ]} />
+        </div>
 
         <CustomPageTitle title="Empleados del sistema" subtitle="Gestiona los empleados que estarán disponibles en la organización" />
 

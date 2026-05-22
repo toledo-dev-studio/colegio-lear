@@ -1,6 +1,8 @@
-import axios from 'axios'
+import axios from "axios"
 
-import { VITE_COLEGIO_LEAR_API_URL } from '@/lib/constants/environment.constants';
+import { useAuthStore } from "@/modules/auth/stores/auth.store";
+
+import { VITE_COLEGIO_LEAR_API_URL } from "@/lib/constants/environment.constants";
 
 const baseURL = VITE_COLEGIO_LEAR_API_URL;
 
@@ -14,8 +16,9 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            // Redirect to login
-            window.location.href = "/auth/login";
+            // Clear authentication state in Zustand store
+            // Routes will redirect to login page because authStatus will be "not-authenticated"
+            useAuthStore.getState().clearSession();
         }
         return Promise.reject(error);
     }

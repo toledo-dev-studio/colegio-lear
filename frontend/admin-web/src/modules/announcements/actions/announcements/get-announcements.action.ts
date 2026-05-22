@@ -19,7 +19,7 @@ export const getAnnouncementsActionAsync = async ({ query, name, publishedAt, ex
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/announcements/announcements.json";
 
-    const { data } = await api.get<Announcement[]>('/announcements/announcements.json', {
+    const { data } = await api.get<Announcement[]>(endpoint, {
         params: {
             q: query,
             name,

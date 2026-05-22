@@ -13,7 +13,6 @@ import { LoaderContextProvider } from "./shared/context/LoaderContext";
 const queryClient = new QueryClient();
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
-
   const authStatus = useAuthStore((state) => state.authStatus);
   const checkAuthStatus = useAuthStore((state) => state.checkAuthStatus);
 

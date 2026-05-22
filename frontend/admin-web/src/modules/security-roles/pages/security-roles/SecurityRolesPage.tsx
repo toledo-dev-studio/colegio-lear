@@ -8,6 +8,7 @@ import { SecurityRolesTable } from "./components/SecurityRolesTable";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import type { SecurityRole } from "@/interfaces/entites/security-role";
 import { CustomPagination } from "@/shared/components/CustomPagination";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 import { useDeleteSecurityRole } from "../../hooks/useDeleteSecurityRole";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { useExportSecurityRoles } from "../../hooks/useExportSecurityRoles";
@@ -39,7 +40,7 @@ export const SecurityRolesPage = () => {
 
     const handleClickExport = async () => {
         showLoading("Descargando información", "Por favor espere...");
-        
+
         const data = await exportSecurityRolesMutation.mutateAsync();
 
         if (!data || !Array.isArray(data)) {
@@ -97,6 +98,13 @@ export const SecurityRolesPage = () => {
     return (
         <>
             <div className="w-full py-12 px-10 lg:px-15">
+
+                <div className="mb-10">
+                    <CustomBreadcrumb items={[
+                        { label: "Seguridad" },
+                        { label: "Roles de seguridad", to: "/security-roles" }
+                    ]} />
+                </div>
 
                 <CustomPageTitle title="Roles de seguridad" subtitle="Gestiona los roles de seguridad y sus privilegios disponibles en la organización" />
 

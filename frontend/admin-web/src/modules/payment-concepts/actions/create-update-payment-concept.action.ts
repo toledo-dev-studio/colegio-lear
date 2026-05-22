@@ -18,6 +18,9 @@ export const createUpdatePaymentConceptActionAsync = async (paymentConceptLike: 
         } as PaymentConcept;
     }
 
+    console.log(paymentConceptLike);
+    
+
     const { data } = await api<PaymentConcept>({
         url: isCreating ? '/payment-concepts' : `/payment-concepts/${id}`,
         method: isCreating ? 'POST' : 'PATCH',

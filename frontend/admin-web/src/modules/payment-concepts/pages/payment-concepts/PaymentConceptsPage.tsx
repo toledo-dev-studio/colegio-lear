@@ -14,6 +14,7 @@ import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 import { useDeletePaymentConcept } from "../../hooks/useDeletePaymentConcept";
 import { PaymentConceptsAdvancedFilters } from "./components/PaymentConceptsAdvancedFilters";
 import { useGetPagedPaymentConcepts } from "../../hooks/useGetPagedPaymentConcepts";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const PaymentConceptsPage = () => {
 
@@ -23,9 +24,9 @@ export const PaymentConceptsPage = () => {
   const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
   const [paymentConceptToDelete, setPaymentConceptToDelete] = useState<PaymentConcept | undefined>(undefined);
 
-    const pagedPaymentConceptsQuery = useGetPagedPaymentConcepts();
-    const deletePaymentConceptMutation = useDeletePaymentConcept();
-    const exportPaymentConceptsMutation = useExportPaymentConcepts();
+  const pagedPaymentConceptsQuery = useGetPagedPaymentConcepts();
+  const deletePaymentConceptMutation = useDeletePaymentConcept();
+  const exportPaymentConceptsMutation = useExportPaymentConcepts();
 
   const { showLoading, hideLoading } = useLoaderStore();
 
@@ -99,6 +100,13 @@ export const PaymentConceptsPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Configuración escolar" },
+            { label: "Conceptos de pago", to: "/payment-concepts" },
+          ]} />
+        </div>
 
         <CustomPageTitle title="Conceptos de pago" subtitle="Gestiona los conceptos de pago disponibles en el colegio  " />
 

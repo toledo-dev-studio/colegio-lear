@@ -1,5 +1,6 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
+import { generateTemporalId } from "@/lib/extensions/utils";
 import type { Announcement } from "@/interfaces/entites/announcement";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
@@ -7,9 +8,10 @@ export const createUpdateAnnouncementActionAsync = async (announcementLike: Part
     await sleep();
 
     const { id } = announcementLike;
-    const isCreating = id?.startsWith("new_");
+    const isCreating = id === undefined;
 
     if (VITE_ENVIRONMENT === "mockable") {
+        announcementLike.id = isCreating ? generateTemporalId() : id;
         return announcementLike as Announcement;
     }
 

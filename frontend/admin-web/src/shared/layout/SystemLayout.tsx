@@ -6,7 +6,9 @@ import { CustomSidebar } from "@/shared/components/CustomSidebar";
 import { useLoaderStore } from "../stores/LoaderStore";
 
 export const SystemLayout = ({ children }: PropsWithChildren) => {
+
   const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(false);
+
   const { logout } = useAuthStore();
   const { showLoading, hideLoading } = useLoaderStore();
 
@@ -25,7 +27,7 @@ export const SystemLayout = ({ children }: PropsWithChildren) => {
       <div className="min-h-screen flex bg-background text-foreground" data-testid="dashboard-layout">
         <CustomSidebar isOpenSidebar={isOpenSidebar} toggleSidebar={handleToggleSidebar} logout={handleLogout} />
         <div className="flex-1 flex flex-col min-w-0">
-          <CustomNavbar toggleSidebar={handleToggleSidebar} />
+          <CustomNavbar toggleSidebar={handleToggleSidebar} logout={handleLogout} />
           <main className="flex-1 p-4 sm:p-8 animate-fade-in">
             {children}
           </main>

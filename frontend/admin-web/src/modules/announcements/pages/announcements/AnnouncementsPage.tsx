@@ -14,6 +14,7 @@ import { useDeleteAnnouncement } from "../../hooks/announcements/useDeleteAnnoun
 import { AnnouncementsAdvancedFilters } from "./components/AnnouncementsAdvancedFilters";
 import { useExportAnnouncements } from "../../hooks/announcements/useExportAnnouncements";
 import { useGetPagedAnnouncements } from "../../hooks/announcements/useGetPagedAnnouncements";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const AnnouncementsPage = () => {
 
@@ -99,6 +100,13 @@ export const AnnouncementsPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Seguimiento escolar" },
+            { label: "Campañas & comunicados", to: "/announcements" },
+          ]} />
+        </div>
 
         <CustomPageTitle title="Campañas & comunicados" subtitle="Gestiona las campañas & comunicados disponibles en el colegio y la organización" />
 
