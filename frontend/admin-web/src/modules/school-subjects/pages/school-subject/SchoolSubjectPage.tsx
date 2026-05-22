@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { SchoolSubjectForm } from "./components/SchoolSubjectForm";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useGetByIdSchoolSubject } from "../../hooks/school-subjects/useGetByIdSchoolSubject";
@@ -55,6 +56,15 @@ export const SchoolSubjectPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Configuración escolar" },
+            { label: "Materias escolares", to: "/school-subjects" },
+            { label: id === "new" ? "Nueva materia escolar" : schoolSubjectQuery.data?.name || "Edición de materia escolar" },
+          ]} />
+        </div>
+
         <CustomPageTitle
           title={title}
           subtitle="Gestiona la información de la materia escolar que estará disponible en el colegio" />

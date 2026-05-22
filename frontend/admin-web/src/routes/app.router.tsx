@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 
 import authRouter from "@/modules/auth/routes/auth.router";
 import academicLevelsRouter from "@/modules/academic-levels/routes/academic-levels.router";
@@ -41,6 +41,10 @@ export const appRouter = createBrowserRouter([
     /** security-roles */
     securityRolesRouter,
 
+    {
+        path: "/",
+        element: <Navigate to="/dashboard" />
+    },
     /** Forbidden page */
     {
         path: "forbidden",

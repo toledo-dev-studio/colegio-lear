@@ -23,3 +23,15 @@ export const stringToNumberWithDefault = (value: string | null | undefined, defa
     }
     return +value;
 }
+
+/**
+ * Return a true if text is a valid boolean string ("true" or "false"), otherwise return false.
+ * @param value Value to check
+ * @returns True if value is a valid boolean
+ */
+export const isValidBooleanString = (value: string | null | undefined): boolean => {
+    if (!value) 
+        return false;
+    const normalizedValue = value.trim().toLowerCase();
+    return normalizedValue === "true" || normalizedValue === "false";
+}

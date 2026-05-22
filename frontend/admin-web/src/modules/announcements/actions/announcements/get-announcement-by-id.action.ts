@@ -2,7 +2,6 @@ import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import type { Announcement } from "@/interfaces/entites/announcement";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import { generateTemporalId } from "@/lib/extensions/utils";
 
 export const getAnnouncementByIdActionAsync = async (id?: string): Promise<Announcement> => {
     await sleep();
@@ -12,8 +11,7 @@ export const getAnnouncementByIdActionAsync = async (id?: string): Promise<Annou
 
     if (id === "new") {
         return {
-            // Required generate a temporal id to upload files without announcement record created previously
-            id: generateTemporalId(),
+            id: undefined,
             name: "",
             description: "",
             content: "",

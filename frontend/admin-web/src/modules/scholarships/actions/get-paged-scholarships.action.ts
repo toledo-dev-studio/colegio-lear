@@ -23,7 +23,7 @@ export const getPagedScholarshipsActionAsync = async (props: Options): Promise<P
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/scholarships/paged-scholarships.json";
 
-    const { data } = await api.get<PagedResponse<Scholarship>>('/scholarships/paged-scholarships.json', {
+    const { data } = await api.get<PagedResponse<Scholarship>>(endpoint, {
         params: {
             q: query,
             page,
@@ -32,7 +32,7 @@ export const getPagedScholarshipsActionAsync = async (props: Options): Promise<P
             status,
             discountPercentage,
         }
-    });
+    });    
 
     return {
         ...data

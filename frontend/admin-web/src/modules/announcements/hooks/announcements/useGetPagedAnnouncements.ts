@@ -2,22 +2,22 @@ import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { GET_PAGED_ANNOUNCEMENTS_QUERY_KEY } from "@/lib/queries-key/announcements-queries-key";
-import { stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 import { getPagedAnnouncementsActionAsync } from "../../actions/announcements/get-paged-announcements.action";
+import { isValidBooleanString, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetPagedAnnouncements = () => {
     const [searchParams] = useSearchParams();
 
     // Main query filters
-    const query = searchParams.get('query')?.trim() || '';
-    const page = stringToNumberWithDefault(searchParams.get('page'), 1);
-    const pageSize = stringToNumberWithDefault(searchParams.get('pageSize'), 10);
+    const query = searchParams.get("query")?.trim() || undefined;
+    const page = stringToNumberWithDefault(searchParams.get("page"), 1);
+    const pageSize = stringToNumberWithDefault(searchParams.get("pageSize"), 10);
 
     // Advanced query filters
-    const name = searchParams.get('name')?.trim() || '';
-    const publishedAt = searchParams.get('published-at')?.trim() || '';
-    const expiresAt = searchParams.get('expires-at')?.trim() || '';
-    const status = stringToBooleanWithDefault(searchParams.get('status'));
+    const name = searchParams.get("name")?.trim() || undefined;
+    const publishedAt = searchParams.get("published-at")?.trim() || undefined;
+    const expiresAt = searchParams.get("expires-at")?.trim() || undefined;
+    const status = isValidBooleanString(searchParams.get("status")) ? stringToBooleanWithDefault(searchParams.get("status")) : undefined;
 
     const queryResult = useQuery({
         queryKey: [GET_PAGED_ANNOUNCEMENTS_QUERY_KEY, { query, page, pageSize, name, publishedAt, expiresAt, status, }],

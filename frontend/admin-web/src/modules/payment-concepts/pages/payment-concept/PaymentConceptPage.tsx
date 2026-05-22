@@ -8,6 +8,7 @@ import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 import { useGetByIdPaymentConcept } from "../../hooks/useGetByIdPaymentConcept";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdatePaymentConcept } from "../../hooks/useCreateUpdatePaymentConcept";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const PaymentConceptPage = () => {
   const navigate = useNavigate();
@@ -53,6 +54,15 @@ export const PaymentConceptPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Configuración escolar" },
+            { label: "Conceptos de pago", to: "/payment-concepts" },
+            { label: id === "new" ? "Nuevo concepto de pago" : paymentConceptQuery.data?.name || "Edición de concepto de pago" },
+          ]} />
+        </div>
+
         <CustomPageTitle
           title={title}
           subtitle="Gestiona la información de los conceptos de pago que estará disponible en el colegio" />

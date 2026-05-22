@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router";
 import { Controller, useForm } from "react-hook-form";
-import { Save, X } from "lucide-react";
+import { InfoIcon, Save, X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Switch } from "@/shared/ui/switch";
@@ -39,13 +39,9 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
     });
 
     useEffect(() => {
-        if (!announcement)
-            return;
-        reset({
-            ...announcement,
-            attachments: announcement.attachments ?? []
-        });
-    }, [announcement?.id]);
+        if (announcement)
+            reset(announcement);
+    }, [announcement]);
 
     return (
         <>
@@ -163,60 +159,88 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                     </div>
                 </section>
 
-                {/* Attachments */}
-                <section className="flex flex-col gap-y-4">
-                    <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-8">
-                        <h2 className="w-full text-muted-foreground">ARCHIVOS ADJUNTOS</h2>
-                        <p className="text-xs text-muted-foreground">
-                            Sube archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace públic.
-                            Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB.
-                        </p>
-                    </div>
-                    <div className="mt-2">
-                        <Controller
-                            name="attachments"
-                            control={control}
-                            render={({ field }) => (
-                                <AttachmentsGrid
-                                    announcementId={announcement?.id!}
-                                    attachments={field.value || []}
-                                    onChange={field.onChange}
-                                />
-                            )}
-                        />
-                    </div>
-                </section>
-
-                {/* TipTap text editor */}
-                <section className="flex flex-col gap-y-6">
-                    <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-8">
-                        <h2 className="w-full text-muted-foreground">
-                            CONTENIDO DE LA CAMPAÑA
-                        </h2>
-                    </div>
-                    <div className="grid grid-cols-1 gap-8">
-                        <div className="w-full">
-                            <Controller
-                                name="content"
-                                control={control}
-                                rules={{
-                                    validate: (v) => {
-                                        const text = (v || "").replace(/<[^>]+>/g, "").trim();
-                                        return text.length > 0 || "El contenido de la campaña no puede estar vacío";
-                                    },
-                                }}
-                                render={({ field }) => <CustomTipTapEditor value={field.value ?? ""} onChange={field.onChange} />}
-                            />
-                            {
-                                errors.content && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        {errors.content.message as string}
+                {/* Content and Attachments for new announcements */}
+                {
+                    !announcement?.id && (
+                        <>
+                            <section className="flex flex-col gap-y-4">
+                                <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-8">
+                                    <h2 className="w-full text-muted-foreground flex gap-x-4 items-center">
+                                        <InfoIcon /> CONTENIDO DE LA CAMPAÑA & ARCHIVOS ADJUNTOS
+                                    </h2>
+                                    <p className="text-xs text-muted-foreground">
+                                        Una vez guardada la información general de la campaña, podrás agregar el contenido que se mostrará a los usuarios dentro del diseño de la campaña, así como también subir archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace público.
+                                        <br />
+                                        Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB.
                                     </p>
-                                )
-                            }
-                        </div>
-                    </div>
-                </section>
+                                </div>
+                            </section>
+                        </>
+                    )
+                }
+
+                {/* Content and Attachments for existing announcements */}
+                {
+                    announcement?.id && (
+                        <>
+                            {/* Attachments */}
+                            <section className="flex flex-col gap-y-4">
+                                <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-8">
+                                    <h2 className="w-full text-muted-foreground">ARCHIVOS ADJUNTOS</h2>
+                                    <p className="text-xs text-muted-foreground">
+                                        Sube archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace públic.
+                                        Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB.
+                                    </p>
+                                </div>
+                                <div className="mt-2">
+                                    <Controller
+                                        name="attachments"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <AttachmentsGrid
+                                                announcementId={announcement?.id!}
+                                                attachments={field.value || []}
+                                                onChange={field.onChange}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                            </section>
+
+                            {/* TipTap text editor */}
+                            <section className="flex flex-col gap-y-6">
+                                <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-8">
+                                    <h2 className="w-full text-muted-foreground">
+                                        CONTENIDO DE LA CAMPAÑA
+                                    </h2>
+                                </div>
+                                <div className="grid grid-cols-1 gap-8">
+                                    <div className="w-full">
+                                        <Controller
+                                            name="content"
+                                            control={control}
+                                            rules={{
+                                                validate: (v) => {
+                                                    const text = (v || "").replace(/<[^>]+>/g, "").trim();
+                                                    return text.length > 0 || "El contenido de la campaña no puede estar vacío";
+                                                },
+                                            }}
+                                            render={({ field }) => <CustomTipTapEditor value={field.value ?? ""} onChange={field.onChange} />}
+                                        />
+                                        {
+                                            errors.content && (
+                                                <p className="text-red-500 text-sm mt-2">
+                                                    {errors.content.message as string}
+                                                </p>
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                            </section>
+                        </>
+                    )
+                }
+
 
                 {/* Actions Buttons */}
                 <section className="flex items-center justify-end mt-8 gap-x-6">

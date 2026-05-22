@@ -1,14 +1,22 @@
 import { use, useState } from "react";
-import { Search, Sun, Bell, Menu, ChevronDown, User, LogOut, Moon } from "lucide-react";
+import { useNavigate } from "react-router";
+import { Search, Sun, Bell, Menu, ChevronDown, User, LogOut, Moon, UserIcon } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { ThemeContext } from "../context/ThemeContext";
+import { useAuthStore } from "@/modules/auth/stores/auth.store";
+import { userStoreFullName, userStoreImage } from "@/modules/auth/stores/auth.store.selectors";
 
 interface Props {
     toggleSidebar: () => void;
+    logout: () => void
 }
 
-export const CustomNavbar = ({ toggleSidebar }: Props) => {
+export const CustomNavbar = ({ toggleSidebar, logout }: Props) => {
+    const navigate = useNavigate();
+
+    const loggedInUserFullName = useAuthStore(userStoreFullName);
+    const loggedInUserImage = useAuthStore(userStoreImage); // "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x"
 
     const { theme, toggleTheme } = use(ThemeContext);
     const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
@@ -56,12 +64,25 @@ export const CustomNavbar = ({ toggleSidebar }: Props) => {
                         className="cursor-pointer flex items-center gap-3 pl-2 pr-1 py-1 rounded-full"
                         onClick={() => setToggleDropdown(!toggleDropdown)}>
                         <span className="hidden md:inline text-sm font-medium text-foreground">
-                            Emmanuel Toledo Castro
+                            {loggedInUserFullName || "Usuario"}
                         </span>
-                        <img className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/30"
-                            alt="avatar"
-                            src="https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x" />
+                        {
+                            loggedInUserImage ?
+                                (
+                                    <>
+                                        <img className="ml-2 w-10 h-10 rounded-full object-cover ring-2 ring-primary/30"
+                                            alt="avatar"
+                                            src={loggedInUserImage} />
+                                    </>
+                                ) :
+                                (
+                                    <div className="ml-2 w-10 h-10 rounded-full bg-muted ring-4 ring-primary/15 flex items-center justify-center overflow-hidden">
+                                        <UserIcon className="w-5 h-5 text-muted-foreground/60" />
+                                    </div>
+                                )
+                        }
                         <ChevronDown className="hidden md:inline w-4 h-4 text-muted-foreground" />
+
                     </button>
 
                     {toggleDropdown && (
@@ -69,14 +90,20 @@ export const CustomNavbar = ({ toggleSidebar }: Props) => {
                             className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-2xl shadow-lg py-2 animate-fade-in"
                             onMouseLeave={() => setToggleDropdown(false)}>
                             <button
-                                onClick={() => { setToggleDropdown(false); }}
+                                onClick={() => { 
+                                    setToggleDropdown(false);
+                                    navigate("/my-account");
+                                }}
                                 data-testid="user-menu-profile"
                                 className="cursor-pointer w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
                                 <User className="w-4 h-4" />
                                 Mi cuenta
                             </button>
                             <button
-                                onClick={() => { setToggleDropdown(false); }}
+                                onClick={() => { 
+                                    setToggleDropdown(false);
+                                    logout();
+                                }}
                                 data-testid="user-menu-logout"
                                 className="cursor-pointer w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/5 transition-colors">
                                 <LogOut className="w-4 h-4" />

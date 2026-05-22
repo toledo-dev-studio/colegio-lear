@@ -19,7 +19,8 @@ export const deleteAttachmentForAnnouncementByIdActionAsync = async ({ announcem
     if (VITE_ENVIRONMENT === "mockable")
         return;
 
-    await api.delete(`attachments/announcement/${announcementId}/${attachmentId}`);
+    const { request } = await api.delete(`attachments/announcement/${announcementId}/${attachmentId}`);
+    console.log(request);
     
     return;
 }

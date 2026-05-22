@@ -19,8 +19,8 @@ export const createUpdateSecurityRoleActionAsync = async (securityRoleLike: Part
     
 
     const { data } = await api<SecurityRole>({
-        url: isCreating ? '/security-roles' : `/security-roles/${id}`,
-        method: isCreating ? 'POST' : 'PATCH',
+        url: isCreating ? "/security-roles" : `/security-roles/${id}`,
+        method: isCreating ? "POST" : "PATCH",
         data: securityRoleLike
     });
 

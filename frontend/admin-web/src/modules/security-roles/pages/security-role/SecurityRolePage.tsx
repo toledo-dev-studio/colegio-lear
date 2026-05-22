@@ -5,6 +5,7 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { SecurityRoleForm } from "./components/SecurityRoleForm";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import type { SecurityRole } from "@/interfaces/entites/security-role";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 import { useGetByIdSecurityRole } from "../../hooks/useGetByIdSecurityRole";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdateSecurityRole } from "../../hooks/useCreateUpdateSecurityRole";
@@ -53,6 +54,15 @@ export const SecurityRolePage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Seguridad" },
+            { label: "Roles de seguridad", to: "/security-roles" },
+            { label: id === "new" ? "Nuevo rol de seguridad" : securityRoleQuery.data?.name || "Edición de rol de seguridad" },
+          ]} />
+        </div>
+
         <CustomPageTitle
           title={title}
           subtitle="Getiona la información del rol de seguridad para estar dispoible en la organiación" />

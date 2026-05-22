@@ -62,9 +62,9 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
     /**
      * Event to detect if any file is duplicated by name.
      */
-    const isDuplicate = useCallback((file: File): boolean => {
+    const hasDuplicateName = useCallback((file: File): boolean => {
         return attachments.some(
-            (a) => a.name.toLowerCase() === file.name.toLowerCase(),
+            (a) => a.name.toLowerCase() === file.name.toLowerCase().split(".")[0]
         );
     }, [attachments],);
 
@@ -94,7 +94,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
             }
 
             // A file with same name already exists?
-            if (isDuplicate(file)) {
+            if (hasDuplicateName(file)) {
                 toast.error(`Ya se encuentra cargado un archivo con el nombre "${file.name}".`, { position: "top-right" });
                 return;
             }
@@ -132,7 +132,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
                     URL.revokeObjectURL(previewUrl);
             }
         });
-    }, [acceptedExtensions, disabled, isDuplicate, onChange]);
+    }, [acceptedExtensions, disabled, hasDuplicateName, onChange]);
 
     /**
      * Handle on delete attachment from server.

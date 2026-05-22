@@ -8,6 +8,7 @@ import type { EmployeeFormData } from "../../interfaces/employee-form";
 import { useGetByIdEmployee } from "../../hooks/employees/useGetByIdEmployee";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdateEmployee } from "../../hooks/employees/useCreateUpdateEmployee";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const EmployeePage = () => {
   const navigate = useNavigate();
@@ -53,6 +54,15 @@ export const EmployeePage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Seguridad" },
+            { label: "Empleados", to: "/employees" },
+            { label: id === "new" ? "Nuevo empleado" : employeeQuery.data?.name || "Edición de empleado" },
+          ]} />
+        </div>
+
         <CustomPageTitle
           title={title}
           subtitle="Gestiona la información de los empleados que estará disponible en la organización" />

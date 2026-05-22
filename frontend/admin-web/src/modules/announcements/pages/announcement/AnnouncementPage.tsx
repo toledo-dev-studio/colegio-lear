@@ -8,6 +8,7 @@ import type { Announcement } from "@/interfaces/entites/announcement";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useGetByIdAnnouncement } from "../../hooks/announcements/useGetByIdAnnouncement";
 import { useCreateUpdateAnnouncement } from "../../hooks/announcements/useCreateUpdateAnnouncement";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const AnnouncementPage = () => {
   const navigate = useNavigate();
@@ -53,6 +54,15 @@ export const AnnouncementPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Seguimiento escolar" },
+            { label: "Campañas & comunicados", to: "/announcements" },
+            { label: id === "new" ? "Nueva campaña o comunicado" : announcementQuery.data?.name || "Edición de campaña o comunicado" },
+          ]} />
+        </div>
+
         <CustomPageTitle
           title={title}
           subtitle="Gestiona las campañas & comunicados disponibles en el colegio y la organización" />

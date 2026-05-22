@@ -8,6 +8,7 @@ import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
 import type { JobTitle } from "@/interfaces/entites/job-title.interface";
 import { useCreateUpdateJobTitle } from "../../hooks/useCreateUpdateJobTitle";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const JobTitlePage = () => {
   const navigate = useNavigate();
@@ -53,6 +54,15 @@ export const JobTitlePage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Seguridad" },
+            { label: "Puestos de trabajo", to: "/job-titles" },
+            { label: id === "new" ? "Nuevo puesto de trabajo" : jobTitleQuery.data?.name || "Edición de puesto de trabajo" },
+          ]} />
+        </div>
+
         <CustomPageTitle
           title={title}
           subtitle="Getiona la información del puesto de trabajo para que este dispoible en la organiación" />

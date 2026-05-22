@@ -1,18 +1,18 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
+import { isValidBooleanString, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getSchoolSubjectsActionAsync } from "../../actions/get-school-subjects.action";
 
 export const useExportSchoolSubjects = () => {
     const [searchParams] = useSearchParams();
 
-    // Main query filters
-    const query = searchParams.get("query")?.trim() || "";
+// Main query filters
+    const query = searchParams.get("query")?.trim() || undefined;
 
     // Advanced query filters
-    const name = searchParams.get("name")?.trim() || "";
-    const status = stringToBooleanWithDefault(searchParams.get("status"));
+    const name = searchParams.get("name")?.trim() || undefined;
+    const status = isValidBooleanString(searchParams.get("status")) ? stringToBooleanWithDefault(searchParams.get("status")) : undefined;
     const academicLevelId = searchParams.get("academic-level-id") || undefined;
     const educationLevelId = searchParams.get("education-level-id") || undefined;
 

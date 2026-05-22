@@ -14,6 +14,7 @@ import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { useGetPagedScholarships } from "../../hooks/useGetPagedScholarships";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { ScholarshipsAdvancedFilters } from "./components/ScholarshipsAdvancedFilters";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const ScholarshipsPage = () => {
     const navigate = useNavigate();
@@ -97,6 +98,13 @@ export const ScholarshipsPage = () => {
     return (
         <>
             <div className="w-full py-12 px-10 lg:px-15">
+
+                <div className="mb-10">
+                    <CustomBreadcrumb items={[
+                        { label: "Configuración escolar" },
+                        { label: "Becas escolares", to: "/scholarships" },
+                    ]} />
+                </div>
 
                 <CustomPageTitle title="Becas escolares" subtitle="Gestiona las becas escolares que estarán disponibles en el colegio" />
 

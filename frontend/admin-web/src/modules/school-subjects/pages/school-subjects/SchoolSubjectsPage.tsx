@@ -7,6 +7,7 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { SchoolSubjectsTable } from "./components/SchoolSubjectsTable";
 import { CustomPagination } from "@/shared/components/CustomPagination";
+import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
@@ -99,6 +100,13 @@ export const SchoolSubjectsPage = () => {
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <CustomBreadcrumb items={[
+            { label: "Configuración escolar" },
+            { label: "Materias escolares", to: "/school-subjects" }
+          ]} />
+        </div>
 
         <CustomPageTitle title="Materias escolares" subtitle="Gestiona las materias escolares que estarán disponibles en el colegio" />
 

@@ -28,8 +28,5 @@ export const getSecurityRoleByIdActionAsync = async (id?: string): Promise<Secur
 
     const { data } = await api.get<SecurityRole>(`/security-roles/${id}`);
 
-    console.log(data);
-    
-
     return data;
 }

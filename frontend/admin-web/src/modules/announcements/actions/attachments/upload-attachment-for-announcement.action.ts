@@ -29,11 +29,14 @@ export const uploadAttachmentsForAnnouncementActionAsync = async ({ announcement
     const formData = new FormData();
     formData.append("file", file);
 
-    const { data } = await api<Attachment>({
+    const { data, request } = await api<Attachment>({
         url: `attachments/announcement/${announcementId}`,
         method: "POST",
         data: formData
     });
+
+    console.log(data, request);
+    
 
     return data;
 }
