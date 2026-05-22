@@ -98,13 +98,23 @@ export const securityRolePagedQuerySchema = securityRoleFiltersSchema.extend({
  */
 export const createSecurityRoleSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500).optional(),
+  description: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
   permissions: z
     .array(permissionSchema)
     .refine(
       (perms) => new Set(perms.map((p) => p.moduleKey)).size === perms.length,
       { message: "Duplicate moduleKey values are not allowed" },
-    ).optional(),
+    )
+    .optional(),
 });
 
 /**
@@ -116,7 +126,16 @@ export const createSecurityRoleSchema = z.object({
 export const updateSecurityRoleSchema = z
   .object({
     name: nonBlankString(100).optional(),
-    description: nonBlankString(500).optional(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     permissions: z
       .array(permissionSchema)
       .refine(

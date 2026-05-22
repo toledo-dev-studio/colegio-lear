@@ -16,6 +16,23 @@ function nonBlankString(maxLength: number) {
     });
 }
 
+/**
+ * Schema for optional secondLastName field.
+ * Accepts string, null, or undefined. Trims and converts empty/null to undefined.
+ */
+function optionalSecondLastName() {
+  return z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(100, "Must be at most 100 characters").optional());
+}
+
 // ─── Schemas ────────────────────────────────────────────────────────────────
 
 /**
@@ -80,12 +97,7 @@ export const employeePagedQuerySchema = employeeFiltersSchema.extend({
 export const createEmployeeSchema = z.object({
   name: nonBlankString(100),
   firstLastName: nonBlankString(100),
-  secondLastName: z
-    .string()
-    .transform((val) => val.trim())
-    .transform((val) => (val === "" ? undefined : val))
-    .pipe(z.string().max(100, "Must be at most 100 characters").optional())
-    .optional(),
+  secondLastName: optionalSecondLastName(),
   phoneNumber: nonBlankString(20),
   email: z
     .string()
@@ -105,12 +117,7 @@ export const createEmployeeSchema = z.object({
 export const updateMyAccountSchema = z.object({
   name: nonBlankString(100),
   firstLastName: nonBlankString(100),
-  secondLastName: z
-    .string()
-    .transform((val) => val.trim())
-    .transform((val) => (val === "" ? undefined : val))
-    .pipe(z.string().max(100, "Must be at most 100 characters").optional())
-    .optional(),
+  secondLastName: optionalSecondLastName(),
   phoneNumber: nonBlankString(20),
 });
 
@@ -123,12 +130,7 @@ export const updateMyAccountSchema = z.object({
 export const updateEmployeeSchema = z.object({
   name: nonBlankString(100).optional(),
   firstLastName: nonBlankString(100).optional(),
-  secondLastName: z
-    .string()
-    .transform((val) => val.trim())
-    .transform((val) => (val === "" ? undefined : val))
-    .pipe(z.string().max(100, "Must be at most 100 characters").optional())
-    .optional(),
+  secondLastName: optionalSecondLastName(),
   phoneNumber: nonBlankString(20).optional(),
   email: z
     .string()

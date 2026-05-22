@@ -194,7 +194,16 @@ export const paymentConceptPagedQuerySchema =
  */
 export const createPaymentConceptSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500).optional(),
+  description: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
   baseAmount: z
     .number({ message: "baseAmount must be a number" })
     .min(0.01, "baseAmount must be at least 0.01")
@@ -237,7 +246,16 @@ export const createPaymentConceptSchema = z.object({
 export const updatePaymentConceptSchema = z
   .object({
     name: nonBlankString(100).optional(),
-    description: nonBlankString(500).optional(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     baseAmount: z
       .number({ message: "baseAmount must be a number" })
       .min(0.01, "baseAmount must be at least 0.01")

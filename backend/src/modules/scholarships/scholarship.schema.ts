@@ -155,7 +155,16 @@ export const scholarshipPagedQuerySchema = scholarshipFiltersSchema.extend({
  */
 export const createScholarshipSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500).optional(),
+  description: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
   discountPercentage: z
     .number({ message: "discountPercentage must be a number" })
     .min(0, "discountPercentage must be at least 0")
@@ -192,7 +201,16 @@ export const createScholarshipSchema = z.object({
 export const updateScholarshipSchema = z
   .object({
     name: nonBlankString(100).optional(),
-    description: nonBlankString(500).optional(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     discountPercentage: z
       .number({ message: "discountPercentage must be a number" })
       .min(0, "discountPercentage must be at least 0")
