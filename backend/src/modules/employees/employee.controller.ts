@@ -64,11 +64,13 @@ function mapFile(reqFile: MulterFile | undefined): FileUpload | undefined {
 /**
  * GET /employees
  * Returns all employees matching the optional query filters.
+ * Excludes the authenticated employee from results.
  */
 export async function findAll(req: Request, res: Response): Promise<void> {
   const filters = buildFilters(req.query as Record<string, unknown>);
+  const { employeeId } = req.user!;
 
-  const data = await service.findAll(filters);
+  const data = await service.findAll(filters, employeeId);
 
   sendSuccess(res, data);
 }
@@ -76,15 +78,21 @@ export async function findAll(req: Request, res: Response): Promise<void> {
 /**
  * GET /employees/paged
  * Returns a paginated list of employees matching the optional query filters.
+ * Excludes the authenticated employee from results.
  */
 export async function findAllPaged(req: Request, res: Response): Promise<void> {
   const query = req.query as Record<string, unknown>;
   const filters = buildFilters(query);
+  const { employeeId } = req.user!;
 
   const page = query.page as number;
   const pageSize = query.pageSize as number;
 
-  const result = await service.findAllPaged(filters, { page, limit: pageSize });
+  const result = await service.findAllPaged(
+    filters,
+    { page, limit: pageSize },
+    employeeId,
+  );
 
   sendPaginatedSuccess(
     res,
@@ -171,4 +179,24 @@ export async function resendInvitation(
   await service.resendInvitation(id);
 
   sendSuccess(res, 204);
+}
+
+/**
+ * PATCH /employees/me (multipart/form-data)
+ * Updates the authenticated employee's own account.
+ * Required fields: name, firstLastName, phoneNumber.
+ * Optional: secondLastName, file (image).
+ * Returns the same shape as GET /auth/me (LoginResponse).
+ */
+export async function updateMyAccount(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { employeeId } = req.user!;
+  const multerReq = req as MulterRequest;
+  const file = mapFile(multerReq.file);
+
+  const data = await service.updateMyAccount(employeeId, req.body, file);
+
+  sendSuccess(res, data);
 }

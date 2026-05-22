@@ -148,35 +148,37 @@ export class AnnouncementService {
   /**
    * Create a new announcement.
    * Parses date strings to Date objects and sets status = true by default.
-   * Returns the created announcement without attachments.
+   * Content defaults to empty string when not provided (added later via update).
+   * Returns the created announcement with empty attachments array.
    */
-  async create(dto: CreateAnnouncementDto): Promise<AnnouncementRecord> {
+  async create(dto: CreateAnnouncementDto): Promise<AnnouncementDetail> {
     const created = await this.prisma.announcement.create({
       data: {
         name: dto.name,
         description: dto.description ?? null,
         audience: JSON.parse(JSON.stringify(dto.audience)),
-        content: dto.content,
+        content: dto.content ?? "",
         publishedAt: new Date(dto.publishedAt),
         expiresAt: new Date(dto.expiresAt),
         status: true,
       },
+      include: { attachments: true },
     });
 
-    return created as unknown as AnnouncementRecord;
+    return created as unknown as AnnouncementDetail;
   }
 
   /**
    * Partial update of an announcement.
    * Verifies the announcement exists before updating.
    * Parses date strings to Date objects when present.
-   * Returns the updated announcement without attachments.
+   * Returns the updated announcement with attachments.
    * Throws NotFoundError if the record does not exist.
    */
   async update(
     id: string,
     dto: UpdateAnnouncementDto,
-  ): Promise<AnnouncementRecord> {
+  ): Promise<AnnouncementDetail> {
     // Verify announcement exists
     const existing = await this.prisma.announcement.findUnique({
       where: { id },
@@ -203,9 +205,10 @@ export class AnnouncementService {
     const updated = await this.prisma.announcement.update({
       where: { id },
       data: updateData,
+      include: { attachments: true },
     });
 
-    return updated as unknown as AnnouncementRecord;
+    return updated as unknown as AnnouncementDetail;
   }
 
   /**

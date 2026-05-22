@@ -8,6 +8,7 @@ import {
   employeePagedQuerySchema,
   createEmployeeSchema,
   updateEmployeeSchema,
+  updateMyAccountSchema,
 } from "./employee.schema";
 import {
   findAll,
@@ -17,6 +18,7 @@ import {
   update,
   softDelete,
   resendInvitation,
+  updateMyAccount,
 } from "./employee.controller";
 
 // ─── Multer Configuration ───────────────────────────────────────────────────────
@@ -236,6 +238,59 @@ router.get("/paged", validate(employeePagedQuerySchema, "query"), findAllPaged);
  *         description: Employee with this email already exists
  */
 router.post("/", uploadSingle, validate(createEmployeeSchema, "body"), create);
+
+/**
+ * @openapi
+ * /employees/me:
+ *   patch:
+ *     tags:
+ *       - Employees
+ *     summary: Update authenticated employee's own account
+ *     description: Updates the current user's profile (name, firstLastName, secondLastName, phoneNumber, image). Returns the same shape as GET /auth/me.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - firstLastName
+ *               - phoneNumber
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Optional profile image (jpeg, png, webp, gif; max 5MB)
+ *               name:
+ *                 type: string
+ *               firstLastName:
+ *                 type: string
+ *               secondLastName:
+ *                 type: string
+ *                 description: Optional
+ *               phoneNumber:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Account updated successfully. Returns same shape as /auth/me.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Not authenticated
+ *       404:
+ *         description: Employee not found or inactive
+ */
+router.patch(
+  "/me",
+  uploadSingle,
+  validate(updateMyAccountSchema, "body"),
+  updateMyAccount,
+);
 
 /**
  * @openapi

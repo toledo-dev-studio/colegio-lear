@@ -160,7 +160,7 @@ router.get(
  *     tags:
  *       - Announcements
  *     summary: Create a new announcement
- *     description: Creates a new announcement. Status defaults to true.
+ *     description: Creates a new announcement (without content). Content and attachments are added later via PATCH. Status defaults to true.
  *     requestBody:
  *       required: true
  *       content:
@@ -173,7 +173,7 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Announcement'
+ *               $ref: '#/components/schemas/AnnouncementDetail'
  *       400:
  *         description: Validation error
  */
@@ -216,7 +216,7 @@ router.get("/:id", validate(idParamSchema, "params"), getById);
  *     tags:
  *       - Announcements
  *     summary: Update an announcement
- *     description: Partially updates an existing announcement. At least one field must be provided.
+ *     description: Partially updates an existing announcement. At least one field must be provided. Used to add content and update metadata after creation.
  *     parameters:
  *       - in: path
  *         name: id
@@ -237,7 +237,7 @@ router.get("/:id", validate(idParamSchema, "params"), getById);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Announcement'
+ *               $ref: '#/components/schemas/AnnouncementDetail'
  *       400:
  *         description: Validation error or empty body
  *       404:

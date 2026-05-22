@@ -617,7 +617,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateAnnouncementDto: {
           type: "object",
-          required: ["name", "audience", "content", "publishedAt", "expiresAt"],
+          required: ["name", "audience", "publishedAt", "expiresAt"],
           properties: {
             name: {
               type: "string",
@@ -648,7 +648,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
             content: {
               type: "string",
-              minLength: 1,
+              description: "Optional at creation. Added later via update.",
               example: "<p>Se convoca a reunión general...</p>",
             },
             publishedAt: {

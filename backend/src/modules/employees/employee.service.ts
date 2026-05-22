@@ -11,6 +11,7 @@ import type {
   PagedResult,
   CreateEmployeeDto,
   UpdateEmployeeDto,
+  UpdateMyAccountDto,
   FileUpload,
   SecurityRolePermissionView,
 } from "./employee.types";
@@ -25,6 +26,7 @@ import {
 } from "../../shared/helpers/pagination.helper";
 import type { IStorageService } from "../../shared/services/storage.service";
 import type { IMailService } from "../../shared/services/mail.service";
+import type { LoginResponse } from "../auth/auth.types";
 import {
   invitationEmail,
   resendInvitationEmail,
@@ -182,10 +184,16 @@ export class EmployeeService {
 
   /**
    * List all employees (no pagination) with optional filters.
+   * Excludes the authenticated employee from results.
    * Includes jobTitle and securityRole (without permissions).
    */
-  async findAll(filters: EmployeeFilters): Promise<EmployeeRecord[]> {
+  async findAll(
+    filters: EmployeeFilters,
+    excludeEmployeeId: string,
+  ): Promise<EmployeeRecord[]> {
     const where = this.buildWhereClause(filters);
+    // Exclude the authenticated user from the list
+    (where as Record<string, unknown>).id = { not: excludeEmployeeId };
 
     const results = await this.prisma.employee.findMany({
       where,
@@ -197,13 +205,17 @@ export class EmployeeService {
 
   /**
    * List employees with pagination and optional filters.
+   * Excludes the authenticated employee from results.
    * Returns a PagedResult with metadata (totalPages, currentPage, itemsCount).
    */
   async findAllPaged(
     filters: EmployeeFilters,
     pagination: PaginationParams,
+    excludeEmployeeId: string,
   ): Promise<PagedResult<EmployeeRecord>> {
     const where = this.buildWhereClause(filters);
+    // Exclude the authenticated user from the list
+    (where as Record<string, unknown>).id = { not: excludeEmployeeId };
     const skip = calculateSkip(pagination);
 
     const [data, itemsCount] = await Promise.all([
@@ -505,5 +517,88 @@ export class EmployeeService {
         frontendUrl: env.FRONTEND_URL,
       }),
     });
+  }
+
+  /**
+   * Update the authenticated employee's own account (my account).
+   * Only allows updating: name, firstLastName, secondLastName, phoneNumber, and image.
+   * Returns the same shape as auth/me (LoginResponse) with securityRole+permissions and jobTitle.
+   * Throws NotFoundError if the employee does not exist or is inactive.
+   */
+  async updateMyAccount(
+    employeeId: string,
+    dto: UpdateMyAccountDto,
+    file?: FileUpload,
+  ): Promise<LoginResponse> {
+    // Verify employee exists and is active
+    const existing = await this.prisma.employee.findUnique({
+      where: { id: employeeId },
+    });
+
+    if (!existing || !existing.status) {
+      throw new NotFoundError("Empleado no encontrado o inactivo");
+    }
+
+    // Upload file if present
+    let image: string | undefined;
+    if (file) {
+      image = await this.storage.upload({
+        buffer: file.buffer,
+        fileName: file.originalname,
+        mimeType: file.mimetype,
+        subfolder: "employees",
+      });
+    }
+
+    // Build update data
+    const updateData: Record<string, unknown> = {
+      name: dto.name,
+      firstLastName: dto.firstLastName,
+      secondLastName: dto.secondLastName ?? null,
+      phoneNumber: dto.phoneNumber,
+    };
+    if (image !== undefined) updateData.image = image;
+
+    // Update the record
+    await this.prisma.employee.update({
+      where: { id: employeeId },
+      data: updateData,
+    });
+
+    // Re-fetch with full relations (same as auth/me)
+    const updated = await this.prisma.employee.findUnique({
+      where: { id: employeeId },
+      include: {
+        securityRole: { include: { permissions: true } },
+        jobTitle: true,
+      },
+    });
+
+    // Map to LoginResponse shape
+    return {
+      id: updated!.id,
+      name: updated!.name,
+      firstLastName: updated!.firstLastName,
+      secondLastName: updated!.secondLastName,
+      email: updated!.email,
+      username: updated!.username,
+      image: updated!.image,
+      mustChangePassword: updated!.mustChangePassword,
+      securityRole: {
+        id: updated!.securityRole.id,
+        name: updated!.securityRole.name,
+        permissions: updated!.securityRole.permissions.map((p) => ({
+          moduleKey: p.moduleKey,
+          canRead: p.canRead,
+          canWrite: p.canWrite,
+          canDelete: p.canDelete,
+        })),
+      },
+      jobTitle: {
+        id: updated!.jobTitle.id,
+        name: updated!.jobTitle.name,
+        jobTitleType: String(updated!.jobTitle.jobTitleType),
+      },
+    };
   }
 }

@@ -53,9 +53,9 @@ export const idParamSchema = z.object({
 /**
  * Validates POST body for creating an announcement.
  * - name: 1-200 chars, trimmed, non-blank
- * - description: 1-500 chars, trimmed, non-blank
+ * - description: 1-500 chars, trimmed, non-blank (optional)
  * - audience: array of audienceItemSchema, min 1 element
- * - content: non-empty string
+ * - content: optional (added later when editing)
  * - publishedAt: valid ISO date string
  * - expiresAt: valid ISO date string, must be >= publishedAt
  */
@@ -66,7 +66,7 @@ export const createAnnouncementSchema = z
     audience: z
       .array(audienceItemSchema)
       .min(1, "audience must have at least 1 element"),
-    content: z.string().min(1, "content must not be empty"),
+    content: z.string().optional(),
     publishedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
       message: "publishedAt must be a valid ISO date string",
     }),

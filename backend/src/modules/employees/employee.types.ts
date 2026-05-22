@@ -101,6 +101,14 @@ export interface UpdateEmployeeDto {
   status?: boolean;
 }
 
+/** Input DTO for updating the authenticated employee's own account */
+export interface UpdateMyAccountDto {
+  name: string;
+  firstLastName: string;
+  secondLastName?: string;
+  phoneNumber: string;
+}
+
 /** Result of a paginated query */
 export interface PagedResult<T> {
   data: T[];

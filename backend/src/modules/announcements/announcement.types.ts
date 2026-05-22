@@ -53,12 +53,13 @@ export interface AnnouncementDetail extends AnnouncementRecord {
 
 /**
  * Input DTO for creating an announcement.
+ * Content is optional at creation time (added later via update).
  */
 export interface CreateAnnouncementDto {
   name: string;
   description?: string;
   audience: AudienceItem[];
-  content: string;
+  content?: string;
   publishedAt: string;
   expiresAt: string;
 }

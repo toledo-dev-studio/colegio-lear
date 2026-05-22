@@ -98,6 +98,23 @@ export const createEmployeeSchema = z.object({
 });
 
 /**
+ * Validates PATCH /employees/me body for updating the authenticated employee's own account.
+ * Required: name, firstLastName, phoneNumber.
+ * Optional: secondLastName, file (handled by multer).
+ */
+export const updateMyAccountSchema = z.object({
+  name: nonBlankString(100),
+  firstLastName: nonBlankString(100),
+  secondLastName: z
+    .string()
+    .transform((val) => val.trim())
+    .transform((val) => (val === "" ? undefined : val))
+    .pipe(z.string().max(100, "Must be at most 100 characters").optional())
+    .optional(),
+  phoneNumber: nonBlankString(20),
+});
+
+/**
  * Validates PATCH body for updating an employee.
  * All fields are optional. When present, they must satisfy the same constraints as creation.
  * Note: The "at least one field or file" refinement is checked in the controller
