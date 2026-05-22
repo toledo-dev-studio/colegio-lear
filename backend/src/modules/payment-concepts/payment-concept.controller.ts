@@ -27,8 +27,7 @@ function buildFilters(query: Record<string, unknown>): PaymentConceptFilters {
   if (query.status !== undefined) filters.status = query.status === "true";
   if (query.allowRemission !== undefined)
     filters.allowRemission = query.allowRemission === "true";
-  if (query.baseAmount !== undefined)
-    filters.baseAmount = query.baseAmount as number;
+  if (query.amount !== undefined) filters.amount = query.amount as number;
   if (query.minAmount !== undefined)
     filters.minAmount = query.minAmount as number;
   if (query.maxAmount !== undefined)

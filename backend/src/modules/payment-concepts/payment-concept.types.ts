@@ -4,7 +4,7 @@ export interface PaymentConceptFilters {
   name?: string;
   status?: boolean;
   allowRemission?: boolean;
-  baseAmount?: number;
+  amount?: number;
   minAmount?: number;
   maxAmount?: number;
 }
@@ -14,7 +14,7 @@ export interface PaymentConceptRecord {
   id: string;
   name: string;
   description: string | null;
-  baseAmount: number;
+  amount: number;
   allowRemission: boolean;
   status: boolean;
 }
@@ -31,7 +31,7 @@ export interface PagedResult<T> {
 export interface CreatePaymentConceptDto {
   name: string;
   description?: string;
-  baseAmount: number;
+  amount: number;
   allowRemission?: boolean;
 }
 
@@ -39,7 +39,7 @@ export interface CreatePaymentConceptDto {
 export interface UpdatePaymentConceptDto {
   name?: string;
   description?: string;
-  baseAmount?: number;
+  amount?: number;
   allowRemission?: boolean;
   status?: boolean;
 }

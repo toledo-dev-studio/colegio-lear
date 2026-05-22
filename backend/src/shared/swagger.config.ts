@@ -760,7 +760,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Pago mensual de colegiatura",
             },
-            baseAmount: { type: "number", format: "float", example: 1500 },
+            amount: { type: "number", format: "float", example: 1500 },
             allowRemission: { type: "boolean", example: true },
             status: { type: "boolean", example: true },
             createdAt: { type: "string", format: "date-time" },
@@ -769,7 +769,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreatePaymentConceptBody: {
           type: "object",
-          required: ["name", "baseAmount"],
+          required: ["name", "amount"],
           properties: {
             name: {
               type: "string",
@@ -783,7 +783,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               maxLength: 500,
               example: "Pago mensual de colegiatura",
             },
-            baseAmount: {
+            amount: {
               type: "number",
               minimum: 0,
               example: 1500,
@@ -798,7 +798,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
             description: { type: "string", minLength: 1, maxLength: 500 },
-            baseAmount: { type: "number", minimum: 0 },
+            amount: { type: "number", minimum: 0 },
             allowRemission: { type: "boolean" },
             status: { type: "boolean" },
           },
