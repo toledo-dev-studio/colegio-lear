@@ -168,7 +168,16 @@ export const pagedQuerySchema = subjectFiltersSchema.extend({
  */
 export const createSchoolSubjectSchema = z.object({
   name: nonBlankString(150),
-  description: nonBlankString(500).optional(),
+  description: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
   academicLevelId: z
     .string()
     .uuid({ message: "academicLevelId must be a valid UUID" }),
@@ -213,7 +222,16 @@ export const createSchoolSubjectSchema = z.object({
 export const updateSchoolSubjectSchema = z
   .object({
     name: nonBlankString(150).optional(),
-    description: nonBlankString(500).optional(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     status: z.boolean({ message: "status must be a boolean" }).optional(),
     academicLevelId: z
       .string()

@@ -66,7 +66,16 @@ export const jobTitlePagedQuerySchema = jobTitleFiltersSchema.extend({
  */
 export const createJobTitleSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500).optional(),
+  description: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
   jobTitleType: z.enum(["teacher", "administrative-staff"]),
 });
 
@@ -78,7 +87,16 @@ export const createJobTitleSchema = z.object({
 export const updateJobTitleSchema = z
   .object({
     name: nonBlankString(100).optional(),
-    description: nonBlankString(500).optional(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     jobTitleType: z.enum(["teacher", "administrative-staff"]).optional(),
     status: z.boolean({ message: "status must be a boolean" }).optional(),
   })

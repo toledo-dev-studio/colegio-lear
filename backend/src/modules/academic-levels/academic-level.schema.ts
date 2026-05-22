@@ -96,8 +96,14 @@ const educationLevelInputSchema = z.object({
   name: nonBlankString(100),
   description: z
     .string()
-    .max(500, "description must be at most 500 characters")
-    .optional(),
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
 });
 
 /**
@@ -108,7 +114,16 @@ const educationLevelInputSchema = z.object({
  */
 export const createAcademicLevelSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500).optional(),
+  description: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
   educationLevels: z.array(educationLevelInputSchema).optional(),
 });
 
@@ -120,7 +135,16 @@ export const createAcademicLevelSchema = z.object({
 export const updateAcademicLevelSchema = z
   .object({
     name: nonBlankString(100).optional(),
-    description: nonBlankString(500).optional(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     status: z.boolean().optional(),
     educationLevels: z.array(educationLevelInputSchema).optional(),
   })

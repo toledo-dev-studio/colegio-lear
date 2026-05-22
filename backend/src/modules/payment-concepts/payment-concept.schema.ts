@@ -101,10 +101,10 @@ export const paymentConceptFiltersSchema = z.object({
   name: z.string().max(100, "name must be at most 100 characters").optional(),
   status: z.enum(["true", "false"]).optional(),
   allowRemission: z.enum(["true", "false"]).optional(),
-  baseAmount: z.coerce
-    .number({ message: "baseAmount must be a number" })
-    .min(0.01, "baseAmount must be at least 0.01")
-    .max(999999.99, "baseAmount must be at most 999999.99")
+  amount: z.coerce
+    .number({ message: "amount must be a number" })
+    .min(0.01, "amount must be at least 0.01")
+    .max(999999.99, "amount must be at most 999999.99")
     .optional(),
   minAmount: z.coerce
     .number({ message: "minAmount must be a number" })
@@ -194,11 +194,20 @@ export const paymentConceptPagedQuerySchema =
  */
 export const createPaymentConceptSchema = z.object({
   name: nonBlankString(100),
-  description: nonBlankString(500).optional(),
-  baseAmount: z
-    .number({ message: "baseAmount must be a number" })
-    .min(0.01, "baseAmount must be at least 0.01")
-    .max(999999.99, "baseAmount must be at most 999999.99"),
+  description: z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+  amount: z
+    .number({ message: "amount must be a number" })
+    .min(0.01, "amount must be at least 0.01")
+    .max(999999.99, "amount must be at most 999999.99"),
   allowRemission: z
     .boolean({ message: "allowRemission must be a boolean" })
     .default(false),
@@ -237,11 +246,20 @@ export const createPaymentConceptSchema = z.object({
 export const updatePaymentConceptSchema = z
   .object({
     name: nonBlankString(100).optional(),
-    description: nonBlankString(500).optional(),
-    baseAmount: z
-      .number({ message: "baseAmount must be a number" })
-      .min(0.01, "baseAmount must be at least 0.01")
-      .max(999999.99, "baseAmount must be at most 999999.99")
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+    amount: z
+      .number({ message: "amount must be a number" })
+      .min(0.01, "amount must be at least 0.01")
+      .max(999999.99, "amount must be at most 999999.99")
       .optional(),
     allowRemission: z
       .boolean({ message: "allowRemission must be a boolean" })

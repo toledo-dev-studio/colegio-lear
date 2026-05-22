@@ -240,7 +240,7 @@ export class EmployeeService {
 
   /**
    * Find a single employee by ID with full relations (securityRole with permissions).
-   * Throws NotFoundError if the employee does not exist.
+   * Throws NotFoundError if the employee does not exist or is deleted.
    */
   async findById(id: string): Promise<EmployeeDetail> {
     const employee = await this.prisma.employee.findUnique({
@@ -248,7 +248,7 @@ export class EmployeeService {
       include: EMPLOYEE_DETAIL_INCLUDE,
     });
 
-    if (!employee) {
+    if (!employee || employee.isDeleted) {
       throw new NotFoundError("Empleado no encontrado");
     }
 
@@ -580,6 +580,7 @@ export class EmployeeService {
       name: updated!.name,
       firstLastName: updated!.firstLastName,
       secondLastName: updated!.secondLastName,
+      phoneNumber: updated!.phoneNumber,
       email: updated!.email,
       username: updated!.username,
       image: updated!.image,

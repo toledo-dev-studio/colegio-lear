@@ -62,11 +62,20 @@ export const idParamSchema = z.object({
 export const createAnnouncementSchema = z
   .object({
     name: nonBlankString(200),
-    description: nonBlankString(500).optional(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     audience: z
       .array(audienceItemSchema)
       .min(1, "audience must have at least 1 element"),
-    content: z.string().optional(),
+    content: z.string().nullable().optional(),
     publishedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
       message: "publishedAt must be a valid ISO date string",
     }),
@@ -87,12 +96,21 @@ export const createAnnouncementSchema = z
 export const updateAnnouncementSchema = z
   .object({
     name: nonBlankString(200).optional(),
-    description: nonBlankString(500).optional(),
+    description: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((val) => {
+        if (val === null || val === undefined) return undefined;
+        const trimmed = val.trim();
+        return trimmed === "" ? undefined : trimmed;
+      })
+      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     audience: z
       .array(audienceItemSchema)
       .min(1, "audience must have at least 1 element")
       .optional(),
-    content: z.string().min(1, "content must not be empty").optional(),
+    content: z.string().nullable().optional(),
     publishedAt: z
       .string()
       .refine((val) => !isNaN(Date.parse(val)), {

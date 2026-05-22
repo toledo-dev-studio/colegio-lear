@@ -58,9 +58,9 @@ export class PaymentConceptService {
       andConditions.push({ allowRemission: filters.allowRemission });
     }
 
-    // Base amount filter (exact match)
-    if (filters.baseAmount !== undefined) {
-      andConditions.push({ baseAmount: filters.baseAmount });
+    // Amount filter (exact match)
+    if (filters.amount !== undefined) {
+      andConditions.push({ baseAmount: filters.amount });
     }
 
     // Min amount filter (greater than or equal)
@@ -82,14 +82,14 @@ export class PaymentConceptService {
 
   /**
    * Convert a raw Prisma payment concept record to a PaymentConceptRecord,
-   * converting the Decimal `baseAmount` field to a plain number.
+   * converting the Decimal `baseAmount` field to `amount` as a plain number.
    */
   private toRecord(raw: Record<string, unknown>): PaymentConceptRecord {
     return {
       id: raw.id as string,
       name: raw.name as string,
       description: raw.description as string,
-      baseAmount: Number(raw.baseAmount),
+      amount: Number(raw.baseAmount),
       allowRemission: raw.allowRemission as boolean,
       status: raw.status as boolean,
     };
@@ -144,14 +144,14 @@ export class PaymentConceptService {
 
   /**
    * Find a single payment concept by ID.
-   * Throws NotFoundError if the payment concept does not exist.
+   * Throws NotFoundError if the payment concept does not exist or is deleted.
    */
   async findById(id: string): Promise<PaymentConceptRecord> {
     const paymentConcept = await this.prisma.paymentConcept.findUnique({
       where: { id },
     });
 
-    if (!paymentConcept) {
+    if (!paymentConcept || paymentConcept.isDeleted) {
       throw new NotFoundError("Payment concept not found");
     }
 
@@ -181,7 +181,7 @@ export class PaymentConceptService {
       data: {
         name: dto.name,
         description: dto.description ?? null,
-        baseAmount: dto.baseAmount,
+        baseAmount: dto.amount,
         allowRemission: dto.allowRemission ?? false,
         status: true,
       },
@@ -224,10 +224,19 @@ export class PaymentConceptService {
       }
     }
 
+    // Build update data mapping `amount` to Prisma's `baseAmount`
+    const updateData: Record<string, unknown> = {};
+    if (dto.name !== undefined) updateData.name = dto.name;
+    if (dto.description !== undefined) updateData.description = dto.description;
+    if (dto.amount !== undefined) updateData.baseAmount = dto.amount;
+    if (dto.allowRemission !== undefined)
+      updateData.allowRemission = dto.allowRemission;
+    if (dto.status !== undefined) updateData.status = dto.status;
+
     // Update the record
     const updated = await this.prisma.paymentConcept.update({
       where: { id },
-      data: dto,
+      data: updateData,
     });
 
     return this.toRecord(updated as unknown as Record<string, unknown>);

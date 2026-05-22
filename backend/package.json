@@ -1,6 +1,6 @@
 {
   "name": "api-colegio-lear",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Apis de conexión para plataforma web",
   "main": "dist/index.js",
   "scripts": {
