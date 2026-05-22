@@ -580,6 +580,7 @@ export class EmployeeService {
       name: updated!.name,
       firstLastName: updated!.firstLastName,
       secondLastName: updated!.secondLastName,
+      phoneNumber: updated!.phoneNumber,
       email: updated!.email,
       username: updated!.username,
       image: updated!.image,
