@@ -132,7 +132,7 @@ export class SchoolSubjectService {
       },
     });
 
-    if (!subject) {
+    if (!subject || subject.isDeleted) {
       throw new NotFoundError("School subject not found");
     }
 

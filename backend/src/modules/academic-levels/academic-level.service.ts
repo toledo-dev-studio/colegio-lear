@@ -183,7 +183,7 @@ export class AcademicLevelService {
       include: { educationLevels: true },
     });
 
-    if (!academicLevel) {
+    if (!academicLevel || academicLevel.isDeleted) {
       throw new NotFoundError("Academic level not found");
     }
 

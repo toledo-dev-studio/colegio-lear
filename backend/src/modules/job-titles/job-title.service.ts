@@ -161,7 +161,7 @@ export class JobTitleService {
       where: { id },
     });
 
-    if (!jobTitle) {
+    if (!jobTitle || jobTitle.isDeleted) {
       throw new NotFoundError("Puesto no encontrado");
     }
 

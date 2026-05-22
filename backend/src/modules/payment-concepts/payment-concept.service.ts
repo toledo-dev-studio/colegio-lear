@@ -144,14 +144,14 @@ export class PaymentConceptService {
 
   /**
    * Find a single payment concept by ID.
-   * Throws NotFoundError if the payment concept does not exist.
+   * Throws NotFoundError if the payment concept does not exist or is deleted.
    */
   async findById(id: string): Promise<PaymentConceptRecord> {
     const paymentConcept = await this.prisma.paymentConcept.findUnique({
       where: { id },
     });
 
-    if (!paymentConcept) {
+    if (!paymentConcept || paymentConcept.isDeleted) {
       throw new NotFoundError("Payment concept not found");
     }
 

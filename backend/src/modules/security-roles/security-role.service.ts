@@ -128,7 +128,7 @@ export class SecurityRoleService {
       include: { permissions: true },
     });
 
-    if (!role) {
+    if (!role || role.isDeleted) {
       throw new NotFoundError("Rol no encontrado");
     }
 

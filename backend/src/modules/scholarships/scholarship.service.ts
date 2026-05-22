@@ -133,7 +133,7 @@ export class ScholarshipService {
       where: { id },
     });
 
-    if (!scholarship) {
+    if (!scholarship || scholarship.isDeleted) {
       throw new NotFoundError("Scholarship not found");
     }
 

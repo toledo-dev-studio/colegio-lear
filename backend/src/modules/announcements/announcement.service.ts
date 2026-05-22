@@ -130,7 +130,7 @@ export class AnnouncementService {
   /**
    * Find a single announcement by ID with its attachments.
    * Uses Prisma `include` to fetch related attachments in a single query.
-   * Throws NotFoundError if the announcement does not exist.
+   * Throws NotFoundError if the announcement does not exist or is deleted.
    */
   async findById(id: string): Promise<AnnouncementDetail> {
     const announcement = await this.prisma.announcement.findUnique({
@@ -138,7 +138,7 @@ export class AnnouncementService {
       include: { attachments: true },
     });
 
-    if (!announcement) {
+    if (!announcement || announcement.isDeleted) {
       throw new NotFoundError("Comunicado no encontrado");
     }
 
