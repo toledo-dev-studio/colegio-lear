@@ -5,7 +5,7 @@ import { JobTitleForm } from "./components/JobTitleForm";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useGetByIdJobTitle } from "../../hooks/useGetByIdJobTitle";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle } from "@/interfaces/entites/job-title";
 import { useCreateUpdateJobTitle } from "../../hooks/useCreateUpdateJobTitle";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";

@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router"
 
 import { isValidBooleanString, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getJobTitlesActionAsync } from "../actions/get-job-titles.action";
-import type { JobTitleTypes } from "@/interfaces/entites/job-title.interface";
+import type { JobTitleTypes } from "@/interfaces/entites/job-title";
 
 export const useExportJobTitles = () => {
     const [searchParams] = useSearchParams();

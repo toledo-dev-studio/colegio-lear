@@ -3,7 +3,7 @@ import { Pencil, Trash } from 'lucide-react'
 
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import type { JobTitle } from '@/interfaces/entites/job-title.interface'
+import type { JobTitle } from '@/interfaces/entites/job-title'
 
 interface Props {
     data: JobTitle[];

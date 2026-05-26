@@ -2,7 +2,7 @@ import { api } from "@/api/client";
 
 import { sleep } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle } from "@/interfaces/entites/job-title";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
 export const CreateUpdateJobTitleActionAsync = async (jobTitleLike: Partial<JobTitle>): Promise<JobTitle> => {

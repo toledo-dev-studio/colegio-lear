@@ -1,6 +1,6 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle } from "@/interfaces/entites/job-title";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
 export const getJobTitleByIdActionAsync = async (id?: string): Promise<JobTitle> => {
