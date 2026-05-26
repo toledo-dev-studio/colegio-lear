@@ -10,7 +10,7 @@ import { useExportJobTitles } from "../../hooks/useExportJobTitles";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { useGetPagedJobTitles } from "../../hooks/useGetPagedJobTitles";
 import { CustomPagination } from "@/shared/components/CustomPagination";
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle } from "@/interfaces/entites/job-title";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { JobTitlesAdvancedFilters } from "./components/JobTitlesAdvancedFilters";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";

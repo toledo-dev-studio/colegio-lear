@@ -1,7 +1,5 @@
 import type { Attachment } from "./attachment";
 
-export type AudienceType = { key: string, label: string };
-
 export interface Announcement {
     id: string;
     name: string;
@@ -14,6 +12,8 @@ export interface Announcement {
 
     attachments: Attachment[];
 }
+
+export type AudienceType = { key: string, label: string };
 
 export const AUDIENCE: AudienceType[] = [
     { key: "administrative-staff", label: "Personal administrativo" },

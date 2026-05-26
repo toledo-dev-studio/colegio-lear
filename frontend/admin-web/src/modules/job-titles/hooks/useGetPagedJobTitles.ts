@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import type { JobTitleTypes } from "@/interfaces/entites/job-title.interface";
+import type { JobTitleTypes } from "@/interfaces/entites/job-title";
 import { getPagedJobTitlesActionAsync } from "../actions/get-paged-job-titles.action";
 import { GET_PAGED_JOB_TITLES_QUERY_KEY } from "@/lib/queries-key/job-titles-queries-key";
 import { isValidBooleanString, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";

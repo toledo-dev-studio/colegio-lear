@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle } from "@/interfaces/entites/job-title";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import { getPagedJobTitlesActionAsync } from "@/modules/job-titles/actions/get-paged-job-titles.action";
 

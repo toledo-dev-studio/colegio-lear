@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import type { JobTitle } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle } from "@/interfaces/entites/job-title";
 import { CreateUpdateJobTitleActionAsync } from "../actions/create-update-job-title.action";
 import { GET_JOB_TITLE_QUERY_KEY, GET_PAGED_JOB_TITLES_QUERY_KEY } from "@/lib/queries-key/job-titles-queries-key";
 

@@ -8,7 +8,7 @@ import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
-import type { JobTitle } from "@/interfaces/entites/job-title.interface"
+import type { JobTitle } from "@/interfaces/entites/job-title"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 

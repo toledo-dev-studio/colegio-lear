@@ -14,6 +14,7 @@ import announcementsRouter from "@/modules/announcements/routes/announcements.ro
 import { NotFoundPage } from "@/shared/pages/NotFoundPage";
 import { ForbiddenRoute } from "./protected.router";
 import { ForbiddenPage } from "@/shared/pages/ForbiddenPage";
+import { studentsRouter } from "@/modules/students/routes/students.router";
 
 export const appRouter = createBrowserRouter([
     /** auth */
@@ -23,16 +24,19 @@ export const appRouter = createBrowserRouter([
     /** my-account */
     myAccountRouter,
 
+    /** students */
+    studentsRouter,
+    /** announcements */
+    announcementsRouter,
+
     /** academic-levels */
     academicLevelsRouter,
     /** school-subjects */
     schoolSubjectRouter,
     /** scholarships */
     scholarshipsRouter,
-
     /** payment-concepts */
     paymentConceptsRouter,
-    announcementsRouter,
 
     /** employees */
     employeesRouter,
@@ -40,7 +44,6 @@ export const appRouter = createBrowserRouter([
     jobTitlesRouter,
     /** security-roles */
     securityRolesRouter,
-
     {
         path: "/",
         element: <Navigate to="/dashboard" />

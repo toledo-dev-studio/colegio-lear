@@ -6,7 +6,7 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import type { JobTitle, JobTitleTypes } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle, JobTitleTypes } from "@/interfaces/entites/job-title";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 interface Props {

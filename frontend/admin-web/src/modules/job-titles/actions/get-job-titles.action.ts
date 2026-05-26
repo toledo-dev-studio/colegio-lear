@@ -1,7 +1,7 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { JobTitle, JobTitleTypes } from "@/interfaces/entites/job-title.interface";
+import type { JobTitle, JobTitleTypes } from "@/interfaces/entites/job-title";
 
 interface Options {
     query?: string;
