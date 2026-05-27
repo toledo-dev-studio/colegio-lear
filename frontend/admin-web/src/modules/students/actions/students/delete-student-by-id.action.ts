@@ -9,7 +9,7 @@ interface Options {
 export const deleteStudentByIdActionAsync = async ({ id }: Options): Promise<string> => {
     await sleep();
 
-    if (VITE_ENVIRONMENT === "development")
+    if (VITE_ENVIRONMENT === "mockable")
         return id;
 
     await api.delete(`/students/${id}`);

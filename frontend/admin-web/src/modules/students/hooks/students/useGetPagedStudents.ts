@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { getPagedStudentsActionAsync } from "../../actions/get-paged-students.action";
+import { getPagedStudentsActionAsync } from "../../actions/students/get-paged-students.action";
 import { GET_PAGED_STUDENTS_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
 import { isValidBooleanString, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 

@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
 import { isValidBooleanString, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { getStudentsActionAsync } from "../../actions/get-students.action";
+import { getStudentsActionAsync } from "../../actions/students/get-students.action";
 
 export const useExportStudents = () => {
     const [searchParams] = useSearchParams();

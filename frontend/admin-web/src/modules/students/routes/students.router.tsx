@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
+import { StudentPage } from "../pages/student/StudentPage";
 import { StudentsPage } from "../pages/students/StudentsPage";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 
@@ -19,6 +20,10 @@ export const studentsRouter: RouteObject = {
         {
             path: "",
             element: <StudentsPage />
+        },
+        {
+            path: ":id",
+            element: <StudentPage />
         },
         {
             path: "*",

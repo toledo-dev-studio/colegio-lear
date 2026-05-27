@@ -76,7 +76,7 @@ export const CustomNavbar = ({ toggleSidebar, logout }: Props) => {
                                     </>
                                 ) :
                                 (
-                                    <div className="ml-2 w-10 h-10 rounded-full bg-muted ring-4 ring-primary/15 flex items-center justify-center overflow-hidden">
+                                    <div className="ml-2 w-10 h-10 rounded-full bg-muted ring-2 ring-primary/15 flex items-center justify-center overflow-hidden">
                                         <UserIcon className="w-5 h-5 text-muted-foreground/60" />
                                     </div>
                                 )

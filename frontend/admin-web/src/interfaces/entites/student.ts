@@ -76,20 +76,4 @@ export interface Student {
      * Required - Postal code
      */
     postalCode: string;
-
-    //! Medical Information
-    /**
-     * Required - Blood type (e.g., "A+", "O-", etc.)
-     */
-    bloodType: string;
-    /**
-     * Optional - List of allergies, can be empty if none
-     */
-    allergies: Allergy[];
-
-    //! Guardians & Emergency contacts (famyly members responsible for the student)
-    /**
-     * Required (At least one) - List of guardians, must have at least one guardian
-     */
-    guardians: StudentGuardian[];
 }
