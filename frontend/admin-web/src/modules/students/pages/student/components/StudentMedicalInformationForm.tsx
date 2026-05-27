@@ -1,19 +1,20 @@
-import { toast } from "sonner";
-import { Link, Navigate, useNavigate } from "react-router";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { useGetByIdStudentMedicalInformation } from "@/modules/students/hooks/medical-information/useGetByIdStudentMedicalInformation";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { BLOOD_TYPES, type StudentMedicalInformation } from "@/interfaces/entites/student-medical-information";
-import { ALLERGY_SEVERITIES } from "@/interfaces/entites/allergy";
+import { useEffect, useRef } from "react";
+import { Link, Navigate } from "react-router";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { useEffect, useRef, useState } from "react";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
-import { Textarea } from "@/shared/ui/textarea";
-import { Button } from "@/shared/ui/button";
 import { Plus, Save, Trash, X } from "lucide-react";
+import { toast } from "sonner";
+
 import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Textarea } from "@/shared/ui/textarea";
+import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { ALLERGY_SEVERITIES } from "@/interfaces/entites/allergy";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
+import { BLOOD_TYPES, type StudentMedicalInformation } from "@/interfaces/entites/student-medical-information";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { useUpdateStudentMedicalInformation } from "@/modules/students/hooks/medical-information/useUpdateStudentMedicalInformation";
+import { useGetByIdStudentMedicalInformation } from "@/modules/students/hooks/medical-information/useGetByIdStudentMedicalInformation";
 
 interface Props {
     id: string;

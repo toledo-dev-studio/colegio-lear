@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
-import { InfoIcon, Mail, Phone, Save, X } from "lucide-react";
+import { Mail, Phone, Save, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Input } from "@/shared/ui/input";

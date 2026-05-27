@@ -1,6 +1,3 @@
-import type { Allergy } from "./allergy";
-import type { StudentGuardian } from "./student-guardian";
-
 /**
  * Represents a student enrolled in the school, containing their personal information, contact details, medical information, and guardians.
  */
