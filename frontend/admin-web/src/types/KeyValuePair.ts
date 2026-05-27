@@ -65,3 +65,13 @@ export type DayOfWeekKey =
 export type PaymentMethodKey =
   | "online-payment"
   | "cash";
+
+export type BloodTypeKey =
+  | "A+"
+  | "A-"
+  | "B+"
+  | "B-"
+  | "AB+"
+  | "AB-"
+  | "O+"
+  | "O-";

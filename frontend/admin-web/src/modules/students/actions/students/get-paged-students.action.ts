@@ -24,7 +24,7 @@ export const getPagedStudentsActionAsync = async ({ query, page = 1, pageSize = 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/students/paged-students.json";
 
-    endpoint = "http://localhost/api/students/paged-students.json";
+    endpoint = "http://localhost/api/students/students/paged-students.json";
 
     const { data } = await api.get<PagedResponse<Student>>(endpoint, {
         params: {

@@ -14,14 +14,26 @@ export const isValidPhone = (value?: string) => {
 
 /**
  * Validate an URL string.
- * @param urlString Url string to validate
+ * @param value Url string to validate
  * @returns Is valid URL
  */
-export const isValidUrl = (urlString: string): boolean => {
+export const isValidUrl = (value: string): boolean => {
     try {
-        const url = new URL(urlString);
+        const url = new URL(value);
         return url.protocol === "https:";
     } catch (e) {
         return false;
     }
-}
+};
+
+/**
+ * Validates that an email address has a valid format.
+ * @param value Email address to validate
+ * - Returns true if valid, otherwise returns an error message string.
+ */
+export const isValidEmail = (value?: string) => {
+    if (!value)
+        return false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+};

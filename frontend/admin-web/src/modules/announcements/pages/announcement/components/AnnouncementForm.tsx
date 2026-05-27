@@ -163,12 +163,12 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                 {
                     !announcement?.id && (
                         <>
-                            <section className="flex flex-col gap-y-4">
-                                <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-8">
-                                    <h2 className="w-full text-muted-foreground flex gap-x-4 items-center">
+                            <section className="flex flex-col gap-y-4 mt-6">
+                                <div className="flex flex-col items-start gap-y-4 border-b border-border mt-2 mb-2 border-solid border p-6 rounded-xl bg-primary/90 dark:bg-primary/20">
+                                    <h2 className="w-full text-white flex gap-x-4 items-center">
                                         <InfoIcon /> CONTENIDO DE LA CAMPAÑA & ARCHIVOS ADJUNTOS
                                     </h2>
-                                    <p className="text-xs text-muted-foreground">
+                                    <p className="text-xs text-white">
                                         Una vez guardada la información general de la campaña, podrás agregar el contenido que se mostrará a los usuarios dentro del diseño de la campaña, así como también subir archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace público.
                                         <br />
                                         Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB.
