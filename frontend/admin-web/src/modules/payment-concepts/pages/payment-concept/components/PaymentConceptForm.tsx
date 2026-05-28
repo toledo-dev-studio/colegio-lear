@@ -131,14 +131,17 @@ export const PaymentConceptForm = ({ paymentConcept, isSubmitting, onSubmit }: P
                     </div>
 
                     <div className="w-full">
-                        <div className="flex items-center justify-center mt-3.5">
+                        <label className="text-sm font-medium text-foreground mb-3 block">
+                                ¿Permitir condonación?:
+                            </label>
+                        <div className="flex items-center justify-center">
                             <Controller
                                 name="allowForgiveness"
                                 control={control}
                                 render={({ field }) => (
                                     <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">Permitir condonación</p>
+                                            <p className="text-sm font-medium text-foreground">{ field.value ? "Sí" : "No" }</p>
                                             <p className="text-xs text-muted-foreground mt-1">El administrador podrá condonar este concepto por alumno según su ciclo escolar.</p>
                                         </div>
                                         <Switch checked={field.value} onCheckedChange={field.onChange} />

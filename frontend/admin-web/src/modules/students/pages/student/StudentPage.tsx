@@ -7,14 +7,15 @@ import { cn } from "@/lib/extensions/utils";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { StudentGeneralInformationForm } from "./components/StudentGeneralInformationForm";
-import { StudentMedicalInformationForm } from "./components/StudentMedicalInformationForm";
+import { StudentForm } from "./components/student-tab/StudentForm";
+import { StudentMedicalInformationForm } from "./components/student-medical-tab/StudentMedicalInformationForm";
 import { useGetByIdStudentGeneralInformation } from "../../hooks/students/useGetByIdStudentGeneralInformation";
+import { StudentGuardiansForm } from "./components/student-guardians-tab/StudentGuardiansForm";
 
 export const StudentPage = () => {
     const { id } = useParams();
 
-    const [formSection, setFormSection] = useState<"main-information" | "guards" | "academic-cycles" | "payments" | "medical-information">("main-information");
+    const [formSection, setFormSection] = useState<"main-information" | "guardians" | "academic-cycles" | "payments" | "medical-information">("main-information");
 
     const studentQuery = useGetByIdStudentGeneralInformation(id || "");
     const isNew = id === "new";
@@ -84,10 +85,10 @@ export const StudentPage = () => {
                                     <button
                                         className={
                                             cn("cursor-pointer inline-flex items-center justify-center p-4 border-b border-transparent rounded-t-base hover:text-fg-brand hover:border-brand group transition transition-all",
-                                                formSection === "guards" && "border-primary text-primary",
+                                                formSection === "guardians" && "border-primary text-primary",
                                                 isNew && "cursor-not-allowed opacity-50"
                                             )}
-                                        onClick={() => !isNew && setFormSection("guards")}>
+                                        onClick={() => !isNew && setFormSection("guardians")}>
                                         <ShieldPlus className="w-4 h-4 me-2 text-muted-foreground group-hover:text-fg-brand" aria-hidden="true" />
                                         Tutores del estudiante
                                     </button>
@@ -133,8 +134,9 @@ export const StudentPage = () => {
                             )
                         }
 
-                        {formSection === "main-information" && <StudentGeneralInformationForm student={studentQuery.data} isNew={isNew} />}
+                        {formSection === "main-information" && <StudentForm student={studentQuery.data} isNew={isNew} />}
                         {formSection === "medical-information" && <StudentMedicalInformationForm id={id!} />}
+                        {formSection === "guardians" && <StudentGuardiansForm studentId={id!} />}
 
                     </div>
                 </div>

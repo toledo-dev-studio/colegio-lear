@@ -8,12 +8,11 @@ interface Options {
     studentMedicalInformationLike: Partial<StudentMedicalInformation>
 }
 
-export const updateStudentMedicalInformationActionAsync = async (options: Options): Promise<StudentMedicalInformation> => {
+export const updateStudentMedicalInformationForStudentActionAsync = async ({ studentId, studentMedicalInformationLike }: Options): Promise<StudentMedicalInformation> => {
     await sleep();
 
-    const { studentId, studentMedicalInformationLike } = options;
-
-    if (VITE_ENVIRONMENT === "mockable") {
+    // REMOVE
+    if (VITE_ENVIRONMENT === "development") {
         return studentMedicalInformationLike as StudentMedicalInformation;
     }
 
