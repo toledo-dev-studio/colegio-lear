@@ -227,8 +227,8 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                             <User className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                             <Input
                                 type="text"
-                                {...register("username", { required: isNew })}
-                                disabled={!isNew}
+                                value={watch("username")}
+                                disabled
                                 placeholder="Nombre de usuario"
                                 className="pill-input w-full pl-8 pr-13" />
                         </div>

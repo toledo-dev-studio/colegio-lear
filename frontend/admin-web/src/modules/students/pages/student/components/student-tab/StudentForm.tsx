@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
-import { Mail, Phone, Save, X } from "lucide-react";
+import { Mail, Phone, Save, User, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Input } from "@/shared/ui/input";
@@ -13,7 +13,6 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { useCreateUpdateStudentGeneralInformation } from "@/modules/students/hooks/students/useCreateUpdateStudentGeneralInformation";
 
 interface Props {
@@ -21,7 +20,7 @@ interface Props {
     isNew: boolean,
 }
 
-export const StudentGeneralInformationForm = ({ student, isNew }: Props) => {
+export const StudentForm = ({ student, isNew }: Props) => {
 
     const navigate = useNavigate();
     const { showLoading, hideLoading } = useLoaderStore();
@@ -32,8 +31,6 @@ export const StudentGeneralInformationForm = ({ student, isNew }: Props) => {
         register,
         handleSubmit,
         formState: { errors },
-        setValue,
-        watch,
         reset
     } = useForm<Partial<Student>>({
         defaultValues: {
@@ -70,26 +67,11 @@ export const StudentGeneralInformationForm = ({ student, isNew }: Props) => {
             <form onSubmit={handleSubmit(onSubmit)}>
 
                 {/* Main student information */}
-                <section className="flex flex-col gap-y-6 mt-1">
-                    <div className="flex flex-col gap-y-2 justify-center border-b border-border pb-4">
-                        <div className="flex flex-col items-start gap-y-4 md:items-center md:flex-row md:justify-between">
-                            <h2 className="w-full text-muted-foreground">
-                                INFORMACIÓN GENERAL DEL ESTUDIANTE
-                            </h2>
-                            <div className="w-fit flex items-center">
-                                <Tooltip>
-                                    <TooltipTrigger>
-                                        <Switch
-                                            size="default"
-                                            checked={watch("status") ?? false}
-                                            onCheckedChange={(checked) => setValue("status", checked)} />
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Estatus del registro</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </div>
-                        </div>
+                <section className="flex flex-col gap-y-6 mt-2">
+                    <div className="flex flex-col items-start gap-y-3 justify-center border-b border-border pb-4">
+                        <h2 className="w-full text-muted-foreground">
+                            INFORMACIÓN GENERAL DEL ESTUDIANTE
+                        </h2>
                         <p className="text-sm text-muted-foreground">
                             En esta sección de la pantalla podrás configurar la información general de un estudiante, además de datos de domicilio y de contacto para darle un mejor seguimiento a la información del alumno dentro de la institución.
                         </p>
@@ -145,7 +127,23 @@ export const StudentGeneralInformationForm = ({ student, isNew }: Props) => {
                             }
                         </div>
                         <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">Fecha de publicación <span className="text-destructive">*</span>:</label>
+                            <label className="text-sm font-medium text-foreground mb-3 block">
+                                CURP <span className="text-destructive">*</span>:
+                            </label>
+                            <Input
+                                type="text"
+                                {...register("curp", { required: true })}
+                                placeholder="Ejemplo: SASO750909HDFNNS05" />
+                            {
+                                errors.curp && (
+                                    <p className="text-red-500 text-sm mt-2">
+                                        La CURP es obligatorio
+                                    </p>
+                                )
+                            }
+                        </div>
+                        <div className="w-full">
+                            <label className="text-sm font-medium text-foreground mb-3 block">Fecha de nacimiento <span className="text-destructive">*</span>:</label>
                             <Controller
                                 name="dateOfBirth"
                                 control={control}
@@ -167,35 +165,38 @@ export const StudentGeneralInformationForm = ({ student, isNew }: Props) => {
                         </div>
                         <div className="w-full">
                             <label className="text-sm font-medium text-foreground mb-3 block">
-                                CURP <span className="text-destructive">*</span>:
+                                Matrícula:
                             </label>
-                            <Input
-                                type="text"
-                                {...register("curp", { required: true })}
-                                placeholder="Ejemplo: SASO750909HDFNNS05" />
-                            {
-                                errors.curp && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        La CURP es obligatorio
-                                    </p>
-                                )
-                            }
+                            <div className="relative">
+                                <User className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Input
+                                    type="text"
+                                    disabled
+                                    value={student?.enrollment}
+                                    placeholder="Matricula del alumno"
+                                    className="pill-input w-full pl-8 pr-13" />
+                            </div>
                         </div>
-
-                        {
-                            !isNew && (
-                                <div className="w-full">
-                                    <label className="text-sm font-medium text-foreground mb-3 block">
-                                        Matrícula:
-                                    </label>
-                                    <Input
-                                        type="text"
-                                        disabled
-                                        value={student?.enrollment}
-                                        placeholder="Ejemplo: 123456789" />
-                                </div>
-                            )
-                        }
+                        <div className="w-full">
+                            <label className="text-sm font-medium text-foreground mb-3 block">
+                                Estatus del registro:
+                            </label>
+                            <div className="flex items-center justify-center mt-3.5">
+                                <Controller
+                                    name="status"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
+                                            <div>
+                                                <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                                <p className="text-xs text-muted-foreground mt-1">Permite o restringe al alumno del sistema.</p>
+                                            </div>
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                        </label>
+                                    )}
+                                />
+                            </div>
+                        </div>
 
                         <div className="w-full col-span-1 md:col-span-2 xl:col-span-3">
                             <label className="text-sm font-medium text-foreground mb-3 block">Observaciones adicionales:</label>
@@ -213,7 +214,7 @@ export const StudentGeneralInformationForm = ({ student, isNew }: Props) => {
                             DATOS DE CONTACTO DEL ESTUDIANTE
                         </h2>
                         <p className="text-xs text-muted-foreground">
-                            Información que servirá para que el alumno pueda acceder a su portal de alumno, así como para que el personal administrativo pueda contactarlo en caso de ser necesario.
+                            Información necesaria para que el alumno pueda acceder a su portal de alumno, así como para que el personal administrativo pueda contactarlo en caso de ser necesario.
                             Si el alumno es menor de edad, se recomienda utilizar el correo electrónico y número de teléfono de alguno de sus tutores para evitar problemas de comunicación.
                         </p>
                     </div>
@@ -279,10 +280,13 @@ export const StudentGeneralInformationForm = ({ student, isNew }: Props) => {
 
                 {/* Address student information */}
                 <section className="flex flex-col gap-y-6 mt-8">
-                    <div className="flex flex-col gap-y-4 items-center border-b border-border pb-4">
+                    <div className="flex flex-col gap-y-4 justify-center border-b border-border pb-4">
                         <h2 className="w-full text-muted-foreground">
                             DOMICILIO DEL ESTUDIANTE
                         </h2>
+                        <p className="text-xs text-muted-foreground">
+                            Información necesaria para poder atender cualquier incidente con el alumno.
+                        </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                         <div className="w-full">

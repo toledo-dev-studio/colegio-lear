@@ -41,3 +41,28 @@ export const formatFriendlyDateTime = (dateString: string): string => {
         minute: "2-digit"
     }).format(date);
 };
+
+/**
+ * Calculate the years between a date until now.
+ * @param dateString Date in ISO string format
+ * @returns Years
+ */
+export const calculateYears = (dateString: string): number => {
+    const birthDate = new Date(dateString);
+    const today = new Date();
+
+    let years = today.getFullYear() - birthDate.getFullYear();
+
+    const hasHadBirthdayThisYear =
+        today.getMonth() > birthDate.getMonth() ||
+        (
+            today.getMonth() === birthDate.getMonth() &&
+            today.getDate() >= birthDate.getDate()
+        );
+
+    if (!hasHadBirthdayThisYear) {
+        years--;
+    }
+
+    return years;
+};

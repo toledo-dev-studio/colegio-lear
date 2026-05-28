@@ -23,6 +23,14 @@ export const STUDENT_GUARDIANS: KeyValuePair<StudentGuardianTypeKey>[] = [
  */
 export interface StudentGuardian {
     /**
+     * Required - Guardian unique identifier
+     */
+    id: string;
+    /**
+     * Required - Student unique identifier
+     */
+    studentId: string;
+    /**
      * Required - Full name of the guardian
      */
     fullName: string;

@@ -15,6 +15,10 @@ export const ALLERGY_SEVERITIES: KeyValuePair<AllergySeverityKey>[] = [
  */
 export interface Allergy {
     /**
+     * Required - Allergy unique identifier
+     */
+    id: string;
+    /**
      * Required - Name of the allergy (e.g., "Peanuts", "Pollen", etc.)
      */
     name: string;
