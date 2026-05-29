@@ -5,7 +5,7 @@ import { AuthenticatedRoute } from "@/routes/protected.router";
 import { AnnouncementPage } from "../pages/announcement/AnnouncementPage";
 import { AnnouncementsPage } from "../pages/announcements/AnnouncementsPage";
 
-const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const AnnouncementsLayout = lazy(() => import("@/modules/announcements/layout/AnnouncementsLayout"));
 
 export const announcementsRouter: RouteObject = {

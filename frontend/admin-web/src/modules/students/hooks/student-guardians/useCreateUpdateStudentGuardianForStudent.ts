@@ -10,8 +10,8 @@ export const useCreateUpdateStudentGuardianForStudent = () => {
     return useMutation({
         mutationFn: createUpdateStudentGuardianForStudentActionAsync,
         onSuccess: (response: StudentGuardian) => {
-            // Invalid cache for useQueries
-            queryClient.invalidateQueries({ queryKey: [GET_STUDENT_GUARDIANS_QUERY_KEY, { studentId: response.studentId }] });
+            // Set query data for student guardians list to avoid refetch api
+            queryClient.setQueryData([GET_STUDENT_GUARDIANS_QUERY_KEY, { studentId: response.studentId }], (prev: StudentGuardian[] = []) => [...prev.filter(item => item.id !== response.id), response]);
         }
     });
 }

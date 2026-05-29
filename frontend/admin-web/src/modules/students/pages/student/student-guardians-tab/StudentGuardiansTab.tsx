@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate } from "react-router";
+import { Navigate, useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Mail, Pencil, Phone, Plus, Trash } from "lucide-react";
@@ -14,16 +14,16 @@ import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { STUDENT_GUARDIANS, type StudentGuardian } from "@/interfaces/entites/student-guardian";
+import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { useGetStudentGuardiansForStudent } from "@/modules/students/hooks/student-guardians/useGetStudentGuardiansForStudent";
 import { useDeleteStudentGuardianByIdForStudent } from "@/modules/students/hooks/student-guardians/useDeleteStudentGuardianByIdForStudent";
 import { useCreateUpdateStudentGuardianForStudent } from "@/modules/students/hooks/student-guardians/useCreateUpdateStudentGuardianForStudent";
 
-interface Props {
-    studentId: string;
-}
+export const StudentGuardiansTab = () => {
 
-export const StudentGuardiansForm = ({ studentId }: Props) => {
+    // Get context from layout
+    const { studentId } = useOutletContext<StudentLayoutContext>();
 
     // Hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
@@ -31,19 +31,12 @@ export const StudentGuardiansForm = ({ studentId }: Props) => {
     const [studentGuardianToDelete, setStudentGuardianToDelete] = useState<StudentGuardian>();
 
     // Queries & mutations
-    const studentGuardiansForStudentQuery = useGetStudentGuardiansForStudent(studentId);
+    const studentGuardiansForStudentQuery = useGetStudentGuardiansForStudent(studentId!);
     const deleteStudentGuardianByIdForStudent = useDeleteStudentGuardianByIdForStudent();
     const createUpdateStudentGuardianForStudentMutation = useCreateUpdateStudentGuardianForStudent();
 
     // Use hook form configuration
-    const {
-        control,
-        register,
-        handleSubmit,
-        formState: { errors },
-        watch,
-        reset,
-    } = useForm<Partial<StudentGuardian>>({
+    const { control, register, handleSubmit, formState: { errors }, watch, reset } = useForm<Partial<StudentGuardian>>({
         defaultValues: {
             id: "",
             studentId: studentId,
@@ -57,9 +50,6 @@ export const StudentGuardiansForm = ({ studentId }: Props) => {
             observations: ""
         }
     });
-    const principal = watch("principal");
-    const authorizedToPickUp = watch("authorizedToPickUp");
-    const emergencyContact = watch("emergencyContact");
 
     const resetFormToDefaultValues = () => {
         reset({
@@ -89,7 +79,7 @@ export const StudentGuardiansForm = ({ studentId }: Props) => {
     const handleClickConfirmDeleteStudentGuardian = async () => {
         if (!studentGuardianToDelete)
             return;
-        await deleteStudentGuardianByIdForStudent.mutateAsync({ studentId: studentGuardianToDelete.studentId, guardianId: studentGuardianToDelete.id },
+        await deleteStudentGuardianByIdForStudent.mutateAsync({ studentId: studentGuardianToDelete.studentId, studentGuardianId: studentGuardianToDelete.id },
             {
                 onSuccess: () => {
                     toast.success("Tutor eliminado correctamente", { position: "top-right" });
@@ -277,10 +267,10 @@ export const StudentGuardiansForm = ({ studentId }: Props) => {
                                     render={({ field }) => (
                                         <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
                                             <div>
-                                                <p className="text-sm font-medium text-foreground">{principal ? "Sí" : "No"}</p>
+                                                <p className="text-sm font-medium text-foreground">{field.value ? "Sí" : "No"}</p>
                                                 <p className="text-xs text-muted-foreground mt-1">El usuario que esta registrando es un tutor principal y podrá ver la actividad del estudiante.</p>
                                             </div>
-                                            <Switch checked={principal} onCheckedChange={field.onChange} />
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
                                         </label>
                                     )}
                                 />
@@ -297,10 +287,10 @@ export const StudentGuardiansForm = ({ studentId }: Props) => {
                                     render={({ field }) => (
                                         <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
                                             <div>
-                                                <p className="text-sm font-medium text-foreground">{emergencyContact ? "Sí" : "No"}</p>
+                                                <p className="text-sm font-medium text-foreground">{field.value ? "Sí" : "No"}</p>
                                                 <p className="text-xs text-muted-foreground mt-1">El usuario que esta registrando será considerado como contacto de emergencia.</p>
                                             </div>
-                                            <Switch checked={emergencyContact} onCheckedChange={field.onChange} />
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
                                         </label>
                                     )}
                                 />
@@ -317,10 +307,10 @@ export const StudentGuardiansForm = ({ studentId }: Props) => {
                                     render={({ field }) => (
                                         <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
                                             <div>
-                                                <p className="text-sm font-medium text-foreground">{authorizedToPickUp ? "Sí" : "No"}</p>
+                                                <p className="text-sm font-medium text-foreground">{field.value ? "Sí" : "No"}</p>
                                                 <p className="text-xs text-muted-foreground mt-1">El usuario que esta registrando podrá acudir al colegio para recoger al estudiante al finalizar clases.</p>
                                             </div>
-                                            <Switch checked={authorizedToPickUp} onCheckedChange={field.onChange} />
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
                                         </label>
                                     )}
                                 />

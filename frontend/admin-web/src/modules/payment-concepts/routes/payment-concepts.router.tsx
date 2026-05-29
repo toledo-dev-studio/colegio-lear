@@ -5,7 +5,7 @@ import { AuthenticatedRoute } from "@/routes/protected.router";
 import { PaymentConceptPage } from "../pages/payment-concept/PaymentConceptPage";
 import { PaymentConceptsPage } from "../pages/payment-concepts/PaymentConceptsPage";
 
-const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const PaymentConceptsLayout = lazy(() => import("@/modules/payment-concepts/layout/PaymentConceptsLayout"));
 
 export const paymentConceptsRouter: RouteObject = {

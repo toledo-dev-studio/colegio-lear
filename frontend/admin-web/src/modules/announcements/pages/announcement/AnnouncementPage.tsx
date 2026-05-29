@@ -41,7 +41,7 @@ export const AnnouncementPage = () => {
     return <Navigate to="/announcements" />;
   }
 
-  if (announcementQuery.isLoading) {
+  if (announcementQuery.isFetching) {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">

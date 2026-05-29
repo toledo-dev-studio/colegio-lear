@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useLocation } from "react-router";
 import { ChevronRight, Home } from "lucide-react";
 
@@ -22,8 +21,8 @@ export const CustomBreadcrumb = ({ items }: BreadcrumbProps) => {
       {items.map((c, i) => {
         const isLast = i === items.length - 1;
         return (
-          <React.Fragment key={`${c.label}-${i}`}>
-            <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/60" />
+          <div className="flex flex-row items-center" key={`${c.label}-${i}`}>
+            <ChevronRight className="min-w-3.5 min-h-3.5 text-muted-foreground/60" />
             {c.to && !isLast ? (
               <Link to={c.to} className="hover:text-primary transition-colors">
                 {c.label}
@@ -33,7 +32,7 @@ export const CustomBreadcrumb = ({ items }: BreadcrumbProps) => {
                 {c.label}
               </span>
             )}
-          </React.Fragment>
+          </div>
         );
       })}
       <span className="sr-only">Página actual: {location.pathname}</span>

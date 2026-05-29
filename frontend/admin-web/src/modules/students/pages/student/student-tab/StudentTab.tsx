@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Mail, Phone, Save, User, X } from "lucide-react";
 import { toast } from "sonner";
@@ -13,19 +13,20 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
+import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 import { useCreateUpdateStudentGeneralInformation } from "@/modules/students/hooks/students/useCreateUpdateStudentGeneralInformation";
 
-interface Props {
-    student?: Student,
-    isNew: boolean,
-}
+export const StudentTab = () => {
 
-export const StudentForm = ({ student, isNew }: Props) => {
+    // Get context from layout
+    const { student, isNew } = useOutletContext<StudentLayoutContext>();
 
+    // Hooks & stores
     const navigate = useNavigate();
     const { showLoading, hideLoading } = useLoaderStore();
     const mutation = useCreateUpdateStudentGeneralInformation();
 
+    // Use hook form configuration
     const {
         control,
         register,
@@ -191,7 +192,7 @@ export const StudentForm = ({ student, isNew }: Props) => {
                                                 <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
                                                 <p className="text-xs text-muted-foreground mt-1">Permite o restringe al alumno del sistema.</p>
                                             </div>
-                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                            <Switch defaultChecked={field.value} onCheckedChange={field.onChange} />
                                         </label>
                                     )}
                                 />
@@ -368,17 +369,16 @@ export const StudentForm = ({ student, isNew }: Props) => {
                 </section>
 
                 {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-10 gap-x-6">
+                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
                     <Link to="/students">
-                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"destructive"}>
+                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
                             Cancelar
-                            <X className="ml-4 w-3 h-3" />
                         </Button>
                     </Link>
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar datos
+                        Guardar
                         {
-                            isSubmitting ? (<CustomSpinner variant="primary" className="ml-4" />) : <Save className="ml-4 w-3 h-3" />
+                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

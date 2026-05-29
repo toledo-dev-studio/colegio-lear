@@ -105,8 +105,8 @@ export const CustomTableListRibbon = (props: Props) => {
                         disabled={disabledAdd}
                         aria-label="Agregar nuevo registro"
                         className="pill-btn-primary w-fit px-10 rounded-full">
-                        Agregar nuevo
-                        <Plus className="w-4 h-4" />
+                        Nuevo registro
+                        <Plus className="ml-4 w-4 h-4" />
                     </Button>
                 </div>
             </div>

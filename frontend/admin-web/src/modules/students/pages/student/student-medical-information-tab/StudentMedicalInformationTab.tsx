@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, Navigate } from "react-router";
+import { Link, Navigate, useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Save, X } from "lucide-react";
 import { toast } from "sonner";
@@ -14,17 +14,19 @@ import { BLOOD_TYPES, type StudentMedicalInformation } from "@/interfaces/entite
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { useGetStudentMedicalInformationForStudent } from "@/modules/students/hooks/medical-information/useGetStudentMedicalInformationForStudent";
 import { useUpdateStudentMedicalInformationForStudent } from "@/modules/students/hooks/medical-information/useUpdateStudentMedicalInformationForStudent";
+import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 
-interface Props {
-    id: string;
-}
+export const StudentMedicalInformationTab = () => {
 
-export const StudentMedicalInformationForm = ({ id }: Props) => {
+    // Get context from layout
+    const { studentId } = useOutletContext<StudentLayoutContext>();
 
+    // Hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
-    const studentMedicalInformationQuery = useGetStudentMedicalInformationForStudent(id);
+    const studentMedicalInformationQuery = useGetStudentMedicalInformationForStudent(studentId);
     const updateStudentMedicalInformationForStudentMutation = useUpdateStudentMedicalInformationForStudent();
 
+    // Use hook form configuration
     const {
         control,
         register,
@@ -44,7 +46,7 @@ export const StudentMedicalInformationForm = ({ id }: Props) => {
     const onSubmit = async (studentMedicalInformationLike: Partial<StudentMedicalInformation>) => {
         try {
             showLoading("Guardando");
-            await updateStudentMedicalInformationForStudentMutation.mutateAsync({ studentId: id, studentMedicalInformationLike }, {
+            await updateStudentMedicalInformationForStudentMutation.mutateAsync({ studentId: studentId!, studentMedicalInformationLike }, {
                 onSuccess: () => {
                     toast.success("Datos médicos del estudiante actualizados correctamente", { position: "top-right" });
                     hideLoading();
@@ -149,17 +151,16 @@ export const StudentMedicalInformationForm = ({ id }: Props) => {
                 </section>
 
                 {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-10 gap-x-6">
+                <section className="flex items-center justify-end mt-8 gap-x-4 pt-6">
                     <Link to="/students">
-                        <Button type="button" disabled={updateStudentMedicalInformationForStudentMutation.isPending} aria-label="cancel" variant={"destructive"}>
+                        <Button type="button" disabled={updateStudentMedicalInformationForStudentMutation.isPending} aria-label="cancel" variant={"ghost"}>
                             Cancelar
-                            <X className="ml-4 w-3 h-3" />
                         </Button>
                     </Link>
                     <Button type="submit" disabled={updateStudentMedicalInformationForStudentMutation.isPending} aria-label="save-record">
-                        Guardar datos
+                        Guardar
                         {
-                            updateStudentMedicalInformationForStudentMutation.isPending ? (<CustomSpinner variant="primary" className="ml-4" />) : <Save className="ml-4 w-3 h-3" />
+                            updateStudentMedicalInformationForStudentMutation.isPending && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

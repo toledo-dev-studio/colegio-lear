@@ -241,19 +241,17 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                     )
                 }
 
-
                 {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-8 gap-x-6">
+                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
                     <Link to="/announcements">
-                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"destructive"}>
+                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
                             Cancelar
-                            <X className="ml-4 w-3 h-3" />
                         </Button>
                     </Link>
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar datos
+                        Guardar
                         {
-                            isSubmitting ? (<CustomSpinner variant="primary" className="ml-4" />) : <Save className="ml-4 w-3 h-3" />
+                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

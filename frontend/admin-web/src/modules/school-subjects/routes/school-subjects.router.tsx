@@ -5,7 +5,7 @@ import { AuthenticatedRoute } from "@/routes/protected.router";
 import { SchoolSubjectPage } from "../pages/school-subject/SchoolSubjectPage";
 import { SchoolSubjectsPage } from "../pages/school-subjects/SchoolSubjectsPage";
 
-const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const SchoolSubjectsLayout = lazy(() => import("@/modules/school-subjects/layout/SchoolSubjectsLayout"));
 
 export const schoolSubjectsRouter: RouteObject = {

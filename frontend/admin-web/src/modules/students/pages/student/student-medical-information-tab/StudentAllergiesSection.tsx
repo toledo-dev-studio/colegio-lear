@@ -148,7 +148,7 @@ export const StudentAllergiesSection = ({ allergies = [], onUpdateAllergies }: P
                 </div>
                 <div className="w-full flex justify-start items-center col-span-1 md:col-span-2 mt-4">
                     <Button type="button" variant={"outline"} className="text-primary hover:text-white hover:bg-primary !border-primary hover:border-white bg-white" onClick={handleSubmit(onSubmit)}>
-                        {watch("id") ? "Actualizar alergia" : "Agregar alergia"}
+                        {watch("id") ? "Actualizar alergia" : "Agregar al listado"}
                         <Plus className="ml-4 w-4 h-4" />
                     </Button>
                 </div>
