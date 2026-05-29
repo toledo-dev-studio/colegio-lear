@@ -4,16 +4,16 @@ import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
 interface Options {
     studentId: string;
-    guardianId: string;
+    studentGuardianId: string;
 }
 
-export const deleteStudentGuardianByIdForStudentActionAsync = async ({ studentId, guardianId }: Options): Promise<Options> => {
+export const deleteStudentGuardianByIdForStudentActionAsync = async ({ studentId, studentGuardianId }: Options): Promise<Options> => {
     await sleep();
 
     // REMOVE
     if (VITE_ENVIRONMENT === "development")
-        return { studentId, guardianId };
+        return { studentId, studentGuardianId };
 
-    await api.delete(`/students/${studentId}/guardians/${guardianId}`);
-    return { studentId, guardianId };
+    await api.delete(`/students/${studentId}/guardians/${studentGuardianId}`);
+    return { studentId, studentGuardianId };
 }

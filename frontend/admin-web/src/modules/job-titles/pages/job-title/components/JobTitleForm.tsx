@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Save, X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
@@ -126,18 +126,22 @@ export const JobTitleForm = ({ jobTitle, isSubmitting, onSubmit }: Props) => {
 
                 </div>
 
-                <div className="flex items-center justify-end mt-8 gap-x-6">
-                    <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"destructive"} onClick={handleClickCancel}>
-                        Cancelar
-                        <X className="ml-4 w-3 h-3" />
-                    </Button>
+                {/* Actions Buttons */}
+                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
+                    <Link to="/job-titles">
+                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
+                            Cancelar
+                        </Button>
+                    </Link>
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar datos
+                        Guardar
                         {
-                            isSubmitting ? (<CustomSpinner variant="primary" className="ml-4" />) : <Save className="ml-4 w-3 h-3" />
+                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
-                </div>
+                </section>
+
+                
 
             </form>
         </>

@@ -4,7 +4,7 @@ import { Navigate, type RouteObject } from "react-router";
 import { DashboardPage } from "../pages/DashboardPage";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 
-const SystemLayout = lazy(() => import('@/shared/layout/SystemLayout'));
+const SystemLayout = lazy(() => import('@/shared/layouts/SystemLayout'));
 const DashboardLayout = lazy(() => import('@/modules/dashboard/layout/DashboardLayout'));
 
 export const dashboardRouter: RouteObject = {

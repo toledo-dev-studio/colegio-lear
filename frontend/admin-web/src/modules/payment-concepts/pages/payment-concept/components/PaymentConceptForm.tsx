@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router';
 import { Controller, useForm } from 'react-hook-form';
-import { Banknote, Save, X } from 'lucide-react';
+import { Banknote } from 'lucide-react';
 
 import { Input } from '@/shared/ui/input';
 import { Switch } from '@/shared/ui/switch';
@@ -152,22 +152,20 @@ export const PaymentConceptForm = ({ paymentConcept, isSubmitting, onSubmit }: P
                     </div>
                 </div>
 
-
                 {/* Actions Buttons */}
-                <div className="flex items-center justify-end mt-8 gap-x-6">
+                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
                     <Link to="/payment-concepts">
-                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"destructive"}>
+                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
                             Cancelar
-                            <X className="ml-4 w-3 h-3" />
                         </Button>
                     </Link>
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar datos
+                        Guardar
                         {
-                            isSubmitting ? (<CustomSpinner variant="primary" className="ml-4" />) : <Save className="ml-4 w-3 h-3" />
+                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
-                </div>
+                </section>
 
             </form>
         </>

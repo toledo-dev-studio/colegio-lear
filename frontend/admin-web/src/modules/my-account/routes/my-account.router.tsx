@@ -4,7 +4,7 @@ import { Navigate, type RouteObject } from "react-router";
 import { MyAccountPage } from "../pages/MyAccountPage";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 
-const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const MyAccountLayout = lazy(() => import("@/modules/my-account/layout/MyAccountLayout"));
 
 export const myAccountRouter: RouteObject = {

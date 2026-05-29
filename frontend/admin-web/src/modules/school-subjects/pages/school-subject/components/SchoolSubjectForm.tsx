@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { Save, X } from "lucide-react";
 
@@ -173,15 +173,16 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
 
                 </div>
 
-                <div className="flex items-center justify-end mt-8 gap-x-6">
-                    <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"destructive"} onClick={handleClickCancel}>
-                        Cancelar
-                        <X className="ml-4 w-3 h-3" />
-                    </Button>
+                 <div className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
+                    <Link to="/school-subjects">
+                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
+                            Cancelar
+                        </Button>
+                    </Link>
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar datos
+                        Guardar
                         {
-                            isSubmitting ? (<CustomSpinner variant="primary" className="ml-4" />) : <Save className="ml-4 w-3 h-3" />
+                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </div>

@@ -5,7 +5,7 @@ import { AuthenticatedRoute } from "@/routes/protected.router";
 import { ScholarshipPage } from "../pages/scholarship/ScholarshipPage";
 import { ScholarshipsPage } from "../pages/scholarships/ScholarshipsPage";
 
-const SystemLayout = lazy(() => import("@/shared/layout/SystemLayout"));
+const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const ScholarshipsLayout = lazy(() => import("@/modules/scholarships/layout/ScholarshipsLayout"));
 
 export const scholarshipsRouter: RouteObject = {
