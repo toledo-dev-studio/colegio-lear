@@ -1,7 +1,7 @@
 import type { Student } from "./student";
 import type { AcademicCycle } from "./academic-cycle";
 import type { KeyValuePair, StudentPaymentStatusKey } from "@/types/KeyValuePair";
-import type { AcademicCycleWalletPaymentConcept } from "./academic-cycle-wallet-payment-concept";
+import type { AcademicCycleWallet } from "./academic-cycle-wallet";
 
 /**
  * STUDENT_PAYMENT_STATUSES defines the possible statuses for a student's payment associated with an academic cycle wallet, which can be used to track the current state of the payment. 
@@ -79,9 +79,9 @@ export interface StudentWalletPaymentConcept {
     /**
      * Not set from frontend - Identifier of the associated academic cycle wallet payment concept
      */
-    academicCycleWalletPaymentConceptId: string;
+    academicCycleWalletId: string;
     /**
      * Not set from frontend - Reference to the associated academic cycle wallet payment concept
      */
-    academicCycleWalletPaymentConcept?: AcademicCycleWalletPaymentConcept;
+    academicCycleWallet?: AcademicCycleWallet;
 }

@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
 import { isValidBooleanString, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { getAcademicLevelsActionAsync } from "../actions/get-academic-levels.action";
+import { getAcademicLevelsActionAsync } from "../../actions/get-academic-levels.action";
 
 export const useExportAcademicLevels = () => {
     const [searchParams] = useSearchParams();

@@ -5,7 +5,7 @@ import { DashboardPage } from "../pages/DashboardPage";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 
 const SystemLayout = lazy(() => import('@/shared/layouts/SystemLayout'));
-const DashboardLayout = lazy(() => import('@/modules/dashboard/layout/DashboardLayout'));
+const DashboardLayout = lazy(() => import('@/modules/dashboard/layouts/DashboardLayout'));
 
 export const dashboardRouter: RouteObject = {
     path: '/dashboard',

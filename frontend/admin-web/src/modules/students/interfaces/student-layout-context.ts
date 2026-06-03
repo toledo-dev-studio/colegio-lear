@@ -11,9 +11,9 @@ export interface StudentLayoutContext {
     /**
      * Student information or undefined if is new record
      */
-    student?: Student;
+    student: Student;
     /**
      * Student unique identifier or undefined if is a new record
      */
-    studentId?: string;
+    studentId: string;
 }

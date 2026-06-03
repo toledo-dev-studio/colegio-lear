@@ -17,7 +17,7 @@ import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { StudentsAdvancedFilters } from "./components/StudentsAdvancedFilters";
 
 export const StudentsPage = () => {
-      const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
     const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);

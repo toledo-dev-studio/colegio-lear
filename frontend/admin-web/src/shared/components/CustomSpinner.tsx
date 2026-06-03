@@ -3,7 +3,7 @@ import { cn } from "@/lib/extensions/utils";
 
 interface Props {
     className?: string,
-    variant: 'primary' | 'destructive' | 'foreground';
+    variant: "primary" | "destructive" | "foreground";
 }
 
 export const CustomSpinner = ({ className, variant }: Props) => {

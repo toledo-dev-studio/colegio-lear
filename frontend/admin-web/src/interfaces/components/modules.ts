@@ -3,7 +3,7 @@ export type ModuleKeys =
     | 'my-account'
     | 'my-classes'
     | 'students'
-    | 'academic-years'
+    | 'academic-cycles'
     | 'announcements'
     | 'academic-levels'
     | 'school-subjects'
@@ -60,8 +60,8 @@ export const STUDENTS_MODULE: Module = {
     }
 };
 
-export const ACADEMIC_YEARS_MODULE: Module = {
-    key: 'academic-years',
+export const ACADEMIC_CYCLES_MODULE: Module = {
+    key: 'academic-cycles',
     label: 'Ciclos escolares',
     permissions: {
         canRead: true,
@@ -167,7 +167,7 @@ export const AVAILABLE_MODULES: Module[] = [
 
     // Seguimiento escolar
     STUDENTS_MODULE,
-    ACADEMIC_YEARS_MODULE,
+    ACADEMIC_CYCLES_MODULE,
     ANNOUNCEMENTS_MODULE,
 
     // Configuración escolar

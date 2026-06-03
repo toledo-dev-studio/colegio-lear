@@ -1,7 +1,6 @@
 import type { AcademicCycle } from "./academic-cycle";
 import type { AcademicCycleGroup } from "./academic-cycle-group";
 import type { DayOfWeekKey, KeyValuePair } from "@/types/KeyValuePair";
-import type { AcademicCycleGroupSchoolSubject } from "./academic-cycle-group-school-subject";
 
 /**
  * DAY_OF_WEEKS represents a list of all possible days of the week with their corresponding keys and labels.
@@ -54,13 +53,4 @@ export interface AcademicCycleGroupSchoolSubjectCalendar {
      * Not set from frontend - Reference to the associated academic cycle group
      */
     academicCycleGroup?: AcademicCycleGroup;
-
-    /**
-     * Required - Identifier of the associated academic cycle group school subject
-     */
-    academicCycleGroupSchoolSubjectId: string;
-    /**
-     * Not set from frontend - Reference to the associated academic cycle group school subject
-     */
-    academicCycleGroupSchoolSubject?: AcademicCycleGroupSchoolSubject;
 }

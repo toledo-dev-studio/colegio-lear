@@ -6,7 +6,7 @@ import { SchoolSubjectPage } from "../pages/school-subject/SchoolSubjectPage";
 import { SchoolSubjectsPage } from "../pages/school-subjects/SchoolSubjectsPage";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
-const SchoolSubjectsLayout = lazy(() => import("@/modules/school-subjects/layout/SchoolSubjectsLayout"));
+const SchoolSubjectsLayout = lazy(() => import("@/modules/school-subjects/layouts/SchoolSubjectsLayout"));
 
 export const schoolSubjectsRouter: RouteObject = {
     path: "/school-subjects",

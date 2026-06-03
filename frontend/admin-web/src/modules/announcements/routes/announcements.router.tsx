@@ -6,7 +6,7 @@ import { AnnouncementPage } from "../pages/announcement/AnnouncementPage";
 import { AnnouncementsPage } from "../pages/announcements/AnnouncementsPage";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
-const AnnouncementsLayout = lazy(() => import("@/modules/announcements/layout/AnnouncementsLayout"));
+const AnnouncementsLayout = lazy(() => import("@/modules/announcements/layouts/AnnouncementsLayout"));
 
 export const announcementsRouter: RouteObject = {
     path: "/announcements",

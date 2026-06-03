@@ -36,7 +36,6 @@ export interface AcademicCycleGroup {
      * Backend should set this field when updating a record, frontend should not set this field when creating or updating a record
      */
     updatedAt?: string;
-
     /**
      * Required - Identifier of the associated academic cycle
      */
@@ -45,22 +44,4 @@ export interface AcademicCycleGroup {
      * Not set from frontend - Reference to the associated academic cycle
      */
     academicCycle?: AcademicCycle;
-
-    /**
-     * Required - Identifier of the associated academic level
-     */
-    academicLevelId: string;
-    /**
-     * Not set from frontend - Reference to the associated academic level
-     */
-    academicLevel?: AcademicLevel;
-
-    /**
-     * Required - Identifier of the associated education level
-     */
-    educationLevelId: string;
-    /**
-     * Not set from frontend - Reference to the associated education level
-     */
-    educationLevel?: EducationLevel;
 }

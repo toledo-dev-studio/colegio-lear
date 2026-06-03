@@ -10,7 +10,8 @@ export const createUpdateStudentGeneralInformationActionAsync = async (studentLi
     const { id } = studentLike;
     const isCreating = id === undefined;
 
-    if (VITE_ENVIRONMENT === "mockable") {
+    // REMOVE
+    if (VITE_ENVIRONMENT === "development") {
         studentLike.id = isCreating ? generateTemporalId() : id;
         return studentLike as Student;
     }

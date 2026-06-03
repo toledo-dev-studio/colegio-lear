@@ -5,7 +5,7 @@ import { LoginPage } from "../pages/login/LoginPage";
 import { NotAuthenticatedRoute } from "@/routes/protected.router";
 import { ForgotPassword } from "../pages/forgot-password/ForgotPassword";
 
-const AuthLayout = lazy(() => import("@/modules/auth/layout/AuthLayout"));
+const AuthLayout = lazy(() => import("@/modules/auth/layouts/AuthLayout"));
 
 export const authRouter: RouteObject = {
     path: "/auth",
