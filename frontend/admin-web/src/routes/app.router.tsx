@@ -15,6 +15,7 @@ import { NotFoundPage } from "@/shared/pages/NotFoundPage";
 import { ForbiddenRoute } from "./protected.router";
 import { ForbiddenPage } from "@/shared/pages/ForbiddenPage";
 import { studentsRouter } from "@/modules/students/routes/students.router";
+import academicCyclesRouter from "@/modules/academic-cycles/routes/academic-cycles.router";
 
 export const appRouter = createBrowserRouter([
     /** auth */
@@ -26,6 +27,8 @@ export const appRouter = createBrowserRouter([
 
     /** students */
     studentsRouter,
+    /** academic-cycles */
+    academicCyclesRouter,
     /** announcements */
     announcementsRouter,
 

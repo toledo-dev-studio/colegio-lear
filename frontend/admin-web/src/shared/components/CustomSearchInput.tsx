@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, XCircle } from "lucide-react"
 
 import { cn } from "@/lib/extensions/utils";
@@ -21,6 +21,7 @@ interface Props {
 }
 
 export const CustomSearchInput = (props: Props) => {
+    const [searched, setSearched] = useState<boolean>(false);
     const {
         placeholder,
         defaultValue,
@@ -40,7 +41,7 @@ export const CustomSearchInput = (props: Props) => {
         if (inputRef.current) {
             inputRef.current.value = defaultValue ?? "";
         }
-    }, [defaultValue])
+    }, [defaultValue]);
 
     return (
         <>
@@ -54,13 +55,15 @@ export const CustomSearchInput = (props: Props) => {
                         placeholder={placeholder}
                         disabled={disabled || selected || isSearching}
                         onKeyDown={(event) => {
+                            setSearched(false);
                             if (event.key !== "Enter")
                                 return;
                             if (isSearching)
                                 return;
-                            if(event.key === "Enter")
+                            if (event.key === "Enter")
                                 event.preventDefault();
                             onSearch(inputRef.current?.value ?? "", event);
+                            setSearched(true);
                         }}
                         className={
                             cn("pill-input w-full pl-8 pr-12", disabled && "cursor-not-allowed")
@@ -77,7 +80,11 @@ export const CustomSearchInput = (props: Props) => {
                             <div className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground">
                                 <Tooltip>
                                     <TooltipTrigger>
-                                        <XCircle className="cursor-pointer w-4 h-4 text-muted-foreground" onClick={onClearSelection} />
+                                        <XCircle className="cursor-pointer w-4 h-4 text-muted-foreground" onClick={() => {
+                                            if(disabled) 
+                                                return;
+                                            onClearSelection();
+                                        }} />
                                     </TooltipTrigger>
                                     <TooltipContent>
                                         <p>Remover selección</p>
@@ -100,6 +107,19 @@ export const CustomSearchInput = (props: Props) => {
                 }
 
                 {
+                    (!selected && !isSearching && searched && options.length === 0) && (
+                        <div className="absolute z-10 w-full text-right mt-2">
+                            <ul className="shadow-sm bg-card border border-border text-foreground flex flex-col rounded-md">
+                                <li className={cn("py-3 text-sm text-left pl-6 border-b border-border cursor-pointer hover:bg-muted")}>
+                                    No se encontró ningún registro
+                                </li>
+
+                            </ul>
+                        </div>
+                    )
+                }
+
+                {
                     (options.length > 0) && (
                         <div className="absolute z-10 w-full text-right mt-2">
                             <ul className="shadow-sm bg-card border border-border text-foreground flex flex-col rounded-md">
@@ -112,6 +132,7 @@ export const CustomSearchInput = (props: Props) => {
                                                     inputRef.current.value = option[labelSchemaName];
                                                 }
                                                 onOptionChange(option);
+                                                setSearched(false);
                                             }}
                                             className={cn("py-3 text-sm text-left pl-6 border-b border-border cursor-pointer hover:bg-muted")}>
                                             {option[labelSchemaName]}

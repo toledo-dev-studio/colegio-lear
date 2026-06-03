@@ -5,7 +5,7 @@ import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import { getPagedAcademicLevelsActionAsync } from "@/modules/academic-levels/actions/get-paged-academic-levels.action";
 
-export const useSearchAcademicLevelsForSchoolSubject = () => {
+export const useSearchAcademicLevels = () => {
     const [academicLevels, setAcademicLevels] = useState<AcademicLevel[]>([])
 
     const mutation = useMutation({

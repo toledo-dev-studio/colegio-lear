@@ -1,10 +1,12 @@
 import type { AcademicCycleStatusKey, AcademicPeriodTypeKey, KeyValuePair } from "@/types/KeyValuePair";
+import type { AcademicLevel } from "./academic-level";
+import type { EducationLevel } from "./education-level";
 
 /**
  * ACADEMIC_PERIOD_TYPES defines the different types of academic periods that can be used to categorize academic cycles.
  * Each type has a key and a label for display purposes.
  */
-export const ACADEMIC_PERIOD_TYPES: KeyValuePair<AcademicPeriodTypeKey>[] = [
+export const ACADEMIC_CYCLE_PERIOD_TYPES: KeyValuePair<AcademicPeriodTypeKey>[] = [
     { key: "annual", label: "Anual" },
     { key: "semester", label: "Semestral" },
     { key: "four-month-period", label: "Cuatrimestral" },
@@ -20,11 +22,11 @@ export const ACADEMIC_PERIOD_TYPES: KeyValuePair<AcademicPeriodTypeKey>[] = [
  * Each status has a key and a label for display purposes.
  */
 export const ACADEMIC_CYCLE_STATUSES: KeyValuePair<AcademicCycleStatusKey>[] = [
-  { key: "upcoming", label: "Próximo" },
-  { key: "active", label: "Activo" },
-  { key: "completed", label: "Finalizado" },
-  { key: "cancelled", label: "Cancelado" },
-  { key: "archived", label: "Archivado" },
+    { key: "upcoming", label: "Próximo" },
+    { key: "active", label: "En curso" },
+    { key: "completed", label: "Finalizado" },
+    { key: "cancelled", label: "Cancelado" },
+    { key: "archived", label: "Archivado" },
 ];
 
 /**
@@ -82,4 +84,25 @@ export interface AcademicCycle {
      * Backend should set this field when updating a record, frontend should not set this field when creating or updating a record
      */
     updatedAt?: string;
+    /**
+     * Optional - Additional observations or comments about the academic cycle
+     */
+    observations?: string;
+    /**
+     * Required - Identifier of the associated academic level
+     */
+    academicLevelId: string;
+    /**
+     * Not set from frontend - Reference to the associated academic level
+     */
+    academicLevel?: AcademicLevel;
+
+    /**
+     * Required - Identifier of the associated education level
+     */
+    educationLevelId: string;
+    /**
+     * Not set from frontend - Reference to the associated education level
+     */
+    educationLevel?: EducationLevel;
 }

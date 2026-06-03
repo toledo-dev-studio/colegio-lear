@@ -13,22 +13,26 @@ const TABS: Tab[] = [
     {
         to: "",
         label: "Información general",
-        icon: UserCircle2
+        icon: UserCircle2,
+        protected: false
     },
     {
         to: "medical-information",
         label: "Información médica",
-        icon: HeartPlus
+        icon: HeartPlus,
+        protected: true
     },
     {
         to: "guardians",
         label: "Tutores del estudiante",
-        icon: ShieldPlus
+        icon: ShieldPlus,
+        protected: true
     },
     {
         to: "academic-cycles",
         label: "Ciclos escolares",
-        icon: CalendarDays
+        icon: CalendarDays,
+        protected: true
     }
 ];
 
@@ -44,8 +48,7 @@ export const StudentLayout = () => {
     const isNew = id === "new";
     const title = isNew ? "Registro de estudiante" : "Edición de estudiante";
 
-    const protectedRoutes = ["/medical-information", "/guardians", "/payments", "/academic-cycles"];
-    const isProtectedRoute = protectedRoutes.some(route => pathname.endsWith(route));
+    const isProtectedRoute = TABS.some(tab => tab.protected && pathname.endsWith(tab.to));
 
     const isActiveRoute = (to: string): boolean => {
         if (to === "") {
@@ -108,7 +111,10 @@ export const StudentLayout = () => {
                                                             isActiveRoute(tab.to) && "border-primary text-primary",
                                                             (tab.to !== "" && isNew) && "cursor-not-allowed opacity-50"
                                                         )}>
-                                                    <Icon className="w-4 h-4 me-2 text-muted-foreground group-hover:text-fg-brand" aria-hidden="true" />
+                                                    <Icon className={
+                                                        cn("w-4 h-4 me-2 text-muted-foreground group-hover:text-fg-brand",
+                                                            isActiveRoute(tab.to) && "text-primary"
+                                                        )} aria-hidden="true" />
                                                     {tab.label}
                                                 </button>
                                             </li>

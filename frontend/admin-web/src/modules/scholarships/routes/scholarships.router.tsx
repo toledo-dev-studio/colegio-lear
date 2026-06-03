@@ -6,7 +6,7 @@ import { ScholarshipPage } from "../pages/scholarship/ScholarshipPage";
 import { ScholarshipsPage } from "../pages/scholarships/ScholarshipsPage";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
-const ScholarshipsLayout = lazy(() => import("@/modules/scholarships/layout/ScholarshipsLayout"));
+const ScholarshipsLayout = lazy(() => import("@/modules/scholarships/layouts/ScholarshipsLayout"));
 
 export const scholarshipsRouter: RouteObject = {
     path: "/scholarships",

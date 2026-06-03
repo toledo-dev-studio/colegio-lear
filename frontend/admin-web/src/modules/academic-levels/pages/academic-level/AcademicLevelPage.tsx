@@ -5,9 +5,9 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { AcademicLevelForm } from "./components/AcademicLevelForm";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { useGetByIdAcademicLevel } from "../../hooks/useGetByIdAcademicLevel";
+import { useGetByIdAcademicLevel } from "../../hooks/academic-levels/useGetByIdAcademicLevel";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { useCreateUpdateAcademicLevel } from "../../hooks/useCreateUpdateAcademicLevel";
+import { useCreateUpdateAcademicLevel } from "../../hooks/academic-levels/useCreateUpdateAcademicLevel";
 import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const AcademicLevelPage = () => {

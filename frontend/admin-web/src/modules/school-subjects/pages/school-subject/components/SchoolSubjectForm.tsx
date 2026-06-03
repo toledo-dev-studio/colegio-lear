@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useForm } from "react-hook-form";
-import { Save, X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
@@ -13,8 +12,8 @@ import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { useSearchAcademicLevelsForSchoolSubject } from "@/modules/school-subjects/hooks/academic-levels/useSearchAcademicLevelsForSchoolSubject";
-import { useSearchEducationLevelsForSchoolSubject } from "@/modules/school-subjects/hooks/education-levels/useSearchEducationLevelsForSchoolSubject";
+import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
+import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
 
 interface Props {
     schoolSubject?: SchoolSubject,
@@ -24,7 +23,6 @@ interface Props {
 
 export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Props) => {
 
-    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -40,19 +38,15 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
     const selectedEducationLevel = watch("educationLevelId");
 
     // Academic levels assign configuration
-    const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevelsForSchoolSubject();
+    const searchAcademicLevels = useSearchAcademicLevels();
 
     // Education levels assign configuration
-    const searchEducationLevelsForSchoolSubject = useSearchEducationLevelsForSchoolSubject();
+    const searchEducationLevelsForAcademicLevel = useSearchEducationLevelsForAcademicLevel();
 
     useEffect(() => {
         if (schoolSubject)
             reset(schoolSubject);
     }, [schoolSubject])
-
-    const handleClickCancel = () => {
-        navigate("/school-subjects");
-    }
 
     return (
         <>
@@ -105,8 +99,8 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                             defaultValue={watch("academicLevel.name")}
                             selected={!!selectedAcademicLevel}
                             placeholder="Busqueda de nivel académico"
-                            options={searchAcademicLevelsForSchoolSubject.academicLevels ?? []}
-                            isSearching={searchAcademicLevelsForSchoolSubject.isPending}
+                            options={searchAcademicLevels.academicLevels ?? []}
+                            isSearching={searchAcademicLevels.isPending}
                             onClearSelection={() => {
                                 setValue("academicLevelId", undefined);
                                 setValue("academicLevel.name", undefined);
@@ -116,9 +110,9 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                             onOptionChange={async (option: AcademicLevel) => {
                                 setValue("academicLevelId", option.id);
                                 setValue("academicLevel.name", option.name);
-                                searchAcademicLevelsForSchoolSubject.clearSearchResult();
+                                searchAcademicLevels.clearSearchResult();
                             }}
-                            onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync(query)}
+                            onSearch={async (query) => searchAcademicLevels.searchAsync(query)}
                         />
                         {
                             (errors.academicLevelId && !selectedAcademicLevel) && (
@@ -137,8 +131,8 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                             selected={!!selectedEducationLevel}
                             disabled={!selectedAcademicLevel}
                             placeholder="Busqueda de nivel educativo"
-                            options={searchEducationLevelsForSchoolSubject.educationLevels ?? []}
-                            isSearching={searchEducationLevelsForSchoolSubject.isPending}
+                            options={searchEducationLevelsForAcademicLevel.educationLevels ?? []}
+                            isSearching={searchEducationLevelsForAcademicLevel.isPending}
                             onClearSelection={() => {
                                 setValue("educationLevelId", undefined);
                                 setValue("educationLevel.name", undefined);
@@ -146,9 +140,9 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                             onOptionChange={async (option: EducationLevel) => {
                                 setValue("educationLevelId", option.id);
                                 setValue("educationLevel.name", option.name);
-                                searchEducationLevelsForSchoolSubject.clearSearchResult();
+                                searchEducationLevelsForAcademicLevel.clearSearchResult();
                             }}
-                            onSearch={async (query) => searchEducationLevelsForSchoolSubject.searchAsync({
+                            onSearch={async (query) => searchEducationLevelsForAcademicLevel.searchAsync({
                                 academicLevelId: selectedAcademicLevel!,
                                 query
                             })}

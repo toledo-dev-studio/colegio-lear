@@ -11,7 +11,7 @@ export const useGetPagedStudents = () => {
     // Main query filters
     const query = searchParams.get("query")?.trim() || undefined;
     const page = stringToNumberWithDefault(searchParams.get("page"), 1);
-    const pageSize = stringToNumberWithDefault(searchParams.get("pageSize"), 10);
+    const pageSize = stringToNumberWithDefault(searchParams.get("page-size"), 10);
 
     // Advanced query filters
     const name = searchParams.get("name")?.trim() || undefined;

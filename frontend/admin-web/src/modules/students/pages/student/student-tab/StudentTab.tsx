@@ -11,10 +11,10 @@ import { Textarea } from "@/shared/ui/textarea";
 import type { Student } from "@/interfaces/entites/student";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
-import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
 import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 import { useCreateUpdateStudentGeneralInformation } from "@/modules/students/hooks/students/useCreateUpdateStudentGeneralInformation";
+import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 
 export const StudentTab = () => {
 
@@ -27,19 +27,11 @@ export const StudentTab = () => {
     const mutation = useCreateUpdateStudentGeneralInformation();
 
     // Use hook form configuration
-    const {
-        control,
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset
-    } = useForm<Partial<Student>>({
+    const { control, register, handleSubmit, formState: { errors }, setValues } = useForm<Partial<Student>>({
         defaultValues: {
             ...student,
         }
     });
-
-    const isSubmitting = false;
 
     const onSubmit = async (studentLike: Partial<Student>) => {
         try {
@@ -59,8 +51,7 @@ export const StudentTab = () => {
     }
 
     useEffect(() => {
-        if (student)
-            reset(student);
+        setValues(student);
     }, [student]);
 
     return (
@@ -371,14 +362,14 @@ export const StudentTab = () => {
                 {/* Actions Buttons */}
                 <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
                     <Link to="/students">
-                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
+                        <Button type="button" disabled={mutation.isPending} aria-label="cancel" variant={"ghost"}>
                             Cancelar
                         </Button>
                     </Link>
-                    <Button type="submit" disabled={isSubmitting} aria-label="save-record">
+                    <Button type="submit" disabled={mutation.isPending} aria-label="save-record">
                         Guardar
                         {
-                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
+                            mutation.isPending && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

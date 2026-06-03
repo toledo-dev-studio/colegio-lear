@@ -6,7 +6,7 @@ import { AuthenticatedRoute } from "@/routes/protected.router";
 import { AcademicLevelPage } from "../pages/academic-level/AcademicLevelPage";
 import { AcademicLevelsPage } from "../pages/academic-levels/AcademicLevelsPage";
 
-const AcademicLevelsLayout = lazy(() => import("@/modules/academic-levels/layout/AcademicLevelsLayout"));
+const AcademicLevelsLayout = lazy(() => import("@/modules/academic-levels/layouts/AcademicLevelsLayout"));
 
 export const academicLevelsRouter: RouteObject = {
     path: "/academic-levels",

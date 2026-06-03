@@ -9,10 +9,10 @@ import { AcademicLevelsTable } from "./components/AcademicLevelsTable";
 import { CustomPagination } from "@/shared/components/CustomPagination";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { useDeleteAcademicLevel } from "../../hooks/useDeleteAcademicLevel";
-import { useExportAcademicLevels } from "../../hooks/useExportAcademicLevels";
+import { useDeleteAcademicLevel } from "../../hooks/academic-levels/useDeleteAcademicLevel";
+import { useExportAcademicLevels } from "../../hooks/academic-levels/useExportAcademicLevels";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
-import { useGetPagedAcademicLevels } from "../../hooks/useGetPagedAcademicLevels";
+import { useGetPagedAcademicLevels } from "../../hooks/academic-levels/useGetPagedAcademicLevels";
 import { AcademicLevelsAdvancedFilters } from "./components/AcademicLevelsAdvancedFilters";
 import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
