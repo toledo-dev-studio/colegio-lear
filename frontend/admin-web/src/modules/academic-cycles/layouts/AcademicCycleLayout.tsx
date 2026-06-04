@@ -23,7 +23,7 @@ const TABS: Tab[] = [
         protected: true
     },
     {
-        to: "groups",
+        to: "school-groups",
         label: "Grupos escolares",
         icon: Users,
         protected: true
@@ -139,7 +139,12 @@ export const AcademicCycleLayout = () => {
 
                         {/* Router outlet container */}
                         <div className="w-full flex flex-col gap-y-6">
-                            <Outlet context={{ academicCycle: academicCycleQuery.data, academicCycleId: id, isNew: isNew, isLocked: academicCycleQuery.data?.status !== "upcoming" }} />
+                            <Outlet context={{
+                                academicCycle: academicCycleQuery.data,
+                                academicCycleId: id,
+                                isNew: isNew,
+                                isLocked: (academicCycleQuery.data?.status !== "upcoming" && academicCycleQuery.data?.status !== undefined)
+                            }} />
                         </div>
 
                     </div>

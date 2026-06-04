@@ -3,13 +3,13 @@
  * - Removes all non-numeric characters before validation.
  * - Returns true if valid, otherwise returns an error message string.
  */
-export const isValidPhone = (value?: string) => {
+export const isValidPhone = (value?: string): boolean => {
     if (!value)
-        return "El número de teléfono no es válido";
+        return false;
 
     const cleaned = value.replace(/\D/g, "");
 
-    return cleaned.length >= 10 || "El número de teléfono no es válido";
+    return cleaned.length >= 10;
 };
 
 /**

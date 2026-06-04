@@ -1,6 +1,6 @@
 import type { Student } from "./student";
 import type { AcademicCycle } from "./academic-cycle";
-import type { AcademicCycleGroup } from "./academic-cycle-group";
+import type { AcademicCycleGroup } from "./academic-cycle-school-group";
 
 /**
  * Represents an attendance record for a student on a specific date, containing details about the attendance status, related entities, and timestamps for record management.

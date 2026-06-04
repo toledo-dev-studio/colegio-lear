@@ -12,10 +12,6 @@ export interface AcademicCycleSchoolSubject {
      */
     id: string;
     /**
-     * Required - Indicates if the academic cycle group school subject is active
-     */
-    status: boolean;
-    /**
      * Optional - Description of the academic cycle group school subject
      */
     observations?: string;

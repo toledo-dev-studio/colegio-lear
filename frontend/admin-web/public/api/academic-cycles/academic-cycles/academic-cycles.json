@@ -10,11 +10,11 @@
         "enrollmentOpen": false,
         "description": "Ciclo escolar anual 2023-2024.",
         "observations": "Ciclo concluido sin incidencias.",
-        "academicLevelId": "al-primaria",
+        "academicLevelId": "a1000000-0001-4000-8000-000000000002",
         "academicLevel": {
             "name": "Primaria"
         },
-        "educationLevelId": "el-primaria-1",
+        "educationLevelId": "b2000000-0002-4000-8000-000000000003",
         "educationLevel": {
             "name": "1ro de Primaria"
         }

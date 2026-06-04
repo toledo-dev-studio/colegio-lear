@@ -49,7 +49,7 @@ export interface StudentGuardian {
     /**
      * Required - Indicates if this guardian is the primary contact
      */
-    principal: boolean;
+    isPrincipal: boolean;
     /**
      * Required - Indicates if this guardian should be contacted in case of emergency
      */

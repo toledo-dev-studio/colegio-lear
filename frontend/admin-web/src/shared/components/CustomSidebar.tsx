@@ -20,7 +20,7 @@ export const CustomSidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) =
   const navbar = filterNavbarByPermissions(NAVBAR, permissions);
 
   const isActiveRoute = (to?: string) => {
-    if (pathname.includes(to || "")) return true;
+    if (pathname.startsWith(`/${to}` || "")) return true;
     return pathname === to;
   }
 

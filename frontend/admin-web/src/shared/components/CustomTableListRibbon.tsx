@@ -73,12 +73,12 @@ export const CustomTableListRibbon = (props: Props) => {
 
                     {/* Search */}
                     <div className="flex-1 max-w-md relative">
-                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
                             ref={inputSearchRef}
                             onKeyDown={handleKeyDown}
                             placeholder="Búsqueda general..."
-                            className="pill-input w-full pl-12"
+                            className="pill-input w-full pl-8 pr-12"
                             defaultValue={query}
                         />
                     </div>

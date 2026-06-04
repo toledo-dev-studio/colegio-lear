@@ -1,7 +1,4 @@
 import type { AcademicCycle } from "./academic-cycle";
-import type { AcademicLevel } from "./academic-level";
-import type { EducationLevel } from "./education-level";
-
 /**
  * Represents a group within an academic cycle, containing details about the group's name, status, description, and references to related entities such as the academic cycle, academic level, and education level.
  * This entity is used to organize students into specific groups for each academic cycle, allowing for better management of enrollments, attendance, and other related processes.

@@ -1,7 +1,7 @@
 import { Navigate } from "react-router";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Banknote, Pencil, Plus, Trash } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
 import { Switch } from "@/shared/ui/switch";
@@ -126,7 +126,7 @@ export const AcademicCycleWalletTab = () => {
                     <CustomFullScreenLoading className="relative" title="Cargando cartera de ciclo escolar" subtitle="Por favor espere..." />
                 </div>
             </>
-        )
+        );
     }
 
     return (
