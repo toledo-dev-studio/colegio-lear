@@ -7,6 +7,7 @@ import { AcademicCycleLayout } from "../layouts/AcademicCycleLayout";
 import { AcademicCycleTab } from "../pages/academic-cycle/academic-cycle-tab/AcademicCycleTab";
 import { AcademicCycleSchoolSubjectTab } from "../pages/academic-cycle/academic-cycle-school-subjects-tab/AcademicCycleSchoolSubjectTab";
 import { AcademicCycleWalletTab } from "../pages/academic-cycle/academic-cycle-wallet-tab/AcademicCycleWalletTab";
+import { AcademicCycleSchoolGroupTab } from "../pages/academic-cycle/academic-cycle-school-group-tab/AcademicCycleSchoolGroupTab";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const AcademicCyclesLayout = lazy(() => import("@/modules/academic-cycles/layouts/AcademicCyclesLayout"));
@@ -39,6 +40,10 @@ export const academicCyclesRouter: RouteObject = {
                 {
                     path: "school-subjects",
                     element: <AcademicCycleSchoolSubjectTab />
+                },
+                {
+                    path: "school-groups",
+                    element: <AcademicCycleSchoolGroupTab />
                 },
                 {
                     path: "wallet",

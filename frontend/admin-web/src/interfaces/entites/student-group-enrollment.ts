@@ -1,6 +1,6 @@
 import type { Student } from "./student";
 import type { AcademicCycle } from "./academic-cycle";
-import type { AcademicCycleGroup } from "./academic-cycle-group";
+import type { AcademicCycleGroup } from "./academic-cycle-school-group";
 import type { KeyValuePair, StudentGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
 import type { Scholarship } from "./scholarship";
 

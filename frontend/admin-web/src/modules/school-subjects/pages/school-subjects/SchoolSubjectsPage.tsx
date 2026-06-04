@@ -12,9 +12,9 @@ import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
 import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
 import { SchoolSubjectsAdvancedFilters } from "./components/SchoolSubjectsAdvancedFilters";
-import { useDeleteSchoolSubject } from "../../hooks/school-subjects/useDeleteSchoolSubject";
-import { useExportSchoolSubjects } from "../../hooks/school-subjects/useExportSchoolSubjects";
-import { useGetPagedSchoolSubjects } from "../../hooks/school-subjects/useGetPagedSchoolSubjects";
+import { useDeleteSchoolSubject } from "../../hooks/useDeleteSchoolSubject";
+import { useExportSchoolSubjects } from "../../hooks/useExportSchoolSubjects";
+import { useGetPagedSchoolSubjects } from "../../hooks/useGetPagedSchoolSubjects";
 
 export const SchoolSubjectsPage = () => {
 

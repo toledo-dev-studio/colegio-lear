@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useGetStudentGuardiansForStudent } from "@/modules/students/hooks/student-guardians/useGetStudentGuardiansForStudent";
 import { useDeleteStudentGuardianByIdForStudent } from "@/modules/students/hooks/student-guardians/useDeleteStudentGuardianByIdForStudent";
 import { useCreateUpdateStudentGuardianForStudent } from "@/modules/students/hooks/student-guardians/useCreateUpdateStudentGuardianForStudent";
+import { Modal } from "@/shared/components/modal/Modal";
 
 export const StudentGuardiansTab = () => {
 
@@ -29,6 +30,7 @@ export const StudentGuardiansTab = () => {
     const { showLoading, hideLoading } = useLoaderStore();
     const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
     const [studentGuardianToDelete, setStudentGuardianToDelete] = useState<StudentGuardian>();
+    const [confirmationRequired, setConfirmationRequired] = useState<boolean>(false);
 
     // Queries & mutations
     const studentGuardiansForStudentQuery = useGetStudentGuardiansForStudent(studentId!);
@@ -36,7 +38,7 @@ export const StudentGuardiansTab = () => {
     const createUpdateStudentGuardianForStudentMutation = useCreateUpdateStudentGuardianForStudent();
 
     // Use hook form configuration
-    const { control, register, handleSubmit, formState: { errors }, watch, reset } = useForm<Partial<StudentGuardian>>({
+    const { control, register, handleSubmit, formState: { errors }, watch, getValues, reset } = useForm<Partial<StudentGuardian>>({
         defaultValues: {
             id: "",
             studentId: studentId,
@@ -44,12 +46,13 @@ export const StudentGuardiansTab = () => {
             email: "",
             phoneNumber: "",
             relationship: undefined,
-            principal: false,
+            isPrincipal: false,
             authorizedToPickUp: false,
             emergencyContact: false,
             observations: ""
         }
     });
+    const isPrincipal = watch("isPrincipal");
 
     const resetFormToDefaultValues = () => {
         reset({
@@ -59,7 +62,7 @@ export const StudentGuardiansTab = () => {
             email: "",
             phoneNumber: "",
             relationship: undefined,
-            principal: false,
+            isPrincipal: false,
             authorizedToPickUp: false,
             emergencyContact: false,
             observations: ""
@@ -93,6 +96,14 @@ export const StudentGuardiansTab = () => {
                 }
             }
         );
+    }
+
+    const validateAcademicCycleStatus = async (studentGuardianLike: Partial<StudentGuardian>) => {
+        if (studentGuardianLike.isPrincipal) {
+            setConfirmationRequired(true);
+            return;
+        }
+        await onSubmit(studentGuardianLike);
     }
 
     const onSubmit = async (studentGuardianLike: Partial<StudentGuardian>) => {
@@ -131,7 +142,7 @@ export const StudentGuardiansTab = () => {
     return (
         <>
             {/* Student guardian form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-8">
+            <form onSubmit={handleSubmit(validateAcademicCycleStatus)} className="flex flex-col gap-y-8">
                 <section className="flex flex-col gap-y-6 mt-2 border-b border-border pb-8">
                     <div className="flex flex-col items-start gap-y-3 justify-center border-b border-border pb-4">
                         <h2 className="w-full text-muted-foreground">
@@ -146,7 +157,7 @@ export const StudentGuardiansTab = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                         <div className="w-full">
                             <label className="text-sm font-medium text-foreground mb-3 block">
-                                Nombre del estudiante <span className="text-destructive">*</span>:
+                                Nombre completo del tutor <span className="text-destructive">*</span>:
                             </label>
                             <Input
                                 type="text"
@@ -156,61 +167,6 @@ export const StudentGuardiansTab = () => {
                                 errors.fullName && (
                                     <p className="text-red-500 text-sm mt-2">
                                         El nombre completo del tutor es obligatorio
-                                    </p>
-                                )
-                            }
-                        </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">
-                                Correo electrónico <span className="text-destructive">*</span>:
-                            </label>
-                            <div className="relative">
-                                <Mail className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                                <Input
-                                    type="email"
-                                    {...register("email",
-                                        {
-                                            required: true,
-                                            validate: {
-                                                isValidEmail: (value) => isValidEmail(value) || "El correo electrónico no es válido"
-                                            }
-                                        }
-                                    )}
-                                    placeholder="usuario@dominio.com"
-                                    className="pr-13" />
-                            </div>
-                            {
-                                errors.email && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        {errors.email.message || "El correo electrónico del empleado es obligatorio"}
-                                    </p>
-                                )
-                            }
-                        </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">
-                                Número de teléfono<span className="text-destructive">*</span>:
-                            </label>
-                            <div className="relative">
-                                <Phone className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                                <Input
-                                    type="number"
-                                    {...register("phoneNumber",
-                                        {
-                                            required: true,
-                                            validate: {
-                                                isValidPhone: (value) => isValidPhone(value) || "El número de teléfono no es válido"
-                                            }
-                                        }
-                                    )}
-                                    placeholder="+52 (55) 1234-5678"
-                                    maxLength={10}
-                                    className="pr-13" />
-                            </div>
-                            {
-                                errors.phoneNumber && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        {errors.phoneNumber.message || "El número de teléfono del empleado es obligatorio"}
                                     </p>
                                 )
                             }
@@ -253,7 +209,69 @@ export const StudentGuardiansTab = () => {
                                 )
                             }
                         </div>
-
+                        <div className="w-full">
+                            <label className="text-sm font-medium text-foreground mb-3 block">
+                                Número de teléfono {isPrincipal && <span className="text-destructive">*</span>}:
+                            </label>
+                            <div className="relative">
+                                <Phone className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Input
+                                    type="number"
+                                    {...register("phoneNumber",
+                                        {
+                                            required: isPrincipal,
+                                            validate: {
+                                                isValidPhone: (value) => {
+                                                    if (!isPrincipal && !value)
+                                                        return true;
+                                                    return isValidPhone(value) || "El número de teléfono no es válido"
+                                                }
+                                            }
+                                        }
+                                    )}
+                                    placeholder="+52 (55) 1234-5678"
+                                    maxLength={10}
+                                    className="pr-13" />
+                            </div>
+                            {
+                                errors.phoneNumber && (
+                                    <p className="text-red-500 text-sm mt-2">
+                                        {errors.phoneNumber.message || "El número de teléfono del empleado es obligatorio"}
+                                    </p>
+                                )
+                            }
+                        </div>
+                        <div className="w-full">
+                            <label className="text-sm font-medium text-foreground mb-3 block">
+                                Correo electrónico {isPrincipal && <span className="text-destructive">*</span>}:
+                            </label>
+                            <div className="relative">
+                                <Mail className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Input
+                                    type="email"
+                                    {...register("email",
+                                        {
+                                            required: isPrincipal,
+                                            validate: {
+                                                isValidEmail: (value) => {
+                                                    if (!isPrincipal && !value)
+                                                        return true;
+                                                    return isValidEmail(value) || "El correo electrónico no es válido"
+                                                }
+                                            }
+                                        }
+                                    )}
+                                    placeholder="usuario@dominio.com"
+                                    className="pr-13" />
+                            </div>
+                            {
+                                errors.email && (
+                                    <p className="text-red-500 text-sm mt-2">
+                                        {errors.email.message || "El correo electrónico del empleado es obligatorio"}
+                                    </p>
+                                )
+                            }
+                        </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                         <div className="w-full">
@@ -262,7 +280,7 @@ export const StudentGuardiansTab = () => {
                             </label>
                             <div className="flex items-center justify-center">
                                 <Controller
-                                    name="principal"
+                                    name="isPrincipal"
                                     control={control}
                                     render={({ field }) => (
                                         <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
@@ -330,6 +348,26 @@ export const StudentGuardiansTab = () => {
                         </Button>
                     </div>
                 </section>
+
+                {/* Save confirmation modal */}
+                <Modal
+                    open={confirmationRequired}
+                    type="info"
+                    title="¡Antes de continuar!"
+                    message="El registro que estas por guardar se marcó como 'Tutor principal', por ello a este tutor se le enviará información del alumno así como sus accesos para el portal del alumno. ¿Estás seguro de continuar?"
+                    isLoading={false}
+                    cancelButton={{
+                        label: "Cancelar",
+                        onClick: () => setConfirmationRequired(false)
+                    }}
+                    confirmButton={{
+                        label: "Aceptar",
+                        onClick: async () => {
+                            setConfirmationRequired(false);
+                            await onSubmit(getValues())
+                        },
+                    }}
+                />
             </form>
 
             {/* Guards table section */}
@@ -390,9 +428,9 @@ export const StudentGuardiansTab = () => {
                                             <td className="row">{studentGuardian.phoneNumber}</td>
                                             <td className="row">{studentGuardian.email}</td>
                                             <td className="row">
-                                                <Badge variant={studentGuardian.principal ? "success" : "destructive"} className="py-4 px-6">
+                                                <Badge variant={studentGuardian.isPrincipal ? "success" : "destructive"} className="py-4 px-6">
                                                     {
-                                                        studentGuardian.principal ? "Sí" : "No"
+                                                        studentGuardian.isPrincipal ? "Sí" : "No"
                                                     }
                                                 </Badge>
                                             </td>

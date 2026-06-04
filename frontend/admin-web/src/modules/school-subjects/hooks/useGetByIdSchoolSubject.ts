@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { GET_SCHOOL_SUBJECT_QUERY_KEY } from "@/lib/queries-key/school-subjects-queries-key";
-import { getSchoolSubjectByIdActionAsync } from "../../actions/get-school-subject-by-id.action";
+import { getSchoolSubjectByIdActionAsync } from "../actions/get-school-subject-by-id.action";
 
 export const useGetByIdSchoolSubject = (id?: string) => {
     return useQuery({

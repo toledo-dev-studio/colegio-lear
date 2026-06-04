@@ -6,9 +6,9 @@ import { SchoolSubjectForm } from "./components/SchoolSubjectForm";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
+import { useGetByIdSchoolSubject } from "../../hooks/useGetByIdSchoolSubject";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { useGetByIdSchoolSubject } from "../../hooks/school-subjects/useGetByIdSchoolSubject";
-import { useCreateUpdateSchoolSubject } from "../../hooks/school-subjects/useCreateUpdateSchoolSubject";
+import { useCreateUpdateSchoolSubject } from "../../hooks/useCreateUpdateSchoolSubject";
 
 export const SchoolSubjectPage = () => {
   const navigate = useNavigate();

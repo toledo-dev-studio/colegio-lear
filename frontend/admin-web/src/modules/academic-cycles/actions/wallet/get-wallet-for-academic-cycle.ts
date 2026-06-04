@@ -7,7 +7,7 @@ interface Options {
     academicCycleId: string;
 }
 
-export const getWalletForAcademicCycle = async ({ academicCycleId }: Options): Promise<AcademicCycleWallet[]> => {
+export const getWalletForAcademicCycleActionAsync = async ({ academicCycleId }: Options): Promise<AcademicCycleWallet[]> => {
     await sleep();
 
     if (!academicCycleId)

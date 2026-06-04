@@ -7,19 +7,19 @@ import { Input } from "@/shared/ui/input";
 import { Switch } from "@/shared/ui/switch";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
+import { Modal } from "@/shared/components/modal/Modal";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
+import type { AcademicLevel } from "@/interfaces/entites/academic-level";
+import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import type { EducationLevel } from "@/interfaces/entites/education-level";
+import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES, type AcademicCycle } from "@/interfaces/entites/academic-cycle";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
-import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import type { EducationLevel } from "@/interfaces/entites/education-level";
-import { Modal } from "@/shared/components/modal/Modal";
 
 export const AcademicCycleTab = () => {
 

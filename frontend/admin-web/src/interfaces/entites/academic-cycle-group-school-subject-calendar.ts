@@ -1,5 +1,5 @@
 import type { AcademicCycle } from "./academic-cycle";
-import type { AcademicCycleGroup } from "./academic-cycle-group";
+import type { AcademicCycleGroup } from "./academic-cycle-school-group";
 import type { DayOfWeekKey, KeyValuePair } from "@/types/KeyValuePair";
 
 /**

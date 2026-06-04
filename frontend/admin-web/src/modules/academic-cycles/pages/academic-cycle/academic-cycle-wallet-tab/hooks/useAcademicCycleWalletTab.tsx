@@ -1,4 +1,4 @@
-import { useOutletContext } from "react-router";
+import { Link, useOutletContext } from "react-router";
 
 import { Badge } from "@/shared/ui/badge";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
@@ -14,6 +14,13 @@ import { useCreateUpdateWalletForAcademicCycle } from "@/modules/academic-cycles
 const tablePropertiesStructure: TableProperty<AcademicCycleWallet>[] = [
     {
         key: "paymentConcept.name",
+        render: (item: AcademicCycleWallet) => (
+            <Link to={`/payment-concepts/${item.paymentConceptId}`}>
+                <span className="text-primary">
+                    {item.paymentConcept?.name ?? "-"}
+                </span>
+            </Link>
+        )
     },
     {
         key: "amount",
