@@ -53,9 +53,9 @@ export class PaymentConceptService {
       andConditions.push({ status: filters.status });
     }
 
-    // Allow remission filter (exact match)
-    if (filters.allowRemission !== undefined) {
-      andConditions.push({ allowRemission: filters.allowRemission });
+    // Allow forgiveness filter (exact match)
+    if (filters.allowForgiveness !== undefined) {
+      andConditions.push({ allowForgiveness: filters.allowForgiveness });
     }
 
     // Amount filter (exact match)
@@ -90,7 +90,7 @@ export class PaymentConceptService {
       name: raw.name as string,
       description: raw.description as string,
       amount: Number(raw.baseAmount),
-      allowRemission: raw.allowRemission as boolean,
+      allowForgiveness: raw.allowForgiveness as boolean,
       status: raw.status as boolean,
     };
   }
@@ -161,7 +161,7 @@ export class PaymentConceptService {
   /**
    * Create a new payment concept.
    * Validates name uniqueness (case-insensitive) before insert.
-   * Sets status = true and allowRemission to dto value or false by default.
+   * Sets status = true and allowForgiveness to dto value or false by default.
    */
   async create(dto: CreatePaymentConceptDto): Promise<PaymentConceptRecord> {
     // Check uniqueness: name (case-insensitive)
@@ -182,7 +182,7 @@ export class PaymentConceptService {
         name: dto.name,
         description: dto.description ?? null,
         baseAmount: dto.amount,
-        allowRemission: dto.allowRemission ?? false,
+        allowForgiveness: dto.allowForgiveness ?? false,
         status: true,
       },
     });
@@ -229,8 +229,8 @@ export class PaymentConceptService {
     if (dto.name !== undefined) updateData.name = dto.name;
     if (dto.description !== undefined) updateData.description = dto.description;
     if (dto.amount !== undefined) updateData.baseAmount = dto.amount;
-    if (dto.allowRemission !== undefined)
-      updateData.allowRemission = dto.allowRemission;
+    if (dto.allowForgiveness !== undefined)
+      updateData.allowForgiveness = dto.allowForgiveness;
     if (dto.status !== undefined) updateData.status = dto.status;
 
     // Update the record

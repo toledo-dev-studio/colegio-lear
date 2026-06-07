@@ -3,7 +3,7 @@ export interface PaymentConceptFilters {
   q?: string;
   name?: string;
   status?: boolean;
-  allowRemission?: boolean;
+  allowForgiveness?: boolean;
   amount?: number;
   minAmount?: number;
   maxAmount?: number;
@@ -15,7 +15,7 @@ export interface PaymentConceptRecord {
   name: string;
   description: string | null;
   amount: number;
-  allowRemission: boolean;
+  allowForgiveness: boolean;
   status: boolean;
 }
 
@@ -32,7 +32,7 @@ export interface CreatePaymentConceptDto {
   name: string;
   description?: string;
   amount: number;
-  allowRemission?: boolean;
+  allowForgiveness?: boolean;
 }
 
 /** Input DTO for updating a payment concept (all fields optional) */
@@ -40,6 +40,6 @@ export interface UpdatePaymentConceptDto {
   name?: string;
   description?: string;
   amount?: number;
-  allowRemission?: boolean;
+  allowForgiveness?: boolean;
   status?: boolean;
 }

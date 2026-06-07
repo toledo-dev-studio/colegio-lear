@@ -77,13 +77,13 @@ model Scholarship {
 // ─── Payment Concept ────────────────────────────────────────────────────────────
 
 model PaymentConcept {
-  id             String  @id @default(uuid()) @db.Uuid
-  name           String  @unique @db.VarChar(100)
-  description    String? @db.VarChar(500)
-  baseAmount     Decimal @map("base_amount") @db.Decimal(10, 2)
-  allowRemission Boolean @default(false) @map("allow_remission")
-  status         Boolean @default(true)
-  isDeleted      Boolean @default(false) @map("is_deleted")
+  id               String  @id @default(uuid()) @db.Uuid
+  name             String  @unique @db.VarChar(100)
+  description      String? @db.VarChar(500)
+  baseAmount       Decimal @map("base_amount") @db.Decimal(10, 2)
+  allowForgiveness Boolean @default(false) @map("allow_remission")
+  status           Boolean @default(true)
+  isDeleted        Boolean @default(false) @map("is_deleted")
 
   @@map("payment_concepts")
   @@schema("core")

@@ -41,7 +41,7 @@ describe("PaymentConceptService", () => {
           name: "Inscripción",
           description: "Cuota de inscripción",
           baseAmount: 3500.0,
-          allowRemission: true,
+          allowForgiveness: true,
           status: true,
         },
       ];
@@ -55,7 +55,7 @@ describe("PaymentConceptService", () => {
           name: "Inscripción",
           description: "Cuota de inscripción",
           baseAmount: 3500.0,
-          allowRemission: true,
+          allowForgiveness: true,
           status: true,
         },
       ]);
@@ -112,14 +112,14 @@ describe("PaymentConceptService", () => {
       });
     });
 
-    it("should apply allowRemission filter", async () => {
+    it("should apply allowForgiveness filter", async () => {
       prisma.paymentConcept.findMany.mockResolvedValue([]);
 
-      await service.findAll({ allowRemission: false });
+      await service.findAll({ allowForgiveness: false });
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [{ allowRemission: false }],
+          AND: [{ allowForgiveness: false }],
         },
       });
     });
@@ -182,7 +182,7 @@ describe("PaymentConceptService", () => {
         q: "pago",
         name: "Inscripción",
         status: true,
-        allowRemission: true,
+        allowForgiveness: true,
         minAmount: 1000.0,
         maxAmount: 5000.0,
       });
@@ -198,7 +198,7 @@ describe("PaymentConceptService", () => {
             },
             { name: { contains: "Inscripción", mode: "insensitive" } },
             { status: true },
-            { allowRemission: true },
+            { allowForgiveness: true },
             { baseAmount: { gte: 1000.0 } },
             { baseAmount: { lte: 5000.0 } },
           ],
@@ -216,7 +216,7 @@ describe("PaymentConceptService", () => {
           name: "Inscripción",
           description: "Cuota de inscripción",
           baseAmount: 3500.0,
-          allowRemission: true,
+          allowForgiveness: true,
           status: true,
         },
       ];
@@ -232,7 +232,7 @@ describe("PaymentConceptService", () => {
             name: "Inscripción",
             description: "Cuota de inscripción",
             baseAmount: 3500.0,
-            allowRemission: true,
+            allowForgiveness: true,
             status: true,
           },
         ],
@@ -289,7 +289,7 @@ describe("PaymentConceptService", () => {
         name: "Inscripción",
         description: "Cuota de inscripción al ciclo escolar",
         baseAmount: 3500.0,
-        allowRemission: true,
+        allowForgiveness: true,
         status: true,
       };
       prisma.paymentConcept.findUnique.mockResolvedValue(mockPaymentConcept);
@@ -301,7 +301,7 @@ describe("PaymentConceptService", () => {
         name: "Inscripción",
         description: "Cuota de inscripción al ciclo escolar",
         baseAmount: 3500.0,
-        allowRemission: true,
+        allowForgiveness: true,
         status: true,
       });
       expect(prisma.paymentConcept.findUnique).toHaveBeenCalledWith({
@@ -334,7 +334,7 @@ describe("PaymentConceptService", () => {
       prisma.paymentConcept.create.mockResolvedValue({
         id: "new-uuid",
         ...validDto,
-        allowRemission: false,
+        allowForgiveness: false,
         status: true,
       });
 
@@ -345,7 +345,7 @@ describe("PaymentConceptService", () => {
         name: "Inscripción",
         description: "Cuota de inscripción al ciclo escolar",
         baseAmount: 3500.0,
-        allowRemission: false,
+        allowForgiveness: false,
         status: true,
       });
       expect(prisma.paymentConcept.create).toHaveBeenCalledWith({
@@ -353,7 +353,7 @@ describe("PaymentConceptService", () => {
           name: validDto.name,
           description: validDto.description,
           baseAmount: validDto.baseAmount,
-          allowRemission: false,
+          allowForgiveness: false,
           status: true,
         },
       });
@@ -376,7 +376,7 @@ describe("PaymentConceptService", () => {
       prisma.paymentConcept.create.mockResolvedValue({
         id: "new-uuid",
         ...validDto,
-        allowRemission: false,
+        allowForgiveness: false,
         status: true,
       });
 
@@ -390,27 +390,27 @@ describe("PaymentConceptService", () => {
       );
     });
 
-    it("should set allowRemission to false by default when not provided", async () => {
+    it("should set allowForgiveness to false by default when not provided", async () => {
       prisma.paymentConcept.findFirst.mockResolvedValue(null);
       prisma.paymentConcept.create.mockResolvedValue({
         id: "new-uuid",
         ...validDto,
-        allowRemission: false,
+        allowForgiveness: false,
         status: true,
       });
 
       const result = await service.create(validDto);
 
-      expect(result.allowRemission).toBe(false);
+      expect(result.allowForgiveness).toBe(false);
       expect(prisma.paymentConcept.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({ allowRemission: false }),
+          data: expect.objectContaining({ allowForgiveness: false }),
         }),
       );
     });
 
-    it("should respect allowRemission when explicitly provided as true", async () => {
-      const dtoWithRemission = { ...validDto, allowRemission: true };
+    it("should respect allowForgiveness when explicitly provided as true", async () => {
+      const dtoWithRemission = { ...validDto, allowForgiveness: true };
       prisma.paymentConcept.findFirst.mockResolvedValue(null);
       prisma.paymentConcept.create.mockResolvedValue({
         id: "new-uuid",
@@ -420,10 +420,10 @@ describe("PaymentConceptService", () => {
 
       const result = await service.create(dtoWithRemission);
 
-      expect(result.allowRemission).toBe(true);
+      expect(result.allowForgiveness).toBe(true);
       expect(prisma.paymentConcept.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({ allowRemission: true }),
+          data: expect.objectContaining({ allowForgiveness: true }),
         }),
       );
     });
@@ -433,7 +433,7 @@ describe("PaymentConceptService", () => {
       prisma.paymentConcept.create.mockResolvedValue({
         id: "new-uuid",
         ...validDto,
-        allowRemission: false,
+        allowForgiveness: false,
         status: true,
       });
 
@@ -454,7 +454,7 @@ describe("PaymentConceptService", () => {
       name: "Inscripción",
       description: "Cuota de inscripción al ciclo escolar",
       baseAmount: 3500.0,
-      allowRemission: true,
+      allowForgiveness: true,
       status: true,
     };
 
