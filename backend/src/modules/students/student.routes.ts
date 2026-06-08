@@ -22,6 +22,7 @@ import {
   create,
   update,
   softDelete,
+  sendCredentials,
 } from "./student.controller";
 import {
   findAllGuardians,
@@ -333,6 +334,39 @@ router.delete(
   authorize("students"),
   validate(idParamSchema, "params"),
   softDelete,
+);
+
+// ─── Send Credentials ────────────────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /students/{id}/send-credentials:
+ *   post:
+ *     tags:
+ *       - Students
+ *     summary: Send credentials to principal guardians
+ *     description: Generates a new temporary password and sends it via email to all guardians marked as isPrincipal for the given student.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Student UUID
+ *     responses:
+ *       200:
+ *         description: Credentials sent successfully
+ *       404:
+ *         description: Student not found
+ *       409:
+ *         description: No principal guardians found
+ */
+router.post(
+  "/:id/send-credentials",
+  authorize("students"),
+  validate(idParamSchema, "params"),
+  sendCredentials,
 );
 
 // ─── Student Guardians ───────────────────────────────────────────────────────

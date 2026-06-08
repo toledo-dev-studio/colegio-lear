@@ -136,3 +136,34 @@ export function forgotPasswordEmail(params: {
 
   return baseLayout(content);
 }
+
+/** Student credentials email — sent to principal guardians */
+export function studentCredentialsEmail(params: {
+  guardianName: string;
+  studentName: string;
+  enrollment: string;
+  tempPassword: string;
+  portalUrl: string;
+}): string {
+  const content = `
+    <h2 style="margin:0 0 8px;color:#0F172A;font-size:20px;font-weight:600;">Credenciales de acceso al portal</h2>
+    <p style="margin:0 0 24px;color:#64748B;font-size:14px;line-height:1.6;">Hola ${params.guardianName}, se han generado las credenciales de acceso al portal para el alumno <strong>${params.studentName}</strong>.</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#EFF6FF;border-radius:8px;padding:20px;margin-bottom:24px;">
+      <tr>
+        <td style="padding:12px 20px;">
+          <p style="margin:0 0 12px;color:#0F172A;font-size:14px;"><strong>Matrícula:</strong> <span style="color:#1E6FDB;font-weight:600;">${params.enrollment}</span></p>
+          <p style="margin:0;color:#0F172A;font-size:14px;"><strong>Contraseña:</strong> <code style="background:#FFFFFF;padding:4px 8px;border-radius:4px;font-size:14px;color:#1E6FDB;border:1px solid #E2E8F0;">${params.tempPassword}</code></p>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:0 0 24px;color:#64748B;font-size:13px;line-height:1.5;">⚠️ Al iniciar sesión por primera vez se pedirá cambiar la contraseña.</p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+      <tr>
+        <td style="border-radius:8px;background-color:#1E6FDB;">
+          <a href="${params.portalUrl}" target="_blank" style="display:inline-block;padding:14px 32px;color:#FFFFFF;font-size:14px;font-weight:600;text-decoration:none;">Acceder al portal</a>
+        </td>
+      </tr>
+    </table>`;
+
+  return baseLayout(content);
+}

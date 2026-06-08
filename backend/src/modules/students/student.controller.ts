@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { StudentService } from "./student.service";
 import { prisma } from "../../shared/lib/prisma";
+import { mailService } from "../../shared/services/mail.service";
 import {
   sendSuccess,
   sendNoContent,
@@ -8,7 +9,7 @@ import {
 } from "../../shared/helpers/response.helper";
 import type { StudentFilters } from "./student.types";
 
-const service = new StudentService(prisma);
+const service = new StudentService(prisma, mailService);
 
 function buildFilters(query: Record<string, unknown>): StudentFilters {
   const filters: StudentFilters = {};
@@ -75,4 +76,14 @@ export async function softDelete(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };
   await service.softDelete(id);
   sendNoContent(res);
+}
+
+/** POST /students/:id/send-credentials */
+export async function sendCredentials(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { id } = req.params as { id: string };
+  await service.sendCredentials(id);
+  sendSuccess(res, null);
 }

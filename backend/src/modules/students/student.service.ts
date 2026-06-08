@@ -1,5 +1,10 @@
 import { PrismaClient } from "../../generated/prisma/client";
+import bcrypt from "bcrypt";
 import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
+import { env } from "../../shared/config/env.config";
+import { logger } from "../../shared/lib/logger";
+import type { IMailService } from "../../shared/services/mail.service";
+import { studentCredentialsEmail } from "../../shared/templates/email.templates";
 import type {
   StudentFilters,
   StudentRecord,
@@ -17,7 +22,10 @@ interface PaginationParams {
  * Business logic layer for the Students module.
  */
 export class StudentService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly mail: IMailService,
+  ) {}
 
   private buildWhereClause(filters: StudentFilters) {
     const where: Record<string, unknown> = { isDeleted: false };
@@ -125,6 +133,17 @@ export class StudentService {
     return `${prefix}${String(nextNumber).padStart(4, "0")}`;
   }
 
+  /** Generate 8-character alphanumeric password */
+  private generateTempPassword(): string {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+
   async findAll(filters: StudentFilters): Promise<StudentRecord[]> {
     const where = this.buildWhereClause(filters);
     const results = await this.prisma.student.findMany({ where });
@@ -175,19 +194,22 @@ export class StudentService {
     const existingCurp = await this.prisma.student.findUnique({
       where: { curp: dto.curp },
     });
-    if (existingCurp) {
+    if (existingCurp)
       throw new ConflictError("A student with this CURP already exists");
-    }
 
     // Check uniqueness: email
     const existingEmail = await this.prisma.student.findUnique({
       where: { email: dto.email },
     });
-    if (existingEmail) {
+    if (existingEmail)
       throw new ConflictError("A student with this email already exists");
-    }
 
     const enrollment = await this.generateEnrollment();
+    const tempPassword = this.generateTempPassword();
+    const hashedPassword = await bcrypt.hash(
+      tempPassword,
+      env.BCRYPT_SALT_ROUNDS,
+    );
 
     const created = await this.prisma.student.create({
       data: {
@@ -205,6 +227,8 @@ export class StudentService {
         state: dto.state,
         municipality: dto.municipality,
         postalCode: dto.postalCode,
+        password: hashedPassword,
+        mustChangePassword: true,
         status: true,
       },
     });
@@ -216,7 +240,6 @@ export class StudentService {
     const existing = await this.prisma.student.findUnique({ where: { id } });
     if (!existing) throw new NotFoundError("Student not found");
 
-    // Check uniqueness if curp is changing
     if (dto.curp !== undefined && dto.curp !== existing.curp) {
       const dup = await this.prisma.student.findUnique({
         where: { curp: dto.curp },
@@ -225,7 +248,6 @@ export class StudentService {
         throw new ConflictError("A student with this CURP already exists");
     }
 
-    // Check uniqueness if email is changing
     if (dto.email !== undefined && dto.email !== existing.email) {
       const dup = await this.prisma.student.findUnique({
         where: { email: dto.email },
@@ -273,5 +295,65 @@ export class StudentService {
       where: { id },
       data: { isDeleted: true },
     });
+  }
+
+  /**
+   * Send credentials to all principal guardians of a student.
+   * Generates a new temp password, updates the student record, and sends emails.
+   */
+  async sendCredentials(studentId: string): Promise<void> {
+    const student = await this.prisma.student.findUnique({
+      where: { id: studentId },
+    });
+    if (!student || student.isDeleted)
+      throw new NotFoundError("Student not found");
+
+    // Get principal guardians
+    const guardians = await this.prisma.studentGuardian.findMany({
+      where: { studentId, isPrincipal: true },
+    });
+
+    if (guardians.length === 0) {
+      throw new ConflictError("No principal guardians found for this student");
+    }
+
+    // Generate new temp password and hash it
+    const tempPassword = this.generateTempPassword();
+    const hashedPassword = await bcrypt.hash(
+      tempPassword,
+      env.BCRYPT_SALT_ROUNDS,
+    );
+
+    // Update student password
+    await this.prisma.student.update({
+      where: { id: studentId },
+      data: { password: hashedPassword, mustChangePassword: true },
+    });
+
+    const studentFullName = `${student.name} ${student.firstLastName} ${student.secondLastName}`;
+    const portalUrl = env.FRONTEND_URL; // Will be the student portal URL in the future
+
+    // Send email to each principal guardian (fire and forget)
+    for (const guardian of guardians) {
+      this.mail
+        .sendMail({
+          to: guardian.email,
+          subject: "Credenciales de acceso al portal - Colegio Lear",
+          html: studentCredentialsEmail({
+            guardianName: guardian.fullName,
+            studentName: studentFullName,
+            enrollment: student.enrollment,
+            tempPassword,
+            portalUrl,
+          }),
+        })
+        .catch((error) => {
+          logger.error("Failed to send student credentials email", {
+            error,
+            studentId,
+            guardianId: guardian.id,
+          });
+        });
+    }
   }
 }

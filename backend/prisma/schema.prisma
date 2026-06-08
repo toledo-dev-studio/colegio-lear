@@ -249,6 +249,8 @@ model Student {
   state          String   @db.VarChar(100)
   municipality   String   @db.VarChar(100)
   postalCode     String   @map("postal_code") @db.VarChar(10)
+  password       String   @db.VarChar(255)
+  mustChangePassword Boolean @default(true) @map("must_change_password")
   isDeleted      Boolean  @default(false) @map("is_deleted")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
