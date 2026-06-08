@@ -26,15 +26,13 @@ const router = Router();
  *     tags:
  *       - Payment Concepts
  *     summary: List all payment concepts
- *     description: Returns all payment concepts with optional filters (q, name, status, allowForgiveness, baseAmount, minAmount, maxAmount).
+ *     description: Returns all payment concepts with optional filters (q, name, status, allowForgiveness, amount).
  *     parameters:
  *       - $ref: '#/components/parameters/PaymentConceptFilterQ'
  *       - $ref: '#/components/parameters/PaymentConceptFilterName'
  *       - $ref: '#/components/parameters/PaymentConceptFilterStatus'
  *       - $ref: '#/components/parameters/PaymentConceptFilterAllowForgiveness'
- *       - $ref: '#/components/parameters/PaymentConceptFilterBaseAmount'
- *       - $ref: '#/components/parameters/PaymentConceptFilterMinAmount'
- *       - $ref: '#/components/parameters/PaymentConceptFilterMaxAmount'
+ *       - $ref: '#/components/parameters/PaymentConceptFilterAmount'
  *     responses:
  *       200:
  *         description: List of payment concepts
@@ -67,9 +65,7 @@ router.get(
  *       - $ref: '#/components/parameters/PaymentConceptFilterName'
  *       - $ref: '#/components/parameters/PaymentConceptFilterStatus'
  *       - $ref: '#/components/parameters/PaymentConceptFilterAllowForgiveness'
- *       - $ref: '#/components/parameters/PaymentConceptFilterBaseAmount'
- *       - $ref: '#/components/parameters/PaymentConceptFilterMinAmount'
- *       - $ref: '#/components/parameters/PaymentConceptFilterMaxAmount'
+ *       - $ref: '#/components/parameters/PaymentConceptFilterAmount'
  *       - $ref: '#/components/parameters/PaymentConceptPageParam'
  *       - $ref: '#/components/parameters/PaymentConceptPageSizeParam'
  *     responses:

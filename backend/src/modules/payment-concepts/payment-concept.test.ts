@@ -40,7 +40,7 @@ describe("PaymentConceptService", () => {
           id: "uuid-1",
           name: "Inscripción",
           description: "Cuota de inscripción",
-          baseAmount: 3500.0,
+          amount: 3500.0,
           allowForgiveness: true,
           status: true,
         },
@@ -54,7 +54,7 @@ describe("PaymentConceptService", () => {
           id: "uuid-1",
           name: "Inscripción",
           description: "Cuota de inscripción",
-          baseAmount: 3500.0,
+          amount: 3500.0,
           allowForgiveness: true,
           status: true,
         },
@@ -124,53 +124,14 @@ describe("PaymentConceptService", () => {
       });
     });
 
-    it("should apply baseAmount filter (exact match)", async () => {
+    it("should apply amount filter (exact match)", async () => {
       prisma.paymentConcept.findMany.mockResolvedValue([]);
 
       await service.findAll({ amount: 3500.0 });
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [{ baseAmount: 3500.0 }],
-        },
-      });
-    });
-
-    it("should apply minAmount filter (gte)", async () => {
-      prisma.paymentConcept.findMany.mockResolvedValue([]);
-
-      await service.findAll({ minAmount: 2000.0 });
-
-      expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
-        where: {
-          AND: [{ baseAmount: { gte: 2000.0 } }],
-        },
-      });
-    });
-
-    it("should apply maxAmount filter (lte)", async () => {
-      prisma.paymentConcept.findMany.mockResolvedValue([]);
-
-      await service.findAll({ maxAmount: 5000.0 });
-
-      expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
-        where: {
-          AND: [{ baseAmount: { lte: 5000.0 } }],
-        },
-      });
-    });
-
-    it("should apply minAmount and maxAmount together (range filter)", async () => {
-      prisma.paymentConcept.findMany.mockResolvedValue([]);
-
-      await service.findAll({ minAmount: 1000.0, maxAmount: 4000.0 });
-
-      expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
-        where: {
-          AND: [
-            { baseAmount: { gte: 1000.0 } },
-            { baseAmount: { lte: 4000.0 } },
-          ],
+          AND: [{ amount: 3500.0 }],
         },
       });
     });
@@ -183,8 +144,7 @@ describe("PaymentConceptService", () => {
         name: "Inscripción",
         status: true,
         allowForgiveness: true,
-        minAmount: 1000.0,
-        maxAmount: 5000.0,
+        amount: 1500.0,
       });
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
@@ -199,8 +159,7 @@ describe("PaymentConceptService", () => {
             { name: { contains: "Inscripción", mode: "insensitive" } },
             { status: true },
             { allowForgiveness: true },
-            { baseAmount: { gte: 1000.0 } },
-            { baseAmount: { lte: 5000.0 } },
+            { amount: 1500.0 },
           ],
         },
       });
@@ -215,7 +174,7 @@ describe("PaymentConceptService", () => {
           id: "uuid-1",
           name: "Inscripción",
           description: "Cuota de inscripción",
-          baseAmount: 3500.0,
+          amount: 3500.0,
           allowForgiveness: true,
           status: true,
         },
@@ -231,7 +190,7 @@ describe("PaymentConceptService", () => {
             id: "uuid-1",
             name: "Inscripción",
             description: "Cuota de inscripción",
-            baseAmount: 3500.0,
+            amount: 3500.0,
             allowForgiveness: true,
             status: true,
           },
@@ -288,7 +247,7 @@ describe("PaymentConceptService", () => {
         id: "uuid-1",
         name: "Inscripción",
         description: "Cuota de inscripción al ciclo escolar",
-        baseAmount: 3500.0,
+        amount: 3500.0,
         allowForgiveness: true,
         status: true,
       };
@@ -300,7 +259,7 @@ describe("PaymentConceptService", () => {
         id: "uuid-1",
         name: "Inscripción",
         description: "Cuota de inscripción al ciclo escolar",
-        baseAmount: 3500.0,
+        amount: 3500.0,
         allowForgiveness: true,
         status: true,
       });
@@ -344,7 +303,7 @@ describe("PaymentConceptService", () => {
         id: "new-uuid",
         name: "Inscripción",
         description: "Cuota de inscripción al ciclo escolar",
-        baseAmount: 3500.0,
+        amount: 3500.0,
         allowForgiveness: false,
         status: true,
       });
@@ -352,7 +311,7 @@ describe("PaymentConceptService", () => {
         data: {
           name: validDto.name,
           description: validDto.description,
-          baseAmount: validDto.amount,
+          amount: validDto.amount,
           allowForgiveness: false,
           status: true,
         },
@@ -453,7 +412,7 @@ describe("PaymentConceptService", () => {
       id: "uuid-1",
       name: "Inscripción",
       description: "Cuota de inscripción al ciclo escolar",
-      baseAmount: 3500.0,
+      amount: 3500.0,
       allowForgiveness: true,
       status: true,
     };

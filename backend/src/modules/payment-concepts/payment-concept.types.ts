@@ -5,8 +5,6 @@ export interface PaymentConceptFilters {
   status?: boolean;
   allowForgiveness?: boolean;
   amount?: number;
-  minAmount?: number;
-  maxAmount?: number;
 }
 
 /** Record returned from the payment_concepts table (used for all responses) */

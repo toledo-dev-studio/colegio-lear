@@ -28,10 +28,6 @@ function buildFilters(query: Record<string, unknown>): PaymentConceptFilters {
   if (query.allowForgiveness !== undefined)
     filters.allowForgiveness = query.allowForgiveness === "true";
   if (query.amount !== undefined) filters.amount = query.amount as number;
-  if (query.minAmount !== undefined)
-    filters.minAmount = query.minAmount as number;
-  if (query.maxAmount !== undefined)
-    filters.maxAmount = query.maxAmount as number;
 
   return filters;
 }

@@ -71,27 +71,13 @@ export const idParamSchema = z.object({
  *         type: string
  *         enum: [true, false]
  *       description: Filter by whether forgiveness is allowed
- *     PaymentConceptFilterBaseAmount:
+ *     PaymentConceptFilterAmount:
  *       in: query
- *       name: baseAmount
+ *       name: amount
  *       schema:
  *         type: number
  *         minimum: 0.01
- *       description: Filter by exact base amount
- *     PaymentConceptFilterMinAmount:
- *       in: query
- *       name: minAmount
- *       schema:
- *         type: number
- *         minimum: 0.01
- *       description: Filter by minimum base amount (inclusive)
- *     PaymentConceptFilterMaxAmount:
- *       in: query
- *       name: maxAmount
- *       schema:
- *         type: number
- *         minimum: 0.01
- *       description: Filter by maximum base amount (inclusive)
+ *       description: Filter by exact amount
  */
 export const paymentConceptFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
@@ -101,14 +87,6 @@ export const paymentConceptFiltersSchema = z.object({
   amount: z.coerce
     .number({ message: "amount must be a number" })
     .positive("amount must be a positive number")
-    .optional(),
-  minAmount: z.coerce
-    .number({ message: "minAmount must be a number" })
-    .positive("minAmount must be a positive number")
-    .optional(),
-  maxAmount: z.coerce
-    .number({ message: "maxAmount must be a number" })
-    .positive("maxAmount must be a positive number")
     .optional(),
 });
 
@@ -163,8 +141,7 @@ export const paymentConceptPagedQuerySchema =
  *       type: object
  *       required:
  *         - name
- *         - description
- *         - baseAmount
+ *         - amount
  *       properties:
  *         name:
  *           type: string
@@ -176,11 +153,11 @@ export const paymentConceptPagedQuerySchema =
  *           minLength: 1
  *           maxLength: 500
  *           description: Payment concept description (trimmed, non-blank)
- *         baseAmount:
+ *         amount:
  *           type: number
  *           minimum: 0.01
  *           maximum: 999999.99
- *           description: Base amount in MXN (0.01-999999.99)
+ *           description: Amount in MXN (0.01-999999.99)
  *         allowForgiveness:
  *           type: boolean
  *           default: false
@@ -228,11 +205,11 @@ export const createPaymentConceptSchema = z.object({
  *           minLength: 1
  *           maxLength: 500
  *           description: Payment concept description (trimmed, non-blank)
- *         baseAmount:
+ *         amount:
  *           type: number
  *           minimum: 0.01
  *           maximum: 999999.99
- *           description: Base amount in MXN (0.01-999999.99)
+ *           description: Amount in MXN (0.01-999999.99)
  *         allowForgiveness:
  *           type: boolean
  *           description: Whether the concept allows forgiveness (waiver)

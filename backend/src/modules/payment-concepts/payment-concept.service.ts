@@ -60,17 +60,7 @@ export class PaymentConceptService {
 
     // Amount filter (exact match)
     if (filters.amount !== undefined) {
-      andConditions.push({ baseAmount: filters.amount });
-    }
-
-    // Min amount filter (greater than or equal)
-    if (filters.minAmount !== undefined) {
-      andConditions.push({ baseAmount: { gte: filters.minAmount } });
-    }
-
-    // Max amount filter (less than or equal)
-    if (filters.maxAmount !== undefined) {
-      andConditions.push({ baseAmount: { lte: filters.maxAmount } });
+      andConditions.push({ amount: filters.amount });
     }
 
     if (andConditions.length > 0) {
@@ -82,14 +72,14 @@ export class PaymentConceptService {
 
   /**
    * Convert a raw Prisma payment concept record to a PaymentConceptRecord,
-   * converting the Decimal `baseAmount` field to `amount` as a plain number.
+   * converting the Decimal `amount` field to a plain number.
    */
   private toRecord(raw: Record<string, unknown>): PaymentConceptRecord {
     return {
       id: raw.id as string,
       name: raw.name as string,
       description: raw.description as string,
-      amount: Number(raw.baseAmount),
+      amount: Number(raw.amount),
       allowForgiveness: raw.allowForgiveness as boolean,
       status: raw.status as boolean,
     };
@@ -181,7 +171,7 @@ export class PaymentConceptService {
       data: {
         name: dto.name,
         description: dto.description ?? null,
-        baseAmount: dto.amount,
+        amount: dto.amount,
         allowForgiveness: dto.allowForgiveness ?? false,
         status: true,
       },
@@ -224,16 +214,14 @@ export class PaymentConceptService {
       }
     }
 
-    // Build update data mapping `amount` to Prisma's `baseAmount`
     const updateData: Record<string, unknown> = {};
     if (dto.name !== undefined) updateData.name = dto.name;
     if (dto.description !== undefined) updateData.description = dto.description;
-    if (dto.amount !== undefined) updateData.baseAmount = dto.amount;
+    if (dto.amount !== undefined) updateData.amount = dto.amount;
     if (dto.allowForgiveness !== undefined)
       updateData.allowForgiveness = dto.allowForgiveness;
     if (dto.status !== undefined) updateData.status = dto.status;
 
-    // Update the record
     const updated = await this.prisma.paymentConcept.update({
       where: { id },
       data: updateData,
