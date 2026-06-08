@@ -86,8 +86,9 @@ export const paymentConceptFiltersSchema = z.object({
   allowForgiveness: z.enum(["true", "false"]).optional(),
   amount: z.coerce
     .number({ message: "amount must be a number" })
-    .positive("amount must be a positive number")
-    .optional(),
+    .min(0)
+    .optional()
+    .transform((val) => (val === 0 ? undefined : val)),
 });
 
 /**

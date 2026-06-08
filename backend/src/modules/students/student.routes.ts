@@ -1,0 +1,565 @@
+import { Router } from "express";
+import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
+import {
+  idParamSchema,
+  studentIdParamSchema,
+  studentSubResourceParamSchema,
+  studentFiltersSchema,
+  studentPagedQuerySchema,
+  createStudentSchema,
+  updateStudentSchema,
+} from "./student.schema";
+import {
+  createStudentGuardianSchema,
+  updateStudentGuardianSchema,
+} from "./student-guardian.schema";
+import { upsertMedicalInformationSchema } from "./student-medical-information.schema";
+import {
+  findAll,
+  findAllPaged,
+  findById,
+  create,
+  update,
+  softDelete,
+} from "./student.controller";
+import {
+  findAllGuardians,
+  createGuardian,
+  updateGuardian,
+  deleteGuardian,
+} from "./student-guardian.controller";
+import {
+  getMedicalInfo,
+  upsertMedicalInfo,
+} from "./student-medical-information.controller";
+
+const router = Router();
+
+// ─── Students CRUD ───────────────────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /students:
+ *   get:
+ *     tags:
+ *       - Students
+ *     summary: List all students
+ *     description: Returns all students with optional filters (q, name, curp, enrollment, email, phoneNumber, status).
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *           maxLength: 100
+ *         description: Free-text search on name, lastNames, email, curp, enrollment
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *           maxLength: 100
+ *         description: Filter by name or last names (case-insensitive)
+ *       - in: query
+ *         name: curp
+ *         schema:
+ *           type: string
+ *           maxLength: 18
+ *         description: Filter by CURP (case-insensitive contains)
+ *       - in: query
+ *         name: enrollment
+ *         schema:
+ *           type: string
+ *           maxLength: 20
+ *         description: Filter by enrollment (case-insensitive contains)
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *           maxLength: 150
+ *         description: Filter by email (case-insensitive contains)
+ *       - in: query
+ *         name: phoneNumber
+ *         schema:
+ *           type: string
+ *           maxLength: 20
+ *         description: Filter by phone number (case-insensitive contains)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *         description: Filter by active/inactive status
+ *     responses:
+ *       200:
+ *         description: List of students
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/StudentRecord'
+ *       400:
+ *         description: Validation error
+ */
+router.get(
+  "/",
+  authorize("students"),
+  validate(studentFiltersSchema, "query"),
+  findAll,
+);
+
+/**
+ * @openapi
+ * /students/paged:
+ *   get:
+ *     tags:
+ *       - Students
+ *     summary: List students with pagination
+ *     description: Returns a paginated list of students with optional filters.
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         description: Free-text search
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: Filter by name
+ *       - in: query
+ *         name: curp
+ *         schema:
+ *           type: string
+ *         description: Filter by CURP
+ *       - in: query
+ *         name: enrollment
+ *         schema:
+ *           type: string
+ *         description: Filter by enrollment
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: Filter by email
+ *       - in: query
+ *         name: phoneNumber
+ *         schema:
+ *           type: string
+ *         description: Filter by phone number
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *         description: Filter by status
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: Paginated list of students
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/StudentRecord'
+ *                 totalPages:
+ *                   type: integer
+ *                 currentPage:
+ *                   type: integer
+ *                 itemsCount:
+ *                   type: integer
+ *       400:
+ *         description: Validation error
+ */
+router.get(
+  "/paged",
+  authorize("students"),
+  validate(studentPagedQuerySchema, "query"),
+  findAllPaged,
+);
+
+/**
+ * @openapi
+ * /students/{id}:
+ *   get:
+ *     tags:
+ *       - Students
+ *     summary: Get a student by ID
+ *     description: Returns a single student by UUID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Student UUID
+ *     responses:
+ *       200:
+ *         description: Student found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentRecord'
+ *       404:
+ *         description: Student not found
+ */
+router.get(
+  "/:id",
+  authorize("students"),
+  validate(idParamSchema, "params"),
+  findById,
+);
+
+/**
+ * @openapi
+ * /students:
+ *   post:
+ *     tags:
+ *       - Students
+ *     summary: Create a new student
+ *     description: Creates a new student. Enrollment is auto-generated. Validates CURP and email uniqueness.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateStudentBody'
+ *     responses:
+ *       201:
+ *         description: Student created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentRecord'
+ *       400:
+ *         description: Validation error
+ *       409:
+ *         description: Duplicate CURP or email
+ */
+router.post(
+  "/",
+  authorize("students"),
+  validate(createStudentSchema, "body"),
+  create,
+);
+
+/**
+ * @openapi
+ * /students/{id}:
+ *   patch:
+ *     tags:
+ *       - Students
+ *     summary: Update a student
+ *     description: Partially updates a student. At least one field must be provided.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateStudentBody'
+ *     responses:
+ *       200:
+ *         description: Student updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentRecord'
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: Student not found
+ *       409:
+ *         description: Duplicate CURP or email
+ */
+router.patch(
+  "/:id",
+  authorize("students"),
+  validate(idParamSchema, "params"),
+  validate(updateStudentSchema, "body"),
+  update,
+);
+
+/**
+ * @openapi
+ * /students/{id}:
+ *   delete:
+ *     tags:
+ *       - Students
+ *     summary: Soft delete a student
+ *     description: Sets the student as deleted (logical deletion).
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Student not found
+ *       409:
+ *         description: Already deleted
+ */
+router.delete(
+  "/:id",
+  authorize("students"),
+  validate(idParamSchema, "params"),
+  softDelete,
+);
+
+// ─── Student Guardians ───────────────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /students/{studentId}/guardians:
+ *   get:
+ *     tags:
+ *       - Student Guardians
+ *     summary: List guardians for a student
+ *     description: Returns all guardians associated with the given student.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of guardians
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/StudentGuardianRecord'
+ *       404:
+ *         description: Student not found
+ */
+router.get(
+  "/:studentId/guardians",
+  authorize("students"),
+  validate(studentIdParamSchema, "params"),
+  findAllGuardians,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/guardians:
+ *   post:
+ *     tags:
+ *       - Student Guardians
+ *     summary: Create a guardian for a student
+ *     description: Creates a new guardian. If isPrincipal is true, any existing principal is unset.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateStudentGuardianBody'
+ *     responses:
+ *       201:
+ *         description: Guardian created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentGuardianRecord'
+ *       404:
+ *         description: Student not found
+ */
+router.post(
+  "/:studentId/guardians",
+  authorize("students"),
+  validate(studentIdParamSchema, "params"),
+  validate(createStudentGuardianSchema, "body"),
+  createGuardian,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/guardians/{id}:
+ *   patch:
+ *     tags:
+ *       - Student Guardians
+ *     summary: Update a guardian
+ *     description: Partially updates a guardian. If isPrincipal is set to true, others are unset.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateStudentGuardianBody'
+ *     responses:
+ *       200:
+ *         description: Guardian updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentGuardianRecord'
+ *       404:
+ *         description: Student or guardian not found
+ */
+router.patch(
+  "/:studentId/guardians/:id",
+  authorize("students"),
+  validate(studentSubResourceParamSchema, "params"),
+  validate(updateStudentGuardianSchema, "body"),
+  updateGuardian,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/guardians/{id}:
+ *   delete:
+ *     tags:
+ *       - Student Guardians
+ *     summary: Delete a guardian
+ *     description: Permanently removes a guardian from the student.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Student or guardian not found
+ */
+router.delete(
+  "/:studentId/guardians/:id",
+  authorize("students"),
+  validate(studentSubResourceParamSchema, "params"),
+  deleteGuardian,
+);
+
+// ─── Student Medical Information ─────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /students/{studentId}/medical-information:
+ *   get:
+ *     tags:
+ *       - Student Medical Information
+ *     summary: Get medical information for a student
+ *     description: Returns the medical information record including allergies. Returns null data if not yet created.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Medical information (or null if not created yet)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentMedicalInformationRecord'
+ *       404:
+ *         description: Student not found
+ */
+router.get(
+  "/:studentId/medical-information",
+  authorize("students"),
+  validate(studentIdParamSchema, "params"),
+  getMedicalInfo,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/medical-information:
+ *   patch:
+ *     tags:
+ *       - Student Medical Information
+ *     summary: Upsert medical information for a student
+ *     description: Creates medical information if it does not exist, or updates it. Allergies are fully synced (replaced).
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpsertMedicalInformationBody'
+ *     responses:
+ *       200:
+ *         description: Medical information upserted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentMedicalInformationRecord'
+ *       404:
+ *         description: Student not found
+ */
+router.patch(
+  "/:studentId/medical-information",
+  authorize("students"),
+  validate(studentIdParamSchema, "params"),
+  validate(upsertMedicalInformationSchema, "body"),
+  upsertMedicalInfo,
+);
+
+export default router;
