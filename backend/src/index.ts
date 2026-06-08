@@ -21,6 +21,7 @@ import authRoutes from "./modules/auth/auth.routes";
 import announcementRoutes from "./modules/announcements/announcement.routes";
 import attachmentRoutes from "./modules/attachments/attachment.routes";
 import studentRoutes from "./modules/students/student.routes";
+import academicCycleRoutes from "./modules/academic-cycles/academic-cycle.routes";
 
 /** Create Express application */
 const app = express();
@@ -51,6 +52,7 @@ app.use("/employees", employeeRoutes);
 app.use("/announcements", announcementRoutes);
 app.use("/attachments", attachmentRoutes);
 app.use("/students", studentRoutes);
+app.use("/academic-cycles", academicCycleRoutes);
 
 /* --- Global Error Handler (must be last) --- */
 app.use(errorHandler);
