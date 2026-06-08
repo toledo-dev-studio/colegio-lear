@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
   idParamSchema,
   subjectFiltersSchema,
@@ -44,7 +45,12 @@ const router = Router();
  *       400:
  *         description: Validation error
  */
-router.get("/", validate(subjectFiltersSchema, "query"), findAll);
+router.get(
+  "/",
+  authorize("school-subjects"),
+  validate(subjectFiltersSchema, "query"),
+  findAll,
+);
 
 /**
  * @openapi
@@ -86,7 +92,12 @@ router.get("/", validate(subjectFiltersSchema, "query"), findAll);
  *       400:
  *         description: Validation error
  */
-router.get("/paged", validate(pagedQuerySchema, "query"), findAllPaged);
+router.get(
+  "/paged",
+  authorize("school-subjects"),
+  validate(pagedQuerySchema, "query"),
+  findAllPaged,
+);
 
 /**
  * @openapi
@@ -110,7 +121,12 @@ router.get("/paged", validate(pagedQuerySchema, "query"), findAllPaged);
  *       404:
  *         description: School subject not found
  */
-router.get("/:id", validate(idParamSchema, "params"), findById);
+router.get(
+  "/:id",
+  authorize("school-subjects"),
+  validate(idParamSchema, "params"),
+  findById,
+);
 
 /**
  * @openapi
@@ -140,7 +156,12 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *       409:
  *         description: Duplicate name for the same education level
  */
-router.post("/", validate(createSchoolSubjectSchema, "body"), create);
+router.post(
+  "/",
+  authorize("school-subjects"),
+  validate(createSchoolSubjectSchema, "body"),
+  create,
+);
 
 /**
  * @openapi
@@ -174,6 +195,7 @@ router.post("/", validate(createSchoolSubjectSchema, "body"), create);
  */
 router.patch(
   "/:id",
+  authorize("school-subjects"),
   validate(idParamSchema, "params"),
   validate(updateSchoolSubjectSchema, "body"),
   update,
@@ -199,6 +221,11 @@ router.patch(
  *       409:
  *         description: School subject is already inactive
  */
-router.delete("/:id", validate(idParamSchema, "params"), softDelete);
+router.delete(
+  "/:id",
+  authorize("school-subjects"),
+  validate(idParamSchema, "params"),
+  softDelete,
+);
 
 export default router;

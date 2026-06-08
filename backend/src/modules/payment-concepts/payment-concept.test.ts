@@ -127,7 +127,7 @@ describe("PaymentConceptService", () => {
     it("should apply baseAmount filter (exact match)", async () => {
       prisma.paymentConcept.findMany.mockResolvedValue([]);
 
-      await service.findAll({ baseAmount: 3500.0 });
+      await service.findAll({ amount: 3500.0 });
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
@@ -326,7 +326,7 @@ describe("PaymentConceptService", () => {
     const validDto = {
       name: "Inscripción",
       description: "Cuota de inscripción al ciclo escolar",
-      baseAmount: 3500.0,
+      amount: 3500.0,
     };
 
     it("should create a payment concept successfully with valid data", async () => {
@@ -352,7 +352,7 @@ describe("PaymentConceptService", () => {
         data: {
           name: validDto.name,
           description: validDto.description,
-          baseAmount: validDto.baseAmount,
+          baseAmount: validDto.amount,
           allowForgiveness: false,
           status: true,
         },

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
   idParamSchema,
   academicLevelFiltersSchema,
@@ -57,7 +58,12 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/AcademicLevel'
  */
-router.get("/", validate(academicLevelFiltersSchema, "query"), findAll);
+router.get(
+  "/",
+  authorize("academic-levels"),
+  validate(academicLevelFiltersSchema, "query"),
+  findAll,
+);
 
 /**
  * @openapi
@@ -127,6 +133,7 @@ router.get("/", validate(academicLevelFiltersSchema, "query"), findAll);
  */
 router.get(
   "/paged",
+  authorize("academic-levels"),
   validate(academicLevelPagedQuerySchema, "query"),
   findAllPaged,
 );
@@ -199,6 +206,7 @@ router.get(
  */
 router.get(
   "/education-levels/paged",
+  authorize("academic-levels"),
   validate(educationLevelPagedQuerySchema, "query"),
   findEducationLevelsPaged,
 );
@@ -229,7 +237,12 @@ router.get(
  *       409:
  *         description: Academic level with this name already exists
  */
-router.post("/", validate(createAcademicLevelSchema, "body"), create);
+router.post(
+  "/",
+  authorize("academic-levels"),
+  validate(createAcademicLevelSchema, "body"),
+  create,
+);
 
 /**
  * @openapi
@@ -259,7 +272,12 @@ router.post("/", validate(createAcademicLevelSchema, "body"), create);
  *       404:
  *         description: Academic level not found
  */
-router.get("/:id", validate(idParamSchema, "params"), findById);
+router.get(
+  "/:id",
+  authorize("academic-levels"),
+  validate(idParamSchema, "params"),
+  findById,
+);
 
 /**
  * @openapi
@@ -299,6 +317,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  */
 router.patch(
   "/:id",
+  authorize("academic-levels"),
   validate(idParamSchema, "params"),
   validate(updateAcademicLevelSchema, "body"),
   update,
@@ -330,6 +349,11 @@ router.patch(
  *       409:
  *         description: Academic level is already inactive
  */
-router.delete("/:id", validate(idParamSchema, "params"), softDelete);
+router.delete(
+  "/:id",
+  authorize("academic-levels"),
+  validate(idParamSchema, "params"),
+  softDelete,
+);
 
 export default router;

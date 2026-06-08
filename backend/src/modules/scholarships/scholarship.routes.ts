@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
   idParamSchema,
   scholarshipFiltersSchema,
@@ -43,7 +44,12 @@ const router = Router();
  *       400:
  *         description: Validation error
  */
-router.get("/", validate(scholarshipFiltersSchema, "query"), findAll);
+router.get(
+  "/",
+  authorize("scholarships"),
+  validate(scholarshipFiltersSchema, "query"),
+  findAll,
+);
 
 /**
  * @openapi
@@ -86,6 +92,7 @@ router.get("/", validate(scholarshipFiltersSchema, "query"), findAll);
  */
 router.get(
   "/paged",
+  authorize("scholarships"),
   validate(scholarshipPagedQuerySchema, "query"),
   findAllPaged,
 );
@@ -112,7 +119,12 @@ router.get(
  *       404:
  *         description: Scholarship not found
  */
-router.get("/:id", validate(idParamSchema, "params"), findById);
+router.get(
+  "/:id",
+  authorize("scholarships"),
+  validate(idParamSchema, "params"),
+  findById,
+);
 
 /**
  * @openapi
@@ -140,7 +152,12 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *       409:
  *         description: Duplicate scholarship name
  */
-router.post("/", validate(createScholarshipSchema, "body"), create);
+router.post(
+  "/",
+  authorize("scholarships"),
+  validate(createScholarshipSchema, "body"),
+  create,
+);
 
 /**
  * @openapi
@@ -174,6 +191,7 @@ router.post("/", validate(createScholarshipSchema, "body"), create);
  */
 router.patch(
   "/:id",
+  authorize("scholarships"),
   validate(idParamSchema, "params"),
   validate(updateScholarshipSchema, "body"),
   update,
@@ -199,6 +217,11 @@ router.patch(
  *       409:
  *         description: Scholarship is already inactive
  */
-router.delete("/:id", validate(idParamSchema, "params"), softDelete);
+router.delete(
+  "/:id",
+  authorize("scholarships"),
+  validate(idParamSchema, "params"),
+  softDelete,
+);
 
 export default router;

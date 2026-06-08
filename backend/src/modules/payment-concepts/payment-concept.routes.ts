@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
   idParamSchema,
   paymentConceptFiltersSchema,
@@ -46,7 +47,12 @@ const router = Router();
  *       400:
  *         description: Validation error
  */
-router.get("/", validate(paymentConceptFiltersSchema, "query"), findAll);
+router.get(
+  "/",
+  authorize("payment-concepts"),
+  validate(paymentConceptFiltersSchema, "query"),
+  findAll,
+);
 
 /**
  * @openapi
@@ -92,6 +98,7 @@ router.get("/", validate(paymentConceptFiltersSchema, "query"), findAll);
  */
 router.get(
   "/paged",
+  authorize("payment-concepts"),
   validate(paymentConceptPagedQuerySchema, "query"),
   findAllPaged,
 );
@@ -118,7 +125,12 @@ router.get(
  *       404:
  *         description: Payment concept not found
  */
-router.get("/:id", validate(idParamSchema, "params"), findById);
+router.get(
+  "/:id",
+  authorize("payment-concepts"),
+  validate(idParamSchema, "params"),
+  findById,
+);
 
 /**
  * @openapi
@@ -146,7 +158,12 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  *       409:
  *         description: Duplicate payment concept name
  */
-router.post("/", validate(createPaymentConceptSchema, "body"), create);
+router.post(
+  "/",
+  authorize("payment-concepts"),
+  validate(createPaymentConceptSchema, "body"),
+  create,
+);
 
 /**
  * @openapi
@@ -180,6 +197,7 @@ router.post("/", validate(createPaymentConceptSchema, "body"), create);
  */
 router.patch(
   "/:id",
+  authorize("payment-concepts"),
   validate(idParamSchema, "params"),
   validate(updatePaymentConceptSchema, "body"),
   update,
@@ -205,6 +223,11 @@ router.patch(
  *       409:
  *         description: Payment concept is already inactive
  */
-router.delete("/:id", validate(idParamSchema, "params"), softDelete);
+router.delete(
+  "/:id",
+  authorize("payment-concepts"),
+  validate(idParamSchema, "params"),
+  softDelete,
+);
 
 export default router;

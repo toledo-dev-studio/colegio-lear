@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import { ValidationError } from "../../shared/errors/app-error";
 import {
   idParamSchema,
@@ -100,7 +101,12 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Employee'
  */
-router.get("/", validate(employeeFiltersSchema, "query"), findAll);
+router.get(
+  "/",
+  authorize("employees"),
+  validate(employeeFiltersSchema, "query"),
+  findAll,
+);
 
 /**
  * @openapi
@@ -180,7 +186,12 @@ router.get("/", validate(employeeFiltersSchema, "query"), findAll);
  *       400:
  *         description: Invalid pagination parameters
  */
-router.get("/paged", validate(employeePagedQuerySchema, "query"), findAllPaged);
+router.get(
+  "/paged",
+  authorize("employees"),
+  validate(employeePagedQuerySchema, "query"),
+  findAllPaged,
+);
 
 /**
  * @openapi
@@ -237,7 +248,13 @@ router.get("/paged", validate(employeePagedQuerySchema, "query"), findAllPaged);
  *       409:
  *         description: Employee with this email already exists
  */
-router.post("/", uploadSingle, validate(createEmployeeSchema, "body"), create);
+router.post(
+  "/",
+  authorize("employees"),
+  uploadSingle,
+  validate(createEmployeeSchema, "body"),
+  create,
+);
 
 /**
  * @openapi
@@ -246,7 +263,7 @@ router.post("/", uploadSingle, validate(createEmployeeSchema, "body"), create);
  *     tags:
  *       - Employees
  *     summary: Update authenticated employee's own account
- *     description: Updates the current user's profile (name, firstLastName, secondLastName, phoneNumber, image). Returns the same shape as GET /auth/me.
+ *     description: Updates the current user's profile (name, firstLastName, secondLastName, phoneNumber, image). Returns the same shape as GET /auth/me. No RBAC check — any authenticated user can update their own account.
  *     requestBody:
  *       required: true
  *       content:
@@ -285,6 +302,7 @@ router.post("/", uploadSingle, validate(createEmployeeSchema, "body"), create);
  *       404:
  *         description: Employee not found or inactive
  */
+// PATCH /me does NOT require RBAC — any authenticated employee can update their own profile
 router.patch(
   "/me",
   uploadSingle,
@@ -320,7 +338,12 @@ router.patch(
  *       404:
  *         description: Employee not found
  */
-router.get("/:id", validate(idParamSchema, "params"), findById);
+router.get(
+  "/:id",
+  authorize("employees"),
+  validate(idParamSchema, "params"),
+  findById,
+);
 
 /**
  * @openapi
@@ -382,6 +405,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  */
 router.patch(
   "/:id",
+  authorize("employees"),
   uploadSingle,
   validate(idParamSchema, "params"),
   validate(updateEmployeeSchema, "body"),
@@ -414,7 +438,12 @@ router.patch(
  *       409:
  *         description: Employee is already deleted
  */
-router.delete("/:id", validate(idParamSchema, "params"), softDelete);
+router.delete(
+  "/:id",
+  authorize("employees"),
+  validate(idParamSchema, "params"),
+  softDelete,
+);
 
 /**
  * @openapi
@@ -446,6 +475,7 @@ router.delete("/:id", validate(idParamSchema, "params"), softDelete);
  */
 router.post(
   "/:id/resend-invitation",
+  authorize("employees"),
   validate(idParamSchema, "params"),
   resendInvitation,
 );

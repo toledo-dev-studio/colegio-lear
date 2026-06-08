@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
   idParamSchema,
   announcementFiltersSchema,
@@ -67,7 +68,12 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Announcement'
  */
-router.get("/", validate(announcementFiltersSchema, "query"), getAll);
+router.get(
+  "/",
+  authorize("announcements"),
+  validate(announcementFiltersSchema, "query"),
+  getAll,
+);
 
 /**
  * @openapi
@@ -149,6 +155,7 @@ router.get("/", validate(announcementFiltersSchema, "query"), getAll);
  */
 router.get(
   "/paged",
+  authorize("announcements"),
   validate(announcementPagedQuerySchema, "query"),
   getAllPaged,
 );
@@ -177,7 +184,12 @@ router.get(
  *       400:
  *         description: Validation error
  */
-router.post("/", validate(createAnnouncementSchema, "body"), create);
+router.post(
+  "/",
+  authorize("announcements"),
+  validate(createAnnouncementSchema, "body"),
+  create,
+);
 
 /**
  * @openapi
@@ -207,7 +219,12 @@ router.post("/", validate(createAnnouncementSchema, "body"), create);
  *       404:
  *         description: Announcement not found
  */
-router.get("/:id", validate(idParamSchema, "params"), getById);
+router.get(
+  "/:id",
+  authorize("announcements"),
+  validate(idParamSchema, "params"),
+  getById,
+);
 
 /**
  * @openapi
@@ -245,6 +262,7 @@ router.get("/:id", validate(idParamSchema, "params"), getById);
  */
 router.patch(
   "/:id",
+  authorize("announcements"),
   validate(idParamSchema, "params"),
   validate(updateAnnouncementSchema, "body"),
   update,
@@ -276,6 +294,11 @@ router.patch(
  *       409:
  *         description: Announcement is already inactive
  */
-router.delete("/:id", validate(idParamSchema, "params"), remove);
+router.delete(
+  "/:id",
+  authorize("announcements"),
+  validate(idParamSchema, "params"),
+  remove,
+);
 
 export default router;
