@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
   idParamSchema,
   jobTitleFiltersSchema,
@@ -61,7 +62,12 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/JobTitle'
  */
-router.get("/", validate(jobTitleFiltersSchema, "query"), findAll);
+router.get(
+  "/",
+  authorize("job-titles"),
+  validate(jobTitleFiltersSchema, "query"),
+  findAll,
+);
 
 /**
  * @openapi
@@ -135,7 +141,12 @@ router.get("/", validate(jobTitleFiltersSchema, "query"), findAll);
  *       400:
  *         description: Invalid pagination parameters
  */
-router.get("/paged", validate(jobTitlePagedQuerySchema, "query"), findAllPaged);
+router.get(
+  "/paged",
+  authorize("job-titles"),
+  validate(jobTitlePagedQuerySchema, "query"),
+  findAllPaged,
+);
 
 /**
  * @openapi
@@ -163,7 +174,12 @@ router.get("/paged", validate(jobTitlePagedQuerySchema, "query"), findAllPaged);
  *       409:
  *         description: Job title with this name already exists
  */
-router.post("/", validate(createJobTitleSchema, "body"), create);
+router.post(
+  "/",
+  authorize("job-titles"),
+  validate(createJobTitleSchema, "body"),
+  create,
+);
 
 /**
  * @openapi
@@ -193,7 +209,12 @@ router.post("/", validate(createJobTitleSchema, "body"), create);
  *       404:
  *         description: Job title not found
  */
-router.get("/:id", validate(idParamSchema, "params"), findById);
+router.get(
+  "/:id",
+  authorize("job-titles"),
+  validate(idParamSchema, "params"),
+  findById,
+);
 
 /**
  * @openapi
@@ -233,6 +254,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  */
 router.patch(
   "/:id",
+  authorize("job-titles"),
   validate(idParamSchema, "params"),
   validate(updateJobTitleSchema, "body"),
   update,
@@ -264,6 +286,11 @@ router.patch(
  *       409:
  *         description: Job title is already inactive
  */
-router.delete("/:id", validate(idParamSchema, "params"), softDelete);
+router.delete(
+  "/:id",
+  authorize("job-titles"),
+  validate(idParamSchema, "params"),
+  softDelete,
+);
 
 export default router;

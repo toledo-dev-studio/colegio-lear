@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
   attachmentParamsSchema,
   attachmentDeleteParamsSchema,
@@ -64,6 +65,7 @@ const router = Router();
  */
 router.post(
   "/announcement/:announcementId",
+  authorize("announcements"),
   uploadSingle,
   validate(attachmentParamsSchema, "params"),
   uploadHandler,
@@ -102,6 +104,7 @@ router.post(
  */
 router.delete(
   "/announcement/:announcementId/:attachmentId",
+  authorize("announcements"),
   validate(attachmentDeleteParamsSchema, "params"),
   remove,
 );

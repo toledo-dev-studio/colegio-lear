@@ -7,7 +7,7 @@ export type ModuleKey =
   | "my-account"
   | "my-classes"
   | "students"
-  | "academic-years"
+  | "academic-cycles"
   | "announcements"
   | "academic-levels"
   | "school-subjects"

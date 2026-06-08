@@ -27,7 +27,7 @@ export const MODULE_KEYS = [
   "my-account",
   "my-classes",
   "students",
-  "academic-years",
+  "academic-cycles",
   "announcements",
   "academic-levels",
   "school-subjects",

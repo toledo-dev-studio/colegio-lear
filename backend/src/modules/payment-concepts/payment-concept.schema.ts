@@ -64,58 +64,31 @@ export const idParamSchema = z.object({
  *         type: string
  *         enum: [true, false]
  *       description: Filter by active/inactive status
- *     PaymentConceptFilterAllowRemission:
+ *     PaymentConceptFilterAllowForgiveness:
  *       in: query
- *       name: allowRemission
+ *       name: allowForgiveness
  *       schema:
  *         type: string
  *         enum: [true, false]
- *       description: Filter by whether remission is allowed
- *     PaymentConceptFilterBaseAmount:
+ *       description: Filter by whether forgiveness is allowed
+ *     PaymentConceptFilterAmount:
  *       in: query
- *       name: baseAmount
+ *       name: amount
  *       schema:
  *         type: number
  *         minimum: 0.01
- *         maximum: 999999.99
- *       description: Filter by exact base amount
- *     PaymentConceptFilterMinAmount:
- *       in: query
- *       name: minAmount
- *       schema:
- *         type: number
- *         minimum: 0.01
- *         maximum: 999999.99
- *       description: Filter by minimum base amount (inclusive)
- *     PaymentConceptFilterMaxAmount:
- *       in: query
- *       name: maxAmount
- *       schema:
- *         type: number
- *         minimum: 0.01
- *         maximum: 999999.99
- *       description: Filter by maximum base amount (inclusive)
+ *       description: Filter by exact amount
  */
 export const paymentConceptFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(100, "name must be at most 100 characters").optional(),
   status: z.enum(["true", "false"]).optional(),
-  allowRemission: z.enum(["true", "false"]).optional(),
+  allowForgiveness: z.enum(["true", "false"]).optional(),
   amount: z.coerce
     .number({ message: "amount must be a number" })
-    .min(0.01, "amount must be at least 0.01")
-    .max(999999.99, "amount must be at most 999999.99")
-    .optional(),
-  minAmount: z.coerce
-    .number({ message: "minAmount must be a number" })
-    .min(0.01, "minAmount must be at least 0.01")
-    .max(999999.99, "minAmount must be at most 999999.99")
-    .optional(),
-  maxAmount: z.coerce
-    .number({ message: "maxAmount must be a number" })
-    .min(0.01, "maxAmount must be at least 0.01")
-    .max(999999.99, "maxAmount must be at most 999999.99")
-    .optional(),
+    .min(0)
+    .optional()
+    .transform((val) => (val === 0 ? undefined : val)),
 });
 
 /**
@@ -169,8 +142,7 @@ export const paymentConceptPagedQuerySchema =
  *       type: object
  *       required:
  *         - name
- *         - description
- *         - baseAmount
+ *         - amount
  *       properties:
  *         name:
  *           type: string
@@ -182,15 +154,15 @@ export const paymentConceptPagedQuerySchema =
  *           minLength: 1
  *           maxLength: 500
  *           description: Payment concept description (trimmed, non-blank)
- *         baseAmount:
+ *         amount:
  *           type: number
  *           minimum: 0.01
  *           maximum: 999999.99
- *           description: Base amount in MXN (0.01-999999.99)
- *         allowRemission:
+ *           description: Amount in MXN (0.01-999999.99)
+ *         allowForgiveness:
  *           type: boolean
  *           default: false
- *           description: Whether the concept allows remission (waiver)
+ *           description: Whether the concept allows forgiveness (waiver)
  */
 export const createPaymentConceptSchema = z.object({
   name: nonBlankString(100),
@@ -208,8 +180,8 @@ export const createPaymentConceptSchema = z.object({
     .number({ message: "amount must be a number" })
     .min(0.01, "amount must be at least 0.01")
     .max(999999.99, "amount must be at most 999999.99"),
-  allowRemission: z
-    .boolean({ message: "allowRemission must be a boolean" })
+  allowForgiveness: z
+    .boolean({ message: "allowForgiveness must be a boolean" })
     .default(false),
 });
 
@@ -234,14 +206,14 @@ export const createPaymentConceptSchema = z.object({
  *           minLength: 1
  *           maxLength: 500
  *           description: Payment concept description (trimmed, non-blank)
- *         baseAmount:
+ *         amount:
  *           type: number
  *           minimum: 0.01
  *           maximum: 999999.99
- *           description: Base amount in MXN (0.01-999999.99)
- *         allowRemission:
+ *           description: Amount in MXN (0.01-999999.99)
+ *         allowForgiveness:
  *           type: boolean
- *           description: Whether the concept allows remission (waiver)
+ *           description: Whether the concept allows forgiveness (waiver)
  */
 export const updatePaymentConceptSchema = z
   .object({
@@ -261,8 +233,8 @@ export const updatePaymentConceptSchema = z
       .min(0.01, "amount must be at least 0.01")
       .max(999999.99, "amount must be at most 999999.99")
       .optional(),
-    allowRemission: z
-      .boolean({ message: "allowRemission must be a boolean" })
+    allowForgiveness: z
+      .boolean({ message: "allowForgiveness must be a boolean" })
       .optional(),
     status: z.boolean({ message: "status must be a boolean" }).optional(),
   })

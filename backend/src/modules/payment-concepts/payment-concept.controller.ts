@@ -16,7 +16,7 @@ const service = new PaymentConceptService(prisma);
 
 /**
  * Builds a PaymentConceptFilters object from validated query parameters.
- * Converts `status` and `allowRemission` strings ("true"/"false") to booleans.
+ * Converts `status` and `allowForgiveness` strings ("true"/"false") to booleans.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
  */
 function buildFilters(query: Record<string, unknown>): PaymentConceptFilters {
@@ -25,13 +25,9 @@ function buildFilters(query: Record<string, unknown>): PaymentConceptFilters {
   if (query.q !== undefined) filters.q = query.q as string;
   if (query.name !== undefined) filters.name = query.name as string;
   if (query.status !== undefined) filters.status = query.status === "true";
-  if (query.allowRemission !== undefined)
-    filters.allowRemission = query.allowRemission === "true";
+  if (query.allowForgiveness !== undefined)
+    filters.allowForgiveness = query.allowForgiveness === "true";
   if (query.amount !== undefined) filters.amount = query.amount as number;
-  if (query.minAmount !== undefined)
-    filters.minAmount = query.minAmount as number;
-  if (query.maxAmount !== undefined)
-    filters.maxAmount = query.maxAmount as number;
 
   return filters;
 }

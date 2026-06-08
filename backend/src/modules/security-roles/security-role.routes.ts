@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
+import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
   idParamSchema,
   securityRoleFiltersSchema,
@@ -55,7 +56,12 @@ const router: Router = Router();
  *               items:
  *                 $ref: '#/components/schemas/SecurityRole'
  */
-router.get("/", validate(securityRoleFiltersSchema, "query"), findAll);
+router.get(
+  "/",
+  authorize("security-roles"),
+  validate(securityRoleFiltersSchema, "query"),
+  findAll,
+);
 
 /**
  * @openapi
@@ -125,6 +131,7 @@ router.get("/", validate(securityRoleFiltersSchema, "query"), findAll);
  */
 router.get(
   "/paged",
+  authorize("security-roles"),
   validate(securityRolePagedQuerySchema, "query"),
   findAllPaged,
 );
@@ -155,7 +162,12 @@ router.get(
  *       409:
  *         description: Security role with this name already exists
  */
-router.post("/", validate(createSecurityRoleSchema, "body"), create);
+router.post(
+  "/",
+  authorize("security-roles"),
+  validate(createSecurityRoleSchema, "body"),
+  create,
+);
 
 /**
  * @openapi
@@ -185,7 +197,12 @@ router.post("/", validate(createSecurityRoleSchema, "body"), create);
  *       404:
  *         description: Security role not found
  */
-router.get("/:id", validate(idParamSchema, "params"), findById);
+router.get(
+  "/:id",
+  authorize("security-roles"),
+  validate(idParamSchema, "params"),
+  findById,
+);
 
 /**
  * @openapi
@@ -225,6 +242,7 @@ router.get("/:id", validate(idParamSchema, "params"), findById);
  */
 router.patch(
   "/:id",
+  authorize("security-roles"),
   validate(idParamSchema, "params"),
   validate(updateSecurityRoleSchema, "body"),
   update,
@@ -256,6 +274,11 @@ router.patch(
  *       409:
  *         description: Security role is already inactive
  */
-router.delete("/:id", validate(idParamSchema, "params"), softDelete);
+router.delete(
+  "/:id",
+  authorize("security-roles"),
+  validate(idParamSchema, "params"),
+  softDelete,
+);
 
 export default router;
