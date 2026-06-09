@@ -144,7 +144,7 @@ export const PaymentConceptForm = ({ paymentConcept, isSubmitting, onSubmit }: P
                                             <p className="text-sm font-medium text-foreground">{ field.value ? "Sí" : "No" }</p>
                                             <p className="text-xs text-muted-foreground mt-1">El administrador podrá condonar este concepto por alumno según su ciclo escolar.</p>
                                         </div>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                        <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
                                     </label>
                                 )}
                             />

@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { matchPath, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router";
-import { CalendarDays, GraduationCap, InfoIcon, Users, Wallet } from "lucide-react";
+import { CalendarDays, GraduationCap, InfoIcon, School, Users, Wallet } from "lucide-react";
 
 import { cn } from "@/lib/extensions/utils";
 import type { Tab } from "@/interfaces/components/tab";
@@ -17,6 +17,12 @@ const TABS: Tab[] = [
         protected: false
     },
     {
+        to: "wallet",
+        label: "Cartera de pagos",
+        icon: Wallet,
+        protected: true
+    },
+    {
         to: "school-subjects",
         label: "Materias escolares",
         icon: GraduationCap,
@@ -25,13 +31,13 @@ const TABS: Tab[] = [
     {
         to: "school-groups",
         label: "Grupos escolares",
-        icon: Users,
+        icon: School,
         protected: true
     },
     {
-        to: "wallet",
-        label: "Cartera de pagos",
-        icon: Wallet,
+        to: "enrollments",
+        label: "Inscripciones al ciclo escolar",
+        icon: Users,
         protected: true
     }
 ];

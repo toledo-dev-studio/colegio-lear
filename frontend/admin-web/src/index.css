@@ -215,6 +215,23 @@ h6 {
     /* Firefox */
   }
 
+  /* Input controller styles */
+  .control-container {
+    @apply w-full;
+  }
+
+  .control-container .label {
+    @apply text-sm font-medium text-foreground mb-2 block;
+  }
+
+  .control-container .label .required {
+    @apply text-destructive;
+  }
+
+  .control-container .error {
+    @apply text-red-500 text-sm mt-2;
+  }
+
 }
 
 /* Scrollbar */

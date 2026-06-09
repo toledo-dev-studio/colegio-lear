@@ -1,0 +1,38 @@
+[
+    {
+        "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "name": "Primero A (2026-2027)",
+        "description": "Grupo conformado por estudiantes de primer grado sección A para el ciclo escolar 2026-2027.",
+        "status": "active",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
+    },
+    {
+        "id": "b8d3e9f5-6a7b-4e3f-c9b2-1e6a7d8f9b02",
+        "name": "Primero B (2026-2027)",
+        "description": "Grupo conformado por estudiantes de primer grado sección B para el ciclo escolar 2026-2027.",
+        "status": "active",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
+    },
+    {
+        "id": "c9e4fa06-7b8c-4f40-da03-2f7b8e9a0c13",
+        "name": "Segundo A (2026-2027)",
+        "description": "Grupo conformado por estudiantes de segundo grado sección A para el ciclo escolar 2026-2027.",
+        "status": "active",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
+    },
+    {
+        "id": "da05ab17-8c9d-4151-eb14-3a8c9f0b1d24",
+        "name": "Segundo B (2026-2027)",
+        "description": "Grupo conformado por estudiantes de segundo grado sección B para el ciclo escolar 2026-2027.",
+        "status": "discharged",
+        "dischargedDescription": "El grupo fue dado de baja debido a una reorganización académica y redistribución de estudiantes a otros grupos del mismo grado.",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
+    },
+    {
+        "id": "eb16bc28-9dae-4262-fc25-4b9da01c2e35",
+        "name": "Tercero A (2026-2027)",
+        "description": "Grupo conformado por estudiantes de tercer grado sección A para el ciclo escolar 2026-2027.",
+        "status": "active",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
+    }
+]

@@ -36,7 +36,7 @@
                 "canDelete": true
             },
             {
-                "moduleKey": "academic-years",
+                "moduleKey": "academic-cycles",
                 "canRead": true,
                 "canWrite": true,
                 "canDelete": true

@@ -2,12 +2,13 @@ import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
 import { AuthenticatedRoute } from "@/routes/protected.router"
-import { AcademicCyclesPage } from "../pages/academic-cycles/AcademicCyclesPage";
 import { AcademicCycleLayout } from "../layouts/AcademicCycleLayout";
+import { AcademicCyclesPage } from "../pages/academic-cycles/AcademicCyclesPage";
 import { AcademicCycleTab } from "../pages/academic-cycle/academic-cycle-tab/AcademicCycleTab";
-import { AcademicCycleSchoolSubjectTab } from "../pages/academic-cycle/academic-cycle-school-subjects-tab/AcademicCycleSchoolSubjectTab";
 import { AcademicCycleWalletTab } from "../pages/academic-cycle/academic-cycle-wallet-tab/AcademicCycleWalletTab";
-import { AcademicCycleSchoolGroupTab } from "../pages/academic-cycle/academic-cycle-school-group-tab/AcademicCycleSchoolGroupTab";
+import { AcademicCycleEnrollmentsTab } from "../pages/academic-cycle/academic-cycle-enrollments-tab/AcademicCycleEnrollmentsTab";
+import { AcademicCycleSchoolGroupsTab } from "../pages/academic-cycle/academic-cycle-school-groups-tab/AcademicCycleSchoolGroupsTab";
+import { AcademicCycleSchoolSubjectsTab } from "../pages/academic-cycle/academic-cycle-school-subjects-tab/AcademicCycleSchoolSubjectsTab";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const AcademicCyclesLayout = lazy(() => import("@/modules/academic-cycles/layouts/AcademicCyclesLayout"));
@@ -15,15 +16,11 @@ const AcademicCyclesLayout = lazy(() => import("@/modules/academic-cycles/layout
 export const academicCyclesRouter: RouteObject = {
     path: "/academic-cycles",
     element:
-        // REMOVE: CUANDO SE CAMBIE EL KEY DEL MODULO academic-years POR academic-cycles EN LA INTERFAZ DE MODULES
-        // <AuthenticatedRoute moduleKey="academic-cycles">
-        //     <SystemLayout>
-        //         <AcademicCyclesLayout />
-        //     </SystemLayout>
-        // </AuthenticatedRoute>,
-        <SystemLayout>
-            <AcademicCyclesLayout />
-        </SystemLayout>,
+        <AuthenticatedRoute moduleKey="academic-cycles">
+            <SystemLayout>
+                <AcademicCyclesLayout />
+            </SystemLayout>
+        </AuthenticatedRoute>,
     children: [
         {
             path: "",
@@ -38,16 +35,20 @@ export const academicCyclesRouter: RouteObject = {
                     element: <AcademicCycleTab />
                 },
                 {
+                    path: "wallet",
+                    element: <AcademicCycleWalletTab />
+                },
+                {
                     path: "school-subjects",
-                    element: <AcademicCycleSchoolSubjectTab />
+                    element: <AcademicCycleSchoolSubjectsTab />
                 },
                 {
                     path: "school-groups",
-                    element: <AcademicCycleSchoolGroupTab />
+                    element: <AcademicCycleSchoolGroupsTab />
                 },
                 {
-                    path: "wallet",
-                    element: <AcademicCycleWalletTab />
+                    path: "enrollments",
+                    element: <AcademicCycleEnrollmentsTab />
                 }
             ]
         },
