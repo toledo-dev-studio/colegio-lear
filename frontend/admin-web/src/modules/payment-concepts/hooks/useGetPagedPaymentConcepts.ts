@@ -15,7 +15,7 @@ export const useGetPagedPaymentConcepts = () => {
 
     // Advanced query filters
     const name = searchParams.get("name")?.trim() || undefined;
-    const amount = stringToNumberWithDefault(searchParams.get("amount")?.trim(), undefined);
+    const amount = stringToNumberWithDefault(searchParams.get("amount"), undefined);
     const allowForgiveness = isValidBooleanString(searchParams.get("allowForgiveness")) ? stringToBooleanWithDefault(searchParams.get("allowForgiveness")) : undefined;
     const status = isValidBooleanString(searchParams.get("status")) ? stringToBooleanWithDefault(searchParams.get("status")) : undefined;
 

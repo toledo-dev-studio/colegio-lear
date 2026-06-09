@@ -1,7 +1,7 @@
 import { Navigate } from "react-router";
 import { Controller } from "react-hook-form";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Save } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
@@ -10,20 +10,20 @@ import { Table } from "@/shared/components/table/Table";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { useAcademicCycleSchoolSubjectTab } from "./hooks/useAcademicCycleSchoolSubjectTab"
-import { useAcademicCycleSchoolSubjecTable } from "./hooks/useAcademicCycleSchoolSubjecTable";
+import { useAcademicCycleSchoolSubjectsTab } from "./hooks/useAcademicCycleSchoolSubjectsTab"
 import { useAcademicCycleSchoolSubjectForm } from "./hooks/useAcademicCycleSchoolSubjectForm";
 import type { AcademicCycleSchoolSubject } from "@/interfaces/entites/academic-cycle-school-subject";
+import { useAcademicCycleSchoolSubjectsTable } from "./hooks/useAcademicCycleSchoolSubjectsTable";
 
-export const AcademicCycleSchoolSubjectTab = () => {
+export const AcademicCycleSchoolSubjectsTab = () => {
     // Context hooks and stores configuration
-    const { context, loader, queries, mutations, deleteModal } = useAcademicCycleSchoolSubjectTab();
+    const { context, loader, queries, mutations, deleteModal } = useAcademicCycleSchoolSubjectsTab();
 
     // Form hook configuration
     const { watcher, control, errors, handleSubmit, register, setValue, reset } = useAcademicCycleSchoolSubjectForm();
 
     // Table hook configuration
-    const { columns, properties, actions } = useAcademicCycleSchoolSubjecTable(reset, deleteModal.open);
+    const { columns, properties, actions } = useAcademicCycleSchoolSubjectsTable(reset, deleteModal.open);
 
     // Component functions
     const handleClickConfirmDeleteSchoolSubject = async () => {
@@ -75,7 +75,7 @@ export const AcademicCycleSchoolSubjectTab = () => {
         return (
             <>
                 <div className="w-full relative mx-auto h-full my-4">
-                    <CustomFullScreenLoading className="relative" title="Cargando cartera de ciclo escolar" subtitle="Por favor espere..." />
+                    <CustomFullScreenLoading className="relative" title="Cargando materias del ciclo escolar" subtitle="Por favor espere..." />
                 </div>
             </>
         );
@@ -156,7 +156,7 @@ export const AcademicCycleSchoolSubjectTab = () => {
                             <div className="w-full flex justify-end items-center col-span-1 md:col-span-2 xl:col-span-3 mt-4">
                                 <Button type="submit">
                                     {watcher.isNewRecord ? "Agregar nueva materia" : "Actualizar materia"}
-                                    <Plus className="ml-4 w-4 h-4" />
+                                    <Save className="ml-4 w-4 h-4" />
                                 </Button>
                             </div>
                         </section>

@@ -1,18 +1,17 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router';
-import { Save, X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from "react"
+import { Link } from "react-router";
+import { useForm } from "react-hook-form";
 
-import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
-import { Switch } from '@/shared/ui/switch';
-import { Textarea } from '@/shared/ui/textarea';
-import { CustomSpinner } from '@/shared/components/CustomSpinner';
-import { type ModuleKeys } from '@/interfaces/components/modules';
-import type { SecurityRole } from '@/interfaces/entites/security-role';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
-import type { SecurityRolePermission } from '@/interfaces/entites/security-role-permission';
-import { SecurityRolePermissionsGrid } from '../../../components/SecurityRolePermissionsGrid';
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Switch } from "@/shared/ui/switch";
+import { Textarea } from "@/shared/ui/textarea";
+import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { type ModuleKeys } from "@/interfaces/components/modules";
+import type { SecurityRole } from "@/interfaces/entites/security-role";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import type { SecurityRolePermission } from "@/interfaces/entites/security-role-permission";
+import { SecurityRolePermissionsGrid } from "../../../components/SecurityRolePermissionsGrid";
 
 interface Props {
     securityRole?: SecurityRole,
@@ -25,15 +24,15 @@ export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props
     const { register, handleSubmit, formState: { errors }, getValues, setValue, watch, reset } = useForm<Partial<SecurityRole>>({
         defaultValues: securityRole
     });
-    const [permissions, setPermissions] = useState<SecurityRolePermission[]>(getValues('permissions') ?? []);
+    const [permissions, setPermissions] = useState<SecurityRolePermission[]>(getValues("permissions") ?? []);
 
     useEffect(() => {
         if (securityRole)
             reset(securityRole);
     }, [securityRole]);
 
-    const handleOnChangePermission = (key: ModuleKeys, permission: 'can-read' | 'can-write' | 'can-delete', checked: boolean) => {
-        const currentPermissions = getValues('permissions') ?? [];
+    const handleOnChangePermission = (key: ModuleKeys, permission: "can-read" | "can-write" | "can-delete", checked: boolean) => {
+        const currentPermissions = getValues("permissions") ?? [];
         let newPermissions: SecurityRolePermission[] = [];
         if (!currentPermissions.some(item => item.moduleKey === key)) {
             newPermissions = [...currentPermissions, {
@@ -47,13 +46,13 @@ export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props
                 if (item.moduleKey !== key)
                     return item;
                 switch (permission) {
-                    case 'can-read':
+                    case "can-read":
                         item.canRead = checked;
                         break;
-                    case 'can-write':
+                    case "can-write":
                         item.canWrite = checked;
                         break;
-                    case 'can-delete':
+                    case "can-delete":
                         item.canDelete = checked;
                         break;
                     default:
@@ -62,7 +61,7 @@ export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props
                 return item;
             });
         }
-        setValue('permissions', newPermissions);
+        setValue("permissions", newPermissions);
         setPermissions(newPermissions);
     }
 
@@ -79,8 +78,8 @@ export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props
                             <TooltipTrigger>
                                 <Switch
                                     size="default"
-                                    checked={watch('status') ?? false}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
+                                    checked={watch("status") ?? false}
+                                    onCheckedChange={(checked) => setValue("status", checked)} />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Estatus del registro</p>
@@ -98,7 +97,7 @@ export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props
                         </label>
                         <Input
                             type="text"
-                            {...register('name', { required: true })}
+                            {...register("name", { required: true })}
                             placeholder="Nombre del registro..."
                             className="pill-input w-full pl-8" />
                         {
@@ -113,8 +112,8 @@ export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-3 block">Descripción del rol de seguridad:</label>
                         <Textarea
-                            {...register('description')}
-                            defaultValue={getValues('description')}
+                            {...register("description")}
+                            defaultValue={getValues("description")}
                             placeholder="Descripción del registro..."
                             className="pill-input w-full pl-8" />
                     </div>

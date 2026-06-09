@@ -14,6 +14,7 @@ export const loginActionAsync = async (credentials: AuthCredentials): Promise<Em
     console.log(credentials);
     
     const { data } = await api.post<Employee>("/auth/login", credentials);
+console.log(data);
 
     return data;
 }

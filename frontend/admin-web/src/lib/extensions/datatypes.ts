@@ -17,7 +17,7 @@ export const stringToBooleanWithDefault = (value: string | null | undefined): bo
  * @param value The value to normalize.
  * @returns number result.
  */
-export const stringToNumberWithDefault = (value: string | null | undefined, defaultValue: any = 0): number => {
+export const stringToNumberWithDefault = (value: string | null | undefined, defaultValue: any): number => {
     if (!value || isNaN(+value)) {
         return defaultValue;
     }

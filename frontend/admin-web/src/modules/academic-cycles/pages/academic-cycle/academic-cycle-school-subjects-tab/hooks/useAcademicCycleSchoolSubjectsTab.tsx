@@ -9,7 +9,7 @@ import { useDeleteSchoolSubjectByIdForAcademicCycle } from "@/modules/academic-c
 import { useCreateUpdateSchoolSubjectForAcademicCycle } from "@/modules/academic-cycles/hooks/school-subjects/useCreateUpdateSchoolSubjectForAcademicCycle";
 import { useSearchSchoolSubjects } from "@/modules/school-subjects/hooks/useSearchSchoolSubjects";
 
-export const useAcademicCycleSchoolSubjectTab = () => {
+export const useAcademicCycleSchoolSubjectsTab = () => {
     // Get context from layout
     const { academicCycleId, academicCycle, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 

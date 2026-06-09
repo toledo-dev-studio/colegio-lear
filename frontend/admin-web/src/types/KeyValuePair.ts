@@ -20,6 +20,10 @@ export type AcademicCycleStatusKey =
   | "cancelled"
   | "archived";
 
+export type AcademicCycleSchoolGroupStatusKey =
+  | "active"
+  | "discharged";
+
 export type StudentGuardianTypeKey =
   | "father"
   | "mother"
@@ -75,3 +79,8 @@ export type BloodTypeKey =
   | "AB-"
   | "O+"
   | "O-";
+
+export const labelOf = <T extends string>(
+  list: KeyValuePair<T>[],
+  key: T | undefined | null,
+): string => list.find((x) => x.key === key)?.label || String(key ?? "");

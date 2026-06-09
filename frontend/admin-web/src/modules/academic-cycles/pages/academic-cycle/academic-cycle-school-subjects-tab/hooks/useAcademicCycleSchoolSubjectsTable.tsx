@@ -7,7 +7,7 @@ import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/inter
 import { Button } from "@/shared/ui/button";
 import { Pencil, Trash } from "lucide-react";
 
-export const useAcademicCycleSchoolSubjecTable = (handleEdit: (item: AcademicCycleSchoolSubject) => void, handleDelete: (item: AcademicCycleSchoolSubject) => void) => {
+export const useAcademicCycleSchoolSubjectsTable = (handleEdit: (item: AcademicCycleSchoolSubject) => void, handleDelete: (item: AcademicCycleSchoolSubject) => void) => {
     // Get context from layout
     const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 

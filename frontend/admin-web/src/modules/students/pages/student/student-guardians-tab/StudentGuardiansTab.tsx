@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Navigate, useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Mail, Pencil, Phone, Plus, Trash } from "lucide-react";
+import { Mail, Pencil, Phone, Save, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
 import { Input } from "@/shared/ui/input";
@@ -344,7 +344,7 @@ export const StudentGuardiansTab = () => {
                     <div className="w-full flex justify-end items-center col-span-1 md:col-span-2 xl:col-span-3 mt-4">
                         <Button type="submit">
                             {watch("id") ? "Actualizar tutor" : "Registrar nuevo tutor"}
-                            <Plus className="ml-4 w-4 h-4" />
+                            <Save className="ml-4 w-4 h-4" />
                         </Button>
                     </div>
                 </section>

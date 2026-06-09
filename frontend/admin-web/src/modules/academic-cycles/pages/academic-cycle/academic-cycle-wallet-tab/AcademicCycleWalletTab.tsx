@@ -1,7 +1,7 @@
 import { Navigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Banknote, Pencil, Plus, Trash } from "lucide-react";
+import { Banknote, Pencil, Save, Trash } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Switch } from "@/shared/ui/switch";
@@ -215,7 +215,7 @@ export const AcademicCycleWalletTab = () => {
                                     {
                                         errors.amount && (
                                             <p className="text-red-500 text-sm mt-2">
-                                                {errors.amount.message || 'El monto de pago es obligatorio'}
+                                                {errors.amount.message || "El monto de pago es obligatorio"}
                                             </p>
                                         )
                                     }
@@ -259,7 +259,7 @@ export const AcademicCycleWalletTab = () => {
                                                         <p className="text-sm font-medium text-foreground">{field.value ? "Sí" : "No"}</p>
                                                         <p className="text-xs text-muted-foreground mt-1">El administrador podrá condonar este concepto por alumno según su ciclo escolar.</p>
                                                     </div>
-                                                    <Switch disabled={!selectedPaymentConceptId} checked={field.value} onCheckedChange={field.onChange} />
+                                                    <Switch disabled={!selectedPaymentConceptId} checked={field.value ?? false} onCheckedChange={field.onChange} />
                                                 </label>
                                             )}
                                         />
@@ -269,7 +269,7 @@ export const AcademicCycleWalletTab = () => {
                             <div className="w-full flex justify-end items-center col-span-1 md:col-span-2 xl:col-span-3 mt-4">
                                 <Button type="submit">
                                     {isNew ? "Registrar nuevo" : "Actualizar concepto de pago"}
-                                    <Plus className="ml-4 w-4 h-4" />
+                                    <Save className="ml-4 w-4 h-4" />
                                 </Button>
                             </div>
                         </section>
