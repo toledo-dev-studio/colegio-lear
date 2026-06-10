@@ -11,14 +11,10 @@ import type { FileUpload } from "./attachment.types";
 
 /** Minimal multer file shape needed for mapping to FileUpload */
 interface MulterFile {
-  buffer: Buffer;
   originalname: string;
   mimetype: string;
-}
-
-/** Extended Request type that includes the optional multer file */
-interface MulterRequest extends Request {
-  file?: MulterFile;
+  buffer: Buffer;
+  size: number;
 }
 
 /**
@@ -33,9 +29,9 @@ const service = new AttachmentService(prisma, storageService);
  * Multer processes the file before this handler runs.
  */
 export async function upload(req: Request, res: Response): Promise<void> {
-  const multerReq = req as MulterRequest;
+  const multerFile = (req as unknown as { file?: MulterFile }).file;
 
-  if (!multerReq.file) {
+  if (!multerFile) {
     throw new ValidationError("File is required", [
       { field: "file", message: "File is required" },
     ]);
@@ -44,9 +40,9 @@ export async function upload(req: Request, res: Response): Promise<void> {
   const { announcementId } = req.params as { announcementId: string };
 
   const file: FileUpload = {
-    buffer: multerReq.file.buffer,
-    originalname: multerReq.file.originalname,
-    mimetype: multerReq.file.mimetype,
+    buffer: multerFile.buffer,
+    originalname: multerFile.originalname,
+    mimetype: multerFile.mimetype,
   };
 
   const data = await service.upload(announcementId, file);

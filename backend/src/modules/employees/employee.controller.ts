@@ -13,14 +13,10 @@ import type { EmployeeFilters, FileUpload } from "./employee.types";
 
 /** Minimal multer file shape needed for mapping to FileUpload */
 interface MulterFile {
-  buffer: Buffer;
   originalname: string;
   mimetype: string;
-}
-
-/** Extended Request type that includes the optional multer file */
-interface MulterRequest extends Request {
-  file?: MulterFile;
+  buffer: Buffer;
+  size: number;
 }
 
 /**
@@ -121,8 +117,8 @@ export async function findById(req: Request, res: Response): Promise<void> {
  * Multer processes the file before this handler runs.
  */
 export async function create(req: Request, res: Response): Promise<void> {
-  const multerReq = req as MulterRequest;
-  const file = mapFile(multerReq.file);
+  
+  const file = mapFile((req as unknown as { file?: MulterFile }).file);
 
   const data = await service.create(req.body, file);
 
@@ -136,8 +132,8 @@ export async function create(req: Request, res: Response): Promise<void> {
  */
 export async function update(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };
-  const multerReq = req as MulterRequest;
-  const file = mapFile(multerReq.file);
+  
+  const file = mapFile((req as unknown as { file?: MulterFile }).file);
 
   // Validate at least one field or file is present
   const hasFields = Object.values(req.body).some(
@@ -193,10 +189,22 @@ export async function updateMyAccount(
   res: Response,
 ): Promise<void> {
   const { employeeId } = req.user!;
-  const multerReq = req as MulterRequest;
-  const file = mapFile(multerReq.file);
+  
+  const file = mapFile((req as unknown as { file?: MulterFile }).file);
 
   const data = await service.updateMyAccount(employeeId, req.body, file);
 
+  sendSuccess(res, data);
+}
+
+/**
+ * GET /employees/teachers
+ * Returns all active employees whose jobTitle type is "teacher".
+ */
+export async function findAllTeachers(
+  _req: Request,
+  res: Response,
+): Promise<void> {
+  const data = await service.findAllTeachers();
   sendSuccess(res, data);
 }

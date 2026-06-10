@@ -204,6 +204,23 @@ export class EmployeeService {
   }
 
   /**
+   * List only active employees whose jobTitle type is "teacher".
+   * Returns a simplified list for selects/dropdowns in other modules.
+   */
+  async findAllTeachers(): Promise<EmployeeRecord[]> {
+    const results = await this.prisma.employee.findMany({
+      where: {
+        isDeleted: false,
+        status: true,
+        jobTitle: { jobTitleType: "teacher" as never },
+      },
+      include: EMPLOYEE_LIST_INCLUDE,
+    });
+
+    return results as unknown as EmployeeRecord[];
+  }
+
+  /**
    * List employees with pagination and optional filters.
    * Excludes the authenticated employee from results.
    * Returns a PagedResult with metadata (totalPages, currentPage, itemsCount).
