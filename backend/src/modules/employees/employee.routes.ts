@@ -20,6 +20,7 @@ import {
   softDelete,
   resendInvitation,
   updateMyAccount,
+  findAllTeachers,
 } from "./employee.controller";
 
 // ─── Multer Configuration ───────────────────────────────────────────────────────
@@ -479,5 +480,25 @@ router.post(
   validate(idParamSchema, "params"),
   resendInvitation,
 );
+
+/**
+ * @openapi
+ * /employees/teachers:
+ *   get:
+ *     tags:
+ *       - Employees
+ *     summary: List active teachers
+ *     description: Returns all active employees whose job title type is "teacher". Useful for dropdowns in other modules.
+ *     responses:
+ *       200:
+ *         description: List of teacher employees
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Employee'
+ */
+router.get("/teachers", authorize("employees"), findAllTeachers);
 
 export default router;
