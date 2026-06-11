@@ -65,7 +65,7 @@ export const Table = <T extends Record<string, any>>({ data = [], isLoading, ena
                                             properties.map((property) => (
                                                 <td key={property.key} className="row">
                                                     {
-                                                        property.render ? property.render(item) : (<span>{getNestedValue(item, property.key) ?? "-"}</span>)
+                                                        property.render ? property.render(item) : (<span>{getNestedValue(item, property.key) || "-"}</span>)
                                                     }
                                                 </td>
                                             ))

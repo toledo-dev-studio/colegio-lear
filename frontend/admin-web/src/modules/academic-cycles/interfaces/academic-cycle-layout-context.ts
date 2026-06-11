@@ -15,7 +15,7 @@ export interface AcademicCycleLayoutContext {
     /**
      * Academic cycle information or undefined if is new record
      */
-    academicCycle: AcademicCycle;
+    academicCycle?: AcademicCycle;
     /**
      * Academic cycle unique identifier or undefined if is a new record
      */

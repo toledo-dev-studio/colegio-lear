@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { Link } from "react-router";
 import { Controller, useForm } from "react-hook-form";
-import { Mail, Phone, Save, User, X } from "lucide-react";
+import { Mail, Phone, User } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { isValidPhone } from "@/lib/extensions/validators";

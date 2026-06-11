@@ -71,10 +71,6 @@ export interface AcademicCycle {
      */
     enrollmentOpen?: boolean;
     /**
-     * Optional - Additional notes or comments
-     */
-    description?: string;
-    /**
      * Not set from frontend - Timestamp when the record was created as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
      * Backend should set this field when creating a new record, frontend should not set this field when creating or updating a record
      */

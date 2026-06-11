@@ -190,7 +190,7 @@ export const AcademicCycleSchoolGroupForm = ({ academicCycleSchoolGroup, teacher
                 </section>
 
                 {/* Actions section */}
-                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
+                <section className="flex items-center justify-end gap-x-4">
                     {
                         !isNewRecord &&
                         <Button type="button" aria-label="cancel" variant={"ghost"} onClick={() => setAcademicCycleSchoolGroup({})}>
@@ -199,7 +199,7 @@ export const AcademicCycleSchoolGroupForm = ({ academicCycleSchoolGroup, teacher
                     }
                     <Button type="submit">
                         {
-                            isNewRecord ? "Agregar nuevo grupo" : "Actualizar grupo"
+                            isNewRecord ? "Crear nuevo grupo" : "Actualizar grupo"
                         }
                     </Button>
                 </section>

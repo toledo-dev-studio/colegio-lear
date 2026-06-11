@@ -43,7 +43,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
 
     const onSubmit = async (academicCycleSchoolSubjectLike: Partial<AcademicCycleSchoolSubject>) => {
         try {
-            if (!academicCycleSchoolSubject?.id && queries.schoolSubject.data.some(item => item.schoolSubjectId === academicCycleSchoolSubjectLike.schoolSubjectId)) {
+            if (!academicCycleSchoolSubjectLike?.id && queries.schoolSubject.data.some(item => item.schoolSubjectId === academicCycleSchoolSubjectLike.schoolSubjectId)) {
                 toast.warning("La materia seleccionada ya se encuentra asociada al ciclo escolar", { position: "top-right" });
                 return;
             }

@@ -21,6 +21,7 @@ interface Props {
 }
 
 export const AcademicCycleWalletForm = ({ academicCycleWallet, setAcademicCycleWallet, onSubmit }: Props) => {
+
     // Get context from layout
     const { academicCycleId } = useOutletContext<AcademicCycleLayoutContext>();
 
@@ -200,21 +201,21 @@ export const AcademicCycleWalletForm = ({ academicCycleWallet, setAcademicCycleW
                             </div>
                         </div>
                     </section>
+                </section>
 
-                    {/* Actions section */}
-                    <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                        {
-                            !isNewRecord &&
-                            <Button type="button" aria-label="cancel" variant={"ghost"} onClick={() => setAcademicCycleWallet({})}>
-                                Cancelar
-                            </Button>
-                        }
-                        <Button type="submit">
-                            {
-                                isNewRecord ? "Agregar nuevo concepto" : "Actualizar concepto"
-                            }
+                {/* Actions section */}
+                <section className="flex items-center justify-end gap-x-4">
+                    {
+                        !isNewRecord &&
+                        <Button type="button" aria-label="cancel" variant={"ghost"} onClick={() => setAcademicCycleWallet({})}>
+                            Cancelar
                         </Button>
-                    </section>
+                    }
+                    <Button type="submit">
+                        {
+                            isNewRecord ? "Agregar nuevo concepto" : "Actualizar concepto"
+                        }
+                    </Button>
                 </section>
             </form>
         </>

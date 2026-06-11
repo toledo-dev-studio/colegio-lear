@@ -95,8 +95,8 @@ export const AcademicCycleSchoolSubjectForm = ({ academicCycleSchoolSubject, set
                                         onSearch={async (query) => searchSchoolSubjectsMutation.searchAsync({
                                             query,
                                             status: true,
-                                            academicLevelId: academicCycle.academicLevelId,
-                                            educationLevelId: academicCycle.educationLevelId
+                                            academicLevelId: academicCycle!.academicLevelId,
+                                            educationLevelId: academicCycle!.educationLevelId
                                         })}
                                     />
                                 )}
@@ -109,6 +109,9 @@ export const AcademicCycleSchoolSubjectForm = ({ academicCycleSchoolSubject, set
                                 )
                             }
                         </div>
+                    </section>
+
+                    <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="control-container">
                             <label className="label">Descripción de la materia:</label>
                             <Textarea
@@ -130,21 +133,21 @@ export const AcademicCycleSchoolSubjectForm = ({ academicCycleSchoolSubject, set
                             />
                         </div>
                     </section>
+                </section>
 
-                    {/* Actions section */}
-                    <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                        {
-                            !isNewRecord &&
-                            <Button type="button" aria-label="cancel" variant={"ghost"} onClick={() => setAcademicCycleSchoolSubject({})}>
-                                Cancelar
-                            </Button>
-                        }
-                        <Button type="submit">
-                            {
-                                isNewRecord ? "Agregar nueva materia" : "Actualizar materia"
-                            }
+                {/* Actions section */}
+                <section className="flex items-center justify-end gap-x-4">
+                    {
+                        !isNewRecord &&
+                        <Button type="button" aria-label="cancel" variant={"ghost"} onClick={() => setAcademicCycleSchoolSubject({})}>
+                            Cancelar
                         </Button>
-                    </section>
+                    }
+                    <Button type="submit">
+                        {
+                            isNewRecord ? "Agregar nueva materia" : "Actualizar materia"
+                        }
+                    </Button>
                 </section>
             </form>
         </>
