@@ -9,7 +9,7 @@ import { Textarea } from "@/shared/ui/textarea";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject"
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
@@ -94,7 +94,7 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
 
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico <span className="text-destructive">*</span>:</label>
-                        <CustomSearchInput
+                        <SearchInput
                             {...register("academicLevelId", { required: true })}
                             defaultValue={watch("academicLevel.name")}
                             selected={!!selectedAcademicLevel}
@@ -125,7 +125,7 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
 
                     <div className="w-full">
                         <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo <span className="text-destructive">*</span>:</label>
-                        <CustomSearchInput
+                        <SearchInput
                             {...register("educationLevelId", { required: true })}
                             defaultValue={watch("educationLevel.name")}
                             selected={!!selectedEducationLevel}

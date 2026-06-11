@@ -20,13 +20,14 @@ import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
 import { Modal } from "../modal/Modal";
 
 interface Props {
+    disabled: boolean;
     teachers: Employee[];
     schoolSubjects: SchoolSubject[];
     calendars: AcademicCycleGroupSchoolSubjectCalendar[];
-    onChangeCalendars: (calendars: AcademicCycleGroupSchoolSubjectCalendar[]) => void;
+    onChangeCalendars?: (calendars: AcademicCycleGroupSchoolSubjectCalendar[]) => void;
 }
 
-export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], calendars = [], onChangeCalendars }: Props) {
+export default function ScheduleCalendar({ disabled = false, teachers = [], schoolSubjects = [], calendars = [], onChangeCalendars = () => {} }: Props) {
 
     const calendarGridRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +43,10 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
     };
 
     const onPointerDownCreate = (e: React.PointerEvent, day: DayOfWeekKey) => {
+        if (disabled) return;
+
         if ((e.target as HTMLElement).closest("[data-block]")) return; // ignore on blocks
+
         e.preventDefault();
         const col = e.currentTarget as HTMLElement;
         col.setPointerCapture(e.pointerId);
@@ -58,6 +62,8 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
     };
 
     const onPointerDownMove = (e: React.PointerEvent, academicCycleGroupSchoolSubjectCalendar: AcademicCycleGroupSchoolSubjectCalendar, day: DayOfWeekKey, startMin: number, endMin: number) => {
+        if (disabled) return;
+
         e.stopPropagation();
         e.preventDefault();
         const col = e.currentTarget.parentElement as HTMLElement;
@@ -77,6 +83,8 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
     };
 
     const onPointerDownResize = (e: React.PointerEvent, academicCycleGroupSchoolSubjectCalendar: AcademicCycleGroupSchoolSubjectCalendar, day: DayOfWeekKey, startMin: number, endMin: number) => {
+        if (disabled) return;
+
         e.stopPropagation();
         e.preventDefault();
         const col = e.currentTarget.parentElement?.parentElement as HTMLElement;
@@ -96,6 +104,8 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
     };
 
     const commitDrag = useCallback(async () => {
+        if (disabled) return;
+
         if (!drag) return;
         const d = drag;
         setDrag(null);
@@ -130,6 +140,8 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
 
     const onPointerMove = useCallback(
         (e: PointerEvent) => {
+            if (disabled) return;
+
             if (!drag) return;
             const grid = calendarGridRef.current;
             if (!grid) return;
@@ -173,7 +185,7 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
     );
 
     const handleCreateUpdateConfirm = async (calendarLike: Partial<AcademicCycleGroupSchoolSubjectCalendar>) => {
-        console.log(calendarLike);
+        if (disabled) return;
 
         if (!calendar)
             return;
@@ -188,6 +200,8 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
     };
 
     const handleClickConfirmDelete = async () => {
+        if (disabled) return;
+
         if (!recordToDelete)
             return;
         onChangeCalendars([
@@ -197,6 +211,8 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
     }
 
     useEffect(() => {
+        if (disabled) return;
+
         if (!drag) return;
         const onMove = (e: PointerEvent) => onPointerMove(e);
         const onUp = () => commitDrag();
@@ -227,7 +243,7 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
                             const calendarItems = calendars.filter((c) => c.day === d.key);
                             const dragPreview = drag && drag.day === d.key ? drag : null;
                             return (
-                                <div key={d.key} data-day-col={d.key} onPointerDown={(e) => onPointerDownCreate(e, d.key)} data-testid={`dyn-day-col-${d.key}`} className="min-w-[180px] relative flex-1 border-l border-border cursor-pointer" style={{ height: TOTAL_SLOTS * SLOT_PX }}>
+                                <div key={d.key} data-day-col={d.key} onPointerDown={(e) => onPointerDownCreate(e, d.key)} data-testid={`dyn-day-col-${d.key}`} className="min-w-[160px] relative flex-1 border-l border-border cursor-pointer" style={{ height: TOTAL_SLOTS * SLOT_PX }}>
                                     {/* Available slot lines */}
                                     {
                                         Array.from({ length: TOTAL_SLOTS }).map((_, i) => {
@@ -281,15 +297,19 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
                                                                 className="cursor-pointer rounded-full"
                                                                 onPointerDown={(e) => e.stopPropagation()}
                                                                 onClick={() => setCalendar(item)}>
-                                                                <Info className="w-4 h-4" />
+                                                                <Info className="w-3 h-3" />
                                                             </button>
-                                                            <button
-                                                                type="button"
-                                                                className="cursor-pointer rounded-full"
-                                                                onPointerDown={(e) => e.stopPropagation()}
-                                                                onClick={() => openDeleteModal(item)}>
-                                                                <Trash className="w-4 h-4" />
-                                                            </button>
+                                                            {
+                                                                !disabled && (
+                                                                    <button
+                                                                        type="button"
+                                                                        className="cursor-pointer rounded-full"
+                                                                        onPointerDown={(e) => e.stopPropagation()}
+                                                                        onClick={() => openDeleteModal(item)}>
+                                                                        <Trash className="w-3 h-3" />
+                                                                    </button>
+                                                                )
+                                                            }
                                                         </div>
                                                     </section>
 
@@ -359,6 +379,7 @@ export default function ScheduleCalendar({ teachers = [], schoolSubjects = [], c
             {
                 calendar && (
                     <CalendarFormPanel
+                        disabled={disabled}
                         schoolSubjects={schoolSubjects}
                         teachers={teachers}
                         calendar={calendar}

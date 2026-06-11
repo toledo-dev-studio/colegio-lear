@@ -8,7 +8,7 @@ import { Switch } from "@/shared/ui/switch";
 import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
@@ -112,7 +112,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
 
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico:</label>
-                                <CustomSearchInput
+                                <SearchInput
                                     {...register("academicLevelId")}
                                     defaultValue={watch("academicLevel.name")}
                                     selected={!!selectedAcademicLevel}
@@ -136,7 +136,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
 
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo:</label>
-                                <CustomSearchInput
+                                <SearchInput
                                     {...register("educationLevelId")}
                                     defaultValue={watch("educationLevel.name")}
                                     selected={!!selectedEducationLevel}

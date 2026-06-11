@@ -10,7 +10,7 @@ import { Button } from "@/shared/ui/button";
 import type { Employee } from "@/interfaces/entites/employee";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { type SecurityRole } from "@/interfaces/entites/security-role";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { CustomPhotoUploader } from "@/shared/components/CustomPhotoUploader";
 import type { EmployeeFormData } from "@/modules/employees/interfaces/employee-form";
@@ -245,7 +245,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                         <label className="text-sm font-medium text-foreground mb-2 block">
                             Puesto de trabajo <span className="text-destructive">*</span>:
                         </label>
-                        <CustomSearchInput
+                        <SearchInput
                             {...register("jobTitleId", { required: true })}
                             defaultValue={watch("jobTitle.name")}
                             selected={!!selectedJobTitleId}
@@ -276,7 +276,7 @@ export const EmployeeForm = ({ employee, isSubmitting, onSubmit }: Props) => {
                         <label className="text-sm font-medium text-foreground mb-2 block">
                             Rol por asignar <span className="text-destructive">*</span>:
                         </label>
-                        <CustomSearchInput
+                        <SearchInput
                             {...register("securityRoleId", { required: true })}
                             defaultValue={watch("securityRole.name")}
                             selected={!!selectedSecurityRoleId}

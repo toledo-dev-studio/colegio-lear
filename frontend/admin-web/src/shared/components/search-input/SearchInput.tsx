@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from "react";
-import { Search, XCircle } from "lucide-react"
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { Search, XCircle } from "lucide-react";
 
+import { Input } from "../../ui/input";
 import { cn } from "@/lib/extensions/utils";
-import { Input } from "../ui/input"
-import { CustomSpinner } from "./CustomSpinner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { CustomSpinner } from "../CustomSpinner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
 
 interface Props {
+    name?: string;
     placeholder?: string;
     defaultValue?: string;
     disabled?: boolean;
@@ -20,9 +21,15 @@ interface Props {
     onSearch: (query: string, event?: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
-export const CustomSearchInput = (props: Props) => {
+export interface SearchInputRef {
+    focus: () => void;
+}
+
+export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
+
     const [searched, setSearched] = useState<boolean>(false);
     const {
+        name,
         placeholder,
         defaultValue,
         disabled,
@@ -35,7 +42,14 @@ export const CustomSearchInput = (props: Props) => {
         onOptionChange,
         onSearch
     } = props;
+
     const inputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => ({
+        focus() {
+            inputRef.current?.focus();
+        }
+    }));
 
     useEffect(() => {
         if (inputRef.current) {
@@ -48,6 +62,7 @@ export const CustomSearchInput = (props: Props) => {
             <div className="relative">
                 <div className="relative">
                     <Input
+                        name={name}
                         data-testid="login-password-input"
                         type="text"
                         ref={inputRef}
@@ -81,7 +96,7 @@ export const CustomSearchInput = (props: Props) => {
                                 <Tooltip>
                                     <TooltipTrigger>
                                         <XCircle className="cursor-pointer w-4 h-4 text-muted-foreground" onClick={() => {
-                                            if(disabled) 
+                                            if (disabled)
                                                 return;
                                             onClearSelection();
                                         }} />
@@ -145,5 +160,8 @@ export const CustomSearchInput = (props: Props) => {
                 }
             </div>
         </>
-    )
+    );
 }
+);
+
+SearchInput.displayName = "SearchInput";

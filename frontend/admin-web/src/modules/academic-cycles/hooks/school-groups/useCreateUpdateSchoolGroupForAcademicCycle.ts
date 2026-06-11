@@ -12,8 +12,14 @@ export const useCreateUpdateSchoolGroupForAcademicCycle = () => {
         onSuccess: (response: AcademicCycleSchoolGroup) => {
             // Set query data for academic cycle school groups list to avoid refetch api
             queryClient.setQueryData(
-                [GET_ACADEMIC_CYCLE_SCHOOL_GROUPS_QUERY_KEY, { academicCycleId: response.academicCycleId }], 
-                (prev: AcademicCycleSchoolGroup[] = []) => [...prev.filter(item => item.id !== response.id), response]
+                [GET_ACADEMIC_CYCLE_SCHOOL_GROUPS_QUERY_KEY, { academicCycleId: response.academicCycleId }],
+                (prev: AcademicCycleSchoolGroup[] = []) => {
+                    const index = prev.findIndex(item => item.id === response.id);
+                    if (index === -1)
+                        return [...prev, response]
+                    prev[index] = response;
+                    return prev;
+                }
             );
         }
     });

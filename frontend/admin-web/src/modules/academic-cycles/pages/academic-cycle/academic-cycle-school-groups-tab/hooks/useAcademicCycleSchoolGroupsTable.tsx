@@ -1,14 +1,18 @@
-import { Pencil, Trash } from "lucide-react";
 import { useOutletContext } from "react-router";
+import { Calendar, Pencil, Trash } from "lucide-react";
 
+import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
-import { ACADEMIC_CYCLE_SCHOOL_GROUP_STATUSES, type AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cycle-school-group";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { Badge } from "@/shared/ui/badge";
+import { ACADEMIC_CYCLE_SCHOOL_GROUP_STATUSES, type AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cycle-school-group";
 
-export const useAcademicCycleSchoolGroupsTable = (handleEdit: (item: AcademicCycleSchoolGroup) => void, handleDelete: (item: AcademicCycleSchoolGroup) => void) => {
+export const useAcademicCycleSchoolGroupsTable = (
+    handleEdit: (item: AcademicCycleSchoolGroup) => void,
+    handleDelete: (item: AcademicCycleSchoolGroup) => void,
+) => {
+
     // Get context from layout
     const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
@@ -19,7 +23,6 @@ export const useAcademicCycleSchoolGroupsTable = (handleEdit: (item: AcademicCyc
         "Estatus",
         "Acciones"
     ];
-    isLocked && columns.pop();
 
     // Table properties value configuration structure
     const properties: TableProperty<AcademicCycleSchoolGroup>[] = [
@@ -38,28 +41,41 @@ export const useAcademicCycleSchoolGroupsTable = (handleEdit: (item: AcademicCyc
         },
     ];
 
-    const actions: TableAction<AcademicCycleSchoolGroup>[] = isLocked ? [] : [
-        {
-            key: "edit",
+    // Table actions column with on click handler
+    const actions: TableAction<AcademicCycleSchoolGroup>[] = isLocked ?
+        [{
+            key: "calendar",
             render: (item: AcademicCycleSchoolGroup) => (
                 <Button
                     className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
                     onClick={() => handleEdit(item)}>
-                    <Pencil className="w-4 h-4" />
+                    <Calendar className="w-4 h-4" />
                 </Button>
             )
-        },
-        {
-            key: "delete",
-            render: (item: AcademicCycleSchoolGroup) => (
-                <Button
-                    className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
-                    onClick={() => handleDelete(item)}>
-                    <Trash className="w-4 h-4" />
-                </Button>
-            )
-        }
-    ];
+        }]
+        :
+        [
+            {
+                key: "edit",
+                render: (item: AcademicCycleSchoolGroup) => (
+                    <Button
+                        className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
+                        onClick={() => handleEdit(item)}>
+                        <Pencil className="w-4 h-4" />
+                    </Button>
+                )
+            },
+            {
+                key: "delete",
+                render: (item: AcademicCycleSchoolGroup) => (
+                    <Button
+                        className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
+                        onClick={() => handleDelete(item)}>
+                        <Trash className="w-4 h-4" />
+                    </Button>
+                )
+            }
+        ];
 
     return {
         columns,

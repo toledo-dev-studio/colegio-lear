@@ -12,7 +12,6 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
@@ -20,6 +19,7 @@ import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/ac
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES, type AcademicCycle } from "@/interfaces/entites/academic-cycle";
 import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
+import { SearchInput } from "@/shared/components/search-input/SearchInput";
 
 export const AcademicCycleTab = () => {
 
@@ -170,7 +170,7 @@ export const AcademicCycleTab = () => {
                         </div>
                         <div className="w-full">
                             <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico <span className="text-destructive">*</span>:</label>
-                            <CustomSearchInput
+                            <SearchInput
                                 {...register("academicLevelId", { required: true })}
                                 disabled={isLocked}
                                 defaultValue={watch("academicLevel.name")}
@@ -201,7 +201,7 @@ export const AcademicCycleTab = () => {
                         </div>
                         <div className="w-full">
                             <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo <span className="text-destructive">*</span>:</label>
-                            <CustomSearchInput
+                            <SearchInput
                                 {...register("educationLevelId", { required: true })}
                                 defaultValue={watch("educationLevel.name")}
                                 selected={!!selectedEducationLevel}
