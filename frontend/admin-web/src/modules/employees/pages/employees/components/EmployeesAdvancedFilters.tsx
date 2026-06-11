@@ -8,7 +8,7 @@ import { Switch } from "@/shared/ui/switch";
 import type { Employee } from "@/interfaces/entites/employee";
 import type { SecurityRole } from "@/interfaces/entites/security-role";
 import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import { useSearchJobTitlesForEmployee } from "@/modules/employees/hooks/job-titles/useSearchJobTitlesForEmployee";
 import { useSearchSecurityRolesForEmployee } from "@/modules/employees/hooks/security-roles/useSearchSecurityRolesForEmployee";
 
@@ -110,7 +110,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
 
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">Puesto de trabajo:</label>
-                                <CustomSearchInput
+                                <SearchInput
                                     defaultValue={watch('jobTitle.name')}
                                     selected={!!watch('jobTitleId')}
                                     placeholder="Busqueda de puesto de trabajo"
@@ -131,7 +131,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
 
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">Rol asignado:</label>
-                                <CustomSearchInput
+                                <SearchInput
                                     defaultValue={watch('securityRole.name')}
                                     selected={!!watch('securityRoleId')}
                                     placeholder="Busqueda de rol asignado"

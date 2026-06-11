@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
+import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 
 interface Props {
@@ -178,7 +178,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                             </div>
                             <div className="w-full">
                                 <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico:</label>
-                                <CustomSearchInput
+                                <SearchInput
                                     {...register("academicLevelId")}
                                     defaultValue={watch("academicLevel.name")}
                                     selected={!!selectedAcademicLevel}
@@ -201,7 +201,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                             </div>
                             <div className="w-full">
                                 <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo:</label>
-                                <CustomSearchInput
+                                <SearchInput
                                     {...register("educationLevelId")}
                                     defaultValue={watch("educationLevel.name")}
                                     selected={!!selectedEducationLevel}

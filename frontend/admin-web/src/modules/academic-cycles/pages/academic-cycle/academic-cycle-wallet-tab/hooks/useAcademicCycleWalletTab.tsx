@@ -1,67 +1,29 @@
-import { Link, useOutletContext } from "react-router";
+import { useOutletContext } from "react-router";
 
-import { Badge } from "@/shared/ui/badge";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
-import { formatFriendlyDate, formatMoney } from "@/lib/extensions/formatters";
 import type { AcademicCycleWallet } from "@/interfaces/entites/academic-cycle-wallet";
-import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import { useGetWalletForAcademicCycle } from "@/modules/academic-cycles/hooks/wallet/useGetWalletForAcademicCycle";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { useDeleteWalletByIdForAcademicCycle } from "@/modules/academic-cycles/hooks/wallet/useDeleteWalletByIdForAcademicCycle";
 import { useCreateUpdateWalletForAcademicCycle } from "@/modules/academic-cycles/hooks/wallet/useCreateUpdateWalletForAcademicCycle";
 
-const tablePropertiesStructure: TableProperty<AcademicCycleWallet>[] = [
-    {
-        key: "paymentConcept.name",
-        render: (item: AcademicCycleWallet) => (
-            <Link to={`/payment-concepts/${item.paymentConceptId}`}>
-                <span className="text-primary">
-                    {item.paymentConcept?.name ?? "-"}
-                </span>
-            </Link>
-        )
-    },
-    {
-        key: "amount",
-        render: (item) => (<>{formatMoney(item.amount)}</>)
-    },
-    {
-        key: "allowForgiveness",
-        render: (item) => (
-            <Badge variant={item.allowForgiveness ? "success" : "destructive"} className="py-4 px-6">
-                {
-                    item.allowForgiveness ? "Permitido" : "No permitido"
-                }
-            </Badge>
-        )
-    },
-    {
-        key: "dueDate",
-        render: (item) => (<>{formatFriendlyDate(item.dueDate)}</>)
-    },
-];
-
 export const useAcademicCycleWalletTab = () => {
     // Get context from layout
     const { academicCycleId, academicCycle, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
-    // Hooks & stores
+    // Shared hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
+
+    // Components hooks & stores
     const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleWallet>();
+
+    // Queries
     const walletForAcademicCycleQuery = useGetWalletForAcademicCycle(academicCycleId!);
+
+    // Mutations
     const deleteWalletByIdForAcademicCycle = useDeleteWalletByIdForAcademicCycle();
     const createUpdateWalletForAcademicCycle = useCreateUpdateWalletForAcademicCycle();
-
-    // Table configuration structure
-    const tableColumnsStructure: string[] = [
-        "Concepto de pago",
-        "Monto de pago (MXN)",
-        "¿Condonación de pago permitida?",
-        "Fecha de vencimiento",
-        "Acciones"
-    ];
-    isLocked && tableColumnsStructure.pop();
 
     return {
         context: {
@@ -70,11 +32,18 @@ export const useAcademicCycleWalletTab = () => {
             isLocked
         },
         queries: {
-            walletForAcademicCycleQuery
+            wallet: {
+                data: walletForAcademicCycleQuery.data ?? [],
+                isError: walletForAcademicCycleQuery.isError,
+                isLoading: walletForAcademicCycleQuery.isLoading,
+                isFetching: walletForAcademicCycleQuery.isFetching
+            }
         },
         mutations: {
-            deleteWalletByIdForAcademicCycle,
-            createUpdateWalletForAcademicCycle
+            wallet: {
+                delete: deleteWalletByIdForAcademicCycle,
+                createUpdate: createUpdateWalletForAcademicCycle
+            },
         },
         loader: {
             show: showLoading,
@@ -85,10 +54,6 @@ export const useAcademicCycleWalletTab = () => {
             record: recordToDelete,
             close: closeDeleteModal,
             open: openDeleteModal
-        },
-        tableStructure: {
-            columns: tableColumnsStructure,
-            properties: tablePropertiesStructure,
-        },
+        }
     }
 }

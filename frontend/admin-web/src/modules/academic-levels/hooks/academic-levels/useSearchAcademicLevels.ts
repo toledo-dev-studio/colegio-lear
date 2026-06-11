@@ -5,15 +5,21 @@ import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import { getPagedAcademicLevelsActionAsync } from "@/modules/academic-levels/actions/get-paged-academic-levels.action";
 
+interface Options {
+    query?: string;
+    name?: string,
+    status?: boolean,
+}
+
 export const useSearchAcademicLevels = () => {
     const [academicLevels, setAcademicLevels] = useState<AcademicLevel[]>([])
 
     const mutation = useMutation({
-        mutationFn: (query: string) => getPagedAcademicLevelsActionAsync({ query, page: 1, pageSize: 5, status: true }),
+        mutationFn: (options: Options) => getPagedAcademicLevelsActionAsync({ ...options, page: 1, pageSize: 5, status: true }),
     });
 
-    const searchAsync = async (query: string) => {
-        mutation.mutateAsync(query, {
+    const searchAsync = async (options: Options) => {
+        mutation.mutateAsync(options, {
             onSuccess: (response: PagedResponse<AcademicLevel>) => {
                 setAcademicLevels(response.data);
             },

@@ -40,8 +40,6 @@ export type StudentGuardianTypeKey =
 
 export type StudentGroupEnrollmentStatusKey =
   | "enrolled"
-  | "pending"
-  | "transferred"
   | "completed"
   | "dropped";
 

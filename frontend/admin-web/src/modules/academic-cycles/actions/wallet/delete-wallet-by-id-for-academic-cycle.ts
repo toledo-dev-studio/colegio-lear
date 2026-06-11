@@ -14,6 +14,6 @@ export const deleteWalletByIdForAcademicCycleActionAsync = async ({ academicCycl
     if (VITE_ENVIRONMENT === "development")
         return { academicCycleId, academicCycleWalletId };
 
-    await api.delete(`/academic-cycles/${academicCycleId}/wallet/${academicCycleWalletId}}`);
+    await api.delete(`/academic-cycles/${academicCycleId}/wallet/${academicCycleWalletId}`);
     return { academicCycleId, academicCycleWalletId };
 }

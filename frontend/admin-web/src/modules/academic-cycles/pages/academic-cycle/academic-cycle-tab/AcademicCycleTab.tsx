@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -12,8 +12,9 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { CustomSearchInput } from "@/shared/components/CustomSearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
+import { SearchInput } from "@/shared/components/search-input/SearchInput";
+import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
@@ -26,39 +27,44 @@ export const AcademicCycleTab = () => {
     // Get context from layout
     const { academicCycle, isNew, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
-    // Hooks & stores
+    // Components hooks & stores
     const navigate = useNavigate();
     const [confirmationRequired, setConfirmationRequired] = useState<boolean>(false);
     const { showLoading, hideLoading } = useLoaderStore();
-    const mutation = useCreateUpdateAcademicCycle();
+    const createUpdateMutation = useCreateUpdateAcademicCycle();
+
+    // Related entities hooks & stores
+    const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevels();
+    const searchEducationLevelsForAcademicLevel = useSearchEducationLevelsForAcademicLevel();
+    const academicLevelSearchInputRef = useRef<HTMLInputElement>(null);
+    const educationLevelSearchInputRef = useRef<HTMLInputElement>(null);
 
     // Use hook form configuration
-    const { control, register, handleSubmit, formState: { errors }, setValue, watch, setValues, getValues } = useForm<Partial<AcademicCycle>>({
+    const { control, handleSubmit, formState: { errors }, setValue, watch, getValues, reset } = useForm<Partial<AcademicCycle>>({
         defaultValues: {
-            ...academicCycle,
+            id: academicCycle?.id,
+            name: academicCycle?.name ?? "",
+            code: academicCycle?.code ?? "",
+            startDate: academicCycle?.startDate ?? "",
+            endDate: academicCycle?.endDate ?? "",
+            observations: academicCycle?.observations ?? "",
+            enrollmentOpen: academicCycle?.enrollmentOpen ?? undefined,
+            type: academicCycle?.type ?? undefined,
+            status: academicCycle?.status ?? "upcoming",
+            academicLevelId: academicCycle?.academicLevelId ?? "",
+            academicLevel: academicCycle?.academicLevel ?? undefined,
+            educationLevelId: academicCycle?.educationLevelId ?? "",
+            educationLevel: academicCycle?.educationLevel ?? undefined,
         }
     });
-    const selectedAcademicLevel = watch("academicLevelId");
-    const selectedEducationLevel = watch("educationLevelId");
+    const academicLevel = watch("academicLevel");
+    const educationLevel = watch("educationLevel");
 
-    // Academic levels assign configuration
-    const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevels();
-
-    // Education levels assign configuration
-    const searchEducationLevelsForAcademicLevel = useSearchEducationLevelsForAcademicLevel();
-
-    const validateAcademicCycleStatus = async (academicCycleLike: Partial<AcademicCycle>) => {
-        if (academicCycleLike.status !== "upcoming" && !isLocked) {
-            setConfirmationRequired(true);
-            return;
-        }
-        await onSubmit(academicCycleLike);
-    }
-
+    // Component functions
     const onSubmit = async (academicCycleLike: Partial<AcademicCycle>) => {
         try {
             showLoading("Guardando registro");
-            await mutation.mutateAsync(academicCycleLike, {
+            await createUpdateMutation.mutateAsync(academicCycleLike, {
                 onSuccess: (response) => {
                     toast.success(isNew ? "Ciclo escolar creado correctamente" : "Ciclo escolar actualizado correctamente", { position: "top-right" });
                     hideLoading();
@@ -72,36 +78,72 @@ export const AcademicCycleTab = () => {
         }
     }
 
-    useEffect(() => setValues(academicCycle), [academicCycle]);
+    const onError = () => {
+        if (errors.academicLevelId && !academicLevel?.id) {
+            academicLevelSearchInputRef.current?.focus();
+            return;
+        }
+        if (errors.educationLevelId && !educationLevel?.id) {
+            educationLevelSearchInputRef.current?.focus();
+            return;
+        }
+    }
+
+    const validate = async (academicCycleLike: Partial<AcademicCycle>) => {
+        if (academicCycleLike.status !== "upcoming" && !isLocked) {
+            setConfirmationRequired(true);
+            return;
+        }
+        await onSubmit(academicCycleLike);
+    }
+
+    useEffect(() => {
+        requestAnimationFrame(() => {
+            reset({
+                id: academicCycle?.id,
+                name: academicCycle?.name ?? "",
+                code: academicCycle?.code ?? "",
+                startDate: academicCycle?.startDate ?? "",
+                endDate: academicCycle?.endDate ?? "",
+                observations: academicCycle?.observations ?? "",
+                enrollmentOpen: academicCycle?.enrollmentOpen ?? undefined,
+                type: academicCycle?.type ?? undefined,
+                status: academicCycle?.status ?? "upcoming",
+                academicLevelId: academicCycle?.academicLevelId ?? "",
+                academicLevel: academicCycle?.academicLevel ?? undefined,
+                educationLevelId: academicCycle?.educationLevelId ?? "",
+                educationLevel: academicCycle?.educationLevel ?? undefined,
+            });
+        })
+    }, [academicCycle]);
 
     return (
         <>
             {/* Academic cycle form */}
-            <form onSubmit={handleSubmit(validateAcademicCycleStatus)}>
+            <form onSubmit={handleSubmit(validate, onError)}>
 
                 {/* Main student information */}
                 <section className="flex flex-col gap-y-6 mt-2">
-                    <div className="flex flex-col items-start gap-y-3 justify-center border-b border-border pb-4">
-                        <h2 className="w-full text-muted-foreground">
-                            INFORMACIÓN GENERAL DEL CICLO ESCOLAR
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                            En esta sección de la pantalla podrás configurar la información general de un ciclo escolar.
-                        </p>
-                    </div>
+                    <TabSectionTitle
+                        title="INFORMACIÓN GENERAL DEL CICLO ESCOLAR"
+                        description="En esta sección de la pantalla podrás configurar la información general de un ciclo escolar." />
 
                     <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-2 block">Nombre del ciclo <span className="text-destructive">*</span>:</label>
-                            <div className="relative">
-                                <Input
-                                    type="text"
-                                    {...register("name", { required: true })}
-                                    placeholder="Nombre del ciclo..."
-                                    className="pill-input w-full pl-8"
-                                    disabled={isLocked}
-                                />
-                            </div>
+                        <div className="control-container">
+                            <label className="label">Nombre del ciclo <span className="required">*</span>:</label>
+                            <Controller
+                                control={control}
+                                name="name"
+                                rules={{ required: true }}
+                                disabled={isLocked}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        disabled={isLocked}
+                                        type="text"
+                                        placeholder="Nombre del ciclo escolar..."
+                                    />
+                                )} />
                             {
                                 errors.name && (
                                     <p className="text-red-500 text-sm mt-2">
@@ -110,17 +152,21 @@ export const AcademicCycleTab = () => {
                                 )
                             }
                         </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-2 block">Código del ciclo <span className="text-destructive">*</span>:</label>
-                            <div className="relative">
-                                <Input
-                                    type="text"
-                                    {...register("code", { required: true })}
-                                    placeholder="Código del ciclo..."
-                                    className="pill-input w-full pl-8"
-                                    disabled={isLocked}
-                                />
-                            </div>
+                        <div className="control-container">
+                            <label className="label">Código del ciclo <span className="required">*</span>:</label>
+                            <Controller
+                                control={control}
+                                name="code"
+                                rules={{ required: true }}
+                                disabled={isLocked}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        disabled={isLocked}
+                                        type="text"
+                                        placeholder="Código del ciclo escolar..."
+                                    />
+                                )} />
                             {
                                 errors.code && (
                                     <p className="text-red-500 text-sm mt-2">
@@ -129,9 +175,9 @@ export const AcademicCycleTab = () => {
                                 )
                             }
                         </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">
-                                Tipo de periodo del ciclo escolar <span className="text-destructive">*</span>:
+                        <div className="control-container">
+                            <label className="label">
+                                Tipo de periodo del ciclo escolar <span className="required">*</span>:
                             </label>
                             <Controller
                                 control={control}
@@ -168,74 +214,8 @@ export const AcademicCycleTab = () => {
                                 )
                             }
                         </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico <span className="text-destructive">*</span>:</label>
-                            <CustomSearchInput
-                                {...register("academicLevelId", { required: true })}
-                                disabled={isLocked}
-                                defaultValue={watch("academicLevel.name")}
-                                selected={!!selectedAcademicLevel}
-                                placeholder="Busqueda de nivel académico"
-                                options={searchAcademicLevelsForSchoolSubject.academicLevels ?? []}
-                                isSearching={searchAcademicLevelsForSchoolSubject.isPending}
-                                onClearSelection={() => {
-                                    setValue("academicLevelId", undefined);
-                                    setValue("academicLevel.name", undefined);
-                                    setValue("educationLevelId", undefined);
-                                    setValue("educationLevel.name", undefined);
-                                }}
-                                onOptionChange={async (option: AcademicLevel) => {
-                                    setValue("academicLevelId", option.id);
-                                    setValue("academicLevel.name", option.name);
-                                    searchAcademicLevelsForSchoolSubject.clearSearchResult();
-                                }}
-                                onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync(query)}
-                            />
-                            {
-                                (errors.academicLevelId && !selectedAcademicLevel) && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        El nivel académico es obligatorio
-                                    </p>
-                                )
-                            }
-                        </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo <span className="text-destructive">*</span>:</label>
-                            <CustomSearchInput
-                                {...register("educationLevelId", { required: true })}
-                                defaultValue={watch("educationLevel.name")}
-                                selected={!!selectedEducationLevel}
-                                disabled={!selectedAcademicLevel || isLocked}
-                                placeholder="Busqueda de nivel educativo"
-                                options={searchEducationLevelsForAcademicLevel.educationLevels ?? []}
-                                isSearching={searchEducationLevelsForAcademicLevel.isPending}
-                                onClearSelection={() => {
-                                    setValue("educationLevelId", undefined);
-                                    setValue("educationLevel.name", undefined);
-                                }}
-                                onOptionChange={async (option: EducationLevel) => {
-                                    setValue("educationLevelId", option.id);
-                                    setValue("educationLevel.name", option.name);
-                                    searchEducationLevelsForAcademicLevel.clearSearchResult();
-                                }}
-                                onSearch={async (query) => searchEducationLevelsForAcademicLevel.searchAsync({
-                                    academicLevelId: selectedAcademicLevel!,
-                                    query
-                                })}
-                            />
-                            {
-                                (errors.educationLevelId && !selectedEducationLevel) && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        El nivel educativo es obligatorio
-                                    </p>
-                                )
-                            }
-                        </div>
-                    </section>
-
-                    <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-2 block">Entre fecha de inicio <span className="text-destructive">*</span>:</label>
+                        <div className="control-container">
+                            <label className="label">Entre fecha de inicio <span className="required">*</span>:</label>
                             <Controller
                                 name="startDate"
                                 control={control}
@@ -243,6 +223,7 @@ export const AcademicCycleTab = () => {
                                 rules={{ required: true }}
                                 render={({ field }) => (
                                     <CustomDatePicker
+                                        {...field}
                                         value={field.value}
                                         onChange={field.onChange}
                                         disabled={isLocked}
@@ -257,8 +238,8 @@ export const AcademicCycleTab = () => {
                                 )
                             }
                         </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-2 block">Hasta fecha de termino <span className="text-destructive">*</span>:</label>
+                        <div className="control-container">
+                            <label className="label">Hasta fecha de termino <span className="required">*</span>:</label>
                             <Controller
                                 name="endDate"
                                 control={control}
@@ -266,6 +247,7 @@ export const AcademicCycleTab = () => {
                                 disabled={isLocked}
                                 render={({ field }) => (
                                     <CustomDatePicker
+                                        {...field}
                                         value={field.value}
                                         onChange={field.onChange}
                                         disabled={isLocked}
@@ -280,9 +262,9 @@ export const AcademicCycleTab = () => {
                                 )
                             }
                         </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">
-                                Estado del ciclo escolar <span className="text-destructive">*</span>:
+                        <div className="control-container">
+                            <label className="label">
+                                Estado del ciclo escolar <span className="required">*</span>:
                             </label>
                             <Controller
                                 control={control}
@@ -319,8 +301,91 @@ export const AcademicCycleTab = () => {
                                 )
                             }
                         </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">
+                    </section>
+
+                    <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                        <div className="control-container">
+                            <label className="label">Nivel académico <span className="required">*</span>:</label>
+                            <Controller
+                                name="academicLevelId"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <SearchInput
+                                        {...field}
+                                        ref={academicLevelSearchInputRef}
+                                        disabled={isLocked}
+                                        defaultValue={academicLevel?.name}
+                                        selected={!!academicLevel}
+                                        placeholder="Busqueda de nivel académico"
+                                        options={searchAcademicLevelsForSchoolSubject.academicLevels ?? []}
+                                        isSearching={searchAcademicLevelsForSchoolSubject.isPending}
+                                        onClearSelection={() => {
+                                            setValue("academicLevelId", undefined);
+                                            setValue("academicLevel", undefined);
+                                            setValue("educationLevelId", undefined);
+                                            setValue("educationLevel", undefined);
+                                        }}
+                                        onOptionChange={async (option: AcademicLevel) => {
+                                            setValue("academicLevelId", option.id);
+                                            setValue("academicLevel", option);
+                                            searchAcademicLevelsForSchoolSubject.clearSearchResult();
+                                        }}
+                                        onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync({ query })}
+                                    />
+                                )} />
+                            {
+                                (errors.academicLevelId && !academicLevel) && (
+                                    <p className="text-red-500 text-sm mt-2">
+                                        El nivel académico es obligatorio
+                                    </p>
+                                )
+                            }
+                        </div>
+                        <div className="control-container">
+                            <label className="label">Nivel educativo <span className="required">*</span>:</label>
+                            <Controller
+                                name="educationLevelId"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <SearchInput
+                                        {...field}
+                                        ref={educationLevelSearchInputRef}
+                                        defaultValue={educationLevel?.name}
+                                        selected={!!educationLevel}
+                                        disabled={!academicLevel || isLocked}
+                                        placeholder="Busqueda de nivel educativo"
+                                        options={searchEducationLevelsForAcademicLevel.educationLevels ?? []}
+                                        isSearching={searchEducationLevelsForAcademicLevel.isPending}
+                                        onClearSelection={() => {
+                                            setValue("educationLevelId", undefined);
+                                            setValue("educationLevel", undefined);
+                                        }}
+                                        onOptionChange={async (option: EducationLevel) => {
+                                            setValue("educationLevelId", option.id);
+                                            setValue("educationLevel", option);
+                                            searchEducationLevelsForAcademicLevel.clearSearchResult();
+                                        }}
+                                        onSearch={async (query) => searchEducationLevelsForAcademicLevel.searchAsync({
+                                            academicLevelId: academicLevel?.id!,
+                                            query
+                                        })}
+                                    />
+                                )} />
+                            {
+                                (errors.educationLevelId && !educationLevel) && (
+                                    <p className="text-red-500 text-sm mt-2">
+                                        El nivel educativo es obligatorio
+                                    </p>
+                                )
+                            }
+                        </div>
+                    </section>
+
+                    <section className="grid grid-cols-1 gap-8">
+                        <div className="control-container">
+                            <label className="label">
                                 ¿Inscripciones abiertas?:
                             </label>
                             <div className="flex items-center justify-center">
@@ -340,26 +405,33 @@ export const AcademicCycleTab = () => {
                                 />
                             </div>
                         </div>
-                        <div className="w-full col-span-1 md:col-span-2 xl:col-span-3">
-                            <label className="text-sm font-medium text-foreground mb-3 block">Observaciones adicionales:</label>
-                            <Textarea
-                                {...register("observations")}
-                                placeholder="Observaciones..." />
+                        <div className="control-container">
+                            <label className="label">Observaciones adicionales:</label>
+                            <Controller
+                                name="observations"
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea
+                                        {...field}
+                                        placeholder="-"
+                                    />
+                                )}
+                            />
                         </div>
                     </section>
                 </section>
 
                 {/* Actions Buttons */}
                 <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                    <Link to="/students">
-                        <Button type="button" disabled={mutation.isPending} aria-label="cancel" variant={"ghost"}>
+                    <Link to="/academic-cycles">
+                        <Button type="button" disabled={createUpdateMutation.isPending} aria-label="cancel" variant={"ghost"}>
                             Cancelar
                         </Button>
                     </Link>
-                    <Button type="submit" disabled={mutation.isPending} aria-label="save-record">
+                    <Button type="submit" disabled={createUpdateMutation.isPending} aria-label="save-record">
                         Guardar
                         {
-                            mutation.isPending && (<CustomSpinner variant="primary" className="ml-4" />)
+                            createUpdateMutation.isPending && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

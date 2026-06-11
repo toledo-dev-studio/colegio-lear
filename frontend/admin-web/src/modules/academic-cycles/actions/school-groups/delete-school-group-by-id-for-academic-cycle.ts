@@ -14,6 +14,6 @@ export const deleteSchoolGroupByIdForAcademicCycleActionAsync = async ({ academi
     if (VITE_ENVIRONMENT === "development")
         return { academicCycleId, academicCycleSchoolGroupId };
 
-    await api.delete(`/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}}`);
+    await api.delete(`/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}`);
     return { academicCycleId, academicCycleSchoolGroupId };
 }

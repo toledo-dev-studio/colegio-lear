@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-import { labelOf } from "@/types/KeyValuePair";
+import { labelOf, type DayOfWeekKey } from "@/types/KeyValuePair";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
 import type { Employee } from "@/interfaces/entites/employee";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { DAY_OF_WEEKS, type AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
 
 interface Props {
+    disabled: boolean;
     teachers: Employee[];
     schoolSubjects: SchoolSubject[];
     calendar?: Partial<AcademicCycleGroupSchoolSubjectCalendar>;
@@ -19,7 +20,7 @@ interface Props {
     onSubmit: (calendarLike: Partial<AcademicCycleGroupSchoolSubjectCalendar>) => void;
 }
 
-export const CalendarFormPanel = ({ teachers = [], schoolSubjects = [], calendar = undefined, onCancel, onSubmit }: Props) => {
+export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubjects = [], calendar = undefined, onCancel, onSubmit }: Props) => {
 
     // React hook form config
     const { control, formState: { errors }, handleSubmit, reset, watch, setValue } = useForm<Partial<AcademicCycleGroupSchoolSubjectCalendar>>({
@@ -55,11 +56,13 @@ export const CalendarFormPanel = ({ teachers = [], schoolSubjects = [], calendar
                                 <Controller
                                     control={control}
                                     name="day"
+                                    disabled={disabled}
                                     rules={{ required: true }}
                                     render={({ field }) => (
                                         <Select
+                                            disabled={disabled}
                                             value={field.value ?? ""}
-                                            onValueChange={field.onChange}>
+                                            onValueChange={(value) => setValue("day", value as DayOfWeekKey)}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selecciona una opción">
                                                     {!field.value ? "Selecciona una opción" : labelOf(DAY_OF_WEEKS, field.value)}
@@ -92,9 +95,11 @@ export const CalendarFormPanel = ({ teachers = [], schoolSubjects = [], calendar
                                     control={control}
                                     name="startTime"
                                     rules={{ required: true }}
+                                    disabled={disabled}
                                     render={({ field }) => (
                                         <Input
                                             type="time"
+                                            disabled={disabled}
                                             placeholder="Inicio de clase"
                                             step={60 * SLOT_MIN}
                                             value={field.value ?? ""}
@@ -115,10 +120,12 @@ export const CalendarFormPanel = ({ teachers = [], schoolSubjects = [], calendar
                                 <Controller
                                     control={control}
                                     name="endTime"
+                                    disabled={disabled}
                                     rules={{ required: true }}
                                     render={({ field }) => (
                                         <Input
                                             type="time"
+                                            disabled={disabled}
                                             placeholder="Termino de clase"
                                             step={60 * SLOT_MIN}
                                             value={field.value ?? ""}
@@ -140,12 +147,14 @@ export const CalendarFormPanel = ({ teachers = [], schoolSubjects = [], calendar
                                     control={control}
                                     name="schoolSubjectId"
                                     rules={{ required: true }}
+                                    disabled={disabled}
                                     render={({ field }) => (
                                         <Select
+                                            disabled={disabled}
                                             value={field.value ?? ""}
                                             onValueChange={(value) => {
                                                 setValue("schoolSubject", schoolSubjects.find(item => item.id === value));
-                                                field.onChange(value);
+                                                setValue("schoolSubjectId", value ?? "")
                                             }}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selecciona una opción">
@@ -180,13 +189,15 @@ export const CalendarFormPanel = ({ teachers = [], schoolSubjects = [], calendar
                                 <Controller
                                     control={control}
                                     name="teacherId"
+                                    disabled={disabled}
                                     rules={{ required: true }}
                                     render={({ field }) => (
                                         <Select
+                                            disabled={disabled}
                                             value={field.value ?? ""}
                                             onValueChange={(value) => {
                                                 setValue("teacher", teachers.find(item => item.id === value));
-                                                field.onChange(value);
+                                                setValue("teacherId", value ?? "");
                                             }}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selecciona una opción">
@@ -199,7 +210,7 @@ export const CalendarFormPanel = ({ teachers = [], schoolSubjects = [], calendar
                                                     {
                                                         teachers.map((item) => (
                                                             <SelectItem key={item.id} value={item.id} label={item.email}>
-                                                                {`${item.name  ?? ""} ${item.firstLastName  ?? ""} ${item.secondLastName ?? ""}`}
+                                                                {`${item.name ?? ""} ${item.firstLastName ?? ""} ${item.secondLastName ?? ""}`}
                                                                 <br />
                                                                 {item.email}
                                                             </SelectItem>
@@ -225,9 +236,13 @@ export const CalendarFormPanel = ({ teachers = [], schoolSubjects = [], calendar
                         <Button type="button" aria-label="cancel" variant={"ghost"} onClick={onCancel}>
                             Cancelar
                         </Button>
-                        <Button type="submit" aria-label="save-record" onClick={handleSubmit(onSubmit)}>
-                            {!watch("id") ? "Guardar horario" : "Actualizar horario"}
-                        </Button>
+                        {
+                            !disabled && (
+                                <Button type="submit" aria-label="save-record" onClick={handleSubmit(onSubmit)}>
+                                    Guardar
+                                </Button>
+                            )
+                        }
                     </section>
                 </aside>
             </section>
