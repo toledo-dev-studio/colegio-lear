@@ -2,20 +2,22 @@ import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
-import type { StudentEnrollment } from "@/interfaces/entites/student-enrollment";
+import type { AcademicCycleSchoolGroupEnrollment } from "@/interfaces/entites/academic-cycle-school-group-enrollment";
+import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
 
 interface Options {
     query?: string;
     page?: number;
     pageSize?: number;
-    academicCycleId: string;
-    academicCycleSchoolGroupId: string;
+    academicCycleId?: string;
+    academicCycleSchoolGroupId?: string;
+    academicCycleSchoolGroupEnrollmentStatus?: AcademicCycleSchoolGroupEnrollmentStatusKey
 }
 
-export const getPagedEnrollmentsForAcademicCycleActionAsync = async ({ query, page = 1, pageSize = 5, academicCycleId, academicCycleSchoolGroupId }: Options): Promise<PagedResponse<StudentEnrollment>> => {
+export const getPagedEnrollmentsForAcademicCycleActionAsync = async ({ query, page = 1, pageSize = 5, academicCycleId, academicCycleSchoolGroupId, academicCycleSchoolGroupEnrollmentStatus }: Options): Promise<PagedResponse<AcademicCycleSchoolGroupEnrollment>> => {
     await sleep();
 
-    if (!academicCycleId)
+    if (!academicCycleId || !academicCycleSchoolGroupId)
         throw new Error("El identificador del registro es requerido");
 
     let endpoint = `/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/enrollments/paged`;
@@ -26,11 +28,12 @@ export const getPagedEnrollmentsForAcademicCycleActionAsync = async ({ query, pa
     // REMOVE
     endpoint = "http://localhost/api/academic-cycles/enrollments/enrollments.json";
 
-    const { data } = await api.get<PagedResponse<StudentEnrollment>>(endpoint, {
+    const { data } = await api.get<PagedResponse<AcademicCycleSchoolGroupEnrollment>>(endpoint, {
         params: {
             q: query,
             page,
-            pageSize
+            pageSize,
+            academicCycleSchoolGroupEnrollmentStatus
         }
     });
 

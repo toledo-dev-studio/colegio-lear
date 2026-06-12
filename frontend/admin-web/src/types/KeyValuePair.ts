@@ -38,7 +38,7 @@ export type StudentGuardianTypeKey =
   | "step-mother"
   | "other";
 
-export type StudentGroupEnrollmentStatusKey =
+export type AcademicCycleSchoolGroupEnrollmentStatusKey =
   | "enrolled"
   | "completed"
   | "dropped";

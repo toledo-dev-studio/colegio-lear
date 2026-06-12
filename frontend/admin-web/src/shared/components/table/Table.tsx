@@ -104,7 +104,7 @@ export const Table = <T extends Record<string, any>>({ data = [], isLoading, ena
             {/* Pagination */}
             {
                 (enablePagination && !isLoading && data.length > 0) && (
-                    <div className="flex items-center justify-center my-8">
+                    <div className="flex items-center justify-center mb-8">
                         <CustomPagination totalPages={totalPages ?? 1} />
                     </div>
                 )
