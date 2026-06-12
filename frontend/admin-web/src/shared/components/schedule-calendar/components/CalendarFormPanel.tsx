@@ -4,9 +4,9 @@ import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-import { labelOf, type DayOfWeekKey } from "@/types/KeyValuePair";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
 import type { Employee } from "@/interfaces/entites/employee";
+import { labelOf, type DayOfWeekKey } from "@/types/KeyValuePair";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { DAY_OF_WEEKS, type AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
@@ -23,7 +23,7 @@ interface Props {
 export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubjects = [], calendar = undefined, onCancel, onSubmit }: Props) => {
 
     // React hook form config
-    const { control, formState: { errors }, handleSubmit, reset, watch, setValue } = useForm<Partial<AcademicCycleGroupSchoolSubjectCalendar>>({
+    const { control, formState: { errors }, handleSubmit, reset, setValue } = useForm<Partial<AcademicCycleGroupSchoolSubjectCalendar>>({
         defaultValues: {
             ...calendar
         }

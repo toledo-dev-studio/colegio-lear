@@ -196,7 +196,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                         setValue("academicLevel.name", option.name);
                                         searchAcademicLevelsForSchoolSubject.clearSearchResult();
                                     }}
-                                    onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync(query)}
+                                    onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync({ query })}
                                 />
                             </div>
                             <div className="w-full">

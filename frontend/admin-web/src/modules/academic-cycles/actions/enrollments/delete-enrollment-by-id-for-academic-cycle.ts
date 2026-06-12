@@ -5,16 +5,16 @@ import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 interface Options {
     academicCycleId: string;
     academicCycleSchoolGroupId: string;
-    enrollmentId: string;
+    academicCycleSchoolGroupEnrollmentId: string;
 }
 
-export const deleteEnrollmentByIdForAcademicCycleActionAsync = async ({ academicCycleId, academicCycleSchoolGroupId, enrollmentId }: Options): Promise<Options> => {
+export const deleteEnrollmentByIdForAcademicCycleActionAsync = async ({ academicCycleId, academicCycleSchoolGroupId, academicCycleSchoolGroupEnrollmentId }: Options): Promise<Options> => {
     await sleep();
 
     // REMOVE
     if (VITE_ENVIRONMENT === "development")
-        return { academicCycleId, academicCycleSchoolGroupId, enrollmentId };
+        return { academicCycleId, academicCycleSchoolGroupId, academicCycleSchoolGroupEnrollmentId };
 
-    await api.delete(`/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/enrollments/${enrollmentId}`);
-    return { academicCycleId, academicCycleSchoolGroupId, enrollmentId };
+    await api.delete(`/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/enrollments/${academicCycleSchoolGroupEnrollmentId}`);
+    return { academicCycleId, academicCycleSchoolGroupId, academicCycleSchoolGroupEnrollmentId };
 }

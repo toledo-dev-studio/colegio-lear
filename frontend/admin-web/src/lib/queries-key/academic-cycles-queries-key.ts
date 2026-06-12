@@ -8,4 +8,4 @@ export const GET_ACADEMIC_CYCLE_SCHOOL_SUBJECTS_QUERY_KEY = "academic-cycle-scho
 
 export const GET_ACADEMIC_CYCLE_SCHOOL_GROUPS_QUERY_KEY = "academic-cycle-school-groups";
 
-export const GET_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY = "academic-cycle-enrollments";
+export const GET_PAGED_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY = "academic-cycle-paged-enrollments";
