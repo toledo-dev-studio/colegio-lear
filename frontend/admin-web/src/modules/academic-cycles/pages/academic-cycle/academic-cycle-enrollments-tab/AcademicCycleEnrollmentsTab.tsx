@@ -127,7 +127,7 @@ export const AcademicCycleEnrollmentsTab = () => {
           <Modal
             open={deleteModal.isOpen}
             type="delete"
-            title={"¿Estas seguro de eliminar el registro seleccionado"}
+            title={"¿Estas seguro de eliminar el registro seleccionado?"}
             message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
             isLoading={mutations.enrollments.delete.isPending}
             cancelButton={{

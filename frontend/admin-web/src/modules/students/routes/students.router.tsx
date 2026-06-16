@@ -5,10 +5,10 @@ import { StudentLayout } from "../layouts/StudentLayout";
 import { StudentsPage } from "../pages/students/StudentsPage";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 import { StudentTab } from "../pages/student/student-tab/StudentTab";
-import { StudentAcademicCycle } from "../pages/student-academic-cycle/StudentAcademicCycle";
 import { StudentGuardiansTab } from "../pages/student/student-guardians-tab/StudentGuardiansTab";
 import { StudentAcademicCyclesTab } from "../pages/student/student-academic-cycles-tab/StudentAcademicCyclesTab";
 import { StudentMedicalInformationTab } from "../pages/student/student-medical-information-tab/StudentMedicalInformationTab";
+import { StudentAcademicCycleSchoolGroupEnrollmentPage } from "../pages/student-academic-cycle-school-group-enrollment/StudentAcademicCycleSchoolGroupEnrollmentPage";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const StudentsLayout = lazy(() => import("@/modules/students/layouts/StudentsLayout"));
@@ -49,8 +49,8 @@ export const studentsRouter: RouteObject = {
             ]
         },
         {
-            path: ":student-id/academic-cycles/:academic-cycle-id",
-            element: <StudentAcademicCycle />
+            path: ":studentId/enrollments/:academicCycleSchoolGroupId",
+            element: <StudentAcademicCycleSchoolGroupEnrollmentPage />
         },
         {
             path: "*",
