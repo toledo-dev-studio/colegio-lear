@@ -9,9 +9,13 @@ export interface AcademicCycleLayoutContext {
      */
     isNew: boolean;
     /**
-     * Can update academic cycle information
+     * Academic cycle's status is not "upcomming"
      */
     isLocked: boolean;
+    /**
+     * Academic cycle has status "active"
+     */
+    isActive: boolean;
     /**
      * Academic cycle information or undefined if is new record
      */
@@ -19,5 +23,5 @@ export interface AcademicCycleLayoutContext {
     /**
      * Academic cycle unique identifier or undefined if is a new record
      */
-    academicCycleId: string;
+    academicCycleId?: string;
 }

@@ -30,8 +30,26 @@ export const stringToNumberWithDefault = (value: string | null | undefined, defa
  * @returns True if value is a valid boolean
  */
 export const isValidBooleanString = (value: string | null | undefined): boolean => {
-    if (!value) 
+    if (!value)
         return false;
     const normalizedValue = value.trim().toLowerCase();
     return normalizedValue === "true" || normalizedValue === "false";
+}
+
+export const isNullOrEmptyWithDefault = () => {
+
+}
+
+export const isValidValue = <T>(value: T | null | undefined): T | null | undefined => {
+    if (value === null || value === undefined)
+        return undefined;
+
+    if (typeof value === "string" && value.trim().length === 0)
+        return undefined;
+
+    return value;
+}
+
+export const isValidValueWithDefault = <T>(value: T | null | undefined, defaultValue: T): T => {
+    return isValidValue(value) ? value! : defaultValue;
 }

@@ -8,6 +8,7 @@ import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useGetAcademicCycleById } from "../hooks/academic-cycles/useGetAcademicCycleById";
+import type { AcademicCycleLayoutContext } from "../interfaces/academic-cycle-layout-context";
 
 const TABS: Tab[] = [
     {
@@ -53,6 +54,15 @@ export const AcademicCycleLayout = () => {
     // Constant configuration variables
     const isNew = id === "new";
     const title = isNew ? "Registro de ciclo escolar" : "Edición de ciclo escolar";
+
+    // Layout context information
+    const context: AcademicCycleLayoutContext = {
+        academicCycle: academicCycleQuery.data,
+        academicCycleId: id,
+        isNew: isNew,
+        isLocked: (academicCycleQuery.data?.status !== "upcoming" && academicCycleQuery.data?.status !== undefined),
+        isActive: (academicCycleQuery.data?.status === "active")
+    }
 
     const isProtectedRoute = TABS.some(tab => tab.protected && pathname.endsWith(tab.to));
 
@@ -145,12 +155,7 @@ export const AcademicCycleLayout = () => {
 
                         {/* Router outlet container */}
                         <div className="w-full flex flex-col gap-y-6">
-                            <Outlet context={{
-                                academicCycle: academicCycleQuery.data,
-                                academicCycleId: id,
-                                isNew: isNew,
-                                isLocked: (academicCycleQuery.data?.status !== "upcoming" && academicCycleQuery.data?.status !== undefined)
-                            }} />
+                            <Outlet context={context} />
                         </div>
 
                     </div>

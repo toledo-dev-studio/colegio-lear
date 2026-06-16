@@ -1,32 +1,41 @@
-import { useSearchParams } from "react-router";
+import { useEffect } from "react";
+import { useOutletContext, useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Search } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
 import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import type { AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cycle-school-group";
+import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { ACADEMIC_CYCLE_SCHOOL_GROUP_ENROLLMENT_STATUSES } from "@/interfaces/entites/academic-cycle-school-group-enrollment";
 import type { AcademicCycleSchoolGroupEnrollmentFilter } from "@/modules/academic-cycles/interfaces/academic-cycle-school-group-enrollment-filter";
-import type { AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cycle-school-group";
 
 interface Props {
+    isLoading: boolean;
     academicCycleSchoolGroups: AcademicCycleSchoolGroup[];
+    handleAddEnrollment: () => void;
 }
 
-export const AcademicCycleEnrollmentsFilters = ({ academicCycleSchoolGroups }: Props) => {
+export const AcademicCycleEnrollmentsFilters = ({ academicCycleSchoolGroups, isLoading, handleAddEnrollment }: Props) => {
+    // Get context from layout
+    const { academicCycle, isLocked, isActive } = useOutletContext<AcademicCycleLayoutContext>();
+
     // Componet hooks and stores
     const [searchParams, setSearchParams] = useSearchParams();
 
     // Use react hook form configuration
     const { control, handleSubmit, formState: { errors }, watch } = useForm<AcademicCycleSchoolGroupEnrollmentFilter>({
         defaultValues: {
-            query: "",
-            academicCycleSchoolGroupId: "",
-            status: undefined
+            query: isValidValueWithDefault(searchParams.get("query"), ""),
+            academicCycleSchoolGroupId: isValidValueWithDefault(searchParams.get("school-group-id"), academicCycleSchoolGroups.length > 0 ? academicCycleSchoolGroups[0].id : ""),
+            status: isValidValueWithDefault<AcademicCycleSchoolGroupEnrollmentStatusKey | undefined>(searchParams.get("status") as AcademicCycleSchoolGroupEnrollmentStatusKey, undefined)
         }
     });
-    const academicCycleSchoolGroupId = watch("academicCycleSchoolGroupId");
+    const academicCycleSchoolGroupId = watch("academicCycleSchoolGroupId") ?? undefined;
 
     // Component functions
     const onSubmit = (enrollmentLike: AcademicCycleSchoolGroupEnrollmentFilter) => {
@@ -35,6 +44,11 @@ export const AcademicCycleEnrollmentsFilters = ({ academicCycleSchoolGroups }: P
         enrollmentLike.status ? searchParams.set("status", enrollmentLike.status) : searchParams.delete("status");
         setSearchParams(searchParams);
     }
+
+    useEffect(() => {
+        if (academicCycleSchoolGroupId)
+            onSubmit({ academicCycleSchoolGroupId: academicCycleSchoolGroupId });
+    }, [])
 
     return (
         <>
@@ -53,6 +67,7 @@ export const AcademicCycleEnrollmentsFilters = ({ academicCycleSchoolGroups }: P
                             <Controller
                                 control={control}
                                 name={"academicCycleSchoolGroupId"}
+                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <Select
                                         value={field.value ?? ""}
@@ -78,7 +93,7 @@ export const AcademicCycleEnrollmentsFilters = ({ academicCycleSchoolGroups }: P
                             {
                                 (errors.academicCycleSchoolGroupId && !academicCycleSchoolGroupId) && (
                                     <p className="text-red-500 text-sm mt-2">
-                                        El tipo de periodo del ciclo escolar es obligatorio
+                                        El grupo escolar es obligatorio
                                     </p>
                                 )
                             }
@@ -135,9 +150,16 @@ export const AcademicCycleEnrollmentsFilters = ({ academicCycleSchoolGroups }: P
 
                 {/* Actions section */}
                 <section className="flex items-center justify-end gap-x-4 border-b border-border pb-8">
-                    <Button type="submit">
+                    <Button type="submit" variant="outilne-primary" disabled={isLoading}>
                         Aplicar filtros
                     </Button>
+                    {
+                        (academicCycle?.enrollmentOpen && (isActive || !isLocked)) && (
+                            <Button type="button" variant="default" disabled={isLoading} onClick={handleAddEnrollment}>
+                                Nueva inscripción
+                            </Button>
+                        )
+                    }
                 </section>
 
             </form>

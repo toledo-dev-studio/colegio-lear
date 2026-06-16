@@ -20,9 +20,9 @@
                 "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
                 "name": "Ciclo Escolar 2026-2027"
             },
-            "academicCycleSchoolGroupId": "4c1f5e62-9f1d-4f4c-9d2a-5b3d0a7f1234",
+            "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
             "academicCycleSchoolGroup": {
-                "id": "4c1f5e62-9f1d-4f4c-9d2a-5b3d0a7f1234",
+                "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
                 "name": "Primero A"
             }
         },
@@ -43,9 +43,9 @@
                 "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
                 "name": "Ciclo Escolar 2026-2027"
             },
-            "academicCycleSchoolGroupId": "5d3b2a71-8f1e-41c5-91f2-4b6a0e7d5678",
+            "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
             "academicCycleSchoolGroup": {
-                "id": "5d3b2a71-8f1e-41c5-91f2-4b6a0e7d5678",
+                "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
                 "name": "Primero B"
             },
             "scholarshipId": "0d8e1f23-c456-4f9a-a1b2-3c4d5e6f7890",
@@ -71,9 +71,9 @@
                 "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
                 "name": "Ciclo Escolar 2026-2027"
             },
-            "academicCycleSchoolGroupId": "7b4d8c91-2f6e-4c1d-b2e4-6f8a9b123456",
+            "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
             "academicCycleSchoolGroup": {
-                "id": "7b4d8c91-2f6e-4c1d-b2e4-6f8a9b123456",
+                "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
                 "name": "Segundo A"
             }
         },
@@ -94,9 +94,9 @@
                 "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
                 "name": "Ciclo Escolar 2026-2027"
             },
-            "academicCycleSchoolGroupId": "1f2e3d4c-5b6a-4789-8abc-123456789def",
+            "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
             "academicCycleSchoolGroup": {
-                "id": "1f2e3d4c-5b6a-4789-8abc-123456789def",
+                "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
                 "name": "Segundo B"
             }
         },
@@ -116,9 +116,9 @@
                 "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
                 "name": "Ciclo Escolar 2026-2027"
             },
-            "academicCycleSchoolGroupId": "2a3b4c5d-6e7f-4812-9abc-34567890abcd",
+            "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
             "academicCycleSchoolGroup": {
-                "id": "2a3b4c5d-6e7f-4812-9abc-34567890abcd",
+                "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
                 "name": "Tercero A"
             }
         }

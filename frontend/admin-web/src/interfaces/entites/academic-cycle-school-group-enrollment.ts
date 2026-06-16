@@ -31,6 +31,10 @@ export interface AcademicCycleSchoolGroupEnrollment {
      * Optional - Additional notes about the student group enrollment
      */
     observations?: string;
+    /**
+     * Optional - Notes about "dropped" status for a student.
+     */
+    droppedNotes?: string;
 
     /**
      * Not set from frontend - Timestamp when the record was created as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)

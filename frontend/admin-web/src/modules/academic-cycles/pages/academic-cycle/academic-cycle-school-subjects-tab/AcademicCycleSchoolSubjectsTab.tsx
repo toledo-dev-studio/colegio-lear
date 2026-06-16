@@ -25,7 +25,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
     const handleClickConfirmDeleteSchoolSubject = async () => {
         if (!deleteModal.record)
             return;
-        await mutations.schoolSubject.delete.mutateAsync({ academicCycleId: context.academicCycleId, academicCycleSchoolSubjectId: deleteModal.record.id },
+        await mutations.schoolSubject.delete.mutateAsync({ academicCycleId: context.academicCycleId!, academicCycleSchoolSubjectId: deleteModal.record.id },
             {
                 onSuccess: () => {
                     toast.success("La materia se desasocio correctamente del ciclo escolar", { position: "top-right" });
