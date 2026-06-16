@@ -60,7 +60,8 @@ export const AcademicCycleTab = () => {
     const academicLevel = watch("academicLevel");
     const educationLevel = watch("educationLevel");
 
-    // Component functions
+    // Component functions && constants
+    const ACADEMIC_CYCLE_STATUSES_LIST = !isLocked ? ACADEMIC_CYCLE_STATUSES.filter(item => item.key === "upcoming" || item.key === "active") : ACADEMIC_CYCLE_STATUSES.filter(item => item.key !== "upcoming");
     const onSubmit = async (academicCycleLike: Partial<AcademicCycle>) => {
         try {
             showLoading("Guardando registro");
@@ -270,20 +271,19 @@ export const AcademicCycleTab = () => {
                                 control={control}
                                 name={"status"}
                                 rules={{ required: true }}
-                                disabled={isLocked}
                                 render={({ field }) => (
                                     <Select
                                         value={field.value ?? ""}
                                         onValueChange={field.onChange}>
-                                        <SelectTrigger disabled={isLocked}>
+                                        <SelectTrigger>
                                             <SelectValue placeholder="Selecciona una opción">
-                                                {!field.value ? "Selecciona una opción" : ACADEMIC_CYCLE_STATUSES.find(item => item.key === field.value)?.label}
+                                                {!field.value ? "Selecciona una opción" : ACADEMIC_CYCLE_STATUSES_LIST.find(item => item.key === field.value)?.label}
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Estado del ciclo escolar</SelectLabel>
-                                                {ACADEMIC_CYCLE_STATUSES.map((item) => (
+                                                {ACADEMIC_CYCLE_STATUSES_LIST.map((item) => (
                                                     <SelectItem key={item.key} value={item.key} label={item.label}>
                                                         {item.label}
                                                     </SelectItem>
@@ -441,7 +441,7 @@ export const AcademicCycleTab = () => {
                     open={confirmationRequired}
                     type="info"
                     title="¡Antes de continuar!"
-                    message="Una vez que actualices el estatus del ciclo escolar y deje de ser 'Próximo' ya no podrás realizar ciertas configuraciones posteriores al registro, tales como configurar nuevas materias y/o modificar la cartera de pagos."
+                    message={`Al continuar, el ciclo escolar comenzará a estar en estado de "En Curso". Después de este cambio ya no podrás agregar nuevas materias ni modificar la cartera de pagos, ya que el sistema generará automáticamente la configuración correspondiente para los alumnos inscritos. ¿Deseas continuar?`}
                     isLoading={false}
                     cancelButton={{
                         label: "Cancelar",

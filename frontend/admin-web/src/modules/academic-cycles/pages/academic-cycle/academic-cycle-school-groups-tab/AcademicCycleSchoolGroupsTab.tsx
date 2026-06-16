@@ -26,7 +26,7 @@ export const AcademicCycleSchoolGroupsTab = () => {
     const handleClickConfirmDeleteSchoolGroup = async () => {
         if (!deleteModal.record)
             return;
-        await mutations.schoolGroups.delete.mutateAsync({ academicCycleId: context.academicCycleId, academicCycleSchoolGroupId: deleteModal.record.id },
+        await mutations.schoolGroups.delete.mutateAsync({ academicCycleId: context.academicCycleId!, academicCycleSchoolGroupId: deleteModal.record.id },
             {
                 onSuccess: () => {
                     toast.success("El grupo escolar se eliminó correctamente del ciclo escolar", { position: "top-right" });

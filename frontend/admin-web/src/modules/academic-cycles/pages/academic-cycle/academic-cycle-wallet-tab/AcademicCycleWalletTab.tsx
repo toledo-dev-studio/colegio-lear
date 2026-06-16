@@ -25,7 +25,7 @@ export const AcademicCycleWalletTab = () => {
     const handleClickConfirmDeleteWallet = async () => {
         if (!deleteModal.record)
             return;
-        await mutations.wallet.delete.mutateAsync({ academicCycleId: context.academicCycleId, academicCycleWalletId: deleteModal.record.id },
+        await mutations.wallet.delete.mutateAsync({ academicCycleId: context.academicCycleId!, academicCycleWalletId: deleteModal.record.id },
             {
                 onSuccess: () => {
                     toast.success("Concepto de pago eliminado correctamente", { position: "top-right" });

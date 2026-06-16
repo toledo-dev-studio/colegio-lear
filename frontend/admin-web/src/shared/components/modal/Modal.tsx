@@ -42,7 +42,7 @@ export const Modal = ({ open, type, title, message, isLoading, confirmButton, ca
                     }
                     {
                         confirmButton && (
-                            <AlertDialogAction className={"px-10"} variant={type === "info" ? "default" : type === "delete" ? "destructive" : "default"} onClick={confirmButton.onClick} disabled={isLoading}>
+                            <AlertDialogAction className={"px-10"} variant={type === "info" ? "default" : type === "delete" ? "destructive-light" : "default"} onClick={confirmButton.onClick} disabled={isLoading}>
                                 { confirmButton.label }
                                 {isLoading && <CustomSpinner variant={type === "info" ? "primary" : type === "delete" ? "destructive" : "primary"} />}
                             </AlertDialogAction>

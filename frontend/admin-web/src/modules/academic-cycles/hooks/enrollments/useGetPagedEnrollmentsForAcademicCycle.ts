@@ -17,7 +17,7 @@ export const useGetPagedEnrollmentsForAcademicCycle = ({ academicCycleId }: Opti
     // Main query filters
     const query = searchParams.get("query")?.trim() || undefined;
     const page = stringToNumberWithDefault(searchParams.get("page"), 1);
-    const pageSize = stringToNumberWithDefault(searchParams.get("page-size"), 5);
+    const pageSize = stringToNumberWithDefault(searchParams.get("page-size"), 10);
     const academicCycleSchoolGroupId = searchParams.get("school-group-id")?.trim() || undefined;
     const academicCycleSchoolGroupEnrollmentStatus = searchParams.get("status")?.trim() as AcademicCycleSchoolGroupEnrollmentStatusKey || undefined;
 
