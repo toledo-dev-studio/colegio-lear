@@ -13,7 +13,7 @@ export const useAcademicCycleEnrollmentsTable = (
     handleDeleteEnrollment: (item: AcademicCycleSchoolGroupEnrollment) => void,
 ) => {
     // Get context from layout
-    const { isLocked, isActive } = useOutletContext<AcademicCycleLayoutContext>();
+    const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Table columns configuration structure
     const columns: string[] = [
