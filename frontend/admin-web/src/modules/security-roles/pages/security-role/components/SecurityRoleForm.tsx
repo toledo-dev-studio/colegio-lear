@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Link } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
@@ -24,7 +24,7 @@ interface Props {
 export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit }: Props) => {
 
     // Use react hook form configuration
-    const { control, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm<Partial<SecurityRoleRequest>>({
+    const { control, handleSubmit, formState: { errors }, setValue, watch } = useForm<Partial<SecurityRoleRequest>>({
         defaultValues: {
             name: isValidValueWithDefault(securityRoleResponse?.name, ""),
             description: isValidValueWithDefault(securityRoleResponse?.description, ""),
@@ -33,17 +33,6 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
         }
     });
     const [permissions, setPermissions] = useState<SecurityRolePermissionRequest[]>(watch("permissions") ?? []);
-
-    useEffect(() => {
-        requestAnimationFrame(() => {
-            reset({
-                name: isValidValueWithDefault(securityRoleResponse?.name, ""),
-                description: isValidValueWithDefault(securityRoleResponse?.description, ""),
-                isActive: isValidValueWithDefault(securityRoleResponse?.isActive, false),
-                permissions: isValidValueWithDefault(securityRoleResponse?.permissions, [])
-            })
-        });
-    }, [securityRoleResponse]);
 
     // Component functions
     const handleOnChangePermission = (key: ModuleKeys, permission: "can-read" | "can-write" | "can-delete", checked: boolean) => {
@@ -101,8 +90,6 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
                             render={({ field }) => (
                                 <Input
                                     {...field}
-                                    value={watch(field.name) ?? ""}
-                                    onChange={field.onChange}
                                     type="text"
                                     placeholder="Nombre del rol de seguridad..."
                                 />
@@ -125,10 +112,10 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
                                 render={({ field }) => (
                                     <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{watch(field.name) ? "Activo" : "Inactivo"}</p>
+                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
                                             <p className="text-xs text-muted-foreground mt-1">El rol de seguridad se encuentra activo o inactivo.</p>
                                         </div>
-                                        <Switch checked={watch(field.name)} onCheckedChange={field.onChange} />
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     </label>
                                 )}
                             />
@@ -142,9 +129,7 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
                             control={control}
                             render={({ field }) => (
                                 <Textarea
-                                    {...field ?? ""}
-                                    value={watch(field.name)}
-                                    onChange={field.onChange}
+                                    {...field}
                                     placeholder="-"
                                 />
                             )}

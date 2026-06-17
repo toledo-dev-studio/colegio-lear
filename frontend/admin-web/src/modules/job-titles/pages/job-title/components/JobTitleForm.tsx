@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { Link } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
@@ -22,7 +21,7 @@ interface Props {
 
 export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props) => {
     // Use react hook form configuration
-    const { control, handleSubmit, formState: { errors }, watch, reset } = useForm<Partial<JobTitleRequest>>({
+    const { control, handleSubmit, formState: { errors } } = useForm<Partial<JobTitleRequest>>({
         defaultValues: {
             name: isValidValueWithDefault(jobTitleResponse?.name, ""),
             description: isValidValueWithDefault(jobTitleResponse?.description, ""),
@@ -30,17 +29,6 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
             jobTitleType: isValidValueWithDefault(jobTitleResponse?.jobTitleType as JobTitleTypes, undefined)
         }
     });
-
-    useEffect(() => {
-        requestAnimationFrame(() => {
-            reset({
-                name: isValidValueWithDefault(jobTitleResponse?.name, ""),
-                description: isValidValueWithDefault(jobTitleResponse?.description, ""),
-                isActive: isValidValueWithDefault(jobTitleResponse?.isActive, false),
-                jobTitleType: isValidValueWithDefault(jobTitleResponse?.jobTitleType as JobTitleTypes, undefined)
-            });
-        });
-    }, [jobTitleResponse])
 
     return (
         <>
@@ -63,8 +51,6 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                                 render={({ field }) => (
                                     <Input
                                         {...field}
-                                        value={watch(field.name) ?? ""}
-                                        onChange={field.onChange}
                                         type="text"
                                         placeholder="Nombre del puesto de trabajo..."
                                     />
@@ -83,16 +69,15 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                             <Controller
                                 control={control}
                                 name="jobTitleType"
-                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <Select
-                                        value={watch(field.name) ?? ""}
+                                        value={field.value ?? ""}
                                         onValueChange={field.onChange}>
                                         <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Selecciona un puesto de trabajo">
-                                                {watch(field.name) === "teacher" && "Docente"}
-                                                {watch(field.name) === "administrative-staff" && "Administrativo"}
-                                                {!watch(field.name) && "Selecciona una opción"}
+                                                {field.value === "teacher" && "Docente"}
+                                                {field.value === "administrative-staff" && "Administrativo"}
+                                                {!field.value && "Selecciona una opción"}
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
@@ -103,7 +88,8 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>
-                                )} />
+                                )}
+                            />
                             {
                                 errors.jobTitleType && (
                                     <p className="text-red-500 text-sm mt-2">
@@ -123,10 +109,10 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                                 render={({ field }) => (
                                     <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{watch(field.name) ? "Activo" : "Inactivo"}</p>
+                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
                                             <p className="text-xs text-muted-foreground mt-1">El puesto de trabajo se encuentra activo o inactivo.</p>
                                         </div>
-                                        <Switch checked={watch(field.name)} onCheckedChange={field.onChange} />
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     </label>
                                 )}
                             />
@@ -141,8 +127,6 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                             render={({ field }) => (
                                 <Textarea
                                     {...field}
-                                    value={watch(field.name) ?? ""}
-                                    onChange={field.onChange}
                                     placeholder="-"
                                 />
                             )}
