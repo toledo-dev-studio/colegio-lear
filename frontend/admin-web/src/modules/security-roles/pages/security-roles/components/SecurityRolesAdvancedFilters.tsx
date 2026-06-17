@@ -5,8 +5,8 @@ import { X } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import type { SecurityRoleFilter } from "@/interfaces/filters/security-role.filter";
+import { isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 
 interface Props {
     open: boolean;
@@ -18,7 +18,7 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
     // Component hooks & stores
     const [searchParams, setSearchParams] = useSearchParams();
     const securityRoleLikeFilter: Partial<SecurityRoleFilter> = {
-        name: searchParams.get("name") ?? "",
+        name: isValidValueWithDefault(searchParams.get("name"), ""),
         isActive: stringToBooleanWithDefault(searchParams.get("is-active"))
     };
 

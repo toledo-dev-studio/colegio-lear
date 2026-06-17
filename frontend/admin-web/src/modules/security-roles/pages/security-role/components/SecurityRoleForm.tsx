@@ -88,19 +88,20 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
                 {/* General section */}
                 <SectionTitle
                     title="INFORMACIÓN GENERAL DEL ROL DE SEGURIDAD"
-                    description="Registro de información básica del rol de seguridad." />
+                    description="Registro de información básica del rol de seguridad en la organización." />
 
                 <div className="flex items-center flex-col gap-y-8">
 
                     <div className="control-container">
-                        <label className="label">Nombre del rol de seguridad:</label>
+                        <label className="label">Nombre del rol de seguridad <span className="required">*</span>:</label>
                         <Controller
                             name="name"
                             control={control}
+                            rules={{ required: true }}
                             render={({ field }) => (
                                 <Input
                                     {...field}
-                                    value={field.value}
+                                    value={watch(field.name) ?? ""}
                                     onChange={field.onChange}
                                     type="text"
                                     placeholder="Nombre del rol de seguridad..."
@@ -124,10 +125,10 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
                                 render={({ field }) => (
                                     <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="text-sm font-medium text-foreground">{watch(field.name) ? "Activo" : "Inactivo"}</p>
                                             <p className="text-xs text-muted-foreground mt-1">El rol de seguridad se encuentra activo o inactivo.</p>
                                         </div>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                        <Switch checked={watch(field.name)} onCheckedChange={field.onChange} />
                                     </label>
                                 )}
                             />
@@ -141,8 +142,8 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
                             control={control}
                             render={({ field }) => (
                                 <Textarea
-                                    {...field}
-                                    value={field.value}
+                                    {...field ?? ""}
+                                    value={watch(field.name)}
                                     onChange={field.onChange}
                                     placeholder="-"
                                 />

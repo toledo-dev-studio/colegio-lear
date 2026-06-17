@@ -11,20 +11,22 @@ import { useCreateUpdateSecurityRole } from "../../hooks/useCreateUpdateSecurity
 import type { SecurityRoleRequest } from "@/interfaces/requests/security-role.request";
 
 export const SecurityRolePage = () => {
+  // Hooks & stores
   const navigate = useNavigate();
   const { id } = useParams();
 
   const { showLoading, hideLoading } = useLoaderStore();
   const securityRoleQuery = useGetSecurityRoleById({ id: id! });
   const createUpdateSecurityRoleMutation = useCreateUpdateSecurityRole();
-  const title = id === "new" ? 'Registro de nuevo rol de seguridad' : 'Edición de rol de seguridad';
+  const title = id === "new" ? "Registro de nuevo rol de seguridad" : "Edición de rol de seguridad";
 
+  // Component functions
   const handleSubmit = async (securityRoleRequestLike: Partial<SecurityRoleRequest>) => {
     try {
-      showLoading('Guardando registro');
+      showLoading("Guardando registro");
       await createUpdateSecurityRoleMutation.mutateAsync({ id, securityRoleRequestLike }, {
         onSuccess: (response) => {
-          toast.success('El registro se ah actualizado correctamente', { position: "top-right" });
+          toast.success("El registro se ah actualizado correctamente", { position: "top-right" });
           hideLoading();
           navigate(`/security-roles/${response.id}`);
         }
@@ -32,7 +34,7 @@ export const SecurityRolePage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar el registro', { position: "top-right" });
+      toast.error("Ocurrio un error al tratar de actualizar el registro", { position: "top-right" });
     }
   }
 

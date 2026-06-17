@@ -1,45 +1,30 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
-import { JobTitlesTable } from "./components/JobTitlesTable";
+import { Table } from "@/shared/components/table/Table";
+import { Modal } from "@/shared/components/modal/Modal";
+import { useJobTitlesPage } from "./hooks/useJobTitlesPage";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteJobTitle } from "../../hooks/useDeleteJobTitle";
-import { useExportJobTitles } from "../../hooks/useExportJobTitles";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { useGetPagedJobTitles } from "../../hooks/useGetPagedJobTitles";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import type { JobTitle } from "@/interfaces/entites/job-title";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { useJobTitlesPageTable } from "./hooks/useJobTitlesPageTable";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { JobTitlesAdvancedFilters } from "./components/JobTitlesAdvancedFilters";
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const JobTitlesPage = () => {
+  // Component hooks & stores
   const navigate = useNavigate();
+  const { loader, advancedFilters, deleteModal, queries, mutations } = useJobTitlesPage();
+  const { columns, properties, actions } = useJobTitlesPageTable({ handleClickDelete: deleteModal.open });
 
-  const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
-  const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
-  const [jobTitleToDelete, setJobTitleToDelete] = useState<JobTitle | undefined>(undefined);
-
-  const pagedJobTitlesQuery = useGetPagedJobTitles();
-  const deleteJobTitleMutation = useDeleteJobTitle();
-  const exportJobTitleMutation = useExportJobTitles();
-
-  const { showLoading, hideLoading } = useLoaderStore();
-
-  const handleClickAdd = () => {
-    navigate("/job-titles/new");
-  }
-
+  // Component functions
   const handleClickExport = async () => {
-    showLoading("Descargando información", "Por favor espere...");
+    loader.show("Descargando información", "Por favor espere...");
 
-    const data = await exportJobTitleMutation.mutateAsync();
+    const data = await mutations.jobTitles.export.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
-      hideLoading();
+      loader.hide();
       toast.info("No se cuenta con información para descargar", { position: "top-right" });
       return;
     }
@@ -53,34 +38,15 @@ export const JobTitlesPage = () => {
 
     downloadDataToCsvFile("Puestos de trabajo", headers, data);
 
-    setTimeout(() => hideLoading(), 500);
+    setTimeout(() => loader.hide(), 500);
   }
 
-  const handleClickAdvancedFilters = () => {
-    setIsOpenAdvancedFiltersPanel(true);
-  }
-
-  const handleClickEditRow = (jobTitle: JobTitle) => {
-    navigate(`/job-titles/${jobTitle.id}`);
-  }
-
-  const handleClickDeleteRow = (jobTitle: JobTitle) => {
-    setJobTitleToDelete(jobTitle);
-    setIsOpenSingleDeleteModal(true);
-  }
-
-  const handleClickCancelDelteJobTitle = () => {
-    setJobTitleToDelete(undefined);
-    setIsOpenSingleDeleteModal(false);
-  }
-
-  const handleClickDelteJobTitle = async () => {
-    await deleteJobTitleMutation.mutateAsync({ id: jobTitleToDelete?.id! },
+  const handleClickConfirmDeleteJobTitle = async () => {
+    await mutations.jobTitles.delete.mutateAsync({ id: deleteModal.record?.id! },
       {
         onSuccess: () => {
           toast.success("Puesto de trabajo eliminado correctamente", { position: "top-right" });
-          setJobTitleToDelete(undefined);
-          setIsOpenSingleDeleteModal(false);
+          deleteModal.close();
         },
         onError: (error) => {
           console.warn(error);
@@ -90,76 +56,73 @@ export const JobTitlesPage = () => {
     );
   }
 
-  const handleClickCloseAdvancedFiltersPanel = () => {
-    setIsOpenAdvancedFiltersPanel(false);
-  }
-
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Seguridad" },
             { label: "Puestos de trabajo", to: "/job-titles" },
           ]} />
         </div>
 
-        <CustomPageTitle title="Puestos de trabajo" subtitle="Gestiona los puestos de trabajo disponibles en la organización" />
+        <PageTitle title="Puestos de trabajo" subtitle="Gestiona los puestos de trabajo disponibles en la organización" />
 
-        <div className="flex flex-col gap-8 mt-14">
+        <section className="flex flex-col gap-8 mt-14">
 
           {/* Table ribbon options */}
-          <CustomTableListRibbon
-            handleClickAdvancedFilters={handleClickAdvancedFilters}
-            handleClickAdd={handleClickAdd}
+          <TableRibbon
+            handleClickAdvancedFilters={() => advancedFilters.open()}
+            handleClickAdd={() => navigate("/job-titles/new")}
             handleClickExport={handleClickExport}
-            disabledExport={exportJobTitleMutation.isPending}
+            inputSearchTooltip="Búsqueda general por nombre y descripción"
           />
 
           {/* Table content*/}
-          <JobTitlesTable
-            data={pagedJobTitlesQuery.data}
-            isLoading={pagedJobTitlesQuery.isFetching}
-            handleClickEditRow={handleClickEditRow}
-            handleClickDeleteRow={handleClickDeleteRow}
+          <Table
+            data={queries.jobTitles.paged.data}
+            isLoading={queries.jobTitles.paged.isFetching}
+            enablePagination={true}
+            columns={columns}
+            properties={properties}
+            actions={actions}
+            totalPages={queries.jobTitles.paged.totalPages}
           />
-
-          {/* Pagination top element */}
-          {
-            (!pagedJobTitlesQuery.isFetching && pagedJobTitlesQuery.itemsCount > 0) && (
-              <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedJobTitlesQuery.totalPages} />
-              </div>
-            )
-          }
 
           {/* Delete single record modal */}
           {
-            jobTitleToDelete && (
-              <CustomDeleteModal
-                open={isOpenSingleDeleteModal}
-                title={`¿Estas seguro de eliminar el registro ${jobTitleToDelete?.name}`}
+            (deleteModal.isOpen && deleteModal.record) && (
+              <Modal
+                open={deleteModal.isOpen}
+                type="delete"
+                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={deleteJobTitleMutation.isPending}
-                handleClickConfirm={handleClickDelteJobTitle}
-                handleClickCancel={handleClickCancelDelteJobTitle}
+                isLoading={mutations.jobTitles.delete.isPending}
+                cancelButton={{
+                  label: "Cancelar",
+                  onClick: () => deleteModal.close()
+                }}
+                confirmButton={{
+                  label: "Sí, eliminar",
+                  onClick: handleClickConfirmDeleteJobTitle
+                }}
               />
             )
           }
 
           {/* Advanced filters panel */}
           {
-            isOpenAdvancedFiltersPanel && (
+            advancedFilters.isOpen && (
               <JobTitlesAdvancedFilters
-                open={isOpenAdvancedFiltersPanel}
+                open={advancedFilters.isOpen}
                 title="Filtros avanzados"
-                handleClickClose={handleClickCloseAdvancedFiltersPanel}
+                handleClickClose={advancedFilters.close}
               />
             )
           }
 
-        </div>
+        </section>
       </div>
     </>
   )

@@ -16,7 +16,7 @@ export interface SecurityRoleResponse {
     /**
      * Security role description
      */
-    description: string;
+    description?: string;
     /**
      * Security role is active flag
      */

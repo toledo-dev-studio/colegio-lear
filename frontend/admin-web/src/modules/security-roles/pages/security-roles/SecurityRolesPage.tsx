@@ -5,8 +5,8 @@ import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
 import { useSecurityRolesPage } from "./hooks/useSecurityRolesPage";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useSecurityRolesPageTable } from "./hooks/useSecurityRolesPageTable";
 import { SecurityRolesAdvancedFilters } from "./components/SecurityRolesAdvancedFilters";
@@ -15,7 +15,7 @@ export const SecurityRolesPage = () => {
     // Component hooks & stores
     const navigate = useNavigate();
     const { loader, advancedFilters, deleteModal, queries, mutations } = useSecurityRolesPage();
-    const { columns, properties, actions } = useSecurityRolesPageTable({ handleOnClickDelete: deleteModal.open });
+    const { columns, properties, actions } = useSecurityRolesPageTable({ handleClickDelete: deleteModal.open });
 
     // Component functions
     const handleClickExport = async () => {
@@ -63,22 +63,22 @@ export const SecurityRolesPage = () => {
             <div className="w-full py-12 px-10 lg:px-15">
 
                 <div className="mb-10">
-                    <CustomBreadcrumb items={[
+                    <Breadcrumb items={[
                         { label: "Seguridad" },
                         { label: "Roles de seguridad", to: "/security-roles" }
                     ]} />
                 </div>
 
-                <CustomPageTitle title="Roles de seguridad" subtitle="Gestiona los roles de seguridad y sus privilegios disponibles en la organización" />
+                <PageTitle title="Roles de seguridad" subtitle="Gestiona los roles de seguridad y sus privilegios disponibles en la organización" />
 
-                <div className="flex flex-col gap-8 mt-14">
+                <section className="flex flex-col gap-8 mt-14">
 
                     {/* Table ribbon options */}
                     <TableRibbon
                         handleClickAdvancedFilters={() => advancedFilters.open()}
                         handleClickAdd={() => navigate("/security-roles/new")}
                         handleClickExport={handleClickExport}
-                        inputSearchPlaceholder="Búsqueda general..."
+                        inputSearchTooltip="Búsqueda general por nombre y descripción"
                     />
 
                     {/* Table content*/}
@@ -124,7 +124,7 @@ export const SecurityRolesPage = () => {
                         )
                     }
 
-                </div>
+                </section>
             </div>
         </>
     )

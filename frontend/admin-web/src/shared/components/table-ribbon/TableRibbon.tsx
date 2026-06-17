@@ -11,6 +11,7 @@ interface Props {
     enabledExport?: boolean;
     enabledAdvancedFilters?: boolean;
     inputSearchPlaceholder?: string;
+    inputSearchTooltip?: string;
     handleClickAdvancedFilters?: () => void;
     handleClickExport?: () => void;
     handleClickAdd?: () => void;
@@ -22,6 +23,7 @@ export const TableRibbon = (props: Props) => {
         enabledExport = true,
         enabledAdvancedFilters = true,
         inputSearchPlaceholder = "",
+        inputSearchTooltip = "",
         handleClickAdvancedFilters = () => { },
         handleClickExport = () => { },
         handleClickAdd = () => { },
@@ -83,15 +85,22 @@ export const TableRibbon = (props: Props) => {
 
                     {/* Search */}
                     <div className="flex-1 w-full">
-                        <div className="relative w-full md:max-w-md">
-                            <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                            <Input
-                                ref={inputSearchRef}
-                                onKeyDown={handleKeyDown}
-                                placeholder={inputSearchPlaceholder || "Búsqueda general..."}
-                                defaultValue={query}
-                            />
-                        </div>
+                        <Tooltip>
+                            <TooltipTrigger className="relative w-full md:max-w-md">
+                                <div className="relative w-full md:max-w-md">
+                                    <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                    <Input
+                                        ref={inputSearchRef}
+                                        onKeyDown={handleKeyDown}
+                                        placeholder={inputSearchPlaceholder || "Búsqueda general..."}
+                                        defaultValue={query}
+                                    />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p> { inputSearchTooltip || "Búsqueda general" }</p>
+                            </TooltipContent>
+                        </Tooltip>
                     </div>
 
                     {/* Add new action */}

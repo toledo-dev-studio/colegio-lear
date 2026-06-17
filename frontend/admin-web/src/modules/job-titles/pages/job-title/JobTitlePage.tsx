@@ -4,27 +4,29 @@ import { toast } from "sonner";
 import { JobTitleForm } from "./components/JobTitleForm";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useGetByIdJobTitle } from "../../hooks/useGetByIdJobTitle";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
-import type { JobTitle } from "@/interfaces/entites/job-title";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { useCreateUpdateJobTitle } from "../../hooks/useCreateUpdateJobTitle";
+import type { JobTitleRequest } from "@/interfaces/requests/job-title.request";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const JobTitlePage = () => {
+  // Hooks & stores
   const navigate = useNavigate();
   const { id } = useParams();
 
   const { showLoading, hideLoading } = useLoaderStore();
-  const jobTitleQuery = useGetByIdJobTitle(id || "");
+  const jobTitleQuery = useGetByIdJobTitle({ id: id! });
   const createUpdateJobTitleMutation = useCreateUpdateJobTitle();
-  const title = id === "new" ? 'Registro de puesto de trabajo' : 'Edición de puesto de trabajo';
+  const title = id === "new" ? "Registro de puesto de trabajo" : "Edición de puesto de trabajo";
 
-  const handleSubmit = async (jobTitleLike: Partial<JobTitle>) => {
+  // Component functions
+  const handleSubmit = async (jobTitleRequestLike: Partial<JobTitleRequest>) => {
     try {
-      showLoading('Guardando registro');
-      await createUpdateJobTitleMutation.mutateAsync(jobTitleLike, {
+      showLoading("Guardando registro");
+      await createUpdateJobTitleMutation.mutateAsync({ id, jobTitleRequestLike }, {
         onSuccess: (response) => {
-          toast.success('Puesto de trabajo actualizado correctamente', { position: "top-right" });
+          toast.success("Puesto de trabajo actualizado correctamente", { position: "top-right" });
           hideLoading();
           navigate(`/job-titles/${response.id}`);
         }
@@ -32,7 +34,7 @@ export const JobTitlePage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar el puesto de trabajo', { position: "top-right" });
+      toast.error("Ocurrio un error al tratar de actualizar el puesto de trabajo", { position: "top-right" });
     }
   }
 
@@ -56,14 +58,14 @@ export const JobTitlePage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Seguridad" },
             { label: "Puestos de trabajo", to: "/job-titles" },
             { label: id === "new" ? "Nuevo puesto de trabajo" : jobTitleQuery.data?.name || "Edición de puesto de trabajo" },
           ]} />
         </div>
 
-        <CustomPageTitle
+        <PageTitle
           title={title}
           subtitle="Getiona la información del puesto de trabajo para que este dispoible en la organiación" />
 
@@ -71,7 +73,7 @@ export const JobTitlePage = () => {
           <div className="flex flex-col min-h-full gap-8 mt-14">
 
             <JobTitleForm
-              jobTitle={jobTitleQuery.data}
+              jobTitleResponse={jobTitleQuery.data}
               isSubmitting={createUpdateJobTitleMutation.isPending}
               onSubmit={handleSubmit}
             />

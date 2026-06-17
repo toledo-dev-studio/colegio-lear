@@ -8,15 +8,15 @@ import type { TableProperty } from "@/shared/components/table/interfaces/table-p
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 
 interface Options {
-    handleOnClickDelete: (item: SecurityRoleResponse) => void;
+    handleClickDelete: (item: SecurityRoleResponse) => void;
 }
 
-export const useSecurityRolesPageTable = ({ handleOnClickDelete }: Options) => {
+export const useSecurityRolesPageTable = ({ handleClickDelete }: Options) => {
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre",
         "Descripción",
-        "Estado",
+        "¿Registro activo?",
         "Acciones",
     ];
 
@@ -70,7 +70,7 @@ export const useSecurityRolesPageTable = ({ handleOnClickDelete }: Options) => {
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"
-                            onClick={() => handleOnClickDelete(item)}>
+                            onClick={() => handleClickDelete(item)}>
                             <Trash className="w-4 h-4" />
                         </span>
                     </TooltipTrigger>
