@@ -9,13 +9,13 @@ export interface JobTitleFilter {
      * Name of the job title
      * Example: "Profesor de matemáticas", "Secretaria"
      */
-    name: string;
+    name?: string;
     /**
      * Type of the job title, indicating whether it is a teaching position or an administrative staff position
      */
-    jobTitleType: JobTitleTypes;
+    jobTitleType?: JobTitleTypes;
     /**
      * Indicates if the job title is active
      */
-    isActive: boolean;
+    isActive?: boolean;
 }

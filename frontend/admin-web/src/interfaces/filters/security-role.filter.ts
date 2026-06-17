@@ -6,9 +6,9 @@ export interface SecurityRoleFilter {
     /**
      * Security role name
      */
-    name: string;
+    name?: string;
     /**
      * Security role is active flag
      */
-    isActive: boolean;
+    isActive?: boolean;
 }
