@@ -10,7 +10,7 @@ import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { AcademicCycleWallet } from "@/interfaces/entites/academic-cycle-wallet";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { useSearchPaymentConcepts } from "@/modules/payment-concepts/hooks/useSearchPaymentConcepts";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 
@@ -70,7 +70,7 @@ export const AcademicCycleWalletForm = ({ academicCycleWallet, setAcademicCycleW
                         () => (errors.paymentConceptId && !paymentConcept?.id) && paymentConceptSearchInputRef.current?.focus())
                 }>
                 <section className="flex flex-col gap-y-6 mt-2 border-b border-border pb-8">
-                    <TabSectionTitle
+                    <SectionTitle
                         title="ASOCIACIÓN DE CONCEPTOS DE PAGO AL CICLO ESCOLAR"
                         description="En esta sección podrás configurar aquellos conceptos de pago que deberán saldar los alumnos una vez inscritos a este ciclo escolar." />
 

@@ -1,12 +1,12 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import type { SecurityRole } from "@/interfaces/entites/security-role";
 import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
+import type { SecurityRoleFilter } from "@/interfaces/filters/security-role.filter";
 
 interface Props {
     open: boolean;
@@ -15,20 +15,15 @@ interface Props {
 }
 
 export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
-
+    // Component hooks & stores
     const [searchParams, setSearchParams] = useSearchParams();
-    const securityRoleLikeFilter: Partial<SecurityRole> = {
+    const securityRoleLikeFilter: Partial<SecurityRoleFilter> = {
         name: searchParams.get("name") ?? "",
-        status: stringToBooleanWithDefault(searchParams.get("status"))
+        isActive: stringToBooleanWithDefault(searchParams.get("is-active"))
     };
 
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        reset,
-        watch
-    } = useForm<Partial<SecurityRole>>({
+    // Use react hook form configuration
+    const { control, handleSubmit, reset } = useForm<Partial<SecurityRoleFilter>>({
         defaultValues: securityRoleLikeFilter
     });
 
@@ -38,14 +33,15 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
     const handleClickClearFilters = () => {
         searchParams.delete("query");
         searchParams.delete("name");
-        searchParams.delete("status");
-        reset({ name: "", status: true });
+        searchParams.delete("is-active");
+        reset({ name: "", isActive: true });
         setSearchParams(searchParams);
         handleClickClose();
     }
 
-    const handleSubmitForm = (filter: Partial<SecurityRole>) => {
-        searchParams.set("status", `${filter.status}`);
+    const handleSubmitForm = (filter: Partial<SecurityRoleFilter>) => {
+        searchParams.delete("query");
+        searchParams.set("is-active", `${filter.isActive}`);
         filter.name ? searchParams.set("name", filter.name) : searchParams.delete("name");
         setSearchParams(searchParams);
         handleClickClose();
@@ -53,59 +49,70 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
 
     return (
         <>
-            <form onSubmit={handleSubmit(handleSubmitForm)} className="fixed inset-0 z-50 flex justify-end" data-testid="filter-drawer">
+            <form className="fixed inset-0 z-50 flex justify-end" onSubmit={handleSubmit(handleSubmitForm)}>
+
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleClickClose} />
+
                 <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
-                    <div className="h-22 flex items-center justify-between px-10 border-b border-border">
+
+                    <section className="h-22 flex items-center justify-between px-10 border-b border-border">
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
                         <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground !px-0">
                             <X className="!w-5 !h-5 text-muted-foreground" />
                         </Button>
-                    </div>
-                    <div className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
-                        {/* Contenido de filtrados */}
-                        <div className="flex flex-col gap-8">
-                            <div>
-                                <label className="text-sm font-medium text-foreground mb-2 block">Nombre:</label>
-                                <div className="relative">
-                                    <Input
-                                        type="text"
-                                        {...register("name")}
-                                        placeholder="Nombre del rol de seguridad..."
-                                        className="pill-input w-full pl-8"
+                    </section>
+
+                    <section className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
+                        <section className="flex flex-col gap-8">
+                            <div className="control-container">
+                                <label className="label">Nombre del rol de seguridad:</label>
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            type="text"
+                                            {...field}
+                                            placeholder="Nombre del rol de seguridad..."
+                                        />
+                                    )} />
+                            </div>
+
+                            <div className="control-container">
+                                <label className="label">¿Registro activo?:</label>
+                                <div className="flex items-center justify-center">
+                                    <Controller
+                                        name="isActive"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
+                                                <div>
+                                                    <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                                    <p className="text-xs text-muted-foreground mt-1">El rol de seguridad se encuentra activo o inactivo.</p>
+                                                </div>
+                                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                            </label>
+                                        )}
                                     />
                                 </div>
                             </div>
+                        </section>
+                    </section>
 
-                            <div>
-                                <label className="text-sm font-medium text-foreground mb-2 block">Estatus:</label>
-                                <Switch
-                                    size="default"
-                                    checked={watch("status")}
-                                    onCheckedChange={(checked) => setValue("status", checked)} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
-                        <Button
-                            type="button"
-                            variant={"destructive"}
-                            data-testid="filter-clear-button"
-                            className="pill-btn-outline px-10"
-                            onClick={handleClickClearFilters}>
+                    <section className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
+                        <Button type="button" variant={"ghost"} onClick={handleClickClearFilters}>
                             Limpiar filtros
                         </Button>
-                        <Button
-                            type="submit"
-                            data-testid="filter-apply-button"
-                            className="pill-btn-primary px-10">
+                        <Button type="submit" variant={"default"}>
                             Aplicar filtros
                         </Button>
-                    </div>
+                    </section>
+
                 </aside>
-            </form>
+
+            </form >
         </>
     );
 }

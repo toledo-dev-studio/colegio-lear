@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { AcademicCycleSchoolSubjectForm } from "./components/AcademicCycleSchoolSubjectForm";
 import { useAcademicCycleSchoolSubjectsTab } from "./hooks/useAcademicCycleSchoolSubjectsTab";
 import { useAcademicCycleSchoolSubjectsTable } from "./hooks/useAcademicCycleSchoolSubjectsTable";
@@ -83,7 +83,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
         <>
             {/* School subjects table section */}
             <section className="flex flex-col gap-y-6">
-                <TabSectionTitle
+                <SectionTitle
                     title="LISTADO DE MATERIAS ASIGNADAS PARA EL CICLO ESCOLAR"
                     description="El siguiente listado contiene la información de las materias que serán impartidas para los alumnos que sean inscritos a este ciclo escolar." />
 

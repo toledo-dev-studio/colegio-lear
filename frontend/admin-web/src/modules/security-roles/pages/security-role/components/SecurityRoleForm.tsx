@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
@@ -8,41 +8,55 @@ import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { type ModuleKeys } from "@/interfaces/components/modules";
-import type { SecurityRole } from "@/interfaces/entites/security-role";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import type { SecurityRolePermission } from "@/interfaces/entites/security-role-permission";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import type { SecurityRoleRequest } from "@/interfaces/requests/security-role.request";
+import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 import { SecurityRolePermissionsGrid } from "../../../components/SecurityRolePermissionsGrid";
+import type { SecurityRolePermissionRequest } from "@/interfaces/requests/security-role-permission.request";
 
 interface Props {
-    securityRole?: SecurityRole,
     isSubmitting: boolean,
-    onSubmit: (securityRoleLike: Partial<SecurityRole>) => void
+    securityRoleResponse?: SecurityRoleResponse,
+    onSubmit: (securityRoleRequestLike: Partial<SecurityRoleRequest>) => void
 }
 
-export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props) => {
+export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit }: Props) => {
 
-    const { register, handleSubmit, formState: { errors }, getValues, setValue, watch, reset } = useForm<Partial<SecurityRole>>({
-        defaultValues: securityRole
+    // Use react hook form configuration
+    const { control, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm<Partial<SecurityRoleRequest>>({
+        defaultValues: {
+            name: isValidValueWithDefault(securityRoleResponse?.name, ""),
+            description: isValidValueWithDefault(securityRoleResponse?.description, ""),
+            isActive: isValidValueWithDefault(securityRoleResponse?.isActive, false),
+            permissions: isValidValueWithDefault(securityRoleResponse?.permissions, [])
+        }
     });
-    const [permissions, setPermissions] = useState<SecurityRolePermission[]>(getValues("permissions") ?? []);
+    const [permissions, setPermissions] = useState<SecurityRolePermissionRequest[]>(watch("permissions") ?? []);
 
     useEffect(() => {
-        if (securityRole)
-            reset(securityRole);
-    }, [securityRole]);
+        requestAnimationFrame(() => {
+            reset({
+                name: isValidValueWithDefault(securityRoleResponse?.name, ""),
+                description: isValidValueWithDefault(securityRoleResponse?.description, ""),
+                isActive: isValidValueWithDefault(securityRoleResponse?.isActive, false),
+                permissions: isValidValueWithDefault(securityRoleResponse?.permissions, [])
+            })
+        });
+    }, [securityRoleResponse]);
 
+    // Component functions
     const handleOnChangePermission = (key: ModuleKeys, permission: "can-read" | "can-write" | "can-delete", checked: boolean) => {
-        const currentPermissions = getValues("permissions") ?? [];
-        let newPermissions: SecurityRolePermission[] = [];
-        if (!currentPermissions.some(item => item.moduleKey === key)) {
-            newPermissions = [...currentPermissions, {
+        let updatedPermissions: SecurityRolePermissionRequest[] = [];
+        if (!permissions.some(item => item.moduleKey === key)) {
+            updatedPermissions = [...permissions, {
                 moduleKey: key,
                 canRead: permission === "can-read",
                 canWrite: permission === "can-write",
                 canDelete: permission === "can-delete"
             }];
         } else {
-            newPermissions = currentPermissions.map((item) => {
+            updatedPermissions = permissions.map((item) => {
                 if (item.moduleKey !== key)
                     return item;
                 switch (permission) {
@@ -61,45 +75,37 @@ export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props
                 return item;
             });
         }
-        setValue("permissions", newPermissions);
-        setPermissions(newPermissions);
+        requestAnimationFrame(() => { 
+            setValue("permissions", updatedPermissions);
+            setPermissions(updatedPermissions);
+        });
     }
 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
 
-                <div className="flex flex-col items-start gap-y-4 md:items-center md:flex-row md:justify-between border-b border-border pb-4">
-                    <h2 className="w-full text-muted-foreground">
-                        INFORMACIÓN GENERAL DEL ROL DE SEGURIDAD
-                    </h2>
-                    <div className="w-fit flex items-center">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Switch
-                                    size="default"
-                                    checked={watch("status") ?? false}
-                                    onCheckedChange={(checked) => setValue("status", checked)} />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Estatus del registro</p>
-                            </TooltipContent>
-                        </Tooltip>
-
-                    </div>
-                </div>
+                {/* General section */}
+                <SectionTitle
+                    title="INFORMACIÓN GENERAL DEL ROL DE SEGURIDAD"
+                    description="Registro de información básica del rol de seguridad." />
 
                 <div className="flex items-center flex-col gap-y-8">
 
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">
-                            Nombre del rol de seguridad <span className="text-destructive">*</span>:
-                        </label>
-                        <Input
-                            type="text"
-                            {...register("name", { required: true })}
-                            placeholder="Nombre del registro..."
-                            className="pill-input w-full pl-8" />
+                    <div className="control-container">
+                        <label className="label">Nombre del rol de seguridad:</label>
+                        <Controller
+                            name="name"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    type="text"
+                                    placeholder="Nombre del rol de seguridad..."
+                                />
+                            )} />
                         {
                             errors.name && (
                                 <p className="text-red-500 text-sm mt-2">
@@ -109,22 +115,47 @@ export const SecurityRoleForm = ({ securityRole, isSubmitting, onSubmit }: Props
                         }
                     </div>
 
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">Descripción del rol de seguridad:</label>
-                        <Textarea
-                            {...register("description")}
-                            defaultValue={getValues("description")}
-                            placeholder="Descripción del registro..."
-                            className="pill-input w-full pl-8" />
+                    <div className="control-container">
+                        <label className="label">¿Registro activo?:</label>
+                        <div className="flex items-center justify-center">
+                            <Controller
+                                name="isActive"
+                                control={control}
+                                render={({ field }) => (
+                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">El rol de seguridad se encuentra activo o inactivo.</p>
+                                        </div>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </label>
+                                )}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="control-container">
+                        <label className="label">Descripción del rol de seguridad:</label>
+                        <Controller
+                            name="description"
+                            control={control}
+                            render={({ field }) => (
+                                <Textarea
+                                    {...field}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="-"
+                                />
+                            )}
+                        />
                     </div>
 
                 </div>
 
-                <div className="flex flex-col items-start gap-y-4 md:items-center md:flex-row md:justify-between border-b border-border pb-4 mt-4">
-                    <h2 className="w-full text-muted-foreground">
-                        CONFIGURACIÓN DE PRIVILEGIOS DEL ROL DE SEGURIDAD
-                    </h2>
-                </div>
+                {/* Permissions section */}
+                <SectionTitle
+                    title="CONFIGURACIÓN DE PRIVILEGIOS DEL ROL DE SEGURIDAD"
+                    description="Ajusta los diferentes privilegios en los módulos del sistema que el rol de seguridad tendrá." />
 
                 <SecurityRolePermissionsGrid
                     disabled={false}

@@ -3,26 +3,26 @@ import { toast } from "sonner";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { SecurityRoleForm } from "./components/SecurityRoleForm";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import type { SecurityRole } from "@/interfaces/entites/security-role";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
-import { useGetByIdSecurityRole } from "../../hooks/useGetByIdSecurityRole";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { useGetSecurityRoleById } from "../../hooks/useGetSecurityRoleById";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdateSecurityRole } from "../../hooks/useCreateUpdateSecurityRole";
+import type { SecurityRoleRequest } from "@/interfaces/requests/security-role.request";
 
 export const SecurityRolePage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const { showLoading, hideLoading } = useLoaderStore();
-  const securityRoleQuery = useGetByIdSecurityRole(id || "");
+  const securityRoleQuery = useGetSecurityRoleById({ id: id! });
   const createUpdateSecurityRoleMutation = useCreateUpdateSecurityRole();
   const title = id === "new" ? 'Registro de nuevo rol de seguridad' : 'Edición de rol de seguridad';
 
-  const handleSubmit = async (securityRoleLike: Partial<SecurityRole>) => {
+  const handleSubmit = async (securityRoleRequestLike: Partial<SecurityRoleRequest>) => {
     try {
       showLoading('Guardando registro');
-      await createUpdateSecurityRoleMutation.mutateAsync(securityRoleLike, {
+      await createUpdateSecurityRoleMutation.mutateAsync({ id, securityRoleRequestLike }, {
         onSuccess: (response) => {
           toast.success('El registro se ah actualizado correctamente', { position: "top-right" });
           hideLoading();
@@ -53,32 +53,33 @@ export const SecurityRolePage = () => {
 
   return (
     <>
-      <div className="w-full py-12 px-10 lg:px-15">
+      <section className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
-            { label: "Seguridad" },
-            { label: "Roles de seguridad", to: "/security-roles" },
-            { label: id === "new" ? "Nuevo rol de seguridad" : securityRoleQuery.data?.name || "Edición de rol de seguridad" },
-          ]} />
+          <Breadcrumb items={
+            [
+              { label: "Seguridad" },
+              { label: "Roles de seguridad", to: "/security-roles" },
+              { label: id === "new" ? "Nuevo rol de seguridad" : securityRoleQuery.data?.name || "Edición de rol de seguridad" },
+            ]
+          } />
         </div>
 
-        <CustomPageTitle
+        <PageTitle
           title={title}
           subtitle="Getiona la información del rol de seguridad para estar dispoible en la organiación" />
 
         <div className="flex-1">
-          <div className="flex flex-col min-h-full gap-8 mt-14">
-
+          <section className="flex flex-col min-h-full gap-8 mt-14">
             <SecurityRoleForm
-              securityRole={securityRoleQuery.data}
+              securityRoleResponse={securityRoleQuery.data}
               isSubmitting={createUpdateSecurityRoleMutation.isPending}
               onSubmit={handleSubmit}
             />
-
-          </div>
+          </section>
         </div>
-      </div>
+
+      </section>
 
     </>
   )

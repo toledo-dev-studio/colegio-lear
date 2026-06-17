@@ -5,7 +5,7 @@ import { Table } from "@/shared/components/table/Table";
 import { useStudentAcademicCyclesTab } from "./hooks/useStudentAcademicCyclesTab";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useStudentAcademicCyclesTable } from "./hooks/useStudentAcademicCyclesTable";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 
 export const StudentAcademicCyclesTab = () => {
     // Context hooks and stores configuration
@@ -33,7 +33,7 @@ export const StudentAcademicCyclesTab = () => {
         <>
             {/* Student academic cycles section */}
             <section className="flex flex-col gap-y-8">
-                <TabSectionTitle
+                <SectionTitle
                     title="CICLOS ESCOLARES DEL ESTUDIANTE"
                     description="En esta sección de la pantalla podrás ver y acceder a la información de los ciclos escolares en los que el alumno se encuentra o estuvo inscrito, además de poder interactuar con información tales como realizar pagos a la cartera del estudiante." />
 

@@ -14,7 +14,7 @@ import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
@@ -125,7 +125,7 @@ export const AcademicCycleTab = () => {
 
                 {/* Main student information */}
                 <section className="flex flex-col gap-y-6 mt-2">
-                    <TabSectionTitle
+                    <SectionTitle
                         title="INFORMACIÓN GENERAL DEL CICLO ESCOLAR"
                         description="En esta sección de la pantalla podrás configurar la información general de un ciclo escolar." />
 

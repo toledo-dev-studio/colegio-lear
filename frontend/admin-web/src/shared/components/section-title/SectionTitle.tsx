@@ -3,16 +3,20 @@ interface Props {
     description?: string;
 }
 
-export const TabSectionTitle = ({ title, description }: Props) => {
+export const SectionTitle = ({ title, description }: Props) => {
     return (
         <>
             <section className="flex flex-col items-start gap-y-3 justify-center border-b border-border pb-4">
                 <h2 className="w-full text-muted-foreground uppercase font-semibold">
-                    { title }
+                    {title}
                 </h2>
-                <p className="text-sm text-muted-foreground">
-                    { description }
-                </p>
+                {
+                    description && (
+                        <p className="text-sm text-muted-foreground">
+                            {description}
+                        </p>
+                    )
+                }
             </section>
         </>
     )

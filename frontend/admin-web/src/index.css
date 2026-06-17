@@ -155,7 +155,7 @@ h6 {
   }
 
   .icon-btn {
-    @apply relative cursor-pointer min-w-12 min-h-12 !px-0 inline-flex items-center justify-center transition-all bg-transparent text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply rounded-full relative cursor-pointer min-w-12 min-h-12 !px-0 inline-flex items-center justify-center transition-all bg-transparent text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .icon-btn-sm {

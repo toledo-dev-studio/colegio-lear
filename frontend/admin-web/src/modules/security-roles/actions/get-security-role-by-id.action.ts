@@ -1,32 +1,24 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { SecurityRole } from "@/interfaces/entites/security-role";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 
-export const getSecurityRoleByIdActionAsync = async (id?: string): Promise<SecurityRole> => {
+interface Options {
+    id: string;
+}
+
+export const getSecurityRoleByIdActionAsync = async ({ id }: Options): Promise<SecurityRoleResponse> => {
     await sleep();
-
-    if (!id)
-        throw new Error("El identificador del registro es requerido");
-
-    if (id === "new") {
-        return {
-            id: undefined,
-            name: "",
-            description: "",
-            status: true
-        } as unknown as SecurityRole;
-    }
-
+    
     if (VITE_ENVIRONMENT === "mockable") {
-        const { data } = await api.get<SecurityRole[]>("/security-roles/security-roles.json");
+        const { data } = await api.get<SecurityRoleResponse[]>("/security-roles/security-roles.json");
         const record = data.find(item => item.id === id);
         if (!record)
             throw new Error("No se encontró el registro solicitado");
         return record;
     }
 
-    const { data } = await api.get<SecurityRole>(`/security-roles/${id}`);
+    const { data } = await api.get<SecurityRoleResponse>(`/security-roles/${id}`);
 
     return data;
 }

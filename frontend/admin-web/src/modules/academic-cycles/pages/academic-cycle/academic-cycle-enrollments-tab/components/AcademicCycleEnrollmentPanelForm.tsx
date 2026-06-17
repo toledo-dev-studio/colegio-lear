@@ -29,7 +29,7 @@ export const AcademicCycleEnrollmentPanelForm = ({ open, title, academicCycleSch
     // Get context from layout
     const { academicCycleId } = useOutletContext<AcademicCycleLayoutContext>();
 
-    // Component hooks and stores
+    // Component hooks & stores
     const searchStudentsMutation = useSearchStudents();
     const studentSearchInputRef = useRef<HTMLInputElement>(null);
 

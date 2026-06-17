@@ -8,7 +8,7 @@ import { Textarea } from "@/shared/ui/textarea";
 import type { Employee } from "@/interfaces/entites/employee";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import ScheduleCalendar from "@/shared/components/schedule-calendar/ScheduleCalendar";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import type { AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
@@ -62,7 +62,7 @@ export const AcademicCycleSchoolGroupForm = ({ academicCycleSchoolGroup, teacher
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-8">
                 <section className="flex flex-col gap-y-6 mt-2 border-b border-border pb-8">
-                    <TabSectionTitle
+                    <SectionTitle
                         title="REGISTRO & EDICIÓN DE GRUPOS ESCOLARES"
                         description="En esta sección podrás configurar aquellos grupos escolares que estarán disponibles para los alumnos al momento de su incripción en el ciclo escolar." />
 
@@ -169,7 +169,7 @@ export const AcademicCycleSchoolGroupForm = ({ academicCycleSchoolGroup, teacher
                     </section>
 
                     {/* Schedule calendar for school group */}
-                    <TabSectionTitle
+                    <SectionTitle
                         title="CONFIGURACIÓN DE HORARIO ESCOLAR"
                         description="Edita el horario escolar para el grupo por registrar o actualizar." />
 
