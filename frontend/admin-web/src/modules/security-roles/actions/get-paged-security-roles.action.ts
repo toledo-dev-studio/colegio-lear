@@ -3,13 +3,12 @@ import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
+import type { SecurityRoleFilter } from "@/interfaces/filters/security-role.filter";
 
-interface Options {
+interface Options extends SecurityRoleFilter {
     query?: string;
     page?: number;
     pageSize?: number;
-    name?: string;
-    isActive?: boolean,
 }
 
 export const getPagedSecurityRolesActionAsync = async ({ query, page = 1, pageSize = 1, name, isActive }: Options): Promise<PagedResponse<SecurityRoleResponse>> => {

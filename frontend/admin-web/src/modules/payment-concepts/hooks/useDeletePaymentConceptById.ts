@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePaymentConceptByIdActionAsync } from "../actions/delete-payment-concept-by-id.action";
 import { GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY, GET_PAYMENT_CONCEPT_QUERY_KEY } from "@/lib/queries-key/payment-concepts-queries-key";
 
-export const useDeletePaymentConcept = () => {
+export const useDeletePaymentConceptById = () => {
     const queryClient = useQueryClient();
 
     return useMutation({

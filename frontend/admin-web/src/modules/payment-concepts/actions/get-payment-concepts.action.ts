@@ -1,17 +1,14 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
+import type { PaymentConceptFilter } from "@/interfaces/filters/payment-concept.filter";
+import type { PaymentConceptResponse } from "@/interfaces/responses/payment-concept.response";
 
-interface Options {
+interface Options extends PaymentConceptFilter {
     query?: string;
-    name?: string;
-    amount?: number;
-    allowForgiveness?: boolean;
-    status?: boolean;
 }
 
-export const getPaymentConceptsActionAsync = async ({ query = '', name, amount, allowForgiveness, status }: Options): Promise<PaymentConcept[]> => {
+export const getPaymentConceptsActionAsync = async ({ query, name, amount, allowForgiveness, isActive }: Options): Promise<PaymentConceptResponse[]> => {
     await sleep();
 
     let endpoint = "payment-concepts";
@@ -19,13 +16,13 @@ export const getPaymentConceptsActionAsync = async ({ query = '', name, amount, 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/payment-concepts/payment-concepts.json";
 
-    const { data } = await api.get<PaymentConcept[]>(endpoint, {
+    const { data } = await api.get<PaymentConceptResponse[]>(endpoint, {
         params: {
             q: query,
             name,
             amount,
             allowForgiveness,
-            status
+            isActive
         }
     });
 
