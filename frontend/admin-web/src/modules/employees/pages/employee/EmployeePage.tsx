@@ -3,26 +3,27 @@ import { toast } from "sonner";
 
 import { EmployeeForm } from "./components/EmployeeForm";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import type { EmployeeFormData } from "../../interfaces/employee-form";
-import { useGetByIdEmployee } from "../../hooks/employees/useGetByIdEmployee";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
+import { useGetEmployeeById } from "../../hooks/employees/useGetEmployeeById";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdateEmployee } from "../../hooks/employees/useCreateUpdateEmployee";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const EmployeePage = () => {
+  // Hooks & stores
   const navigate = useNavigate();
   const { id } = useParams();
 
   const { showLoading, hideLoading } = useLoaderStore();
-  const employeeQuery = useGetByIdEmployee(id || "");
+  const employeeQuery = useGetEmployeeById({ id: id! });
   const createUpdateEmployeeMutation = useCreateUpdateEmployee();
   const title = id === "new" ? "Registro de empleado" : "Edición de empleado";
 
-  const handleSubmit = async (employeeLike: Partial<EmployeeFormData>) => {
+  const handleSubmit = async (employeeRequestLike: Partial<EmployeeRequest>) => {
     try {
       showLoading("Guardando registro");
-      await createUpdateEmployeeMutation.mutateAsync(employeeLike, {
+      await createUpdateEmployeeMutation.mutateAsync({ id: id!, employeeRequestLike }, {
         onSuccess: (response) => {
           toast.success("Empleado actualizada correctamente", { position: "top-right" });
           hideLoading();
@@ -56,27 +57,25 @@ export const EmployeePage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Seguridad" },
             { label: "Empleados", to: "/employees" },
             { label: id === "new" ? "Nuevo empleado" : employeeQuery.data?.name || "Edición de empleado" },
           ]} />
         </div>
 
-        <CustomPageTitle
+        <PageTitle
           title={title}
           subtitle="Gestiona la información de los empleados que estará disponible en la organización" />
 
         <div className="flex-1">
-          <div className="flex flex-col min-h-full gap-8 mt-14">
-
+          <section className="flex flex-col min-h-full gap-8 mt-14">
             <EmployeeForm
-              employee={employeeQuery.data}
+              employeeResponse={employeeQuery.data}
               isSubmitting={createUpdateEmployeeMutation.isPending}
               onSubmit={handleSubmit}
             />
-
-          </div>
+          </section>
         </div>
       </div>
     </>

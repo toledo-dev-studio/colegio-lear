@@ -1,17 +1,17 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { Employee } from "@/interfaces/entites/employee";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 
 interface Options {
     query?: string;
     name?: string;
-    status?: boolean
-    roleId?: string;
+    isActive?: boolean
+    securityRoleId?: string;
     jobTitleId?: string;
 }
 
-export const getEmployeesActionAsync = async ({ query = '', name, status, roleId, jobTitleId }: Options): Promise<Employee[]> => {
+export const getEmployeesActionAsync = async ({ query = '', name, isActive, securityRoleId, jobTitleId }: Options): Promise<EmployeeResponse[]> => {
     await sleep();
 
     let endpoint = "/employees";
@@ -19,12 +19,12 @@ export const getEmployeesActionAsync = async ({ query = '', name, status, roleId
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/employees/employees.json";
 
-    const { data } = await api.get<Employee[]>(endpoint, {
+    const { data } = await api.get<EmployeeResponse[]>(endpoint, {
         params: {
             q: query,
             name,
-            status,
-            roleId,
+            isActive,
+            securityRoleId,
             jobTitleId
         }
     });

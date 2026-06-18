@@ -7,6 +7,7 @@ import type { TableAction } from "@/shared/components/table/interfaces/table-act
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { ACADEMIC_CYCLE_SCHOOL_GROUP_ENROLLMENT_STATUSES, type AcademicCycleSchoolGroupEnrollment } from "@/interfaces/entites/academic-cycle-school-group-enrollment";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 export const useAcademicCycleEnrollmentsTable = (
     onClickCreateUpdateEnrollment: (item: AcademicCycleSchoolGroupEnrollment) => void,
@@ -62,38 +63,59 @@ export const useAcademicCycleEnrollmentsTable = (
         },
     ];
 
-    // Table actions column with on click handler
     const actions: TableAction<AcademicCycleSchoolGroupEnrollment>[] = [
         {
             key: "info",
             render: (item: AcademicCycleSchoolGroupEnrollment) => (
-                <Link to={`/students/${item.studentId}/academic-cycles/${item.academicCycleId}`}>
-                    <Button variant={"info"} className="icon-btn-sm text-primary-foreground">
-                        <Info className="w-4 h-4" />
-                    </Button>
-                </Link>
+                <Tooltip>
+                    <TooltipTrigger>
+                        <Link to={`/students/${item.studentId}/academic-cycles/${item.academicCycleId}`}>
+                            <Button variant={"info"} className="icon-btn-sm text-primary-foreground">
+                                <Info className="w-4 h-4" />
+                            </Button>
+                        </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Consultar detalles de la inscripción</p>
+                    </TooltipContent>
+                </Tooltip>
             )
         },
         {
             key: "edit",
             render: (item: AcademicCycleSchoolGroupEnrollment) => (
-                <Button className="icon-btn-sm"
-                    onClick={() => onClickCreateUpdateEnrollment(item)}>
-                    <Pencil className="w-4 h-4" />
-                </Button>
+                <Tooltip>
+                    <TooltipTrigger>
+                        <Button className="icon-btn-sm"
+                            onClick={() => onClickCreateUpdateEnrollment(item)}>
+                            <Pencil className="w-4 h-4" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Edición rápida de la inscripción</p>
+                    </TooltipContent>
+                </Tooltip>
             )
-        }];
+        }
+    ];
     if (!isLocked) {
         actions.push(
 
             {
                 key: "delete",
                 render: (item: AcademicCycleSchoolGroupEnrollment) => (
-                    <Button className="icon-btn-sm text-primary-foreground"
-                        variant={"destructive"}
-                        onClick={() => handleDeleteEnrollment(item)}>
-                        <Trash className="w-4 h-4" />
-                    </Button>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <Button className="icon-btn-sm text-primary-foreground"
+                                variant={"destructive"}
+                                onClick={() => handleDeleteEnrollment(item)}>
+                                <Trash className="w-4 h-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Eliminar inscripción</p>
+                        </TooltipContent>
+                    </Tooltip>
                 )
             }
         );

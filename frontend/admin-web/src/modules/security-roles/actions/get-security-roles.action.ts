@@ -1,15 +1,15 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { SecurityRole } from "@/interfaces/entites/security-role";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 
 interface Options {
     query?: string;
     name?: string;
-    status?: boolean
+    isActive?: boolean
 }
 
-export const getSecurityRolesActionAsync = async ({ query, name, status }: Options): Promise<SecurityRole[]> => {
+export const getSecurityRolesActionAsync = async ({ query, name, isActive }: Options): Promise<SecurityRoleResponse[]> => {
     await sleep();
 
     let endpoint = "/security-roles";
@@ -17,11 +17,11 @@ export const getSecurityRolesActionAsync = async ({ query, name, status }: Optio
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/security-roles/security-roles.json";
 
-    const { data } = await api.get<SecurityRole[]>(endpoint, {
+    const { data } = await api.get<SecurityRoleResponse[]>(endpoint, {
         params: {
             q: query,
             name,
-            status
+            isActive
         }
     });
 

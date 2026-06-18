@@ -6,7 +6,7 @@ import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { useSearchSchoolSubjects } from "@/modules/school-subjects/hooks/useSearchSchoolSubjects";
 import type { AcademicCycleSchoolSubject } from "@/interfaces/entites/academic-cycle-school-subject";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
@@ -61,7 +61,7 @@ export const AcademicCycleSchoolSubjectForm = ({ academicCycleSchoolSubject, set
                         () => (errors.schoolSubjectId && !schoolSubject?.id) && schoolSubjectSearchInputRef.current?.focus())
                 }>
                 <section className="flex flex-col gap-y-6 mt-2 border-b border-border pb-8">
-                    <TabSectionTitle
+                    <SectionTitle
                         title="ASOCIACIÓN DE MATERIA AL CICLO ESCOLAR"
                         description="En esta sección podrás configurar aquellas materias que deberán cursar los alumnos una vez inscritos a este ciclo escolar." />
 

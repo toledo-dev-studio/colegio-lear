@@ -6,7 +6,7 @@ import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import ScheduleCalendar from "@/shared/components/schedule-calendar/ScheduleCalendar";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { AcademicCycleSchoolGroupForm } from "./components/AcademicCycleSchoolGroupForm";
 import { useAcademicCycleSchoolGroupsTab } from "./hooks/useAcademicCycleSchoolGroupsTab";
 import { useAcademicCycleSchoolGroupsTable } from "./hooks/useAcademicCycleSchoolGroupsTable";
@@ -79,7 +79,7 @@ export const AcademicCycleSchoolGroupsTab = () => {
         <>
             {/* School groups table section */}
             <section className="flex flex-col gap-y-6">
-                <TabSectionTitle
+                <SectionTitle
                     title="LISTADO DE GRUPOS ESCOLARES PARA EL CICLO ESCOLAR"
                     description="El siguiente listado contiene la información de los grupos escolares que estarán disponibles para los alumnos que sean inscritos a este ciclo escolar." />
                 <Table
@@ -109,7 +109,7 @@ export const AcademicCycleSchoolGroupsTab = () => {
             {
                 context.isLocked && (
                     <>
-                        <TabSectionTitle
+                        <SectionTitle
                             title="DETALLE DE HORARIO ESCOLAR"
                             description="Selecciona un grupo escolar para poder consultar el horario configurado" />
                         {

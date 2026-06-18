@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import type { SecurityRole } from "@/interfaces/entites/security-role";
+import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 import { createUpdateSecurityRoleActionAsync } from "../actions/create-update-security-role.action";
 import { GET_PAGED_SECURITY_ROLES_QUERY_KEY, GET_SECURITY_ROLE_QUERY_KEY } from "@/lib/queries-key/security-roles-queries-key";
 
@@ -9,7 +9,7 @@ export const useCreateUpdateSecurityRole = () => {
 
     return useMutation({
         mutationFn: createUpdateSecurityRoleActionAsync,
-        onSuccess: (response: SecurityRole) => {
+        onSuccess: (response: SecurityRoleResponse) => {
             // Invalid cache for useQueries
             queryClient.invalidateQueries({ queryKey: [GET_PAGED_SECURITY_ROLES_QUERY_KEY] });
 

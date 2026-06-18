@@ -9,7 +9,7 @@ import { AcademicCycleWalletForm } from "./components/AcademicCycleWalletForm";
 import { useAcademicCycleWalletTable } from "./hooks/useAcademicCycleWalletTable";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import type { AcademicCycleWallet } from "@/interfaces/entites/academic-cycle-wallet";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 
 export const AcademicCycleWalletTab = () => {
     // Context hooks & stores configuration
@@ -76,7 +76,7 @@ export const AcademicCycleWalletTab = () => {
         <>
             {/* Wallet table section */}
             <section className="flex flex-col gap-y-6">
-                <TabSectionTitle
+                <SectionTitle
                     title="LISTADO DE CONCEPTOS DE PAGO ASOCIADOS AL CICLO ESCOLAR"
                     description="El siguiente listado contiene la información de los conceptos de pago para este ciclo escolar." />
                 <Table

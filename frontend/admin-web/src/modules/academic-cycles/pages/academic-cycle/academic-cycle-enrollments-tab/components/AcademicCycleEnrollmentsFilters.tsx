@@ -7,7 +7,7 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
-import { TabSectionTitle } from "@/shared/components/tab-section-title/TabSectionTitle";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cycle-school-group";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
@@ -54,7 +54,7 @@ export const AcademicCycleEnrollmentsFilters = ({ academicCycleSchoolGroups, isL
         <>
             <form className="flex flex-col gap-y-8" onSubmit={handleSubmit(onSubmit)}>
                 <section className="flex flex-col gap-y-6 mt-2">
-                    <TabSectionTitle
+                    <SectionTitle
                         title="LISTADO DE ESTUDIANTES INSCRITOS AL CICLO ESCOLAR"
                         description="El siguiente listado contiene la información de los estudiantes inscritos al ciclo escolar según el grupo escolar seleccionado." />
 

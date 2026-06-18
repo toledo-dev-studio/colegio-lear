@@ -1,50 +1,30 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
+import { Modal } from "@/shared/components/modal/Modal";
+import { Table } from "@/shared/components/table/Table";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { SecurityRolesTable } from "./components/SecurityRolesTable";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import type { SecurityRole } from "@/interfaces/entites/security-role";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
-import { useDeleteSecurityRole } from "../../hooks/useDeleteSecurityRole";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { useExportSecurityRoles } from "../../hooks/useExportSecurityRoles";
-import { useGetPagedSecurityRoles } from "../../hooks/useGetPagedSecurityRoles";
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
+import { useSecurityRolesPage } from "./hooks/useSecurityRolesPage";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
+import { useSecurityRolesPageTable } from "./hooks/useSecurityRolesPageTable";
 import { SecurityRolesAdvancedFilters } from "./components/SecurityRolesAdvancedFilters";
 
 export const SecurityRolesPage = () => {
-
+    // Component hooks & stores
     const navigate = useNavigate();
+    const { loader, advancedFilters, deleteModal, queries, mutations } = useSecurityRolesPage();
+    const { columns, properties, actions } = useSecurityRolesPageTable({ handleClickDelete: deleteModal.open });
 
-    const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
-    const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
-    const [securityRoleToDelete, setSecurityRoleToDelete] = useState<SecurityRole | undefined>(undefined);
-
-    const pagedSecurityRolesQuery = useGetPagedSecurityRoles();
-    const deleteSecurityRoleMutation = useDeleteSecurityRole();
-    const exportSecurityRolesMutation = useExportSecurityRoles();
-
-    const { showLoading, hideLoading } = useLoaderStore();
-
-    const handleClickAdvancedFilters = () => {
-        setIsOpenAdvancedFiltersPanel(true);
-    }
-
-    const handleClickCloseAdvancedFiltersPanel = () => {
-        setIsOpenAdvancedFiltersPanel(false);
-    }
-
+    // Component functions
     const handleClickExport = async () => {
-        showLoading("Descargando información", "Por favor espere...");
+        loader.show("Descargando información", "Por favor espere...");
 
-        const data = await exportSecurityRolesMutation.mutateAsync();
+        const data = await mutations.securityRoles.export.mutateAsync();
 
         if (!data || !Array.isArray(data)) {
-            hideLoading();
+            loader.hide();
             toast.info("No se cuenta con información para descargar", { position: "top-right" });
             return;
         }
@@ -58,29 +38,17 @@ export const SecurityRolesPage = () => {
 
         downloadDataToCsvFile("Roles de seguridad", headers, data);
 
-        setTimeout(() => hideLoading(), 500);
+        setTimeout(() => loader.hide(), 500);
     }
 
-    const handleClickAdd = () => {
-        navigate("/security-roles/new");
-    }
-
-    const handleClickEditRow = (item: SecurityRole) => {
-        navigate(`/security-roles/${item.id}`);
-    }
-
-    const handleClickDeleteRow = (item: SecurityRole) => {
-        setSecurityRoleToDelete(item);
-        setIsOpenSingleDeleteModal(true);
-    }
-
-    const handleClickDelte = async () => {
-        await deleteSecurityRoleMutation.mutateAsync({ id: securityRoleToDelete?.id! },
+    const handleClickConfirmDeleteSecurityRole = async () => {
+        if (!deleteModal.record)
+            return;
+        await mutations.securityRoles.delete.mutateAsync({ id: deleteModal.record.id },
             {
                 onSuccess: () => {
                     toast.success("Rol de seguridad eliminado correctamente", { position: "top-right" });
-                    setSecurityRoleToDelete(undefined);
-                    setIsOpenSingleDeleteModal(false);
+                    deleteModal.close();
                 },
                 onError: (error) => {
                     console.warn(error);
@@ -90,77 +58,73 @@ export const SecurityRolesPage = () => {
         );
     }
 
-    const handleClickCancelDelte = () => {
-        setSecurityRoleToDelete(undefined);
-        setIsOpenSingleDeleteModal(false);
-    }
-
     return (
         <>
             <div className="w-full py-12 px-10 lg:px-15">
 
                 <div className="mb-10">
-                    <CustomBreadcrumb items={[
+                    <Breadcrumb items={[
                         { label: "Seguridad" },
                         { label: "Roles de seguridad", to: "/security-roles" }
                     ]} />
                 </div>
 
-                <CustomPageTitle title="Roles de seguridad" subtitle="Gestiona los roles de seguridad y sus privilegios disponibles en la organización" />
+                <PageTitle title="Roles de seguridad" subtitle="Gestiona los roles de seguridad y sus privilegios disponibles en la organización" />
 
-                <div className="flex flex-col gap-8 mt-14">
+                <section className="flex flex-col gap-8 mt-14">
 
                     {/* Table ribbon options */}
-                    <CustomTableListRibbon
-                        handleClickAdvancedFilters={handleClickAdvancedFilters}
-                        handleClickAdd={handleClickAdd}
+                    <TableRibbon
+                        handleClickAdvancedFilters={() => advancedFilters.open()}
+                        handleClickAdd={() => navigate("/security-roles/new")}
                         handleClickExport={handleClickExport}
-                        disabledExport={exportSecurityRolesMutation.isPending}
+                        inputSearchTooltip="Búsqueda general por nombre y descripción"
                     />
 
                     {/* Table content*/}
-                    <SecurityRolesTable
-                        data={pagedSecurityRolesQuery.data}
-                        isLoading={pagedSecurityRolesQuery.isFetching}
-                        handleClickEditRow={handleClickEditRow}
-                        handleClickDeleteRow={handleClickDeleteRow}
+                    <Table
+                        data={queries.securityRoles.paged.data}
+                        isLoading={queries.securityRoles.paged.isFetching}
+                        enablePagination={true}
+                        columns={columns}
+                        properties={properties}
+                        actions={actions}
+                        totalPages={queries.securityRoles.paged.totalPages}
                     />
-
-                    {/* Pagination top element */}
-                    {
-                        (!pagedSecurityRolesQuery.isFetching && pagedSecurityRolesQuery.itemsCount > 0) && (
-                            <div className="flex items-center justify-center my-8">
-                                <CustomPagination totalPages={pagedSecurityRolesQuery.totalPages} />
-                            </div>
-                        )
-                    }
 
                     {/* Delete single record modal */}
                     {
-                        securityRoleToDelete && (
-                            <CustomDeleteModal
-                                open={isOpenSingleDeleteModal}
-                                title={`¿Estas seguro de eliminar el registro ${securityRoleToDelete?.name}`}
+                        (deleteModal.isOpen && deleteModal.record) && (
+                            <Modal
+                                open={deleteModal.isOpen}
+                                type="delete"
+                                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
                                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                                isLoading={deleteSecurityRoleMutation.isPending}
-                                handleClickConfirm={handleClickDelte}
-                                handleClickCancel={handleClickCancelDelte}
+                                isLoading={mutations.securityRoles.delete.isPending}
+                                cancelButton={{
+                                    label: "Cancelar",
+                                    onClick: () => deleteModal.close()
+                                }}
+                                confirmButton={{
+                                    label: "Sí, eliminar",
+                                    onClick: handleClickConfirmDeleteSecurityRole
+                                }}
                             />
                         )
                     }
 
                     {/* Advanced filters panel */}
                     {
-                        isOpenAdvancedFiltersPanel && (
+                        advancedFilters.isOpen && (
                             <SecurityRolesAdvancedFilters
-                                open={isOpenAdvancedFiltersPanel}
+                                open={advancedFilters.isOpen}
                                 title="Filtros avanzados"
-                                handleClickClose={handleClickCloseAdvancedFiltersPanel}
+                                handleClickClose={advancedFilters.close}
                             />
                         )
                     }
 
-                </div>
+                </section>
             </div>
         </>
     )

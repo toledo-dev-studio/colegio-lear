@@ -21,6 +21,7 @@ export const useAcademicCycleEnrollmentsTab = () => {
     const schoolGroupsForAcademicCycleQuery = useGetSchoolGroupsForAcademicCycle(academicCycleId!);
     const pagedEnrollmentForAcademicCycleQuery = useGetPagedEnrollmentsForAcademicCycle({ academicCycleId });
 
+    // Mutations
     const deleteEnrollmentByIdForAcademicCycle = useDeleteEnrollmentByIdForAcademicCycle();
     const createUpdateEnrollmentForAcademicCycle = useCreateUpdateEnrollmentForAcademicCycle();
 

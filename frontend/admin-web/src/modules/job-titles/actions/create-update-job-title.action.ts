@@ -2,27 +2,31 @@ import { api } from "@/api/client";
 
 import { sleep } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import type { JobTitle } from "@/interfaces/entites/job-title";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { JobTitleRequest } from "@/interfaces/requests/job-title.request";
+import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 
-export const CreateUpdateJobTitleActionAsync = async (jobTitleLike: Partial<JobTitle>): Promise<JobTitle> => {
+interface Options {
+    id: string;
+    jobTitleRequestLike: Partial<JobTitleRequest>;
+}
+
+export const createUpdateJobTitleActionAsync = async ({ id, jobTitleRequestLike }: Options): Promise<JobTitleResponse> => {
     await sleep();
 
-    const { id } = jobTitleLike;
-    const isCreating = id === undefined;
+    const isCreating = id === "new";
 
     if (VITE_ENVIRONMENT === "mockable") {
-        delete jobTitleLike.id;
         return {
+            ...jobTitleRequestLike,
             id: isCreating ? generateTemporalId() : id,
-            ...jobTitleLike,
-        } as JobTitle;
+        } as JobTitleResponse;
     }
 
-    const { data } = await api<JobTitle>({
+    const { data } = await api<JobTitleResponse>({
         url: isCreating ? '/job-titles' : `/job-titles/${id}`,
         method: isCreating ? 'POST' : 'PATCH',
-        data: jobTitleLike
+        data: jobTitleRequestLike
     });
 
     return {
