@@ -24,7 +24,7 @@ export const JobTitlePage = () => {
   const handleSubmit = async (jobTitleRequestLike: Partial<JobTitleRequest>) => {
     try {
       showLoading("Guardando registro");
-      await createUpdateJobTitleMutation.mutateAsync({ id, jobTitleRequestLike }, {
+      await createUpdateJobTitleMutation.mutateAsync({ id: id!, jobTitleRequestLike }, {
         onSuccess: (response) => {
           toast.success("Puesto de trabajo actualizado correctamente", { position: "top-right" });
           hideLoading();

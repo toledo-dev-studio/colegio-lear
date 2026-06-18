@@ -1,18 +1,17 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { Employee } from "@/interfaces/entites/employee";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 
-export const getTeachersEmployeesActionAsync = async (): Promise<Employee[]> => {
+export const getTeachersEmployeesActionAsync = async (): Promise<EmployeeResponse[]> => {
     await sleep();
 
-    // REMOVE (UPDATE TO /employees/teachers)
-    let endpoint = "/employees";
+    let endpoint = "/employees/teachers";
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/employees/employees.json";
 
-    const { data } = await api.get<Employee[]>(endpoint);
+    const { data } = await api.get<EmployeeResponse[]>(endpoint);
 
     return data;
 }

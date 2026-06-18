@@ -1,20 +1,25 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import type { JobTitle } from "@/interfaces/entites/job-title";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
+import type { JobTitleFilter } from "@/interfaces/filters/job-title.filter";
+import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 import { getPagedJobTitlesActionAsync } from "@/modules/job-titles/actions/get-paged-job-titles.action";
 
-export const useSearchJobTitlesForEmployee = () => {
-    const [jobTitles, setJobTitles] = useState<JobTitle[]>([]);
+interface Options extends JobTitleFilter {
+    query?: string;
+}
+
+export const useSearchJobTitles = () => {
+    const [jobTitles, setJobTitles] = useState<JobTitleResponse[]>([]);
 
     const mutation = useMutation({
-        mutationFn: (query: string) => getPagedJobTitlesActionAsync({ query, page: 1, pageSize: 5, status: true }),
+        mutationFn: (options: Options) => getPagedJobTitlesActionAsync({ ...options, page: 1, pageSize: 5 }),
     });
 
-    const searchAsync = async (query: string) => {
-        mutation.mutateAsync(query, {
-            onSuccess: (response: PagedResponse<JobTitle>) => {
+    const searchAsync = async (options: Options) => {
+        mutation.mutateAsync(options, {
+            onSuccess: (response: PagedResponse<JobTitleResponse>) => {
                 setJobTitles(response.data);
             },
             onError: () => {
@@ -22,7 +27,7 @@ export const useSearchJobTitlesForEmployee = () => {
             }
         });
     }
-    
+
     return {
         jobTitles,
         isPending: mutation.isPending,

@@ -57,7 +57,7 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                                 )} />
                             {
                                 errors.name && (
-                                    <p className="text-red-500 text-sm mt-2">
+                                    <p className="error">
                                         El nombre del puesto de trabajo es obligatorio
                                     </p>
                                 )
@@ -92,7 +92,7 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                             />
                             {
                                 errors.jobTitleType && (
-                                    <p className="text-red-500 text-sm mt-2">
+                                    <p className="error">
                                         El tipo de puesto de trabajo es obligatorio
                                     </p>
                                 )

@@ -24,7 +24,7 @@ export const SecurityRolePage = () => {
   const handleSubmit = async (securityRoleRequestLike: Partial<SecurityRoleRequest>) => {
     try {
       showLoading("Guardando registro");
-      await createUpdateSecurityRoleMutation.mutateAsync({ id, securityRoleRequestLike }, {
+      await createUpdateSecurityRoleMutation.mutateAsync({ id: id!, securityRoleRequestLike }, {
         onSuccess: (response) => {
           toast.success("El registro se ah actualizado correctamente", { position: "top-right" });
           hideLoading();

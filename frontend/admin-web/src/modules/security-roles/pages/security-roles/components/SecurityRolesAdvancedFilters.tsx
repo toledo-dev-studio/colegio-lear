@@ -17,14 +17,14 @@ interface Props {
 export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
     // Component hooks & stores
     const [searchParams, setSearchParams] = useSearchParams();
-    const securityRoleLikeFilter: Partial<SecurityRoleFilter> = {
+    const securityRoleFilterLike: Partial<SecurityRoleFilter> = {
         name: isValidValueWithDefault(searchParams.get("name"), ""),
         isActive: stringToBooleanWithDefault(searchParams.get("is-active"))
     };
 
     // Use react hook form configuration
     const { control, handleSubmit, reset } = useForm<Partial<SecurityRoleFilter>>({
-        defaultValues: securityRoleLikeFilter
+        defaultValues: securityRoleFilterLike
     });
 
     if (!open)
@@ -39,7 +39,7 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
         handleClickClose();
     }
 
-    const handleSubmitForm = (filter: Partial<SecurityRoleFilter>) => {
+    const onSubmit = (filter: Partial<SecurityRoleFilter>) => {
         searchParams.delete("query");
         searchParams.set("is-active", `${filter.isActive}`);
         filter.name ? searchParams.set("name", filter.name) : searchParams.delete("name");
@@ -49,7 +49,7 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
 
     return (
         <>
-            <form className="fixed inset-0 z-50 flex justify-end" onSubmit={handleSubmit(handleSubmitForm)}>
+            <form className="fixed inset-0 z-50 flex justify-end" onSubmit={handleSubmit(onSubmit)}>
 
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleClickClose} />
 
@@ -77,7 +77,8 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
                                             {...field}
                                             placeholder="Nombre del rol de seguridad..."
                                         />
-                                    )} />
+                                    )}
+                                />
                             </div>
 
                             <div className="control-container">
@@ -87,7 +88,7 @@ export const SecurityRolesAdvancedFilters = ({ open, title = "Filtros avanzados"
                                         name="isActive"
                                         control={control}
                                         render={({ field }) => (
-                                            <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
+                                            <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
                                                 <div>
                                                     <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
                                                     <p className="text-xs text-muted-foreground mt-1">El rol de seguridad se encuentra activo o inactivo.</p>

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteEmployeeByIdActionAsync } from "../../actions/delete-employee-by-id.action";
 import { GET_EMPLOYEE_QUERY_KEY, GET_PAGED_EMPLOYEES_QUERY_KEY } from "@/lib/queries-key/employees-queries-key";
 
-export const useDeleteEmployee = () => {
+export const useDeleteEmployeeById = () => {
     const queryClient = useQueryClient();
 
     return useMutation({

@@ -6,7 +6,7 @@ import type { SecurityRoleRequest } from "@/interfaces/requests/security-role.re
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 
 interface Options {
-    id?: string;
+    id: string;
     securityRoleRequestLike: Partial<SecurityRoleRequest>;
 }
 

@@ -22,7 +22,6 @@ interface Props {
 }
 
 export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit }: Props) => {
-
     // Use react hook form configuration
     const { control, handleSubmit, formState: { errors }, setValue, watch } = useForm<Partial<SecurityRoleRequest>>({
         defaultValues: {
@@ -96,7 +95,7 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
                             )} />
                         {
                             errors.name && (
-                                <p className="text-red-500 text-sm mt-2">
+                                <p className="error">
                                     El nombre del rol de seguridad es obligatorio
                                 </p>
                             )

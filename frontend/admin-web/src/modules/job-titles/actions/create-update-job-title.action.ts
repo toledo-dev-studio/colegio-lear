@@ -7,7 +7,7 @@ import type { JobTitleRequest } from "@/interfaces/requests/job-title.request";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 
 interface Options {
-    id?: string;
+    id: string;
     jobTitleRequestLike: Partial<JobTitleRequest>;
 }
 
