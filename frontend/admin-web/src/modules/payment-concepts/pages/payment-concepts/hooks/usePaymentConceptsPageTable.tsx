@@ -18,7 +18,7 @@ export const usePaymentConceptsPageTable = ({ handleClickDelete }: Options) => {
         "Nombre & descripción",
         "Monto (MXN)",
         "¿Condonación",
-        "Estado",
+        "¿Registro activo?",
         "Acciones",
     ];
 

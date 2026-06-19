@@ -1,114 +1,124 @@
-import { useEffect } from "react";
-import { Save, X } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
+import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { Textarea } from "@/shared/ui/textarea";
 import { Slider } from "@/shared/ui/slider";
+import { Textarea } from "@/shared/ui/textarea";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
-import type { Scholarship } from "@/interfaces/entites/scholarship"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import type { ScholarshipRequest } from "@/interfaces/requests/scholarship.request";
+import type { ScholarshipResponse } from "@/interfaces/responses/scholarship.response";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 
 interface Props {
-    scholarship?: Scholarship,
     isSubmitting: boolean,
-    onSubmit: (scholarshipLike: Partial<Scholarship>) => void
+    scholarshipResponse?: ScholarshipResponse,
+    onSubmit: (scholarshipRequestLike: Partial<ScholarshipRequest>) => void
 }
 
-export const ScholarshipForm = ({ scholarship, isSubmitting, onSubmit }: Props) => {
+export const ScholarshipForm = ({ scholarshipResponse, isSubmitting, onSubmit }: Props) => {
 
-    const navigate = useNavigate();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        getValues,
-        setValue,
-        watch,
-        reset
-    } = useForm<Partial<Scholarship>>({
-        defaultValues: scholarship
+    const { control, handleSubmit, formState: { errors }, watch } = useForm<Partial<ScholarshipRequest>>({
+        defaultValues: {
+            name: isValidValueWithDefault(scholarshipResponse?.name, ""),
+            isActive: isValidValueWithDefault(scholarshipResponse?.isActive, false),
+            discountPercentage: isValidValueWithDefault(scholarshipResponse?.discountPercentage, 1),
+            description: isValidValueWithDefault(scholarshipResponse?.description, ""),
+        }
     });
-
-    useEffect(() => {
-        if (scholarship)
-            reset(scholarship);
-    }, [scholarship])
-
-    const handleClickCancel = () => {
-        navigate('/scholarships');
-    }
+    const discountPercentage = watch("discountPercentage");
 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
 
-                <div className="flex flex-col items-start gap-y-4 md:items-center md:flex-row md:justify-between border-b border-border pb-4">
-                    <h2 className="w-full text-muted-foreground">
-                        INFORMACIÓN GENERAL DE LA BECA ESCOLAR
-                    </h2>
-                    <div className="w-fit flex items-center">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Switch
-                                    size="default"
-                                    checked={watch('status') ?? false}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Estatus del registro</p>
-                            </TooltipContent>
-                        </Tooltip>
+                <SectionTitle
+                    title="INFORMACIÓN GENERAL DE LA BECA ESCOLAR"
+                    description="Registro de información básica de la beca escolar disponible para los estudiantes." />
 
-                    </div>
-                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                <div className="flex items-center flex-col gap-y-8">
-
-                    <div className="w-full flex md:flex-row flex-col gap-y-8 gap-x-8">
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">
-                                Nombre de la beca escolar <span className="text-destructive">*</span>:
-                            </label>
-                            <Input
-                                type="text"
-                                {...register('name', { required: true })}
-                                placeholder="Nombre de la beca escolar..."
-                                className="pill-input w-full pl-8" />
-                            {
-                                errors.name && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        El nombre de la beca escolar es obligatorio
-                                    </p>
-                                )
-                            }
-                        </div>
-
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">Porcentaje de descuento ({watch('discountPercentage') ?? 1} %) <span className="text-destructive">*</span>:</label>
-                            <div className="flex items-center justify-center mt-0 md:mt-7.5">
-                                <Slider
-                                    value={getValues('discountPercentage') ?? 1}
-                                    min={1}
-                                    max={100}
-                                    step={1}
-                                    onValueChange={(value) => setValue('discountPercentage', +value)}
-                                    className="w-full"
+                    <div className="control-container">
+                        <label className="label">Nombre de la beca escolar <span className="required">*</span>:</label>
+                        <Controller
+                            name="name"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Nombre de la beca escolar..."
                                 />
-                            </div>
+                            )} />
+                        {
+                            errors.name && (
+                                <p className="error">
+                                    El nombre de la beca escolar es obligatoria
+                                </p>
+                            )
+                        }
+                    </div>
+
+                    <div className="control-container">
+                        <label className="label">Porcentaje de descuento ({discountPercentage ?? 1} %):</label>
+                        <Controller
+                            name="discountPercentage"
+                            control={control}
+                            render={({ field }) => (
+                                <div className="flex items-center justify-center mt-0 md:mt-7">
+                                    <Slider
+                                        value={field.value ?? 1}
+                                        min={1}
+                                        max={100}
+                                        step={1}
+                                        onValueChange={(value) => field.onChange(value, { shouldTouch: true })}
+                                    />
+                                </div>
+                            )}
+                        />
+                    </div>
+
+                    <div className="control-container">
+                        <label className="label">¿Registro activo?:</label>
+                        <div className="flex items-center justify-center">
+                            <Controller
+                                name="isActive"
+                                control={control}
+                                render={({ field }) => (
+                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">La beca escolar se encuentra activa o inactiva.</p>
+                                        </div>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </label>
+                                )}
+                            />
                         </div>
                     </div>
 
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">Descripción de la beca escolar:</label>
-                        <Textarea
-                            {...register('description')}
-                            defaultValue={getValues('description')}
-                            placeholder="Descripción de la beca escolar..."
-                            className="pill-input w-full pl-8" />
+                    <div className="control-container col-span-2">
+                        <label className="label">Descripción de la beca escolar:</label>
+                        <Controller
+                            name="description"
+                            control={control}
+                            render={({ field }) => (
+                                <Textarea
+                                    {...field}
+                                    placeholder="-"
+                                />
+                            )}
+                        />
+                        {
+                            errors.description && (
+                                <p className="error">
+                                    La descripción de la beca escolar es obligatorio
+                                </p>
+                            )
+                        }
                     </div>
 
                 </div>

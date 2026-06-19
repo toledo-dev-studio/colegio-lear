@@ -1,17 +1,14 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { EmployeeFilter } from "@/interfaces/filters/employee.filter";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 
-interface Options {
+interface Options extends EmployeeFilter {
     query?: string;
-    name?: string;
-    isActive?: boolean
-    securityRoleId?: string;
-    jobTitleId?: string;
 }
 
-export const getEmployeesActionAsync = async ({ query = '', name, isActive, securityRoleId, jobTitleId }: Options): Promise<EmployeeResponse[]> => {
+export const getEmployeesActionAsync = async ({ query, fullName, isActive, securityRoleId, jobTitleId }: Options): Promise<EmployeeResponse[]> => {
     await sleep();
 
     let endpoint = "/employees";
@@ -22,7 +19,7 @@ export const getEmployeesActionAsync = async ({ query = '', name, isActive, secu
     const { data } = await api.get<EmployeeResponse[]>(endpoint, {
         params: {
             q: query,
-            name,
+            fullName,
             isActive,
             securityRoleId,
             jobTitleId

@@ -25,7 +25,7 @@ export interface EmployeeFilter {
     /**
      * Job title unique identifier
      */
-    jobTitleId: string;
+    jobTitleId?: string;
     /**
      * Reference to the associated job title
      */

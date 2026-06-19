@@ -14,18 +14,18 @@ export const useGetPagedEmployees = () => {
     const pageSize = stringToNumberWithDefault(searchParams.get("page-size"), 10);
 
     // Advanced query filters
-    const name = isValidValueWithDefault(searchParams.get("name")?.trim(), undefined)
+    const fullName = isValidValueWithDefault(searchParams.get("full-name")?.trim(), undefined)
     const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
     const securityRoleId = isValidValueWithDefault(searchParams.get("security-role-id"), undefined);
     const jobTitleId = isValidValueWithDefault(searchParams.get("job-title-id"), undefined);
 
     const queryResult = useQuery({
-        queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY, { query, page, pageSize, name, isActive, securityRoleId, jobTitleId, }],
+        queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY, { query, page, pageSize, fullName, isActive, securityRoleId, jobTitleId, }],
         queryFn: () => getPagedEmployeesActionAsync({
             query,
             page,
             pageSize,
-            name,
+            fullName,
             isActive,
             securityRoleId,
             jobTitleId,

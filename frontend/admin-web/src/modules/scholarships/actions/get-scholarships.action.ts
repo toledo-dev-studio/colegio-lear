@@ -2,15 +2,13 @@ import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import type { Scholarship } from "@/interfaces/entites/scholarship";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { ScholarshipFilter } from "@/interfaces/filters/scholarship.filter";
 
-interface Options {
+interface Options extends ScholarshipFilter {
     query?: string;
-    name?: string;
-    status?: boolean,
-    discountPercentage?: number
 }
 
-export const getScholarshipsActionAsync = async ({ query, name, status, discountPercentage }: Options): Promise<Scholarship[]> => {
+export const getScholarshipsActionAsync = async ({ query, name, discountPercentage, isActive }: Options): Promise<Scholarship[]> => {
     await sleep();
 
     let endpoint = "/scholarships";
@@ -22,8 +20,8 @@ export const getScholarshipsActionAsync = async ({ query, name, status, discount
         params: {
             q: query,
             name,
-            status,
             discountPercentage,
+            isActive,
         }
     });
 
