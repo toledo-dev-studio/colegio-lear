@@ -3,12 +3,13 @@ import { sleep } from "@/lib/extensions/promises";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { EducationLevelFilter } from "@/interfaces/filters/education-level.filter";
 
-interface Options {
+interface Options extends EducationLevelFilter {
     query?: string;
     page?: number;
     pageSize?: number;
-    academicLevelId: string;
+    academicLevelId?: string;
     status?: boolean;
 }
 

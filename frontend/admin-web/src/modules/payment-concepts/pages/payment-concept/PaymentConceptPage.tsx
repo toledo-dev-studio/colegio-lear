@@ -11,6 +11,7 @@ import { useCreateUpdatePaymentConcept } from "../../hooks/useCreateUpdatePaymen
 import type { PaymentConceptRequest } from "@/interfaces/requests/payment-concept.request";
 
 export const PaymentConceptPage = () => {
+  // Component hooks & stores
   const navigate = useNavigate();
   const { id } = useParams();
 

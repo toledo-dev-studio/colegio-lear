@@ -1,34 +1,24 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 
-export const getSchoolSubjectByIdActionAsync = async (id?: string): Promise<SchoolSubject> => {
+interface Options {
+    id: string;
+}
+
+export const getSchoolSubjectByIdActionAsync = async ({ id }: Options): Promise<SchoolSubjectResponse> => {
     await sleep();
 
-    if (!id)
-        throw new Error("El identificador del registro es requerido");
-
-    if (id === "new") {
-        return {
-            id: undefined,
-            name: "",
-            description: "",
-            status: true,
-            academicLevelId: "",
-            educationLevelId: "",
-        } as unknown as SchoolSubject;
-    }
-
     if (VITE_ENVIRONMENT === "mockable") {
-        const { data } = await api.get<SchoolSubject[]>("/school-subjects/school-subjects.json");
+        const { data } = await api.get<SchoolSubjectResponse[]>("/school-subjects/school-subjects.json");
         const record = data.find(item => item.id === id);
         if (!record)
             throw new Error("No se encontró el registro solicitado");
         return record;
     }
 
-    const { data } = await api.get<SchoolSubject>(`/school-subjects/${id}`);
+    const { data } = await api.get<SchoolSubjectResponse>(`/school-subjects/${id}`);
 
     return data;
 }

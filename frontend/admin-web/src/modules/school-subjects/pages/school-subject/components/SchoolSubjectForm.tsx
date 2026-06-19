@@ -1,173 +1,194 @@
-import { useEffect } from "react";
 import { Link } from "react-router";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject"
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
-import type { EducationLevel } from "@/interfaces/entites/education-level";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import type { SchoolSubjectRequest } from "@/interfaces/requests/school-subject.request";
+import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
+import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
+import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
 
 interface Props {
-    schoolSubject?: SchoolSubject,
     isSubmitting: boolean,
-    onSubmit: (schoolSubjectLike: Partial<SchoolSubject>) => void
+    schoolSubjectResponse?: SchoolSubjectResponse,
+    onSubmit: (schoolSubjectRequestLike: Partial<SchoolSubjectRequest>) => void
 }
 
-export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Props) => {
+export const SchoolSubjectForm = ({ schoolSubjectResponse, isSubmitting, onSubmit }: Props) => {
+    // Component hooks & stores
+    const searchAcademicLevelsMutation = useSearchAcademicLevels();
+    const searchEducationLevelsMutation = useSearchEducationLevelsForAcademicLevel();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        getValues,
-        setValue,
-        watch,
-        reset
-    } = useForm<Partial<SchoolSubject>>({
-        defaultValues: schoolSubject
+    // Use react hook form configuration
+    const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<Partial<SchoolSubjectRequest>>({
+        defaultValues: {
+            name: isValidValueWithDefault(schoolSubjectResponse?.name, ""),
+            isActive: isValidValueWithDefault(schoolSubjectResponse?.isActive, false),
+            academicLevelId: isValidValueWithDefault(schoolSubjectResponse?.academicLevelId, ""),
+            academicLevel: isValidValueWithDefault(schoolSubjectResponse?.academicLevel, undefined),
+            educationLevelId: isValidValueWithDefault(schoolSubjectResponse?.educationLevelId, ""),
+            educationLevel: isValidValueWithDefault(schoolSubjectResponse?.educationLevel, undefined),
+            description: isValidValueWithDefault(schoolSubjectResponse?.description, ""),
+        }
     });
-    const selectedAcademicLevel = watch("academicLevelId");
-    const selectedEducationLevel = watch("educationLevelId");
-
-    // Academic levels assign configuration
-    const searchAcademicLevels = useSearchAcademicLevels();
-
-    // Education levels assign configuration
-    const searchEducationLevelsForAcademicLevel = useSearchEducationLevelsForAcademicLevel();
-
-    useEffect(() => {
-        if (schoolSubject)
-            reset(schoolSubject);
-    }, [schoolSubject])
+    const academicLevel = watch("academicLevel");
+    const academicLevelId = watch("academicLevelId");
+    const educationLevel = watch("educationLevel");
+    const educationLevelId = watch("educationLevelId");
 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
 
-                <div className="flex flex-col items-start gap-y-4 md:items-center md:flex-row md:justify-between border-b border-border pb-4">
-                    <h2 className="w-full text-muted-foreground">
-                        INFORMACIÓN GENERAL DE LA MATERIA ESCOLAR
-                    </h2>
-                    <div className="w-fit flex items-center">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Switch
-                                    size="default"
-                                    checked={watch("status") ?? false}
-                                    onCheckedChange={(checked) => setValue("status", checked)} />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Estatus del registro</p>
-                            </TooltipContent>
-                        </Tooltip>
+                <SectionTitle
+                    title="INFORMACIÓN GENERAL DE LA MATERIA ESCOLAR"
+                    description="Registro de información básica de la materia escolar disponible en el colegio." />
 
-                    </div>
-                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                <div className="flex items-center flex-col gap-y-8">
-
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">
-                            Nombre de la materia escolar <span className="text-destructive">*</span>:
-                        </label>
-                        <Input
-                            type="text"
-                            {...register("name", { required: true })}
-                            placeholder="Escribe la materia..."
-                            className="pill-input w-full pl-8" />
+                    <div className="control-container">
+                        <label className="label">Nombre de la materia escolar <span className="required">*</span>:</label>
+                        <Controller
+                            name="name"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Nombre de la materia escolar..."
+                                />
+                            )} />
                         {
                             errors.name && (
-                                <p className="text-red-500 text-sm mt-2">
+                                <p className="error">
                                     El nombre de la materia escolar es obligatorio
                                 </p>
                             )
                         }
                     </div>
 
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico <span className="text-destructive">*</span>:</label>
-                        <SearchInput
-                            {...register("academicLevelId", { required: true })}
-                            defaultValue={watch("academicLevel.name")}
-                            selected={!!selectedAcademicLevel}
-                            placeholder="Busqueda de nivel académico"
-                            options={searchAcademicLevels.academicLevels ?? []}
-                            isSearching={searchAcademicLevels.isPending}
-                            onClearSelection={() => {
-                                setValue("academicLevelId", undefined);
-                                setValue("academicLevel.name", undefined);
-                                setValue("educationLevelId", undefined);
-                                setValue("educationLevel.name", undefined);
-                            }}
-                            onOptionChange={async (option: AcademicLevel) => {
-                                setValue("academicLevelId", option.id);
-                                setValue("academicLevel.name", option.name);
-                                searchAcademicLevels.clearSearchResult();
-                            }}
-                            onSearch={async (query) => searchAcademicLevels.searchAsync(query)}
+                    <div className="control-container">
+                        <label className="label">Nivel académico <span className="required">*</span>:</label>
+                        <Controller
+                            name="academicLevelId"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <SearchInput
+                                    {...field}
+                                    defaultValue={academicLevel?.name}
+                                    selected={!!academicLevelId}
+                                    placeholder="Busqueda de nivel académico"
+                                    options={searchAcademicLevelsMutation.academicLevels}
+                                    isSearching={searchAcademicLevelsMutation.isPending}
+                                    onClearSelection={() => {
+                                        setValue("academicLevel", undefined);
+                                        setValue("academicLevelId", undefined);
+                                        setValue("educationLevel", undefined);
+                                        setValue("educationLevelId", undefined);
+                                    }}
+                                    onOptionChange={async (option: AcademicLevelResponse) => {
+                                        setValue("academicLevel", option);
+                                        setValue("academicLevelId", option.id);
+                                        searchAcademicLevelsMutation.clearSearchResult();
+                                    }}
+                                    onSearch={async (query) => searchAcademicLevelsMutation.searchAsync({ query, isActive: true })}
+                                />
+                            )}
                         />
                         {
-                            (errors.academicLevelId && !selectedAcademicLevel) && (
-                                <p className="text-red-500 text-sm mt-2">
+                            (errors.academicLevelId && !academicLevel) && (
+                                <p className="error">
                                     El nivel académico es obligatorio
                                 </p>
                             )
                         }
                     </div>
 
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo <span className="text-destructive">*</span>:</label>
-                        <SearchInput
-                            {...register("educationLevelId", { required: true })}
-                            defaultValue={watch("educationLevel.name")}
-                            selected={!!selectedEducationLevel}
-                            disabled={!selectedAcademicLevel}
-                            placeholder="Busqueda de nivel educativo"
-                            options={searchEducationLevelsForAcademicLevel.educationLevels ?? []}
-                            isSearching={searchEducationLevelsForAcademicLevel.isPending}
-                            onClearSelection={() => {
-                                setValue("educationLevelId", undefined);
-                                setValue("educationLevel.name", undefined);
-                            }}
-                            onOptionChange={async (option: EducationLevel) => {
-                                setValue("educationLevelId", option.id);
-                                setValue("educationLevel.name", option.name);
-                                searchEducationLevelsForAcademicLevel.clearSearchResult();
-                            }}
-                            onSearch={async (query) => searchEducationLevelsForAcademicLevel.searchAsync({
-                                academicLevelId: selectedAcademicLevel!,
-                                query
-                            })}
+                    <div className="control-container">
+                        <label className="label">Nivel educativo <span className="required">*</span>:</label>
+                        <Controller
+                            name="educationLevelId"
+                            control={control}
+                            disabled={!academicLevelId}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <SearchInput
+                                    {...field}
+                                    defaultValue={educationLevel?.name}
+                                    selected={!!educationLevelId}
+                                    disabled={!academicLevelId}
+                                    placeholder="Busqueda de nivel educativo"
+                                    options={searchEducationLevelsMutation.educationLevels}
+                                    isSearching={searchEducationLevelsMutation.isPending}
+                                    onClearSelection={() => {
+                                        setValue("educationLevel", undefined);
+                                        setValue("educationLevelId", undefined);
+                                    }}
+                                    onOptionChange={async (option: EducationLevelResponse) => {
+                                        setValue("educationLevel", option);
+                                        setValue("educationLevelId", option.id);
+                                        searchEducationLevelsMutation.clearSearchResult();
+                                    }}
+                                    onSearch={async (query) => searchEducationLevelsMutation.searchAsync({ query, academicLevelId: academicLevelId, isActive: true })}
+                                />
+                            )}
                         />
                         {
-                            (errors.educationLevelId && !selectedEducationLevel) && (
-                                <p className="text-red-500 text-sm mt-2">
+                            (errors.educationLevelId && !educationLevel) && (
+                                <p className="error">
                                     El nivel educativo es obligatorio
                                 </p>
                             )
                         }
                     </div>
 
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">Descripción de la materia escolar:</label>
-                        <Textarea
-                            {...register("description")}
-                            defaultValue={getValues("description")}
-                            placeholder="Descripción de la materia..."
-                            className="pill-input w-full pl-8" />
+                    <div className="control-container md:col-span-2">
+                        <label className="label">¿Registro activo?:</label>
+                        <div className="flex items-center justify-center">
+                            <Controller
+                                name="isActive"
+                                control={control}
+                                render={({ field }) => (
+                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">La materia escolarse encuentra activa o inactiva.</p>
+                                        </div>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </label>
+                                )}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="control-container lg:col-span-2">
+                        <label className="label">Descripción de la materia escolar:</label>
+                        <Controller
+                            name="description"
+                            control={control}
+                            render={({ field }) => (
+                                <Textarea
+                                    {...field}
+                                    placeholder="-"
+                                />
+                            )}
+                        />
                     </div>
 
                 </div>
 
-                 <div className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
+                {/* Actions Buttons */}
+                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
                     <Link to="/school-subjects">
                         <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
                             Cancelar
@@ -179,7 +200,7 @@ export const SchoolSubjectForm = ({ schoolSubject, isSubmitting, onSubmit }: Pro
                             isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
-                </div>
+                </section>
 
             </form>
         </>

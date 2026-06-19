@@ -3,30 +3,28 @@ import { toast } from "sonner";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { SchoolSubjectForm } from "./components/SchoolSubjectForm";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
-import { useGetByIdSchoolSubject } from "../../hooks/useGetByIdSchoolSubject";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { useGetSchoolSubjectById } from "../../hooks/useGetSchoolSubjectById";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdateSchoolSubject } from "../../hooks/useCreateUpdateSchoolSubject";
+import type { SchoolSubjectRequest } from "@/interfaces/requests/school-subject.request";
 
 export const SchoolSubjectPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const { showLoading, hideLoading } = useLoaderStore();
-  const schoolSubjectQuery = useGetByIdSchoolSubject(id || "");
+  const schoolSubjectQuery = useGetSchoolSubjectById({ id: id! });
   const createUpdateSchoolSubjectMutation = useCreateUpdateSchoolSubject();
   const title = id === "new" ? "Registro de materia escolar" : "Edición de materia escolar";
 
-  const handleSubmit = async (schoolSubjectLike: Partial<SchoolSubject>) => {
+  const handleSubmit = async (schoolSubjectRequestLike: Partial<SchoolSubjectRequest>) => {
     try {
       showLoading("Guardando registro");
-      !schoolSubjectLike.id && (schoolSubjectLike.id = "new");
-
-      await createUpdateSchoolSubjectMutation.mutateAsync(schoolSubjectLike, {
+      await createUpdateSchoolSubjectMutation.mutateAsync({ id: id!, schoolSubjectRequestLike }, {
         onSuccess: (response) => {
-          toast.success('El registro se ah actualizado correctamente', { position: "top-right" });
+          toast.success("El registro se ah actualizado correctamente", { position: "top-right" });
           hideLoading();
           navigate(`/school-subjects/${response.id}`);
         }
@@ -34,7 +32,7 @@ export const SchoolSubjectPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar el registro', { position: "top-right" });
+      toast.error("Ocurrio un error al tratar de actualizar el registro", { position: "top-right" });
     }
   }
 
@@ -58,14 +56,14 @@ export const SchoolSubjectPage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Configuración escolar" },
             { label: "Materias escolares", to: "/school-subjects" },
             { label: id === "new" ? "Nueva materia escolar" : schoolSubjectQuery.data?.name || "Edición de materia escolar" },
           ]} />
         </div>
 
-        <CustomPageTitle
+        <PageTitle
           title={title}
           subtitle="Gestiona la información de la materia escolar que estará disponible en el colegio" />
 
@@ -73,7 +71,7 @@ export const SchoolSubjectPage = () => {
           <div className="flex flex-col min-h-full gap-8 mt-14">
 
             <SchoolSubjectForm
-              schoolSubject={schoolSubjectQuery.data}
+              schoolSubjectResponse={schoolSubjectQuery.data}
               isSubmitting={createUpdateSchoolSubjectMutation.isPending}
               onSubmit={handleSubmit}
             />

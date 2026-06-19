@@ -4,8 +4,9 @@ import { useMutation } from "@tanstack/react-query";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import { getPagedAcademicLevelsActionAsync } from "@/modules/academic-levels/actions/get-paged-academic-levels.action";
+import type { AcademicLevelFilter } from "@/interfaces/filters/academic-level.filter";
 
-interface Options {
+interface Options extends AcademicLevelFilter {
     query?: string;
     name?: string,
     status?: boolean,

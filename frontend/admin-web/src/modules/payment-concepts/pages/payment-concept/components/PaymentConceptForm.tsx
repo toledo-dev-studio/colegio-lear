@@ -141,7 +141,7 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
                         </div>
                     </div>
 
-                    <div className="control-container col-span-2">
+                    <div className="control-container lg:col-span-2">
                         <label className="label">Descripción del concepto de pago <span className="required">*</span>:</label>
                         <Controller
                             name="description"

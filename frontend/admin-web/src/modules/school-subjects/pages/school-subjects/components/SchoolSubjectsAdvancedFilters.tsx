@@ -1,15 +1,15 @@
 import { useSearchParams } from "react-router";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
-import type { EducationLevel } from "@/interfaces/entites/education-level";
+import type { SchoolSubjectFilter } from "@/interfaces/filters/school-subject.filter";
+import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
+import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
+import { isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
 
@@ -20,63 +20,55 @@ interface Props {
 }
 
 export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
-
-    // Main hooks
+    // Component hooks & stores
     const [searchParams, setSearchParams] = useSearchParams();
-
-    // Form config
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        reset,
-        watch
-    } = useForm<Partial<SchoolSubject>>({
-        defaultValues: {
-            name: searchParams.get('name') ?? '',
-            status: stringToBooleanWithDefault(searchParams.get('status')),
-            academicLevelId: searchParams.get('academic-level-id') ?? undefined,
-            academicLevel: {
-                name: searchParams.get('academic-level-name') ?? undefined,
-            },
-            educationLevelId: searchParams.get('education-level-id') ?? undefined,
-            educationLevel: {
-                name: searchParams.get('education-level-name') ?? undefined,
-            }
+    const searchAcademicLevelsMutation = useSearchAcademicLevels();
+    const searchEducationLevelsMutation = useSearchEducationLevelsForAcademicLevel();
+    const schoolSubjectFilterLike: Partial<SchoolSubjectFilter> = {
+        name: isValidValueWithDefault(searchParams.get("name"), ""),
+        isActive: stringToBooleanWithDefault(searchParams.get("is-active")),
+        academicLevelId: isValidValueWithDefault(searchParams.get("academic-level-id"), ""),
+        academicLevel: {
+            name: isValidValueWithDefault(searchParams.get("academic-level-name"), ""),
+        },
+        educationLevelId: isValidValueWithDefault(searchParams.get("education-level-id"), ""),
+        educationLevel: {
+            name: isValidValueWithDefault(searchParams.get("education-level-name"), "")
         }
+    };
+
+    // Use react hook form configuration
+    const { control, handleSubmit, setValue, reset, watch } = useForm<Partial<SchoolSubjectFilter>>({
+        defaultValues: schoolSubjectFilterLike
     });
-    const selectedAcademicLevel = watch('academicLevelId');
-    const selectedEducationLevel = watch("educationLevelId");
-
-    // Academic levels assign configuration
-    const searchAcademicLevels = useSearchAcademicLevels();
-
-    // Education levels assign configuration
-    const searchEducationLevelsForAcademicLevel = useSearchEducationLevelsForAcademicLevel();
+    const academicLevel = watch("academicLevel");
+    const academicLevelId = watch("academicLevelId");
+    const educationLevel = watch("educationLevel");
+    const educationLevelId = watch("educationLevelId");
 
     if (!open)
         return null;
 
     const handleClickClearFilters = () => {
-        searchParams.delete('query');
-        searchParams.delete('name');
-        searchParams.delete('status');
-        searchParams.delete('academic-level-id');
-        searchParams.delete('academic-level-name');
-        searchParams.delete('education-level-id');
-        searchParams.delete('education-level-name');
+        searchParams.delete("query");
+        searchParams.delete("name");
+        searchParams.delete("is-active");
+        searchParams.delete("academic-level-id");
+        searchParams.delete("academic-level-name");
+        searchParams.delete("education-level-id");
+        searchParams.delete("education-level-name");
         reset({});
         setSearchParams(searchParams);
         handleClickClose();
     }
 
-    const handleSubmitForm = (filter: Partial<SchoolSubject>) => {
-        searchParams.set('status', `${filter.status}`);
-        filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
-        filter.academicLevelId ? searchParams.set('academic-level-id', filter.academicLevelId) : searchParams.delete('academic-level-id');
-        filter.academicLevel?.name ? searchParams.set('academic-level-name', filter.academicLevel.name) : searchParams.delete('academic-level-name');
-        filter.educationLevelId ? searchParams.set('education-level-id', filter.educationLevelId) : searchParams.delete('education-level-id');
-        filter.educationLevel?.name ? searchParams.set('education-level-name', filter.educationLevel?.name) : searchParams.delete('education-level-name');
+    const handleSubmitForm = (filter: Partial<SchoolSubjectFilter>) => {
+        searchParams.set("is-active", `${filter.isActive}`);
+        filter.name ? searchParams.set("name", filter.name) : searchParams.delete("name");
+        filter.academicLevelId ? searchParams.set("academic-level-id", filter.academicLevelId) : searchParams.delete("academic-level-id");
+        filter.academicLevel?.name ? searchParams.set("academic-level-name", filter.academicLevel.name) : searchParams.delete("academic-level-name");
+        filter.educationLevelId ? searchParams.set("education-level-id", filter.educationLevelId) : searchParams.delete("education-level-id");
+        filter.educationLevel?.name ? searchParams.set("education-level-name", filter.educationLevel?.name) : searchParams.delete("education-level-name");
         setSearchParams(searchParams);
         handleClickClose();
     }
@@ -84,8 +76,11 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
     return (
         <>
             <form onSubmit={handleSubmit(handleSubmitForm)} className="fixed inset-0 z-50 flex justify-end" data-testid="filter-drawer">
+
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleClickClose} />
+
                 <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
+
                     <div className="h-22 flex items-center justify-between px-10 border-b border-border">
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
@@ -94,97 +89,117 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
                             <X className="!w-5 !h-5 text-muted-foreground" />
                         </Button>
                     </div>
-                    <div className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
 
-                        {/* Contenido de filtrados */}
-                        <div className="flex flex-col gap-8">
-                            <div>
-                                <label className="text-sm font-medium text-foreground mb-2 block">Nombre:</label>
-                                <div className="relative">
-                                    <Input
-                                        type="text"
-                                        {...register('name')}
-                                        placeholder="Nombre de la materia escolar..."
-                                        className="pill-input w-full pl-8"
+                    <section className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
+
+                        <section className="flex flex-col gap-8">
+
+                            <div className="control-container">
+                                <label className="label">Nombre:</label>
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            type="text"
+                                            placeholder="Nombre..."
+                                        />
+                                    )}
+                                />
+                            </div>
+
+                            <div className="control-container">
+                                <label className="label">Nivel académico:</label>
+                                <Controller
+                                    name="academicLevelId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <SearchInput
+                                            {...field}
+                                            defaultValue={academicLevel?.name}
+                                            selected={!!academicLevelId}
+                                            placeholder="Busqueda de nivel académico"
+                                            options={searchAcademicLevelsMutation.academicLevels}
+                                            isSearching={searchAcademicLevelsMutation.isPending}
+                                            onClearSelection={() => {
+                                                setValue("academicLevel", undefined);
+                                                setValue("academicLevelId", undefined);
+                                                setValue("educationLevel", undefined);
+                                                setValue("educationLevelId", undefined);
+                                            }}
+                                            onOptionChange={async (option: AcademicLevelResponse) => {
+                                                setValue("academicLevel", option);
+                                                setValue("academicLevelId", option.id);
+                                                searchAcademicLevelsMutation.clearSearchResult();
+                                            }}
+                                            onSearch={async (query) => searchAcademicLevelsMutation.searchAsync({ query, isActive: true })}
+                                        />
+                                    )}
+                                />
+                            </div>
+
+                            <div className="control-container">
+                                <label className="label">Nivel educativo:</label>
+                                <Controller
+                                    name="educationLevelId"
+                                    control={control}
+                                    disabled={!academicLevelId}
+                                    render={({ field }) => (
+                                        <SearchInput
+                                            {...field}
+                                            defaultValue={educationLevel?.name}
+                                            selected={!!educationLevelId}
+                                            disabled={!academicLevelId}
+                                            placeholder="Busqueda de nivel educativo"
+                                            options={searchEducationLevelsMutation.educationLevels}
+                                            isSearching={searchEducationLevelsMutation.isPending}
+                                            onClearSelection={() => {
+                                                setValue("educationLevel", undefined);
+                                                setValue("educationLevelId", undefined);
+                                            }}
+                                            onOptionChange={async (option: EducationLevelResponse) => {
+                                                setValue("educationLevel", option);
+                                                setValue("educationLevelId", option.id);
+                                                searchEducationLevelsMutation.clearSearchResult();
+                                            }}
+                                            onSearch={async (query) => searchEducationLevelsMutation.searchAsync({ query, academicLevelId: academicLevelId, isActive: true })}
+                                        />
+                                    )}
+                                />
+                            </div>
+
+                            <div className="control-container">
+                                <label className="label">¿Registro activo?:</label>
+                                <div className="flex items-center justify-center">
+                                    <Controller
+                                        name="isActive"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                                <div>
+                                                    <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                                    <p className="text-xs text-muted-foreground mt-1">La materia escolarse encuentra activa o inactiva.</p>
+                                                </div>
+                                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                            </label>
+                                        )}
                                     />
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico:</label>
-                                <SearchInput
-                                    {...register("academicLevelId")}
-                                    defaultValue={watch("academicLevel.name")}
-                                    selected={!!selectedAcademicLevel}
-                                    placeholder="Busqueda de nivel académico"
-                                    options={searchAcademicLevels.academicLevels ?? []}
-                                    isSearching={searchAcademicLevels.isPending}
-                                    onClearSelection={() => {
-                                        setValue("academicLevelId", undefined);
-                                        setValue("academicLevel.name", undefined);
-                                        setValue("educationLevelId", undefined);
-                                        setValue("educationLevel.name", undefined);
-                                    }}
-                                    onOptionChange={async (option: AcademicLevel) => {
-                                        setValue("academicLevelId", option.id);
-                                        setValue("academicLevel.name", option.name);
-                                        searchAcademicLevels.clearSearchResult();
-                                    }}
-                                    onSearch={async (query) => searchAcademicLevels.searchAsync(query)}
-                                />
-                            </div>
+                        </section>
+                    </section>
 
-                            <div>
-                                <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo:</label>
-                                <SearchInput
-                                    {...register("educationLevelId")}
-                                    defaultValue={watch("educationLevel.name")}
-                                    selected={!!selectedEducationLevel}
-                                    disabled={!selectedAcademicLevel}
-                                    placeholder="Busqueda de nivel educativo"
-                                    options={searchEducationLevelsForAcademicLevel.educationLevels ?? []}
-                                    isSearching={searchEducationLevelsForAcademicLevel.isPending}
-                                    onClearSelection={() => {
-                                        setValue("educationLevelId", undefined);
-                                        setValue("educationLevel.name", undefined);
-                                    }}
-                                    onOptionChange={async (option: EducationLevel) => {
-                                        setValue("educationLevelId", option.id);
-                                        setValue("educationLevel.name", option.name);
-                                        searchEducationLevelsForAcademicLevel.clearSearchResult();
-                                    }}
-                                    onSearch={async (query) => searchEducationLevelsForAcademicLevel.searchAsync({
-                                        academicLevelId: selectedAcademicLevel!,
-                                        query
-                                    })}
-                                />
-                            </div>
-
-                            <div>
-                                <label className="text-sm font-medium text-foreground mb-2 block">Estatus:</label>
-                                <Switch
-                                    size="default"
-                                    checked={watch('status')}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
-                        <Button
-                            type="button"
-                            variant={"destructive"}
-                            data-testid="filter-clear-button"
-                            className="pill-btn-outline px-10"
-                            onClick={handleClickClearFilters}>
+                    <section className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
+                        <Button type="button" variant={"ghost"} onClick={handleClickClearFilters}>
                             Limpiar filtros
                         </Button>
-                        <Button
-                            type="submit"
-                            data-testid="filter-apply-button"
-                            className="pill-btn-primary px-10">
+                        <Button type="submit" variant={"default"}>
                             Aplicar filtros
                         </Button>
-                    </div>
+                    </section>
+
                 </aside>
             </form>
         </>

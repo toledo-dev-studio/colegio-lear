@@ -71,7 +71,6 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
 
-                {/* General section */}
                 <SectionTitle
                     title="INFORMACIÓN GENERAL DEL EMPLEADO"
                     description="Registro de información básica del empleado con acceso al sistema y a la organización." />

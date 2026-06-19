@@ -1,46 +1,30 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
+import { Modal } from "@/shared/components/modal/Modal";
+import { Table } from "@/shared/components/table/Table";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { SchoolSubjectsTable } from "./components/SchoolSubjectsTable";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { useSchoolSubjectsPage } from "./hooks/useSchoolSubjectsPage";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
+import { useSchoolSubjectsPageTable } from "./hooks/useSchoolSubjectsPageTable";
 import { SchoolSubjectsAdvancedFilters } from "./components/SchoolSubjectsAdvancedFilters";
-import { useDeleteSchoolSubject } from "../../hooks/useDeleteSchoolSubject";
-import { useExportSchoolSubjects } from "../../hooks/useExportSchoolSubjects";
-import { useGetPagedSchoolSubjects } from "../../hooks/useGetPagedSchoolSubjects";
 
 export const SchoolSubjectsPage = () => {
-
+  // Component hooks & stores
   const navigate = useNavigate();
+  const { loader, advancedFilters, deleteModal, queries, mutations } = useSchoolSubjectsPage();
+  const { columns, properties, actions } = useSchoolSubjectsPageTable({ handleClickDelete: deleteModal.open });
 
-  const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
-  const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
-  const [schoolSubjectToDelete, setSchoolSubjectToDelete] = useState<SchoolSubject | undefined>(undefined);
-
-  const pagedSchoolSubjectsQuery = useGetPagedSchoolSubjects();
-  const deleteSchoolSubjectMutation = useDeleteSchoolSubject();
-  const exportSchoolSubjectsMutation = useExportSchoolSubjects();
-
-  const { showLoading, hideLoading } = useLoaderStore();
-
-  const handleClickAdd = () => {
-    navigate('/school-subjects/new');
-  }
-
+  // Component functions
   const handleClickExport = async () => {
-    showLoading('Descargando información', 'Por favor espere...');
+    loader.show('Descargando información', 'Por favor espere...');
 
-    const data = await exportSchoolSubjectsMutation.mutateAsync();
+    const data = await mutations.schoolSubjects.export.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
-      hideLoading();
+      loader.hide();
       toast.info('No se cuenta con información para descargar', { position: "top-right" });
       return;
     }
@@ -56,34 +40,17 @@ export const SchoolSubjectsPage = () => {
 
     downloadDataToCsvFile('Materias escolares', headers, data);
 
-    setTimeout(() => hideLoading(), 500);
+    setTimeout(() => loader.hide(), 500);
   }
 
-  const handleClickAdvancedFilters = () => {
-    setIsOpenAdvancedFiltersPanel(true);
-  }
-
-  const handleClickEditRow = (schoolSubject: SchoolSubject) => {
-    navigate(`/school-subjects/${schoolSubject.id}`);
-  }
-
-  const handleClickDeleteRow = (schoolSubject: SchoolSubject) => {
-    setSchoolSubjectToDelete(schoolSubject);
-    setIsOpenSingleDeleteModal(true);
-  }
-
-  const handleClickCancelDelteSchoolSubject = () => {
-    setSchoolSubjectToDelete(undefined);
-    setIsOpenSingleDeleteModal(false);
-  }
-
-  const handleClickDelteSchoolSubject = async () => {
-    await deleteSchoolSubjectMutation.mutateAsync(schoolSubjectToDelete?.id!,
+  const handleClickConfirmDeleteSchoolSubject = async () => {
+    if (!deleteModal.record)
+      return;
+    await mutations.schoolSubjects.delete.mutateAsync({ id: deleteModal.record.id },
       {
         onSuccess: () => {
           toast.success('Materia escolar eliminada correctamente', { position: "top-right" });
-          setSchoolSubjectToDelete(undefined);
-          setIsOpenSingleDeleteModal(false);
+          deleteModal.close();
         },
         onError: (error: any) => {
           console.warn(error);
@@ -93,70 +60,73 @@ export const SchoolSubjectsPage = () => {
     );
   }
 
-  const handleClickCloseAdvancedFiltersPanel = () => {
-    setIsOpenAdvancedFiltersPanel(false);
-  }
-
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Configuración escolar" },
             { label: "Materias escolares", to: "/school-subjects" }
           ]} />
         </div>
 
-        <CustomPageTitle title="Materias escolares" subtitle="Gestiona las materias escolares que estarán disponibles en el colegio" />
+        <PageTitle title="Materias escolares" subtitle="Gestiona las materias escolares que estarán disponibles en el colegio" />
 
-        <div className="flex flex-col gap-8 mt-14">
+        <section className="flex flex-col gap-8 mt-14">
 
           {/* Table ribbon options */}
-          <CustomTableListRibbon
-            handleClickAdvancedFilters={handleClickAdvancedFilters}
-            handleClickAdd={handleClickAdd}
+          <TableRibbon
+            handleClickAdvancedFilters={() => advancedFilters.open()}
+            handleClickAdd={() => navigate("/school-subjects/new")}
             handleClickExport={handleClickExport}
-            disabledExport={exportSchoolSubjectsMutation.isPending}
+            inputSearchTooltip="Búsqueda general por nombre y descripción"
           />
 
           {/* Table content*/}
-          <SchoolSubjectsTable
-            data={pagedSchoolSubjectsQuery.data}
-            isLoading={pagedSchoolSubjectsQuery.isFetching}
-            handleClickEditRow={handleClickEditRow}
-            handleClickDeleteRow={handleClickDeleteRow}
+          <Table
+            data={queries.schoolSubjects.paged.data}
+            isLoading={queries.schoolSubjects.paged.isFetching}
+            enablePagination={true}
+            columns={columns}
+            properties={properties}
+            actions={actions}
+            totalPages={queries.schoolSubjects.paged.totalPages}
           />
 
-          {/* Pagination top element */}
+          {/* Delete single record modal */}
           {
-            (!pagedSchoolSubjectsQuery.isFetching && pagedSchoolSubjectsQuery.itemsCount > 0) && (
-              <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedSchoolSubjectsQuery.totalPages} />
-              </div>
-            )
-          }
-
-          <CustomDeleteModal
-            open={isOpenSingleDeleteModal}
-            title={`¿Estas seguro de eliminar el registro ${schoolSubjectToDelete?.name}`}
-            message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-            isLoading={deleteSchoolSubjectMutation.isPending}
-            handleClickConfirm={handleClickDelteSchoolSubject}
-            handleClickCancel={handleClickCancelDelteSchoolSubject}
-          />
-
-          {
-            isOpenAdvancedFiltersPanel && (
-              <SchoolSubjectsAdvancedFilters
-                open={isOpenAdvancedFiltersPanel}
-                title="Filtros avanzados"
-                handleClickClose={handleClickCloseAdvancedFiltersPanel}
+            (deleteModal.isOpen && deleteModal.record) && (
+              <Modal
+                open={deleteModal.isOpen}
+                type="delete"
+                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
+                message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
+                isLoading={mutations.schoolSubjects.delete.isPending}
+                cancelButton={{
+                  label: "Cancelar",
+                  onClick: () => deleteModal.close()
+                }}
+                confirmButton={{
+                  label: "Sí, eliminar",
+                  onClick: handleClickConfirmDeleteSchoolSubject
+                }}
               />
             )
           }
 
-        </div>
+          {/* Advanced filters panel */}
+          {
+            advancedFilters.isOpen && (
+              <SchoolSubjectsAdvancedFilters
+                open={advancedFilters.isOpen}
+                title="Filtros avanzados"
+                handleClickClose={advancedFilters.close}
+              />
+            )
+          }
+
+        </section>
 
       </div>
     </>
