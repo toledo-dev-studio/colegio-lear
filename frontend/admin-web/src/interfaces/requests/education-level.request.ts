@@ -6,7 +6,7 @@ export interface EducationLevelRequest {
     /**
      * Unique identifier for the education level
      */
-    id: string;
+    id?: string;
     /**
      * Name of the education level
      */

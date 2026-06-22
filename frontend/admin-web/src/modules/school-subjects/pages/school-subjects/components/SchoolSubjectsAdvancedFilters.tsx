@@ -11,7 +11,7 @@ import type { AcademicLevelResponse } from "@/interfaces/responses/academic-leve
 import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 import { isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
-import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
+import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 
 interface Props {
     open: boolean;
@@ -23,7 +23,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
     // Component hooks & stores
     const [searchParams, setSearchParams] = useSearchParams();
     const searchAcademicLevelsMutation = useSearchAcademicLevels();
-    const searchEducationLevelsMutation = useSearchEducationLevelsForAcademicLevel();
+    const searchEducationLevelsMutation = useSearchEducationLevels();
     const schoolSubjectFilterLike: Partial<SchoolSubjectFilter> = {
         name: isValidValueWithDefault(searchParams.get("name"), ""),
         isActive: stringToBooleanWithDefault(searchParams.get("is-active")),

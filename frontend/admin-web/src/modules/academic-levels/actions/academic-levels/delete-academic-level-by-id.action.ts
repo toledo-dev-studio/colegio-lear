@@ -1,6 +1,6 @@
 import { api } from "@/api/client";
-import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import { sleep } from "@/lib/extensions/promises";
+import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
 interface Options {
     id: string

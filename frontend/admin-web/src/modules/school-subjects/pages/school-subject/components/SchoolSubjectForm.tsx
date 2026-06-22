@@ -14,7 +14,7 @@ import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subjec
 import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
 import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
-import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
+import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 
 interface Props {
     isSubmitting: boolean,
@@ -25,7 +25,7 @@ interface Props {
 export const SchoolSubjectForm = ({ schoolSubjectResponse, isSubmitting, onSubmit }: Props) => {
     // Component hooks & stores
     const searchAcademicLevelsMutation = useSearchAcademicLevels();
-    const searchEducationLevelsMutation = useSearchEducationLevelsForAcademicLevel();
+    const searchEducationLevelsMutation = useSearchEducationLevels();
 
     // Use react hook form configuration
     const { control, formState: { errors }, handleSubmit, setValue, watch } = useForm<Partial<SchoolSubjectRequest>>({

@@ -1,11 +1,12 @@
-import { Pencil, Plus } from 'lucide-react'
+import { Pencil, Plus } from "lucide-react";
 
-import { Input } from '@/shared/ui/input'
-import { Button } from '@/shared/ui/button'
-import { Textarea } from '@/shared/ui/textarea'
-import type { EducationLevel } from '@/interfaces/entites/education-level'
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Textarea } from "@/shared/ui/textarea";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 
-export interface AvailableEducationLevel extends EducationLevel {
+export interface AvailableEducationLevel extends EducationLevelResponse {
     isEditing: boolean;
 }
 
@@ -14,7 +15,7 @@ interface Props {
     handleAddEducationLevel: () => void;
     handleRemoveEducationLevel: (id: string) => void;
     handleToggleEditEducationLevel: (id: string, isEditing: boolean) => void;
-    handleChangeEducationLevel: (id: string, field: 'name' | 'description', value: string) => void;
+    handleChangeEducationLevel: (id: string, field: "name" | "description", value: string) => void;
 }
 
 export const EducationLevelGrid = ({ educationLevels = [], handleAddEducationLevel, handleRemoveEducationLevel, handleToggleEditEducationLevel, handleChangeEducationLevel }: Props) => {
@@ -67,23 +68,23 @@ export const EducationLevelGrid = ({ educationLevels = [], handleAddEducationLev
                                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                             <div className="min-w-0 flex-1">
                                                 <Input
-                                                    value={level.name}
-                                                    onChange={(event) => handleChangeEducationLevel(level.id, 'name', event.target.value)}
+                                                    value={isValidValueWithDefault(level.name, "")}
+                                                    onChange={(event) => handleChangeEducationLevel(level.id, "name", event.target.value)}
                                                     placeholder="Nombre del grado"
                                                     className="pill-input w-full pl-8"
                                                 />
                                             </div>
                                         </div>
                                         <Textarea
-                                            value={level.description}
-                                            onChange={(event) => handleChangeEducationLevel(level.id, 'description', event.target.value)}
+                                            value={isValidValueWithDefault(level.description, "")}
+                                            onChange={(event) => handleChangeEducationLevel(level.id, "description", event.target.value)}
                                             placeholder="Descripción del grado educativo"
                                             className="pill-input w-full pl-8"
                                         />
-                                        <div className='flex items-center justify-end'>
+                                        <div className="flex items-center justify-end">
                                             <Button
                                                 type="button"
-                                                variant="destructive"
+                                                variant={"ghost"}
                                                 className="w-full sm:w-auto"
                                                 onClick={() => handleRemoveEducationLevel(level.id)}>
                                                 Eliminar grado

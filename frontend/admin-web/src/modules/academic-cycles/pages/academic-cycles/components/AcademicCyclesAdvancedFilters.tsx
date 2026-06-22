@@ -11,7 +11,7 @@ import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES, type AcademicCycl
 import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/types/KeyValuePair";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
-import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
+import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { EducationLevel } from "@/interfaces/entites/education-level";
@@ -62,7 +62,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
     const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevels();
 
     // Education levels assign configuration
-    const searchEducationLevelsForAcademicLevel = useSearchEducationLevelsForAcademicLevel();
+    const searchEducationLevelsForAcademicLevel = useSearchEducationLevels();
 
     if (!open)
         return null;

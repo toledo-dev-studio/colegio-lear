@@ -1,18 +1,17 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
+import type { AcademicLevelFilter } from "@/interfaces/filters/academic-level.filter";
+import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
 
-interface Options {
+interface Options extends AcademicLevelFilter {
     query?: string;
     page?: number;
     pageSize?: number;
-    name?: string,
-    status?: boolean,
 }
 
-export const getPagedAcademicLevelsActionAsync = async ({ query, page = 1, pageSize = 1, name, status }: Options): Promise<PagedResponse<AcademicLevel>> => {
+export const getPagedAcademicLevelsActionAsync = async ({ query, page = 1, pageSize = 1, name, isActive }: Options): Promise<PagedResponse<AcademicLevelResponse>> => {
     await sleep();
 
     let endpoint = "/academic-levels/paged";
@@ -20,13 +19,13 @@ export const getPagedAcademicLevelsActionAsync = async ({ query, page = 1, pageS
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-levels/paged-academic-levels.json";
 
-    const { data } = await api.get<PagedResponse<AcademicLevel>>(endpoint, {
+    const { data } = await api.get<PagedResponse<AcademicLevelResponse>>(endpoint, {
         params: {
             q: query,
             page,
             pageSize,
             name,
-            status,
+            isActive
         }
     });
 

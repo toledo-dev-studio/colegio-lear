@@ -20,7 +20,7 @@ import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/inter
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES, type AcademicCycle } from "@/interfaces/entites/academic-cycle";
-import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
+import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 
 export const AcademicCycleTab = () => {
 
@@ -35,7 +35,7 @@ export const AcademicCycleTab = () => {
 
     // Related entities hooks & stores
     const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevels();
-    const searchEducationLevelsForAcademicLevel = useSearchEducationLevelsForAcademicLevel();
+    const searchEducationLevelsForAcademicLevel = useSearchEducationLevels();
     const academicLevelSearchInputRef = useRef<HTMLInputElement>(null);
     const educationLevelSearchInputRef = useRef<HTMLInputElement>(null);
 

@@ -1,27 +1,25 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
-import { getPagedAcademicLevelsActionAsync } from "@/modules/academic-levels/actions/get-paged-academic-levels.action";
 import type { AcademicLevelFilter } from "@/interfaces/filters/academic-level.filter";
+import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
+import { getPagedAcademicLevelsActionAsync } from "@/modules/academic-levels/actions/academic-levels/get-paged-academic-levels.action";
 
 interface Options extends AcademicLevelFilter {
     query?: string;
-    name?: string,
-    status?: boolean,
 }
 
 export const useSearchAcademicLevels = () => {
-    const [academicLevels, setAcademicLevels] = useState<AcademicLevel[]>([])
+    const [academicLevels, setAcademicLevels] = useState<AcademicLevelResponse[]>([])
 
     const mutation = useMutation({
-        mutationFn: (options: Options) => getPagedAcademicLevelsActionAsync({ ...options, page: 1, pageSize: 5, status: true }),
+        mutationFn: (options: Options) => getPagedAcademicLevelsActionAsync({ ...options, page: 1, pageSize: 5 }),
     });
 
     const searchAsync = async (options: Options) => {
         mutation.mutateAsync(options, {
-            onSuccess: (response: PagedResponse<AcademicLevel>) => {
+            onSuccess: (response: PagedResponse<AcademicLevelResponse>) => {
                 setAcademicLevels(response.data);
             },
             onError: () => {
