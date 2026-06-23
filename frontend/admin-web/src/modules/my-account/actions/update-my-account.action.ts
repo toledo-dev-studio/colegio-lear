@@ -1,26 +1,30 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { Employee } from "@/interfaces/entites/employee";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { EmployeeFormData } from "@/modules/employees/interfaces/employee-form";
+import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 
-export const updateMyAccountActionAsync = async (employeeLike: Partial<EmployeeFormData>): Promise<Employee> => {
+interface Options {
+    employeeRequestLike: Partial<EmployeeRequest>;
+}
+
+export const updateMyAccountActionAsync = async ({ employeeRequestLike }: Options): Promise<EmployeeResponse> => {
     await sleep();
 
     if (VITE_ENVIRONMENT === "mockable") {
-        return employeeLike as Employee;
+        return employeeRequestLike as EmployeeResponse;
     }
-    
-    let fileFormData = new FormData();
-    if (employeeLike.file)
-        fileFormData.append('file', employeeLike.file);
 
-    const { data } = await api.patch<Employee>("/employees/me", {
-        name: employeeLike.name,
-        firstLastName: employeeLike.firstLastName,
-        secondLastName: employeeLike.secondLastName,
-        phoneNumber: employeeLike.phoneNumber,
-        file: employeeLike.file ? fileFormData : undefined
+    let fileFormData = new FormData();
+    if (employeeRequestLike.file)
+        fileFormData.append('file', employeeRequestLike.file);
+
+    const { data } = await api.patch<EmployeeResponse>("/employees/me", {
+        name: employeeRequestLike.name,
+        firstLastName: employeeRequestLike.firstLastName,
+        secondLastName: employeeRequestLike.secondLastName,
+        phoneNumber: employeeRequestLike.phoneNumber,
+        file: employeeRequestLike.file ? fileFormData : undefined
     });
 
     return {

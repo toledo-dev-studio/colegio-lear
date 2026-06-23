@@ -3,24 +3,24 @@ import { useQuery } from "@tanstack/react-query";
 
 import { GET_PAGED_ANNOUNCEMENTS_QUERY_KEY } from "@/lib/queries-key/announcements-queries-key";
 import { getPagedAnnouncementsActionAsync } from "../../actions/announcements/get-paged-announcements.action";
-import { isValidBooleanString, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
+import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetPagedAnnouncements = () => {
     const [searchParams] = useSearchParams();
 
     // Main query filters
-    const query = searchParams.get("query")?.trim() || undefined;
+    const query = isValidValueWithDefault(searchParams.get("query")?.trim(), undefined);
     const page = stringToNumberWithDefault(searchParams.get("page"), 1);
     const pageSize = stringToNumberWithDefault(searchParams.get("page-size"), 10);
 
     // Advanced query filters
-    const name = searchParams.get("name")?.trim() || undefined;
-    const publishedAt = searchParams.get("published-at")?.trim() || undefined;
-    const expiresAt = searchParams.get("expires-at")?.trim() || undefined;
-    const status = isValidBooleanString(searchParams.get("status")) ? stringToBooleanWithDefault(searchParams.get("status")) : undefined;
+    const name = isValidValueWithDefault(searchParams.get("name")?.trim(), undefined);
+    const publishedAt = isValidValueWithDefault(searchParams.get("published-at")?.trim(), undefined);
+    const expiresAt = isValidValueWithDefault(searchParams.get("expires-at")?.trim(), undefined);
+    const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
 
     const queryResult = useQuery({
-        queryKey: [GET_PAGED_ANNOUNCEMENTS_QUERY_KEY, { query, page, pageSize, name, publishedAt, expiresAt, status, }],
+        queryKey: [GET_PAGED_ANNOUNCEMENTS_QUERY_KEY, { query, page, pageSize, name, publishedAt, expiresAt, isActive, }],
         queryFn: () => getPagedAnnouncementsActionAsync({
             query,
             page,
@@ -28,7 +28,7 @@ export const useGetPagedAnnouncements = () => {
             name,
             publishedAt,
             expiresAt,
-            status,
+            isActive,
         }),
     });
 

@@ -6,8 +6,8 @@ import { useAuthStore } from "@/modules/auth/stores/auth.store";
 import { useUpdateMyAccount } from "../hooks/useUpdateMyAccount";
 import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
 import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
+import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
 import { userStoreFullName } from "@/modules/auth/stores/auth.store.selectors";
-import type { EmployeeFormData } from "@/modules/employees/interfaces/employee-form";
 
 export const MyAccountPage = () => {
 
@@ -18,10 +18,10 @@ export const MyAccountPage = () => {
   const { user: employee, setUser: setEmployee } = useAuthStore();
   const loggedInUserFullName = useAuthStore(userStoreFullName);
   
-  const handleSubmit = async (employeeLike: Partial<EmployeeFormData>) => {
+  const handleSubmit = async (employeeRequestLike: Partial<EmployeeRequest>) => {
     try {
       showLoading("Actualizando información de la cuenta");
-      await updateMyAccountMutation.mutateAsync(employeeLike, {
+      await updateMyAccountMutation.mutateAsync({ employeeRequestLike }, {
         onSuccess: (response) => {
           setEmployee(response);
           toast.success("Información de la cuenta actualizada correctamente", { position: "top-right" });
@@ -52,7 +52,7 @@ export const MyAccountPage = () => {
 
         <div className="flex-1">
           <MyAccountForm
-            employee={employee!}
+            employeeResponse={employee!}
             onSubmit={handleSubmit}
             isSubmitting={false} />
         </div>

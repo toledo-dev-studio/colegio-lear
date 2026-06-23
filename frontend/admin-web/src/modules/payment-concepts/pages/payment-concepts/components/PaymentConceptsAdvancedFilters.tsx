@@ -124,7 +124,7 @@ export const PaymentConceptsAdvancedFilters = ({ open, title = "Filtros avanzado
                                         </div>
                                     )}
                                 />
-                                <p className="text-xs text-muted-foreground mt-1.5">Solo valores enteros — sin decimales</p>
+                                <p className="control-info">Solo valores enteros — sin decimales</p>
                                 {
                                     errors.amount && (
                                         <p className="error">

@@ -3,8 +3,8 @@ import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 
 interface Options {
-    announcementId: string,
-    attachmentId: string
+    announcementId: string;
+    attachmentId: string;
 }
 
 export const deleteAttachmentForAnnouncementByIdActionAsync = async ({ announcementId, attachmentId }: Options): Promise<void> => {

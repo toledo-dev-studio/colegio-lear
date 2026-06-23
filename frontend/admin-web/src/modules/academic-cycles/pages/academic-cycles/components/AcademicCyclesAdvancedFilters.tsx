@@ -160,7 +160,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                         />
                                     )}
                                 />
-                                <p className="text-xs text-muted-foreground mt-1.5">Filtrado a partir de fecha de inicio seleccionada</p>
+                                <p className="control-info">Filtrado a partir de fecha de inicio seleccionada</p>
                             </div>
                             <div className="w-full">
                                 <label className="text-sm font-medium text-foreground mb-2 block">Hasta fecha de termino:</label>
@@ -174,7 +174,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                         />
                                     )}
                                 />
-                                <p className="text-xs text-muted-foreground mt-1.5">Filtrado hasta fecha de termino seleccionada</p>
+                                <p className="control-info">Filtrado hasta fecha de termino seleccionada</p>
                             </div>
                             <div className="w-full">
                                 <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico:</label>

@@ -1,221 +1,207 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router";
 import { Controller, useForm } from "react-hook-form";
-import { InfoIcon, Save, X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { AttachmentsGrid } from "./AttachmentsGrid";
+import { AUDIENCE } from "@/interfaces/entites/announcement";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
-import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
-import { CustomMultiSelect } from "@/shared/components/CustomMultiSelect";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { AUDIENCE, type Announcement } from "@/interfaces/entites/announcement";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { CardAlert } from "@/shared/components/card-alert/CardAlert";
+import { DatePicker } from "@/shared/components/date-picker/DatePicker";
+import { MultiSelect } from "@/shared/components/multi-select/MultiSelect";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
+import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
+import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { CustomTipTapEditor } from "@/shared/components/custom-text-editor/CustomTipTapEditor";
 
 interface Props {
-    announcement?: Announcement,
-    isSubmitting: boolean,
-    onSubmit: (announcementLike: Partial<Announcement>) => void
+    isNew: boolean;
+    isSubmitting: boolean;
+    announcementResponse?: AnnouncementResponse;
+    onSubmit: (announcementRequestLike: Partial<AnnouncementRequest>) => void;
 }
 
-export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props) => {
+export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, onSubmit }: Props) => {
 
-    const {
-        control,
-        register,
-        handleSubmit,
-        formState: { errors },
-        getValues,
-        setValue,
-        watch,
-        reset
-    } = useForm<Partial<Announcement>>({
+    const [attachments, setAttachments] = useState<AttachmentResponse[]>(announcementResponse?.attachments ?? []);
+    const { control, handleSubmit, formState: { errors } } = useForm<Partial<AnnouncementRequest>>({
         defaultValues: {
-            ...announcement,
+            name: isValidValueWithDefault(announcementResponse?.name, ""),
+            isActive: isValidValueWithDefault(announcementResponse?.isActive, false),
+            description: isValidValueWithDefault(announcementResponse?.description, ""),
+            audience: isValidValueWithDefault(announcementResponse?.audience, []),
+            content: isValidValueWithDefault(announcementResponse?.content, ""),
+            publishedAt: isValidValueWithDefault(announcementResponse?.publishedAt, ""),
+            expiresAt: isValidValueWithDefault(announcementResponse?.expiresAt, "")
         }
     });
 
-    useEffect(() => {
-        if (announcement)
-            reset(announcement);
-    }, [announcement]);
-
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
 
-                {/* Main campaing information */}
-                <section className="flex flex-col gap-y-6">
-                    <div className="flex flex-col items-start gap-y-4 md:items-center md:flex-row md:justify-between border-b border-border pb-4">
-                        <h2 className="w-full text-muted-foreground">
-                            INFORMACIÓN GENERAL DE LA CAMPAÑA
-                        </h2>
-                        <div className="w-fit flex items-center">
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <Switch
-                                        size="default"
-                                        checked={watch("status") ?? false}
-                                        onCheckedChange={(checked) => setValue("status", checked)} />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Estatus del registro</p>
-                                </TooltipContent>
-                            </Tooltip>
+                <SectionTitle
+                    title="INFORMACIÓN GENERAL DE LA CAMPAÑA"
+                    description="Registro de información básica de la campaña." />
 
-                        </div>
+                <div className="grid grid-cols-1 gap-8">
+
+                    <div className="control-container">
+                        <label className="label">
+                            Nombre de la campaña <span className="required">*</span>
+                        </label>
+                        <Controller
+                            name="name"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Nombre de la campaña..."
+                                />
+                            )} />
+                        {
+                            errors.name && (
+                                <p className="error">
+                                    El nombre de la campaña es obligatorio
+                                </p>
+                            )
+                        }
                     </div>
 
-                    <div className="grid grid-cols-1 gap-8">
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">
-                                Nombre de la campaña <span className="text-destructive">*</span>:
+                    <div className="control-container">
+                        <label className="label">
+                            Audiencia a la que va dirigida de la campaña <span className="required">*</span>:
+                        </label>
+                        <Controller
+                            name="audience"
+                            control={control}
+                            rules={{ validate: (v) => (v && v.length > 0) || "Selecciona al menos una audiencia" }}
+                            render={({ field }) => (
+                                <MultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE} value={field.value || []} onChange={field.onChange} />
+                            )}
+                        />
+                        {
+                            errors.audience && (
+                                <p className="error">
+                                    {errors.audience.message as string}
+                                </p>
+                            )
+                        }
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="control-container">
+                            <label className="label">
+                                Fecha de publicación <span className="required">*</span>:
                             </label>
-                            <Input
-                                type="text"
-                                {...register("name", { required: true })}
-                                placeholder="Nombre del campaña..."
-                                className="pill-input w-full pl-8" />
+                            <Controller
+                                name="publishedAt"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <DatePicker
+                                        {...field}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
+                            <p className="control-info">A partir de que fecha la campaña estará disponible</p>
                             {
-                                errors.name && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        El nombre de la campaña es obligatorio
+                                errors.publishedAt && (
+                                    <p className="error">
+                                        La fecha de publicación de la campaña es obligatoria
                                     </p>
                                 )
                             }
                         </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">
-                                Audiencia a la que va dirigida de la campaña <span className="text-destructive">*</span>:
+                        <div className="control-container">
+                            <label className="label">
+                                Fecha de vencimiento <span className="required">*</span>:
                             </label>
                             <Controller
-                                name="audience"
+                                name="expiresAt"
                                 control={control}
-                                rules={{ validate: (v) => (v && v.length > 0) || "Selecciona al menos una audiencia" }}
+                                rules={{ required: true }}
                                 render={({ field }) => (
-                                    <CustomMultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE} value={field.value || []} onChange={field.onChange} />
+                                    <DatePicker
+                                        {...field}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
                                 )}
                             />
-                            {errors.audience && <p className="text-red-500 text-sm mt-2">{errors.audience.message as string}</p>}
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-2 block">Fecha de publicación <span className="text-destructive">*</span>:</label>
-                                <Controller
-                                    name="publishedAt"
-                                    control={control}
-                                    rules={{ required: true }}
-                                    render={({ field }) => (
-                                        <CustomDatePicker
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                        />
-                                    )}
-                                />
-                                <p className="text-xs text-muted-foreground mt-1.5">A partir de que fecha la campaña estará disponible</p>
-                                {
-                                    errors.publishedAt && (
-                                        <p className="text-red-500 text-sm mt-2">
-                                            La fecha de publicación de la campaña es obligatoria
-                                        </p>
-                                    )
-                                }
-                            </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-2 block">Fecha de vencimiento <span className="text-destructive">*</span>:</label>
-                                <Controller
-                                    name="expiresAt"
-                                    control={control}
-                                    rules={{ required: true }}
-                                    render={({ field }) => (
-                                        <CustomDatePicker
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                        />
-                                    )}
-                                />
-                                <p className="text-xs text-muted-foreground mt-1.5">Hasta que fecha la campaña estará disponible</p>
-                                {
-                                    errors.expiresAt && (
-                                        <p className="text-red-500 text-sm mt-2">
-                                            La fecha de vencimiento de la campaña es obligatoria
-                                        </p>
-                                    )
-                                }
-                            </div>
-                        </div>
-                        <div className="w-full">
-                            <label className="text-sm font-medium text-foreground mb-3 block">Descripción del campaña:</label>
-                            <Textarea
-                                {...register("description")}
-                                defaultValue={getValues("description")}
-                                placeholder="Descripción del registro..."
-                                className="pill-input w-full pl-8" />
+                            <p className="control-info">Hasta que fecha la campaña estará disponible</p>
+                            {
+                                errors.expiresAt && (
+                                    <p className="error">
+                                        La fecha de vencimiento de la campaña es obligatoria
+                                    </p>
+                                )
+                            }
                         </div>
                     </div>
-                </section>
+                    <div className="control-container">
+                        <label className="label">
+                            Descripción de la campaña:
+                        </label>
+                        <Controller
+                            name="description"
+                            control={control}
+                            render={({ field }) => (
+                                <Textarea
+                                    {...field}
+                                    placeholder="-"
+                                />
+                            )}
+                        />
+                    </div>
+                </div>
 
                 {/* Content and Attachments for new announcements */}
                 {
-                    !announcement?.id && (
+                    isNew && (
                         <>
-                            <section className="flex flex-col gap-y-4 mt-6">
-                                <div className="flex flex-col items-start gap-y-4 border-b border-border mt-2 mb-2 border-solid border p-6 rounded-xl bg-primary/90 dark:bg-primary/20">
-                                    <h2 className="w-full text-white flex gap-x-4 items-center">
-                                        <InfoIcon /> CONTENIDO DE LA CAMPAÑA & ARCHIVOS ADJUNTOS
-                                    </h2>
-                                    <p className="text-xs text-white">
-                                        Una vez guardada la información general de la campaña, podrás agregar el contenido que se mostrará a los usuarios dentro del diseño de la campaña, así como también subir archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace público.
-                                        <br />
-                                        Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB.
-                                    </p>
-                                </div>
-                            </section>
+                            <CardAlert
+                                type="info"
+                                title="CONTENIDO DE LA CAMPAÑA & ARCHIVOS ADJUNTOS"
+                                message="Una vez guardada la información general de la campaña, podrás agregar el contenido que se mostrará a los usuarios dentro del diseño de la campaña, así como también subir archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace público. Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB." />
                         </>
                     )
                 }
 
                 {/* Content and Attachments for existing announcements */}
                 {
-                    announcement?.id && (
+                    !isNew && (
                         <>
                             {/* Attachments */}
                             <section className="flex flex-col gap-y-4">
-                                <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-8">
-                                    <h2 className="w-full text-muted-foreground">ARCHIVOS ADJUNTOS</h2>
-                                    <p className="text-xs text-muted-foreground">
-                                        Sube archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace públic.
-                                        Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB.
-                                    </p>
-                                </div>
+                                <SectionTitle
+                                    title="ARCHIVOS ADJUNTOS"
+                                    description="Sube archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace públic. Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB." />
                                 <div className="mt-2">
-                                    <Controller
-                                        name="attachments"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <AttachmentsGrid
-                                                announcementId={announcement?.id!}
-                                                attachments={field.value || []}
-                                                onChange={field.onChange}
-                                            />
-                                        )}
+                                    <AttachmentsGrid
+                                        announcementId={announcementResponse?.id!}
+                                        attachments={attachments}
+                                        onChange={(attachments) => setAttachments(attachments)}
                                     />
                                 </div>
                             </section>
 
                             {/* TipTap text editor */}
                             <section className="flex flex-col gap-y-6">
-                                <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-8">
-                                    <h2 className="w-full text-muted-foreground">
-                                        CONTENIDO DE LA CAMPAÑA
-                                    </h2>
-                                </div>
+                                <SectionTitle
+                                    title="CONTENIDO DE LA CAMPAÑA"
+                                    description="Edita el contenido de la plantilla para la campaña actual" />
+
                                 <div className="grid grid-cols-1 gap-8">
-                                    <div className="w-full">
+                                    <div className="control-container">
                                         <Controller
                                             name="content"
                                             control={control}
@@ -229,7 +215,7 @@ export const AnnouncementForm = ({ announcement, isSubmitting, onSubmit }: Props
                                         />
                                         {
                                             errors.content && (
-                                                <p className="text-red-500 text-sm mt-2">
+                                                <p className="error">
                                                     {errors.content.message as string}
                                                 </p>
                                             )

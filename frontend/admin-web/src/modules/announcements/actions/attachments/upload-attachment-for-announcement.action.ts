@@ -5,12 +5,12 @@ import type { Attachment } from "@/interfaces/entites/attachment";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import { extractFileExtension, sanitizeFileName } from "@/lib/extensions/attachments";
 
-export type Options = {
+interface Options {
     announcementId: string;
     file: File;
 };
 
-export const uploadAttachmentsForAnnouncementActionAsync = async ({ announcementId, file }: Options): Promise<Attachment> => {
+export const uploadAttachmentForAnnouncementActionAsync = async ({ announcementId, file }: Options): Promise<Attachment> => {
     await sleep();
 
     if (!announcementId)
@@ -36,7 +36,7 @@ export const uploadAttachmentsForAnnouncementActionAsync = async ({ announcement
     });
 
     console.log(data, request);
-    
+
 
     return data;
 }

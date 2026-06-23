@@ -1,46 +1,30 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner"
 
+import { Modal } from "@/shared/components/modal/Modal";
+import { Table } from "@/shared/components/table/Table";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { AnnouncementsTable } from "./components/AnnouncementsTable";
-import type { Announcement } from "@/interfaces/entites/announcement";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
-import { useDeleteAnnouncement } from "../../hooks/announcements/useDeleteAnnouncement";
+import { useAnnouncementsPage } from "./hooks/useAnnouncementsPage";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
+import { useAnnouncementsPageTable } from "./hooks/useAnnouncementsPageTable";
 import { AnnouncementsAdvancedFilters } from "./components/AnnouncementsAdvancedFilters";
-import { useExportAnnouncements } from "../../hooks/announcements/useExportAnnouncements";
-import { useGetPagedAnnouncements } from "../../hooks/announcements/useGetPagedAnnouncements";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const AnnouncementsPage = () => {
-
+  // Component hooks & stores
   const navigate = useNavigate();
+  const { loader, advancedFilters, deleteModal, queries, mutations } = useAnnouncementsPage();
+  const { columns, properties, actions } = useAnnouncementsPageTable({ handleClickDelete: deleteModal.open });
 
-  const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
-  const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
-  const [announcementToDelete, setAnnouncementToDelete] = useState<Announcement | undefined>(undefined);
-
-  const pagedAnnouncementsQuery = useGetPagedAnnouncements();
-  const deleteAnnouncementMutation = useDeleteAnnouncement();
-  const exportAnnouncementsMutation = useExportAnnouncements();
-
-  const { showLoading, hideLoading } = useLoaderStore();
-
-  const handleClickAdd = () => {
-    navigate("/announcements/new");
-  }
-
+  // Component functions
   const handleClickExport = async () => {
-    showLoading("Descargando información", "Por favor espere...");
+    loader.show("Descargando información", "Por favor espere...");
 
-    const data = await exportAnnouncementsMutation.mutateAsync();
+    const data = await mutations.announcements.export.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
-      hideLoading();
+      loader.hide();
       toast.info("No se cuenta con información para descargar", { position: "top-right" });
       return;
     }
@@ -56,34 +40,17 @@ export const AnnouncementsPage = () => {
 
     downloadDataToCsvFile("Campañas & comunicados", headers, data);
 
-    setTimeout(() => hideLoading(), 500);
+    setTimeout(() => loader.hide(), 500);
   }
 
-  const handleClickAdvancedFilters = () => {
-    setIsOpenAdvancedFiltersPanel(true);
-  }
-
-  const handleClickEditRow = (item: Announcement) => {
-    navigate(`/announcements/${item.id}`);
-  }
-
-  const handleClickDeleteRow = (item: Announcement) => {
-    setAnnouncementToDelete(item);
-    setIsOpenSingleDeleteModal(true);
-  }
-
-  const handleClickCancelDelteJobTitle = () => {
-    setAnnouncementToDelete(undefined);
-    setIsOpenSingleDeleteModal(false);
-  }
-
-  const handleClickDelteJobTitle = async () => {
-    await deleteAnnouncementMutation.mutateAsync(announcementToDelete?.id!,
+  const handleClickConfirmDeleteAnnouncement = async () => {
+    if (!deleteModal.record)
+      return
+    await mutations.announcements.delete.mutateAsync({ id: deleteModal.record.id },
       {
         onSuccess: () => {
           toast.success("Concepto de pago eliminado correctamente", { position: "top-right" });
-          setAnnouncementToDelete(undefined);
-          setIsOpenSingleDeleteModal(false);
+          deleteModal.close();
         },
         onError: (error) => {
           console.warn(error);
@@ -93,76 +60,73 @@ export const AnnouncementsPage = () => {
     );
   }
 
-  const handleClickCloseAdvancedFiltersPanel = () => {
-    setIsOpenAdvancedFiltersPanel(false);
-  }
-
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Seguimiento escolar" },
-            { label: "Campañas & comunicados", to: "/announcements" },
+            { label: "Comunicados & campañas", to: "/announcements" },
           ]} />
         </div>
 
-        <CustomPageTitle title="Campañas & comunicados" subtitle="Gestiona las campañas & comunicados disponibles en el colegio y la organización" />
+        <PageTitle title="Comunicados & campañas" subtitle="Gestiona las comunicados & campañas disponibles en el colegio y la organización" />
 
-        <div className="flex flex-col gap-8 mt-14">
+        <section className="flex flex-col gap-8 mt-14">
 
           {/* Table ribbon options */}
-          <CustomTableListRibbon
-            handleClickAdvancedFilters={handleClickAdvancedFilters}
-            handleClickAdd={handleClickAdd}
+          <TableRibbon
+            handleClickAdvancedFilters={() => advancedFilters.open()}
+            handleClickAdd={() => navigate("/announcements/new")}
             handleClickExport={handleClickExport}
-            disabledExport={exportAnnouncementsMutation.isPending}
+            inputSearchTooltip="Búsqueda general por nombre y descripción"
           />
 
           {/* Table content*/}
-          <AnnouncementsTable
-            data={pagedAnnouncementsQuery.data}
-            isLoading={pagedAnnouncementsQuery.isFetching}
-            handleClickEditRow={handleClickEditRow}
-            handleClickDeleteRow={handleClickDeleteRow}
+          <Table
+            data={queries.announcements.paged.data}
+            isLoading={queries.announcements.paged.isFetching}
+            enablePagination={true}
+            columns={columns}
+            properties={properties}
+            actions={actions}
+            totalPages={queries.announcements.paged.totalPages}
           />
-
-          {/* Pagination top element */}
-          {
-            (!pagedAnnouncementsQuery.isFetching && pagedAnnouncementsQuery.itemsCount > 0) && (
-              <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedAnnouncementsQuery.totalPages} />
-              </div>
-            )
-          }
 
           {/* Delete single record modal */}
           {
-            announcementToDelete && (
-              <CustomDeleteModal
-                open={isOpenSingleDeleteModal}
-                title={`¿Estas seguro de eliminar el registro ${announcementToDelete?.name}`}
+            (deleteModal.isOpen && deleteModal.record) && (
+              <Modal
+                open={deleteModal.isOpen}
+                type="delete"
+                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={deleteAnnouncementMutation.isPending}
-                handleClickConfirm={handleClickDelteJobTitle}
-                handleClickCancel={handleClickCancelDelteJobTitle}
+                isLoading={mutations.announcements.delete.isPending}
+                cancelButton={{
+                  label: "Cancelar",
+                  onClick: () => deleteModal.close()
+                }}
+                confirmButton={{
+                  label: "Sí, eliminar",
+                  onClick: handleClickConfirmDeleteAnnouncement
+                }}
               />
             )
           }
 
           {/* Advanced filters panel */}
           {
-            isOpenAdvancedFiltersPanel && (
+            advancedFilters.isOpen && (
               <AnnouncementsAdvancedFilters
-                open={isOpenAdvancedFiltersPanel}
+                open={advancedFilters.isOpen}
                 title="Filtros avanzados"
-                handleClickClose={handleClickCloseAdvancedFiltersPanel}
+                handleClickClose={advancedFilters.close}
               />
             )
           }
 
-        </div>
+        </section>
       </div>
     </>
   )

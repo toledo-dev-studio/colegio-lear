@@ -127,6 +127,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
                                                 setValue("academicLevelId", undefined);
                                                 setValue("educationLevel", undefined);
                                                 setValue("educationLevelId", undefined);
+                                                searchAcademicLevelsMutation.clearSearchResult();
                                             }}
                                             onOptionChange={async (option: AcademicLevelResponse) => {
                                                 setValue("academicLevel", option);
@@ -157,6 +158,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
                                             onClearSelection={() => {
                                                 setValue("educationLevel", undefined);
                                                 setValue("educationLevelId", undefined);
+                                                searchEducationLevelsMutation.clearSearchResult();
                                             }}
                                             onOptionChange={async (option: EducationLevelResponse) => {
                                                 setValue("educationLevel", option);

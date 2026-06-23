@@ -155,7 +155,7 @@ export const AcademicCycleWalletForm = ({ academicCycleWallet, setAcademicCycleW
                                     </p>
                                 )
                             }
-                            <p className="text-xs text-muted-foreground mt-1.5">Solo valores enteros — sin decimales</p>
+                            <p className="control-info">Solo valores enteros — sin decimales</p>
                         </div>
                         <div className="control-container">
                             <label className="label">Entre límite de pago <span className="required">*</span>:</label>

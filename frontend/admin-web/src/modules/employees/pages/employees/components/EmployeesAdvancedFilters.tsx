@@ -121,6 +121,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                             onClearSelection={() => {
                                                 setValue("jobTitle", undefined);
                                                 setValue("jobTitleId", undefined);
+                                                searchJobTitlesMutation.clearSearchResult();
                                             }}
                                             onOptionChange={async (option: JobTitleResponse) => {
                                                 setValue("jobTitle", option);
@@ -149,6 +150,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                             onClearSelection={() => {
                                                 setValue("securityRole", undefined);
                                                 setValue("securityRoleId", undefined);
+                                                searchSecurityRolesMutation.clearSearchResult();
                                             }}
                                             onOptionChange={async (option: SecurityRoleResponse) => {
                                                 setValue("securityRole", option);
@@ -171,7 +173,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                             <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
                                                 <div>
                                                     <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
-                                                    <p className="text-xs text-muted-foreground mt-1">El rol de seguridad se encuentra activo o inactivo.</p>
+                                                    <p className="text-xs text-muted-foreground mt-1">El registro de empleado se encuentra activo o inactivo.</p>
                                                 </div>
                                                 <Switch checked={field.value} onCheckedChange={field.onChange} />
                                             </label>

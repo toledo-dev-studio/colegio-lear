@@ -228,6 +228,10 @@ h6 {
     @apply text-destructive;
   }
 
+  .control-container .control-info {
+    @apply text-xs text-muted-foreground mt-1.5;
+  }
+
   .control-container .error {
     @apply text-red-500 text-sm mt-2;
   }

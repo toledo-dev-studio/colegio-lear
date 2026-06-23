@@ -257,6 +257,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                                     onClearSelection={() => {
                                         setValue("jobTitle", undefined);
                                         setValue("jobTitleId", undefined);
+                                        searchJobTitlesMutation.clearSearchResult();
                                     }}
                                     onOptionChange={async (option: JobTitleResponse) => {
                                         setValue("jobTitle", option);
@@ -293,6 +294,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                                     onClearSelection={() => {
                                         setValue("securityRole", undefined);
                                         setValue("securityRoleId", undefined);
+                                        searchSecurityRolesMutation.clearSearchResult();
                                     }}
                                     onOptionChange={async (option: SecurityRoleResponse) => {
                                         setValue("securityRole", option);

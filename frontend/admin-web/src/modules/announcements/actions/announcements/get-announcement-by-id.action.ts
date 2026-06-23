@@ -1,37 +1,24 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { Announcement } from "@/interfaces/entites/announcement";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 
-export const getAnnouncementByIdActionAsync = async (id?: string): Promise<Announcement> => {
+interface Options {
+    id: string;
+}
+
+export const getAnnouncementByIdActionAsync = async ({ id }: Options): Promise<AnnouncementResponse> => {
     await sleep();
 
-    if (!id)
-        throw new Error("El identificador del registro es requerido");
-
-    if (id === "new") {
-        return {
-            id: undefined,
-            name: "",
-            description: "",
-            content: "",
-            expiresAt: "",
-            publishedAt: "",
-            audience: [],
-            attachments: [],
-            status: true,
-        } as unknown as Announcement;
-    }
-
     if (VITE_ENVIRONMENT === "mockable") {
-        const { data } = await api.get<Announcement[]>("/announcements/announcements.json");
+        const { data } = await api.get<AnnouncementResponse[]>("/announcements/announcements.json");
         const record = data.find(item => item.id === id);
         if (!record)
             throw new Error("No se encontró el registro solicitado");
         return record;
     }
 
-    const { data } = await api.get<Announcement>(`/announcements/${id}`);
+    const { data } = await api.get<AnnouncementResponse>(`/announcements/${id}`);
 
     return data;
 }

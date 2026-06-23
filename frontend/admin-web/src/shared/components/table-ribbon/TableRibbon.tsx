@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router";
-import { Download, Filter, Plus, Search } from "lucide-react";
+import { Download, Filter, Plus, Search, X } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -30,24 +30,22 @@ export const TableRibbon = (props: Props) => {
     } = props;
 
     const [searchParams, setSearchParams] = useSearchParams();
+    const [query, setQuery] = useState<string>(searchParams.get("query") ?? "");
 
-    const query = searchParams.get('query') || '';
-    const inputSearchRef = useRef<HTMLInputElement>(null);
+    const updateQueryParam = (query: string) => {
+        const newSearchParams = new URLSearchParams();
+        if (!query.length) {
+            newSearchParams.delete("query");
+        } else {
+            newSearchParams.set("query", query);
+        }
+        setSearchParams(newSearchParams);
+    }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key !== 'Enter')
+        if (event.key !== "Enter")
             return;
-
-        const newSearchParams = new URLSearchParams();
-        const query = inputSearchRef.current?.value || '';
-
-        if (!query) {
-            newSearchParams.delete('query');
-        } else {
-            newSearchParams.set('query', query);
-        }
-
-        setSearchParams(newSearchParams);
+        updateQueryParam(query);
     }
 
     return (
@@ -88,17 +86,23 @@ export const TableRibbon = (props: Props) => {
                         <Tooltip>
                             <TooltipTrigger className="relative w-full md:max-w-md">
                                 <div className="relative w-full md:max-w-md">
-                                    <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                    {query.length > 0 ?
+                                        <X className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground hover:cursor-pointer"
+                                            onClick={() => {
+                                                setQuery("");
+                                                updateQueryParam("");
+                                            }} />
+                                        : <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />}
                                     <Input
-                                        ref={inputSearchRef}
+                                        value={query}
                                         onKeyDown={handleKeyDown}
+                                        onChange={(e) => setQuery(e.target.value)}
                                         placeholder={inputSearchPlaceholder || "Búsqueda general..."}
-                                        defaultValue={query}
                                     />
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p> { inputSearchTooltip || "Búsqueda general" }</p>
+                                <p> {inputSearchTooltip || "Búsqueda general"}</p>
                             </TooltipContent>
                         </Tooltip>
                     </div>
