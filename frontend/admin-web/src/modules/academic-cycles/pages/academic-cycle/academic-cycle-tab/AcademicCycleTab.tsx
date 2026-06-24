@@ -9,7 +9,6 @@ import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { Modal } from "@/shared/components/modal/Modal";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { labelOf, type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
@@ -22,6 +21,7 @@ import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academi
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
+import { labelOf, type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
@@ -41,10 +41,6 @@ export const AcademicCycleTab = () => {
     const [confirmationRequired, setConfirmationRequired] = useState<boolean>(false);
     const searchAcademicLevels = useSearchAcademicLevels();
     const searchEducationLevels = useSearchEducationLevels();
-
-    // Related entities hooks & stores
-    // const academicLevelSearchInputRef = useRef<HTMLInputElement>(null);
-    // const educationLevelSearchInputRef = useRef<HTMLInputElement>(null);
 
     // Use hook form configuration
     const { control, handleSubmit, formState: { errors }, setValue, watch, getValues } = useForm<Partial<AcademicCycleRequest>>({
@@ -86,18 +82,7 @@ export const AcademicCycleTab = () => {
         }
     }
 
-    const onError = () => {
-        // if (errors.academicLevelId && !academicLevel?.id) {
-        //     academicLevelSearchInputRef.current?.focus();
-        //     return;
-        // }
-        // if (errors.educationLevelId && !educationLevel?.id) {
-        //     educationLevelSearchInputRef.current?.focus();
-        //     return;
-        // }
-    }
-
-    const validate = async (academicCycleRequestLike: Partial<AcademicCycleRequest>) => {
+    const validateForm = async (academicCycleRequestLike: Partial<AcademicCycleRequest>) => {
         if (academicCycleRequestLike.status !== "upcoming" && !isLocked) {
             setConfirmationRequired(true);
             return;
@@ -105,30 +90,10 @@ export const AcademicCycleTab = () => {
         await onSubmit(academicCycleRequestLike);
     }
 
-    // useEffect(() => {
-    //     requestAnimationFrame(() => {
-    //         reset({
-    //             id: academicCycle?.id,
-    //             name: academicCycle?.name ?? "",
-    //             code: academicCycle?.code ?? "",
-    //             startDate: academicCycle?.startDate ?? "",
-    //             endDate: academicCycle?.endDate ?? "",
-    //             observations: academicCycle?.observations ?? "",
-    //             enrollmentOpen: academicCycle?.enrollmentOpen ?? undefined,
-    //             type: academicCycle?.type ?? undefined,
-    //             status: academicCycle?.status ?? "upcoming",
-    //             academicLevelId: academicCycle?.academicLevelId ?? "",
-    //             academicLevel: academicCycle?.academicLevel ?? undefined,
-    //             educationLevelId: academicCycle?.educationLevelId ?? "",
-    //             educationLevel: academicCycle?.educationLevel ?? undefined,
-    //         });
-    //     })
-    // }, [academicCycle]);
-
     return (
         <>
             {/* Academic cycle form */}
-            <form onSubmit={handleSubmit(validate, onError)}>
+            <form onSubmit={handleSubmit(validateForm)}>
 
                 {/* Main student information */}
                 <section className="flex flex-col gap-y-6 mt-2">
