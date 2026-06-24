@@ -1,36 +1,43 @@
 import { useState } from "react";
-import { Navigate } from "react-router";
 import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
-import { useAcademicCycleWalletTab } from "./hooks/useAcademicCycleWalletTab";
-import { AcademicCycleWalletForm } from "./components/AcademicCycleWalletForm";
-import { useAcademicCycleWalletTable } from "./hooks/useAcademicCycleWalletTable";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import type { AcademicCycleWallet } from "@/interfaces/entites/academic-cycle-wallet";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import { useAcademicCycleWalletTab } from "./hooks/useAcademicCycleWalletTab";
+import { useAcademicCycleWalletTable } from "./hooks/useAcademicCycleWalletTable";
+import { AcademicCycleWalletPanelForm } from "./components/AcademicCycleWalletPanelForm";
+import type { AcademicCycleWalletRequest } from "@/interfaces/requests/academic-cycle-wallet.request";
+import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 
 export const AcademicCycleWalletTab = () => {
     // Context hooks & stores configuration
     const { context, queries, mutations, deleteModal, loader } = useAcademicCycleWalletTab();
 
     // Componet hooks and stores
-    const [academicCycleWallet, setAcademicCycleWallet] = useState<Partial<AcademicCycleWallet | undefined>>({});
+    const [isOpenCreateUpdatePanelForm, setIsOpenCreateUpdatePanelForm] = useState<boolean>(false);
+    const [academicCycleWalletToEdit, setAcademicCycleWalletToEdit] = useState<Partial<AcademicCycleWalletResponse>>();
 
     // Table hook configuration
-    const { columns, properties, actions } = useAcademicCycleWalletTable(setAcademicCycleWallet, deleteModal.open);
+    const { columns, properties, actions } = useAcademicCycleWalletTable({
+        handleClickEdit: (item: AcademicCycleWalletResponse) => {
+            setAcademicCycleWalletToEdit(item);
+            setIsOpenCreateUpdatePanelForm(true);
+        },
+        handleClickDelete: deleteModal.open
+    });
 
     // Component functions
-    const handleClickConfirmDeleteWallet = async () => {
+    const handleClickConfirmDeleteAcademicCycleWallet = async () => {
         if (!deleteModal.record)
             return;
-        await mutations.wallet.delete.mutateAsync({ academicCycleId: context.academicCycleId!, academicCycleWalletId: deleteModal.record.id },
+        await mutations.wallet.delete.mutateAsync({ id: deleteModal.record.id, academicCycleId: context.academicCycleId! },
             {
                 onSuccess: () => {
                     toast.success("Concepto de pago eliminado correctamente", { position: "top-right" });
                     deleteModal.close();
-                    setAcademicCycleWallet({});
+                    setAcademicCycleWalletToEdit({});
                 },
                 onError: (error) => {
                     console.warn(error);
@@ -40,14 +47,18 @@ export const AcademicCycleWalletTab = () => {
         )
     }
 
-    const onSubmit = async (academicCycleWalletLike: Partial<AcademicCycleWallet>) => {
+    const onSubmit = async (academicCycleWalletRequestLike: Partial<AcademicCycleWalletRequest>) => {
         try {
             loader.show("Guardando");
-            await mutations.wallet.createUpdate.mutateAsync({ academicCycleWalletLike }, {
+            await mutations.wallet.createUpdate.mutateAsync({
+                id: academicCycleWalletToEdit?.id!,
+                academicCycleWalletRequestLike
+            }, {
                 onSuccess: () => {
                     toast.success("Concepto de pago agregado a la cartera del ciclo escolar correctamente", { position: "top-right" });
                     loader.hide();
-                    setAcademicCycleWallet({});
+                    setAcademicCycleWalletToEdit({});
+                    setIsOpenCreateUpdatePanelForm(false);
                 }
             });
         } catch (error) {
@@ -57,19 +68,8 @@ export const AcademicCycleWalletTab = () => {
         }
     }
 
-    if (queries.wallet.isError) {
+    if (queries.wallet.get.isError) {
         toast.error("No fue posible obtener información de la cartera del ciclo escolar", { position: "top-right" });
-        return <Navigate to="/academic-cycles" />;
-    }
-
-    if (queries.wallet.isLoading) {
-        return (
-            <>
-                <div className="w-full relative mx-auto h-full my-4">
-                    <CustomFullScreenLoading className="relative" title="Cargando cartera de ciclo escolar" subtitle="Por favor espere..." />
-                </div>
-            </>
-        );
     }
 
     return (
@@ -79,9 +79,21 @@ export const AcademicCycleWalletTab = () => {
                 <SectionTitle
                     title="LISTADO DE CONCEPTOS DE PAGO ASOCIADOS AL CICLO ESCOLAR"
                     description="El siguiente listado contiene la información de los conceptos de pago para este ciclo escolar." />
+                <TableRibbon
+                    className="mb-0"
+                    disabledAddButton={queries.wallet.get.isLoading || queries.wallet.get.isError}
+                    disabledSearchInput={queries.wallet.get.isLoading || queries.wallet.get.isError}
+                    enabledAdvancedFilters={false}
+                    enabledExport={false}
+                    inputSearchPlaceholder="Búsqueda general por concepto"
+                    inputSearchTooltip="Búsqueda general por concepto"
+                    handleClickAdd={() => {
+                        setAcademicCycleWalletToEdit({});
+                        setIsOpenCreateUpdatePanelForm(true);
+                    }} />
                 <Table
-                    data={queries.wallet.data}
-                    isLoading={queries.wallet.isLoading}
+                    data={queries.wallet.get.data}
+                    isLoading={queries.wallet.get.isLoading}
                     enablePagination={false}
                     columns={columns}
                     properties={properties}
@@ -91,10 +103,13 @@ export const AcademicCycleWalletTab = () => {
 
             {/* Create & update payment concept form */}
             {
-                !context.isLocked && (
-                    <AcademicCycleWalletForm
-                        academicCycleWallet={academicCycleWallet}
-                        setAcademicCycleWallet={setAcademicCycleWallet}
+                (!context.isLocked && isOpenCreateUpdatePanelForm) && (
+                    <AcademicCycleWalletPanelForm
+                        academicCycleWalletResponse={academicCycleWalletToEdit}
+                        handleClickClose={() => {
+                            setAcademicCycleWalletToEdit({});
+                            setIsOpenCreateUpdatePanelForm(false);
+                        }}
                         onSubmit={onSubmit}
                     />
                 )
@@ -115,7 +130,7 @@ export const AcademicCycleWalletTab = () => {
                         }}
                         confirmButton={{
                             label: "Sí, eliminar",
-                            onClick: handleClickConfirmDeleteWallet
+                            onClick: handleClickConfirmDeleteAcademicCycleWallet
                         }}
                     />
                 )

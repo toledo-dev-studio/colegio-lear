@@ -2,11 +2,12 @@ import { useOutletContext } from "react-router";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
-import type { AcademicCycleWallet } from "@/interfaces/entites/academic-cycle-wallet";
-import { useGetWalletForAcademicCycle } from "@/modules/academic-cycles/hooks/wallet/useGetWalletForAcademicCycle";
+import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { useDeleteWalletByIdForAcademicCycle } from "@/modules/academic-cycles/hooks/wallet/useDeleteWalletByIdForAcademicCycle";
-import { useCreateUpdateWalletForAcademicCycle } from "@/modules/academic-cycles/hooks/wallet/useCreateUpdateWalletForAcademicCycle";
+import { useGetAcademicCycleWallet } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useGetWalletForAcademicCycle";
+import { useDeleteAcademicCycleWalletById } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useDeleteWalletByIdForAcademicCycle";
+import { useCreateUpdateAcademicCycleWallet } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useCreateUpdateWalletForAcademicCycle";
+
 
 export const useAcademicCycleWalletTab = () => {
     // Get context from layout
@@ -16,14 +17,14 @@ export const useAcademicCycleWalletTab = () => {
     const { showLoading, hideLoading } = useLoaderStore();
 
     // Components hooks & stores
-    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleWallet>();
+    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleWalletResponse>();
 
     // Queries
-    const walletForAcademicCycleQuery = useGetWalletForAcademicCycle(academicCycleId!);
+    const getAcademicCycleWalletQuery = useGetAcademicCycleWallet({ academicCycleId: academicCycleId! });
 
     // Mutations
-    const deleteWalletByIdForAcademicCycle = useDeleteWalletByIdForAcademicCycle();
-    const createUpdateWalletForAcademicCycle = useCreateUpdateWalletForAcademicCycle();
+    const deleteAcademicCycleWalletMutation = useDeleteAcademicCycleWalletById();
+    const createUpdateAcademicCycleWalletMutation = useCreateUpdateAcademicCycleWallet();
 
     return {
         context: {
@@ -33,16 +34,13 @@ export const useAcademicCycleWalletTab = () => {
         },
         queries: {
             wallet: {
-                data: walletForAcademicCycleQuery.data ?? [],
-                isError: walletForAcademicCycleQuery.isError,
-                isLoading: walletForAcademicCycleQuery.isLoading,
-                isFetching: walletForAcademicCycleQuery.isFetching
+                get: getAcademicCycleWalletQuery
             }
         },
         mutations: {
             wallet: {
-                delete: deleteWalletByIdForAcademicCycle,
-                createUpdate: createUpdateWalletForAcademicCycle
+                delete: deleteAcademicCycleWalletMutation,
+                createUpdate: createUpdateAcademicCycleWalletMutation
             },
         },
         loader: {

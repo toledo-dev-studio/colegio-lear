@@ -3,6 +3,7 @@ import type { TableProperty } from "./interfaces/table-property";
 import type { TableAction } from "./interfaces/table-action";
 import { CustomPagination } from "../CustomPagination";
 import { getNestedValue } from "@/lib/extensions/objects";
+import { Loader } from "../loader/Loader";
 
 interface Props<T extends Record<string, any>> {
     data: T[];
@@ -40,7 +41,7 @@ export const Table = <T extends Record<string, any>>({ data = [], isLoading, ena
                                 isLoading && (
                                     <tr>
                                         <td colSpan={columns.length} className="no-content-row">
-                                            Cargando información, por favor espere...
+                                            <Loader title="Cargando información" subtitle="por favor espere..." fullScreen={false} size="sm" />
                                         </td>
                                     </tr>
                                 )
@@ -100,7 +101,7 @@ export const Table = <T extends Record<string, any>>({ data = [], isLoading, ena
                         !isLoading && data.length > 0 && (
                             <div className="flex flex-col items-center justify-center md:flex-row md:justify-between">
                                 <p className="text-sm text-muted-foreground mt-6">Viendo {data.length} registro(s)</p>
-                                <p className="text-sm text-muted-foreground mt-6">Total de páginas: {totalPages}</p>
+                                { enablePagination && <p className="text-sm text-muted-foreground mt-6">Total de páginas: {totalPages}</p> }
                             </div>
                         )
                     }

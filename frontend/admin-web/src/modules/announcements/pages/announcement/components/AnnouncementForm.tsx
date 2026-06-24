@@ -17,6 +17,7 @@ import type { AttachmentResponse } from "@/interfaces/responses/attachment.respo
 import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { CustomTipTapEditor } from "@/shared/components/custom-text-editor/CustomTipTapEditor";
+import { Switch } from "@/shared/ui/switch";
 
 interface Props {
     isNew: boolean;
@@ -96,6 +97,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
                         <div className="control-container">
                             <label className="label">
                                 Fecha de publicación <span className="required">*</span>:
@@ -121,6 +123,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                                 )
                             }
                         </div>
+
                         <div className="control-container">
                             <label className="label">
                                 Fecha de vencimiento <span className="required">*</span>:
@@ -147,10 +150,28 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                             }
                         </div>
                     </div>
+
                     <div className="control-container">
-                        <label className="label">
-                            Descripción de la campaña:
-                        </label>
+                        <label className="label">¿Registro activo?:</label>
+                        <div className="flex items-center justify-center">
+                            <Controller
+                                name="isActive"
+                                control={control}
+                                render={({ field }) => (
+                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">La campaña / comunicado se encuentra activa o inactiva.</p>
+                                        </div>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </label>
+                                )}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="control-container">
+                        <label className="label">Descripción de la campaña:</label>
                         <Controller
                             name="description"
                             control={control}
@@ -162,6 +183,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                             )}
                         />
                     </div>
+
                 </div>
 
                 {/* Content and Attachments for new announcements */}

@@ -1,17 +1,15 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { AcademicCycleWallet } from "@/interfaces/entites/academic-cycle-wallet";
+import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
 
 interface Options {
+    query?: string;
     academicCycleId: string;
 }
 
-export const getWalletForAcademicCycleActionAsync = async ({ academicCycleId }: Options): Promise<AcademicCycleWallet[]> => {
+export const getAcademicCycleWalletActionAsync = async ({ query, academicCycleId }: Options): Promise<AcademicCycleWalletResponse[]> => {
     await sleep();
-
-    if (!academicCycleId)
-        throw new Error("El identificador del registro es requerido");
 
     let endpoint = `/academic-cycles/${academicCycleId}/wallet`;
 
@@ -21,7 +19,11 @@ export const getWalletForAcademicCycleActionAsync = async ({ academicCycleId }: 
     // REMOVE
     endpoint = "http://localhost/api/academic-cycles/academic-cycles-wallet/academic-cycles-wallet.json";
 
-    const { data } = await api.get<AcademicCycleWallet[]>(endpoint);
+    const { data } = await api.get<AcademicCycleWalletResponse[]>(endpoint, {
+        params: {
+            q: query,
+        }
+    });
 
     return data;
 }

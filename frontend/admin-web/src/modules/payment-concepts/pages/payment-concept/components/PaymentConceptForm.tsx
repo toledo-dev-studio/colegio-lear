@@ -88,7 +88,7 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
                                             if (["e", "E", "+", "-", ".", ","].includes(e.key))
                                                 e.preventDefault();
                                         }}
-                                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                                        onChange={(e) => e.target.value ? field.onChange(e.target.valueAsNumber) : field.onChange("")}
                                     />
                                 </div>
                             )}

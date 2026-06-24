@@ -72,8 +72,8 @@ export const PaymentConceptsAdvancedFilters = ({ open, title = "Filtros avanzado
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
-                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground !px-0">
-                            <X className="!w-5 !h-5 text-muted-foreground" />
+                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground px-0!">
+                            <X className="w-5! h-5! text-muted-foreground" />
                         </Button>
                     </div>
 
@@ -119,7 +119,7 @@ export const PaymentConceptsAdvancedFilters = ({ open, title = "Filtros avanzado
                                                     if (["e", "E", "+", "-", ".", ","].includes(e.key))
                                                         e.preventDefault();
                                                 }}
-                                                onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                                                onChange={(e) => e.target.value ? field.onChange(e.target.valueAsNumber) : field.onChange("")}
                                             />
                                         </div>
                                     )}
