@@ -1,22 +1,17 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { AcademicCycle } from "@/interfaces/entites/academic-cycle";
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/types/KeyValuePair";
+import type { AcademicCycleFilter } from "@/interfaces/filters/academic-cycle.filter";
+import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 
-interface Options {
+interface Options extends AcademicCycleFilter {
     query?: string;
-    name?: string;
-    code?: string;
-    startDate?: string;
-    endDate?: string;
-    type?: AcademicPeriodTypeKey;
-    enrollmentOpen?: boolean;
-    status?: AcademicCycleStatusKey;
 }
 
-export const getAcademicCyclesActionAsync = async ({ query, name, code, startDate, endDate, type, enrollmentOpen, status }: Options): Promise<AcademicCycle[]> => {
+export const getAcademicCyclesActionAsync = async (options: Options): Promise<AcademicCycleResponse[]> => {
     await sleep();
+
+    const { query, name, code, startDate, endDate, periodType, status, enrollmentOpen, academicLevelId, educationLevelId } = options;
 
     let endpoint = "/academic-cycles";
 
@@ -26,16 +21,18 @@ export const getAcademicCyclesActionAsync = async ({ query, name, code, startDat
     // REMOVE
     endpoint = "http://localhost/api/academic-cycles/academic-cycles/academic-cycles.json";
 
-    const { data } = await api.get<AcademicCycle[]>(endpoint, {
+    const { data } = await api.get<AcademicCycleResponse[]>(endpoint, {
         params: {
             q: query,
-            name,
-            code,
-            startDate,
-            endDate,
-            type,
-            enrollmentOpen,
-            status,
+            name, 
+            code, 
+            startDate, 
+            endDate, 
+            periodType, 
+            status, 
+            enrollmentOpen, 
+            academicLevelId, 
+            educationLevelId
         }
     });
 

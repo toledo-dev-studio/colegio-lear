@@ -69,6 +69,7 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                             <Controller
                                 control={control}
                                 name="jobTitleType"
+                                rules={{ required: true }}
                                 render={({ field }) => (
                                     <Select
                                         value={field.value ?? ""}

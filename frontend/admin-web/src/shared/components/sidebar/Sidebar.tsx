@@ -1,10 +1,10 @@
 import { Link, useLocation } from "react-router";
 import { LogOut } from "lucide-react";
 
-import { CustomLogo } from "./CustomLogo";
 import { cn } from "@/lib/extensions/utils";
 import { NAVBAR } from "@/lib/constants/navbar.constant";
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
+import { ColegioLearLogo } from "../colegio-lear-logo/ColegioLearLogo";
 import { filterNavbarByPermissions } from "@/lib/helpers/navbar.helper";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   logout: () => void;
 }
 
-export const CustomSidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) => {
+export const Sidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) => {
 
   const { pathname } = useLocation();
   const { permissions } = useAuthStore();
@@ -36,7 +36,7 @@ export const CustomSidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) =
             `${isOpenSidebar ? "translate-x-0" : "-translate-x-full"}`
           )}>
 
-        <CustomLogo title="COLEGIO LEAR" subtitle="ADMIN SUITE" />
+        <ColegioLearLogo title="COLEGIO LEAR" subtitle="ADMIN SUITE" />
 
         <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-6">
           {

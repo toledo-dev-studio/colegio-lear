@@ -128,6 +128,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
                                                 setValue("educationLevel", undefined);
                                                 setValue("educationLevelId", undefined);
                                                 searchAcademicLevelsMutation.clearSearchResult();
+                                                searchEducationLevelsMutation.clearSearchResult();
                                             }}
                                             onOptionChange={async (option: AcademicLevelResponse) => {
                                                 setValue("academicLevel", option);

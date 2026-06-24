@@ -1,4 +1,4 @@
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey, KeyValuePair } from "@/types/KeyValuePair";
+import type { AcademicCycleStatusKey, AcademicPeriodTypeKey, KeyValuePair } from "@/lib/key-value-pairs/key-value-pair";
 import type { AcademicLevel } from "./academic-level";
 import type { EducationLevel } from "./education-level";
 

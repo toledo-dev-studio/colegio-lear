@@ -5,16 +5,17 @@ import { X } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import { isValidBooleanString, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
-import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES, type AcademicCycle } from "@/interfaces/entites/academic-cycle";
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/types/KeyValuePair";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { DatePicker } from "@/shared/components/date-picker/DatePicker";
+import { SearchInput } from "@/shared/components/search-input/SearchInput";
+import type { AcademicCycleFilter } from "@/interfaces/filters/academic-cycle.filter";
+import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
+import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
+import { isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
 import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { SearchInput } from "@/shared/components/search-input/SearchInput";
-import type { EducationLevel } from "@/interfaces/entites/education-level";
+import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { labelOf, type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 interface Props {
     open: boolean;
@@ -23,46 +24,37 @@ interface Props {
 }
 
 export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
-
-    // Main hooks
+    // Component hooks & stores
     const [searchParams, setSearchParams] = useSearchParams();
+    const searchAcademicLevels = useSearchAcademicLevels();
+    const searchEducationLevels = useSearchEducationLevels();
 
-    // Form config
-    const {
-        control,
-        register,
-        handleSubmit,
-        watch,
-        setValue,
-        reset,
-    } = useForm<Partial<AcademicCycle>>({
-        defaultValues: {
-            name: searchParams.get("name") || undefined,
-            code: searchParams.get("code") || undefined,
-            startDate: searchParams.get("start-date") || undefined,
-            endDate: searchParams.get("end-date") || undefined,
-            academicLevelId: searchParams.get('academic-level-id') ?? undefined,
-            academicLevel: {
-                name: searchParams.get('academic-level-name') ?? undefined,
-            },
-            educationLevelId: searchParams.get('education-level-id') ?? undefined,
-            educationLevel: {
-                name: searchParams.get('education-level-name') ?? undefined,
-            },
-            type: searchParams.get("type") as AcademicPeriodTypeKey || undefined,
-            enrollmentOpen: isValidBooleanString(searchParams.get("enrollment-open")) ? stringToBooleanWithDefault(searchParams.get("enrollment-open")) : undefined,
-            status: searchParams.get("status") as AcademicCycleStatusKey || undefined,
-        }
+    const academicCycleFilterLike: Partial<AcademicCycleFilter> = {
+        name: isValidValueWithDefault(searchParams.get("name")?.trim(), ""),
+        code: isValidValueWithDefault(searchParams.get("code")?.trim(), ""),
+        startDate: isValidValueWithDefault(searchParams.get("start-date")?.trim(), ""),
+        endDate: isValidValueWithDefault(searchParams.get("end-date")?.trim(), ""),
+        periodType: isValidValueWithDefault(searchParams.get("period-type")?.trim() as AcademicPeriodTypeKey, undefined),
+        status: isValidValueWithDefault(searchParams.get("status")?.trim() as AcademicCycleStatusKey, undefined),
+        enrollmentOpen: stringToBooleanWithDefault(searchParams.get("enrollment-open")),
+        academicLevelId: isValidValueWithDefault(searchParams.get("academic-level-id")?.trim(), ""),
+        educationLevelId: isValidValueWithDefault(searchParams.get("education-level-id")?.trim(), ""),
+        academicLevel: {
+            name: isValidValueWithDefault(searchParams.get("academic-level-name")?.trim(), ""),
+        },
+        educationLevel: {
+            name: isValidValueWithDefault(searchParams.get("education-level-name")?.trim(), "")
+        },
+    };
+
+    // Use react hook form configuration
+    const { control, handleSubmit, setValue, reset, watch } = useForm<Partial<AcademicCycleFilter>>({
+        defaultValues: academicCycleFilterLike
     });
-
-    const selectedAcademicLevel = watch("academicLevelId");
-    const selectedEducationLevel = watch("educationLevelId");
-
-    // Academic levels assign configuration
-    const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevels();
-
-    // Education levels assign configuration
-    const searchEducationLevelsForAcademicLevel = useSearchEducationLevels();
+    const academicLevel = watch("academicLevel");
+    const academicLevelId = watch("academicLevelId");
+    const educationLevel = watch("educationLevel");
+    const educationLevelId = watch("educationLevelId");
 
     if (!open)
         return null;
@@ -76,23 +68,15 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
         searchParams.delete('academic-level-name');
         searchParams.delete('education-level-id');
         searchParams.delete('education-level-name');
-        searchParams.delete("type");
+        searchParams.delete("period-type");
         searchParams.delete("enrollment-open");
         searchParams.delete("status");
-        reset({
-            name: undefined,
-            code: undefined,
-            startDate: undefined,
-            endDate: undefined,
-            type: undefined,
-            enrollmentOpen: false,
-            status: undefined,
-        });
+        reset({});
         setSearchParams(searchParams);
         handleClickClose();
     }
 
-    const handleSubmitForm = (filter: Partial<AcademicCycle>) => {
+    const handleSubmitForm = (filter: Partial<AcademicCycleFilter>) => {
         searchParams.delete("query");
         searchParams.set("enrollment-open", `${filter.enrollmentOpen}`);
         filter.name ? searchParams.set("name", filter.name) : searchParams.delete("name");
@@ -103,7 +87,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
         filter.academicLevel?.name ? searchParams.set('academic-level-name', filter.academicLevel.name) : searchParams.delete('academic-level-name');
         filter.educationLevelId ? searchParams.set('education-level-id', filter.educationLevelId) : searchParams.delete('education-level-id');
         filter.educationLevel?.name ? searchParams.set('education-level-name', filter.educationLevel?.name) : searchParams.delete('education-level-name');
-        filter.type ? searchParams.set("type", filter.type) : searchParams.delete("type");
+        filter.periodType ? searchParams.set("period-type", filter.periodType) : searchParams.delete("period-type");
         filter.status ? searchParams.set("status", `${filter.status}`) : searchParams.delete("status");
         setSearchParams(searchParams);
         handleClickClose();
@@ -112,8 +96,11 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
     return (
         <>
             <form onSubmit={handleSubmit(handleSubmitForm)} className="fixed inset-0 z-50 flex justify-end" data-testid="filter-drawer">
+
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleClickClose} />
+
                 <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
+
                     <div className="h-22 flex items-center justify-between px-10 border-b border-border">
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
@@ -122,39 +109,49 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                             <X className="!w-5 !h-5 text-muted-foreground" />
                         </Button>
                     </div>
-                    <div className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
 
-                        {/* Contenido de filtrados */}
-                        <div className="flex flex-col gap-8">
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-2 block">Nombre del ciclo:</label>
-                                <div className="relative">
-                                    <Input
-                                        type="text"
-                                        {...register("name")}
-                                        placeholder="Nombre del ciclo..."
-                                        className="pill-input w-full pl-8"
-                                    />
-                                </div>
+                    <section className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
+
+                        <section className="flex flex-col gap-8">
+
+                            <div className="control-container">
+                                <label className="label">Nombre del ciclo escolar:</label>
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            type="text"
+                                            placeholder="Nombre del ciclo escolar..."
+                                        />
+                                    )}
+                                />
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-2 block">Código del ciclo:</label>
-                                <div className="relative">
-                                    <Input
-                                        type="text"
-                                        {...register("code")}
-                                        placeholder="Código del ciclo..."
-                                        className="pill-input w-full pl-8"
-                                    />
-                                </div>
+
+                            <div className="control-container">
+                                <label className="label">Código del ciclo escolar:</label>
+                                <Controller
+                                    name="code"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            type="text"
+                                            placeholder="Código del ciclo escolar..."
+                                        />
+                                    )}
+                                />
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-2 block">Entre fecha de inicio:</label>
+
+                            <div className="control-container">
+                                <label className="label">Entre fecha de inicio:</label>
                                 <Controller
                                     name="startDate"
                                     control={control}
                                     render={({ field }) => (
-                                        <CustomDatePicker
+                                        <DatePicker
+                                            {...field}
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
@@ -162,13 +159,14 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                 />
                                 <p className="control-info">Filtrado a partir de fecha de inicio seleccionada</p>
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-2 block">Hasta fecha de termino:</label>
+
+                            <div className="control-container">
+                                <label className="label">Hasta fecha de termino:</label>
                                 <Controller
                                     name="endDate"
                                     control={control}
                                     render={({ field }) => (
-                                        <CustomDatePicker
+                                        <DatePicker
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
@@ -176,73 +174,85 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                 />
                                 <p className="control-info">Filtrado hasta fecha de termino seleccionada</p>
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-2 block">Nivel académico:</label>
-                                <SearchInput
-                                    {...register("academicLevelId")}
-                                    defaultValue={watch("academicLevel.name")}
-                                    selected={!!selectedAcademicLevel}
-                                    placeholder="Busqueda de nivel académico"
-                                    options={searchAcademicLevelsForSchoolSubject.academicLevels ?? []}
-                                    isSearching={searchAcademicLevelsForSchoolSubject.isPending}
-                                    onClearSelection={() => {
-                                        setValue("academicLevelId", undefined);
-                                        setValue("academicLevel.name", undefined);
-                                        setValue("educationLevelId", undefined);
-                                        setValue("educationLevel.name", undefined);
-                                    }}
-                                    onOptionChange={async (option: AcademicLevel) => {
-                                        setValue("academicLevelId", option.id);
-                                        setValue("academicLevel.name", option.name);
-                                        searchAcademicLevelsForSchoolSubject.clearSearchResult();
-                                    }}
-                                    onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync({ query })}
+
+                            <div className="control-container">
+                                <label className="label">Nivel académico:</label>
+                                <Controller
+                                    name="academicLevelId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <SearchInput
+                                            {...field}
+                                            defaultValue={academicLevel?.name}
+                                            selected={!!academicLevelId}
+                                            placeholder="Busqueda de nivel académico"
+                                            options={searchAcademicLevels.academicLevels}
+                                            isSearching={searchAcademicLevels.isPending}
+                                            onClearSelection={() => {
+                                                setValue("academicLevel", undefined);
+                                                setValue("academicLevelId", undefined);
+                                                setValue("educationLevel", undefined);
+                                                setValue("educationLevelId", undefined);
+                                                searchAcademicLevels.clearSearchResult();
+                                            }}
+                                            onOptionChange={async (option: AcademicLevelResponse) => {
+                                                setValue("academicLevel", option);
+                                                setValue("academicLevelId", option.id);
+                                                searchAcademicLevels.clearSearchResult();
+                                            }}
+                                            onSearch={async (query) => searchAcademicLevels.searchAsync({ query, isActive: true })}
+                                        />
+                                    )}
                                 />
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-2 block">Nivel educativo:</label>
-                                <SearchInput
-                                    {...register("educationLevelId")}
-                                    defaultValue={watch("educationLevel.name")}
-                                    selected={!!selectedEducationLevel}
-                                    disabled={!selectedAcademicLevel}
-                                    placeholder="Busqueda de nivel educativo"
-                                    options={searchEducationLevelsForAcademicLevel.educationLevels ?? []}
-                                    isSearching={searchEducationLevelsForAcademicLevel.isPending}
-                                    onClearSelection={() => {
-                                        setValue("educationLevelId", undefined);
-                                        setValue("educationLevel.name", undefined);
-                                    }}
-                                    onOptionChange={async (option: EducationLevel) => {
-                                        setValue("educationLevelId", option.id);
-                                        setValue("educationLevel.name", option.name);
-                                        searchEducationLevelsForAcademicLevel.clearSearchResult();
-                                    }}
-                                    onSearch={async (query) => searchEducationLevelsForAcademicLevel.searchAsync({
-                                        academicLevelId: selectedAcademicLevel!,
-                                        query
-                                    })}
+
+                            <div className="control-container">
+                                <label className="label">Nivel educativo:</label>
+                                <Controller
+                                    name="educationLevelId"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <SearchInput
+                                            {...field}
+                                            defaultValue={educationLevel?.name}
+                                            selected={!!educationLevelId}
+                                            disabled={!academicLevelId}
+                                            placeholder="Busqueda de nivel educativo"
+                                            options={searchEducationLevels.educationLevels}
+                                            isSearching={searchEducationLevels.isPending}
+                                            onClearSelection={() => {
+                                                setValue("educationLevel", undefined);
+                                                setValue("educationLevelId", undefined);
+                                                searchEducationLevels.clearSearchResult();
+                                            }}
+                                            onOptionChange={async (option: EducationLevelResponse) => {
+                                                setValue("educationLevel", option);
+                                                setValue("educationLevelId", option.id);
+                                                searchEducationLevels.clearSearchResult();
+                                            }}
+                                            onSearch={async (query) => searchEducationLevels.searchAsync({ academicLevelId, query, isActive: true })}
+                                        />
+                                    )}
                                 />
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-3 block">
-                                    Tipo de periodo del ciclo escolar:
-                                </label>
+
+                            <div className="control-container">
+                                <label className="label">Tipo de periodo escolar:</label>
                                 <Controller
                                     control={control}
-                                    name={"type"}
+                                    name="periodType"
                                     render={({ field }) => (
                                         <Select
                                             value={field.value ?? ""}
                                             onValueChange={field.onChange}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecciona una opción">
-                                                    {!field.value ? "Selecciona una opción" : ACADEMIC_CYCLE_PERIOD_TYPES.find(item => item.key === field.value)?.label}
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Selecciona un puesto de trabajo">
+                                                    {labelOf(ACADEMIC_CYCLE_PERIOD_TYPES, field.value) || "Selecciona una opción"}
                                                 </SelectValue>
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Tipo de periodo</SelectLabel>
+                                                    <SelectLabel>Tipo de periodo escolar</SelectLabel>
                                                     {ACADEMIC_CYCLE_PERIOD_TYPES.map((item) => (
                                                         <SelectItem key={item.key} value={item.key} label={item.label}>
                                                             {item.label}
@@ -254,20 +264,19 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                     )}
                                 />
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-3 block">
-                                    Estado del ciclo escolar:
-                                </label>
+
+                            <div className="control-container">
+                                <label className="label">Estado del ciclo escolar:</label>
                                 <Controller
                                     control={control}
-                                    name={"status"}
+                                    name="status"
                                     render={({ field }) => (
                                         <Select
                                             value={field.value ?? ""}
                                             onValueChange={field.onChange}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecciona una opción">
-                                                    {!field.value ? "Selecciona una opción" : ACADEMIC_CYCLE_STATUSES.find(item => item.key === field.value)?.label}
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Selecciona un puesto de trabajo">
+                                                    {labelOf(ACADEMIC_CYCLE_STATUSES, field.value) || "Selecciona una opción"}
                                                 </SelectValue>
                                             </SelectTrigger>
                                             <SelectContent>
@@ -284,10 +293,9 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                     )}
                                 />
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-3 block">
-                                    ¿Inscripciones abiertas?:
-                                </label>
+
+                            <div className="control-container">
+                                <label className="label">¿Inscripciones abiertas?:</label>
                                 <div className="flex items-center justify-center">
                                     <Controller
                                         name="enrollmentOpen"
@@ -305,25 +313,22 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                     />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
-                        <Button
-                            type="button"
-                            variant={"ghost"}
-                            data-testid="filter-clear-button"
-                            className="px-10"
-                            onClick={handleClickClearFilters}>
+
+                        </section>
+
+                    </section>
+
+                    <section className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
+                        <Button type="button" variant={"ghost"} onClick={handleClickClearFilters}>
                             Limpiar filtros
                         </Button>
-                        <Button
-                            type="submit"
-                            data-testid="filter-apply-button"
-                            className="pill-btn-primary px-10">
+                        <Button type="submit" variant={"default"}>
                             Aplicar filtros
                         </Button>
-                    </div>
+                    </section>
+
                 </aside>
+
             </form>
         </>
     );

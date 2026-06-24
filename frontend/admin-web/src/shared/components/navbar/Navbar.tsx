@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Search, Sun, Bell, Menu, ChevronDown, User, LogOut, Moon, UserIcon } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "@/shared/context/ThemeContext";
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
 import { userStoreFullName, userStoreImage } from "@/modules/auth/stores/auth.store.selectors";
 
@@ -12,7 +12,7 @@ interface Props {
     logout: () => void
 }
 
-export const CustomNavbar = ({ toggleSidebar, logout }: Props) => {
+export const Navbar = ({ toggleSidebar, logout }: Props) => {
     const navigate = useNavigate();
 
     const loggedInUserFullName = useAuthStore(userStoreFullName);

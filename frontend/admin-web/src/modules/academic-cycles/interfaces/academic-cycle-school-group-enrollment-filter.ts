@@ -1,4 +1,4 @@
-import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
+import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
 
 /**
  * Represents the filter interface for for academic cycle school group enrollments.

@@ -1,28 +1,25 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { AcademicCycle } from "@/interfaces/entites/academic-cycle";
+import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 
-export const getAcademicCycleByIdActionAsync = async (id?: string): Promise<AcademicCycle> => {
+interface Options {
+    id: string;
+}
+
+export const getAcademicCycleByIdActionAsync = async ({ id }: Options): Promise<AcademicCycleResponse> => {
     await sleep();
-
-    if (!id)
-        throw new Error("El identificador del registro es requerido");
-
-    if (id === "new") {
-        return { id: undefined } as unknown as AcademicCycle;
-    }
 
     // REMOVE
     if (VITE_ENVIRONMENT === "development") {
-        const { data } = await api.get<AcademicCycle[]>("http://localhost/api/academic-cycles/academic-cycles/academic-cycles.json");
+        const { data } = await api.get<AcademicCycleResponse[]>("http://localhost/api/academic-cycles/academic-cycles/academic-cycles.json");
         const record = data.find(item => item.id === id);
         if (!record)
             throw new Error("No se encontró el registro solicitado");
         return record;
     }
 
-    const { data } = await api.get<AcademicCycle>(`/academic-cycles/${id}`);
+    const { data } = await api.get<AcademicCycleResponse>(`/academic-cycles/${id}`);
 
     return data;
 }

@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "@/lib/queries-key/academic-levels-queries-key";
 import { getPagedAcademicLevelsActionAsync } from "../../actions/academic-levels/get-paged-academic-levels.action";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
@@ -26,6 +27,7 @@ export const useGetPagedAcademicLevels = () => {
             name,
             isActive,
         }),
+        staleTime: FIVE_MINUTES_STALE_TIME
     });
 
     return {

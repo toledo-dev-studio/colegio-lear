@@ -1,4 +1,4 @@
-import type { AllergySeverityKey, KeyValuePair } from "@/types/KeyValuePair";
+import type { AllergySeverityKey, KeyValuePair } from "@/lib/key-value-pairs/key-value-pair";
 
 /**
  * ALLERGY_SEVERITIES defines the possible severity levels for allergies, which can be used to categorize the severity of a student's allergy. 

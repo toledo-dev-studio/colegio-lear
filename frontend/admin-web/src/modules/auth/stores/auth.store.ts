@@ -4,7 +4,7 @@ import { loginActionAsync } from "../actions/login.action";
 import { logoutActionAsync } from "../actions/logout.action";
 import type { AuthCredentials } from "../interfaces/auth-credentials";
 import { meActionAsync } from "../actions/me.action";
-import type { ModuleKeys } from "@/interfaces/components/modules";
+import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import type { SecurityRolePermission } from "@/interfaces/entites/security-role-permission";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
@@ -20,7 +20,7 @@ export type AuthState = {
     // Actions
     setUser: (user: EmployeeResponse) => void,
     clearSession: () => void,
-    checkPermission: (moduleKey: ModuleKeys, permission: "can-read" | "can-write" | "can-delete") => boolean,
+    checkPermission: (moduleKey: ModuleKey, permission: "can-read" | "can-write" | "can-delete") => boolean,
     checkAuthStatus: () => Promise<boolean>,
     login: (credentials: AuthCredentials) => Promise<boolean>,
     logout: () => Promise<void>,
@@ -42,7 +42,7 @@ export const useAuthStore = create<AuthState>()((set, get) => (
                 permissions: [],
             });
         },
-        checkPermission: (moduleKey: ModuleKeys, permission: "can-read" | "can-write" | "can-delete") => {
+        checkPermission: (moduleKey: ModuleKey, permission: "can-read" | "can-write" | "can-delete") => {
             const user = get().user;
             console.log(moduleKey, permission, user);
             return true;

@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
-import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
+import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cycle-school-group";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";

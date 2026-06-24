@@ -3,7 +3,7 @@ import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import type { AcademicCycleSchoolGroupEnrollment } from "@/interfaces/entites/academic-cycle-school-group-enrollment";
-import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
+import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
 
 interface Options {
     query?: string;

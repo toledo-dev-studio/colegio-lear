@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 
 
-import { type DayOfWeekKey } from "@/types/KeyValuePair";
+import { type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
 import type { Employee } from "@/interfaces/entites/employee";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { DAY_OF_WEEKS, type AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";

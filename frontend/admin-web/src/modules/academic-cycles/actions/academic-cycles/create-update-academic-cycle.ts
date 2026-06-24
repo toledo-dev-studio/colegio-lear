@@ -1,27 +1,32 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import type { AcademicCycle } from "@/interfaces/entites/academic-cycle";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { AcademicCycleRequest } from "@/interfaces/requests/academic-cycle.request";
+import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 
-export const createUpdateAcademicCycleActionAsync = async (academicCycleLike: Partial<AcademicCycle>): Promise<AcademicCycle> => {
+interface Options {
+    id: string;
+    academicCycleRequestLike: Partial<AcademicCycleRequest>;
+}
+
+export const createUpdateAcademicCycleActionAsync = async ({ id, academicCycleRequestLike }: Options): Promise<AcademicCycleResponse> => {
     await sleep();
 
-    const { id } = academicCycleLike;
-    const isCreating = id === undefined;
+    const isCreating = id === "new";
 
     // REMOVE
     if (VITE_ENVIRONMENT === "development") {
-        academicCycleLike.id = isCreating ? generateTemporalId() : id;
-        return academicCycleLike as AcademicCycle;
+        return {
+            ...academicCycleRequestLike,
+            id: isCreating ? generateTemporalId() : id
+        } as AcademicCycleResponse;
     }
 
-    const { data } = await api<AcademicCycle>({
+    const { data } = await api<AcademicCycleResponse>({
         url: isCreating ? "/academic-cycles" : `/academic-cycles/${id}`,
-        method: isCreating ? 'POST' : 'PATCH',
-        data: {
-            ...academicCycleLike,
-        }
+        method: isCreating ? "POST" : "PATCH",
+        data: academicCycleRequestLike
     });
 
     return {

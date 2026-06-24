@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 import { getJobTitleByIdActionAsync } from "../actions/get-job-title-by-id.action";
 import { GET_JOB_TITLE_QUERY_KEY } from "@/lib/queries-key/job-titles-queries-key";
@@ -18,6 +19,6 @@ export const useGetByIdJobTitle = ({ id }: Options) => {
             return getJobTitleByIdActionAsync({ id });
         },
         retry: false,
-        staleTime: 0,
+        staleTime: FIVE_MINUTES_STALE_TIME,
     });
 }

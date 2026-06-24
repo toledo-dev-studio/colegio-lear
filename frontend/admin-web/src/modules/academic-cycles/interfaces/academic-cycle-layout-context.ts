@@ -1,4 +1,4 @@
-import type { AcademicCycle } from "@/interfaces/entites/academic-cycle";
+import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 
 /**
  * Interface to define context for single academic cycle record used in AcademicCycleLayout and his routes tabs.
@@ -19,7 +19,7 @@ export interface AcademicCycleLayoutContext {
     /**
      * Academic cycle information or undefined if is new record
      */
-    academicCycle?: AcademicCycle;
+    academicCycle?: AcademicCycleResponse;
     /**
      * Academic cycle unique identifier or undefined if is a new record
      */

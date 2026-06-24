@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { getPagedPaymentConceptsActionAsync } from "../actions/get-paged-payment-concepts.action";
 import { GET_PAGED_PAYMENT_CONCEPTS_QUERY_KEY } from "@/lib/queries-key/payment-concepts-queries-key";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
@@ -30,6 +31,7 @@ export const useGetPagedPaymentConcepts = () => {
             allowForgiveness,
             isActive,
         }),
+        staleTime: FIVE_MINUTES_STALE_TIME
     });
 
     return {

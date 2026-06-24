@@ -67,10 +67,9 @@ export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
                         data-testid="login-password-input"
                         type="text"
                         ref={inputRef}
-                        defaultValue={defaultValue}
                         placeholder={placeholder}
                         disabled={disabled || selected || isSearching}
-                        value={query}
+                        defaultValue={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(event) => {
                             setSearched(false);
@@ -81,6 +80,7 @@ export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
                             if (event.key === "Enter")
                                 event.preventDefault();
                             onSearch(inputRef.current?.value ?? "", event);
+                            setQuery(inputRef.current?.value ?? "");
                             setSearched(true);
                         }}
                         className={
@@ -103,9 +103,7 @@ export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
                                                 return;
                                             setQuery("");
                                             setSearched(false);
-                                            onClearSelection();
-                                            console.log("test");
-                                            
+                                            onClearSelection();                                            
                                         }} />
                                     </TooltipTrigger>
                                     <TooltipContent>

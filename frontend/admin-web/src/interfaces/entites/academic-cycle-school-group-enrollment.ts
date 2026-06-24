@@ -2,7 +2,7 @@ import type { Student } from "./student";
 import type { Scholarship } from "./scholarship";
 import type { AcademicCycle } from "./academic-cycle";
 import type { AcademicCycleSchoolGroup } from "./academic-cycle-school-group";
-import type { KeyValuePair, AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
+import type { KeyValuePair, AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
 
 /**
  * ACADEMIC_CYCLE_SCHOOL_GROUP_ENROLLMENT_STATUSES defines the possible statuses for a student's enrollment in an academic cycle group, which can be used to track the current state of the enrollment. 

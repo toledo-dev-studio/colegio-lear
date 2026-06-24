@@ -1,8 +1,8 @@
-import type { ModuleKeys } from "@/interfaces/components/modules";
+import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 
 export interface SecurityRolePermission {
     canRead: boolean;
     canWrite: boolean;
     canDelete: boolean;
-    moduleKey: ModuleKeys;
+    moduleKey: ModuleKey;
 }

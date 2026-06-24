@@ -1,4 +1,4 @@
-import type { ModuleKeys } from "@/interfaces/components/modules";
+import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 
 /**
  * Type: Request
@@ -20,5 +20,5 @@ export interface SecurityRolePermissionRequest {
     /**
      * Module key unique identifier
      */
-    moduleKey: ModuleKeys;
+    moduleKey: ModuleKey;
 }

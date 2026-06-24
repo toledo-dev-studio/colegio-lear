@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
+import type { PaymentConceptResponse } from "@/interfaces/responses/payment-concept.response";
 import { getPaymentConceptByIdActionAsync } from "../actions/get-payment-concept-by-id.action";
 import { GET_PAYMENT_CONCEPT_QUERY_KEY } from "@/lib/queries-key/payment-concepts-queries-key";
-import type { PaymentConceptResponse } from "@/interfaces/responses/payment-concept.response";
 
 interface Options {
     id: string;
@@ -18,6 +19,6 @@ export const useGetPaymentConceptById = ({ id }: Options) => {
             return getPaymentConceptByIdActionAsync({ id });
         },
         retry: false,
-        staleTime: 0,
+        staleTime: FIVE_MINUTES_STALE_TIME,
     });
 }

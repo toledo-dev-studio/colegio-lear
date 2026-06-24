@@ -6,7 +6,7 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
 import type { Employee } from "@/interfaces/entites/employee";
-import { labelOf, type DayOfWeekKey } from "@/types/KeyValuePair";
+import { labelOf, type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
 import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { DAY_OF_WEEKS, type AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";

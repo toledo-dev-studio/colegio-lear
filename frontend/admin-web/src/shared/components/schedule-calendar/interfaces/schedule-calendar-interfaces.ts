@@ -1,5 +1,5 @@
 import type { AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
-import type { DayOfWeekKey } from "@/types/KeyValuePair";
+import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
 
 export type DragMode = "create" | "move" | "resize";
 

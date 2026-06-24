@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_ANNOUNCEMENT_QUERY_KEY } from "@/lib/queries-key/announcements-queries-key";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { getAnnouncementByIdActionAsync } from "../../actions/announcements/get-announcement-by-id.action";
@@ -18,6 +19,6 @@ export const useGetAnnouncementById = ({ id }: Options) => {
             return getAnnouncementByIdActionAsync({ id })
         },
         retry: false,
-        staleTime: 0,
+        staleTime: FIVE_MINUTES_STALE_TIME,
     });
 }

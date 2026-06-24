@@ -1,11 +1,12 @@
-import { toast } from "sonner";
 import { matchPath, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router";
-import { CalendarDays, GraduationCap, InfoIcon, School, Users, Wallet } from "lucide-react";
+import { CalendarDays, GraduationCap, School, Users, Wallet } from "lucide-react";
+import { toast } from "sonner";
 
 import { cn } from "@/lib/extensions/utils";
 import type { Tab } from "@/interfaces/components/tab";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
+import { CardAlert } from "@/shared/components/card-alert/CardAlert";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useGetAcademicCycleById } from "../hooks/academic-cycles/useGetAcademicCycleById";
 import type { AcademicCycleLayoutContext } from "../interfaces/academic-cycle-layout-context";
@@ -44,28 +45,27 @@ const TABS: Tab[] = [
 ];
 
 export const AcademicCycleLayout = () => {
-
-    // Hooks & stores
+    // Component hooks & stores
     const { id } = useParams();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const academicCycleQuery = useGetAcademicCycleById(id || "");
+    const academicCycleQuery = useGetAcademicCycleById({ id: id! });
 
     // Constant configuration variables
     const isNew = id === "new";
     const title = isNew ? "Registro de ciclo escolar" : "Edición de ciclo escolar";
+    const isProtectedRoute = TABS.some(tab => tab.protected && pathname.endsWith(tab.to));
 
     // Layout context information
     const context: AcademicCycleLayoutContext = {
-        academicCycle: academicCycleQuery.data,
-        academicCycleId: id,
         isNew: isNew,
+        academicCycleId: id,
+        academicCycle: academicCycleQuery.data,
+        isActive: (academicCycleQuery.data?.status === "active"),
         isLocked: (academicCycleQuery.data?.status !== "upcoming" && academicCycleQuery.data?.status !== undefined),
-        isActive: (academicCycleQuery.data?.status === "active")
     }
 
-    const isProtectedRoute = TABS.some(tab => tab.protected && pathname.endsWith(tab.to));
-
+    // Component functions
     const isActiveRoute = (to: string): boolean => {
         if (to === "") {
             return matchPath("/academic-cycles/:id", pathname) !== null;
@@ -97,14 +97,14 @@ export const AcademicCycleLayout = () => {
             <div className="w-full py-12 px-10 lg:px-15">
 
                 <div className="mb-10">
-                    <CustomBreadcrumb items={[
+                    <Breadcrumb items={[
                         { label: "Seguimiento escolar" },
                         { label: "Ciclos escolares", to: "/academic-cycles" },
                         { label: isNew ? "Nuevo ciclo escolar" : academicCycleQuery.data?.code || "Edición de ciclo escolar" },
                     ]} />
                 </div>
 
-                <CustomPageTitle
+                <PageTitle
                     title={title}
                     subtitle="Gestiona la información de los ciclos escolares que estará disponible en la organización" />
 
@@ -142,14 +142,10 @@ export const AcademicCycleLayout = () => {
 
                         {
                             isNew && (
-                                <div className="flex flex-col items-start gap-y-4 border-b border-border mt-2 mb-2 border-solid border p-6 rounded-xl bg-primary/90 dark:bg-primary/20">
-                                    <h2 className="w-full text-white flex gap-x-4 items-center">
-                                        <InfoIcon /> RECORDATORIO SOBRE EL REGISTRO DE CICLO ESCOLAR
-                                    </h2>
-                                    <p className="text-xs text-white">
-                                        Una vez guardada la información general del ciclo escolar podrás agregar información complementaria tales como gestión de grupos, materias, docentes y estudiantes inscritos en el ciclo escolar.
-                                    </p>
-                                </div>
+                                <CardAlert 
+                                    type="info" 
+                                    title="RECORDATORIO SOBRE EL REGISTRO DE CICLO ESCOLAR" 
+                                    message="Una vez guardada la información general del ciclo escolar podrás agregar información complementaria tales como gestión de grupos, materias, docentes y estudiantes inscritos en el ciclo escolar." />
                             )
                         }
 

@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_EMPLOYEES_QUERY_KEY } from "@/lib/queries-key/employees-queries-key";
 import { getPagedEmployeesActionAsync } from "../../actions/get-paged-employees.action";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
@@ -30,6 +31,7 @@ export const useGetPagedEmployees = () => {
             securityRoleId,
             jobTitleId,
         }),
+        staleTime: FIVE_MINUTES_STALE_TIME
     });
 
     return {

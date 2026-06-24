@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 import { GET_SCHOOL_SUBJECT_QUERY_KEY } from "@/lib/queries-key/school-subjects-queries-key";
 import { getSchoolSubjectByIdActionAsync } from "../actions/get-school-subject-by-id.action";
@@ -18,6 +19,6 @@ export const useGetSchoolSubjectById = ({ id }: Options) => {
             return getSchoolSubjectByIdActionAsync({ id })
         },
         retry: false,
-        staleTime: 0,
+        staleTime: FIVE_MINUTES_STALE_TIME,
     });
 }

@@ -5,7 +5,7 @@ import { stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
 import { getPagedEnrollmentsForAcademicCycleActionAsync } from "../../actions/enrollments/get-paged-enrollments-for-academic-cycle";
-import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/types/KeyValuePair";
+import type { AcademicCycleSchoolGroupEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
 
 interface Options {
     academicCycleId?: string;
