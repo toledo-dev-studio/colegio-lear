@@ -75,10 +75,10 @@ export const AcademicLevelsPage = () => {
 
           {/* Table ribbon options */}
           <TableRibbon
-            handleClickAdvancedFilters={() => advancedFilters.open()}
-            handleClickAdd={() => navigate("/academic-levels/new")}
-            handleClickExport={handleClickExport}
-            inputSearchTooltip="Búsqueda general por nombre, descripción y monto"
+            addButton={{ handleClick: () => navigate("/academic-levels/new") }}
+            filterButton={{ handleClick: advancedFilters.open }}
+            exportButton={{ handleClick: handleClickExport }}
+            searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
           />
 
           {/* Table content*/}

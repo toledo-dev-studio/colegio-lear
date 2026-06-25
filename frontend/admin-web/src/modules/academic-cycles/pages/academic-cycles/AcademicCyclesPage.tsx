@@ -77,12 +77,11 @@ export const AcademicCyclesPage = () => {
 
                     {/* Table ribbon options */}
                     <TableRibbon
-                        handleClickAdvancedFilters={() => advancedFilters.open()}
-                        handleClickAdd={() => navigate("/academic-cycles/new")}
-                        handleClickExport={handleClickExport}
-                        inputSearchTooltip="Búsqueda general por nombre, código & descripción"
+                        addButton={{ handleClick: () => navigate("/academic-cycles/new")}}
+                        filterButton={{ handleClick: advancedFilters.open }}
+                        exportButton={{ handleClick: handleClickExport }}
+                        searchInput={{ tooltip: "Búsqueda general por nombre, código & descripción", placeholder: "Búsqueda general por nombre, código & descripción" }}
                     />
-
                     {/* Table content*/}
                     <Table
                         data={queries.academicCycles.paged.data}

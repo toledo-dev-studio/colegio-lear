@@ -73,10 +73,10 @@ export const JobTitlesPage = () => {
 
           {/* Table ribbon options */}
           <TableRibbon
-            handleClickAdvancedFilters={() => advancedFilters.open()}
-            handleClickAdd={() => navigate("/job-titles/new")}
-            handleClickExport={handleClickExport}
-            inputSearchTooltip="Búsqueda general por nombre y descripción"
+            addButton={{ handleClick: () => navigate("/job-titles/new") }}
+            filterButton={{ handleClick: advancedFilters.open }}
+            exportButton={{ handleClick: handleClickExport }}
+            searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
           />
 
           {/* Table content*/}

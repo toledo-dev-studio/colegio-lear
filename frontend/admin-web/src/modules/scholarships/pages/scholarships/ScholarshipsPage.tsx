@@ -76,10 +76,10 @@ export const ScholarshipsPage = () => {
 
                     {/* Table ribbon options */}
                     <TableRibbon
-                        handleClickAdvancedFilters={() => advancedFilters.open()}
-                        handleClickAdd={() => navigate("/scholarships/new")}
-                        handleClickExport={handleClickExport}
-                        inputSearchTooltip="Búsqueda general por nombre, descripción y monto"
+                        addButton={{ handleClick: () => navigate("/scholarships/new") }}
+                        filterButton={{ handleClick: advancedFilters.open }}
+                        exportButton={{ handleClick: handleClickExport }}
+                        searchInput={{ tooltip: "Búsqueda general por nombre, descripción y monto", placeholder: "Búsqueda general por nombre, descripción y monto" }}
                     />
 
                     {/* Table content*/}

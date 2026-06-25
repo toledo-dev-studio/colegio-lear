@@ -2,22 +2,28 @@ import { useOutletContext } from "react-router";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
-import type { AcademicCycleSchoolSubject } from "@/interfaces/entites/academic-cycle-school-subject";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { useGetSchoolSubjectsForAcademicCycle } from "@/modules/academic-cycles/hooks/school-subjects/useGetSchoolSubjectsForAcademicCycle";
-import { useDeleteSchoolSubjectByIdForAcademicCycle } from "@/modules/academic-cycles/hooks/school-subjects/useDeleteSchoolSubjectByIdForAcademicCycle";
-import { useCreateUpdateSchoolSubjectForAcademicCycle } from "@/modules/academic-cycles/hooks/school-subjects/useCreateUpdateSchoolSubjectForAcademicCycle";
+import { useGetAcademicCycleSchoolSubjects } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useGetSchoolSubjectsForAcademicCycle";
+import { useDeleteAcademicCycleSchoolSubjectById } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useDeleteSchoolSubjectByIdForAcademicCycle";
+import { useCreateUpdateAcademicCycleSchoolSubject } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useCreateUpdateSchoolSubjectForAcademicCycle";
+import type { AcademicCycleSchoolSubjectResponse } from "@/interfaces/responses/academic-cycle-school-subject.response";
 
 export const useAcademicCycleSchoolSubjectsTab = () => {
     // Get context from layout
     const { academicCycleId, academicCycle, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
-    // Hooks & stores
+    // Shared hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
-    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleSchoolSubject>();
-    const schoolSubjectsForAcademicCycleQuery = useGetSchoolSubjectsForAcademicCycle(academicCycleId!);
-    const deleteSchoolSubjectByIdForAcademicCycle = useDeleteSchoolSubjectByIdForAcademicCycle();
-    const createUpdateSchoolSubjectForAcademicCycle = useCreateUpdateSchoolSubjectForAcademicCycle();
+
+    // Components hooks & stores
+    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleSchoolSubjectResponse>();
+
+    // Queries
+    const getAcademicCycleSchoolSubjectsQuery = useGetAcademicCycleSchoolSubjects({ academicCycleId: academicCycleId! });
+
+    // Mutations
+    const deleteAcademicCycleSchoolSubjectMutation = useDeleteAcademicCycleSchoolSubjectById();
+    const useCreateUpdateAcademicCycleSchoolSubjectMutation = useCreateUpdateAcademicCycleSchoolSubject();
 
     return {
         context: {
@@ -27,16 +33,13 @@ export const useAcademicCycleSchoolSubjectsTab = () => {
         },
         queries: {
             schoolSubject: {
-                data: schoolSubjectsForAcademicCycleQuery.data ?? [],
-                isError: schoolSubjectsForAcademicCycleQuery.isError,
-                isLoading: schoolSubjectsForAcademicCycleQuery.isLoading,
-                isFetching: schoolSubjectsForAcademicCycleQuery.isFetching
+                get: getAcademicCycleSchoolSubjectsQuery,
             }
         },
         mutations: {
             schoolSubject: {
-                delete: deleteSchoolSubjectByIdForAcademicCycle,
-                createUpdate: createUpdateSchoolSubjectForAcademicCycle,
+                delete: deleteAcademicCycleSchoolSubjectMutation,
+                createUpdate: useCreateUpdateAcademicCycleSchoolSubjectMutation,
             },
         },
         loader: {

@@ -7,42 +7,62 @@ import { Button } from "@/shared/ui/button";
 import { cn } from "@/lib/extensions/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
+interface ButtonProps {
+    show?: boolean;
+    disabled?: boolean;
+    label?: string;
+    tooltip?: string;
+    handleClick?: () => void;
+}
+
+interface SearchInputProps {
+    show?: boolean;
+    tooltip?: string;
+    disabled?: boolean;
+    placeholder?: string;
+    onClickClear?: () => void,
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void;
+}
+
 interface Props {
-    disabledAddButton?: boolean;
-    disabledFilterButton?: boolean;
-    disabledExportButton?: boolean;
-    disabledSearchInput?: boolean;
-
-
-    enabledAdd?: boolean;
-    enabledExport?: boolean;
-    enabledAdvancedFilters?: boolean;
-    enabledSearch?: boolean;
-    inputSearchPlaceholder?: string;
-    inputSearchTooltip?: string;
+    addButton?: ButtonProps;
+    filterButton?: ButtonProps;
+    exportButton?: ButtonProps;
+    searchInput?: SearchInputProps;
     className?: string;
-    handleClickAdvancedFilters?: () => void;
-    handleClickExport?: () => void;
-    handleClickAdd?: () => void;
 }
 
 export const TableRibbon = (props: Props) => {
-    const {
-        disabledAddButton,
-        disabledFilterButton,
-        disabledExportButton,
-        disabledSearchInput,
-        enabledAdd = true,
-        enabledExport = true,
-        enabledAdvancedFilters = true,
-        enabledSearch = true,
-        inputSearchPlaceholder = "",
-        inputSearchTooltip = "",
-        className = "",
-        handleClickAdvancedFilters = () => { },
-        handleClickExport = () => { },
-        handleClickAdd = () => { },
-    } = props;
+    const { className = "" } = props;
+    const addButton: ButtonProps = {
+        show: true,
+        disabled: false,
+        label: "Agregar nuevo",
+        handleClick: () => { },
+        ...props.addButton,
+    };
+    const filterButton: ButtonProps = {
+        show: true,
+        disabled: false,
+        tooltip: "Aplicar filtros avanzados",
+        handleClick: () => { },
+        ...props.filterButton,
+    };
+    const exportButton: ButtonProps = {
+        show: true,
+        disabled: false,
+        tooltip: "Exportar datos",
+        handleClick: () => { },
+        ...props.exportButton,
+    };
+    const searchInput: SearchInputProps = {
+        show: true,
+        disabled: false,
+        tooltip: "Búsqueda rápida",
+        placeholder: "Búsqueda rápida",
+        ...props.searchInput,
+    };
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState<string>(searchParams.get("query") ?? "");
@@ -66,36 +86,40 @@ export const TableRibbon = (props: Props) => {
     return (
         <>
             <section className={cn("flex flex-col gap-6 mb-6 lg:flex-row lg:items-center", className)}>
-                {/* Advanced filters / export actions */}
-                {enabledAdvancedFilters && (
-                    <Tooltip disabled={disabledFilterButton}>
-                        <TooltipTrigger>
-                            <span className="icon-btn icon-btn-ribbon bg-transparent dark:bg-input/30 border border-input" onClick={handleClickAdvancedFilters}>
-                                <Filter className="text-primary w-4 h-4" />
-                            </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Aplicar filtros avanzados</p>
-                        </TooltipContent>
-                    </Tooltip>
-                )}
-
-                {enabledExport && (
-                    <Tooltip disabled={disabledExportButton}>
-                        <TooltipTrigger>
-                            <span className="icon-btn icon-btn-ribbon bg-transparent dark:bg-input/30 border border-input" onClick={handleClickExport}>
-                                <Download className="text-primary w-4 h-4" />
-                            </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Exportar datos</p>
-                        </TooltipContent>
-                    </Tooltip>
-                )}
-
-                {/* Search */}
+                {/* Advanced filters */}
                 {
-                    enabledSearch && (
+                    filterButton.show && (
+                        <Tooltip disabled={filterButton.disabled}>
+                            <TooltipTrigger>
+                                <span onClick={filterButton.handleClick} className="icon-btn icon-btn-ribbon bg-transparent dark:bg-input/30 border border-input">
+                                    <Filter className="text-primary w-4 h-4" />
+                                </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>{filterButton.tooltip}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )
+                }
+
+                {/* Export data */}
+                {
+                    exportButton.show && (
+                        <Tooltip disabled={exportButton.disabled}>
+                            <TooltipTrigger>
+                                <span onClick={exportButton.handleClick} className="icon-btn icon-btn-ribbon bg-transparent dark:bg-input/30 border border-input">
+                                    <Download className="text-primary w-4 h-4" />
+                                </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>{exportButton.tooltip}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )}
+
+                {/* Search input */}
+                {
+                    searchInput.show && (
                         <Tooltip>
                             <TooltipTrigger className="relative w-full lg:max-w-md">
                                 <div className="relative w-full lg:max-w-md">
@@ -103,33 +127,38 @@ export const TableRibbon = (props: Props) => {
                                         <X className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground hover:cursor-pointer"
                                             onClick={() => {
                                                 setQuery("");
-                                                updateQueryParam("");
+                                                searchInput?.onClickClear ? searchInput.onClickClear() : updateQueryParam("");
                                             }} />
                                         : <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />}
                                     <Input
                                         value={query}
-                                        onKeyDown={handleKeyDown}
-                                        onChange={(e) => setQuery(e.target.value)}
-                                        disabled={disabledSearchInput}
-                                        className={cn("pr-13", disabledSearchInput && "disabled")}
-                                        placeholder={inputSearchPlaceholder || "Búsqueda general..."}
+                                        onKeyDown={(e) => {
+                                            searchInput?.onKeyDown ? searchInput.onKeyDown(e) : handleKeyDown(e);
+                                        }}
+                                        onChange={(e) => {
+                                            setQuery(e.target.value)
+                                            searchInput?.onChange && searchInput.onChange(e);
+                                        }}
+                                        disabled={searchInput.disabled}
+                                        className={cn("pr-13", searchInput.disabled && "disabled")}
+                                        placeholder={searchInput.placeholder}
                                     />
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p> {inputSearchTooltip || "Búsqueda general"}</p>
+                                <p>{searchInput.tooltip}</p>
                             </TooltipContent>
                         </Tooltip>
                     )
                 }
 
-                {/* Add new action */}
+                {/* Add new */}
                 {
-                    enabledAdd && (
-                        <Button onClick={handleClickAdd}
-                            disabled={disabledAddButton}
-                            className={cn("w-full lg:w-fit mx-auto lg:ml-auto lg:mr-0", disabledAddButton && "disabled")}>
-                            Nuevo registro
+                    addButton.show && (
+                        <Button onClick={addButton.handleClick}
+                            disabled={addButton.disabled}
+                            className={cn("w-full lg:w-fit mx-auto lg:ml-auto lg:mr-0", addButton.disabled && "disabled")}>
+                            {addButton.label}
                             <Plus className="ml-4 w-4 h-4" />
                         </Button>
                     )

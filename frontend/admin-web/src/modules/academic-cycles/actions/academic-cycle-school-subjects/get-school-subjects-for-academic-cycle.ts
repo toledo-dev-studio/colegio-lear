@@ -1,17 +1,15 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { AcademicCycleSchoolSubject } from "@/interfaces/entites/academic-cycle-school-subject";
+import type { AcademicCycleSchoolSubjectResponse } from "@/interfaces/responses/academic-cycle-school-subject.response";
 
 interface Options {
+    query?: string;
     academicCycleId: string;
 }
 
-export const getSchoolSubjectsForAcademicCycleActionAsync = async ({ academicCycleId }: Options): Promise<AcademicCycleSchoolSubject[]> => {
+export const getAcademicCycleSchoolSubjectsActionAsync = async ({ query, academicCycleId }: Options): Promise<AcademicCycleSchoolSubjectResponse[]> => {
     await sleep();
-
-    if (!academicCycleId)
-        throw new Error("El identificador del registro es requerido");
 
     let endpoint = `/academic-cycles/${academicCycleId}/school-subjects`;
 
@@ -21,7 +19,11 @@ export const getSchoolSubjectsForAcademicCycleActionAsync = async ({ academicCyc
     // REMOVE
     endpoint = "http://localhost/api/academic-cycles/school-subjects/school-subjects.json";
 
-    const { data } = await api.get<AcademicCycleSchoolSubject[]>(endpoint);
+    const { data } = await api.get<AcademicCycleSchoolSubjectResponse[]>(endpoint, {
+        params: {
+            q: query
+        }
+    });
 
     return data;
 }

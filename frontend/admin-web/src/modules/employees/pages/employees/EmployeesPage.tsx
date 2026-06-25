@@ -79,10 +79,10 @@ export const EmployeesPage = () => {
 
           {/* Table ribbon options */}
           <TableRibbon
-            handleClickAdvancedFilters={() => advancedFilters.open()}
-            handleClickAdd={() => navigate("/employees/new")}
-            handleClickExport={handleClickExport}
-            inputSearchTooltip="Búsqueda general por nombre, email & usuario"
+            addButton={{ handleClick: () => navigate("/employees/new") }}
+            filterButton={{ handleClick: advancedFilters.open }}
+            exportButton={{ handleClick: handleClickExport }}
+            searchInput={{ tooltip: "Búsqueda general por nombre, email & usuario", placeholder: "Búsqueda general por nombre, email & usuario" }}
           />
 
           {/* Table content*/}

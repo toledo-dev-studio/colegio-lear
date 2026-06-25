@@ -49,6 +49,11 @@ export const AcademicCycleWalletTab = () => {
 
     const onSubmit = async (academicCycleWalletRequestLike: Partial<AcademicCycleWalletRequest>) => {
         try {
+            if (queries.wallet.get.data.some(item => item.paymentConceptId === academicCycleWalletRequestLike.paymentConceptId && item.id !== academicCycleWalletToEdit?.id)) {
+                toast.warning("El concepto de pago seleccionado ya se encuentra asociado al ciclo escolar", { position: "top-right" });
+                return;
+            }
+
             loader.show("Guardando");
             await mutations.wallet.createUpdate.mutateAsync({
                 id: academicCycleWalletToEdit?.id!,
@@ -81,16 +86,31 @@ export const AcademicCycleWalletTab = () => {
                     description="El siguiente listado contiene la información de los conceptos de pago para este ciclo escolar." />
                 <TableRibbon
                     className="mb-0"
-                    disabledAddButton={queries.wallet.get.isLoading || queries.wallet.get.isError}
-                    disabledSearchInput={queries.wallet.get.isLoading || queries.wallet.get.isError}
-                    enabledAdvancedFilters={false}
-                    enabledExport={false}
-                    inputSearchPlaceholder="Búsqueda general por concepto"
-                    inputSearchTooltip="Búsqueda general por concepto"
-                    handleClickAdd={() => {
-                        setAcademicCycleWalletToEdit({});
-                        setIsOpenCreateUpdatePanelForm(true);
-                    }} />
+                    filterButton={{show: false}}
+                    exportButton={{show: false}}
+                    addButton={{
+                        show: true,
+                        label: "Asociar nuevo concepto",
+                        disabled: queries.wallet.get.isLoading || queries.wallet.get.isError,
+                        handleClick: () => {
+                            setAcademicCycleWalletToEdit({});
+                            setIsOpenCreateUpdatePanelForm(true);
+                        }
+                    }}
+                    searchInput={{
+                        show: true, 
+                        disabled: queries.wallet.get.isLoading || queries.wallet.get.isError, 
+                        placeholder: "Búsqueda general por concepto", 
+                        tooltip: "Búsqueda general por concepto",
+                        onKeyDown: () => {},
+                        onChange: (event) => {
+                            console.log(event.target.value);
+                        },
+                        onClickClear: () => {
+                            console.log("clear");
+                        }
+                    }}
+                />
                 <Table
                     data={queries.wallet.get.data}
                     isLoading={queries.wallet.get.isLoading}

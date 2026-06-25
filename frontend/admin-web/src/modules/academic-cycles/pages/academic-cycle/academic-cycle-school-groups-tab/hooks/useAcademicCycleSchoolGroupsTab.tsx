@@ -7,7 +7,7 @@ import type { AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cyc
 import { useGetTeachersEmployees } from "@/modules/employees/hooks/employees/useGetTeachersEmployees";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { useGetSchoolGroupsForAcademicCycle } from "@/modules/academic-cycles/hooks/school-groups/useGetSchoolGroupsForAcademicCycle";
-import { useGetSchoolSubjectsForAcademicCycle } from "@/modules/academic-cycles/hooks/school-subjects/useGetSchoolSubjectsForAcademicCycle";
+// import { useGetSchoolSubjectsForAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useGetSchoolSubjectsForAcademicCycle";
 import { useDeleteSchoolGroupByIdForAcademicCycle } from "@/modules/academic-cycles/hooks/school-groups/useDeleteSchoolGroupByIdForAcademicCycle";
 import { useCreateUpdateSchoolGroupForAcademicCycle } from "@/modules/academic-cycles/hooks/school-groups/useCreateUpdateSchoolGroupForAcademicCycle";
 
@@ -29,7 +29,8 @@ export const useAcademicCycleSchoolGroupsTab = () => {
     const createUpdateSchoolGroupForAcademicCycle = useCreateUpdateSchoolGroupForAcademicCycle();
 
     // Related entities queries data
-    const schoolSubjects = useGetSchoolSubjectsForAcademicCycle(academicCycleId!).data.map((item) => { return { id: item.schoolSubjectId, ...item.schoolSubject } as SchoolSubject }) ?? [];
+    // const schoolSubjects = useGetSchoolSubjectsForAcademicCycle(academicCycleId!).data.map((item) => { return { id: item.schoolSubjectId, ...item.schoolSubject } as SchoolSubject }) ?? [];
+    const schoolSubjects: any = []
     const teachers = useGetTeachersEmployees().data ?? [];
 
     return {

@@ -77,10 +77,10 @@ export const AnnouncementsPage = () => {
 
           {/* Table ribbon options */}
           <TableRibbon
-            handleClickAdvancedFilters={() => advancedFilters.open()}
-            handleClickAdd={() => navigate("/announcements/new")}
-            handleClickExport={handleClickExport}
-            inputSearchTooltip="Búsqueda general por nombre y descripción"
+            addButton={{ handleClick: () => navigate("/announcements/new") }}
+            filterButton={{ handleClick: advancedFilters.open }}
+            exportButton={{ handleClick: handleClickExport }}
+            searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
           />
 
           {/* Table content*/}
