@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_ACADEMIC_CYCLE_SCHOOL_SUBJECTS_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
-import { getAcademicCycleSchoolSubjectsActionAsync } from "../../actions/academic-cycle-school-subjects/get-school-subjects-for-academic-cycle";
+import { getAcademicCycleSchoolSubjectsActionAsync } from "../../actions/academic-cycle-school-subjects/get-school-subjects-for-academic-cycle.action";
 
 interface Options {
     academicCycleId: string;

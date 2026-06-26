@@ -4,9 +4,9 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
 import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { useGetAcademicCycleWallet } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useGetWalletForAcademicCycle";
-import { useDeleteAcademicCycleWalletById } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useDeleteWalletByIdForAcademicCycle";
-import { useCreateUpdateAcademicCycleWallet } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useCreateUpdateWalletForAcademicCycle";
+import { useGetAcademicCycleWallet } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useGetAcademicCycleWallet";
+import { useDeleteAcademicCycleWalletById } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useDeleteAcademicCycleWalletById";
+import { useCreateUpdateAcademicCycleWallet } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useCreateUpdateAcademicCycleWallet";
 
 
 export const useAcademicCycleWalletTab = () => {

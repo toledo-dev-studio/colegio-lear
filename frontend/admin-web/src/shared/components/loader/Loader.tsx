@@ -4,11 +4,11 @@ interface Props {
     title: string;
     subtitle?: string;
     fullScreen?: boolean;
-    size: "default" | "sm";
+    size?: "default" | "sm";
     className?: string;
 }
 
-export const Loader = ({ title, subtitle, fullScreen, size = "default", className }: Props) => {
+export const Loader = ({ title, subtitle, fullScreen = true, size = "default", className }: Props) => {
     return (
         <div className={cn(
             "h-full w-full flex items-center justify-center z-100 bg-card",

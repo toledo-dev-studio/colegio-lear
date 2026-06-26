@@ -3,9 +3,9 @@ import { useOutletContext } from "react-router";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { useGetAcademicCycleSchoolSubjects } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useGetSchoolSubjectsForAcademicCycle";
-import { useDeleteAcademicCycleSchoolSubjectById } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useDeleteSchoolSubjectByIdForAcademicCycle";
-import { useCreateUpdateAcademicCycleSchoolSubject } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useCreateUpdateSchoolSubjectForAcademicCycle";
+import { useGetAcademicCycleSchoolSubjects } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useGetAcademicCycleSchoolSubjects";
+import { useDeleteAcademicCycleSchoolSubjectById } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useDeleteAcademicCycleSchoolSubjectById";
+import { useCreateUpdateAcademicCycleSchoolSubject } from "@/modules/academic-cycles/hooks/academic-cycle-school-subjects/useCreateUpdateAcademicCycleSchoolSubject";
 import type { AcademicCycleSchoolSubjectResponse } from "@/interfaces/responses/academic-cycle-school-subject.response";
 
 export const useAcademicCycleSchoolSubjectsTab = () => {

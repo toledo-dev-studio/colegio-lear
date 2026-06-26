@@ -4,10 +4,10 @@ import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import type { AcademicCycleSchoolGroupEnrollment } from "@/interfaces/entites/academic-cycle-school-group-enrollment";
-import { useGetSchoolGroupsForAcademicCycle } from "@/modules/academic-cycles/hooks/school-groups/useGetSchoolGroupsForAcademicCycle";
 import { useGetPagedEnrollmentsForAcademicCycle } from "@/modules/academic-cycles/hooks/enrollments/useGetPagedEnrollmentsForAcademicCycle";
 import { useDeleteEnrollmentByIdForAcademicCycle } from "@/modules/academic-cycles/hooks/enrollments/useDeleteEnrollmentByIdForAcademicCycle";
 import { useCreateUpdateEnrollmentForAcademicCycle } from "@/modules/academic-cycles/hooks/enrollments/useCreateUpdateEnrollmentForAcademicCycle";
+import { useGetAcademicCycleSchoolGroups } from "@/modules/academic-cycles/hooks/academic-cycle-school-groups/useGetAcademicCycleSchoolGroups";
 
 export const useAcademicCycleEnrollmentsTab = () => {
     // Get context from layout
@@ -18,7 +18,7 @@ export const useAcademicCycleEnrollmentsTab = () => {
     const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleSchoolGroupEnrollment>();
 
     // Queries
-    const schoolGroupsForAcademicCycleQuery = useGetSchoolGroupsForAcademicCycle(academicCycleId!);
+    const schoolGroupsForAcademicCycleQuery = useGetAcademicCycleSchoolGroups({ academicCycleId: academicCycleId! });
     const pagedEnrollmentForAcademicCycleQuery = useGetPagedEnrollmentsForAcademicCycle({ academicCycleId });
 
     // Mutations

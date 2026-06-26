@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { Modal } from "@/shared/components/modal/Modal";
@@ -8,14 +8,15 @@ import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { useAcademicCycleSchoolSubjectsTab } from "./hooks/useAcademicCycleSchoolSubjectsTab";
 import { useAcademicCycleSchoolSubjectsTable } from "./hooks/useAcademicCycleSchoolSubjectsTable";
 import { AcademicCycleSchoolSubjectPanelForm } from "./components/AcademicCycleSchoolSubjectPanelForm";
-import type { AcademicCycleSchoolSubjectResponse } from "@/interfaces/responses/academic-cycle-school-subject.response";
 import type { AcademicCycleSchoolSubjectRequest } from "@/interfaces/requests/academic-cycle-school-subject.request";
+import type { AcademicCycleSchoolSubjectResponse } from "@/interfaces/responses/academic-cycle-school-subject.response";
 
 export const AcademicCycleSchoolSubjectsTab = () => {
     // Context hooks & stores configuration
     const { context, queries, mutations, deleteModal, loader } = useAcademicCycleSchoolSubjectsTab();
 
     // Componet hooks and stores
+    const [searchQuery, setSearchQuery] = useState("");
     const [isOpenCreateUpdatePanelForm, setIsOpenCreateUpdatePanelForm] = useState<boolean>(false);
     const [academicCycleSchoolSubjectToEdit, setAcademicCycleSchoolSubjectToEdit] = useState<Partial<AcademicCycleSchoolSubjectResponse>>();
 
@@ -27,6 +28,20 @@ export const AcademicCycleSchoolSubjectsTab = () => {
         },
         handleClickDelete: deleteModal.open
     });
+
+    // Filtering data using memo
+    const associatedSchoolSubjects = useMemo(() => {
+        const data = queries.schoolSubject.get.data ?? [];
+
+        if (!searchQuery.trim())
+            return data;
+
+        const query = searchQuery.toLowerCase();
+
+        return data.filter(item =>
+            item.schoolSubject?.name?.toLowerCase().includes(query)
+        );
+    }, [queries.schoolSubject.get.data, searchQuery]);
 
     // Component functions
     const handleClickConfirmDeleteAcademicCycleSchoolSubject = async () => {
@@ -89,8 +104,8 @@ export const AcademicCycleSchoolSubjectsTab = () => {
                     description="El siguiente listado contiene la información de las materias que serán impartidas para los alumnos que sean inscritos a este ciclo escolar." />
                 <TableRibbon
                     className="mb-0"
-                    filterButton={{show: false}}
-                    exportButton={{show: false}}
+                    filterButton={{ show: false }}
+                    exportButton={{ show: false }}
                     addButton={{
                         show: true,
                         label: "Asociar nueva materia",
@@ -101,21 +116,17 @@ export const AcademicCycleSchoolSubjectsTab = () => {
                         }
                     }}
                     searchInput={{
-                        show: true, 
-                        disabled: queries.schoolSubject.get.isLoading || queries.schoolSubject.get.isError, 
-                        placeholder: "Búsqueda general por materia", 
+                        show: true,
+                        disabled: queries.schoolSubject.get.isLoading || queries.schoolSubject.get.isError,
+                        placeholder: "Búsqueda general por materia",
                         tooltip: "Búsqueda general por materia",
-                        onKeyDown: () => {},
-                        onChange: (event) => {
-                            console.log(event.target.value);
-                        },
-                        onClickClear: () => {
-                            console.log("clear");
-                        }
+                        onKeyDown: () => { },
+                        onChange: (event) => setSearchQuery(event.target.value || ""),
+                        onClickClear: () => setSearchQuery("")
                     }}
                 />
                 <Table
-                    data={queries.schoolSubject.get.data}
+                    data={associatedSchoolSubjects}
                     isLoading={queries.schoolSubject.get.isLoading}
                     enablePagination={false}
                     columns={columns}
@@ -140,7 +151,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
 
             {/* Delete single record modal */}
             {
-                deleteModal.record && (
+                (!context.isLocked && deleteModal.record)  && (
                     <Modal
                         open={deleteModal.isOpen}
                         type="delete"

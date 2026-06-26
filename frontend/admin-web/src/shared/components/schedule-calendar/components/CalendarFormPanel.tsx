@@ -4,30 +4,65 @@ import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
+import type { Calendar } from "../types/calendar";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
-import type { Employee } from "@/interfaces/entites/employee";
+import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import { labelOf, type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
+import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
-import { DAY_OF_WEEKS, type AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 
 interface Props {
     disabled: boolean;
-    teachers: Employee[];
-    schoolSubjects: SchoolSubject[];
-    calendar?: Partial<AcademicCycleGroupSchoolSubjectCalendar>;
+    teachers: EmployeeResponse[];
+    schoolSubjects: SchoolSubjectResponse[];
+    calendar?: Calendar;
     onCancel: () => void;
-    onSubmit: (calendarLike: Partial<AcademicCycleGroupSchoolSubjectCalendar>) => void;
+    onSubmit: (calendarLike: Partial<Calendar>) => void;
 }
 
 export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubjects = [], calendar = undefined, onCancel, onSubmit }: Props) => {
 
     // React hook form config
-    const { control, formState: { errors }, handleSubmit, reset, setValue } = useForm<Partial<AcademicCycleGroupSchoolSubjectCalendar>>({
+    const { control, formState: { errors }, trigger, setError, handleSubmit, reset, setValue } = useForm<Partial<Calendar>>({
         defaultValues: {
-            ...calendar
+            day: isValidValueWithDefault(calendar?.day, undefined),
+            startTime: isValidValueWithDefault(calendar?.startTime, ""),
+            endTime: isValidValueWithDefault(calendar?.endTime, ""),
+            academicCycleId: isValidValueWithDefault(calendar?.academicCycleId, ""),
+            academicCycle: isValidValueWithDefault(calendar?.academicCycle, undefined),
+            academicCycleSchoolGroupId: isValidValueWithDefault(calendar?.academicCycleSchoolGroupId, ""),
+            academicCycleSchoolGroup: isValidValueWithDefault(calendar?.academicCycleSchoolGroup, undefined),
+            schoolSubjectId: isValidValueWithDefault(calendar?.schoolSubjectId, ""),
+            schoolSubject: isValidValueWithDefault(calendar?.schoolSubject, undefined),
+            teacherId: isValidValueWithDefault(calendar?.teacherId, ""),
+            teacher: isValidValueWithDefault(calendar?.teacher, undefined)
         }
     });
+
+    // Component functions
+    const validateForm = async (calendarLike: Partial<Calendar>) => {
+        debugger;
+        // TODO
+        
+        const isValid = await trigger();
+
+        if (!isValid) {
+            return;
+        }
+
+        // Validaciones adicionales de negocio
+        if (calendarLike.startTime! >= calendarLike.endTime!) {
+            setError("endTime", {
+                type: "manual",
+                message: "La hora de término debe ser mayor que la hora de inicio.",
+            });
+            return;
+        }
+
+        onSubmit(calendarLike);
+    }
 
     useEffect(() => {
         if (calendar)
@@ -44,8 +79,8 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                         <h3 className="font-heading text-xl font-bold uppercase">
                             ASIGNACIÓN DE HORARIO
                         </h3>
-                        <Button onClick={onCancel} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground !px-0">
-                            <X className="!w-5 !h-5 text-muted-foreground" />
+                        <Button onClick={onCancel} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground px-0!">
+                            <X className="w-5! h-5! text-muted-foreground" />
                         </Button>
                     </div>
                     {/* Schedule calendar fiels */}
@@ -238,7 +273,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                         </Button>
                         {
                             !disabled && (
-                                <Button type="submit" aria-label="save-record" onClick={handleSubmit(onSubmit)}>
+                                <Button type="submit" aria-label="save-record" onClick={handleSubmit(validateForm)}>
                                     Guardar
                                 </Button>
                             )

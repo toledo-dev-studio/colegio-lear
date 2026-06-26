@@ -1,8 +1,8 @@
-import type { AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
+import type { Calendar } from "../types/calendar";
 import { hhmmToMinutes } from "../lib/schedule-calendar";
 
 interface Props {
-  calendars: AcademicCycleGroupSchoolSubjectCalendar[];
+  calendars: Calendar[]
 }
 
 export const ScheduleCalendarStats = ({ calendars }: Props) => {

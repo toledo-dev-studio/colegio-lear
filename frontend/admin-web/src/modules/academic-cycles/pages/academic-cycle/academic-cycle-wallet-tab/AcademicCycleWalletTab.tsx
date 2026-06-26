@@ -1,21 +1,22 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { useAcademicCycleWalletTab } from "./hooks/useAcademicCycleWalletTab";
 import { useAcademicCycleWalletTable } from "./hooks/useAcademicCycleWalletTable";
 import { AcademicCycleWalletPanelForm } from "./components/AcademicCycleWalletPanelForm";
 import type { AcademicCycleWalletRequest } from "@/interfaces/requests/academic-cycle-wallet.request";
 import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
-import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 
 export const AcademicCycleWalletTab = () => {
     // Context hooks & stores configuration
     const { context, queries, mutations, deleteModal, loader } = useAcademicCycleWalletTab();
 
     // Componet hooks and stores
+    const [searchQuery, setSearchQuery] = useState("");
     const [isOpenCreateUpdatePanelForm, setIsOpenCreateUpdatePanelForm] = useState<boolean>(false);
     const [academicCycleWalletToEdit, setAcademicCycleWalletToEdit] = useState<Partial<AcademicCycleWalletResponse>>();
 
@@ -27,6 +28,20 @@ export const AcademicCycleWalletTab = () => {
         },
         handleClickDelete: deleteModal.open
     });
+
+    // Filtering data using memo
+    const associatedPaymentConcepts = useMemo(() => {
+        const data = queries.wallet.get.data ?? [];
+
+        if (!searchQuery.trim())
+            return data;
+
+        const query = searchQuery.toLowerCase();
+
+        return data.filter(item =>
+            item.paymentConcept?.name?.toLowerCase().includes(query)
+        );
+    }, [queries.wallet.get.data, searchQuery]);
 
     // Component functions
     const handleClickConfirmDeleteAcademicCycleWallet = async () => {
@@ -86,8 +101,8 @@ export const AcademicCycleWalletTab = () => {
                     description="El siguiente listado contiene la información de los conceptos de pago para este ciclo escolar." />
                 <TableRibbon
                     className="mb-0"
-                    filterButton={{show: false}}
-                    exportButton={{show: false}}
+                    filterButton={{ show: false }}
+                    exportButton={{ show: false }}
                     addButton={{
                         show: true,
                         label: "Asociar nuevo concepto",
@@ -98,21 +113,17 @@ export const AcademicCycleWalletTab = () => {
                         }
                     }}
                     searchInput={{
-                        show: true, 
-                        disabled: queries.wallet.get.isLoading || queries.wallet.get.isError, 
-                        placeholder: "Búsqueda general por concepto", 
+                        show: true,
+                        disabled: queries.wallet.get.isLoading || queries.wallet.get.isError,
+                        placeholder: "Búsqueda general por concepto",
                         tooltip: "Búsqueda general por concepto",
-                        onKeyDown: () => {},
-                        onChange: (event) => {
-                            console.log(event.target.value);
-                        },
-                        onClickClear: () => {
-                            console.log("clear");
-                        }
+                        onKeyDown: () => { },
+                        onChange: (event) => setSearchQuery(event.target.value || ""),
+                        onClickClear: () => setSearchQuery("")
                     }}
                 />
                 <Table
-                    data={queries.wallet.get.data}
+                    data={associatedPaymentConcepts}
                     isLoading={queries.wallet.get.isLoading}
                     enablePagination={false}
                     columns={columns}
@@ -137,7 +148,7 @@ export const AcademicCycleWalletTab = () => {
 
             {/* Delete single record modal */}
             {
-                deleteModal.record && (
+                (!context.isLocked && deleteModal.record)  && (
                     <Modal
                         open={deleteModal.isOpen}
                         type="delete"

@@ -1,4 +1,4 @@
-import type { AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
+import type { Calendar } from "../types/calendar";
 import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
 
 export type DragMode = "create" | "move" | "resize";
@@ -13,5 +13,5 @@ export interface DragState {
     originalDay?: DayOfWeekKey;
     pointerStartY: number;
     pointerStartX: number;
-    academicCycleGroupSchoolSubjectCalendar?: Partial<AcademicCycleGroupSchoolSubjectCalendar>;
+    calendar?: Calendar;
 }
