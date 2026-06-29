@@ -408,6 +408,6 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
                     />
                 )
             }
-        </div >
+        </div>
     );
 }
