@@ -35,7 +35,7 @@ export const TABS: Tab[] = [
     },
     {
         to: "enrollments",
-        label: "Inscripciones al ciclo escolar",
+        label: "Inscripción a alumnos",
         icon: Users,
         protected: true
     }

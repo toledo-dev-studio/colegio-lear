@@ -26,7 +26,6 @@ export const useGetPagedAcademicCycles = () => {
     const academicLevelId = isValidValueWithDefault(searchParams.get("academic-level-id")?.trim(), undefined);
     const educationLevelId = isValidValueWithDefault(searchParams.get("education-level-id")?.trim(), undefined);
 
-
     const queryResult = useQuery({
         queryKey: [GET_PAGED_ACADEMIC_CYCLES_QUERY_KEY, {
             query,

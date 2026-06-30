@@ -4,12 +4,13 @@ import { Navigate, type RouteObject } from "react-router";
 import { AuthenticatedRoute } from "@/routes/protected.router"
 import { AcademicCycleLayout } from "../layouts/AcademicCycleLayout";
 import { AcademicCyclesPage } from "../pages/academic-cycles/AcademicCyclesPage";
+import { AcademicCycleContextLayout } from "../layouts/AcademicCycleContextLayout";
 import { AcademicCycleTab } from "../pages/academic-cycle/academic-cycle-tab/AcademicCycleTab";
 import { AcademicCycleWalletTab } from "../pages/academic-cycle/academic-cycle-wallet-tab/AcademicCycleWalletTab";
 import { AcademicCycleEnrollmentsTab } from "../pages/academic-cycle/academic-cycle-enrollments-tab/AcademicCycleEnrollmentsTab";
 import { AcademicCycleSchoolGroupsTab } from "../pages/academic-cycle/academic-cycle-school-groups-tab/AcademicCycleSchoolGroupsTab";
+import { AcademicCycleEnrollmentPage } from "../pages/academic-cycle/academic-cycle-enrollments-tab/pages/AcademicCycleEnrollmentPage";
 import { AcademicCycleSchoolSubjectsTab } from "../pages/academic-cycle/academic-cycle-school-subjects-tab/AcademicCycleSchoolSubjectsTab";
-import { AcademicCycleContextLayout } from "../layouts/AcademicCycleContextLayout";
 import { AcademicCycleSchoolGroupPage } from "../pages/academic-cycle/academic-cycle-school-groups-tab/pages/AcademicCycleSchoolGroupPage";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
@@ -61,9 +62,12 @@ export const academicCyclesRouter: RouteObject = {
                 {
                     path: "school-groups/:schoolGroupId",
                     element: <AcademicCycleSchoolGroupPage />
+                },
+                {
+                    path: "enrollments/:enrollmentId",
+                    element: <AcademicCycleEnrollmentPage />
                 }
             ]
-
         },
         {
             path: "*",

@@ -96,7 +96,7 @@ export const AcademicCycleTab = () => {
             <form onSubmit={handleSubmit(validateForm)}>
 
                 {/* Main student information */}
-                <section className="flex flex-col gap-y-6 mt-2">
+                <section className="flex flex-col gap-y-6">
 
                     <SectionTitle
                         title="INFORMACIÓN GENERAL DEL CICLO ESCOLAR"

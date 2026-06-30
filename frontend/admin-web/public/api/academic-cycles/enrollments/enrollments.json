@@ -5,6 +5,7 @@
     "data": [
         {
             "id": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "code": "INS-2026-0001",
             "status": "enrolled",
             "observations": "Inscripción regular sin observaciones.",
             "studentId": "c2e6f9d1-2f4b-4d0c-b6a5-7c1d9a3f0e21",
@@ -28,6 +29,7 @@
         },
         {
             "id": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345",
+            "code": "INS-2026-0002",
             "status": "enrolled",
             "observations": "Alumno con excelente desempeño académico.",
             "studentId": "7f3e2b18-52d0-4f8e-baf0-92bfa7c51234",
@@ -56,6 +58,7 @@
         },
         {
             "id": "e8c7a3f2-4d91-4e2f-a9d8-6b1c2f3a4567",
+            "code": "INS-2026-0003",
             "status": "completed",
             "observations": "Finalizó satisfactoriamente el ciclo escolar.",
             "studentId": "8c7f2a15-31b8-4d7e-bc21-9f5e7a123456",
@@ -79,6 +82,7 @@
         },
         {
             "id": "a3f9d1c7-7b6a-42e1-8d4c-1e2f3a4b5678",
+            "code": "INS-2026-0004",
             "status": "dropped",
             "observations": "Baja voluntaria por cambio de institución.",
             "studentId": "3b8c5d7e-9f10-4a2b-bcde-123456789abc",
@@ -102,6 +106,7 @@
         },
         {
             "id": "f1e2d3c4-b5a6-47d8-91e2-3f4a5b6c7d8e",
+            "code": "INS-2026-0005",
             "status": "enrolled",
             "studentId": "5e6f7a8b-9c0d-4e1f-abcd-234567890abc",
             "student": {

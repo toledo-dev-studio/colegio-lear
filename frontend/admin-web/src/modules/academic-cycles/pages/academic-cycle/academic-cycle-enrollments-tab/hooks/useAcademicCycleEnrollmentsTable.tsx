@@ -1,57 +1,75 @@
 import { Link, useOutletContext } from "react-router";
-import { Info, Pencil, Trash } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
-import { Button } from "@/shared/ui/button";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
+import { ACADEMIC_CYCLE_ENROLLMENT_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { ACADEMIC_CYCLE_SCHOOL_GROUP_ENROLLMENT_STATUSES, type AcademicCycleSchoolGroupEnrollment } from "@/interfaces/entites/academic-cycle-school-group-enrollment";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
-export const useAcademicCycleEnrollmentsTable = (
-    onClickCreateUpdateEnrollment: (item: AcademicCycleSchoolGroupEnrollment) => void,
-    handleDeleteEnrollment: (item: AcademicCycleSchoolGroupEnrollment) => void,
-) => {
+interface Options {
+    handleClickDelete: (item: AcademicCycleEnrollmentResponse) => void;
+}
+
+export const useAcademicCycleEnrollmentsTable = ({ handleClickDelete }: Options) => {
     // Get context from layout
     const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Table columns configuration structure
     const columns: string[] = [
+        "Código de inscripción",
         "Estudiante",
+        "Grupo escolar",
         "Estado de inscripción",
         "Beca asignada",
         "Acciones"
     ];
 
     // Table properties value configuration structure
-    const properties: TableProperty<AcademicCycleSchoolGroupEnrollment>[] = [
+    const properties: TableProperty<AcademicCycleEnrollmentResponse>[] = [
         {
-            key: "student.name",
-            render: (item: AcademicCycleSchoolGroupEnrollment) => (
-                <Link to={`/students/${item.studentId}`}>
+            key: "code",
+            render: ({ id, academicCycleId, code, student }: AcademicCycleEnrollmentResponse) => (
+                <Link to={`/academic-cycles/${academicCycleId}/enrollments/${id}`}>
                     <span className="text-primary">
-                        {item.student?.enrollment}
+                        {code}
                     </span>
                     <div className="text-xs text-muted-foreground truncate max-w-xs">
-                        {`${item.student?.name ?? ""} ${item.student?.firstLastName ?? ""} ${item.student?.secondLastName ?? ""}`}
+                        {student?.enrollment ?? ""}
                     </div>
                 </Link>
             )
         },
         {
+            key: "studentFullName",
+            render: ({ studentId, student }: AcademicCycleEnrollmentResponse) => (
+                <Link to={`/students/${studentId}`}>
+                    <span className="text-primary">
+                        {student?.enrollment}
+                    </span>
+                    <div className="text-xs text-muted-foreground truncate max-w-xs">
+                        {`${student?.name ?? ""} ${student?.firstLastName ?? ""} ${student?.secondLastName ?? ""}`}
+                    </div>
+                </Link>
+            )
+        },
+        { key: "academicCycleSchoolGroup.name" },
+        {
             key: "status",
-            render: ({ status }) => (
+            render: ({ status }: AcademicCycleEnrollmentResponse) => (
                 <Badge variant={
                     status === "completed" ? "success" :
                         status === "enrolled" ? "default" : "destructive"} className="py-4 px-6">
-                    {ACADEMIC_CYCLE_SCHOOL_GROUP_ENROLLMENT_STATUSES.find(item => item.key === status)?.label}
+                    {labelOf(ACADEMIC_CYCLE_ENROLLMENT_STATUSES, status)}
                 </Badge>
             )
         },
         {
             key: "scholarship",
-            render: ({ scholarship, scholarshipId }) => (
+            render: ({ scholarship, scholarshipId }: AcademicCycleEnrollmentResponse) => (
                 scholarshipId ? (
                     <Link to={`/scholarships/${scholarshipId}`}>
                         <span className="text-primary">
@@ -63,36 +81,20 @@ export const useAcademicCycleEnrollmentsTable = (
         },
     ];
 
-    const actions: TableAction<AcademicCycleSchoolGroupEnrollment>[] = [
+    const actions: TableAction<AcademicCycleEnrollmentResponse>[] = [
         {
             key: "info",
-            render: (item: AcademicCycleSchoolGroupEnrollment) => (
+            render: ({ id, academicCycleId }: AcademicCycleEnrollmentResponse) => (
                 <Tooltip>
                     <TooltipTrigger>
-                        <Link to={`/students/${item.studentId}/academic-cycles/${item.academicCycleId}`}>
-                            <Button variant={"info"} className="icon-btn-sm text-primary-foreground">
-                                <Info className="w-4 h-4" />
-                            </Button>
+                        <Link to={`/academic-cycles/${academicCycleId}/enrollments/${id}`}>
+                            <span className="bg-primary text-white icon-btn icon-btn-sm">
+                                <Pencil className="w-4 h-4" />
+                            </span>
                         </Link>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>Consultar detalles de la inscripción</p>
-                    </TooltipContent>
-                </Tooltip>
-            )
-        },
-        {
-            key: "edit",
-            render: (item: AcademicCycleSchoolGroupEnrollment) => (
-                <Tooltip>
-                    <TooltipTrigger>
-                        <Button className="icon-btn-sm"
-                            onClick={() => onClickCreateUpdateEnrollment(item)}>
-                            <Pencil className="w-4 h-4" />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Edición rápida de la inscripción</p>
+                        <p>Editar detalles de la inscripción</p>
                     </TooltipContent>
                 </Tooltip>
             )
@@ -100,20 +102,18 @@ export const useAcademicCycleEnrollmentsTable = (
     ];
     if (!isLocked) {
         actions.push(
-
             {
                 key: "delete",
-                render: (item: AcademicCycleSchoolGroupEnrollment) => (
+                render: (item: AcademicCycleEnrollmentResponse) => (
                     <Tooltip>
                         <TooltipTrigger>
-                            <Button className="icon-btn-sm text-primary-foreground"
-                                variant={"destructive"}
-                                onClick={() => handleDeleteEnrollment(item)}>
+                            <span className="bg-destructive text-white icon-btn icon-btn-sm"
+                                onClick={() => handleClickDelete(item)}>
                                 <Trash className="w-4 h-4" />
-                            </Button>
+                            </span>
                         </TooltipTrigger>
                         <TooltipContent>
-                            <p>Eliminar inscripción</p>
+                            <p>Eliminar inscripción del alumno</p>
                         </TooltipContent>
                     </Tooltip>
                 )

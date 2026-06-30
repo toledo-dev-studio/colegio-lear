@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { Loader } from "@/shared/components/loader/Loader";
@@ -10,6 +10,7 @@ import { AcademicCycleSchoolGroupForm } from "./components/AcademicCycleSchoolGr
 
 export const AcademicCycleSchoolGroupPage = () => {
     // Component hooks & stores
+    const navigate = useNavigate();
     const { schoolGroupId } = useParams();
 
     // Context hooks & stores configuration
@@ -27,9 +28,10 @@ export const AcademicCycleSchoolGroupPage = () => {
                 id: schoolGroupId!,
                 academicCycleSchoolGroupRequestLike
             }, {
-                onSuccess: () => {
+                onSuccess: (response) => {
                     toast.success("Grupo escolar agregado al ciclo escolar correctamente", { position: "top-right" });
                     loader.hide();
+                    navigate(`/academic-cycles/${context.academicCycleId}/school-groups/${response.id}`);
                 }
             });
         } catch (error) {

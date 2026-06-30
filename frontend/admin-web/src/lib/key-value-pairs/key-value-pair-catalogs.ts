@@ -1,5 +1,5 @@
 import type { KeyValuePair } from "./key-value-pair";
-import type { AcademicCycleSchoolGroupEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, BloodTypeKey, DayOfWeekKey, StudentGuardianTypeKey, StudentPaymentStatusKey } from "./key-value-pair-types";
+import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, BloodTypeKey, DayOfWeekKey, StudentGuardianTypeKey, StudentPaymentStatusKey } from "./key-value-pair-types";
 
 /**
  * DAY_OF_WEEKS represents a list of all possible days of the week with their corresponding keys and labels.
@@ -15,10 +15,10 @@ export const DAY_OF_WEEKS: KeyValuePair<DayOfWeekKey>[] = [
 ];
 
 /**
- * ACADEMIC_CYCLE_SCHOOL_GROUP_ENROLLMENT_STATUSES defines the possible statuses for a student's enrollment in an academic cycle group, which can be used to track the current state of the enrollment. 
+ * ACADEMIC_CYCLE_ENROLLMENT_STATUSES defines the possible statuses for a student's enrollment in an academic cycle group, which can be used to track the current state of the enrollment. 
  * Each status has a key and a label for display purposes.
  */
-export const ACADEMIC_CYCLE_SCHOOL_GROUP_ENROLLMENT_STATUSES: KeyValuePair<AcademicCycleSchoolGroupEnrollmentStatusKey>[] = [
+export const ACADEMIC_CYCLE_ENROLLMENT_STATUSES: KeyValuePair<AcademicCycleEnrollmentStatusKey>[] = [
     { key: "enrolled", label: "Inscrito" },
     { key: "completed", label: "Ciclo finalizado" },
     { key: "dropped", label: "Dado de baja" },

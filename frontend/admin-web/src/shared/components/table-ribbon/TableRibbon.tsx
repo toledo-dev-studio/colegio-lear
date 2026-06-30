@@ -21,7 +21,7 @@ interface SearchInputProps {
     disabled?: boolean;
     placeholder?: string;
     onClickClear?: () => void,
-    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>, query: string) => void;
     onChange?: (event: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) => void;
 }
 
@@ -133,7 +133,7 @@ export const TableRibbon = (props: Props) => {
                                     <Input
                                         value={query}
                                         onKeyDown={(e) => {
-                                            searchInput?.onKeyDown ? searchInput.onKeyDown(e) : handleKeyDown(e);
+                                            searchInput?.onKeyDown ? searchInput.onKeyDown(e, query) : handleKeyDown(e);
                                         }}
                                         onChange={(e) => {
                                             setQuery(e.target.value)

@@ -7,6 +7,7 @@ import { getPagedStudentsActionAsync } from "../../actions/students/get-paged-st
 
 interface Options {
     query?: string;
+    isActive?: boolean;
     enrollment?: string;
     fullName?: string;
     status?: boolean,
