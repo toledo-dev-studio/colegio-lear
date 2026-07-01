@@ -11,17 +11,20 @@ import { useSearchStudents } from "@/modules/students/hooks/students/useSearchSt
 import { useSearchScholarships } from "@/modules/scholarships/hooks/useSearchScholarships";
 import { ACADEMIC_CYCLE_ENROLLMENT_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { AcademicCycleEnrollmentRequest } from "@/interfaces/requests/academic-cycle-enrollment.request";
+import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
 import type { AcademicCycleSchoolGroupResponse } from "@/interfaces/responses/academic-cycle-school-group.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 
 interface Props {
+    academicCycleEnrollmentResponse: Partial<AcademicCycleEnrollmentResponse>;
     academicCycleSchoolGroups: AcademicCycleSchoolGroupResponse[];
     handleClickClose: () => void;
     onSubmit: (academicCycleEnrollmentRequestLike: Partial<AcademicCycleEnrollmentRequest>) => void;
 }
 
-export const AcademicCycleEnrollmentPanelForm = ({ academicCycleSchoolGroups, onSubmit, handleClickClose }: Props) => {
+export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentResponse, academicCycleSchoolGroups, onSubmit, handleClickClose }: Props) => {
     // Get context from layout
     const { academicCycleId } = useOutletContext<AcademicCycleLayoutContext>();
 
@@ -32,7 +35,16 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleSchoolGroups, on
     // Use react hook form configuration
     const { control, formState: { errors }, handleSubmit, watch, setValue } = useForm<Partial<AcademicCycleEnrollmentRequest>>({
         defaultValues: {
-            academicCycleId: academicCycleId
+            academicCycleId: academicCycleId,
+            status: isValidValueWithDefault(academicCycleEnrollmentResponse?.status, undefined),
+            observations: isValidValueWithDefault(academicCycleEnrollmentResponse?.observations, ""),
+            droppedNotes: isValidValueWithDefault(academicCycleEnrollmentResponse?.droppedNotes, ""),
+            studentId: isValidValueWithDefault(academicCycleEnrollmentResponse?.studentId, ""),
+            student: isValidValueWithDefault(academicCycleEnrollmentResponse?.student, undefined),
+            academicCycleSchoolGroupId: isValidValueWithDefault(academicCycleEnrollmentResponse?.academicCycleSchoolGroupId, ""),
+            academicCycleSchoolGroup: isValidValueWithDefault(academicCycleEnrollmentResponse?.academicCycleSchoolGroup, undefined),
+            scholarshipId: isValidValueWithDefault(academicCycleEnrollmentResponse?.scholarshipId, ""),
+            scholarship: isValidValueWithDefault(academicCycleEnrollmentResponse?.scholarship, undefined),
         }
     });
     const student = watch("student");

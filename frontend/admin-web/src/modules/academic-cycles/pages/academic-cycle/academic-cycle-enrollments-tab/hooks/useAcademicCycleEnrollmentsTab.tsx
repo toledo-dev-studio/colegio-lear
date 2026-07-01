@@ -20,6 +20,7 @@ export const useAcademicCycleEnrollmentsTab = () => {
     // Components hooks & stores
     const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
     const [isOpenCreateEnrollmentPanel, setIsOpenCreateEnrollmentPanel] = useState<boolean>(false);
+    const [academicCycleEnrollmentToEdit, setAcademicCycleEnrollmentToEdit] = useState<Partial<AcademicCycleEnrollmentResponse>>({});
     const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleEnrollmentResponse>();
 
     // Queries
@@ -60,8 +61,12 @@ export const useAcademicCycleEnrollmentsTab = () => {
             close: () => setIsOpenAdvancedFiltersPanel(false),
         },
         enrollmentPanel: {
+            data: academicCycleEnrollmentToEdit,
             isOpen: isOpenCreateEnrollmentPanel,
-            open: () => setIsOpenCreateEnrollmentPanel(true),
+            open: (item: Partial<AcademicCycleEnrollmentResponse> = {}) => {
+                setAcademicCycleEnrollmentToEdit(item);
+                setIsOpenCreateEnrollmentPanel(true);
+            },
             close: () => setIsOpenCreateEnrollmentPanel(false),
         },
         deleteModal: {

@@ -1,4 +1,4 @@
-import { Link, useOutletContext } from "react-router";
+import { useOutletContext } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
@@ -22,8 +22,9 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
     const columns: string[] = [
         "Concepto de pago",
         "Monto de pago (MXN)",
-        "¿Condonación de pago permitida?",
         "Fecha de vencimiento",
+        "¿Condonación de pago permitida?",
+        "Descripción",
         "Acciones"
     ];
     isLocked && columns.pop();
@@ -31,13 +32,11 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
     // Table properties value configuration structure
     const properties: TableProperty<AcademicCycleWalletResponse>[] = [
         {
-            key: "paymentConceptName",
-            render: ({ paymentConceptId, paymentConcept }: AcademicCycleWalletResponse) => (
-                <Link to={`/payment-concepts/${paymentConceptId}`}>
-                    <span className="text-primary">
-                        {paymentConcept?.name ?? "-"}
-                    </span>
-                </Link>
+            key: "name",
+            render: (item: AcademicCycleWalletResponse) => (
+                <span className="text-primary cursor-pointer" onClick={() => handleClickEdit(item)}>
+                    {item.name ?? "-"}
+                </span>
             )
         },
         {
@@ -58,6 +57,7 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
             key: "dueDate",
             render: ({ dueDate }: AcademicCycleWalletResponse) => (formatFriendlyDate(dueDate))
         },
+        { key: "description" }
     ];
 
     // Table actions list

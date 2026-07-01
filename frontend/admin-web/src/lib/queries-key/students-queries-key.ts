@@ -1,3 +1,11 @@
+export const GET_STUDENT_WALLET_QUERY_KEY = "student-wallet";
+export const GET_STUDENT_WALLET_SUMMARY_QUERY_KEY = "student-wallet-summary";
+
+
+
+
+
+// REMOVE
 export const GET_STUDENT_QUERY_KEY = "student";
 
 export const GET_PAGED_STUDENTS_QUERY_KEY = "paged-students";

@@ -1,7 +1,7 @@
 import type { EmployeeRequest } from "./employee.request";
 import type { AcademicCycleRequest } from "./academic-cycle.request";
 import type { SchoolSubjectRequest } from "./school-subject.request";
-import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { AcademicCycleSchoolGroupRequest } from "./academic-cycle-school-group.request";
 
 /**

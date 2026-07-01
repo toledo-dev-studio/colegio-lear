@@ -1,4 +1,3 @@
-import type { AcademicCycleResponse } from "./academic-cycle.response";
 import type { SchoolSubjectResponse } from "./school-subject.response";
 
 /**
@@ -19,10 +18,6 @@ export interface AcademicCycleSchoolSubjectResponse {
      * Identifier of the associated academic cycle
      */
     academicCycleId: string;
-    /**
-     * Reference to the associated academic cycle
-     */
-    academicCycle?: AcademicCycleResponse;
     /**
      * Identifier of the associated school subject
      */

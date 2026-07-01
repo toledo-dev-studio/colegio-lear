@@ -1,4 +1,3 @@
-import type { AcademicCycleRequest } from "./academic-cycle.request";
 import type { SchoolSubjectRequest } from "./school-subject.request";
 
 /**
@@ -15,10 +14,6 @@ export interface AcademicCycleSchoolSubjectRequest {
      * Identifier of the associated academic cycle
      */
     academicCycleId: string;
-    /**
-     * Reference to the associated academic cycle
-     */
-    academicCycle?: AcademicCycleRequest;
     /**
      * Identifier of the associated school subject
      */

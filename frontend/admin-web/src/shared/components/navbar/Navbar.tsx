@@ -47,14 +47,14 @@ export const Navbar = ({ toggleSidebar, logout }: Props) => {
                     className="icon-btn"
                     aria-label="Cambiar tema"
                 >
-                    {theme === "dark" ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
+                    {theme === "dark" ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
                 </button>
                 <button
                     data-testid="header-notifications"
                     className="icon-btn"
                     aria-label="Notificaciones"
                 >
-                    <Bell className="w-[18px] h-[18px]" />
+                    <Bell className="w-4.5 h-4.5" />
                     <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary" />
                 </button>
 

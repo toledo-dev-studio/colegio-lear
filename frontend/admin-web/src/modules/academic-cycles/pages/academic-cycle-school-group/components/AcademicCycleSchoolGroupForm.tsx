@@ -174,7 +174,10 @@ export const AcademicCycleSchoolGroupForm = ({ isSubmitting, teachersResponse, s
                                     teachers={teachersResponse}
                                     calendars={field.value || []}
                                     schoolSubjects={schoolSubjectsResponse}
-                                    onChangeCalendars={(calendars) => { field.onChange(calendars) }} />
+                                    onChangeCalendars={(calendars) => {
+                                        debugger;
+                                        field.onChange(calendars)
+                                    }} />
                             )}
                         />
                     </section>

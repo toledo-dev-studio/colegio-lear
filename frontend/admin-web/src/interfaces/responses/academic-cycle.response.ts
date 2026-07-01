@@ -1,6 +1,6 @@
 import type { AcademicLevelResponse } from "./academic-level.response";
 import type { EducationLevelResponse } from "./education-level.response";
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Response

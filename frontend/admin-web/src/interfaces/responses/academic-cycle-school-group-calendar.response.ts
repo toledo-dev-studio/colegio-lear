@@ -1,7 +1,7 @@
 import type { EmployeeResponse } from "./employee.response";
 import type { SchoolSubjectResponse } from "./school-subject.response";
 import type { AcademicCycleResponse } from "./academic-cycle.response";
-import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { AcademicCycleSchoolGroupResponse } from "./academic-cycle-school-group.response";
 
 /**

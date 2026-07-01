@@ -1,5 +1,5 @@
 import type { Calendar } from "../types/calendar";
-import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 export type DragMode = "create" | "move" | "resize";
 

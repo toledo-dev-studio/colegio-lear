@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { Loader } from "@/shared/components/loader/Loader";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
-import { useAcademicCycleSchoolGroupPage } from "../hooks/useAcademicCycleSchoolGroupPage";
+import { useAcademicCycleSchoolGroupPage } from "./hooks/useAcademicCycleSchoolGroupPage";
 import type { AcademicCycleSchoolGroupRequest } from "@/interfaces/requests/academic-cycle-school-group.request";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { AcademicCycleSchoolGroupForm } from "./components/AcademicCycleSchoolGroupForm";
@@ -18,7 +18,6 @@ export const AcademicCycleSchoolGroupPage = () => {
 
     // Constant configuration variables
     const title = schoolGroupId === "new" ? "Registro de grupo escolar" : "Edición de grupo escolar";
-
 
     // Component functions
     const onSubmit = async (academicCycleSchoolGroupRequestLike: Partial<AcademicCycleSchoolGroupRequest>) => {
@@ -58,25 +57,22 @@ export const AcademicCycleSchoolGroupPage = () => {
 
     return (
         <>
-            <div className="w-full py-12 px-10 lg:px-15">
+            <section className="w-full py-12 px-10 lg:px-15">
 
-                <div className="mb-10">
-                    <div className="mb-10">
+                <section className="mb-10">
                         <Breadcrumb items={[
                             { label: "Seguimiento escolar" },
                             { label: "Ciclos escolares", to: "/academic-cycles" },
                             { label: context.academicCycle?.code || "Edición de ciclo escolar", to: `/academic-cycles/${context.academicCycleId}/school-groups` },
                             { label: title }
                         ]} />
-                    </div>
-                </div>
+                </section>
 
                 <PageTitle
                     title="REGISTRO & EDICIÓN DE GRUPOS ESCOLARES"
                     subtitle="En esta sección podrás configurar aquellos grupos escolares que estarán disponibles para los alumnos al momento de su incripción en el ciclo escolar." />
 
-                <div className="flex-1">
-                    <section className="flex flex-col min-h-full gap-8 mt-14">
+                <section className="flex-1 flex flex-col min-h-full gap-8 mt-14">
 
                         <AcademicCycleSchoolGroupForm
                             isSubmitting={mutations.academicCycleSchoolGroup.createUpdate.isPending}
@@ -86,9 +82,8 @@ export const AcademicCycleSchoolGroupPage = () => {
                             onSubmit={onSubmit}
                         />
 
-                    </section>
-                </div>
-            </div>
+                </section>
+            </section>
         </>
     )
 }

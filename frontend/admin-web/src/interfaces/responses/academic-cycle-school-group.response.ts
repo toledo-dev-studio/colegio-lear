@@ -1,5 +1,5 @@
 import type { AcademicCycleResponse } from "./academic-cycle.response";
-import type { AcademicCycleSchoolGroupStatusKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleSchoolGroupStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { AcademicCycleSchoolGroupCalendarResponse } from "./academic-cycle-school-group-calendar.response";
 
 /**

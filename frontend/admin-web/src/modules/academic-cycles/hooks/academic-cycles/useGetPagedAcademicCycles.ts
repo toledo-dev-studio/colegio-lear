@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_ACADEMIC_CYCLES_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { getPagedAcademicCyclesActionAsync } from "@/modules/academic-cycles/actions/academic-cycles/get-paged-academic-cycles.action";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 

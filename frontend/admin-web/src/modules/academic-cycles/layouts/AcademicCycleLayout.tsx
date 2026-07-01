@@ -43,8 +43,8 @@ export const AcademicCycleLayout = () => {
                     title={title}
                     subtitle="Gestiona la información de los ciclos escolares que estará disponible en la organización" />
 
-                <div className="flex-1">
-                    <div className="flex flex-col min-h-full gap-5 mt-6">
+                <section className="flex-1">
+                    <section className="flex flex-col min-h-full gap-5">
 
                         {/* Form tabs */}
                         <div className="border-b border-default overflow-x-auto no-scrollbar w-full">
@@ -89,8 +89,8 @@ export const AcademicCycleLayout = () => {
                             <Outlet context={context} />
                         </div>
 
-                    </div>
-                </div>
+                    </section>
+                </section>
             </div>
         </>
     )

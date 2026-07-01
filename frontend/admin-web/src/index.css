@@ -236,7 +236,11 @@ h6 {
     @apply text-red-500 text-sm mt-2;
   }
 
+  .bg-success {
+    @apply bg-green-700 dark:bg-green-700/70;
+  }
 }
+
 
 /* Scrollbar */
 ::-webkit-scrollbar {

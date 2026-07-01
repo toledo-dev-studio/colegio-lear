@@ -1,44 +1,29 @@
 [
     {
         "id": "8c2f8d8e-1f35-4cb2-b8c7-2d3b6f3c1a11",
-        "dueDate": "2026-08-05T00:00:00.000Z",
+        "name": "Inscripción",
+        "description": "Pago correspondiente al proceso de inscripción para el ciclo escolar 2026-2027.",
         "amount": 2500,
         "allowForgiveness": false,
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-        "academicCycle": {
-            "name": "2026 - 2027"
-        },
-        "paymentConceptId": "b6e2f4d5-9d17-4c76-a8e4-0d8a5d6b7c21",
-        "paymentConcept": {
-            "name": "Inscripción"
-        }
+        "dueDate": "2026-08-05T00:00:00.000Z",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
     },
     {
         "id": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22",
-        "dueDate": "2026-09-10T00:00:00.000Z",
+        "name": "Colegiatura Septiembre",
+        "description": "Pago mensual correspondiente a la colegiatura del mes de septiembre.",
         "amount": 1800,
         "allowForgiveness": true,
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-        "academicCycle": {
-            "name": "2026 - 2027"
-        },
-        "paymentConceptId": "c7f9d1a3-5e62-4d8c-9a17-4b6f2e3d8c32",
-        "paymentConcept": {
-            "name": "Colegiatura Septiembre"
-        }
+        "dueDate": "2026-09-10T00:00:00.000Z",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
     },
     {
         "id": "d9b3e7a1-6c84-4f5d-b2a8-7e1c9d4f3b33",
-        "dueDate": "2026-12-15T00:00:00.000Z",
+        "name": "Material Didáctico",
+        "description": "Pago destinado a la adquisición de libros, cuadernos y demás materiales didácticos requeridos durante el ciclo escolar.",
         "amount": 1200,
         "allowForgiveness": false,
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-        "academicCycle": {
-            "name": "2026 - 2027"
-        },
-        "paymentConceptId": "a1d5c8f7-2b93-4e6a-8d14-5c7e9f2a4d43",
-        "paymentConcept": {
-            "name": "Material Didáctico"
-        }
+        "dueDate": "2026-12-15T00:00:00.000Z",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
     }
 ]

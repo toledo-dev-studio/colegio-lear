@@ -9,6 +9,7 @@ import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { Modal } from "@/shared/components/modal/Modal";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
@@ -18,10 +19,10 @@ import type { AcademicCycleRequest } from "@/interfaces/requests/academic-cycle.
 import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
 import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
+import {type AcademicCycleStatusKey, type AcademicPeriodTypeKey} from "@/lib/key-value-pairs/key-value-pair-types";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
-import { labelOf, type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 

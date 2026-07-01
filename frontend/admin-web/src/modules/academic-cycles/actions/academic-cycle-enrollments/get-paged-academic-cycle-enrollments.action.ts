@@ -11,23 +11,25 @@ interface Options extends AcademicCycleEnrollmentFilter {
     pageSize?: number;
 }
 
-export const getPagedAcademicCycleEnrollmentsActionAsync = async ({ query, page = 1, pageSize = 5, academicCycleId, academicCycleSchoolGroupId, status }: Options): Promise<PagedResponse<AcademicCycleEnrollmentResponse>> => {
+export const getPagedAcademicCycleEnrollmentsActionAsync = async ({ query, page = 1, pageSize = 5, academicCycleId, academicCycleSchoolGroupId, scholarshipId, status }: Options): Promise<PagedResponse<AcademicCycleEnrollmentResponse>> => {
     await sleep();
 
-    let endpoint = `/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/enrollments/paged`;
+    let endpoint = `/academic-cycles/${academicCycleId}/enrollments/paged`;
 
     if (VITE_ENVIRONMENT === "mockable")
-        endpoint = "/academic-cycles/enrollments/enrollments.json";
+        endpoint = "/academic-cycles/enrollments/paged-enrollments.json";
 
     // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/enrollments/enrollments.json";
+    endpoint = "http://localhost/api/academic-cycles/enrollments/paged-enrollments.json";
 
     const { data } = await api.get<PagedResponse<AcademicCycleEnrollmentResponse>>(endpoint, {
         params: {
             q: query,
             page,
             pageSize,
-            status
+            status,
+            academicCycleSchoolGroupId,
+            scholarshipId
         }
     });
 

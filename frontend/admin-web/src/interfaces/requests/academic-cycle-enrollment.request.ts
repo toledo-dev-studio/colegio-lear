@@ -3,7 +3,7 @@ import type { StudentRequest } from "./student.request";
 import type { ScholarshipRequest } from "./scholarship.request";
 import type { AcademicCycleRequest } from "./academic-cycle.request";
 import type { AcademicCycleSchoolGroupRequest } from "./academic-cycle-school-group.request";
-import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Request

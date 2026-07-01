@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { AcademicCycleFilter } from "@/interfaces/filters/academic-cycle.filter";
@@ -12,9 +13,9 @@ import type { AcademicLevelResponse } from "@/interfaces/responses/academic-leve
 import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 import { isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
+import { type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
-import { labelOf, type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 interface Props {

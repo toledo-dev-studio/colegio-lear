@@ -58,7 +58,7 @@ export const Sidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) => {
                                 isActiveRoute(item.module.key) ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted")
                             }
                           >
-                            <Icon className="w-[18px] h-[18px]" />
+                            <Icon className="w-4.5 h-4.5" />
                             <span>{item.module.label}</span>
                           </Link>
                         </li>
@@ -74,7 +74,7 @@ export const Sidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) => {
           onClick={logout}
           data-testid="sidebar-logout"
           className="cursor-pointer m-4 flex items-center gap-3 px-5 py-4 rounded-md text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors">
-          <LogOut className="w-[18px] h-[18px]" />
+          <LogOut className="w-4.5 h-4.5" />
           Cerrar sesión
         </button>
 

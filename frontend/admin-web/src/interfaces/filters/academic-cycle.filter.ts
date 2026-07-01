@@ -2,7 +2,7 @@
 
 import type { AcademicLevelFilter } from "./academic-level.filter";
 import type { EducationLevelFilter } from "./education-level.filter";
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Filter

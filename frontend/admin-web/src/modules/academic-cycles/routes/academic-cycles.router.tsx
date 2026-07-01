@@ -9,9 +9,9 @@ import { AcademicCycleTab } from "../pages/academic-cycle/academic-cycle-tab/Aca
 import { AcademicCycleWalletTab } from "../pages/academic-cycle/academic-cycle-wallet-tab/AcademicCycleWalletTab";
 import { AcademicCycleEnrollmentsTab } from "../pages/academic-cycle/academic-cycle-enrollments-tab/AcademicCycleEnrollmentsTab";
 import { AcademicCycleSchoolGroupsTab } from "../pages/academic-cycle/academic-cycle-school-groups-tab/AcademicCycleSchoolGroupsTab";
-import { AcademicCycleEnrollmentPage } from "../pages/academic-cycle/academic-cycle-enrollments-tab/pages/AcademicCycleEnrollmentPage";
+import { AcademicCycleEnrollmentPage } from "../pages/academic-cycle-enrollment/AcademicCycleEnrollmentPage";
 import { AcademicCycleSchoolSubjectsTab } from "../pages/academic-cycle/academic-cycle-school-subjects-tab/AcademicCycleSchoolSubjectsTab";
-import { AcademicCycleSchoolGroupPage } from "../pages/academic-cycle/academic-cycle-school-groups-tab/pages/AcademicCycleSchoolGroupPage";
+import { AcademicCycleSchoolGroupPage } from "../pages/academic-cycle-school-group/AcademicCycleSchoolGroupPage";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const AcademicCyclesLayout = lazy(() => import("@/modules/academic-cycles/layouts/AcademicCyclesLayout"));

@@ -7,12 +7,12 @@ import { generateTemporalId } from "@/lib/extensions/utils";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
 import { CalendarTimeGuide } from "./components/CalendarTimeGuide";
 import { CalendarFormPanel } from "./components/CalendarFormPanel";
-import { type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
 import { colorOf } from "./lib/schedule-calendar-palette-subject-colors";
 import { ScheduleCalendarStats } from "./components/ScheduleCalendarStats";
 import type { DragState } from "./interfaces/schedule-calendar-interfaces";
 import { CalendarWeekDaysHeader } from "./components/CalendarWeekDaysHeader";
 import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import { minutesToHHMM, clampMin, hhmmToMinutes, snap } from "./lib/schedule-calendar";
 import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
@@ -20,9 +20,9 @@ import { DAY_END_MIN, DAY_START_MIN, MIN_BLOCK_MIN, SLOT_MIN, SLOT_PX, TOTAL_SLO
 
 interface Props {
     disabled: boolean;
+    calendars: Calendar[];
     teachers: EmployeeResponse[];
     schoolSubjects: SchoolSubjectResponse[];
-    calendars: Calendar[];
     onChangeCalendars?: (calendars: Calendar[]) => void;
 }
 
@@ -111,12 +111,13 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
 
         if (d.mode === "create") {
             // Set temporal ID to prevent double records and manage new records
-            setCalendar({
+            const newCalendar = {
                 id: generateTemporalId(),
                 day: d.day,
                 startTime: minutesToHHMM(d.startMin),
                 endTime: minutesToHHMM(d.endMin),
-            })
+            }
+            setCalendar(newCalendar);
             return;
         }
         if (d.calendar) {
@@ -261,7 +262,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
                                     {/* existing slots */}
                                     {
                                         calendarItems.map((item) => {
-
+                                            
                                             const isDragging = drag?.calendar === item;
                                             // Moved to a different column; render at new column instead
                                             if (isDragging && drag?.day !== d.key)

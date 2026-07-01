@@ -14,7 +14,7 @@ export const createUpdateAcademicCycleEnrollmentActionAsync = async ({ id, acade
     await sleep();
 
     const isCreating = id === "new";
-    const { academicCycleId, academicCycleSchoolGroupId } = academicCycleEnrollmentRequestLike;
+    const { academicCycleId } = academicCycleEnrollmentRequestLike;
     
     // REMOVE
     if (VITE_ENVIRONMENT === "development") {
@@ -26,8 +26,8 @@ export const createUpdateAcademicCycleEnrollmentActionAsync = async ({ id, acade
 
     const { data } = await api<AcademicCycleEnrollmentResponse>({
         url: isCreating 
-            ? `/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/enrollments` 
-            : `/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/enrollments/${id}`,
+            ? `/academic-cycles/${academicCycleId}/enrollments` 
+            : `/academic-cycles/${academicCycleId}/enrollments/${id}`,
         method: isCreating ? "POST" : "PATCH",
         data: { ...academicCycleEnrollmentRequestLike }
     });

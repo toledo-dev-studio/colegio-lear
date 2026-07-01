@@ -5,12 +5,14 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import type { Calendar } from "../types/calendar";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
-import { labelOf, type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair";
 import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { generateTemporalId } from "@/lib/extensions/utils";
 
 interface Props {
     disabled: boolean;
@@ -26,6 +28,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
     // React hook form config
     const { control, formState: { errors }, trigger, setError, handleSubmit, setValue } = useForm<Partial<Calendar>>({
         defaultValues: {
+            id: isValidValueWithDefault(calendar?.id, generateTemporalId()),
             day: isValidValueWithDefault(calendar?.day, undefined),
             startTime: isValidValueWithDefault(calendar?.startTime, ""),
             endTime: isValidValueWithDefault(calendar?.endTime, ""),

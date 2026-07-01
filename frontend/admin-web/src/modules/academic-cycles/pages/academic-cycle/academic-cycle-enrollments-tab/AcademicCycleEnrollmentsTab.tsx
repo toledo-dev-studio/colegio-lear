@@ -17,13 +17,16 @@ export const AcademicCycleEnrollmentsTab = () => {
 
   // Context hooks and stores configuration
   const { context, loader, queries, mutations, advancedFiltersPanel, enrollmentPanel, deleteModal } = useAcademicCycleEnrollmentsTab();
-  const { columns, properties, actions } = useAcademicCycleEnrollmentsTable({ handleClickDelete: deleteModal.open });
+  const { columns, properties, actions } = useAcademicCycleEnrollmentsTable({
+    handleClickEdit: enrollmentPanel.open,
+    handleClickDelete: deleteModal.open
+  });
 
   // Component functions
   const handleClickConfirmDeleteEnrollment = async () => {
     if (!deleteModal.record)
       return;
-    await mutations.enrollments.delete.mutateAsync({ academicCycleId: context.academicCycleId!, academicCycleSchoolGroupId: deleteModal.record.academicCycleSchoolGroupId, id: deleteModal.record.id },
+    await mutations.enrollments.delete.mutateAsync({ academicCycleId: context.academicCycleId!, id: deleteModal.record.id },
       {
         onSuccess: () => {
           toast.success("El estudiante se eliminó correctamente del ciclo escolar", { position: "top-right" });
@@ -123,6 +126,7 @@ export const AcademicCycleEnrollmentsTab = () => {
       {
         enrollmentPanel.isOpen && (
           <AcademicCycleEnrollmentPanelForm
+            academicCycleEnrollmentResponse={enrollmentPanel.data}
             onSubmit={onSubmit}
             handleClickClose={enrollmentPanel.close}
             academicCycleSchoolGroups={queries.schoolGroups.get.data} />

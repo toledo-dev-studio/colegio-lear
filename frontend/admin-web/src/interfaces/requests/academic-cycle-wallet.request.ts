@@ -1,39 +1,30 @@
-import type { AcademicCycleRequest } from "./academic-cycle.request";
-import type { PaymentConceptRequest } from "./payment-concept.request";
-
 /**
  * Type: Request
  * Description: Represents a payment concept associated with an academic cycle wallet, containing details about the payment, its status, and references to related entities.
  */
 export interface AcademicCycleWalletRequest {
     /**
-     * Due date for the payment associated with the academic cycle wallet as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
+     * Payment concept name.
      */
-    dueDate: string;
+    name: string;
+    /**
+     * Description of the payment concept
+     */
+    description?: string;
     /**
      * Amount for the payment associated with the academic cycle wallet
-     * In frontend the default value will be determined by the associated payment concept, but it can be overridden when creating or updating an academic cycle wallet.
      */
     amount: number;
     /**
      * Indicates if forgiveness is allowed for the payment associated with the academic cycle wallet
-     * In frontend the default value will be determined by the associated payment concept, but it can be overridden when creating or updating an academic cycle wallet. 
      */
     allowForgiveness: boolean;
+    /**
+     * Due date for the payment associated with the academic cycle wallet as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
+     */
+    dueDate: string;
     /**
      * Identifier of the associated academic cycle
      */
     academicCycleId: string;
-    /**
-     * Reference to the associated academic cycle
-     */
-    academicCycle?: AcademicCycleRequest;
-    /**
-     * Payment concept unique identifier associated with the academic cycle wallet
-     */
-    paymentConceptId: string;
-    /**
-     * Reference to the associated payment concept
-     */
-    paymentConcept?: PaymentConceptRequest;
 }

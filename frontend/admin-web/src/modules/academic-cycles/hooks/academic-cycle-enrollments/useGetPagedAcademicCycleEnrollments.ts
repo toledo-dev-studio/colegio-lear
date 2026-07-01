@@ -2,8 +2,8 @@ import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
-import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
 import { isValidValueWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
+import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { GET_PAGED_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
 import { getPagedAcademicCycleEnrollmentsActionAsync } from "../../actions/academic-cycle-enrollments/get-paged-academic-cycle-enrollments.action";
 

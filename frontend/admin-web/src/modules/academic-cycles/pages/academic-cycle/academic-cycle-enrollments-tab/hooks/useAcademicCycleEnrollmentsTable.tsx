@@ -1,5 +1,5 @@
 import { Link, useOutletContext } from "react-router";
-import { Pencil, Trash } from "lucide-react";
+import { GraduationCap, Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
@@ -11,10 +11,11 @@ import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/aca
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 
 interface Options {
+    handleClickEdit: (item: AcademicCycleEnrollmentResponse) => void;
     handleClickDelete: (item: AcademicCycleEnrollmentResponse) => void;
 }
 
-export const useAcademicCycleEnrollmentsTable = ({ handleClickDelete }: Options) => {
+export const useAcademicCycleEnrollmentsTable = ({ handleClickEdit, handleClickDelete }: Options) => {
     // Get context from layout
     const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
@@ -83,18 +84,33 @@ export const useAcademicCycleEnrollmentsTable = ({ handleClickDelete }: Options)
 
     const actions: TableAction<AcademicCycleEnrollmentResponse>[] = [
         {
-            key: "info",
+            key: "details",
             render: ({ id, academicCycleId }: AcademicCycleEnrollmentResponse) => (
                 <Tooltip>
                     <TooltipTrigger>
                         <Link to={`/academic-cycles/${academicCycleId}/enrollments/${id}`}>
-                            <span className="bg-primary text-white icon-btn icon-btn-sm">
-                                <Pencil className="w-4 h-4" />
+                            <span className="text-white icon-btn icon-btn-sm bg-success">
+                                <GraduationCap className="w-4 h-4" />
                             </span>
                         </Link>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>Editar detalles de la inscripción</p>
+                        <p>Seguimiento académico</p>
+                    </TooltipContent>
+                </Tooltip>
+            )
+        },
+        {
+            key: "edit",
+            render: (item: AcademicCycleEnrollmentResponse) => (
+                <Tooltip>
+                    <TooltipTrigger>
+                        <span className="bg-primary text-white icon-btn icon-btn-sm" onClick={() => handleClickEdit(item)}>
+                            <Pencil className="w-4 h-4" />
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Editar inscripción</p>
                     </TooltipContent>
                 </Tooltip>
             )

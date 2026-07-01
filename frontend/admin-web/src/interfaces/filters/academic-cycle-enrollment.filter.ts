@@ -1,5 +1,5 @@
 import type { ScholarshipResponse } from "../responses/scholarship.response";
-import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { AcademicCycleSchoolGroupResponse } from "../responses/academic-cycle-school-group.response";
 
 /**

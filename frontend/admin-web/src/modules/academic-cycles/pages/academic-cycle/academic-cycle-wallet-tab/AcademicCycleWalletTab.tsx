@@ -39,7 +39,7 @@ export const AcademicCycleWalletTab = () => {
         const query = searchQuery.toLowerCase();
 
         return data.filter(item =>
-            item.paymentConcept?.name?.toLowerCase().includes(query)
+            item.name?.toLowerCase().includes(query)
         );
     }, [queries.wallet.get.data, searchQuery]);
 
@@ -64,8 +64,8 @@ export const AcademicCycleWalletTab = () => {
 
     const onSubmit = async (academicCycleWalletRequestLike: Partial<AcademicCycleWalletRequest>) => {
         try {
-            if (queries.wallet.get.data.some(item => item.paymentConceptId === academicCycleWalletRequestLike.paymentConceptId && item.id !== academicCycleWalletToEdit?.id)) {
-                toast.warning("El concepto de pago seleccionado ya se encuentra asociado al ciclo escolar", { position: "top-right" });
+            if (queries.wallet.get.data.some(item => item.name.trim().toLocaleLowerCase() === academicCycleWalletRequestLike.name?.trim().toLocaleLowerCase() && item.id !== academicCycleWalletToEdit?.id)) {
+                toast.warning("Ya cuenta con un concepto de pago con el mismo nombre", { position: "top-right" });
                 return;
             }
 
@@ -152,7 +152,7 @@ export const AcademicCycleWalletTab = () => {
                     <Modal
                         open={deleteModal.isOpen}
                         type="delete"
-                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.paymentConcept?.name}`}
+                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.name}`}
                         message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
                         isLoading={mutations.wallet.delete.isPending}
                         cancelButton={{

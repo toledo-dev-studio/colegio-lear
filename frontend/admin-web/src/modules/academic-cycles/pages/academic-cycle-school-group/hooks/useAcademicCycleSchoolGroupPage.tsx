@@ -57,7 +57,6 @@ export const useAcademicCycleSchoolGroupPage = ({ id }: Props) => {
             hide: hideLoading,
         },
         isLoadingPage: getAcademicCycleSchoolGroupQuery.isLoading || getTeachersQuery.isLoading || getSchoolSubjectsQuery.isLoading,
-        isLoadingPageError: false,
-        // isLoadingPageError: getAcademicCycleSchoolGroupQuery.isError || getTeachersQuery.isError || getSchoolSubjectsQuery.isError,
+        isLoadingPageError: getAcademicCycleSchoolGroupQuery.isError || getTeachersQuery.isError || getSchoolSubjectsQuery.isError,
     }
 }

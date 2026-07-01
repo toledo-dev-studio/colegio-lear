@@ -2,7 +2,7 @@ import type { StudentResponse } from "./student.response";
 import type { ScholarshipResponse } from "./scholarship.response";
 import type { AcademicCycleResponse } from "./academic-cycle.response";
 import type { AcademicCycleSchoolGroupResponse } from "./academic-cycle-school-group.response";
-import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Response

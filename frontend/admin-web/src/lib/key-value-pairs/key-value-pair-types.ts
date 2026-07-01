@@ -38,7 +38,7 @@ export type AcademicCycleEnrollmentStatusKey =
   | "completed"
   | "dropped";
 
-export type StudentPaymentStatusKey =
+export type StudentWalletStatusKey =
   | "pending"
   | "paid"
   | "overdue"

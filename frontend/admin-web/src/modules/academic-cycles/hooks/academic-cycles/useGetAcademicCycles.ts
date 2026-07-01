@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { getAcademicCyclesActionAsync } from "../../actions/academic-cycles/get-academic-cycles.action";
 

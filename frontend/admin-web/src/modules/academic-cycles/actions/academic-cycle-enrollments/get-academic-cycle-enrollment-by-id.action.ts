@@ -5,23 +5,22 @@ import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/aca
 
 interface Options {
     id: string;
-    academicCycleSchoolGroupId: string;
     academicCycleId: string;
 }
 
-export const getAcademicCycleEnrollmentByIdActionAsync = async ({ id, academicCycleSchoolGroupId, academicCycleId }: Options): Promise<AcademicCycleEnrollmentResponse> => {
+export const getAcademicCycleEnrollmentByIdActionAsync = async ({ id, academicCycleId }: Options): Promise<AcademicCycleEnrollmentResponse> => {
     await sleep();
 
     // REMOVE
     if (VITE_ENVIRONMENT === "development") {
-        const { data } = await api.get<AcademicCycleEnrollmentResponse[]>("http://localhost/api/academic-cycles/academic-cycles/academic-cycles.json");
+        const { data } = await api.get<AcademicCycleEnrollmentResponse[]>("http://localhost/api/academic-cycles/enrollments/enrollments.json");
         const record = data.find(item => item.id === id);
         if (!record)
             throw new Error("No se encontró el registro solicitado");
         return record;
     }
 
-    const { data } = await api.get<AcademicCycleEnrollmentResponse>(`/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/enrollments/${id}`);
+    const { data } = await api.get<AcademicCycleEnrollmentResponse>(`/academic-cycles/${academicCycleId}/enrollments/${id}`);
 
     return data;
 }

@@ -1,7 +1,7 @@
 
 import type { AcademicLevelRequest } from "./academic-level.request";
 import type { EducationLevelRequest } from "./education-level.request";
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair";
+import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Request
