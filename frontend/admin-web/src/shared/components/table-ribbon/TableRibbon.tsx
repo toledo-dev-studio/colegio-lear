@@ -85,7 +85,7 @@ export const TableRibbon = (props: Props) => {
 
     return (
         <>
-            <section className={cn("flex flex-col gap-6 mb-6 lg:flex-row lg:items-center", className)}>
+            <section className={cn("flex flex-col gap-6 lg:flex-row lg:items-center", className)}>
                 {/* Advanced filters */}
                 {
                     filterButton.show && (

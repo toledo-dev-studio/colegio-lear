@@ -78,7 +78,7 @@ export const AcademicCycleEnrollmentsTab = () => {
           addButton={{
             label: "Nueva incripción",
             disabled: queries.enrollments.paged.isLoading || queries.enrollments.paged.isError,
-            handleClick: () => enrollmentPanel.open()
+            handleClick: () => enrollmentPanel.open({})
           }}
           filterButton={{
             disabled: queries.enrollments.paged.isLoading || queries.enrollments.paged.isError,

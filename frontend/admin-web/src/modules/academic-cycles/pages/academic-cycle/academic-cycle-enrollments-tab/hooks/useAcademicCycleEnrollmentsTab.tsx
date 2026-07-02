@@ -67,7 +67,10 @@ export const useAcademicCycleEnrollmentsTab = () => {
                 setAcademicCycleEnrollmentToEdit(item);
                 setIsOpenCreateEnrollmentPanel(true);
             },
-            close: () => setIsOpenCreateEnrollmentPanel(false),
+            close: () => {
+                setAcademicCycleEnrollmentToEdit({});
+                setIsOpenCreateEnrollmentPanel(false)
+            },
         },
         deleteModal: {
             isOpen: isOpenSingleDeleteModal,

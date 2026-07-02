@@ -1,24 +1,26 @@
-import { Calendar, CheckCircle2, GraduationCap, Layers } from "lucide-react";
+import { BookMarked, Calendar, GraduationCap, Layers } from "lucide-react";
 
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
 import { OverviewCard } from "@/shared/components/overview-card/OverviewCard";
-import { ACADEMIC_CYCLE_PERIOD_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import type { StudentResponse } from "@/interfaces/responses/student.response";
 import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
+import { ACADEMIC_CYCLE_ENROLLMENT_STATUSES, ACADEMIC_CYCLE_PERIOD_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 
 interface Props {
+    student: StudentResponse;
     academicCycle: AcademicCycleResponse;
     academicCycleEnrollment: AcademicCycleEnrollmentResponse;
 }
 
-export const OverviewRibbon = ({ academicCycle, academicCycleEnrollment }: Props) => {
-    const { academicCycleSchoolGroup, scholarship } = academicCycleEnrollment;
+export const OverviewRibbon = ({ student, academicCycle, academicCycleEnrollment }: Props) => {
+    const { academicCycleSchoolGroup, scholarship, status } = academicCycleEnrollment;
 
     return (
         <>
-            <section className="bg-card rounded-3xl border border-border shadow-sm p-4 sm:p-6 w-full">
-                <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 mx-auto">
+            <section className="bg-card rounded-3xl border border-border shadow-sm p-4 sm:p-6  w-full">
+                <section className="grid grid-cols-1 lg:grid-cols-4 gap-4 mx-auto">
                     <OverviewCard
                         icon={Calendar}
                         label="Ciclo escolar"
@@ -27,9 +29,15 @@ export const OverviewRibbon = ({ academicCycle, academicCycleEnrollment }: Props
                     />
                     <OverviewCard
                         icon={Layers}
-                        label="Grupo"
+                        label="Grupo asignado"
                         value={academicCycleSchoolGroup?.name || "—"}
                         hint={academicCycleSchoolGroup?.description || "Sin descripción"}
+                    />
+                    <OverviewCard
+                        icon={BookMarked}
+                        label="Estatus de inscripción"
+                        value={labelOf(ACADEMIC_CYCLE_ENROLLMENT_STATUSES, status)}
+                        hint={`Matricula: ${student.enrollment}`}
                     />
                     <OverviewCard
                         icon={GraduationCap}
@@ -37,12 +45,9 @@ export const OverviewRibbon = ({ academicCycle, academicCycleEnrollment }: Props
                         value={scholarship?.name || "Sin beca"}
                         hint={scholarship ? `${scholarship.discountPercentage}% de descuento` : "—"}
                     />
-                    <OverviewCard
-                        icon={CheckCircle2}
-                        label="Fecha de inscripción"
-                        value={formatFriendlyDate(academicCycleEnrollment.createdAt!)}
-                        hint={`Vigencia: ${formatFriendlyDate(academicCycle.endDate)}`}
-                    />
+                </section>
+                <section className="flex flex-col gap-y-2 mt-4 sm:mt-6">
+                    <p className="text-[11px] text-muted-foreground -mb-2">Duración del ciclo escolar: {formatFriendlyDate(academicCycle.startDate)} - {formatFriendlyDate(academicCycle.endDate)}</p>
                 </section>
             </section>
         </>

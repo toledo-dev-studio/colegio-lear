@@ -8,8 +8,8 @@ import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { useAcademicCycleWalletTab } from "./hooks/useAcademicCycleWalletTab";
 import { useAcademicCycleWalletTable } from "./hooks/useAcademicCycleWalletTable";
 import { AcademicCycleWalletPanelForm } from "./components/AcademicCycleWalletPanelForm";
-import type { AcademicCycleWalletRequest } from "@/interfaces/requests/academic-cycle-wallet.request";
-import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
+import type { AcademicCycleWalletItemRequest } from "@/interfaces/requests/academic-cycle-wallet-item.request";
+import type { AcademicCycleWalletItemResponse } from "@/interfaces/responses/academic-cycle-wallet-item.response";
 
 export const AcademicCycleWalletTab = () => {
     // Context hooks & stores configuration
@@ -18,11 +18,11 @@ export const AcademicCycleWalletTab = () => {
     // Componet hooks and stores
     const [searchQuery, setSearchQuery] = useState("");
     const [isOpenCreateUpdatePanelForm, setIsOpenCreateUpdatePanelForm] = useState<boolean>(false);
-    const [academicCycleWalletToEdit, setAcademicCycleWalletToEdit] = useState<Partial<AcademicCycleWalletResponse>>();
+    const [academicCycleWalletToEdit, setAcademicCycleWalletToEdit] = useState<Partial<AcademicCycleWalletItemResponse>>();
 
     // Table hook configuration
     const { columns, properties, actions } = useAcademicCycleWalletTable({
-        handleClickEdit: (item: AcademicCycleWalletResponse) => {
+        handleClickEdit: (item: AcademicCycleWalletItemResponse) => {
             setAcademicCycleWalletToEdit(item);
             setIsOpenCreateUpdatePanelForm(true);
         },
@@ -62,17 +62,17 @@ export const AcademicCycleWalletTab = () => {
         )
     }
 
-    const onSubmit = async (academicCycleWalletRequestLike: Partial<AcademicCycleWalletRequest>) => {
+    const onSubmit = async (academicCycleWalletItemRequestLike: Partial<AcademicCycleWalletItemRequest>) => {
         try {
-            if (queries.wallet.get.data.some(item => item.name.trim().toLocaleLowerCase() === academicCycleWalletRequestLike.name?.trim().toLocaleLowerCase() && item.id !== academicCycleWalletToEdit?.id)) {
+            if (queries.wallet.get.data.some(item => item.name.trim().toLocaleLowerCase() === academicCycleWalletItemRequestLike.name?.trim().toLocaleLowerCase() && item.id !== academicCycleWalletToEdit?.id)) {
                 toast.warning("Ya cuenta con un concepto de pago con el mismo nombre", { position: "top-right" });
                 return;
             }
 
             loader.show("Guardando");
             await mutations.wallet.createUpdate.mutateAsync({
-                id: academicCycleWalletToEdit?.id!,
-                academicCycleWalletRequestLike
+                id: academicCycleWalletToEdit?.id || "new",
+                academicCycleWalletItemRequestLike
             }, {
                 onSuccess: () => {
                     toast.success("Concepto de pago agregado a la cartera del ciclo escolar correctamente", { position: "top-right" });
@@ -136,7 +136,7 @@ export const AcademicCycleWalletTab = () => {
             {
                 (!context.isLocked && isOpenCreateUpdatePanelForm) && (
                     <AcademicCycleWalletPanelForm
-                        academicCycleWalletResponse={academicCycleWalletToEdit}
+                        academicCycleWalletItemResponse={academicCycleWalletToEdit}
                         handleClickClose={() => {
                             setAcademicCycleWalletToEdit({});
                             setIsOpenCreateUpdatePanelForm(false);

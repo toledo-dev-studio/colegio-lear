@@ -1,5 +1,5 @@
 import type { KeyValuePair } from "./key-value-pair";
-import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, BloodTypeKey, DayOfWeekKey, StudentGuardianTypeKey, StudentPaymentStatusKey } from "./key-value-pair-types";
+import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, BloodTypeKey, DayOfWeekKey, PaymentMethodKey, StudentGuardianTypeKey, StudentWalletStatusKey } from "./key-value-pair-types";
 
 /**
  * DAY_OF_WEEKS represents a list of all possible days of the week with their corresponding keys and labels.
@@ -104,13 +104,21 @@ export const BLOOD_TYPES: KeyValuePair<BloodTypeKey>[] = [
 ];
 
 /**
- * STUDENT_PAYMENT_STATUSES defines the possible statuses for a student's payment associated with an academic cycle wallet, which can be used to track the current state of the payment. 
+ * STUDENT_WALLET_STATUSES defines the possible statuses for a student's payment associated with an academic cycle wallet, which can be used to track the current state of the payment. 
  * Each status has a key and a label for display purposes.
  */
-export const STUDENT_PAYMENT_STATUSES: KeyValuePair<StudentPaymentStatusKey>[] = [
+export const STUDENT_WALLET_STATUSES: KeyValuePair<StudentWalletStatusKey>[] = [
     { key: "pending", label: "Pendiente" },
     { key: "paid", label: "Pagado" },
     { key: "overdue", label: "Vencido" },
     { key: "forgiven", label: "Condonado" },
-    { key: "cancelled", label: "Cancelado" },
+];
+
+/**
+ * STUDENT_WALLET_STATUSES defines the possible statuses for a student's payment associated with an academic cycle wallet, which can be used to track the current state of the payment. 
+ * Each status has a key and a label for display purposes.
+ */
+export const STUDENT_WALLET_PAYMENT_METHODS: KeyValuePair<PaymentMethodKey>[] = [
+    { key: "cash", label: "Efectivo" },
+    { key: "online-payment", label: "Pago en línea" },
 ];

@@ -2,11 +2,11 @@ import { useOutletContext } from "react-router";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
-import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
+import type { AcademicCycleWalletItemResponse } from "@/interfaces/responses/academic-cycle-wallet-item.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { useGetAcademicCycleWallet } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useGetAcademicCycleWallet";
-import { useDeleteAcademicCycleWalletById } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useDeleteAcademicCycleWalletById";
-import { useCreateUpdateAcademicCycleWallet } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useCreateUpdateAcademicCycleWallet";
+import { useDeleteAcademicCycleWalletItemById } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useDeleteAcademicCycleWalletItemById";
+import { useCreateUpdateAcademicCycleWalletItem } from "@/modules/academic-cycles/hooks/academic-cycle-wallet/useCreateUpdateAcademicCycleWalletItem";
 
 
 export const useAcademicCycleWalletTab = () => {
@@ -17,14 +17,14 @@ export const useAcademicCycleWalletTab = () => {
     const { showLoading, hideLoading } = useLoaderStore();
 
     // Components hooks & stores
-    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleWalletResponse>();
+    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleWalletItemResponse>();
 
     // Queries
     const getAcademicCycleWalletQuery = useGetAcademicCycleWallet({ academicCycleId: academicCycleId! });
 
     // Mutations
-    const deleteAcademicCycleWalletMutation = useDeleteAcademicCycleWalletById();
-    const createUpdateAcademicCycleWalletMutation = useCreateUpdateAcademicCycleWallet();
+    const deleteAcademicCycleWalletMutation = useDeleteAcademicCycleWalletItemById();
+    const createUpdateAcademicCycleWalletMutation = useCreateUpdateAcademicCycleWalletItem();
 
     return {
         context: {

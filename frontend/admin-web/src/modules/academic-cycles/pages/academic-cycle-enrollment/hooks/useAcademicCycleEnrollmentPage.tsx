@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { useOutletContext } from "react-router";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import type { StudentWalletItemResponse } from "@/interfaces/responses/student-wallet-item.response";
 import { useGetStudentWallet } from "@/modules/academic-cycles/hooks/student-wallet/useGetStudentWallet";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { useGetStudentWalletSummary } from "@/modules/academic-cycles/hooks/student-wallet/useGetStudentWalletSummary";
+import { useUpdateStudentWalletItem } from "@/modules/academic-cycles/hooks/student-wallet/useUpdateStudentWalletItem";
+import { useGetStudentWalletPayments } from "@/modules/academic-cycles/hooks/student-wallet/useGetStudentWalletPayments";
+import { useCreateStudentWalletPayment } from "@/modules/academic-cycles/hooks/student-wallet/useCreateStudentWalletPayment";
 import { useGetAcademicCycleEnrollmentById } from "@/modules/academic-cycles/hooks/academic-cycle-enrollments/useGetAcademicCycleEnrollmentById";
 
 interface Props {
@@ -16,11 +20,22 @@ export const useAcademicCycleEnrollmentPage = ({ id }: Props) => {
 
     // Shared hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
+    
+    // Student wallet item panel form states
+    const [isOpenStudentWalletItemPanelForm, setIsOpenStudentWalletItemPanelForm] = useState<boolean>(false);
+    const [studentWalletItemToEdit, setStudentWalletItemToEdit] = useState<Partial<StudentWalletItemResponse>>();
+
+    // Student wallet payment panel form states
+    const [isOpenStudentWalletPaymentPanelForm, setIsOpenStudentWalletPaymentPanelForm] = useState<boolean>(false);
 
     // Queries
     const getAcademicCycleEnrollmentByIdQuery = useGetAcademicCycleEnrollmentById({ id, academicCycleId: academicCycleId! });
     const getStudentWalletQuery = useGetStudentWallet({ academicCycleId: academicCycleId!, academicCycleEnrollmentId: id });
-    const getStudentWalletSummaryQuery = useGetStudentWalletSummary({ academicCycleId: academicCycleId!, academicCycleEnrollmentId: id });
+    const getStudentWalletPaymentsQuery = useGetStudentWalletPayments({ academicCycleId: academicCycleId!, academicCycleEnrollmentId: id });
+
+    // Mutations
+    const updateStudentWalletItemMutation = useUpdateStudentWalletItem();
+    const createStudentWalletPaymentMutation = useCreateStudentWalletPayment();
 
     return {
         context: {
@@ -34,17 +49,50 @@ export const useAcademicCycleEnrollmentPage = ({ id }: Props) => {
             },
             studentWallet: {
                 get: getStudentWalletQuery,
-                getSummary: getStudentWalletSummaryQuery
+            },
+            studentWalletPayments: {
+                get: getStudentWalletPaymentsQuery,
             }
         },
         mutations: {
-
+            studentWalletItem: {
+                update: updateStudentWalletItemMutation,
+            },
+            studentWalletPayment: {
+                create: createStudentWalletPaymentMutation,
+            }
         },
         loader: {
             show: showLoading,
             hide: hideLoading,
         },
-        isLoadingPage: getAcademicCycleEnrollmentByIdQuery.isLoading || getStudentWalletQuery.isLoading || getStudentWalletSummaryQuery.isLoading,
-        isLoadingPageError: getAcademicCycleEnrollmentByIdQuery.isError || getStudentWalletQuery.isError || getStudentWalletSummaryQuery.isError,
+        sidePanels: {
+            studentWalletItemPanelForm: {
+                data: studentWalletItemToEdit,
+                isOpen: isOpenStudentWalletItemPanelForm,
+                open: (item: StudentWalletItemResponse) => {
+                    setStudentWalletItemToEdit(item);
+                    setIsOpenStudentWalletItemPanelForm(true);
+                },
+                close: () => {
+                    setStudentWalletItemToEdit({});
+                    setIsOpenStudentWalletItemPanelForm(false)
+                }
+            },
+            studentWalletPaymentPanelForm: {
+                data: studentWalletItemToEdit,
+                isOpen: isOpenStudentWalletPaymentPanelForm,
+                open: (item: StudentWalletItemResponse) => {
+                    setStudentWalletItemToEdit(item);
+                    setIsOpenStudentWalletPaymentPanelForm(true);
+                },
+                close: () => {
+                    setStudentWalletItemToEdit({});
+                    setIsOpenStudentWalletPaymentPanelForm(false)
+                }
+            }
+        },
+        isLoadingPage: getAcademicCycleEnrollmentByIdQuery.isLoading || getStudentWalletQuery.isLoading,
+        isLoadingPageError: getAcademicCycleEnrollmentByIdQuery.isError || getStudentWalletQuery.isError,
     }
 }

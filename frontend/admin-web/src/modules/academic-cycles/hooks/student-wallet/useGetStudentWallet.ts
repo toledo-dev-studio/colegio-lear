@@ -10,14 +10,9 @@ interface Options {
 }
 
 export const useGetStudentWallet = ({ academicCycleId, academicCycleEnrollmentId }: Options) => {
-    const queryResult = useQuery({
+    return useQuery({
         queryKey: [GET_STUDENT_WALLET_QUERY_KEY, { academicCycleId, academicCycleEnrollmentId }],
         queryFn: () => getStudentWalletActionAsync({ academicCycleId, academicCycleEnrollmentId }),
         staleTime: FIVE_MINUTES_STALE_TIME
     });
-
-    return {
-        ...queryResult,
-        data: queryResult.data ?? [],
-    }
 }

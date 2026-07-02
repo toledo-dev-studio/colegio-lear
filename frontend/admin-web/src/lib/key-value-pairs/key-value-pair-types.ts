@@ -42,8 +42,7 @@ export type StudentWalletStatusKey =
   | "pending"
   | "paid"
   | "overdue"
-  | "forgiven"
-  | "cancelled";
+  | "forgiven";
 
 export type AllergySeverityKey =
   | "mild"

@@ -7,7 +7,7 @@ interface Options {
     academicCycleId: string;
 }
 
-export const deleteAcademicCycleWalletByIdActionAsync = async ({ academicCycleId, id }: Options): Promise<Options> => {
+export const deleteAcademicCycleWalletItemByIdActionAsync = async ({ academicCycleId, id }: Options): Promise<Options> => {
     await sleep();
 
     // REMOVE

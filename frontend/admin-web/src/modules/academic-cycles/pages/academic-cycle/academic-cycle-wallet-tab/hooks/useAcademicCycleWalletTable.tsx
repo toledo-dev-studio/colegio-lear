@@ -6,12 +6,12 @@ import { formatFriendlyDate, formatMoney } from "@/lib/extensions/formatters";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
-import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
+import type { AcademicCycleWalletItemResponse } from "@/interfaces/responses/academic-cycle-wallet-item.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 
 interface Options {
-    handleClickEdit: (item: AcademicCycleWalletResponse) => void;
-    handleClickDelete: (item: AcademicCycleWalletResponse) => void;
+    handleClickEdit: (item: AcademicCycleWalletItemResponse) => void;
+    handleClickDelete: (item: AcademicCycleWalletItemResponse) => void;
 }
 
 export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete }: Options) => {
@@ -30,10 +30,10 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
     isLocked && columns.pop();
 
     // Table properties value configuration structure
-    const properties: TableProperty<AcademicCycleWalletResponse>[] = [
+    const properties: TableProperty<AcademicCycleWalletItemResponse>[] = [
         {
             key: "name",
-            render: (item: AcademicCycleWalletResponse) => (
+            render: (item: AcademicCycleWalletItemResponse) => (
                 <span className="text-primary cursor-pointer" onClick={() => handleClickEdit(item)}>
                     {item.name ?? "-"}
                 </span>
@@ -41,11 +41,11 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
         },
         {
             key: "amount",
-            render: ({ amount }: AcademicCycleWalletResponse) => (formatMoney(amount))
+            render: ({ amount }: AcademicCycleWalletItemResponse) => (formatMoney(amount))
         },
         {
             key: "allowForgiveness",
-            render: ({ allowForgiveness }: AcademicCycleWalletResponse) => (
+            render: ({ allowForgiveness }: AcademicCycleWalletItemResponse) => (
                 <Badge variant={allowForgiveness ? "success" : "destructive"} className="py-4 px-6">
                     {
                         allowForgiveness ? "Permitido" : "No permitido"
@@ -55,16 +55,16 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
         },
         {
             key: "dueDate",
-            render: ({ dueDate }: AcademicCycleWalletResponse) => (formatFriendlyDate(dueDate))
+            render: ({ dueDate }: AcademicCycleWalletItemResponse) => (formatFriendlyDate(dueDate))
         },
         { key: "description" }
     ];
 
     // Table actions list
-    const actions: TableAction<AcademicCycleWalletResponse>[] = isLocked ? [] : [
+    const actions: TableAction<AcademicCycleWalletItemResponse>[] = isLocked ? [] : [
         {
             key: "edit",
-            render: (item: AcademicCycleWalletResponse) => (
+            render: (item: AcademicCycleWalletItemResponse) => (
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-primary text-white icon-btn icon-btn-sm"
@@ -80,7 +80,7 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
         },
         {
             key: "delete",
-            render: (item: AcademicCycleWalletResponse) => (
+            render: (item: AcademicCycleWalletItemResponse) => (
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"

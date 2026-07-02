@@ -2,7 +2,7 @@
  * Type: Request
  * Description: Represents a payment concept associated with an academic cycle wallet, containing details about the payment, its status, and references to related entities.
  */
-export interface AcademicCycleWalletRequest {
+export interface AcademicCycleWalletItemRequest {
     /**
      * Payment concept name.
      */

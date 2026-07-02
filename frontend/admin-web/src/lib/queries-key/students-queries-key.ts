@@ -1,5 +1,6 @@
 export const GET_STUDENT_WALLET_QUERY_KEY = "student-wallet";
-export const GET_STUDENT_WALLET_SUMMARY_QUERY_KEY = "student-wallet-summary";
+
+export const GET_STUDENT_WALLET_PAYMENTS_QUERY_KEY = "student-wallet-payments";
 
 
 

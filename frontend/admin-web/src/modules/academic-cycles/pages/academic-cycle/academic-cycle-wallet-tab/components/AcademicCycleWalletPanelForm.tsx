@@ -12,17 +12,17 @@ import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { PaymentConceptResponse } from "@/interfaces/responses/payment-concept.response";
 import { useSearchPaymentConcepts } from "@/modules/payment-concepts/hooks/useSearchPaymentConcepts";
-import type { AcademicCycleWalletRequest } from "@/interfaces/requests/academic-cycle-wallet.request";
-import type { AcademicCycleWalletResponse } from "@/interfaces/responses/academic-cycle-wallet.response";
+import type { AcademicCycleWalletItemRequest } from "@/interfaces/requests/academic-cycle-wallet-item.request";
+import type { AcademicCycleWalletItemResponse } from "@/interfaces/responses/academic-cycle-wallet-item.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 
 interface Props {
-    academicCycleWalletResponse?: Partial<AcademicCycleWalletResponse>;
+    academicCycleWalletItemResponse?: Partial<AcademicCycleWalletItemResponse>;
     handleClickClose: () => void;
-    onSubmit: (academicCycleWalletRequestLike: Partial<AcademicCycleWalletRequest>) => void;
+    onSubmit: (academicCycleWalletItemRequestLike: Partial<AcademicCycleWalletItemRequest>) => void;
 }
 
-export const AcademicCycleWalletPanelForm = ({ academicCycleWalletResponse, handleClickClose, onSubmit }: Props) => {
+export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, handleClickClose, onSubmit }: Props) => {
     // Get context from layout
     const { academicCycleId } = useOutletContext<AcademicCycleLayoutContext>();
 
@@ -31,14 +31,14 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletResponse, hand
     const searchPaymentConcepts = useSearchPaymentConcepts();
 
     // Use hook form configuration
-    const { control, handleSubmit, formState: { errors }, setValue } = useForm<Partial<AcademicCycleWalletRequest>>({
+    const { control, handleSubmit, formState: { errors }, setValue } = useForm<Partial<AcademicCycleWalletItemRequest>>({
         defaultValues: {
             academicCycleId: academicCycleId,
-            name: isValidValueWithDefault(academicCycleWalletResponse?.name, ""),
-            description: isValidValueWithDefault(academicCycleWalletResponse?.description, ""),
-            amount: isValidValueWithDefault(academicCycleWalletResponse?.amount, 0),
-            dueDate: isValidValueWithDefault(academicCycleWalletResponse?.dueDate, ""),
-            allowForgiveness: isValidValueWithDefault(academicCycleWalletResponse?.allowForgiveness, false),
+            name: isValidValueWithDefault(academicCycleWalletItemResponse?.name, ""),
+            description: isValidValueWithDefault(academicCycleWalletItemResponse?.description, ""),
+            amount: isValidValueWithDefault(academicCycleWalletItemResponse?.amount, 0),
+            dueDate: isValidValueWithDefault(academicCycleWalletItemResponse?.dueDate, ""),
+            allowForgiveness: isValidValueWithDefault(academicCycleWalletItemResponse?.allowForgiveness, false),
         }
     });
 

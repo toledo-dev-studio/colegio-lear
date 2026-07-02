@@ -62,71 +62,64 @@ export const AcademicCyclesPage = () => {
 
     return (
         <>
-            <div className="w-full py-12 px-10 lg:px-15">
+            <section className="page-main-section">
 
-                <div className="mb-10">
-                    <Breadcrumb items={[
-                        { label: "Seguimiento escolar" },
-                        { label: "Ciclos escolares", to: "/academic-cycles" }
-                    ]} />
-                </div>
+                <Breadcrumb items={[{ label: "Seguimiento escolar" }, { label: "Ciclos escolares", to: "/academic-cycles" }]} />
 
                 <PageTitle title="Ciclos escolares" subtitle="Gestiona la información de los ciclos académicos y sus datos" />
 
-                <section className="flex flex-col gap-8 mt-14">
+                {/* Table ribbon options */}
+                <TableRibbon
+                    addButton={{ handleClick: () => navigate("/academic-cycles/new") }}
+                    filterButton={{ handleClick: advancedFilters.open }}
+                    exportButton={{ handleClick: handleClickExport }}
+                    searchInput={{ tooltip: "Búsqueda general por nombre, código & descripción", placeholder: "Búsqueda general por nombre, código & descripción" }}
+                />
 
-                    {/* Table ribbon options */}
-                    <TableRibbon
-                        addButton={{ handleClick: () => navigate("/academic-cycles/new")}}
-                        filterButton={{ handleClick: advancedFilters.open }}
-                        exportButton={{ handleClick: handleClickExport }}
-                        searchInput={{ tooltip: "Búsqueda general por nombre, código & descripción", placeholder: "Búsqueda general por nombre, código & descripción" }}
-                    />
-                    {/* Table content*/}
-                    <Table
-                        data={queries.academicCycles.paged.data}
-                        isLoading={queries.academicCycles.paged.isFetching}
-                        enablePagination={true}
-                        columns={columns}
-                        properties={properties}
-                        actions={actions}
-                        totalPages={queries.academicCycles.paged.totalPages}
-                    />
+                {/* Table content*/}
+                <Table
+                    data={queries.academicCycles.paged.data}
+                    isLoading={queries.academicCycles.paged.isFetching}
+                    enablePagination={true}
+                    columns={columns}
+                    properties={properties}
+                    actions={actions}
+                    totalPages={queries.academicCycles.paged.totalPages}
+                />
 
-                    {/* Delete single record modal */}
-                    {
-                        (deleteModal.isOpen && deleteModal.record) && (
-                            <Modal
-                                open={deleteModal.isOpen}
-                                type="delete"
-                                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
-                                message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                                isLoading={mutations.academicCycles.delete.isPending}
-                                cancelButton={{
-                                    label: "Cancelar",
-                                    onClick: () => deleteModal.close()
-                                }}
-                                confirmButton={{
-                                    label: "Sí, eliminar",
-                                    onClick: handleClickConfirmDeleteAcademicCycle
-                                }}
-                            />
-                        )
-                    }
+                {/* Delete single record modal */}
+                {
+                    (deleteModal.isOpen && deleteModal.record) && (
+                        <Modal
+                            open={deleteModal.isOpen}
+                            type="delete"
+                            title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
+                            message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
+                            isLoading={mutations.academicCycles.delete.isPending}
+                            cancelButton={{
+                                label: "Cancelar",
+                                onClick: () => deleteModal.close()
+                            }}
+                            confirmButton={{
+                                label: "Sí, eliminar",
+                                onClick: handleClickConfirmDeleteAcademicCycle
+                            }}
+                        />
+                    )
+                }
 
-                    {/* Advanced filters panel */}
-                    {
-                        advancedFilters.isOpen && (
-                            <AcademicCyclesAdvancedFilters
-                                open={advancedFilters.isOpen}
-                                title="Filtros avanzados"
-                                handleClickClose={advancedFilters.close}
-                            />
-                        )
-                    }
+                {/* Advanced filters panel */}
+                {
+                    advancedFilters.isOpen && (
+                        <AcademicCyclesAdvancedFilters
+                            open={advancedFilters.isOpen}
+                            title="Filtros avanzados"
+                            handleClickClose={advancedFilters.close}
+                        />
+                    )
+                }
 
-                </section>
-            </div>
+            </section>
         </>
     )
 }

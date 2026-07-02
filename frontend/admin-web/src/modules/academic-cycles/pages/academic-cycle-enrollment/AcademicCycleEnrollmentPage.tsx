@@ -1,30 +1,75 @@
-import { Navigate, useNavigate, useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
 
 import { toast } from "sonner";
-import { Calendar, CheckCircle2, GraduationCap, Layers, Coins, Banknote, Receipt, Sparkles, ClockAlert, Wallet } from "lucide-react";
 
 import { Loader } from "@/shared/components/loader/Loader";
+import { OverviewRibbon } from "./components/OverviewRibbon";
+import { StudentWalletTable } from "./components/StudentWalletTable";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
-import { OverviewCard } from "@/shared/components/overview-card/OverviewCard";
+import { OverviewStatsRibbon } from "./components/OverviewStatsRibbon";
+import { StudentWalletPaymentsTable } from "./components/StudentWalletPaymentsTable";
+import { StudentWalletItemPanelForm } from "./components/StudentWalletItemPanelForm";
 import { useAcademicCycleEnrollmentPage } from "./hooks/useAcademicCycleEnrollmentPage";
-import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
-import { ACADEMIC_CYCLE_PERIOD_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
-import { OverviewRibbon } from "./components/OverviewRibbon";
-import { StatCard } from "@/shared/components/stat-card/StatCard";
-import { formatMoney } from "@/lib/extensions/formatters";
-import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import { StudentWalletPaymentPanelForm } from "./components/StudentWalletPaymentPanelForm";
+import type { StudentWalletItemRequest } from "@/interfaces/requests/student-wallet-item.request";
+import type { StudentWalletPaymentRequest } from "@/interfaces/requests/student-wallet-payment.request";
 
 export const AcademicCycleEnrollmentPage = () => {
   // Component hooks & stores
-  const navigate = useNavigate();
   const { enrollmentId } = useParams();
 
   // Context hooks & stores configuration
-  const { context, queries, mutations, loader, isLoadingPage, isLoadingPageError } = useAcademicCycleEnrollmentPage({ id: enrollmentId! });
+  const { context, queries, mutations, loader, sidePanels, isLoadingPage, isLoadingPageError } = useAcademicCycleEnrollmentPage({ id: enrollmentId! });
+  const enrolledStudent = queries.enrollment.getById.data?.status === "enrolled";
   const academicCycleEnrollment = queries.enrollment.getById.data;
   const studentWallet = queries.studentWallet.get.data;
-  const studentWalletSummary = queries.studentWallet.getSummary.data;
+  const studentWalletPayments = queries.studentWalletPayments.get.data;
+  console.log(studentWallet?.items[2]);  
+
+  // Component functions
+  const onSubmitStudentWalletItem = async (studentWalletItemRequestLike: Partial<StudentWalletItemRequest>) => {
+    try {
+      loader.show("Guardando");
+      await mutations.studentWalletItem.update.mutateAsync({
+        id: sidePanels.studentWalletItemPanelForm.data?.id!,
+        academicCycleId: context.academicCycleId!,
+        academicCycleEnrollmentId: enrollmentId!,
+        studentWalletItemRequestLike
+      }, {
+        onSuccess: () => {
+          toast.success("Se actualizó el concepto de pago asociado a la cartera del estudiante", { position: "top-right" });
+          loader.hide();
+          sidePanels.studentWalletItemPanelForm.close();
+        }
+      });
+    } catch (error) {
+      console.warn(error);
+      loader.hide();
+      toast.error("Ocurrió un error al tratar de guardar el registro", { position: "top-right" });
+    }
+  }
+
+  const onSubmitStudentWalletPayment = async (studentWalletPaymentRequestLike: Partial<StudentWalletPaymentRequest>) => {
+    try {
+      loader.show("Guardando");
+      await mutations.studentWalletPayment.create.mutateAsync({
+        academicCycleId: context.academicCycleId!,
+        academicCycleEnrollmentId: enrollmentId!,
+        studentWalletPaymentRequestLike
+      }, {
+        onSuccess: () => {
+          toast.success("Se registró el pago al concepto de pago seleccionado con éxito", { position: "top-right" });
+          loader.hide();
+          sidePanels.studentWalletPaymentPanelForm.close();
+        }
+      });
+    } catch (error) {
+      console.warn(error);
+      loader.hide();
+      toast.error("Ocurrió un error al tratar de guardar el registro", { position: "top-right" });
+    }
+  }
 
   if (isLoadingPageError) {
     toast.error("No fue posible obtener la información relacionada en alumno seleccionado", { position: "top-right" });
@@ -43,57 +88,61 @@ export const AcademicCycleEnrollmentPage = () => {
 
   return (
     <>
-      <section className="w-full py-12 px-10 lg:px-15">
+      <section className="page-main-section ">
 
-        <section className="mb-10">
-          <Breadcrumb items={[
-            { label: "Seguimiento escolar" },
-            { label: "Ciclos escolares", to: "/academic-cycles" },
-            { label: context.academicCycle?.code || "Edición de ciclo escolar", to: `/academic-cycles/${context.academicCycleId}/enrollments` },
-            { label: academicCycleEnrollment?.student?.enrollment! }
-          ]} />
-        </section>
+        <Breadcrumb items={[
+          { label: "Seguimiento escolar" },
+          { label: "Ciclos escolares", to: "/academic-cycles" },
+          { label: context.academicCycle?.code || "Edición de ciclo escolar", to: `/academic-cycles/${context.academicCycleId}/enrollments` },
+          { label: academicCycleEnrollment?.student?.enrollment! }
+        ]} />
 
         <PageTitle
           title={`DETALLES DE INSCRIPCIÓN "${academicCycleEnrollment?.code}"`}
           subtitle="En esta sección podrás consultar y modificar la información de la incripción del alumno en el ciclo escolar." />
 
-        {/* Main enrollment content */}
-        <section className="flex-1 flex flex-col min-h-full gap-8 mt-8">
-          {/* Ribbon overview */}
-          <OverviewRibbon
-            academicCycle={context.academicCycle!}
-            academicCycleEnrollment={academicCycleEnrollment!} />
+        {/* Ribbon overview */}
+        <OverviewRibbon
+          student={academicCycleEnrollment?.student!}
+          academicCycle={context.academicCycle!}
+          academicCycleEnrollment={academicCycleEnrollment!} />
 
-          {/* Payments KPI's overview */}
-          <section className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-5">
-            <StatCard icon={Receipt} label="Cartera total" value={formatMoney(studentWalletSummary?.total || 0)} accent="text-primary bg-primary/10" />
-            <StatCard icon={Coins} label="Saldo pendiente" value={formatMoney(studentWalletSummary?.outstanding || 0)} accent="text-rose-600 bg-rose-500/10" />
-            <StatCard icon={Banknote} label="Pagado al ciclo" value={formatMoney(studentWalletSummary?.paid || 0)} accent="text-emerald-600 bg-emerald-500/10" />
-            <StatCard icon={ClockAlert} label="Monto vencido" value={formatMoney(studentWalletSummary?.overdue || 0)} accent="text-amber-600 bg-amber-500/10" />
-          </section>
-        </section>
+        {/* Payments KPI's overview */}
+        <OverviewStatsRibbon studentWalletSummary={studentWallet?.summary!} />
 
-        {/* Student wallet details */}
-        <section className="bg-card rounded-3xl border border-border shadow-sm p-4 sm:p-6 mb-5">
+        {/* Student wallet table */}
+        <StudentWalletTable
+          isLoading={queries.studentWallet.get.isFetching}
+          enableActions={enrolledStudent}
+          data={studentWallet?.items ?? []}
+          summary={studentWallet?.summary!}
+          handleClickEdit={sidePanels.studentWalletItemPanelForm.open}
+          handleClickPay={sidePanels.studentWalletPaymentPanelForm.open} />
 
-          {/* Wallet header */}
-          <section className="flex items-center gap-3 pb-3 border-b border-border mb-5">
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-              <Wallet className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="text-sm font-heading font-bold text-foreground mb-1">Cartera del estudiante</p>
-              <p className="text-[11px] text-muted-foreground">Conceptos de pago configurados para este ciclo escolar</p>
-            </div>
-          </section>
+        {/* Student wallet payment time line */}
+        <StudentWalletPaymentsTable
+          isLoading={queries.studentWalletPayments.get.isLoading}
+          studentWallet={studentWallet?.items!}
+          studentWalletPayments={studentWalletPayments}
+        />
 
-          {/* Student wallet table */}
-          <section>
-            
-          </section>
-        </section>
+        {/* Edit student wallet item panel form */}
+        {sidePanels.studentWalletItemPanelForm.isOpen && (
+          <StudentWalletItemPanelForm
+            studentWalletItemResponse={sidePanels.studentWalletItemPanelForm.data}
+            handleClickClose={sidePanels.studentWalletItemPanelForm.close}
+            onSubmit={onSubmitStudentWalletItem}
+          />
+        )}
 
+        {/* Student wallet payment panel form */}
+        {sidePanels.studentWalletPaymentPanelForm.isOpen && (
+          <StudentWalletPaymentPanelForm
+            studentWalletItemResponse={sidePanels.studentWalletPaymentPanelForm.data}
+            handleClickClose={sidePanels.studentWalletPaymentPanelForm.close}
+            onSubmit={onSubmitStudentWalletPayment}
+          />
+        )}
 
       </section>
     </>

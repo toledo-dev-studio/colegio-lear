@@ -8,10 +8,10 @@ interface Options {
     academicCycleEnrollmentId: string;
 }
 
-export const getStudentWalletActionAsync = async ({ academicCycleId, academicCycleEnrollmentId }: Options): Promise<StudentWalletResponse[]> => {
+export const getStudentWalletActionAsync = async ({ academicCycleId, academicCycleEnrollmentId }: Options): Promise<StudentWalletResponse> => {
     await sleep();
 
-    let endpoint = `/academic-cycles/${academicCycleId}/enrollments/${academicCycleEnrollmentId}/wallet/summary`;
+    let endpoint = `/academic-cycles/${academicCycleId}/enrollments/${academicCycleEnrollmentId}/wallet`;
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/students/student-wallet/student-wallet.json";
@@ -19,7 +19,7 @@ export const getStudentWalletActionAsync = async ({ academicCycleId, academicCyc
     // REMOVE
     endpoint = "http://localhost/api/students/student-wallet/student-wallet.json";
 
-    const { data } = await api.get<StudentWalletResponse[]>(endpoint);
-
+    const { data } = await api.get<StudentWalletResponse>(endpoint);
+    
     return data;
 }
