@@ -29,7 +29,7 @@ export const ACADEMIC_CYCLE_ENROLLMENT_STATUSES: KeyValuePair<AcademicCycleEnrol
  * Each status has a key and a label for display purposes.
  */
 export const ACADEMIC_CYCLE_SCHOOL_GROUP_STATUSES: KeyValuePair<AcademicCycleSchoolGroupStatusKey>[] = [
-    { key: "active", label: "En curso" },
+    { key: "active", label: "Activo" },
     { key: "discharged", label: "Dado de baja" },
 ];
 

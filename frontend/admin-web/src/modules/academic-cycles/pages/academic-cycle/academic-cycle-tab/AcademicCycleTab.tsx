@@ -19,12 +19,13 @@ import type { AcademicCycleRequest } from "@/interfaces/requests/academic-cycle.
 import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
 import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
-import {type AcademicCycleStatusKey, type AcademicPeriodTypeKey} from "@/lib/key-value-pairs/key-value-pair-types";
+import { type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { BookOpenCheck, ClipboardCheck } from "lucide-react";
 
 export const AcademicCycleTab = () => {
     // Context from layout
@@ -48,12 +49,14 @@ export const AcademicCycleTab = () => {
         defaultValues: {
             name: isValidValueWithDefault(academicCycle?.name, ""),
             code: isValidValueWithDefault(academicCycle?.code, ""),
+            periodType: isValidValueWithDefault(academicCycle?.periodType as AcademicPeriodTypeKey, undefined),
+            status: isValidValueWithDefault(academicCycle?.status as AcademicCycleStatusKey, "upcoming"),
+            evaluationCount: isValidValueWithDefault(academicCycle?.evaluationCount, 3),
+            minimumPassingGrade: isValidValueWithDefault(academicCycle?.minimumPassingGrade, 6),
             startDate: isValidValueWithDefault(academicCycle?.startDate, ""),
             endDate: isValidValueWithDefault(academicCycle?.endDate, ""),
             observations: isValidValueWithDefault(academicCycle?.observations, ""),
             enrollmentOpen: isValidValueWithDefault(academicCycle?.enrollmentOpen, false),
-            periodType: isValidValueWithDefault(academicCycle?.periodType as AcademicPeriodTypeKey, undefined),
-            status: isValidValueWithDefault(academicCycle?.status as AcademicCycleStatusKey, "upcoming"),
             academicLevelId: isValidValueWithDefault(academicCycle?.academicLevelId, ""),
             academicLevel: isValidValueWithDefault(academicCycle?.academicLevel, undefined),
             educationLevelId: isValidValueWithDefault(academicCycle?.educationLevelId, ""),
@@ -103,7 +106,7 @@ export const AcademicCycleTab = () => {
                         title="INFORMACIÓN GENERAL DEL CICLO ESCOLAR"
                         description="En esta sección de la pantalla podrás configurar la información general de un ciclo escolar." />
 
-                    <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
 
                         <div className="control-container">
                             <label className="label">Nombre del ciclo <span className="required">*</span>:</label>
@@ -155,7 +158,7 @@ export const AcademicCycleTab = () => {
 
                         <div className="control-container">
                             <label className="label">
-                                Tipo de periodo del ciclo escolar <span className="required">*</span>:
+                                Tipo de periodo <span className="required">*</span>:
                             </label>
                             <Controller
                                 name="periodType"
@@ -192,6 +195,137 @@ export const AcademicCycleTab = () => {
                                 )
                             }
                         </div>
+
+                        <div className="control-container">
+                            <label className="label">
+                                Estado del ciclo escolar <span className="required">*</span>:
+                            </label>
+                            <Controller
+                                control={control}
+                                name={"status"}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <Select
+                                        value={field.value ?? ""}
+                                        onValueChange={field.onChange}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona una opción">
+                                                {labelOf(ACADEMIC_CYCLE_STATUSES_LIST, field.value) || "Selecciona una opción"}
+                                            </SelectValue>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Estado del ciclo escolar</SelectLabel>
+                                                {ACADEMIC_CYCLE_STATUSES_LIST.map((item) => (
+                                                    <SelectItem key={item.key} value={item.key} label={item.label}>
+                                                        {item.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                            {
+                                errors.status && (
+                                    <p className="error">
+                                        El estatus actual del ciclo escolar es obligatorio
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">Minima calf. aprobatoria <span className="required">*</span>:</label>
+                            <Controller
+                                name="minimumPassingGrade"
+                                control={control}
+                                rules={{
+                                    required: true,
+                                    validate: {
+                                        integer: (v) => Number.isInteger(v) || "No se permiten decimales",
+                                        nonNegative: (v) => v! > 0 || "La calificación no puede ser negativa o cero",
+                                        maximum: (v) => v! <= 10 || "La calificación no puede ser mayor a 10",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <div className="relative">
+                                        <ClipboardCheck className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                        <Input
+                                            {...field}
+                                            step={1}
+                                            min={1}
+                                            inputMode="numeric"
+                                            type="number"
+                                            placeholder="10"
+                                            onKeyDown={(e) => {
+                                                if (["e", "E", "+", "-", ".", ","].includes(e.key))
+                                                    e.preventDefault();
+                                            }}
+                                            onChange={(e) => e.target.value ? field.onChange(e.target.valueAsNumber) : field.onChange("")}
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <p className="control-info">Calificación minima por ciclo y materia (Solo valores enteros — sin decimales)</p>
+                            {
+                                errors.minimumPassingGrade && (
+                                    <p className="error">
+                                        {errors.minimumPassingGrade.message || "La calificación mínima es obligatoria"}
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">Número de evaluaciones <span className="required">*</span>:</label>
+                            <Controller
+                                name="evaluationCount"
+                                control={control}
+                                rules={{
+                                    required: true,
+                                    validate: {
+                                        integer: (v) => Number.isInteger(v) || "No se permiten decimales",
+                                        nonNegative: (v) => v! > 0 || "El número de evaluaciones no puede ser negativo o cero",
+                                        maximum: (v) => v! <= 10 || "El número de evaluaciones no puede ser mayor a 10",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <div className="relative">
+                                        <BookOpenCheck className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                        <Input
+                                            {...field}
+                                            step={1}
+                                            min={1}
+                                            inputMode="numeric"
+                                            type="number"
+                                            placeholder="10"
+                                            onKeyDown={(e) => {
+                                                if (["e", "E", "+", "-", ".", ","].includes(e.key))
+                                                    e.preventDefault();
+                                            }}
+                                            onChange={(e) => e.target.value ? field.onChange(e.target.valueAsNumber) : field.onChange("")}
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <p className="control-info">Evaluaciones durante el ciclo (Solo valores enteros — sin decimales)</p>
+                            {
+                                errors.evaluationCount && (
+                                    <p className="error">
+                                        {errors.evaluationCount.message || "El número de evaluaciones es obligatorio"}
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                    </section>
+
+                    <SectionTitle
+                        title="DETALLES DE ADMINISTRACIÓN DEL CICLO ESCOLAR"
+                        description="Configura la duración del ciclo escolar, así como el nivel académico y educativo al que irá dirigido." />
+
+                    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
 
                         <div className="control-container">
                             <label className="label">Entre fecha de inicio <span className="required">*</span>:</label>
@@ -242,48 +376,6 @@ export const AcademicCycleTab = () => {
                                 )
                             }
                         </div>
-
-                        <div className="control-container">
-                            <label className="label">
-                                Estado del ciclo escolar <span className="required">*</span>:
-                            </label>
-                            <Controller
-                                control={control}
-                                name={"status"}
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                    <Select
-                                        value={field.value ?? ""}
-                                        onValueChange={field.onChange}>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecciona una opción">
-                                                {labelOf(ACADEMIC_CYCLE_STATUSES_LIST, field.value) || "Selecciona una opción"}
-                                            </SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>Estado del ciclo escolar</SelectLabel>
-                                                {ACADEMIC_CYCLE_STATUSES_LIST.map((item) => (
-                                                    <SelectItem key={item.key} value={item.key} label={item.label}>
-                                                        {item.label}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                )}
-                            />
-                            {
-                                errors.status && (
-                                    <p className="error">
-                                        El estatus actual del ciclo escolar es obligatorio
-                                    </p>
-                                )
-                            }
-                        </div>
-                    </section>
-
-                    <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
                         <div className="control-container">
                             <label className="label">Nivel académico <span className="required">*</span>:</label>

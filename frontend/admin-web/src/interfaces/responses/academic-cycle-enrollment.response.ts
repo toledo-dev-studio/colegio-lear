@@ -30,16 +30,6 @@ export interface AcademicCycleEnrollmentResponse {
      */
     droppedNotes?: string;
     /**
-     * Timestamp when the record was created as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     * Backend should set this field when creating a new record, frontend should not set this field when creating or updating a record
-     */
-    createdAt?: string;
-    /**
-     * Timestamp when the record was last updated as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     * Backend should set this field when updating a record, frontend should not set this field when creating or updating a record
-     */
-    updatedAt?: string;
-    /**
      * Identifier of the associated student
      */
     studentId: string;

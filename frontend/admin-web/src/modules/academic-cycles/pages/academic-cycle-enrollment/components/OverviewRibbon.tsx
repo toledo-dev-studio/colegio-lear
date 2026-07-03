@@ -19,7 +19,7 @@ export const OverviewRibbon = ({ student, academicCycle, academicCycleEnrollment
 
     return (
         <>
-            <section className="bg-card rounded-3xl border border-border shadow-sm p-4 sm:p-6  w-full">
+            <section className="bg-card rounded-xl border border-border shadow-sm p-4 sm:p-6 w-full hover:bg-muted/40 transition-colors">
                 <section className="grid grid-cols-1 lg:grid-cols-4 gap-4 mx-auto">
                     <OverviewCard
                         icon={Calendar}
@@ -47,7 +47,7 @@ export const OverviewRibbon = ({ student, academicCycle, academicCycleEnrollment
                     />
                 </section>
                 <section className="flex flex-col gap-y-2 mt-4 sm:mt-6">
-                    <p className="text-[11px] text-muted-foreground -mb-2">Duración del ciclo escolar: {formatFriendlyDate(academicCycle.startDate)} - {formatFriendlyDate(academicCycle.endDate)}</p>
+                    <p className="text-[11px] text-muted-foreground flex items-center -mb-2">Duración del ciclo escolar: {formatFriendlyDate(academicCycle.startDate)} - {formatFriendlyDate(academicCycle.endDate)}</p>
                 </section>
             </section>
         </>

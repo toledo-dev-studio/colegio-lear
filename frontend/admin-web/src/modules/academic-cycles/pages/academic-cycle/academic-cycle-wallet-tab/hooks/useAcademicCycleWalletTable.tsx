@@ -22,8 +22,8 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
     const columns: string[] = [
         "Concepto de pago",
         "Monto de pago (MXN)",
-        "Fecha de vencimiento",
         "¿Condonación de pago permitida?",
+        "Fecha de vencimiento",
         "Descripción",
         "Acciones"
     ];

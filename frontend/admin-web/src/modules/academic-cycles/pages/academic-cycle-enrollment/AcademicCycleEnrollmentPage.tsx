@@ -14,6 +14,7 @@ import { useAcademicCycleEnrollmentPage } from "./hooks/useAcademicCycleEnrollme
 import { StudentWalletPaymentPanelForm } from "./components/StudentWalletPaymentPanelForm";
 import type { StudentWalletItemRequest } from "@/interfaces/requests/student-wallet-item.request";
 import type { StudentWalletPaymentRequest } from "@/interfaces/requests/student-wallet-payment.request";
+import { StudentGradesGrid } from "./components/StudentGradesGrid";
 
 export const AcademicCycleEnrollmentPage = () => {
   // Component hooks & stores
@@ -25,7 +26,8 @@ export const AcademicCycleEnrollmentPage = () => {
   const academicCycleEnrollment = queries.enrollment.getById.data;
   const studentWallet = queries.studentWallet.get.data;
   const studentWalletPayments = queries.studentWalletPayments.get.data;
-  console.log(studentWallet?.items[2]);  
+  const studentGrades = queries.studentGrades.get.data;
+  const schoolGroupTeachers = queries.schoolGroupTeachers.get.data;
 
   // Component functions
   const onSubmitStudentWalletItem = async (studentWalletItemRequestLike: Partial<StudentWalletItemRequest>) => {
@@ -108,7 +110,14 @@ export const AcademicCycleEnrollmentPage = () => {
           academicCycleEnrollment={academicCycleEnrollment!} />
 
         {/* Payments KPI's overview */}
-        <OverviewStatsRibbon studentWalletSummary={studentWallet?.summary!} />
+        <OverviewStatsRibbon 
+          studentWalletSummary={studentWallet?.summary!} />
+
+        {/* Student grades grid */}
+        <StudentGradesGrid 
+          studentGradesResponse={studentGrades}
+          academicCycleResponse={context.academicCycle!}
+          schoolGroupTeachersResponse={schoolGroupTeachers} />
 
         {/* Student wallet table */}
         <StudentWalletTable

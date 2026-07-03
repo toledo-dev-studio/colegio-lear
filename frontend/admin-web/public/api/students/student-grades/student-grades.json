@@ -1,0 +1,123 @@
+[
+    {
+        "id": "3c9af60f-0fef-4ec4-a778-0a77842f8c92",
+        "grade": 9.0,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "8d3a9b75-8dc9-470f-a7f1-0dba8cf57b58",
+        "schoolSubject": {
+            "id": "8d3a9b75-8dc9-470f-a7f1-0dba8cf57b58",
+            "name": "Matemáticas"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "fc2c6639-9b1d-4ec8-9874-7a8ea787fd47",
+        "grade": 9.5,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "8d3a9b75-8dc9-470f-a7f1-0dba8cf57b58",
+        "schoolSubject": {
+            "id": "8d3a9b75-8dc9-470f-a7f1-0dba8cf57b58",
+            "name": "Matemáticas"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "d61e3e90-3a9f-4e86-bb73-7f2e898746de",
+        "grade": 10.0,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "8d3a9b75-8dc9-470f-a7f1-0dba8cf57b58",
+        "schoolSubject": {
+            "id": "8d3a9b75-8dc9-470f-a7f1-0dba8cf57b58",
+            "name": "Matemáticas"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "bfc2d2f3-17bb-478c-93ef-6ec82a5930e8",
+        "grade": 9.0,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "cb7c6cc8-78f7-4903-8b4f-f2d9f6f72dd7",
+        "schoolSubject": {
+            "id": "cb7c6cc8-78f7-4903-8b4f-f2d9f6f72dd7",
+            "name": "Ciencias"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "fc15a6e8-8464-4b75-87f8-3ca2d42a8e4f",
+        "grade": 9.5,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "cb7c6cc8-78f7-4903-8b4f-f2d9f6f72dd7",
+        "schoolSubject": {
+            "id": "cb7c6cc8-78f7-4903-8b4f-f2d9f6f72dd7",
+            "name": "Ciencias"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "d2ce5680-f65f-4dc4-a3cb-31f29b80c258",
+        "grade": 10.0,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "cb7c6cc8-78f7-4903-8b4f-f2d9f6f72dd7",
+        "schoolSubject": {
+            "id": "cb7c6cc8-78f7-4903-8b4f-f2d9f6f72dd7",
+            "name": "Ciencias"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "9ef0db75-86f3-483d-b8c4-85014c2870f3",
+        "grade": 9.0,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "c7afc47d-f27d-4260-a728-4e2d2b3fc7d4",
+        "schoolSubject": {
+            "id": "c7afc47d-f27d-4260-a728-4e2d2b3fc7d4",
+            "name": "Historia"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "6a9283d0-9148-4979-93fe-0fd19a78017a",
+        "grade": 10.0,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "c7afc47d-f27d-4260-a728-4e2d2b3fc7d4",
+        "schoolSubject": {
+            "id": "c7afc47d-f27d-4260-a728-4e2d2b3fc7d4",
+            "name": "Historia"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "ff05b433-f594-4bf4-8608-e06a1d35b615",
+        "grade": 9.0,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "5d589fa6-1c5d-4ecb-a01b-767c29e514dc",
+        "schoolSubject": {
+            "id": "5d589fa6-1c5d-4ecb-a01b-767c29e514dc",
+            "name": "Español"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "91346d58-b80f-4b5e-80c8-b05dbb8d4895",
+        "grade": 9.5,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "5d589fa6-1c5d-4ecb-a01b-767c29e514dc",
+        "schoolSubject": {
+            "id": "5d589fa6-1c5d-4ecb-a01b-767c29e514dc",
+            "name": "Español"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "08a7bc62-bbfa-4dbf-a73e-6d3597dbfe67",
+        "grade": 10.0,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "5d589fa6-1c5d-4ecb-a01b-767c29e514dc",
+        "schoolSubject": {
+            "id": "5d589fa6-1c5d-4ecb-a01b-767c29e514dc",
+            "name": "Español"
+        },
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    }
+]

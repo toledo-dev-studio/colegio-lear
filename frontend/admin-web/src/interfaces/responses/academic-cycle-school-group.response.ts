@@ -1,4 +1,3 @@
-import type { AcademicCycleResponse } from "./academic-cycle.response";
 import type { AcademicCycleSchoolGroupStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { AcademicCycleSchoolGroupCalendarResponse } from "./academic-cycle-school-group-calendar.response";
 
@@ -32,23 +31,9 @@ export interface AcademicCycleSchoolGroupResponse {
      */
     dischargedDescription?: string;
     /**
-     * Timestamp when the record was created as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     * Backend should set this field when creating a new record, frontend should not set this field when creating or updating a record
-     */
-    createdAt?: string;
-    /**
-     * Timestamp when the record was last updated as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     * Backend should set this field when updating a record, frontend should not set this field when creating or updating a record
-     */
-    updatedAt?: string;
-    /**
      * Identifier of the associated academic cycle
      */
     academicCycleId: string;
-    /**
-     * Reference to the associated academic cycle
-     */
-    academicCycle?: AcademicCycleResponse;
     /**
      * Calendar configuration for a specific group
      */

@@ -1,8 +1,4 @@
-import type { EmployeeRequest } from "./employee.request";
-import type { AcademicCycleRequest } from "./academic-cycle.request";
-import type { SchoolSubjectRequest } from "./school-subject.request";
 import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
-import type { AcademicCycleSchoolGroupRequest } from "./academic-cycle-school-group.request";
 
 /**
  * Type: Request
@@ -30,31 +26,15 @@ export interface AcademicCycleSchoolGroupCalendarRequest {
      */
     academicCycleId: string;
     /**
-     * Reference to the associated academic cycle
-     */
-    academicCycle?: AcademicCycleRequest;
-    /**
      * Identifier of the associated academic cycle group
      */
     academicCycleSchoolGroupId: string;
-    /**
-     * Reference to the associated academic cycle group
-     */
-    academicCycleSchoolGroup?: AcademicCycleSchoolGroupRequest;
     /**
      * Identifier of the associated school subject
      */
     schoolSubjectId: string;
     /**
-     * Reference to the associated school subject
-     */
-    schoolSubject?: SchoolSubjectRequest;
-    /**
      * Identifier of the associated teacher (employee)
      */
     teacherId: string;
-    /**
-     * Reference to the associated teacher (employee)
-     */
-    teacher?: EmployeeRequest;
 }

@@ -21,7 +21,7 @@ interface Props {
 export const StudentWalletTable = ({ isLoading, enableActions = true, data, summary, handleClickEdit, handleClickPay }: Props) => {
     return (
         <>
-            <section className="flex flex-col gap-y-1.5 bg-card rounded-3xl border border-border shadow-sm p-4 sm:p-6">
+            <section className="flex flex-col gap-y-1.5 bg-card rounded-xl border border-border shadow-sm p-4 sm:p-6">
 
                 <header className="flex items-center gap-3 pb-3 border-b border-border">
                     <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">

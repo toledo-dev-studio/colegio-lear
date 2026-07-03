@@ -1,0 +1,54 @@
+[
+    {
+        "schoolSubjectId": "8d3a9b75-8dc9-470f-a7f1-0dba8cf57b58",
+        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "López",
+            "email": "juan.perez@escuela.edu.mx"
+        }
+    },
+    {
+        "schoolSubjectId": "c7afc47d-f27d-4260-a728-4e2d2b3fc7d4",
+        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "García",
+            "secondLastName": "Hernández",
+            "email": "maria.garcia@escuela.edu.mx"
+        }
+    },
+    {
+        "schoolSubjectId": "cb7c6cc8-78f7-4903-8b4f-f2d9f6f72dd7",
+        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Soto",
+            "email": "carlos.ramirez@escuela.edu.mx"
+        }
+    },
+    {
+        "schoolSubjectId": "5d589fa6-1c5d-4ecb-a01b-767c29e514dc",
+        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Ana",
+            "firstLastName": "Torres",
+            "secondLastName": "Vega",
+            "email": "ana.torres@escuela.edu.mx"
+        }
+    }
+]

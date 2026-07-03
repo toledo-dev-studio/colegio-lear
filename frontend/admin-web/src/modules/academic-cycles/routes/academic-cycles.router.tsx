@@ -6,12 +6,12 @@ import { AcademicCycleLayout } from "../layouts/AcademicCycleLayout";
 import { AcademicCyclesPage } from "../pages/academic-cycles/AcademicCyclesPage";
 import { AcademicCycleContextLayout } from "../layouts/AcademicCycleContextLayout";
 import { AcademicCycleTab } from "../pages/academic-cycle/academic-cycle-tab/AcademicCycleTab";
+import { AcademicCycleEnrollmentPage } from "../pages/academic-cycle-enrollment/AcademicCycleEnrollmentPage";
+import { AcademicCycleSchoolGroupPage } from "../pages/academic-cycle-school-group/AcademicCycleSchoolGroupPage";
 import { AcademicCycleWalletTab } from "../pages/academic-cycle/academic-cycle-wallet-tab/AcademicCycleWalletTab";
 import { AcademicCycleEnrollmentsTab } from "../pages/academic-cycle/academic-cycle-enrollments-tab/AcademicCycleEnrollmentsTab";
 import { AcademicCycleSchoolGroupsTab } from "../pages/academic-cycle/academic-cycle-school-groups-tab/AcademicCycleSchoolGroupsTab";
-import { AcademicCycleEnrollmentPage } from "../pages/academic-cycle-enrollment/AcademicCycleEnrollmentPage";
 import { AcademicCycleSchoolSubjectsTab } from "../pages/academic-cycle/academic-cycle-school-subjects-tab/AcademicCycleSchoolSubjectsTab";
-import { AcademicCycleSchoolGroupPage } from "../pages/academic-cycle-school-group/AcademicCycleSchoolGroupPage";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const AcademicCyclesLayout = lazy(() => import("@/modules/academic-cycles/layouts/AcademicCyclesLayout"));

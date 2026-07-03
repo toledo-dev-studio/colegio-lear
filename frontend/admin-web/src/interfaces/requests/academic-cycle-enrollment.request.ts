@@ -1,8 +1,6 @@
 
 import type { StudentRequest } from "./student.request";
 import type { ScholarshipRequest } from "./scholarship.request";
-import type { AcademicCycleRequest } from "./academic-cycle.request";
-import type { AcademicCycleSchoolGroupRequest } from "./academic-cycle-school-group.request";
 import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
@@ -35,17 +33,9 @@ export interface AcademicCycleEnrollmentRequest {
      */
     academicCycleId: string;
     /**
-     * Reference to the associated academic cycle
-     */
-    academicCycle?: AcademicCycleRequest;
-    /**
      * Identifier of the associated academic cycle group
      */
     academicCycleSchoolGroupId: string;
-    /**
-     * Reference to the associated academic cycle group
-     */
-    academicCycleSchoolGroup?: AcademicCycleSchoolGroupRequest;
     /**
      * Identifier of the scholarship associated with the student group enrollment, if applicable
      */

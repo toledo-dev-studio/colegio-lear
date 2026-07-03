@@ -18,7 +18,7 @@ export const StudentWalletPaymentsTable = ({ isLoading, studentWallet, studentWa
     const totalPaid = studentWalletPayments.reduce((acc, payment) => acc + payment.amount, 0);
     return (
         <>
-            <section className="flex flex-col gap-y-1.5 bg-card rounded-3xl border border-border shadow-sm p-4 sm:p-6">
+            <section className="flex flex-col gap-y-1.5 bg-card rounded-xl border border-border shadow-sm p-4 sm:p-6">
 
                 <header className="flex items-center gap-3 pb-3 border-b border-border">
                     <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center">

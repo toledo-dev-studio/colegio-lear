@@ -22,14 +22,6 @@ export interface AcademicCycleResponse {
      */
     code: string;
     /**
-     * Start date of the academic cycle as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     */
-    startDate: string;
-    /**
-     * End date of the academic cycle as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     */
-    endDate: string;
-    /**
      * Type of the academic cycle 
      * Example: "annual", "semester", "trimester", etc.
      */
@@ -39,6 +31,22 @@ export interface AcademicCycleResponse {
      * Example: "upcoming", "active", "completed", etc.
      */
     status: AcademicCycleStatusKey;
+    /**
+     * Minimum passing grade for the academic cycle and each school subjects
+     */
+    minimumPassingGrade: number;
+    /**
+     * Number of evaluations for school subjects in the academic cycle
+     */
+    evaluationCount: number;
+    /**
+     * Start date of the academic cycle as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
+     */
+    startDate: string;
+    /**
+     * End date of the academic cycle as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
+     */
+    endDate: string;
     /**
      * Indicates if enrollment is currently open
      */
@@ -65,7 +73,6 @@ export interface AcademicCycleResponse {
      * Reference to the associated academic level
      */
     academicLevel?: AcademicLevelResponse;
-
     /**
      * Identifier of the associated education level
      */

@@ -19,14 +19,6 @@ export interface AcademicCycleRequest {
      */
     code: string;
     /**
-     * Start date of the academic cycle as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     */
-    startDate: string;
-    /**
-     * End date of the academic cycle as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     */
-    endDate: string;
-    /**
      * Type of the academic cycle 
      * Example: "annual", "semester", "trimester", etc.
      */
@@ -37,19 +29,25 @@ export interface AcademicCycleRequest {
      */
     status: AcademicCycleStatusKey;
     /**
+     * Minimum passing grade for the academic cycle and each school subjects
+     */
+    minimumPassingGrade: number;
+    /**
+     * Number of evaluations for school subjects in the academic cycle
+     */
+    evaluationCount: number;
+    /**
+     * Start date of the academic cycle as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
+     */
+    startDate: string;
+    /**
+     * End date of the academic cycle as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
+     */
+    endDate: string;
+    /**
      * Indicates if enrollment is currently open
      */
     enrollmentOpen: boolean;
-    /**
-     * Timestamp when the record was created as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     * Backend should set this field when creating a new record, frontend should not set this field when creating or updating a record
-     */
-    createdAt?: string;
-    /**
-     * Timestamp when the record was last updated as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
-     * Backend should set this field when updating a record, frontend should not set this field when creating or updating a record
-     */
-    updatedAt?: string;
     /**
      * Additional observations or comments about the academic cycle
      */
