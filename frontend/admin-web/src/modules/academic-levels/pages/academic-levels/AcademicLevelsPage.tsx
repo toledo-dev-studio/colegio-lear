@@ -60,72 +60,67 @@ export const AcademicLevelsPage = () => {
 
   return (
     <>
-      <div className="w-full py-12 px-10 lg:px-15">
+      <section className="page-main-section">
 
-        <div className="mb-10">
-          <Breadcrumb items={[
-            { label: "Configuración escolar" },
-            { label: "Niveles académicos", to: "/academic-levels" },
-          ]} />
-        </div>
+        <Breadcrumb items={[
+          { label: "Configuración escolar" },
+          { label: "Niveles académicos", to: "/academic-levels" },
+        ]} />
 
         <PageTitle title="Niveles académicos" subtitle="Gestiona los niveles académicos disponibles en la organización" />
 
-        <section className="flex flex-col gap-8 mt-14">
+        {/* Table ribbon options */}
+        <TableRibbon
+          addButton={{ handleClick: () => navigate("/academic-levels/new") }}
+          filterButton={{ handleClick: advancedFilters.open }}
+          exportButton={{ handleClick: handleClickExport }}
+          searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
+        />
 
-          {/* Table ribbon options */}
-          <TableRibbon
-            addButton={{ handleClick: () => navigate("/academic-levels/new") }}
-            filterButton={{ handleClick: advancedFilters.open }}
-            exportButton={{ handleClick: handleClickExport }}
-            searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
-          />
+        {/* Table content*/}
+        <Table
+          data={queries.academicLevels.paged.data}
+          isLoading={queries.academicLevels.paged.isFetching}
+          enablePagination={true}
+          columns={columns}
+          properties={properties}
+          actions={actions}
+          totalPages={queries.academicLevels.paged.totalPages}
+        />
 
-          {/* Table content*/}
-          <Table
-            data={queries.academicLevels.paged.data}
-            isLoading={queries.academicLevels.paged.isFetching}
-            enablePagination={true}
-            columns={columns}
-            properties={properties}
-            actions={actions}
-            totalPages={queries.academicLevels.paged.totalPages}
-          />
+        {/* Delete single record modal */}
+        {
+          (deleteModal.isOpen && deleteModal.record) && (
+            <Modal
+              open={deleteModal.isOpen}
+              type="delete"
+              title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
+              message={"Se eliminará del sistema tanto el nivel académico como sus grados educativos relacionados y solo el administrador del sistema podrán recuperarlo"}
+              isLoading={mutations.academicLevels.delete.isPending}
+              cancelButton={{
+                label: "Cancelar",
+                onClick: () => deleteModal.close()
+              }}
+              confirmButton={{
+                label: "Sí, eliminar",
+                onClick: handleClickConfirmDeleteAcademicLevel
+              }}
+            />
+          )
+        }
 
-          {/* Delete single record modal */}
-          {
-            (deleteModal.isOpen && deleteModal.record) && (
-              <Modal
-                open={deleteModal.isOpen}
-                type="delete"
-                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
-                message={"Se eliminará del sistema tanto el nivel académico como sus grados educativos relacionados y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={mutations.academicLevels.delete.isPending}
-                cancelButton={{
-                  label: "Cancelar",
-                  onClick: () => deleteModal.close()
-                }}
-                confirmButton={{
-                  label: "Sí, eliminar",
-                  onClick: handleClickConfirmDeleteAcademicLevel
-                }}
-              />
-            )
-          }
+        {/* Advanced filters panel */}
+        {
+          advancedFilters.isOpen && (
+            <AcademicLevelsAdvancedFilters
+              open={advancedFilters.isOpen}
+              title="Filtros avanzados"
+              handleClickClose={advancedFilters.close}
+            />
+          )
+        }
 
-          {/* Advanced filters panel */}
-          {
-            advancedFilters.isOpen && (
-              <AcademicLevelsAdvancedFilters
-                open={advancedFilters.isOpen}
-                title="Filtros avanzados"
-                handleClickClose={advancedFilters.close}
-              />
-            )
-          }
-
-        </section>
-      </div>
+      </section>
     </>
   )
 }

@@ -61,72 +61,68 @@ export const ScholarshipsPage = () => {
 
     return (
         <>
-            <div className="w-full py-12 px-10 lg:px-15">
+            <section className="page-main-section">
 
-                <div className="mb-10">
-                    <Breadcrumb items={[
-                        { label: "Configuración escolar" },
-                        { label: "Becas escolares", to: "/scholarships" },
-                    ]} />
-                </div>
+                <Breadcrumb items={[
+                    { label: "Configuración escolar" },
+                    { label: "Becas escolares", to: "/scholarships" },
+                ]} />
 
                 <PageTitle title="Becas escolares" subtitle="Gestiona las becas escolares que estarán disponibles en el colegio" />
 
-                <section className="flex flex-col gap-8 mt-14">
 
-                    {/* Table ribbon options */}
-                    <TableRibbon
-                        addButton={{ handleClick: () => navigate("/scholarships/new") }}
-                        filterButton={{ handleClick: advancedFilters.open }}
-                        exportButton={{ handleClick: handleClickExport }}
-                        searchInput={{ tooltip: "Búsqueda general por nombre, descripción y monto", placeholder: "Búsqueda general por nombre, descripción y monto" }}
-                    />
+                {/* Table ribbon options */}
+                <TableRibbon
+                    addButton={{ handleClick: () => navigate("/scholarships/new") }}
+                    filterButton={{ handleClick: advancedFilters.open }}
+                    exportButton={{ handleClick: handleClickExport }}
+                    searchInput={{ tooltip: "Búsqueda general por nombre, descripción y monto", placeholder: "Búsqueda general por nombre, descripción y monto" }}
+                />
 
-                    {/* Table content*/}
-                    <Table
-                        data={queries.scholarships.paged.data}
-                        isLoading={queries.scholarships.paged.isFetching}
-                        enablePagination={true}
-                        columns={columns}
-                        properties={properties}
-                        actions={actions}
-                        totalPages={queries.scholarships.paged.totalPages}
-                    />
+                {/* Table content*/}
+                <Table
+                    data={queries.scholarships.paged.data}
+                    isLoading={queries.scholarships.paged.isFetching}
+                    enablePagination={true}
+                    columns={columns}
+                    properties={properties}
+                    actions={actions}
+                    totalPages={queries.scholarships.paged.totalPages}
+                />
 
-                    {/* Delete single record modal */}
-                    {
-                        (deleteModal.isOpen && deleteModal.record) && (
-                            <Modal
-                                open={deleteModal.isOpen}
-                                type="delete"
-                                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
-                                message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                                isLoading={mutations.scholarships.delete.isPending}
-                                cancelButton={{
-                                    label: "Cancelar",
-                                    onClick: () => deleteModal.close()
-                                }}
-                                confirmButton={{
-                                    label: "Sí, eliminar",
-                                    onClick: handleClickConfirmDeleteScholarship
-                                }}
-                            />
-                        )
-                    }
+                {/* Delete single record modal */}
+                {
+                    (deleteModal.isOpen && deleteModal.record) && (
+                        <Modal
+                            open={deleteModal.isOpen}
+                            type="delete"
+                            title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
+                            message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
+                            isLoading={mutations.scholarships.delete.isPending}
+                            cancelButton={{
+                                label: "Cancelar",
+                                onClick: () => deleteModal.close()
+                            }}
+                            confirmButton={{
+                                label: "Sí, eliminar",
+                                onClick: handleClickConfirmDeleteScholarship
+                            }}
+                        />
+                    )
+                }
 
-                    {/* Advanced filters panel */}
-                    {
-                        advancedFilters.isOpen && (
-                            <ScholarshipsAdvancedFilters
-                                open={advancedFilters.isOpen}
-                                title="Filtros avanzados"
-                                handleClickClose={advancedFilters.close}
-                            />
-                        )
-                    }
+                {/* Advanced filters panel */}
+                {
+                    advancedFilters.isOpen && (
+                        <ScholarshipsAdvancedFilters
+                            open={advancedFilters.isOpen}
+                            title="Filtros avanzados"
+                            handleClickClose={advancedFilters.close}
+                        />
+                    )
+                }
 
-                </section>
-            </div>
+            </section>
         </>
     )
 }
