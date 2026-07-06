@@ -7,7 +7,7 @@ import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
-import { type ModuleKeys } from "@/interfaces/components/modules";
+import { type ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { SecurityRoleRequest } from "@/interfaces/requests/security-role.request";
@@ -34,7 +34,7 @@ export const SecurityRoleForm = ({ isSubmitting, securityRoleResponse, onSubmit 
     const [permissions, setPermissions] = useState<SecurityRolePermissionRequest[]>(watch("permissions") ?? []);
 
     // Component functions
-    const handleOnChangePermission = (key: ModuleKeys, permission: "can-read" | "can-write" | "can-delete", checked: boolean) => {
+    const handleOnChangePermission = (key: ModuleKey, permission: "can-read" | "can-write" | "can-delete", checked: boolean) => {
         let updatedPermissions: SecurityRolePermissionRequest[] = [];
         if (!permissions.some(item => item.moduleKey === key)) {
             updatedPermissions = [...permissions, {

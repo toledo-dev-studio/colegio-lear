@@ -71,7 +71,6 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
 
-                {/* General section */}
                 <SectionTitle
                     title="INFORMACIÓN GENERAL DEL EMPLEADO"
                     description="Registro de información básica del empleado con acceso al sistema y a la organización." />
@@ -258,6 +257,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                                     onClearSelection={() => {
                                         setValue("jobTitle", undefined);
                                         setValue("jobTitleId", undefined);
+                                        searchJobTitlesMutation.clearSearchResult();
                                     }}
                                     onOptionChange={async (option: JobTitleResponse) => {
                                         setValue("jobTitle", option);
@@ -294,6 +294,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                                     onClearSelection={() => {
                                         setValue("securityRole", undefined);
                                         setValue("securityRoleId", undefined);
+                                        searchSecurityRolesMutation.clearSearchResult();
                                     }}
                                     onOptionChange={async (option: SecurityRoleResponse) => {
                                         setValue("securityRole", option);

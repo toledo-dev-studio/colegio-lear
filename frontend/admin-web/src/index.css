@@ -134,6 +134,10 @@ h6 {
 
   @import "shared/components/custom-text-editor/css/index.css";
 
+  .page-main-section {
+    @apply flex flex-col w-full py-12 px-10 lg:px-15 gap-y-10;
+  }
+
   .page-title-bar {
     @apply absolute w-1.5 h-full rounded-full bg-primary;
   }
@@ -175,7 +179,7 @@ h6 {
   }
 
   .table-container .table {
-    @apply w-full min-w-[720px] border-separate border-spacing-0;
+    @apply w-full min-w-180 border-separate border-spacing-0;
   }
 
   .table tr {
@@ -228,11 +232,19 @@ h6 {
     @apply text-destructive;
   }
 
+  .control-container .control-info {
+    @apply text-xs text-muted-foreground mt-1.5;
+  }
+
   .control-container .error {
     @apply text-red-500 text-sm mt-2;
   }
 
+  .bg-success {
+    @apply bg-green-700 dark:bg-green-700/70;
+  }
 }
+
 
 /* Scrollbar */
 ::-webkit-scrollbar {

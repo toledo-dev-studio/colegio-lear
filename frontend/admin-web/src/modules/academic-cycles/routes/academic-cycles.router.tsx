@@ -4,7 +4,10 @@ import { Navigate, type RouteObject } from "react-router";
 import { AuthenticatedRoute } from "@/routes/protected.router"
 import { AcademicCycleLayout } from "../layouts/AcademicCycleLayout";
 import { AcademicCyclesPage } from "../pages/academic-cycles/AcademicCyclesPage";
+import { AcademicCycleContextLayout } from "../layouts/AcademicCycleContextLayout";
 import { AcademicCycleTab } from "../pages/academic-cycle/academic-cycle-tab/AcademicCycleTab";
+import { AcademicCycleEnrollmentPage } from "../pages/academic-cycle-enrollment/AcademicCycleEnrollmentPage";
+import { AcademicCycleSchoolGroupPage } from "../pages/academic-cycle-school-group/AcademicCycleSchoolGroupPage";
 import { AcademicCycleWalletTab } from "../pages/academic-cycle/academic-cycle-wallet-tab/AcademicCycleWalletTab";
 import { AcademicCycleEnrollmentsTab } from "../pages/academic-cycle/academic-cycle-enrollments-tab/AcademicCycleEnrollmentsTab";
 import { AcademicCycleSchoolGroupsTab } from "../pages/academic-cycle/academic-cycle-school-groups-tab/AcademicCycleSchoolGroupsTab";
@@ -28,34 +31,48 @@ export const academicCyclesRouter: RouteObject = {
         },
         {
             path: ":id",
-            element: <AcademicCycleLayout />,
+            element: <AcademicCycleContextLayout />,
             children: [
                 {
-                    index: true,
-                    element: <AcademicCycleTab />
+                    path: "",
+                    element: <AcademicCycleLayout />,
+                    children: [
+                        {
+                            index: true,
+                            element: <AcademicCycleTab />
+                        },
+                        {
+                            path: "wallet",
+                            element: <AcademicCycleWalletTab />
+                        },
+                        {
+                            path: "school-subjects",
+                            element: <AcademicCycleSchoolSubjectsTab />
+                        },
+                        {
+                            path: "school-groups",
+                            element: <AcademicCycleSchoolGroupsTab />
+                        },
+                        {
+                            path: "enrollments",
+                            element: <AcademicCycleEnrollmentsTab />
+                        }
+                    ]
                 },
                 {
-                    path: "wallet",
-                    element: <AcademicCycleWalletTab />
+                    path: "school-groups/:schoolGroupId",
+                    element: <AcademicCycleSchoolGroupPage />
                 },
                 {
-                    path: "school-subjects",
-                    element: <AcademicCycleSchoolSubjectsTab />
-                },
-                {
-                    path: "school-groups",
-                    element: <AcademicCycleSchoolGroupsTab />
-                },
-                {
-                    path: "enrollments",
-                    element: <AcademicCycleEnrollmentsTab />
+                    path: "enrollments/:enrollmentId",
+                    element: <AcademicCycleEnrollmentPage />
                 }
             ]
         },
         {
             path: "*",
             element: <Navigate to="/academic-cycles" />
-        }
+        },
     ]
 }
 

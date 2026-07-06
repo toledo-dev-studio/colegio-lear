@@ -1,6 +1,6 @@
 import type { Student } from "./student";
 import type { AcademicCycle } from "./academic-cycle";
-import type { PaymentMethodKey } from "@/types/KeyValuePair";
+import type { PaymentMethodKey } from "@/lib/key-value-pairs/key-value-pair";
 import type { StudentWalletPaymentConcept } from "./student-wallet-payment-concept";
 
 /**

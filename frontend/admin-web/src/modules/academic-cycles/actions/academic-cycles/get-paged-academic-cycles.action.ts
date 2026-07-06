@@ -1,25 +1,21 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { AcademicCycle } from "@/interfaces/entites/academic-cycle";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
-import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/types/KeyValuePair";
+import type { AcademicCycleFilter } from "@/interfaces/filters/academic-cycle.filter";
+import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 
-interface Options {
+interface Options extends AcademicCycleFilter {
     query?: string;
     page?: number;
     pageSize?: number;
-    name?: string;
-    code?: string;
-    startDate?: string;
-    endDate?: string;
-    type?: AcademicPeriodTypeKey;
-    enrollmentOpen?: boolean;
-    status?: AcademicCycleStatusKey;
 }
 
-export const getPagedAcademicCyclesActionAsync = async ({ query, page = 1, pageSize = 1, name, code, startDate, endDate, type, enrollmentOpen, status }: Options): Promise<PagedResponse<AcademicCycle>> => {
+export const getPagedAcademicCyclesActionAsync = async (options: Options): Promise<PagedResponse<AcademicCycleResponse>> => {
     await sleep();
+
+    const { query, page = 1, pageSize = 1, name, code, startDate, endDate, periodType, status, enrollmentOpen, academicLevelId, educationLevelId } = options;
+
 
     let endpoint = "/academic-cycles/paged";
 
@@ -29,7 +25,7 @@ export const getPagedAcademicCyclesActionAsync = async ({ query, page = 1, pageS
     // REMOVE
     endpoint = "http://localhost/api/academic-cycles/academic-cycles/paged-academic-cycles.json";
 
-    const { data } = await api.get<PagedResponse<AcademicCycle>>(endpoint, {
+    const { data } = await api.get<PagedResponse<AcademicCycleResponse>>(endpoint, {
         params: {
             q: query,
             page,
@@ -38,9 +34,11 @@ export const getPagedAcademicCyclesActionAsync = async ({ query, page = 1, pageS
             code,
             startDate,
             endDate,
-            type,
-            enrollmentOpen,
+            periodType,
             status,
+            enrollmentOpen,
+            academicLevelId,
+            educationLevelId
         }
     });
 

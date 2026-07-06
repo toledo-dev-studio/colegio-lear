@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { getPagedStudentsActionAsync } from "../../actions/students/get-paged-students.action";
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_STUDENTS_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
+import { getPagedStudentsActionAsync } from "../../actions/students/get-paged-students.action";
 import { isValidBooleanString, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetPagedStudents = () => {
@@ -34,6 +35,7 @@ export const useGetPagedStudents = () => {
             phoneNumber,
             status,
         }),
+        staleTime: FIVE_MINUTES_STALE_TIME
     });
 
     return {

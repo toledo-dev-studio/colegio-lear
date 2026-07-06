@@ -1,100 +1,63 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
+import { Table } from "@/shared/components/table/Table";
+import { Modal } from "@/shared/components/modal/Modal";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useExportPaymentConcepts } from "../../hooks/useExportPaymentConcepts";
-import { PaymentConceptsTable } from "./components/PaymentConceptsTable";
-import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
-import { useDeletePaymentConcept } from "../../hooks/useDeletePaymentConcept";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { usePaymentConceptsPage } from "./hooks/usePaymentConceptsPage";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
+import { usePaymentConceptsPageTable } from "./hooks/usePaymentConceptsPageTable";
 import { PaymentConceptsAdvancedFilters } from "./components/PaymentConceptsAdvancedFilters";
-import { useGetPagedPaymentConcepts } from "../../hooks/useGetPagedPaymentConcepts";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const PaymentConceptsPage = () => {
-
+  // Component hooks & stores
   const navigate = useNavigate();
+  const { loader, advancedFilters, deleteModal, queries, mutations } = usePaymentConceptsPage();
+  const { columns, properties, actions } = usePaymentConceptsPageTable({ handleClickDelete: deleteModal.open });
 
-  const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
-  const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
-  const [paymentConceptToDelete, setPaymentConceptToDelete] = useState<PaymentConcept | undefined>(undefined);
-
-  const pagedPaymentConceptsQuery = useGetPagedPaymentConcepts();
-  const deletePaymentConceptMutation = useDeletePaymentConcept();
-  const exportPaymentConceptsMutation = useExportPaymentConcepts();
-
-  const { showLoading, hideLoading } = useLoaderStore();
-
-  const handleClickAdd = () => {
-    navigate('/payment-concepts/new');
-  }
-
+  // Component functions
   const handleClickExport = async () => {
-    showLoading('Descargando información', 'Por favor espere...');
+    loader.show("Descargando información", "Por favor espere...");
 
-    const data = await exportPaymentConceptsMutation.mutateAsync();
+    const data = await mutations.paymentConcepts.export.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
-      hideLoading();
-      toast.info('No se cuenta con información para descargar', { position: "top-right" });
+      loader.hide();
+      toast.info("No se cuenta con información para descargar", { position: "top-right" });
       return;
     }
 
     const headers = [
-      { label: 'Id', key: 'id' },
-      { label: 'Nombre', key: 'name' },
-      { label: 'Descripción', key: 'description' },
-      { label: 'Monto de pago', key: 'amount' },
-      { label: '¿Condonación?', key: 'allowForgiveness' },
-      { label: 'Estado', key: 'status' }
+      { label: "Id", key: "id" },
+      { label: "Nombre", key: "name" },
+      { label: "Descripción", key: "description" },
+      { label: "Monto de pago", key: "amount" },
+      { label: "¿Condonación?", key: "allowForgiveness" },
+      { label: "Estado", key: "status" }
     ];
 
-    downloadDataToCsvFile('Conceptos de pago', headers, data);
+    downloadDataToCsvFile("Conceptos de pago", headers, data);
 
-    setTimeout(() => hideLoading(), 500);
+    setTimeout(() => loader.hide(), 500);
   }
 
-  const handleClickAdvancedFilters = () => {
-    setIsOpenAdvancedFiltersPanel(true);
-  }
-
-  const handleClickEditRow = (item: PaymentConcept) => {
-    navigate(`/payment-concepts/${item.id}`);
-  }
-
-  const handleClickDeleteRow = (item: PaymentConcept) => {
-    setPaymentConceptToDelete(item);
-    setIsOpenSingleDeleteModal(true);
-  }
-
-  const handleClickCancelDelteJobTitle = () => {
-    setPaymentConceptToDelete(undefined);
-    setIsOpenSingleDeleteModal(false);
-  }
-
-  const handleClickDelteJobTitle = async () => {
-    await deletePaymentConceptMutation.mutateAsync({ id: paymentConceptToDelete?.id! },
+  const handleClickConfirmDeletePaymentConcept = async () => {
+    if (!deleteModal.record)
+      return;
+    await mutations.paymentConcepts.delete.mutateAsync({ id: deleteModal.record.id },
       {
         onSuccess: () => {
-          toast.success('Concepto de pago eliminado correctamente', { position: "top-right" });
-          setPaymentConceptToDelete(undefined);
-          setIsOpenSingleDeleteModal(false);
+          toast.success("Concepto de pago eliminado correctamente", { position: "top-right" });
+          deleteModal.close();
         },
         onError: (error) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el concepto de pago', { position: "top-right" });
+          toast.error("Ocurrio un error al tratar de eliminar el concepto de pago", { position: "top-right" });
         }
       }
     );
-  }
-
-  const handleClickCloseAdvancedFiltersPanel = () => {
-    setIsOpenAdvancedFiltersPanel(false);
   }
 
   return (
@@ -102,67 +65,68 @@ export const PaymentConceptsPage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Configuración escolar" },
             { label: "Conceptos de pago", to: "/payment-concepts" },
           ]} />
         </div>
 
-        <CustomPageTitle title="Conceptos de pago" subtitle="Gestiona los conceptos de pago disponibles en el colegio  " />
+        <PageTitle title="Conceptos de pago" subtitle="Gestiona los conceptos de pago disponibles en el colegio  " />
 
-        <div className="flex flex-col gap-8 mt-14">
+        <section className="flex flex-col gap-8 mt-14">
 
           {/* Table ribbon options */}
-          <CustomTableListRibbon
-            handleClickAdvancedFilters={handleClickAdvancedFilters}
-            handleClickAdd={handleClickAdd}
-            handleClickExport={handleClickExport}
-            disabledExport={exportPaymentConceptsMutation.isPending}
+          <TableRibbon
+            addButton={{ handleClick: () => navigate("/payment-concepts/new") }}
+            filterButton={{ handleClick: advancedFilters.open }}
+            exportButton={{ handleClick: handleClickExport }}
+            searchInput={{ tooltip: "Búsqueda general por nombre, descripción y monto", placeholder: "Búsqueda general por nombre, descripción y monto" }}
           />
 
           {/* Table content*/}
-          <PaymentConceptsTable
-            data={pagedPaymentConceptsQuery.data}
-            isLoading={pagedPaymentConceptsQuery.isFetching}
-            handleClickEditRow={handleClickEditRow}
-            handleClickDeleteRow={handleClickDeleteRow}
+          <Table
+            data={queries.paymentConcepts.paged.data}
+            isLoading={queries.paymentConcepts.paged.isFetching}
+            enablePagination={true}
+            columns={columns}
+            properties={properties}
+            actions={actions}
+            totalPages={queries.paymentConcepts.paged.totalPages}
           />
-
-          {/* Pagination top element */}
-          {
-            (!pagedPaymentConceptsQuery.isFetching && pagedPaymentConceptsQuery.itemsCount > 0) && (
-              <div className="flex items-center justify-center my-8">
-                <CustomPagination totalPages={pagedPaymentConceptsQuery.totalPages} />
-              </div>
-            )
-          }
 
           {/* Delete single record modal */}
           {
-            paymentConceptToDelete && (
-              <CustomDeleteModal
-                open={isOpenSingleDeleteModal}
-                title={`¿Estas seguro de eliminar el registro ${paymentConceptToDelete?.name}`}
+            (deleteModal.isOpen && deleteModal.record) && (
+              <Modal
+                open={deleteModal.isOpen}
+                type="delete"
+                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
                 message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={deletePaymentConceptMutation.isPending}
-                handleClickConfirm={handleClickDelteJobTitle}
-                handleClickCancel={handleClickCancelDelteJobTitle}
+                isLoading={mutations.paymentConcepts.delete.isPending}
+                cancelButton={{
+                  label: "Cancelar",
+                  onClick: () => deleteModal.close()
+                }}
+                confirmButton={{
+                  label: "Sí, eliminar",
+                  onClick: handleClickConfirmDeletePaymentConcept
+                }}
               />
             )
           }
 
           {/* Advanced filters panel */}
           {
-            isOpenAdvancedFiltersPanel && (
+            advancedFilters.isOpen && (
               <PaymentConceptsAdvancedFilters
-                open={isOpenAdvancedFiltersPanel}
+                open={advancedFilters.isOpen}
                 title="Filtros avanzados"
-                handleClickClose={handleClickCloseAdvancedFiltersPanel}
+                handleClickClose={advancedFilters.close}
               />
             )
           }
 
-        </div>
+        </section>
       </div>
     </>
   )

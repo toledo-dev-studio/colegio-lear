@@ -1,4 +1,4 @@
-import type { BloodTypeKey, KeyValuePair } from "@/types/KeyValuePair";
+import type { BloodTypeKey, KeyValuePair } from "@/lib/key-value-pairs/key-value-pair";
 import type { Allergy } from "./allergy";
 
 /**

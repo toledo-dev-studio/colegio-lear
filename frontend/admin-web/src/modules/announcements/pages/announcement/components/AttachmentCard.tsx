@@ -10,13 +10,14 @@ import {
     Check,
     FileImageIcon,
 } from "lucide-react";
-import type { Attachment } from "@/interfaces/entites/attachment";
-import { DEFAULT_IMAGE_EXTENSIONS } from "@/lib/constants/attachment.constants";
 import { toast } from "sonner";
+
+import { DEFAULT_IMAGE_EXTENSIONS } from "@/lib/constants/attachment.constants";
+import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 
 interface Props {
     /** Attachment information */
-    attachment: Attachment;
+    attachment: AttachmentResponse;
     /** True when the card represents a still-uploading file */
     isUploading?: boolean
     /** True when this card is currently being deleted */;
@@ -25,7 +26,7 @@ interface Props {
     previewUrl?: string;
 
     /** Handle event when click on delete option */
-    onDelete: (attachment: Attachment) => void;
+    onDelete: (attachment: AttachmentResponse) => void;
 }
 
 const isImage = (ext: string) => DEFAULT_IMAGE_EXTENSIONS.includes(`.${ext}`.toLowerCase());

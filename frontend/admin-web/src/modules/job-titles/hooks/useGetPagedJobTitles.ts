@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import type { JobTitleTypes } from "@/interfaces/entites/job-title";
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { getPagedJobTitlesActionAsync } from "../actions/get-paged-job-titles.action";
 import { GET_PAGED_JOB_TITLES_QUERY_KEY } from "@/lib/queries-key/job-titles-queries-key";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
@@ -29,6 +30,7 @@ export const useGetPagedJobTitles = () => {
             jobTitleType,
             isActive,
         }),
+        staleTime: FIVE_MINUTES_STALE_TIME
     });
 
     return {

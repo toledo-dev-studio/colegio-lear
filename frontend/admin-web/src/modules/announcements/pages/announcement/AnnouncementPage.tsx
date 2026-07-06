@@ -3,26 +3,27 @@ import { toast } from "sonner";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { AnnouncementForm } from "./components/AnnouncementForm";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import type { Announcement } from "@/interfaces/entites/announcement";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { useGetByIdAnnouncement } from "../../hooks/announcements/useGetByIdAnnouncement";
+import { useGetAnnouncementById } from "../../hooks/announcements/useGetAnnouncementById";
 import { useCreateUpdateAnnouncement } from "../../hooks/announcements/useCreateUpdateAnnouncement";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const AnnouncementPage = () => {
+  // Component hooks & stores
   const navigate = useNavigate();
   const { id } = useParams();
 
   const { showLoading, hideLoading } = useLoaderStore();
-  const announcementQuery = useGetByIdAnnouncement(id || "");
+  const announcementQuery = useGetAnnouncementById({ id: id! });
   const createUpdateAnnouncementMutation = useCreateUpdateAnnouncement();
   const title = id === "new" ? "Registro de campaña" : "Edición de campaña";
 
-  const handleSubmit = async (announcementLike: Partial<Announcement>) => {
+  const handleSubmit = async (announcementRequestLike: Partial<AnnouncementRequest>) => {
     try {
       showLoading("Guardando registro");
-      await createUpdateAnnouncementMutation.mutateAsync(announcementLike, {
+      await createUpdateAnnouncementMutation.mutateAsync({ id: id!, announcementRequestLike }, {
         onSuccess: (response) => {
           toast.success("Registro actualizado de forma exitosa", { position: "top-right" });
           hideLoading();
@@ -41,7 +42,7 @@ export const AnnouncementPage = () => {
     return <Navigate to="/announcements" />;
   }
 
-  if (announcementQuery.isFetching) {
+  if (announcementQuery.isLoading) {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">
@@ -56,27 +57,26 @@ export const AnnouncementPage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Seguimiento escolar" },
             { label: "Campañas & comunicados", to: "/announcements" },
             { label: id === "new" ? "Nueva campaña o comunicado" : announcementQuery.data?.name || "Edición de campaña o comunicado" },
           ]} />
         </div>
 
-        <CustomPageTitle
+        <PageTitle
           title={title}
           subtitle="Gestiona las campañas & comunicados disponibles en el colegio y la organización" />
 
         <div className="flex-1">
-          <div className="flex flex-col min-h-full gap-8 mt-14">
-
+          <section className="flex flex-col min-h-full gap-8 mt-14">
             <AnnouncementForm
-              announcement={announcementQuery.data}
+              isNew={id === "new"}
+              announcementResponse={announcementQuery.data}
               isSubmitting={createUpdateAnnouncementMutation.isPending}
               onSubmit={handleSubmit}
             />
-
-          </div>
+          </section>
         </div>
       </div>
 

@@ -49,7 +49,7 @@ export interface EmployeeResponse {
     /**
      * Reference to the associated security role
      */
-    securityRole?: SecurityRoleResponse;
+    securityRole?: Partial<SecurityRoleResponse>;
     /**
      * Job title unique identifier
      */
@@ -57,5 +57,5 @@ export interface EmployeeResponse {
     /**
      * Reference to the associated job title
      */
-    jobTitle?: JobTitleResponse;
+    jobTitle?: Partial<JobTitleResponse>;
 }

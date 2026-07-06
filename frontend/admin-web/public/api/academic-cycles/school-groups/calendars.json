@@ -1,0 +1,382 @@
+[
+    {
+        "id": "7f7d4d9e-2a2c-4d7f-9f85-0f0b5d9d1001",
+        "day": "monday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "López",
+            "email": "juan.perez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "6f1d55d7-c03d-468d-bb56-ef6cb89c1002",
+        "day": "monday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
+        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "García",
+            "secondLastName": "Hernández",
+            "email": "maria.garcia@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "85d7c0c8-fb2f-4bcb-9e80-57f11c761003",
+        "day": "monday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
+        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Soto",
+            "email": "carlos.ramirez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "9a7b8f20-cd5e-4c8f-9e6b-93f986711004",
+        "day": "monday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
+        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Ana",
+            "firstLastName": "Torres",
+            "secondLastName": "Vega",
+            "email": "ana.torres@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "ef55b5fd-57d4-4d90-b42d-d20d74f21005",
+        "day": "tuesday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
+        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "García",
+            "secondLastName": "Hernández",
+            "email": "maria.garcia@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "1df85dc6-06ea-4a73-a86d-8bda5d451006",
+        "day": "tuesday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "López",
+            "email": "juan.perez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "80d5e53e-fec3-48c6-a48f-861db39b1007",
+        "day": "tuesday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
+        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Ana",
+            "firstLastName": "Torres",
+            "secondLastName": "Vega",
+            "email": "ana.torres@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "f0df8b89-cba5-4baf-badc-321ebaf61008",
+        "day": "tuesday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
+        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Soto",
+            "email": "carlos.ramirez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "25d6d24e-6b96-4e7b-9b52-9c69bce71009",
+        "day": "wednesday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
+        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Soto",
+            "email": "carlos.ramirez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "7649cba8-f813-40ea-9af5-c5d9039b1010",
+        "day": "wednesday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "López",
+            "email": "juan.perez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "0b7d4c1f-b067-42c0-8e5c-58df0d651011",
+        "day": "wednesday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
+        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "García",
+            "secondLastName": "Hernández",
+            "email": "maria.garcia@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "92d69dc5-cb65-4b38-b58d-f75f9c751012",
+        "day": "wednesday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
+        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Ana",
+            "firstLastName": "Torres",
+            "secondLastName": "Vega",
+            "email": "ana.torres@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "a64deec4-3f2d-4b95-b95f-e638c4541013",
+        "day": "thursday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
+        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Ana",
+            "firstLastName": "Torres",
+            "secondLastName": "Vega",
+            "email": "ana.torres@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "d733b7dc-7f81-4938-94df-ff3f91341014",
+        "day": "thursday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
+        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Soto",
+            "email": "carlos.ramirez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "d8a9bdc9-2034-4709-ae1d-55dc468f1015",
+        "day": "thursday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "López",
+            "email": "juan.perez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "a0d0eac4-3e2c-4c94-a7c7-8b64d1dd1016",
+        "day": "thursday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
+        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "García",
+            "secondLastName": "Hernández",
+            "email": "maria.garcia@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "9cb65d17-b0a6-455b-b62c-d79eb8a41017",
+        "day": "friday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "López",
+            "email": "juan.perez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "c36f01e7-82a3-43d4-b4c3-9f7b8b091018",
+        "day": "friday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
+        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "García",
+            "secondLastName": "Hernández",
+            "email": "maria.garcia@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "8a798d9f-2eb3-4a4d-b5e2-20f84d3d1019",
+        "day": "friday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
+        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Soto",
+            "email": "carlos.ramirez@escuela.edu.mx"
+        }
+    },
+    {
+        "id": "98d3df48-1123-45d6-bf8f-efcf9f211020",
+        "day": "friday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
+        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Ana",
+            "firstLastName": "Torres",
+            "secondLastName": "Vega",
+            "email": "ana.torres@escuela.edu.mx"
+        }
+    }
+]

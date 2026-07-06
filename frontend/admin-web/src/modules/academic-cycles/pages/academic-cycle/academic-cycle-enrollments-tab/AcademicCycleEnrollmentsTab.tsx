@@ -1,45 +1,32 @@
-import { useState } from "react";
-import { Navigate } from "react-router";
+import { Navigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { useAcademicCycleEnrollmentsTab } from "./hooks/useAcademicCycleEnrollmentsTab";
 import { useAcademicCycleEnrollmentsTable } from "./hooks/useAcademicCycleEnrollmentsTable";
-import { AcademicCycleEnrollmentsFilters } from "./components/AcademicCycleEnrollmentsFilters";
 import { AcademicCycleEnrollmentPanelForm } from "./components/AcademicCycleEnrollmentPanelForm";
-import { type AcademicCycleSchoolGroupEnrollment } from "@/interfaces/entites/academic-cycle-school-group-enrollment";
+import { AcademicCycleEnrollmentsPanelFilters } from "./components/AcademicCycleEnrollmentsPanelFilters";
+import type { AcademicCycleEnrollmentRequest } from "@/interfaces/requests/academic-cycle-enrollment.request";
 
 export const AcademicCycleEnrollmentsTab = () => {
-  // Component hooks and stores
-  const [isActiveEnrollmentPanel, setIsActiveEnrollmentPanel] = useState<boolean>();
+  // Componen hooks & stores
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Context hooks and stores configuration
-  const { context, loader, queries, mutations, deleteModal } = useAcademicCycleEnrollmentsTab();
-
-  // Use state to enroll a new student to academic cycle
-  const [academicCycleSchoolGroupEnrollment, setAcademicCycleSchoolGroupEnrollment] = useState<Partial<AcademicCycleSchoolGroupEnrollment> | undefined>();
-
-  // Table hook functions
-  const onClickCreateUpdateEnrollment = (item?: AcademicCycleSchoolGroupEnrollment) => {
-    setAcademicCycleSchoolGroupEnrollment(item);
-    setIsActiveEnrollmentPanel(true);
-  }
-
-  // Table hook configuration
-  const { columns, properties, actions } = useAcademicCycleEnrollmentsTable(onClickCreateUpdateEnrollment, deleteModal.open);
+  const { context, loader, queries, mutations, advancedFiltersPanel, enrollmentPanel, deleteModal } = useAcademicCycleEnrollmentsTab();
+  const { columns, properties, actions } = useAcademicCycleEnrollmentsTable({
+    handleClickEdit: enrollmentPanel.open,
+    handleClickDelete: deleteModal.open
+  });
 
   // Component functions
-  const clearSelection = () => {
-    setAcademicCycleSchoolGroupEnrollment(undefined);
-    setIsActiveEnrollmentPanel(undefined);
-  }
-
   const handleClickConfirmDeleteEnrollment = async () => {
     if (!deleteModal.record)
       return;
-    await mutations.enrollments.delete.mutateAsync({ academicCycleId: context.academicCycleId!, academicCycleSchoolGroupId: deleteModal.record.academicCycleSchoolGroupId, academicCycleSchoolGroupEnrollmentId: deleteModal.record.id },
+    await mutations.enrollments.delete.mutateAsync({ academicCycleId: context.academicCycleId!, id: deleteModal.record.id },
       {
         onSuccess: () => {
           toast.success("El estudiante se eliminó correctamente del ciclo escolar", { position: "top-right" });
@@ -53,14 +40,17 @@ export const AcademicCycleEnrollmentsTab = () => {
     )
   }
 
-  const onSubmit = async (enrollmentLike: Partial<AcademicCycleSchoolGroupEnrollment>) => {
+  const onSubmit = async (academicCycleEnrollmentRequestLike: Partial<AcademicCycleEnrollmentRequest>) => {
     try {
       loader.show("Guardando");
-      await mutations.enrollments.createUpdate.mutateAsync({ enrollmentLike }, {
+      await mutations.enrollments.createUpdate.mutateAsync({
+        id: "new",
+        academicCycleEnrollmentRequestLike
+      }, {
         onSuccess: () => {
           toast.success("Estudiante inscrito al ciclo escolar correctamente", { position: "top-right" });
           loader.hide();
-          clearSelection();
+          enrollmentPanel.close();
         }
       });
     } catch (error) {
@@ -70,54 +60,76 @@ export const AcademicCycleEnrollmentsTab = () => {
     }
   }
 
-  if (queries.schoolGroups.isError) {
+  if (queries.enrollments.paged.isError) {
     toast.error("No fue posible obtener información asociada al ciclo escolar", { position: "top-right" });
     return <Navigate to="/academic-cycles" />;
   }
 
-  if (queries.schoolGroups.isLoading) {
-    return (
-      <>
-        <div className="w-full relative mx-auto h-full my-4">
-          <CustomFullScreenLoading className="relative" title="Cargando información del ciclo escolar" subtitle="Por favor espere..." />
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
-      {/* Search academic cycle enrollments form */}
-      <AcademicCycleEnrollmentsFilters
-        isLoading={queries.enrollments.isFetching}
-        academicCycleSchoolGroups={queries.schoolGroups.data}
-        handleAddEnrollment={() => onClickCreateUpdateEnrollment(undefined)} />
-
       {/* School subjects table section */}
       <section className="flex flex-col gap-y-6">
-        {/* School subjects table */}
+        <SectionTitle
+          title="LISTADO DE ESTUDIANTES INSCRITOS AL CICLO ESCOLAR"
+          description="El siguiente listado contiene la información de los estudiantes inscritos al ciclo escolar según el grupo escolar seleccionado." />
+
+        <TableRibbon
+          exportButton={{ disabled: true, show: false }}
+          addButton={{
+            label: "Nueva incripción",
+            disabled: queries.enrollments.paged.isLoading || queries.enrollments.paged.isError,
+            handleClick: () => enrollmentPanel.open({})
+          }}
+          filterButton={{
+            disabled: queries.enrollments.paged.isLoading || queries.enrollments.paged.isError,
+            handleClick: advancedFiltersPanel.open
+          }}
+          searchInput={{
+            disabled: queries.enrollments.paged.isLoading || queries.enrollments.paged.isError,
+            tooltip: "Búsqueda por código de inscripción & alumno",
+            placeholder: "Búsqueda por código de inscripción & alumno",
+            onKeyDown: (event, query) => {
+              if (event.key !== "Enter")
+                return;
+              if (!query.length) {
+                searchParams.delete("query");
+              } else {
+                searchParams.set("query", query);
+              }
+              setSearchParams(searchParams);
+            }
+          }}
+        />
+
         <Table
-          data={queries.enrollments.data}
-          isLoading={queries.enrollments.isFetching}
+          data={queries.enrollments.paged.data}
+          isLoading={queries.enrollments.paged.isLoading}
           enablePagination={true}
+          totalPages={queries.enrollments.paged.totalPages}
           columns={columns}
           properties={properties}
           actions={actions}
-          totalPages={queries.enrollments.totalPages}
         />
       </section>
 
-      {/* Panel to enroll a new student to academic cycle */}
+      {/* Advanced filters panel */}
       {
-        isActiveEnrollmentPanel && (
-          <AcademicCycleEnrollmentPanelForm
-            title={academicCycleSchoolGroupEnrollment ? `Incripción - ${academicCycleSchoolGroupEnrollment.student?.enrollment}` : "Nueva inscripción"}
-            open={isActiveEnrollmentPanel}
-            academicCycleSchoolGroups={queries.schoolGroups.data}
-            academicCycleSchoolGroupEnrollment={academicCycleSchoolGroupEnrollment}
-            handleClickClose={() => setIsActiveEnrollmentPanel(false)}
-            onSubmit={onSubmit}
+        advancedFiltersPanel.isOpen && (
+          <AcademicCycleEnrollmentsPanelFilters
+            academicCycleSchoolGroups={queries.schoolGroups.get.data}
+            handleClickClose={advancedFiltersPanel.close}
           />
+        )
+      }
+
+      {/* Quick enrollment panel */}
+      {
+        enrollmentPanel.isOpen && (
+          <AcademicCycleEnrollmentPanelForm
+            academicCycleEnrollmentResponse={enrollmentPanel.data}
+            onSubmit={onSubmit}
+            handleClickClose={enrollmentPanel.close}
+            academicCycleSchoolGroups={queries.schoolGroups.get.data} />
         )
       }
 

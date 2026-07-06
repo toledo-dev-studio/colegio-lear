@@ -25,7 +25,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     const searchSecurityRolesMutation = useSearchSecurityRoles();
     const searchJobTitlesMutation = useSearchJobTitles();
     const employeeFilterLike: Partial<EmployeeFilter> = {
-        fullName: isValidValueWithDefault(searchParams.get("name"), ""),
+        fullName: isValidValueWithDefault(searchParams.get("full-name"), ""),
         isActive: stringToBooleanWithDefault(searchParams.get("is-active")),
         securityRoleId: isValidValueWithDefault(searchParams.get("security-role-id"), undefined),
         securityRole: {
@@ -51,7 +51,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
 
     const handleClickClearFilters = () => {
         searchParams.delete("query");
-        searchParams.delete("name");
+        searchParams.delete("full-name");
         searchParams.delete("status");
         searchParams.delete("security-role-id");
         searchParams.delete("security-role-name");
@@ -65,7 +65,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     const onSubmit = (filter: Partial<EmployeeFilter>) => {
         searchParams.delete("query");
         searchParams.set("is-active", `${filter.isActive}`);
-        filter.fullName ? searchParams.set("name", filter.fullName) : searchParams.delete("name");
+        filter.fullName ? searchParams.set("full-name", filter.fullName) : searchParams.delete("full-name");
         filter.securityRoleId ? searchParams.set("security-role-id", filter.securityRoleId) : searchParams.delete("security-role-id");
         filter.securityRole?.name ? searchParams.set("security-role-name", filter.securityRole.name) : searchParams.delete("security-role-name");
         filter.jobTitleId ? searchParams.set("job-title-id", filter.jobTitleId) : searchParams.delete("job-title-id");
@@ -121,6 +121,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                             onClearSelection={() => {
                                                 setValue("jobTitle", undefined);
                                                 setValue("jobTitleId", undefined);
+                                                searchJobTitlesMutation.clearSearchResult();
                                             }}
                                             onOptionChange={async (option: JobTitleResponse) => {
                                                 setValue("jobTitle", option);
@@ -149,6 +150,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                             onClearSelection={() => {
                                                 setValue("securityRole", undefined);
                                                 setValue("securityRoleId", undefined);
+                                                searchSecurityRolesMutation.clearSearchResult();
                                             }}
                                             onOptionChange={async (option: SecurityRoleResponse) => {
                                                 setValue("securityRole", option);
@@ -171,7 +173,7 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                             <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
                                                 <div>
                                                     <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
-                                                    <p className="text-xs text-muted-foreground mt-1">El rol de seguridad se encuentra activo o inactivo.</p>
+                                                    <p className="text-xs text-muted-foreground mt-1">El registro de empleado se encuentra activo o inactivo.</p>
                                                 </div>
                                                 <Switch checked={field.value} onCheckedChange={field.onChange} />
                                             </label>

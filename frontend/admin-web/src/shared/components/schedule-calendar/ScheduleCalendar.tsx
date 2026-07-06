@@ -1,30 +1,29 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
+import { Info, Trash } from "lucide-react";
 
-
-import { type DayOfWeekKey } from "@/types/KeyValuePair";
-import type { Employee } from "@/interfaces/entites/employee";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
-import { DAY_OF_WEEKS, type AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
-
+import { Modal } from "../modal/Modal";
+import type { Calendar } from "./types/calendar";
+import { generateTemporalId } from "@/lib/extensions/utils";
+import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
 import { CalendarTimeGuide } from "./components/CalendarTimeGuide";
 import { CalendarFormPanel } from "./components/CalendarFormPanel";
 import { colorOf } from "./lib/schedule-calendar-palette-subject-colors";
 import { ScheduleCalendarStats } from "./components/ScheduleCalendarStats";
 import type { DragState } from "./interfaces/schedule-calendar-interfaces";
 import { CalendarWeekDaysHeader } from "./components/CalendarWeekDaysHeader";
+import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import { minutesToHHMM, clampMin, hhmmToMinutes, snap } from "./lib/schedule-calendar";
+import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 import { DAY_END_MIN, DAY_START_MIN, MIN_BLOCK_MIN, SLOT_MIN, SLOT_PX, TOTAL_SLOTS } from "./lib/schedule-calendar-consts";
-import { generateTemporalId } from "@/lib/extensions/utils";
-import { Info, Trash } from "lucide-react";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
-import { Modal } from "../modal/Modal";
 
 interface Props {
     disabled: boolean;
-    teachers: Employee[];
-    schoolSubjects: SchoolSubject[];
-    calendars: AcademicCycleGroupSchoolSubjectCalendar[];
-    onChangeCalendars?: (calendars: AcademicCycleGroupSchoolSubjectCalendar[]) => void;
+    calendars: Calendar[];
+    teachers: EmployeeResponse[];
+    schoolSubjects: SchoolSubjectResponse[];
+    onChangeCalendars?: (calendars: Calendar[]) => void;
 }
 
 export default function ScheduleCalendar({ disabled = false, teachers = [], schoolSubjects = [], calendars = [], onChangeCalendars = () => {} }: Props) {
@@ -32,8 +31,8 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
     const calendarGridRef = useRef<HTMLDivElement>(null);
 
     const [drag, setDrag] = useState<DragState | null>(null);
-    const [calendar, setCalendar] = useState<Partial<AcademicCycleGroupSchoolSubjectCalendar>>();
-    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleGroupSchoolSubjectCalendar>();
+    const [calendar, setCalendar] = useState<Calendar>();
+    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<Calendar>();
 
     const yToMinutes = (clientY: number, columnEl: HTMLElement): number => {
         const rect = columnEl.getBoundingClientRect();
@@ -61,7 +60,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
         });
     };
 
-    const onPointerDownMove = (e: React.PointerEvent, academicCycleGroupSchoolSubjectCalendar: AcademicCycleGroupSchoolSubjectCalendar, day: DayOfWeekKey, startMin: number, endMin: number) => {
+    const onPointerDownMove = (e: React.PointerEvent, calendar: Calendar, day: DayOfWeekKey, startMin: number, endMin: number) => {
         if (disabled) return;
 
         e.stopPropagation();
@@ -73,7 +72,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
             day,
             startMin,
             endMin,
-            academicCycleGroupSchoolSubjectCalendar,
+            calendar,
             originalStart: startMin,
             originalEnd: endMin,
             originalDay: day,
@@ -82,7 +81,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
         });
     };
 
-    const onPointerDownResize = (e: React.PointerEvent, academicCycleGroupSchoolSubjectCalendar: AcademicCycleGroupSchoolSubjectCalendar, day: DayOfWeekKey, startMin: number, endMin: number) => {
+    const onPointerDownResize = (e: React.PointerEvent, calendar: Calendar, day: DayOfWeekKey, startMin: number, endMin: number) => {
         if (disabled) return;
 
         e.stopPropagation();
@@ -94,7 +93,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
             day,
             startMin,
             endMin,
-            academicCycleGroupSchoolSubjectCalendar,
+            calendar,
             originalStart: startMin,
             originalEnd: endMin,
             originalDay: day,
@@ -112,27 +111,28 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
 
         if (d.mode === "create") {
             // Set temporal ID to prevent double records and manage new records
-            setCalendar({
+            const newCalendar = {
                 id: generateTemporalId(),
                 day: d.day,
                 startTime: minutesToHHMM(d.startMin),
                 endTime: minutesToHHMM(d.endMin),
-            })
+            }
+            setCalendar(newCalendar);
             return;
         }
-        if (d.academicCycleGroupSchoolSubjectCalendar) {
+        if (d.calendar) {
             const changed = d.startMin !== d.originalStart || d.endMin !== d.originalEnd || d.day !== d.originalDay;
             if (!changed) return;
             try {
                 // On update when a card from calendar is moved with cursor
                 onChangeCalendars([
-                    ...calendars.filter(x => x.id !== d.academicCycleGroupSchoolSubjectCalendar?.id),
+                    ...calendars.filter(x => x.id !== d.calendar?.id),
                     {
-                        ...d.academicCycleGroupSchoolSubjectCalendar,
+                        ...d.calendar,
                         day: d.day,
                         startTime: minutesToHHMM(d.startMin),
                         endTime: minutesToHHMM(d.endMin)
-                    } as AcademicCycleGroupSchoolSubjectCalendar
+                    } as Calendar
                 ]);
             } catch { }
         }
@@ -184,7 +184,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
         [drag],
     );
 
-    const handleCreateUpdateConfirm = async (calendarLike: Partial<AcademicCycleGroupSchoolSubjectCalendar>) => {
+    const handleCreateUpdateConfirm = async (calendarLike: Partial<Calendar>) => {
         if (disabled) return;
 
         if (!calendar)
@@ -193,7 +193,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
             // On create or update when a calendar is updated from calendarFormPanel
             onChangeCalendars([
                 ...calendars.filter(x => x.id !== calendarLike.id),
-                { ...calendarLike } as AcademicCycleGroupSchoolSubjectCalendar
+                { ...calendarLike } as Calendar
             ]);
             setCalendar(undefined);
         } catch { }
@@ -243,7 +243,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
                             const calendarItems = calendars.filter((c) => c.day === d.key);
                             const dragPreview = drag && drag.day === d.key ? drag : null;
                             return (
-                                <div key={d.key} data-day-col={d.key} onPointerDown={(e) => onPointerDownCreate(e, d.key)} data-testid={`dyn-day-col-${d.key}`} className="min-w-[160px] relative flex-1 border-l border-border cursor-pointer" style={{ height: TOTAL_SLOTS * SLOT_PX }}>
+                                <div key={d.key} data-day-col={d.key} onPointerDown={(e) => onPointerDownCreate(e, d.key)} data-testid={`dyn-day-col-${d.key}`} className="min-w-40 relative flex-1 border-l border-border cursor-pointer" style={{ height: TOTAL_SLOTS * SLOT_PX }}>
                                     {/* Available slot lines */}
                                     {
                                         Array.from({ length: TOTAL_SLOTS }).map((_, i) => {
@@ -262,25 +262,25 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
                                     {/* existing slots */}
                                     {
                                         calendarItems.map((item) => {
-
-                                            const isDragging = drag?.academicCycleGroupSchoolSubjectCalendar === item;
+                                            
+                                            const isDragging = drag?.calendar === item;
                                             // Moved to a different column; render at new column instead
                                             if (isDragging && drag?.day !== d.key)
                                                 return null;
 
-                                            const startMin = isDragging && drag ? drag.startMin : hhmmToMinutes(item.startTime);
-                                            const endMin = isDragging && drag ? drag.endMin : hhmmToMinutes(item.endTime);
+                                            const startMin = isDragging && drag ? drag.startMin : hhmmToMinutes(item.startTime!);
+                                            const endMin = isDragging && drag ? drag.endMin : hhmmToMinutes(item.endTime!);
                                             const top = ((startMin - DAY_START_MIN) / SLOT_MIN) * SLOT_PX;
                                             const height = ((endMin - startMin) / SLOT_MIN) * SLOT_PX;
 
                                             // Get metadata
-                                            const color = colorOf(item.schoolSubjectId);
+                                            const color = colorOf(item.schoolSubjectId!);
                                             const teacherFullName = `${item.teacher?.name ?? ""} ${item.teacher?.firstLastName ?? ""} ${item.teacher?.secondLastName ?? ""}`;
                                             const schoolSubjectName = item.schoolSubject?.name;
                                             return (
                                                 <div
                                                     key={item.id}
-                                                    onPointerDown={(e) => onPointerDownMove(e, item, d.key, hhmmToMinutes(item.startTime), hhmmToMinutes(item.endTime))}
+                                                    onPointerDown={(e) => onPointerDownMove(e, item, d.key, hhmmToMinutes(item.startTime!), hhmmToMinutes(item.endTime!))}
                                                     onDoubleClick={(e) => { e.stopPropagation(); setCalendar(item); }}
                                                     style={{ top: top + 2, height: height - 4 }}
                                                     className={`absolute left-1 right-1 rounded-lg border-2 ${color.bg} ${color.border} ${color.text} px-2 py-1 cursor-grab active:cursor-grabbing transition-shadow shadow-sm hover:shadow-md hover:z-20 z-10 ${isDragging ? "ring-2 ring-primary/40 shadow-lg" : ""}`}>
@@ -332,7 +332,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
 
                                                     {/* Resize handle */}
                                                     <section
-                                                        onPointerDown={(e) => onPointerDownResize(e, item, d.key, hhmmToMinutes(item.startTime), hhmmToMinutes(item.endTime))}
+                                                        onPointerDown={(e) => onPointerDownResize(e, item, d.key, hhmmToMinutes(item.startTime!), hhmmToMinutes(item.endTime!))}
                                                         data-testid={`dyn-block-resize-${item.id}`}
                                                         className="absolute -bottom-1 left-0 right-0 h-2 cursor-ns-resize flex items-center justify-center group/handle"
                                                     >
@@ -409,6 +409,6 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
                     />
                 )
             }
-        </div >
+        </div>
     );
 }

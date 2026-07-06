@@ -19,5 +19,6 @@ export const getEmployeeByIdActionAsync = async ({ id }: Options): Promise<Emplo
     }
 
     const { data } = await api.get<EmployeeResponse>(`/employees/${id}`);
+    
     return data;
 }

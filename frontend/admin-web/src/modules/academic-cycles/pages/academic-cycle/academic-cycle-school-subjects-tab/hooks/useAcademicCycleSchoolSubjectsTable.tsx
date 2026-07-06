@@ -1,13 +1,18 @@
 import { Link, useOutletContext } from "react-router";
-
-import type { TableAction } from "@/shared/components/table/interfaces/table-action";
-import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
-import type { AcademicCycleSchoolSubject } from "@/interfaces/entites/academic-cycle-school-subject";
-import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { Button } from "@/shared/ui/button";
 import { Pencil, Trash } from "lucide-react";
 
-export const useAcademicCycleSchoolSubjectsTable = (handleEdit: (item: AcademicCycleSchoolSubject) => void, handleDelete: (item: AcademicCycleSchoolSubject) => void) => {
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import type { TableAction } from "@/shared/components/table/interfaces/table-action";
+import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
+import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
+import type { AcademicCycleSchoolSubjectResponse } from "@/interfaces/responses/academic-cycle-school-subject.response";
+
+interface Options {
+    handleClickEdit: (item: AcademicCycleSchoolSubjectResponse) => void;
+    handleClickDelete: (item: AcademicCycleSchoolSubjectResponse) => void;
+}
+
+export const useAcademicCycleSchoolSubjectsTable = ({ handleClickEdit, handleClickDelete }: Options) => {
     // Get context from layout
     const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
@@ -21,10 +26,10 @@ export const useAcademicCycleSchoolSubjectsTable = (handleEdit: (item: AcademicC
     isLocked && columns.pop();
 
     // Table properties value configuration structure
-    const properties: TableProperty<AcademicCycleSchoolSubject>[] = [
+    const properties: TableProperty<AcademicCycleSchoolSubjectResponse>[] = [
         {
             key: "schoolSubject.name",
-            render: (item: AcademicCycleSchoolSubject) => (
+            render: (item: AcademicCycleSchoolSubjectResponse) => (
                 <Link to={`/school-subjects/${item.schoolSubjectId}`}>
                     <span className="text-primary">
                         {item.schoolSubject?.name ?? "-"}
@@ -36,27 +41,37 @@ export const useAcademicCycleSchoolSubjectsTable = (handleEdit: (item: AcademicC
         { key: "observations" }
     ];
 
-    const actions: TableAction<AcademicCycleSchoolSubject>[] = isLocked ? [] : [
+    const actions: TableAction<AcademicCycleSchoolSubjectResponse>[] = isLocked ? [] : [
         {
             key: "edit",
-            render: (item: AcademicCycleSchoolSubject) => (
-                <Button
-                    aria-label="Editar"
-                    className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
-                    onClick={() => handleEdit(item)}>
-                    <Pencil className="w-4 h-4" />
-                </Button>
+            render: (item: AcademicCycleSchoolSubjectResponse) => (
+                <Tooltip>
+                    <TooltipTrigger>
+                        <span className="bg-primary text-white icon-btn icon-btn-sm"
+                            onClick={() => handleClickEdit(item)}>
+                            <Pencil className="w-4 h-4" />
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Editar materia escolar</p>
+                    </TooltipContent>
+                </Tooltip>
             )
         },
         {
             key: "delete",
-            render: (item: AcademicCycleSchoolSubject) => (
-                <Button
-                    aria-label="Eliminar"
-                    className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
-                    onClick={() => handleDelete(item)}>
-                    <Trash className="w-4 h-4" />
-                </Button>
+            render: (item: AcademicCycleSchoolSubjectResponse) => (
+                <Tooltip>
+                    <TooltipTrigger>
+                        <span className="bg-destructive text-white icon-btn icon-btn-sm"
+                            onClick={() => handleClickDelete(item)}>
+                            <Trash className="w-4 h-4" />
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Eliminar materia escolar</p>
+                    </TooltipContent>
+                </Tooltip>
             )
         }
     ];

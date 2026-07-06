@@ -11,7 +11,7 @@ export const useGetEmployees = () => {
     const query = isValidValueWithDefault(searchParams.get("query")?.trim(), undefined);
 
     // Advanced query filters
-    const name = isValidValueWithDefault(searchParams.get("name")?.trim(), undefined)
+    const fullName = isValidValueWithDefault(searchParams.get("full-name")?.trim(), undefined)
     const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
     const securityRoleId = isValidValueWithDefault(searchParams.get("security-role-id"), undefined);
     const jobTitleId = isValidValueWithDefault(searchParams.get("job-title-id"), undefined);
@@ -19,7 +19,7 @@ export const useGetEmployees = () => {
     return useMutation({
         mutationFn: () => getEmployeesActionAsync({
             query,
-            name,
+            fullName,
             isActive,
             securityRoleId,
             jobTitleId

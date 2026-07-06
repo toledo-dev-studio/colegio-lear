@@ -2,14 +2,10 @@ import { useOutletContext } from "react-router";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
-import type { AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cycle-school-group";
-import { useGetTeachersEmployees } from "@/modules/employees/hooks/employees/useGetTeachersEmployees";
+import type { AcademicCycleSchoolGroupResponse } from "@/interfaces/responses/academic-cycle-school-group.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { useGetSchoolGroupsForAcademicCycle } from "@/modules/academic-cycles/hooks/school-groups/useGetSchoolGroupsForAcademicCycle";
-import { useGetSchoolSubjectsForAcademicCycle } from "@/modules/academic-cycles/hooks/school-subjects/useGetSchoolSubjectsForAcademicCycle";
-import { useDeleteSchoolGroupByIdForAcademicCycle } from "@/modules/academic-cycles/hooks/school-groups/useDeleteSchoolGroupByIdForAcademicCycle";
-import { useCreateUpdateSchoolGroupForAcademicCycle } from "@/modules/academic-cycles/hooks/school-groups/useCreateUpdateSchoolGroupForAcademicCycle";
+import { useGetAcademicCycleSchoolGroups } from "@/modules/academic-cycles/hooks/academic-cycle-school-groups/useGetAcademicCycleSchoolGroups";
+import { useDeleteAcademicCycleSchoolGroupById } from "@/modules/academic-cycles/hooks/academic-cycle-school-groups/useDeleteAcademicCycleSchoolGroupById";
 
 export const useAcademicCycleSchoolGroupsTab = () => {
     // Get context from layout
@@ -19,18 +15,13 @@ export const useAcademicCycleSchoolGroupsTab = () => {
     const { showLoading, hideLoading } = useLoaderStore();
 
     // Components hooks & stores
-    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleSchoolGroup>();
+    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleSchoolGroupResponse>();
 
     // Queries
-    const schoolGroupsForAcademicCycleQuery = useGetSchoolGroupsForAcademicCycle(academicCycleId!);
+    const getAcademicCycleSchoolGroupQuery = useGetAcademicCycleSchoolGroups({ academicCycleId: academicCycleId! });
 
     // Mutations
-    const deleteSchoolGroupByIdForAcademicCycle = useDeleteSchoolGroupByIdForAcademicCycle();
-    const createUpdateSchoolGroupForAcademicCycle = useCreateUpdateSchoolGroupForAcademicCycle();
-
-    // Related entities queries data
-    const schoolSubjects = useGetSchoolSubjectsForAcademicCycle(academicCycleId!).data.map((item) => { return { id: item.schoolSubjectId, ...item.schoolSubject } as SchoolSubject }) ?? [];
-    const teachers = useGetTeachersEmployees().data ?? [];
+    const deleteAcademicCycleSchoolGroupMutation = useDeleteAcademicCycleSchoolGroupById();
 
     return {
         context: {
@@ -40,22 +31,12 @@ export const useAcademicCycleSchoolGroupsTab = () => {
         },
         queries: {
             schoolGroups: {
-                data: schoolGroupsForAcademicCycleQuery.data ?? [],
-                isError: schoolGroupsForAcademicCycleQuery.isError,
-                isLoading: schoolGroupsForAcademicCycleQuery.isLoading,
-                isFetching: schoolGroupsForAcademicCycleQuery.isFetching,
-            },
-            teachers: {
-                data: teachers
-            },
-            schoolSubjects: {
-                data: schoolSubjects
+                get: getAcademicCycleSchoolGroupQuery
             },
         },
         mutations: {
             schoolGroups: {
-                delete: deleteSchoolGroupByIdForAcademicCycle,
-                createUpdate: createUpdateSchoolGroupForAcademicCycle,
+                delete: deleteAcademicCycleSchoolGroupMutation,
             }
         },
         loader: {

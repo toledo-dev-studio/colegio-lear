@@ -1,10 +1,10 @@
 import { Navigate } from "react-router";
 import { type PropsWithChildren } from "react"
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
-import type { ModuleKeys } from "@/interfaces/components/modules";
+import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 
 interface AuthenticatedRouteProps extends PropsWithChildren {
-    moduleKey: ModuleKeys,
+    moduleKey: ModuleKey,
 }
 
 /**

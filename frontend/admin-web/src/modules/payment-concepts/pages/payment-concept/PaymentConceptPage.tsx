@@ -3,28 +3,29 @@ import { toast } from "sonner";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { PaymentConceptForm } from "./components/PaymentConceptForm";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import type { PaymentConcept } from "@/interfaces/entites/payment-concept";
-import { useGetByIdPaymentConcept } from "../../hooks/useGetByIdPaymentConcept";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { useGetPaymentConceptById } from "../../hooks/useGetPaymentConceptById";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdatePaymentConcept } from "../../hooks/useCreateUpdatePaymentConcept";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
+import type { PaymentConceptRequest } from "@/interfaces/requests/payment-concept.request";
 
 export const PaymentConceptPage = () => {
+  // Component hooks & stores
   const navigate = useNavigate();
   const { id } = useParams();
 
   const { showLoading, hideLoading } = useLoaderStore();
-  const paymentConceptQuery = useGetByIdPaymentConcept(id || "");
+  const paymentConceptQuery = useGetPaymentConceptById({ id: id! });
   const createUpdatePaymentConceptMutation = useCreateUpdatePaymentConcept();
-  const title = id === "new" ? 'Registro de concepto de pago' : 'Edición de concepto de pago';
+  const title = id === "new" ? "Registro de concepto de pago" : "Edición de concepto de pago";
 
-  const handleSubmit = async (paymentConceptLike: Partial<PaymentConcept>) => {
+  const handleSubmit = async (paymentConceptRequestLike: Partial<PaymentConceptRequest>) => {
     try {
-      showLoading('Guardando registro');
-      await createUpdatePaymentConceptMutation.mutateAsync(paymentConceptLike, {
+      showLoading("Guardando registro");
+      await createUpdatePaymentConceptMutation.mutateAsync({ id: id!, paymentConceptRequestLike }, {
         onSuccess: (response) => {
-          toast.success('Registro actualizado de forma exitosa', { position: "top-right" });
+          toast.success("Registro actualizado de forma exitosa", { position: "top-right" });
           hideLoading();
           navigate(`/payment-concepts/${response.id}`);
         }
@@ -32,7 +33,7 @@ export const PaymentConceptPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar el registro seleccionado', { position: "top-right" });
+      toast.error("Ocurrio un error al tratar de actualizar el registro seleccionado", { position: "top-right" });
     }
   }
 
@@ -56,27 +57,25 @@ export const PaymentConceptPage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Configuración escolar" },
             { label: "Conceptos de pago", to: "/payment-concepts" },
             { label: id === "new" ? "Nuevo concepto de pago" : paymentConceptQuery.data?.name || "Edición de concepto de pago" },
           ]} />
         </div>
 
-        <CustomPageTitle
+        <PageTitle
           title={title}
           subtitle="Gestiona la información de los conceptos de pago que estará disponible en el colegio" />
 
         <div className="flex-1">
-          <div className="flex flex-col min-h-full gap-8 mt-14">
-
+          <section className="flex flex-col min-h-full gap-8 mt-14">
             <PaymentConceptForm
-              paymentConcept={paymentConceptQuery.data}
+              paymentConceptResponse={paymentConceptQuery.data}
               isSubmitting={createUpdatePaymentConceptMutation.isPending}
               onSubmit={handleSubmit}
             />
-
-          </div>
+          </section>
         </div>
       </div>
 

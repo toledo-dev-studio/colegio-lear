@@ -1,4 +1,4 @@
-import type { KeyValuePair, StudentGuardianTypeKey } from "@/types/KeyValuePair";
+import type { KeyValuePair, StudentGuardianTypeKey } from "@/lib/key-value-pairs/key-value-pair";
 
 /**
  * STUDENT_GUARDIANS defines the possible relationships a guardian can have with a student, along with their display labels.

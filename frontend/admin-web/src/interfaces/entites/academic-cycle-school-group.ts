@@ -1,5 +1,5 @@
 import type { AcademicCycle } from "./academic-cycle";
-import type { AcademicCycleSchoolGroupStatusKey, KeyValuePair } from "@/types/KeyValuePair";
+import type { AcademicCycleSchoolGroupStatusKey, KeyValuePair } from "@/lib/key-value-pairs/key-value-pair";
 import type { AcademicCycleGroupSchoolSubjectCalendar } from "./academic-cycle-group-school-subject-calendar";
 
 /**

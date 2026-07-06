@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Search, XCircle } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 import { Input } from "../../ui/input";
 import { cn } from "@/lib/extensions/utils";
@@ -44,6 +44,7 @@ export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
     } = props;
 
     const inputRef = useRef<HTMLInputElement>(null);
+    const [query, setQuery] = useState<string>(defaultValue ?? "");
 
     useImperativeHandle(ref, () => ({
         focus() {
@@ -66,9 +67,10 @@ export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
                         data-testid="login-password-input"
                         type="text"
                         ref={inputRef}
-                        defaultValue={defaultValue}
                         placeholder={placeholder}
                         disabled={disabled || selected || isSearching}
+                        defaultValue={query}
+                        onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(event) => {
                             setSearched(false);
                             if (event.key !== "Enter")
@@ -78,6 +80,7 @@ export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
                             if (event.key === "Enter")
                                 event.preventDefault();
                             onSearch(inputRef.current?.value ?? "", event);
+                            setQuery(inputRef.current?.value ?? "");
                             setSearched(true);
                         }}
                         className={
@@ -85,20 +88,22 @@ export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
                         }
                     />
                     {
-                        (!isSearching && !selected) && <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        (!isSearching && !selected && !query.length) && <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     }
                     {
                         isSearching && <CustomSpinner className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" variant="foreground" />
                     }
                     {
-                        selected && (
+                        ((selected || query) && !isSearching) && (
                             <div className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground">
                                 <Tooltip>
                                     <TooltipTrigger>
-                                        <XCircle className="cursor-pointer w-4 h-4 text-muted-foreground" onClick={() => {
+                                        <X className="cursor-pointer w-4 h-4 text-muted-foreground" onClick={() => {
                                             if (disabled)
                                                 return;
-                                            onClearSelection();
+                                            setQuery("");
+                                            setSearched(false);
+                                            onClearSelection();                                            
                                         }} />
                                     </TooltipTrigger>
                                     <TooltipContent>

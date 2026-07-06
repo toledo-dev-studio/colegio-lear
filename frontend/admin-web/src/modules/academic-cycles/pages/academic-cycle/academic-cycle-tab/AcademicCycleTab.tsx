@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -9,63 +9,70 @@ import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { Modal } from "@/shared/components/modal/Modal";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
-import { CustomDatePicker } from "@/shared/components/CustomDatePicker";
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import type { EducationLevel } from "@/interfaces/entites/education-level";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import type { AcademicCycleRequest } from "@/interfaces/requests/academic-cycle.request";
+import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
+import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useSearchAcademicLevels";
+import { type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
+import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
-import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES, type AcademicCycle } from "@/interfaces/entites/academic-cycle";
-import { useSearchEducationLevelsForAcademicLevel } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevelsForAcademicLevel";
+import { BookOpenCheck, ClipboardCheck } from "lucide-react";
 
 export const AcademicCycleTab = () => {
-
-    // Get context from layout
+    // Context from layout
     const { academicCycle, isNew, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
-    // Components hooks & stores
-    const navigate = useNavigate();
-    const [confirmationRequired, setConfirmationRequired] = useState<boolean>(false);
-    const { showLoading, hideLoading } = useLoaderStore();
-    const createUpdateMutation = useCreateUpdateAcademicCycle();
+    // Constant configuration variables
+    const ACADEMIC_CYCLE_STATUSES_LIST = !isLocked
+        ? ACADEMIC_CYCLE_STATUSES.filter(item => item.key === "upcoming" || item.key === "active")
+        : ACADEMIC_CYCLE_STATUSES.filter(item => item.key !== "upcoming");
 
-    // Related entities hooks & stores
-    const searchAcademicLevelsForSchoolSubject = useSearchAcademicLevels();
-    const searchEducationLevelsForAcademicLevel = useSearchEducationLevelsForAcademicLevel();
-    const academicLevelSearchInputRef = useRef<HTMLInputElement>(null);
-    const educationLevelSearchInputRef = useRef<HTMLInputElement>(null);
+    // Component hooks & stores
+    const navigate = useNavigate();
+    const { showLoading, hideLoading } = useLoaderStore();
+    const createUpdateAcademicCycleMutation = useCreateUpdateAcademicCycle();
+    const [confirmationRequired, setConfirmationRequired] = useState<boolean>(false);
+    const searchAcademicLevels = useSearchAcademicLevels();
+    const searchEducationLevels = useSearchEducationLevels();
 
     // Use hook form configuration
-    const { control, handleSubmit, formState: { errors }, setValue, watch, getValues, reset } = useForm<Partial<AcademicCycle>>({
+    const { control, handleSubmit, formState: { errors }, setValue, watch, getValues } = useForm<Partial<AcademicCycleRequest>>({
         defaultValues: {
-            id: academicCycle?.id,
-            name: academicCycle?.name ?? "",
-            code: academicCycle?.code ?? "",
-            startDate: academicCycle?.startDate ?? "",
-            endDate: academicCycle?.endDate ?? "",
-            observations: academicCycle?.observations ?? "",
-            enrollmentOpen: academicCycle?.enrollmentOpen ?? undefined,
-            type: academicCycle?.type ?? undefined,
-            status: academicCycle?.status ?? "upcoming",
-            academicLevelId: academicCycle?.academicLevelId ?? "",
-            academicLevel: academicCycle?.academicLevel ?? undefined,
-            educationLevelId: academicCycle?.educationLevelId ?? "",
-            educationLevel: academicCycle?.educationLevel ?? undefined,
+            name: isValidValueWithDefault(academicCycle?.name, ""),
+            code: isValidValueWithDefault(academicCycle?.code, ""),
+            periodType: isValidValueWithDefault(academicCycle?.periodType as AcademicPeriodTypeKey, undefined),
+            status: isValidValueWithDefault(academicCycle?.status as AcademicCycleStatusKey, "upcoming"),
+            evaluationCount: isValidValueWithDefault(academicCycle?.evaluationCount, 3),
+            minimumPassingGrade: isValidValueWithDefault(academicCycle?.minimumPassingGrade, 6),
+            startDate: isValidValueWithDefault(academicCycle?.startDate, ""),
+            endDate: isValidValueWithDefault(academicCycle?.endDate, ""),
+            observations: isValidValueWithDefault(academicCycle?.observations, ""),
+            enrollmentOpen: isValidValueWithDefault(academicCycle?.enrollmentOpen, false),
+            academicLevelId: isValidValueWithDefault(academicCycle?.academicLevelId, ""),
+            academicLevel: isValidValueWithDefault(academicCycle?.academicLevel, undefined),
+            educationLevelId: isValidValueWithDefault(academicCycle?.educationLevelId, ""),
+            educationLevel: isValidValueWithDefault(academicCycle?.educationLevel, undefined),
         }
     });
     const academicLevel = watch("academicLevel");
+    const academicLevelId = watch("academicLevelId");
     const educationLevel = watch("educationLevel");
+    const educationLevelId = watch("educationLevelId");
 
     // Component functions && constants
-    const ACADEMIC_CYCLE_STATUSES_LIST = !isLocked ? ACADEMIC_CYCLE_STATUSES.filter(item => item.key === "upcoming" || item.key === "active") : ACADEMIC_CYCLE_STATUSES.filter(item => item.key !== "upcoming");
-    const onSubmit = async (academicCycleLike: Partial<AcademicCycle>) => {
+    const onSubmit = async (academicCycleRequestLike: Partial<AcademicCycleRequest>) => {
         try {
             showLoading("Guardando registro");
-            await createUpdateMutation.mutateAsync(academicCycleLike, {
+            await createUpdateAcademicCycleMutation.mutateAsync({ id: academicCycle?.id!, academicCycleRequestLike }, {
                 onSuccess: (response) => {
                     toast.success(isNew ? "Ciclo escolar creado correctamente" : "Ciclo escolar actualizado correctamente", { position: "top-right" });
                     hideLoading();
@@ -79,62 +86,33 @@ export const AcademicCycleTab = () => {
         }
     }
 
-    const onError = () => {
-        if (errors.academicLevelId && !academicLevel?.id) {
-            academicLevelSearchInputRef.current?.focus();
-            return;
-        }
-        if (errors.educationLevelId && !educationLevel?.id) {
-            educationLevelSearchInputRef.current?.focus();
-            return;
-        }
-    }
-
-    const validate = async (academicCycleLike: Partial<AcademicCycle>) => {
-        if (academicCycleLike.status !== "upcoming" && !isLocked) {
+    const validateForm = async (academicCycleRequestLike: Partial<AcademicCycleRequest>) => {
+        if (academicCycleRequestLike.status !== "upcoming" && !isLocked) {
             setConfirmationRequired(true);
             return;
         }
-        await onSubmit(academicCycleLike);
+        await onSubmit(academicCycleRequestLike);
     }
-
-    useEffect(() => {
-        requestAnimationFrame(() => {
-            reset({
-                id: academicCycle?.id,
-                name: academicCycle?.name ?? "",
-                code: academicCycle?.code ?? "",
-                startDate: academicCycle?.startDate ?? "",
-                endDate: academicCycle?.endDate ?? "",
-                observations: academicCycle?.observations ?? "",
-                enrollmentOpen: academicCycle?.enrollmentOpen ?? undefined,
-                type: academicCycle?.type ?? undefined,
-                status: academicCycle?.status ?? "upcoming",
-                academicLevelId: academicCycle?.academicLevelId ?? "",
-                academicLevel: academicCycle?.academicLevel ?? undefined,
-                educationLevelId: academicCycle?.educationLevelId ?? "",
-                educationLevel: academicCycle?.educationLevel ?? undefined,
-            });
-        })
-    }, [academicCycle]);
 
     return (
         <>
             {/* Academic cycle form */}
-            <form onSubmit={handleSubmit(validate, onError)}>
+            <form onSubmit={handleSubmit(validateForm)}>
 
                 {/* Main student information */}
-                <section className="flex flex-col gap-y-6 mt-2">
+                <section className="flex flex-col gap-y-6">
+
                     <SectionTitle
                         title="INFORMACIÓN GENERAL DEL CICLO ESCOLAR"
                         description="En esta sección de la pantalla podrás configurar la información general de un ciclo escolar." />
 
-                    <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
+
                         <div className="control-container">
                             <label className="label">Nombre del ciclo <span className="required">*</span>:</label>
                             <Controller
-                                control={control}
                                 name="name"
+                                control={control}
                                 rules={{ required: true }}
                                 disabled={isLocked}
                                 render={({ field }) => (
@@ -147,17 +125,18 @@ export const AcademicCycleTab = () => {
                                 )} />
                             {
                                 errors.name && (
-                                    <p className="text-red-500 text-sm mt-2">
+                                    <p className="error">
                                         El nombre del ciclo escolar es obligatorio
                                     </p>
                                 )
                             }
                         </div>
+
                         <div className="control-container">
                             <label className="label">Código del ciclo <span className="required">*</span>:</label>
                             <Controller
-                                control={control}
                                 name="code"
+                                control={control}
                                 rules={{ required: true }}
                                 disabled={isLocked}
                                 render={({ field }) => (
@@ -170,19 +149,20 @@ export const AcademicCycleTab = () => {
                                 )} />
                             {
                                 errors.code && (
-                                    <p className="text-red-500 text-sm mt-2">
+                                    <p className="error">
                                         El código del ciclo escolar es obligatorio
                                     </p>
                                 )
                             }
                         </div>
+
                         <div className="control-container">
                             <label className="label">
-                                Tipo de periodo del ciclo escolar <span className="required">*</span>:
+                                Tipo de periodo <span className="required">*</span>:
                             </label>
                             <Controller
+                                name="periodType"
                                 control={control}
-                                name={"type"}
                                 rules={{ required: true }}
                                 disabled={isLocked}
                                 render={({ field }) => (
@@ -191,7 +171,7 @@ export const AcademicCycleTab = () => {
                                         onValueChange={field.onChange}>
                                         <SelectTrigger disabled={isLocked}>
                                             <SelectValue placeholder="Selecciona una opción">
-                                                {!field.value ? "Selecciona una opción" : ACADEMIC_CYCLE_PERIOD_TYPES.find(item => item.key === field.value)?.label}
+                                                {labelOf(ACADEMIC_CYCLE_PERIOD_TYPES, field.value) || "Selecciona una opción"}
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
@@ -208,61 +188,14 @@ export const AcademicCycleTab = () => {
                                 )}
                             />
                             {
-                                errors.type && (
-                                    <p className="text-red-500 text-sm mt-2">
+                                errors.periodType && (
+                                    <p className="error">
                                         El tipo de periodo del ciclo escolar es obligatorio
                                     </p>
                                 )
                             }
                         </div>
-                        <div className="control-container">
-                            <label className="label">Entre fecha de inicio <span className="required">*</span>:</label>
-                            <Controller
-                                name="startDate"
-                                control={control}
-                                disabled={isLocked}
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                    <CustomDatePicker
-                                        {...field}
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        disabled={isLocked}
-                                    />
-                                )}
-                            />
-                            {
-                                errors.startDate && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        La fecha de inicio del ciclo escolar es obligatoria
-                                    </p>
-                                )
-                            }
-                        </div>
-                        <div className="control-container">
-                            <label className="label">Hasta fecha de termino <span className="required">*</span>:</label>
-                            <Controller
-                                name="endDate"
-                                control={control}
-                                rules={{ required: true }}
-                                disabled={isLocked}
-                                render={({ field }) => (
-                                    <CustomDatePicker
-                                        {...field}
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        disabled={isLocked}
-                                    />
-                                )}
-                            />
-                            {
-                                errors.endDate && (
-                                    <p className="text-red-500 text-sm mt-2">
-                                        La fecha de termino del ciclo escolar es obligatoria
-                                    </p>
-                                )
-                            }
-                        </div>
+
                         <div className="control-container">
                             <label className="label">
                                 Estado del ciclo escolar <span className="required">*</span>:
@@ -277,7 +210,7 @@ export const AcademicCycleTab = () => {
                                         onValueChange={field.onChange}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Selecciona una opción">
-                                                {!field.value ? "Selecciona una opción" : ACADEMIC_CYCLE_STATUSES_LIST.find(item => item.key === field.value)?.label}
+                                                {labelOf(ACADEMIC_CYCLE_STATUSES_LIST, field.value) || "Selecciona una opción"}
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
@@ -295,15 +228,155 @@ export const AcademicCycleTab = () => {
                             />
                             {
                                 errors.status && (
-                                    <p className="text-red-500 text-sm mt-2">
+                                    <p className="error">
                                         El estatus actual del ciclo escolar es obligatorio
                                     </p>
                                 )
                             }
                         </div>
+
+                        <div className="control-container">
+                            <label className="label">Minima calf. aprobatoria <span className="required">*</span>:</label>
+                            <Controller
+                                name="minimumPassingGrade"
+                                control={control}
+                                rules={{
+                                    required: true,
+                                    validate: {
+                                        integer: (v) => Number.isInteger(v) || "No se permiten decimales",
+                                        nonNegative: (v) => v! > 0 || "La calificación no puede ser negativa o cero",
+                                        maximum: (v) => v! <= 10 || "La calificación no puede ser mayor a 10",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <div className="relative">
+                                        <ClipboardCheck className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                        <Input
+                                            {...field}
+                                            step={1}
+                                            min={1}
+                                            inputMode="numeric"
+                                            type="number"
+                                            placeholder="10"
+                                            onKeyDown={(e) => {
+                                                if (["e", "E", "+", "-", ".", ","].includes(e.key))
+                                                    e.preventDefault();
+                                            }}
+                                            onChange={(e) => e.target.value ? field.onChange(e.target.valueAsNumber) : field.onChange("")}
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <p className="control-info">Calificación minima por ciclo y materia (Solo valores enteros — sin decimales)</p>
+                            {
+                                errors.minimumPassingGrade && (
+                                    <p className="error">
+                                        {errors.minimumPassingGrade.message || "La calificación mínima es obligatoria"}
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">Número de evaluaciones <span className="required">*</span>:</label>
+                            <Controller
+                                name="evaluationCount"
+                                control={control}
+                                rules={{
+                                    required: true,
+                                    validate: {
+                                        integer: (v) => Number.isInteger(v) || "No se permiten decimales",
+                                        nonNegative: (v) => v! > 0 || "El número de evaluaciones no puede ser negativo o cero",
+                                        maximum: (v) => v! <= 10 || "El número de evaluaciones no puede ser mayor a 10",
+                                    },
+                                }}
+                                render={({ field }) => (
+                                    <div className="relative">
+                                        <BookOpenCheck className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                        <Input
+                                            {...field}
+                                            step={1}
+                                            min={1}
+                                            inputMode="numeric"
+                                            type="number"
+                                            placeholder="10"
+                                            onKeyDown={(e) => {
+                                                if (["e", "E", "+", "-", ".", ","].includes(e.key))
+                                                    e.preventDefault();
+                                            }}
+                                            onChange={(e) => e.target.value ? field.onChange(e.target.valueAsNumber) : field.onChange("")}
+                                        />
+                                    </div>
+                                )}
+                            />
+                            <p className="control-info">Evaluaciones durante el ciclo (Solo valores enteros — sin decimales)</p>
+                            {
+                                errors.evaluationCount && (
+                                    <p className="error">
+                                        {errors.evaluationCount.message || "El número de evaluaciones es obligatorio"}
+                                    </p>
+                                )
+                            }
+                        </div>
+
                     </section>
 
-                    <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                    <SectionTitle
+                        title="DETALLES DE ADMINISTRACIÓN DEL CICLO ESCOLAR"
+                        description="Configura la duración del ciclo escolar, así como el nivel académico y educativo al que irá dirigido." />
+
+                    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
+
+                        <div className="control-container">
+                            <label className="label">Entre fecha de inicio <span className="required">*</span>:</label>
+                            <Controller
+                                name="startDate"
+                                control={control}
+                                disabled={isLocked}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <DatePicker
+                                        {...field}
+                                        disabled={isLocked}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
+                            {
+                                errors.startDate && (
+                                    <p className="error">
+                                        La fecha de inicio del ciclo escolar es obligatoria
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">Hasta fecha de termino <span className="required">*</span>:</label>
+                            <Controller
+                                name="endDate"
+                                control={control}
+                                rules={{ required: true }}
+                                disabled={isLocked}
+                                render={({ field }) => (
+                                    <DatePicker
+                                        {...field}
+                                        disabled={isLocked}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
+                            {
+                                errors.endDate && (
+                                    <p className="error">
+                                        La fecha de termino del ciclo escolar es obligatoria
+                                    </p>
+                                )
+                            }
+                        </div>
+
                         <div className="control-container">
                             <label className="label">Nivel académico <span className="required">*</span>:</label>
                             <Controller
@@ -313,35 +386,38 @@ export const AcademicCycleTab = () => {
                                 render={({ field }) => (
                                     <SearchInput
                                         {...field}
-                                        ref={academicLevelSearchInputRef}
+                                        // ref={academicLevelSearchInputRef}
                                         disabled={isLocked}
                                         defaultValue={academicLevel?.name}
-                                        selected={!!academicLevel}
+                                        selected={!!academicLevelId}
                                         placeholder="Busqueda de nivel académico"
-                                        options={searchAcademicLevelsForSchoolSubject.academicLevels ?? []}
-                                        isSearching={searchAcademicLevelsForSchoolSubject.isPending}
+                                        options={searchAcademicLevels.academicLevels}
+                                        isSearching={searchAcademicLevels.isPending}
                                         onClearSelection={() => {
-                                            setValue("academicLevelId", undefined);
                                             setValue("academicLevel", undefined);
-                                            setValue("educationLevelId", undefined);
+                                            setValue("academicLevelId", undefined);
                                             setValue("educationLevel", undefined);
+                                            setValue("educationLevelId", undefined);
+                                            searchAcademicLevels.clearSearchResult();
                                         }}
-                                        onOptionChange={async (option: AcademicLevel) => {
-                                            setValue("academicLevelId", option.id);
+                                        onOptionChange={async (option: AcademicLevelResponse) => {
                                             setValue("academicLevel", option);
-                                            searchAcademicLevelsForSchoolSubject.clearSearchResult();
+                                            setValue("academicLevelId", option.id);
+                                            searchAcademicLevels.clearSearchResult();
                                         }}
-                                        onSearch={async (query) => searchAcademicLevelsForSchoolSubject.searchAsync({ query })}
+                                        onSearch={async (query) => searchAcademicLevels.searchAsync({ query, isActive: true })}
                                     />
-                                )} />
+                                )}
+                            />
                             {
                                 (errors.academicLevelId && !academicLevel) && (
-                                    <p className="text-red-500 text-sm mt-2">
+                                    <p className="error">
                                         El nivel académico es obligatorio
                                     </p>
                                 )
                             }
                         </div>
+
                         <div className="control-container">
                             <label className="label">Nivel educativo <span className="required">*</span>:</label>
                             <Controller
@@ -351,39 +427,39 @@ export const AcademicCycleTab = () => {
                                 render={({ field }) => (
                                     <SearchInput
                                         {...field}
-                                        ref={educationLevelSearchInputRef}
+                                        // ref={educationLevelSearchInputRef}
+                                        disabled={!academicLevelId || isLocked}
                                         defaultValue={educationLevel?.name}
-                                        selected={!!educationLevel}
-                                        disabled={!academicLevel || isLocked}
+                                        selected={!!educationLevelId}
                                         placeholder="Busqueda de nivel educativo"
-                                        options={searchEducationLevelsForAcademicLevel.educationLevels ?? []}
-                                        isSearching={searchEducationLevelsForAcademicLevel.isPending}
+                                        options={searchEducationLevels.educationLevels}
+                                        isSearching={searchEducationLevels.isPending}
                                         onClearSelection={() => {
-                                            setValue("educationLevelId", undefined);
                                             setValue("educationLevel", undefined);
+                                            setValue("educationLevelId", undefined);
+                                            searchEducationLevels.clearSearchResult();
                                         }}
-                                        onOptionChange={async (option: EducationLevel) => {
-                                            setValue("educationLevelId", option.id);
+                                        onOptionChange={async (option: EducationLevelResponse) => {
                                             setValue("educationLevel", option);
-                                            searchEducationLevelsForAcademicLevel.clearSearchResult();
+                                            setValue("educationLevelId", option.id);
+                                            searchEducationLevels.clearSearchResult();
                                         }}
-                                        onSearch={async (query) => searchEducationLevelsForAcademicLevel.searchAsync({
-                                            academicLevelId: academicLevel?.id!,
-                                            query
-                                        })}
+                                        onSearch={async (query) => searchEducationLevels.searchAsync({ academicLevelId, query, isActive: true })}
                                     />
                                 )} />
                             {
                                 (errors.educationLevelId && !educationLevel) && (
-                                    <p className="text-red-500 text-sm mt-2">
+                                    <p className="error">
                                         El nivel educativo es obligatorio
                                     </p>
                                 )
                             }
                         </div>
+
                     </section>
 
                     <section className="grid grid-cols-1 gap-8">
+
                         <div className="control-container">
                             <label className="label">
                                 ¿Inscripciones abiertas?:
@@ -405,6 +481,7 @@ export const AcademicCycleTab = () => {
                                 />
                             </div>
                         </div>
+
                         <div className="control-container">
                             <label className="label">Observaciones adicionales:</label>
                             <Controller
@@ -418,20 +495,22 @@ export const AcademicCycleTab = () => {
                                 )}
                             />
                         </div>
+
                     </section>
+
                 </section>
 
                 {/* Actions Buttons */}
                 <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
                     <Link to="/academic-cycles">
-                        <Button type="button" disabled={createUpdateMutation.isPending} aria-label="cancel" variant={"ghost"}>
+                        <Button type="button" disabled={createUpdateAcademicCycleMutation.isPending} aria-label="cancel" variant={"ghost"}>
                             Cancelar
                         </Button>
                     </Link>
-                    <Button type="submit" disabled={createUpdateMutation.isPending} aria-label="save-record">
+                    <Button type="submit" disabled={createUpdateAcademicCycleMutation.isPending} aria-label="save-record">
                         Guardar
                         {
-                            createUpdateMutation.isPending && (<CustomSpinner variant="primary" className="ml-4" />)
+                            createUpdateAcademicCycleMutation.isPending && (<CustomSpinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

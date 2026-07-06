@@ -1,4 +1,4 @@
-import type { Module } from "./modules";
+import type { Module } from "./module";
 
 export interface Navbar {
     title: string;

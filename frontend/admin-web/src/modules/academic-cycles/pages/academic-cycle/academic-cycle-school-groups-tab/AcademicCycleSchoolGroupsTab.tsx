@@ -1,38 +1,52 @@
-import { useState } from "react";
-import { Navigate } from "react-router";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import ScheduleCalendar from "@/shared/components/schedule-calendar/ScheduleCalendar";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
-import { AcademicCycleSchoolGroupForm } from "./components/AcademicCycleSchoolGroupForm";
 import { useAcademicCycleSchoolGroupsTab } from "./hooks/useAcademicCycleSchoolGroupsTab";
 import { useAcademicCycleSchoolGroupsTable } from "./hooks/useAcademicCycleSchoolGroupsTable";
-import { type AcademicCycleSchoolGroup } from "@/interfaces/entites/academic-cycle-school-group";
+import type { AcademicCycleSchoolGroupResponse } from "@/interfaces/responses/academic-cycle-school-group.response";
 
 export const AcademicCycleSchoolGroupsTab = () => {
     // Context hooks & stores configuration
-    const { context, loader, queries, mutations, deleteModal } = useAcademicCycleSchoolGroupsTab();
+    const { context, queries, mutations, deleteModal } = useAcademicCycleSchoolGroupsTab();
 
     // Componet hooks and stores
-    const [academicCycleSchoolGroup, setAcademicCycleSchoolGroup] = useState<Partial<AcademicCycleSchoolGroup | undefined>>({});
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState("");
 
     // Table hook configuration
-    const { columns, properties, actions } = useAcademicCycleSchoolGroupsTable(setAcademicCycleSchoolGroup, deleteModal.open);
+    const { columns, properties, actions } = useAcademicCycleSchoolGroupsTable({
+        handleClickEdit: ({ id }: AcademicCycleSchoolGroupResponse) => navigate(id),
+        handleClickDelete: deleteModal.open
+    });
+
+    // Filtering data using memo
+    const schoolGroups = useMemo(() => {
+        const data = queries.schoolGroups.get.data ?? [];
+
+        if (!searchQuery.trim())
+            return data;
+
+        const query = searchQuery.toLowerCase();
+
+        return data.filter(item =>
+            item.name?.toLowerCase().includes(query)
+        );
+    }, [queries.schoolGroups.get.data, searchQuery]);
 
     // Component functions
     const handleClickConfirmDeleteSchoolGroup = async () => {
         if (!deleteModal.record)
             return;
-        await mutations.schoolGroups.delete.mutateAsync({ academicCycleId: context.academicCycleId!, academicCycleSchoolGroupId: deleteModal.record.id },
+        await mutations.schoolGroups.delete.mutateAsync({ id: deleteModal.record.id, academicCycleId: context.academicCycleId! },
             {
                 onSuccess: () => {
                     toast.success("El grupo escolar se eliminó correctamente del ciclo escolar", { position: "top-right" });
                     deleteModal.close();
-                    setAcademicCycleSchoolGroup({});
-                    window.scrollTo(0, 0);
                 },
                 onError: (error) => {
                     console.warn(error);
@@ -42,37 +56,8 @@ export const AcademicCycleSchoolGroupsTab = () => {
         )
     }
 
-    const onSubmit = async (academicCycleSchoolGroupLike: Partial<AcademicCycleSchoolGroup>) => {
-        try {
-            loader.show("Guardando");
-            await mutations.schoolGroups.createUpdate.mutateAsync({ academicCycleSchoolGroupLike }, {
-                onSuccess: () => {
-                    toast.success("Grupo escolar agregado al ciclo escolar correctamente", { position: "top-right" });
-                    loader.hide();
-                    setAcademicCycleSchoolGroup({});
-                    window.scrollTo(0, 0);
-                }
-            });
-        } catch (error) {
-            console.warn(error);
-            loader.hide();
-            toast.error("Ocurrió un error al tratar de registrar el grupo escolar", { position: "top-right" });
-        }
-    }
-
-    if (queries.schoolGroups.isError) {
+    if (queries.schoolGroups.get.isError) {
         toast.error("No fue posible obtener información de los grupos escolares de este ciclo escolar", { position: "top-right" });
-        return <Navigate to="/academic-cycles" />;
-    }
-
-    if (queries.schoolGroups.isLoading) {
-        return (
-            <>
-                <div className="w-full relative mx-auto h-full my-4">
-                    <CustomFullScreenLoading className="relative" title="Cargando grupos escolares" subtitle="Por favor espere..." />
-                </div>
-            </>
-        );
     }
 
     return (
@@ -82,9 +67,29 @@ export const AcademicCycleSchoolGroupsTab = () => {
                 <SectionTitle
                     title="LISTADO DE GRUPOS ESCOLARES PARA EL CICLO ESCOLAR"
                     description="El siguiente listado contiene la información de los grupos escolares que estarán disponibles para los alumnos que sean inscritos a este ciclo escolar." />
+                <TableRibbon
+                    className="mb-0"
+                    filterButton={{ show: false }}
+                    exportButton={{ show: false }}
+                    addButton={{
+                        show: true,
+                        label: "Crear nuevo grupo",
+                        disabled: queries.schoolGroups.get.isLoading || queries.schoolGroups.get.isError,
+                        handleClick: () => navigate("new")
+                    }}
+                    searchInput={{
+                        show: true,
+                        disabled: queries.schoolGroups.get.isLoading || queries.schoolGroups.get.isError,
+                        placeholder: "Búsqueda general por nombre",
+                        tooltip: "Búsqueda general por nombre",
+                        onKeyDown: () => { },
+                        onChange: (event) => setSearchQuery(event.target.value || ""),
+                        onClickClear: () => setSearchQuery("")
+                    }}
+                />
                 <Table
-                    data={queries.schoolGroups.data}
-                    isLoading={queries.schoolGroups.isLoading}
+                    data={schoolGroups}
+                    isLoading={queries.schoolGroups.get.isLoading}
                     enablePagination={false}
                     columns={columns}
                     properties={properties}
@@ -92,38 +97,9 @@ export const AcademicCycleSchoolGroupsTab = () => {
                 />
             </section>
 
-            {/* Create & update school group form */}
-            {
-                (!context.isLocked) && (
-                    <AcademicCycleSchoolGroupForm
-                        teachers={queries.teachers.data}
-                        schoolSubjects={queries.schoolSubjects.data}
-                        academicCycleSchoolGroup={academicCycleSchoolGroup}
-                        setAcademicCycleSchoolGroup={setAcademicCycleSchoolGroup}
-                        onSubmit={onSubmit}
-                    />
-                )
-            }
-
-            {/* Calendar view when record is locked */}
-            {
-                context.isLocked && (
-                    <>
-                        <SectionTitle
-                            title="DETALLE DE HORARIO ESCOLAR"
-                            description="Selecciona un grupo escolar para poder consultar el horario configurado" />
-                        {
-                            academicCycleSchoolGroup && (
-                                <ScheduleCalendar
-                                    disabled={true}
-                                    teachers={[]}
-                                    schoolSubjects={[]}
-                                    calendars={academicCycleSchoolGroup?.calendars ?? []} />
-                            )
-                        }
-                    </>
-                )
-            }
+            {/* <SectionTitle
+                title="DETALLE DE HORARIO ESCOLAR"
+                description="Selecciona un grupo escolar para poder consultar el horario configurado" /> */}
 
             {/* Delete single record modal */}
             {

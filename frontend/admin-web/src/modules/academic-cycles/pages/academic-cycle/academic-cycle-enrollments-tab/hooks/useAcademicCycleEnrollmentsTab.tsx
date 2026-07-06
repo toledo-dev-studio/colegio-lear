@@ -1,29 +1,35 @@
+import { useState } from "react";
 import { useOutletContext } from "react-router";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import type { AcademicCycleSchoolGroupEnrollment } from "@/interfaces/entites/academic-cycle-school-group-enrollment";
-import { useGetSchoolGroupsForAcademicCycle } from "@/modules/academic-cycles/hooks/school-groups/useGetSchoolGroupsForAcademicCycle";
-import { useGetPagedEnrollmentsForAcademicCycle } from "@/modules/academic-cycles/hooks/enrollments/useGetPagedEnrollmentsForAcademicCycle";
-import { useDeleteEnrollmentByIdForAcademicCycle } from "@/modules/academic-cycles/hooks/enrollments/useDeleteEnrollmentByIdForAcademicCycle";
-import { useCreateUpdateEnrollmentForAcademicCycle } from "@/modules/academic-cycles/hooks/enrollments/useCreateUpdateEnrollmentForAcademicCycle";
+import { useGetAcademicCycleSchoolGroups } from "@/modules/academic-cycles/hooks/academic-cycle-school-groups/useGetAcademicCycleSchoolGroups";
+import { useGetPagedAcademicCycleEnrollments } from "@/modules/academic-cycles/hooks/academic-cycle-enrollments/useGetPagedAcademicCycleEnrollments";
+import { useDeleteAcademicCycleEnrollmentById } from "@/modules/academic-cycles/hooks/academic-cycle-enrollments/useDeleteEnrollmentByIdForAcademicCycle";
+import { useCreateUpdateAcademicCycleEnrollment } from "@/modules/academic-cycles/hooks/academic-cycle-enrollments/useCreateUpdateAcademicCycleEnrollment";
 
 export const useAcademicCycleEnrollmentsTab = () => {
     // Get context from layout
     const { academicCycleId, academicCycle, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
-    // Hooks & stores
+    // Shared hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
-    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleSchoolGroupEnrollment>();
+
+    // Components hooks & stores
+    const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
+    const [isOpenCreateEnrollmentPanel, setIsOpenCreateEnrollmentPanel] = useState<boolean>(false);
+    const [academicCycleEnrollmentToEdit, setAcademicCycleEnrollmentToEdit] = useState<Partial<AcademicCycleEnrollmentResponse>>({});
+    const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<AcademicCycleEnrollmentResponse>();
 
     // Queries
-    const schoolGroupsForAcademicCycleQuery = useGetSchoolGroupsForAcademicCycle(academicCycleId!);
-    const pagedEnrollmentForAcademicCycleQuery = useGetPagedEnrollmentsForAcademicCycle({ academicCycleId });
+    const getAcademicCycleSchoolSubjectsQuery = useGetAcademicCycleSchoolGroups({ academicCycleId: academicCycleId! });
+    const getPagedAcademicCycleEnrollmentsQuery = useGetPagedAcademicCycleEnrollments({ academicCycleId: academicCycleId! });
 
     // Mutations
-    const deleteEnrollmentByIdForAcademicCycle = useDeleteEnrollmentByIdForAcademicCycle();
-    const createUpdateEnrollmentForAcademicCycle = useCreateUpdateEnrollmentForAcademicCycle();
+    const deleteAcademicCycleEnrollmentMutation = useDeleteAcademicCycleEnrollmentById();
+    const createUpdateAcademicCycleEnrollmentMutation = useCreateUpdateAcademicCycleEnrollment();
 
     return {
         context: {
@@ -33,28 +39,38 @@ export const useAcademicCycleEnrollmentsTab = () => {
         },
         queries: {
             enrollments: {
-                ...pagedEnrollmentForAcademicCycleQuery.data,
-                data: pagedEnrollmentForAcademicCycleQuery.data?.data ?? [],
-                isLoading: pagedEnrollmentForAcademicCycleQuery.isLoading,
-                isError: pagedEnrollmentForAcademicCycleQuery.isError,
-                isFetching: pagedEnrollmentForAcademicCycleQuery.isFetching
+                paged: getPagedAcademicCycleEnrollmentsQuery
             },
             schoolGroups: {
-                data: schoolGroupsForAcademicCycleQuery.data ?? [],
-                isError: schoolGroupsForAcademicCycleQuery.isError,
-                isLoading: schoolGroupsForAcademicCycleQuery.isLoading,
-                isFetching: schoolGroupsForAcademicCycleQuery.isFetching,
+                get: getAcademicCycleSchoolSubjectsQuery
             },
         },
         mutations: {
             enrollments: {
-                delete: deleteEnrollmentByIdForAcademicCycle,
-                createUpdate: createUpdateEnrollmentForAcademicCycle,
+                delete: deleteAcademicCycleEnrollmentMutation,
+                createUpdate: createUpdateAcademicCycleEnrollmentMutation,
             },
         },
         loader: {
             show: showLoading,
             hide: hideLoading,
+        },
+        advancedFiltersPanel: {
+            isOpen: isOpenAdvancedFiltersPanel,
+            open: () => setIsOpenAdvancedFiltersPanel(true),
+            close: () => setIsOpenAdvancedFiltersPanel(false),
+        },
+        enrollmentPanel: {
+            data: academicCycleEnrollmentToEdit,
+            isOpen: isOpenCreateEnrollmentPanel,
+            open: (item: Partial<AcademicCycleEnrollmentResponse> = {}) => {
+                setAcademicCycleEnrollmentToEdit(item);
+                setIsOpenCreateEnrollmentPanel(true);
+            },
+            close: () => {
+                setAcademicCycleEnrollmentToEdit({});
+                setIsOpenCreateEnrollmentPanel(false)
+            },
         },
         deleteModal: {
             isOpen: isOpenSingleDeleteModal,

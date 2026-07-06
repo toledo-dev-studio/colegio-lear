@@ -1,56 +1,91 @@
-import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
+import type { Calendar } from "../types/calendar";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
-import type { Employee } from "@/interfaces/entites/employee";
-import { labelOf, type DayOfWeekKey } from "@/types/KeyValuePair";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
+import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
-import { DAY_OF_WEEKS, type AcademicCycleGroupSchoolSubjectCalendar } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { generateTemporalId } from "@/lib/extensions/utils";
 
 interface Props {
     disabled: boolean;
-    teachers: Employee[];
-    schoolSubjects: SchoolSubject[];
-    calendar?: Partial<AcademicCycleGroupSchoolSubjectCalendar>;
+    teachers: EmployeeResponse[];
+    schoolSubjects: SchoolSubjectResponse[];
+    calendar?: Calendar;
     onCancel: () => void;
-    onSubmit: (calendarLike: Partial<AcademicCycleGroupSchoolSubjectCalendar>) => void;
+    onSubmit: (calendarLike: Partial<Calendar>) => void;
 }
 
 export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubjects = [], calendar = undefined, onCancel, onSubmit }: Props) => {
 
     // React hook form config
-    const { control, formState: { errors }, handleSubmit, reset, setValue } = useForm<Partial<AcademicCycleGroupSchoolSubjectCalendar>>({
+    const { control, formState: { errors }, trigger, setError, handleSubmit, setValue } = useForm<Partial<Calendar>>({
         defaultValues: {
-            ...calendar
+            id: isValidValueWithDefault(calendar?.id, generateTemporalId()),
+            day: isValidValueWithDefault(calendar?.day, undefined),
+            startTime: isValidValueWithDefault(calendar?.startTime, ""),
+            endTime: isValidValueWithDefault(calendar?.endTime, ""),
+            academicCycleId: isValidValueWithDefault(calendar?.academicCycleId, ""),
+            academicCycle: isValidValueWithDefault(calendar?.academicCycle, undefined),
+            academicCycleSchoolGroupId: isValidValueWithDefault(calendar?.academicCycleSchoolGroupId, ""),
+            academicCycleSchoolGroup: isValidValueWithDefault(calendar?.academicCycleSchoolGroup, undefined),
+            schoolSubjectId: isValidValueWithDefault(calendar?.schoolSubjectId, ""),
+            schoolSubject: isValidValueWithDefault(calendar?.schoolSubject, undefined),
+            teacherId: isValidValueWithDefault(calendar?.teacherId, ""),
+            teacher: isValidValueWithDefault(calendar?.teacher, undefined)
         }
     });
 
-    useEffect(() => {
-        if (calendar)
-            reset({ ...calendar });
-    }, [calendar]);
+    // Component functions
+    const validateForm = async (calendarLike: Partial<Calendar>) => {    
+        const isValid = await trigger();
+
+        if (!isValid) {
+            return;
+        }
+
+        // Validaciones adicionales de negocio
+        if (calendarLike.startTime! >= calendarLike.endTime!) {
+            setError("endTime", {
+                type: "manual",
+                message: "La hora de término debe ser mayor que la hora de inicio.",
+            });
+            return;
+        }
+
+        onSubmit(calendarLike);
+    }
 
     return (
         <>
             {/* Schedule calendar form */}
             <section className="fixed inset-0 z-50 flex justify-end" data-testid="filter-drawer">
+
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onCancel} />
+                
                 <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
+                
                     <div className="h-22 flex items-center justify-between px-10 border-b border-border">
                         <h3 className="font-heading text-xl font-bold uppercase">
                             ASIGNACIÓN DE HORARIO
                         </h3>
-                        <Button onClick={onCancel} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground !px-0">
-                            <X className="!w-5 !h-5 text-muted-foreground" />
+                        <Button onClick={onCancel} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground px-0!">
+                            <X className="w-5! h-5! text-muted-foreground" />
                         </Button>
                     </div>
+                
                     {/* Schedule calendar fiels */}
                     <section className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
+
                         <div className="flex flex-col gap-8">
+
                             <div className="control-container">
                                 <label className="label">Día de la semana <span className="required">*</span>:</label>
                                 <Controller
@@ -89,6 +124,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                                     )
                                 }
                             </div>
+
                             <div className="control-container">
                                 <label className="label">Hora de inicio de clase <span className="required">*</span>:</label>
                                 <Controller
@@ -115,6 +151,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                                     )
                                 }
                             </div>
+
                             <div className="control-container">
                                 <label className="label">Hora de termino de clase <span className="required">*</span>:</label>
                                 <Controller
@@ -136,11 +173,12 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                                 {
                                     errors.endTime && (
                                         <p className="error">
-                                            La hora de termino de clase es requerido
+                                            { errors.endTime.message || "La hora de termino de clase es requerido" }
                                         </p>
                                     )
                                 }
                             </div>
+
                             <div className="control-container">
                                 <label className="label">Materia escolar<span className="required">*</span>:</label>
                                 <Controller
@@ -184,6 +222,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                                     )
                                 }
                             </div>
+
                             <div className="control-container">
                                 <label className="label">Docente <span className="required">*</span>:</label>
                                 <Controller
@@ -229,8 +268,11 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                                     )
                                 }
                             </div>
+
                         </div>
+                        
                     </section>
+
                     {/* Actions Buttons */}
                     <section className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
                         <Button type="button" aria-label="cancel" variant={"ghost"} onClick={onCancel}>
@@ -238,7 +280,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                         </Button>
                         {
                             !disabled && (
-                                <Button type="submit" aria-label="save-record" onClick={handleSubmit(onSubmit)}>
+                                <Button type="submit" aria-label="save-record" onClick={handleSubmit(validateForm)}>
                                     Guardar
                                 </Button>
                             )

@@ -1,98 +1,62 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
+import { Table } from "@/shared/components/table/Table";
+import { Modal } from "@/shared/components/modal/Modal";
 import { downloadDataToCsvFile } from "@/lib/extensions/csv";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { ScholarshipsTable } from "./components/ScholarshipsTable";
-import type { Scholarship } from "@/interfaces/entites/scholarship";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle"
-import { CustomPagination } from "@/shared/components/CustomPagination";
-import { useDeleteScholarship } from "../../hooks/useDeleteScholarships";
-import { useExportScholarships } from "../../hooks/useExportScholarships";
-import { CustomDeleteModal } from "@/shared/components/CustomDeleteModal";
-import { useGetPagedScholarships } from "../../hooks/useGetPagedScholarships";
-import { CustomTableListRibbon } from "@/shared/components/CustomTableListRibbon";
+import { useScholarshipsPage } from "./hooks/useScholarshipsPage";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
+import { useScholarshipsPageTable } from "./hooks/useScholarshipsPageTable";
 import { ScholarshipsAdvancedFilters } from "./components/ScholarshipsAdvancedFilters";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const ScholarshipsPage = () => {
+    // Component hooks & stores
     const navigate = useNavigate();
+    const { loader, advancedFilters, deleteModal, queries, mutations } = useScholarshipsPage();
+    const { columns, properties, actions } = useScholarshipsPageTable({ handleClickDelete: deleteModal.open });
 
-    const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);
-    const [isOpenAdvancedFiltersPanel, setIsOpenAdvancedFiltersPanel] = useState<boolean>(false);
-    const [scholarshipToDelete, setScholarshipToDelete] = useState<Scholarship | undefined>(undefined);
-
-    const pagedScholarshipsQuery = useGetPagedScholarships();
-    const deleteScholarshipMutation = useDeleteScholarship();
-    const exportScholarshipsMutation = useExportScholarships();
-
-    const { showLoading, hideLoading } = useLoaderStore();
-
-    const handleClickAdd = () => {
-        navigate('/scholarships/new');
-    }
-
+    // Component functions
     const handleClickExport = async () => {
-        showLoading('Descargando información', 'Por favor espere...');
+        loader.show("Descargando información", "Por favor espere...");
 
-        const data = await exportScholarshipsMutation.mutateAsync();
+        const data = await mutations.scholarships.export.mutateAsync();
 
         if (!data || !Array.isArray(data)) {
-            hideLoading();
-            toast.info('No se cuenta con información para descargar', { position: "top-right" });
+            loader.hide()
+            toast.info("No se cuenta con información para descargar", { position: "top-right" });
             return;
         }
 
         const headers = [
-            { label: 'Id', key: 'id' },
-            { label: 'Nombre', key: 'name' },
-            { label: 'Descripción', key: 'description' },
-            { label: 'Porcentaje de descuento', key: 'discountPercentage' },
-            { label: 'Estado', key: 'status' }
+            { label: "Id", key: "id" },
+            { label: "Nombre", key: "name" },
+            { label: "Descripción", key: "description" },
+            { label: "Porcentaje de descuento", key: "discountPercentage" },
+            { label: "Estado", key: "status" }
         ];
 
-        downloadDataToCsvFile('Becas escolares', headers, data);
+        downloadDataToCsvFile("Becas escolares", headers, data);
 
-        setTimeout(() => hideLoading(), 500);
+        setTimeout(() => loader.hide(), 500);
     }
 
-    const handleClickAdvancedFilters = () => {
-        setIsOpenAdvancedFiltersPanel(true);
-    }
-
-    const handleClickEditRow = (scholarship: Scholarship) => {
-        navigate(`/scholarships/${scholarship.id}`);
-    }
-
-    const handleClickDeleteRow = (scholarship: Scholarship) => {
-        setScholarshipToDelete(scholarship);
-        setIsOpenSingleDeleteModal(true);
-    }
-
-    const handleClickCancelDelteScholarship = () => {
-        setScholarshipToDelete(undefined);
-        setIsOpenSingleDeleteModal(false);
-    }
-
-    const handleClickDelteScholarship = async () => {
-        await deleteScholarshipMutation.mutateAsync({ id: scholarshipToDelete?.id! },
+    const handleClickConfirmDeleteScholarship = async () => {
+        if (!deleteModal.record)
+            return;
+        await mutations.scholarships.delete.mutateAsync({ id: deleteModal.record.id },
             {
                 onSuccess: () => {
-                    toast.success('Beca escolar eliminada correctamente', { position: "top-right" });
-                    setScholarshipToDelete(undefined);
-                    setIsOpenSingleDeleteModal(false);
+                    toast.success("Beca escolar eliminada correctamente", { position: "top-right" });
+                    deleteModal.close();
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error('Ocurrio un error al tratar de eliminar la beca escolar', { position: "top-right" });
+                    toast.error("Ocurrio un error al tratar de eliminar la beca escolar", { position: "top-right" });
                 }
             }
         );
-    }
-
-    const handleClickCloseAdvancedFiltersPanel = () => {
-        setIsOpenAdvancedFiltersPanel(false);
     }
 
     return (
@@ -100,62 +64,68 @@ export const ScholarshipsPage = () => {
             <div className="w-full py-12 px-10 lg:px-15">
 
                 <div className="mb-10">
-                    <CustomBreadcrumb items={[
+                    <Breadcrumb items={[
                         { label: "Configuración escolar" },
                         { label: "Becas escolares", to: "/scholarships" },
                     ]} />
                 </div>
 
-                <CustomPageTitle title="Becas escolares" subtitle="Gestiona las becas escolares que estarán disponibles en el colegio" />
+                <PageTitle title="Becas escolares" subtitle="Gestiona las becas escolares que estarán disponibles en el colegio" />
 
-                <div className="flex flex-col gap-8 mt-14">
+                <section className="flex flex-col gap-8 mt-14">
 
                     {/* Table ribbon options */}
-                    <CustomTableListRibbon
-                        handleClickAdvancedFilters={handleClickAdvancedFilters}
-                        handleClickAdd={handleClickAdd}
-                        handleClickExport={handleClickExport}
-                        disabledExport={exportScholarshipsMutation.isPending}
+                    <TableRibbon
+                        addButton={{ handleClick: () => navigate("/scholarships/new") }}
+                        filterButton={{ handleClick: advancedFilters.open }}
+                        exportButton={{ handleClick: handleClickExport }}
+                        searchInput={{ tooltip: "Búsqueda general por nombre, descripción y monto", placeholder: "Búsqueda general por nombre, descripción y monto" }}
                     />
 
                     {/* Table content*/}
-                    <ScholarshipsTable
-                        data={pagedScholarshipsQuery.data}
-                        isLoading={pagedScholarshipsQuery.isFetching}
-                        handleClickEditRow={handleClickEditRow}
-                        handleClickDeleteRow={handleClickDeleteRow}
+                    <Table
+                        data={queries.scholarships.paged.data}
+                        isLoading={queries.scholarships.paged.isFetching}
+                        enablePagination={true}
+                        columns={columns}
+                        properties={properties}
+                        actions={actions}
+                        totalPages={queries.scholarships.paged.totalPages}
                     />
 
-                    {/* Pagination top element */}
+                    {/* Delete single record modal */}
                     {
-                        (!pagedScholarshipsQuery.isFetching && pagedScholarshipsQuery.itemsCount > 0) && (
-                            <div className="flex items-center justify-center my-8">
-                                <CustomPagination totalPages={pagedScholarshipsQuery.totalPages} />
-                            </div>
-                        )
-                    }
-
-                    <CustomDeleteModal
-                        open={isOpenSingleDeleteModal}
-                        title={`¿Estas seguro de eliminar el registro ${scholarshipToDelete?.name}`}
-                        message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                        isLoading={deleteScholarshipMutation.isPending}
-                        handleClickConfirm={handleClickDelteScholarship}
-                        handleClickCancel={handleClickCancelDelteScholarship}
-                    />
-
-                    {
-                        isOpenAdvancedFiltersPanel && (
-                            <ScholarshipsAdvancedFilters
-                                open={isOpenAdvancedFiltersPanel}
-                                title="Filtros avanzados"
-                                handleClickClose={handleClickCloseAdvancedFiltersPanel}
+                        (deleteModal.isOpen && deleteModal.record) && (
+                            <Modal
+                                open={deleteModal.isOpen}
+                                type="delete"
+                                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
+                                message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
+                                isLoading={mutations.scholarships.delete.isPending}
+                                cancelButton={{
+                                    label: "Cancelar",
+                                    onClick: () => deleteModal.close()
+                                }}
+                                confirmButton={{
+                                    label: "Sí, eliminar",
+                                    onClick: handleClickConfirmDeleteScholarship
+                                }}
                             />
                         )
                     }
 
-                </div>
+                    {/* Advanced filters panel */}
+                    {
+                        advancedFilters.isOpen && (
+                            <ScholarshipsAdvancedFilters
+                                open={advancedFilters.isOpen}
+                                title="Filtros avanzados"
+                                handleClickClose={advancedFilters.close}
+                            />
+                        )
+                    }
 
+                </section>
             </div>
         </>
     )

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import type { Announcement } from "@/interfaces/entites/announcement";
+import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { createUpdateAnnouncementActionAsync } from "../../actions/announcements/create-update-announcement.action";
 import { GET_PAGED_ANNOUNCEMENTS_QUERY_KEY, GET_ANNOUNCEMENT_QUERY_KEY } from "@/lib/queries-key/announcements-queries-key";
 
@@ -9,7 +9,7 @@ export const useCreateUpdateAnnouncement = () => {
 
     return useMutation({
         mutationFn: createUpdateAnnouncementActionAsync,
-        onSuccess: (response: Announcement) => {
+        onSuccess: (response: AnnouncementResponse) => {
             // Invalid cache for useQueries
             queryClient.invalidateQueries({ queryKey: [GET_PAGED_ANNOUNCEMENTS_QUERY_KEY] });
 

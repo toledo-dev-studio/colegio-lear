@@ -1,24 +1,31 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import type { Announcement } from "@/interfaces/entites/announcement";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
+import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 
-export const createUpdateAnnouncementActionAsync = async (announcementLike: Partial<Announcement>): Promise<Announcement> => {
+interface Options {
+    id: string;
+    announcementRequestLike: Partial<AnnouncementRequest>;
+}
+
+export const createUpdateAnnouncementActionAsync = async ({ id, announcementRequestLike }: Options): Promise<AnnouncementResponse> => {
     await sleep();
 
-    const { id } = announcementLike;
-    const isCreating = id === undefined;
+    const isCreating = id === "new";
 
     if (VITE_ENVIRONMENT === "mockable") {
-        announcementLike.id = isCreating ? generateTemporalId() : id;
-        return announcementLike as Announcement;
+        return {
+            ...announcementRequestLike,
+            id: isCreating ? generateTemporalId() : id,
+        } as AnnouncementResponse;
     }
 
-    const { data } = await api<Announcement>({
-        url: isCreating ? '/announcements' : `/announcements/${id}`,
-        method: isCreating ? 'POST' : 'PATCH',
-        data: announcementLike
+    const { data } = await api<AnnouncementResponse>({
+        url: isCreating ? "/announcements" : `/announcements/${id}`,
+        method: isCreating ? "POST" : "PATCH",
+        data: announcementRequestLike
     });
 
     return {

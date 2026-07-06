@@ -1,9 +1,9 @@
 import { useState, type PropsWithChildren } from "react";
 
-import { CustomNavbar } from "@/shared/components/CustomNabvar";
-import { useAuthStore } from "@/modules/auth/stores/auth.store";
-import { CustomSidebar } from "@/shared/components/CustomSidebar";
+import { Navbar } from "../components/navbar/Navbar";
 import { useLoaderStore } from "../stores/LoaderStore";
+import { Sidebar } from "../components/sidebar/Sidebar";
+import { useAuthStore } from "@/modules/auth/stores/auth.store";
 
 export const SystemLayout = ({ children }: PropsWithChildren) => {
 
@@ -25,9 +25,9 @@ export const SystemLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <div className="min-h-screen flex bg-background text-foreground" data-testid="dashboard-layout">
-        <CustomSidebar isOpenSidebar={isOpenSidebar} toggleSidebar={handleToggleSidebar} logout={handleLogout} />
+        <Sidebar isOpenSidebar={isOpenSidebar} toggleSidebar={handleToggleSidebar} logout={handleLogout} />
         <div className="flex-1 flex flex-col min-w-0">
-          <CustomNavbar toggleSidebar={handleToggleSidebar} logout={handleLogout} />
+          <Navbar toggleSidebar={handleToggleSidebar} logout={handleLogout} />
           <main className="flex-1 p-4 sm:p-8 animate-fade-in">
             {children}
           </main>

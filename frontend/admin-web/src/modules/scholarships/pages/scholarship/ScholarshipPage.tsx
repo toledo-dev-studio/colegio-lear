@@ -3,11 +3,11 @@ import { toast } from "sonner";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { ScholarshipForm } from "./components/ScholarshipForm";
-import type { Scholarship } from "@/interfaces/entites/scholarship";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
-import { useGetByIdScholarship } from "../../hooks/useGetByIdScholarship";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { useGetScholarshipById } from "../../hooks/useGetScholarshipById";
 import { useCreateUpdateScholarship } from "../../hooks/useCreateUpdateScholarship";
+import type { ScholarshipRequest } from "@/interfaces/requests/scholarship.request";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 
 export const ScholarshipPage = () => {
@@ -16,16 +16,16 @@ export const ScholarshipPage = () => {
   const { id } = useParams();
 
   const { showLoading, hideLoading } = useLoaderStore();
-  const scholarshipQuery = useGetByIdScholarship(id || "");
+  const scholarshipQuery = useGetScholarshipById({ id: id! });
   const createUpdateScholarshipMutation = useCreateUpdateScholarship();
-  const title = id === "new" ? 'Registro de beca escolar' : 'Edición de beca escolar';
+  const title = id === "new" ? "Registro de beca escolar" : "Edición de beca escolar";
 
-  const handleSubmit = async (scholarshipLike: Partial<Scholarship>) => {
+  const handleSubmit = async (scholarshipRequestLike: Partial<ScholarshipRequest>) => {
     try {
-      showLoading('Guardando registro');
-      await createUpdateScholarshipMutation.mutateAsync(scholarshipLike, {
+      showLoading("Guardando registro");
+      await createUpdateScholarshipMutation.mutateAsync({ id: id!, scholarshipRequestLike }, {
         onSuccess: (response) => {
-          toast.success('Beca escolar actualizada correctamente', { position: "top-right" });
+          toast.success("Beca escolar actualizada correctamente", { position: "top-right" });
           hideLoading();
           navigate(`/scholarships/${response.id}`);
         }
@@ -33,7 +33,7 @@ export const ScholarshipPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error('Ocurrio un error al tratar de actualizar la beca escolar', { position: "top-right" });
+      toast.error("Ocurrio un error al tratar de actualizar la beca escolar", { position: "top-right" });
     }
   }
 
@@ -57,14 +57,14 @@ export const ScholarshipPage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Configuración escolar" },
             { label: "Becas escolares", to: "/scholarships" },
             { label: id === "new" ? "Nueva beca escolar" : scholarshipQuery.data?.name || "Edición de beca escolar" },
           ]} />
         </div>
 
-        <CustomPageTitle
+        <PageTitle
           title={title}
           subtitle="Getiona la información de la beca escolar que estará disponible en el colegio" />
 
@@ -72,7 +72,7 @@ export const ScholarshipPage = () => {
           <div className="flex flex-col min-h-full gap-8 mt-14">
 
             <ScholarshipForm
-              scholarship={scholarshipQuery.data}
+              scholarshipResponse={scholarshipQuery.data}
               isSubmitting={createUpdateScholarshipMutation.isPending}
               onSubmit={handleSubmit}
             />

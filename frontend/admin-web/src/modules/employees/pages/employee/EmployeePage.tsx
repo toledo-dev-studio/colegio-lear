@@ -11,10 +11,9 @@ import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoa
 import { useCreateUpdateEmployee } from "../../hooks/employees/useCreateUpdateEmployee";
 
 export const EmployeePage = () => {
-  // Hooks & stores
-  const navigate = useNavigate();
+  // Component hooks & stores
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const { showLoading, hideLoading } = useLoaderStore();
   const employeeQuery = useGetEmployeeById({ id: id! });
   const createUpdateEmployeeMutation = useCreateUpdateEmployee();

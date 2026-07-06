@@ -1,13 +1,13 @@
-import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { useSearchParams } from 'react-router';
+import { useSearchParams } from "react-router";
+import { Controller, useForm } from "react-hook-form";
+import { X } from "lucide-react";
 
-import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
-import { Switch } from '@/shared/ui/switch';
-import { Slider } from '@/shared/ui/slider';
-import type { Scholarship } from '@/interfaces/entites/scholarship';
-import { stringToBooleanWithDefault, stringToNumberWithDefault } from '@/lib/extensions/datatypes';
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Switch } from "@/shared/ui/switch";
+import { Slider } from "@/shared/ui/slider";
+import type { ScholarshipFilter } from "@/interfaces/filters/scholarship.filter";
+import { isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 interface Props {
     open: boolean;
@@ -17,40 +17,38 @@ interface Props {
 
 export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
 
+    // Component hooks & stores
     const [searchParams, setSearchParams] = useSearchParams();
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        getValues,
-        reset,
-        watch,
-    } = useForm<Partial<Scholarship>>({
-        defaultValues: {
-            name: searchParams.get('name') ?? '',
-            status: stringToBooleanWithDefault(searchParams.get('status')),
-            discountPercentage: stringToNumberWithDefault(searchParams.get('discount-percentage'))
-        }
+    const scholarshipFilterLike: Partial<ScholarshipFilter> = {
+        name: isValidValueWithDefault(searchParams.get("name"), ""),
+        discountPercentage: stringToNumberWithDefault(searchParams.get("discount-percentage"), 0),
+        isActive: stringToBooleanWithDefault(searchParams.get("is-active"))
+    };
+
+    // Use react hook form configuration
+    const { control, handleSubmit, watch, reset } = useForm<Partial<ScholarshipFilter>>({
+        defaultValues: scholarshipFilterLike
     });
+    const discountPercentage = watch("discountPercentage");
 
     if (!open)
         return null;
 
     const handleClickClearFilters = () => {
-        searchParams.delete('query');
-        searchParams.delete('name');
-        searchParams.delete('status');
-        searchParams.delete('discount-percentage');
-        reset({ name: '', status: true, discountPercentage: 0 }, { keepTouched: false });
+        searchParams.delete("query");
+        searchParams.delete("name");
+        searchParams.delete("is-active");
+        searchParams.delete("discount-percentage");
+        reset({ name: "", isActive: true, discountPercentage: 0 }, { keepTouched: false });
         setSearchParams(searchParams);
         handleClickClose();
     }
 
-    const handleSubmitForm = (filter: Partial<Scholarship>) => {
-        searchParams.delete('query');
-        searchParams.set('status', `${filter.status}`);
-        searchParams.set('discount-percentage', `${filter.discountPercentage}`);
-        filter.name ? searchParams.set('name', filter.name) : searchParams.delete('name');
+    const handleSubmitForm = (filter: Partial<ScholarshipFilter>) => {
+        searchParams.delete("query");
+        searchParams.set("is-active", `${filter.isActive}`);
+        searchParams.set("discount-percentage", `${filter.discountPercentage}`);
+        filter.name ? searchParams.set("name", filter.name) : searchParams.delete("name");
         setSearchParams(searchParams);
         handleClickClose();
     }
@@ -58,8 +56,11 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
     return (
         <>
             <form onSubmit={handleSubmit(handleSubmitForm)} className="fixed inset-0 z-50 flex justify-end" data-testid="filter-drawer">
+
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleClickClose} />
+
                 <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
+
                     <div className="h-22 flex items-center justify-between px-10 border-b border-border">
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
@@ -68,59 +69,77 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
                             <X className="!w-5 !h-5 text-muted-foreground" />
                         </Button>
                     </div>
-                    <div className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
-                        {/* Contenido de filtrados */}
-                        <div className="flex flex-col gap-8">
-                            <div>
-                                <label className="text-sm font-medium text-foreground mb-2 block">Nombre:</label>
-                                <div className="relative">
-                                    <Input
-                                        type="text"
-                                        {...register('name')}
-                                        placeholder="Nombre del puesto de trabajo..."
-                                        className="pill-input w-full pl-8"
-                                    />
-                                </div>
+
+                    <section className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
+
+                        <section className="flex flex-col gap-8">
+
+                            <div className="control-container">
+                                <label className="label">Nombre del concepto de pago:</label>
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            type="text"
+                                            {...field}
+                                            placeholder="Nombre del concepto de pago..."
+                                        />
+                                    )}
+                                />
                             </div>
-                            <div className="w-full">
-                                <label className="text-sm font-medium text-foreground mb-3 block">Máximo de porcentaje de descuento ({watch('discountPercentage') ?? 1} %):</label>
-                                <div className="flex items-center justify-center mt-0 md:mt-7">
-                                    <Slider
-                                        value={getValues('discountPercentage')}
-                                        min={0}
-                                        max={100}
-                                        step={1}
-                                        onValueChange={(value) => setValue('discountPercentage', +value, { shouldTouch: true })}
-                                        className="w-full"
+
+                            <div className="control-container">
+                                <label className="label">Máximo de porcentaje de descuento ({discountPercentage ?? 1} %):</label>
+                                <Controller
+                                    name="discountPercentage"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <div className="flex items-center justify-center mt-0 md:mt-7">
+                                            <Slider
+                                                value={field.value ?? 1}
+                                                min={0}
+                                                max={100}
+                                                step={1}
+                                                onValueChange={(value) => field.onChange(value, { shouldTouch: true })}
+                                            />
+                                        </div>
+                                    )}
+                                />
+                            </div>
+
+                            <div className="control-container">
+                                <label className="label">¿Registro activo?:</label>
+                                <div className="flex items-center justify-center">
+                                    <Controller
+                                        name="isActive"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                                <div>
+                                                    <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                                    <p className="text-xs text-muted-foreground mt-1">La beca escolar encuentra activa o inactiva.</p>
+                                                </div>
+                                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                            </label>
+                                        )}
                                     />
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="text-sm font-medium text-foreground mb-2 block">Estatus:</label>
-                                <Switch
-                                    size="default"
-                                    checked={watch('status')}
-                                    onCheckedChange={(checked) => setValue('status', checked, { shouldTouch: true })} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
-                        <Button
-                            type="button"
-                            variant={"destructive"}
-                            data-testid="filter-clear-button"
-                            className="pill-btn-outline px-10"
-                            onClick={handleClickClearFilters}>
+                        </section>
+
+                    </section>
+
+                    <section className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
+                        <Button type="button" variant={"ghost"} onClick={handleClickClearFilters}>
                             Limpiar filtros
                         </Button>
-                        <Button
-                            type="submit"
-                            data-testid="filter-apply-button"
-                            className="pill-btn-primary px-10">
+                        <Button type="submit" variant={"default"}>
                             Aplicar filtros
                         </Button>
-                    </div>
+                    </section>
+
                 </aside>
             </form>
         </>

@@ -3,26 +3,27 @@ import { toast } from "sonner";
 
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { AcademicLevelForm } from "./components/AcademicLevelForm";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import type { AcademicLevel } from "@/interfaces/entites/academic-level";
-import { useGetByIdAcademicLevel } from "../../hooks/academic-levels/useGetByIdAcademicLevel";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
+import type { AcademicLevelRequest } from "@/interfaces/requests/academic-level.request";
+import { useGetAcademicLevelById } from "../../hooks/academic-levels/useGetAcademicLevelById";
 import { useCreateUpdateAcademicLevel } from "../../hooks/academic-levels/useCreateUpdateAcademicLevel";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
 
 export const AcademicLevelPage = () => {
+    // Component hooks & stores
     const navigate = useNavigate();
     const { id } = useParams();
 
     const { showLoading, hideLoading } = useLoaderStore();
-    const academicLevelQuery = useGetByIdAcademicLevel(id || "");
+    const academicLevelQuery = useGetAcademicLevelById({ id: id! });
     const createUpdateAcademicLevelMutation = useCreateUpdateAcademicLevel();
     const title = id === "new" ? "Registro de nivel académico" : "Edición de nivel académico";
 
-    const handleSubmit = async (academicLevelLike: Partial<AcademicLevel>) => {
+    const handleSubmit = async (academicLevelRequestLike: Partial<AcademicLevelRequest>) => {
         try {
             showLoading("Guardando registro");
-            await createUpdateAcademicLevelMutation.mutateAsync(academicLevelLike, {
+            await createUpdateAcademicLevelMutation.mutateAsync({ id: id!, academicLevelRequestLike }, {
                 onSuccess: (response) => {
                     toast.success("Nivel académico actualizado correctamente", { position: "top-right" });
                     hideLoading();
@@ -56,14 +57,14 @@ export const AcademicLevelPage = () => {
             <div className="w-full py-12 px-10 lg:px-15">
 
                 <div className="mb-10">
-                    <CustomBreadcrumb items={[
+                    <Breadcrumb items={[
                         { label: "Configuración escolar" },
                         { label: "Niveles academicos", to: "/academic-levels" },
                         { label: id === "new" ? "Nuevo nivel académico" : academicLevelQuery.data?.name || "Edición de nivel académico" },
                     ]} />
                 </div>
 
-                <CustomPageTitle
+                <PageTitle
                     title={title}
                     subtitle="Gestiona la información del nivel académico para que este disponible en el sistema" />
 
@@ -71,7 +72,8 @@ export const AcademicLevelPage = () => {
                     <div className="flex flex-col min-h-full gap-8 mt-14">
 
                         <AcademicLevelForm
-                            academicLevel={academicLevelQuery.data}
+                            isNew={id === "new"}
+                            academicLevelResponse={academicLevelQuery.data}
                             isSubmitting={createUpdateAcademicLevelMutation.isPending}
                             onSubmit={handleSubmit}
                         />

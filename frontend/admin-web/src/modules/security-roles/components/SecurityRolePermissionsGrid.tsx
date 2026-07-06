@@ -1,12 +1,12 @@
 import { cn } from "@/lib/extensions/utils";
 import { Switch } from "@/shared/ui/switch";
-import { AVAILABLE_MODULES, type ModuleKeys } from "@/interfaces/components/modules";
+import { AVAILABLE_MODULES, type ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 import type { SecurityRolePermissionRequest } from "@/interfaces/requests/security-role-permission.request";
 
 interface Props {
     disabled: boolean;
     permissions: SecurityRolePermissionRequest[];
-    handleOnChangePermission?: (key: ModuleKeys, permission: "can-read" | "can-write" | "can-delete", checked: boolean) => void;
+    handleOnChangePermission?: (key: ModuleKey, permission: "can-read" | "can-write" | "can-delete", checked: boolean) => void;
 }
 
 export const SecurityRolePermissionsGrid = ({ disabled = false, permissions = [], handleOnChangePermission }: Props) => {

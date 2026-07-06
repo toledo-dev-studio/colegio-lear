@@ -7,8 +7,9 @@ import { generateTemporalId } from "@/lib/extensions/utils";
 import type { Attachment } from "@/interfaces/entites/attachment";
 import { extractFileExtension } from "@/lib/extensions/attachments";
 import { CustomDragAndDrop } from "@/shared/components/CustomDragAndDrop";
-import { useAttachmentsForAnnouncement } from "@/modules/announcements/hooks/attachments/useAttachmentsForAnnouncement";
 import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/constants/attachment.constants";
+import { useDeleteAttachmentForAnnouncementById } from "@/modules/announcements/hooks/attachments/useDeleteAttachmentForAnnouncementById";
+import { useUploadAttachmentForAnnouncement } from "@/modules/announcements/hooks/attachments/useUploadAttachmentForAnnouncement";
 
 /**
  * Attachments — owner of all attachment business logic for announcement.
@@ -47,10 +48,11 @@ interface Props {
 }
 
 export const AttachmentsGrid = ({ announcementId, attachments, disabled, acceptedExtensions = DEFAULT_ACCEPTED_FILE_EXTENSIONS, onChange }: Props) => {
-
+    // Coomponent hooks & stores
     const [uploadingAttachments, setUploadingAttachments] = useState<UploadAttachment[]>([]);
     const [deletingIds, setDeletingIds] = useState<string[]>([]);
-    const { attachmentsMutation } = useAttachmentsForAnnouncement();
+    const deleteAttachmentByIdMutation = useDeleteAttachmentForAnnouncementById();
+    const useUploadAttachmentMutation = useUploadAttachmentForAnnouncement();
 
     // Revoke object URLs on unmount to avoid leaks
     useEffect(() => {
@@ -119,7 +121,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
         // Process uploads in parallel in pool of 3 requests; each finishes independently
         await promisePool(attachmentsToUpload, 3, async ({ id, name, previewUrl, file }) => {
             try {
-                const attachment = await attachmentsMutation.upload.mutateAsync({ announcementId, file });
+                const attachment = await useUploadAttachmentMutation.mutateAsync({ announcementId, file });
                 onChange((prev) => [...(prev ?? []), attachment]);
                 toast.success(`Archivo "${name}" cargado correctamente.`, { position: "top-right" });
                 return attachment;
@@ -142,7 +144,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
             return;
         setDeletingIds((prev) => [...prev, attachment.id]);
         try {
-            await attachmentsMutation.remove.mutateAsync({ announcementId: announcementId, attachmentId: attachment.id });
+            await deleteAttachmentByIdMutation.mutateAsync({ announcementId: announcementId, attachmentId: attachment.id });
             onChange((prev) => prev.filter((a) => a.id !== attachment.id));
             toast.success(`Archivo "${attachment.name}" eliminado correctamente.`, { position: "top-right" });
         } catch (err) {

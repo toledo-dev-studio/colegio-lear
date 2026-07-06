@@ -1,24 +1,31 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import type { SchoolSubject } from "@/interfaces/entites/school-subject";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { SchoolSubjectRequest } from "@/interfaces/requests/school-subject.request";
+import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 
-export const createUpdateSchoolSubjectActionAsync = async (schoolSubjectLike: Partial<SchoolSubject>): Promise<SchoolSubject> => {
+interface Options {
+    id: string;
+    schoolSubjectRequestLike: Partial<SchoolSubjectRequest>;
+}
+
+export const createUpdateSchoolSubjectActionAsync = async ({ id, schoolSubjectRequestLike }: Options): Promise<SchoolSubjectResponse> => {
     await sleep();
 
-    const { id } = schoolSubjectLike;
-    const isCreating = id === undefined;
+    const isCreating = id === "new";
 
     if (VITE_ENVIRONMENT === "mockable") {
-        schoolSubjectLike.id = isCreating ? generateTemporalId() : id;
-        return schoolSubjectLike as SchoolSubject;
+        return {
+            ...schoolSubjectRequestLike,
+            id: isCreating ? generateTemporalId() : id
+        } as SchoolSubjectResponse;
     }
 
-    const { data } = await api<SchoolSubject>({
+    const { data } = await api<SchoolSubjectResponse>({
         url: isCreating ? '/school-subjects' : `/school-subjects/${id}`,
         method: isCreating ? 'POST' : 'PATCH',
-        data: schoolSubjectLike
+        data: schoolSubjectRequestLike
     });
 
     return {

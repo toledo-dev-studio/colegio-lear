@@ -1,24 +1,31 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import type { Scholarship } from "@/interfaces/entites/scholarship";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { ScholarshipRequest } from "@/interfaces/requests/scholarship.request";
+import type { ScholarshipResponse } from "@/interfaces/responses/scholarship.response";
 
-export const createUpdateScholarshipActionAsync = async (scholarshipLike: Partial<Scholarship>): Promise<Scholarship> => {
+interface Options {
+    id: string;
+    scholarshipRequestLike: Partial<ScholarshipRequest>;
+}
+
+export const createUpdateScholarshipActionAsync = async ({ id, scholarshipRequestLike }: Options): Promise<ScholarshipResponse> => {
     await sleep();
 
-    const { id } = scholarshipLike;
-    const isCreating = id === undefined;
+    const isCreating = id === "new";
 
     if (VITE_ENVIRONMENT === "mockable") {
-        scholarshipLike.id = isCreating ? generateTemporalId() : id;
-        return scholarshipLike as Scholarship;
+        return {
+            ...scholarshipRequestLike,
+            id: isCreating ? generateTemporalId() : id
+        } as ScholarshipResponse;
     }
 
-    const { data } = await api<Scholarship>({
+    const { data } = await api<ScholarshipResponse>({
         url: isCreating ? '/scholarships' : `/scholarships/${id}`,
         method: isCreating ? 'POST' : 'PATCH',
-        data: scholarshipLike
+        data: scholarshipRequestLike
     });
 
     return {

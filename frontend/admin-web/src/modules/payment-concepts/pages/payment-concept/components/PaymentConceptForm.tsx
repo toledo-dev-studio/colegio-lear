@@ -1,154 +1,166 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router';
-import { Controller, useForm } from 'react-hook-form';
-import { Banknote } from 'lucide-react';
+import { Link } from "react-router";
+import { Controller, useForm } from "react-hook-form";
+import { Banknote } from "lucide-react";
 
-import { Input } from '@/shared/ui/input';
-import { Switch } from '@/shared/ui/switch';
-import { Button } from '@/shared/ui/button';
-import { CustomSpinner } from '@/shared/components/CustomSpinner';
-import type { PaymentConcept } from '@/interfaces/entites/payment-concept';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
-import { Textarea } from '@/shared/ui/textarea';
+import { Input } from "@/shared/ui/input";
+import { Switch } from "@/shared/ui/switch";
+import { Button } from "@/shared/ui/button";
+import { Textarea } from "@/shared/ui/textarea";
+import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import type { PaymentConceptRequest } from "@/interfaces/requests/payment-concept.request";
+import type { PaymentConceptResponse } from "@/interfaces/responses/payment-concept.response";
 
 interface Props {
-    paymentConcept?: PaymentConcept,
     isSubmitting: boolean,
-    onSubmit: (paymentConceptLike: Partial<PaymentConcept>) => void
+    paymentConceptResponse?: PaymentConceptResponse,
+    onSubmit: (paymentConceptRequestLike: Partial<PaymentConceptRequest>) => void
 }
 
-export const PaymentConceptForm = ({ paymentConcept, isSubmitting, onSubmit }: Props) => {
+export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSubmit }: Props) => {
 
-    const {
-        control,
-        register,
-        handleSubmit,
-        formState: { errors },
-        getValues,
-        setValue,
-        watch,
-        reset
-    } = useForm<Partial<PaymentConcept>>({
-        defaultValues: paymentConcept
+    const { control, handleSubmit, formState: { errors } } = useForm<Partial<PaymentConceptRequest>>({
+        defaultValues: {
+            name: isValidValueWithDefault(paymentConceptResponse?.name, ""),
+            isActive: isValidValueWithDefault(paymentConceptResponse?.isActive, false),
+            amount: isValidValueWithDefault(paymentConceptResponse?.amount, 1),
+            description: isValidValueWithDefault(paymentConceptResponse?.description, ""),
+            allowForgiveness: isValidValueWithDefault(paymentConceptResponse?.allowForgiveness, false),
+        }
     });
-
-    useEffect(() => {
-        if (paymentConcept)
-            reset(paymentConcept);
-    }, [paymentConcept]);
 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
 
-                <div className="flex flex-col items-start gap-y-4 md:items-center md:flex-row md:justify-between border-b border-border pb-4">
-                    <h2 className="w-full text-muted-foreground">
-                        INFORMACIÓN GENERAL DEL CONCEPTO DE PAGO
-                    </h2>
-                    <div className="w-fit flex items-center">
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Switch
-                                    size="default"
-                                    checked={watch('status') ?? false}
-                                    onCheckedChange={(checked) => setValue('status', checked)} />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Estatus del registro</p>
-                            </TooltipContent>
-                        </Tooltip>
+                <SectionTitle
+                    title="INFORMACIÓN GENERAL DEL CONCEPTO DE PAGO"
+                    description="Registro de información básica del concepto de pago así como de montos y condonaciones." />
 
-                    </div>
-                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                <div className="grid grid-cols-1 gap-8">
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">
-                            Nombre del concepto de pago<span className="text-destructive">*</span>:
-                        </label>
-                        <Input
-                            type="text"
-                            {...register('name', { required: true })}
-                            placeholder="Nombre del concepto de pago..."
-                            className="pill-input w-full pl-8" />
+                    <div className="control-container">
+                        <label className="label">Nombre del concepto de pago <span className="required">*</span>:</label>
+                        <Controller
+                            name="name"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Nombre del concepto de pago..."
+                                />
+                            )} />
                         {
                             errors.name && (
-                                <p className="text-red-500 text-sm mt-2">
+                                <p className="error">
                                     El nombre del concepto de pago es obligatorio
                                 </p>
                             )
                         }
                     </div>
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">Descripción del concepto de pago:</label>
-                        <Textarea
-                            {...register('description')}
-                            defaultValue={getValues('description')}
-                            placeholder="Descripción del registro..."
-                            className="pill-input w-full pl-8" />
-                    </div>
-                </div>
 
-                <div className="flex flex-col items-start gap-y-4 border-b border-border pb-4 mt-7">
-                    <h2 className="w-full text-muted-foreground">
-                        DETALLES DE PAGO DEL CONCEPTO DE PAGO
-                    </h2>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">
-                            Monto de pago (MXN)<span className="text-destructive">*</span>:
-                        </label>
-                        <div className="relative">
-                            <Banknote className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                            <Input
-                                type="number"
-                                className="pill-input w-full pl-8 pr-13"
-                                step={1}
-                                min={1}
-                                inputMode="numeric"
-                                placeholder="Monto de pago..."
-                                onKeyDown={(e) => { if (["e", "E", "+", "-", ".", ","].includes(e.key)) e.preventDefault(); }}
-                                {...register("amount", {
-                                    required: true,
-                                    valueAsNumber: true,
-                                    validate: {
-                                        integer: (v) => Number.isInteger(v) || "No se permiten decimales",
-                                        nonNegative: (v) => v! >= 1 || "El monto de pago no puede ser menor o igual a 0",
-                                    },
-                                })}
-                            />
-                        </div>
+                    <div className="control-container">
+                        <label className="label">Monto de pago (MXN) <span className="required">*</span>:</label>
+                        <Controller
+                            name="amount"
+                            control={control}
+                            rules={{
+                                required: true,
+                                validate: {
+                                    integer: (v) => Number.isInteger(v) || "No se permiten decimales",
+                                    nonNegative: (v) => v! >= 0 || "El monto de pago no puede ser negativo",
+                                },
+                            }}
+                            render={({ field }) => (
+                                <div className="relative">
+                                    <Banknote className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                    <Input
+                                        {...field}
+                                        step={1}
+                                        min={1}
+                                        inputMode="numeric"
+                                        type="number"
+                                        placeholder="100"
+                                        onKeyDown={(e) => {
+                                            if (["e", "E", "+", "-", ".", ","].includes(e.key))
+                                                e.preventDefault();
+                                        }}
+                                        onChange={(e) => e.target.value ? field.onChange(e.target.valueAsNumber) : field.onChange("")}
+                                    />
+                                </div>
+                            )}
+                        />
+                        <p className="control-info">Solo valores enteros — sin decimales</p>
                         {
                             errors.amount && (
-                                <p className="text-red-500 text-sm mt-2">
-                                    {errors.amount.message || 'El monto de pago es obligatorio'}
+                                <p className="error">
+                                    {errors.amount.message || "El monto de pago es obligatorio"}
                                 </p>
                             )
                         }
-                        <p className="text-xs text-muted-foreground mt-1.5">Solo valores enteros — sin decimales</p>
                     </div>
 
-                    <div className="w-full">
-                        <label className="text-sm font-medium text-foreground mb-3 block">
-                                ¿Permitir condonación?:
-                            </label>
+                    <div className="control-container">
+                        <label className="label">¿Registro activo?:</label>
+                        <div className="flex items-center justify-center">
+                            <Controller
+                                name="isActive"
+                                control={control}
+                                render={({ field }) => (
+                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                        <div>
+                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">El concepto de pago se encuentra activo o inactivo.</p>
+                                        </div>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </label>
+                                )}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="control-container">
+                        <label className="label">¿Permitir condonación?:</label>
                         <div className="flex items-center justify-center">
                             <Controller
                                 name="allowForgiveness"
                                 control={control}
                                 render={({ field }) => (
-                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
+                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{ field.value ? "Sí" : "No" }</p>
-                                            <p className="text-xs text-muted-foreground mt-1">El administrador podrá condonar este concepto por alumno según su ciclo escolar.</p>
+                                            <p className="text-sm font-medium text-foreground">{field.value ? "Permitido" : "No permitido"}</p>
+                                            <p className="text-xs text-muted-foreground mt-1">El concepto de pago permite la condonación del pago.</p>
                                         </div>
-                                        <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     </label>
                                 )}
                             />
                         </div>
+                    </div>
+
+                    <div className="control-container lg:col-span-2">
+                        <label className="label">Descripción del concepto de pago <span className="required">*</span>:</label>
+                        <Controller
+                            name="description"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Textarea
+                                    {...field}
+                                    placeholder="-"
+                                />
+                            )}
+                        />
+                        {
+                            errors.description && (
+                                <p className="error">
+                                    La descripción del concepto de pago es obligatorio
+                                </p>
+                            )
+                        }
                     </div>
                 </div>
 

@@ -75,10 +75,10 @@ export const SecurityRolesPage = () => {
 
                     {/* Table ribbon options */}
                     <TableRibbon
-                        handleClickAdvancedFilters={() => advancedFilters.open()}
-                        handleClickAdd={() => navigate("/security-roles/new")}
-                        handleClickExport={handleClickExport}
-                        inputSearchTooltip="Búsqueda general por nombre y descripción"
+                        addButton={{ handleClick: () => navigate("/security-roles/new") }}
+                        filterButton={{ handleClick: advancedFilters.open }}
+                        exportButton={{ handleClick: handleClickExport }}
+                        searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
                     />
 
                     {/* Table content*/}

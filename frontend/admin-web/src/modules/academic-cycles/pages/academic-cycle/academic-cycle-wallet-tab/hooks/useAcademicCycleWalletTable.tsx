@@ -1,18 +1,20 @@
-import { Link, useOutletContext } from "react-router";
+import { useOutletContext } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
-import { Button } from "@/shared/ui/button";
-import type { TableAction } from "@/shared/components/table/interfaces/table-action";
-import type { AcademicCycleWallet } from "@/interfaces/entites/academic-cycle-wallet";
-import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
-import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { formatFriendlyDate, formatMoney } from "@/lib/extensions/formatters";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import type { TableAction } from "@/shared/components/table/interfaces/table-action";
+import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
+import type { AcademicCycleWalletItemResponse } from "@/interfaces/responses/academic-cycle-wallet-item.response";
+import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 
-export const useAcademicCycleWalletTable = (
-    handleEdit: (item: AcademicCycleWallet) => void,
-    handleDelete: (item: AcademicCycleWallet) => void,
-) => {
+interface Options {
+    handleClickEdit: (item: AcademicCycleWalletItemResponse) => void;
+    handleClickDelete: (item: AcademicCycleWalletItemResponse) => void;
+}
+
+export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete }: Options) => {
     // Get context from layout
     const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
@@ -22,64 +24,74 @@ export const useAcademicCycleWalletTable = (
         "Monto de pago (MXN)",
         "¿Condonación de pago permitida?",
         "Fecha de vencimiento",
+        "Descripción",
         "Acciones"
     ];
     isLocked && columns.pop();
 
     // Table properties value configuration structure
-    const properties: TableProperty<AcademicCycleWallet>[] = [
+    const properties: TableProperty<AcademicCycleWalletItemResponse>[] = [
         {
-            key: "paymentConcept.name",
-            render: (item: AcademicCycleWallet) => (
-                <Link to={`/payment-concepts/${item.paymentConceptId}`}>
-                    <span className="text-primary">
-                        {item.paymentConcept?.name ?? "-"}
-                    </span>
-                </Link>
+            key: "name",
+            render: (item: AcademicCycleWalletItemResponse) => (
+                <span className="text-primary cursor-pointer" onClick={() => handleClickEdit(item)}>
+                    {item.name ?? "-"}
+                </span>
             )
         },
         {
             key: "amount",
-            render: (item) => (<>{formatMoney(item.amount)}</>)
+            render: ({ amount }: AcademicCycleWalletItemResponse) => (formatMoney(amount))
         },
         {
             key: "allowForgiveness",
-            render: (item) => (
-                <Badge variant={item.allowForgiveness ? "success" : "destructive"} className="py-4 px-6">
+            render: ({ allowForgiveness }: AcademicCycleWalletItemResponse) => (
+                <Badge variant={allowForgiveness ? "success" : "destructive"} className="py-4 px-6">
                     {
-                        item.allowForgiveness ? "Permitido" : "No permitido"
+                        allowForgiveness ? "Permitido" : "No permitido"
                     }
                 </Badge>
             )
         },
         {
             key: "dueDate",
-            render: (item) => (<>{formatFriendlyDate(item.dueDate)}</>)
+            render: ({ dueDate }: AcademicCycleWalletItemResponse) => (formatFriendlyDate(dueDate))
         },
+        { key: "description" }
     ];
 
-    // Table actions column with on click handler
-    const actions: TableAction<AcademicCycleWallet>[] = isLocked ? [] : [
+    // Table actions list
+    const actions: TableAction<AcademicCycleWalletItemResponse>[] = isLocked ? [] : [
         {
             key: "edit",
-            render: (item: AcademicCycleWallet) => (
-                <Button
-                    aria-label="Editar"
-                    className="icon-btn-sm bg-primary text-primary-foreground hover:bg-primary/90"
-                    onClick={() => handleEdit(item)}>
-                    <Pencil className="w-4 h-4" />
-                </Button>
+            render: (item: AcademicCycleWalletItemResponse) => (
+                <Tooltip>
+                    <TooltipTrigger>
+                        <span className="bg-primary text-white icon-btn icon-btn-sm"
+                            onClick={() => handleClickEdit(item)}>
+                            <Pencil className="w-4 h-4" />
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Editar concepto de la cartera</p>
+                    </TooltipContent>
+                </Tooltip>
             )
         },
         {
             key: "delete",
-            render: (item: AcademicCycleWallet) => (
-                <Button
-                    aria-label="Eliminar"
-                    className="icon-btn-sm bg-destructive text-primary-foreground hover:bg-destructive/90"
-                    onClick={() => handleDelete(item)}>
-                    <Trash className="w-4 h-4" />
-                </Button>
+            render: (item: AcademicCycleWalletItemResponse) => (
+                <Tooltip>
+                    <TooltipTrigger>
+                        <span className="bg-destructive text-white icon-btn icon-btn-sm"
+                            onClick={() => handleClickDelete(item)}>
+                            <Trash className="w-4 h-4" />
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Eliminar concepto de la cartera</p>
+                    </TooltipContent>
+                </Tooltip>
             )
         }
     ];
