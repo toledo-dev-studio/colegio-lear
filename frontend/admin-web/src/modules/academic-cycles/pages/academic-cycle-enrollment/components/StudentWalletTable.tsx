@@ -14,8 +14,8 @@ interface Props {
     enableActions?: boolean;
     data: StudentWalletItemResponse[];
     summary: StudentWalletSummaryResponse;
-    handleClickEdit: (item: StudentWalletItemResponse) => void;
     handleClickPay: (item: StudentWalletItemResponse) => void;
+    handleClickEdit: (item: StudentWalletItemResponse) => void;
 }
 
 export const StudentWalletTable = ({ isLoading, enableActions = true, data, summary, handleClickEdit, handleClickPay }: Props) => {

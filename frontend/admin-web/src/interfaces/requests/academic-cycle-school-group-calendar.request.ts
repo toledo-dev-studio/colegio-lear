@@ -1,3 +1,5 @@
+import type { EmployeeRequest } from "./employee.request";
+import type { SchoolSubjectRequest } from "./school-subject.request";
 import type { DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
@@ -34,7 +36,15 @@ export interface AcademicCycleSchoolGroupCalendarRequest {
      */
     schoolSubjectId: string;
     /**
+     * Reference to school subject
+     */
+    schoolSubject: SchoolSubjectRequest;
+    /**
      * Identifier of the associated teacher (employee)
      */
     teacherId: string;
+    /**
+     * Identifier of the associated teacher (employee)
+     */
+    teacher: EmployeeRequest;
 }

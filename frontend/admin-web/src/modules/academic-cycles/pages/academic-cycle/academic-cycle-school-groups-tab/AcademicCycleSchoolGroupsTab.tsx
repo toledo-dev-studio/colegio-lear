@@ -72,7 +72,7 @@ export const AcademicCycleSchoolGroupsTab = () => {
                     filterButton={{ show: false }}
                     exportButton={{ show: false }}
                     addButton={{
-                        show: true,
+                        show: !context.isLocked,
                         label: "Crear nuevo grupo",
                         disabled: queries.schoolGroups.get.isLoading || queries.schoolGroups.get.isError,
                         handleClick: () => navigate("new")

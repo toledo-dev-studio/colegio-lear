@@ -240,6 +240,7 @@ export const AcademicCycleTab = () => {
                             <Controller
                                 name="minimumPassingGrade"
                                 control={control}
+                                disabled={isLocked}
                                 rules={{
                                     required: true,
                                     validate: {
@@ -253,6 +254,7 @@ export const AcademicCycleTab = () => {
                                         <ClipboardCheck className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                         <Input
                                             {...field}
+                                            disabled={isLocked}
                                             step={1}
                                             min={1}
                                             inputMode="numeric"
@@ -282,6 +284,7 @@ export const AcademicCycleTab = () => {
                             <Controller
                                 name="evaluationCount"
                                 control={control}
+                                disabled={isLocked}
                                 rules={{
                                     required: true,
                                     validate: {
@@ -297,6 +300,7 @@ export const AcademicCycleTab = () => {
                                             {...field}
                                             step={1}
                                             min={1}
+                                            disabled={isLocked}
                                             inputMode="numeric"
                                             type="number"
                                             placeholder="10"

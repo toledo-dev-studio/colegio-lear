@@ -104,7 +104,7 @@ export const AcademicCycleWalletTab = () => {
                     filterButton={{ show: false }}
                     exportButton={{ show: false }}
                     addButton={{
-                        show: true,
+                        show: !context.isLocked,
                         label: "Asociar nuevo concepto",
                         disabled: queries.wallet.get.isLoading || queries.wallet.get.isError,
                         handleClick: () => {
