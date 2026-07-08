@@ -6,7 +6,7 @@ import { Mail, Phone, User } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
@@ -368,7 +368,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
                         Guardar
                         {
-                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
+                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

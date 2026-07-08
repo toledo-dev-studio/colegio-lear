@@ -1,6 +1,6 @@
 import { Trash } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle } from "@/shared/ui/alert-dialog";
-import { CustomSpinner } from "./CustomSpinner";
+import { Spinner } from "./spinner/Spinner";
 
 interface Props {
   open: boolean;
@@ -29,7 +29,7 @@ export const CustomDeleteModal = ({ open, title, message, isLoading, handleClick
           <AlertDialogCancel className={"px-10"} variant="outline" onClick={handleClickCancel} disabled={isLoading}>Cancelar</AlertDialogCancel>
           <AlertDialogAction className={"px-10"} variant="destructive" onClick={handleClickConfirm} disabled={isLoading}>
             Si, eliminar
-            { isLoading && <CustomSpinner variant="destructive" /> }
+            { isLoading && <Spinner variant="destructive" /> }
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

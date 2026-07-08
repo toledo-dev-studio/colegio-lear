@@ -4,7 +4,7 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Controller, useForm } from "react-hook-form";
 import { isValidPhone } from "@/lib/extensions/validators";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { extractFileExtension } from "@/lib/extensions/attachments";
 import { CustomPhotoUploader } from "@/shared/components/CustomPhotoUploader";
 import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
@@ -232,7 +232,7 @@ export const MyAccountForm = ({ employeeResponse, isSubmitting, onSubmit }: Prop
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
                         Guardar
                         {
-                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
+                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

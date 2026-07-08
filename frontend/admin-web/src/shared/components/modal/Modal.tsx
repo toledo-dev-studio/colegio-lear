@@ -1,7 +1,7 @@
 import { Info, Trash } from "lucide-react";
 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle } from "@/shared/ui/alert-dialog";
-import { CustomSpinner } from "../CustomSpinner";
+import { Spinner } from "../spinner/Spinner";
 import { cn } from "@/lib/extensions/utils";
 
 interface ButtonConfig {
@@ -44,7 +44,7 @@ export const Modal = ({ open, type, title, message, isLoading, confirmButton, ca
                         confirmButton && (
                             <AlertDialogAction className={"px-10"} variant={type === "info" ? "default" : type === "delete" ? "destructive-light" : "default"} onClick={confirmButton.onClick} disabled={isLoading}>
                                 { confirmButton.label }
-                                {isLoading && <CustomSpinner variant={type === "info" ? "primary" : type === "delete" ? "destructive" : "primary"} />}
+                                {isLoading && <Spinner variant={type === "info" ? "primary" : type === "delete" ? "destructive" : "primary"} />}
                             </AlertDialogAction>
                         )
                     }

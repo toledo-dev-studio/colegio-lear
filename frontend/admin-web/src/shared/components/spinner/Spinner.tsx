@@ -6,7 +6,7 @@ interface Props {
     variant: "primary" | "destructive" | "foreground";
 }
 
-export const CustomSpinner = ({ className, variant }: Props) => {
+export const Spinner = ({ className, variant }: Props) => {
     return (
         <div className={
             cn("h-4 w-4 animate-spin rounded-full border-2 border-t-transparent",

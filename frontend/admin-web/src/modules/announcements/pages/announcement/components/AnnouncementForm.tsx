@@ -6,7 +6,7 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { AttachmentsGrid } from "./AttachmentsGrid";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { CardAlert } from "@/shared/components/card-alert/CardAlert";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
@@ -259,7 +259,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
                         Guardar
                         {
-                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
+                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

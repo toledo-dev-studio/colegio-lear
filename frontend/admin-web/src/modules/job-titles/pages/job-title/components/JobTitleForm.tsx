@@ -5,7 +5,7 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { JobTitleRequest } from "@/interfaces/requests/job-title.request";
@@ -146,7 +146,7 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
                         Guardar
                         {
-                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
+                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

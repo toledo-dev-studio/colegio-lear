@@ -10,7 +10,7 @@ import { Textarea } from "@/shared/ui/textarea";
 import { Modal } from "@/shared/components/modal/Modal";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
@@ -510,7 +510,7 @@ export const AcademicCycleTab = () => {
                     <Button type="submit" disabled={createUpdateAcademicCycleMutation.isPending} aria-label="save-record">
                         Guardar
                         {
-                            createUpdateAcademicCycleMutation.isPending && (<CustomSpinner variant="primary" className="ml-4" />)
+                            createUpdateAcademicCycleMutation.isPending && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>
