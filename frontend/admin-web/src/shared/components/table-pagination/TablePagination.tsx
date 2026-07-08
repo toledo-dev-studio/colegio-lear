@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router";
 
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
@@ -8,7 +8,7 @@ interface Props {
     totalPages: number;
 }
 
-export const CustomPagination = ({ totalPages }: Props) => {
+export const TablePagination = ({ totalPages }: Props) => {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -26,7 +26,7 @@ export const CustomPagination = ({ totalPages }: Props) => {
         <>
             <div className="w-full flex items-center justify-center space-x-2">
 
-                <Button className={"!px-8 !h-10"} variant="outline" size="sm" disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
+                <Button className={"px-8! h-10!"} variant="outline" size="sm" disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
                     <ChevronLeft className="h-4 w-4" />
                     Anterior
                 </Button>
@@ -34,7 +34,7 @@ export const CustomPagination = ({ totalPages }: Props) => {
                 {
                     totalPages <= 6 && (
                         Array.from({ length: totalPages }, (_, index) => (
-                            <Button className={"!w-9 !h-9 !px-0"} key={index} variant={page === index + 1 ? "default" : "outline"} size="sm" onClick={() => handlePageChange(index + 1)}>
+                            <Button className={"w-9! h-9! px-0!"} key={index} variant={page === index + 1 ? "default" : "outline"} size="sm" onClick={() => handlePageChange(index + 1)}>
                                 {index + 1}
                             </Button>
                         ))
@@ -65,13 +65,13 @@ export const CustomPagination = ({ totalPages }: Props) => {
                         return pages.map((p, index) => {
                             if (p === "...") {
                                 return (
-                                    <Button key={`more-${index}`} variant="ghost" size="sm" className={"!px-0"} disabled>
+                                    <Button key={`more-${index}`} variant="ghost" size="sm" className={"px-0!"} disabled>
                                         <MoreHorizontal className="h-4 w-4" />
                                     </Button>
                                 );
                             } else {
                                 return (
-                                    <Button className={"!w-9 !h-9 !px-0"} key={p} variant={page === p ? "default" : "outline"} size="sm" onClick={() => handlePageChange(+p)}>
+                                    <Button className={"w-9! h-9! px-0!"} key={p} variant={page === p ? "default" : "outline"} size="sm" onClick={() => handlePageChange(+p)}>
                                         {p}
                                     </Button>
                                 );
@@ -80,7 +80,7 @@ export const CustomPagination = ({ totalPages }: Props) => {
                     })()
                 }
 
-                <Button className={"!px-8 !h-10"} variant="outline" size="sm" disabled={page === totalPages} onClick={() => handlePageChange(page + 1)}>
+                <Button className={"px-8! h-10!"} variant="outline" size="sm" disabled={page === totalPages} onClick={() => handlePageChange(page + 1)}>
                     Siguiente
                     <ChevronRight className="h-4 w-4" />
                 </Button>

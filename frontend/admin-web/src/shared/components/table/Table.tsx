@@ -1,7 +1,7 @@
 import { generateTemporalId } from "@/lib/extensions/utils";
 import type { TableProperty } from "./interfaces/table-property";
 import type { TableAction } from "./interfaces/table-action";
-import { CustomPagination } from "../CustomPagination";
+import { TablePagination } from "../table-pagination/TablePagination";
 import { getNestedValue } from "@/lib/extensions/objects";
 import { Loader } from "../loader/Loader";
 
@@ -109,7 +109,7 @@ export const Table = <T extends Record<string, any>>({ data = [], isLoading, ena
             {
                 (enablePagination && !isLoading && data.length > 0) && (
                     <div className="w-full flex items-center justify-center">
-                        <CustomPagination totalPages={totalPages ?? 1} />
+                        <TablePagination totalPages={totalPages ?? 1} />
                     </div>
                 )
             }
