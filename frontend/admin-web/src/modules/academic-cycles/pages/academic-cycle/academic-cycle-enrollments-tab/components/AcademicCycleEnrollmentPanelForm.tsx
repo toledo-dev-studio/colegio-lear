@@ -66,6 +66,7 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
                         <Controller
                             name="studentId"
                             control={control}
+                            disabled={isLocked}
                             rules={{ required: true }}
                             render={({ field }) => (
                                 <SearchInput
@@ -73,6 +74,7 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
                                     name="studentId"
                                     defaultValue={student?.name}
                                     selected={!!student}
+                                    disabled={isLocked}
                                     placeholder="Busqueda de estudiante"
                                     options={searchStudentsMutation.students}
                                     isSearching={searchStudentsMutation.isPending}

@@ -7,7 +7,7 @@ import { AuthenticatedRoute } from "@/routes/protected.router";
 import { StudentTab } from "../pages/student/student-tab/StudentTab";
 import { StudentGuardiansTab } from "../pages/student/student-guardians-tab/StudentGuardiansTab";
 import { StudentAllergiesTab } from "../pages/student/student-allergies-tab/StudentAllergiesTab";
-import { StudentAcademicCyclesTab } from "../pages/student/student-enrollments/StudentAcademicCyclesTab";
+import { StudentEnrollmentsTab } from "../pages/student/student-enrollments-tab/StudentEnrollmentsTab";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const StudentsLayout = lazy(() => import("@/modules/students/layouts/StudentsLayout"));
@@ -42,8 +42,8 @@ export const studentsRouter: RouteObject = {
                     element: <StudentGuardiansTab />
                 },
                 {
-                    path: "academic-cycles",
-                    element: <StudentAcademicCyclesTab />
+                    path: "enrollments",
+                    element: <StudentEnrollmentsTab />
                 }
             ]
         },

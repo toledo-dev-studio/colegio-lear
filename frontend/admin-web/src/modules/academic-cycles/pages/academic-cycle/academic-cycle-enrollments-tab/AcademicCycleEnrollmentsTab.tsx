@@ -1,4 +1,4 @@
-import { Navigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
@@ -62,7 +62,6 @@ export const AcademicCycleEnrollmentsTab = () => {
 
   if (queries.enrollments.paged.isError) {
     toast.error("No fue posible obtener información asociada al ciclo escolar", { position: "top-right" });
-    return <Navigate to="/academic-cycles" />;
   }
 
   return (
