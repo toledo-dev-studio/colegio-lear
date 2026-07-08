@@ -4,8 +4,8 @@ import { MyAccountForm } from "./components/MyAccountForm";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
 import { useUpdateMyAccount } from "../hooks/useUpdateMyAccount";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
 import { userStoreFullName } from "@/modules/auth/stores/auth.store.selectors";
 
@@ -40,13 +40,13 @@ export const MyAccountPage = () => {
       <div className="w-full py-12 px-10 lg:px-15">
 
         <div className="mb-10">
-          <CustomBreadcrumb items={[
+          <Breadcrumb items={[
             { label: "Accesos rápidos" },
             { label: "Mi cuenta", to: "/my-account" },
           ]} />
         </div>
 
-        <CustomPageTitle
+        <PageTitle
           title={loggedInUserFullName || "Mi cuenta"}
           subtitle="Gestiona la información de tu cuenta y consulta información detallada" />
 
