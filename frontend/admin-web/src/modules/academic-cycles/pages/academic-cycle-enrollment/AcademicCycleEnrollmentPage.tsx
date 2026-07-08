@@ -109,15 +109,15 @@ export const AcademicCycleEnrollmentPage = () => {
           academicCycle={context.academicCycle!}
           academicCycleEnrollment={academicCycleEnrollment!} />
 
-        {/* Payments KPI's overview */}
-        <OverviewStatsRibbon 
-          studentWalletSummary={studentWallet?.summary!} />
-
         {/* Student grades grid */}
-        <StudentGradesGrid 
+        <StudentGradesGrid
           studentGradesResponse={studentGrades}
           academicCycleResponse={context.academicCycle!}
           schoolGroupTeachersResponse={schoolGroupTeachers} />
+
+        {/* Payments KPI's overview */}
+        <OverviewStatsRibbon
+          studentWalletSummary={studentWallet?.summary!} />
 
         {/* Student wallet table */}
         <StudentWalletTable

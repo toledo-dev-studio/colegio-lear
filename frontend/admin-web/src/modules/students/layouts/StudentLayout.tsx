@@ -31,8 +31,8 @@ const TABS: Tab[] = [
         protected: true
     },
     {
-        to: "academic-cycles",
-        label: "Ciclos escolares",
+        to: "enrollments",
+        label: "Ciclos escolares inscritos",
         icon: CalendarDays,
         protected: true
     }
@@ -45,17 +45,17 @@ export const StudentLayout = () => {
     const { pathname } = useLocation();
     const studentQuery = useGetStudentById({ id: id! })
 
-    // Constant configuration variables
-    const isNew = id === "new";
-    const title = isNew ? "Registro de estudiante" : "Edición de estudiante";
-    const isProtectedRoute = TABS.some(tab => tab.protected && pathname.endsWith(tab.to));
-
     // Layout context information
+    const isNew = id === "new";
     const context: StudentLayoutContext = {
         isNew: isNew,
         studentId: id!,
         student: studentQuery.data!,
     };
+
+    // Constant configuration variables
+    const title = isNew ? "Registro de estudiante" : `${context.student?.name ?? ""} ${context.student?.firstLastName ?? ""} ${context.student?.secondLastName ?? ""}`;
+    const isProtectedRoute = TABS.some(tab => tab.protected && pathname.endsWith(tab.to));
 
     const isActiveRoute = (to: string): boolean => {
         if (to === "") {
