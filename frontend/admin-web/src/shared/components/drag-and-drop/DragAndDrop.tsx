@@ -37,7 +37,7 @@ export interface Props {
  *
  * All of those concerns live in the parent component.
  */
-export const CustomDragAndDrop = ({ acceptedExtensions, onFilesSelected, multiple = true, disabled = false, label = "Arrastra tus archivos aquí o haz clic para seleccionar", hint, testId = "file-dropzone" }: Props) => {
+export const DragAndDrop = ({ acceptedExtensions, onFilesSelected, multiple = true, disabled = false, label = "Arrastra tus archivos aquí o haz clic para seleccionar", hint, testId = "file-dropzone" }: Props) => {
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDragActive, setIsDragActive] = useState(false);

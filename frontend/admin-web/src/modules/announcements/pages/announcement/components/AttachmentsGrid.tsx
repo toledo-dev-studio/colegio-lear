@@ -5,7 +5,7 @@ import { AttachmentCard } from "./AttachmentCard";
 import { promisePool } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
 import { extractFileExtension } from "@/lib/extensions/attachments";
-import { CustomDragAndDrop } from "@/shared/components/CustomDragAndDrop";
+import { DragAndDrop } from "@/shared/components/drag-and-drop/DragAndDrop";
 import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/constants/attachment.constants";
 import { useDeleteAttachmentForAnnouncementById } from "@/modules/announcements/hooks/attachments/useDeleteAttachmentForAnnouncementById";
 import { useUploadAttachmentForAnnouncement } from "@/modules/announcements/hooks/attachments/useUploadAttachmentForAnnouncement";
@@ -15,7 +15,7 @@ import type { AttachmentResponse } from "@/interfaces/responses/attachment.respo
  * Attachments — owner of all attachment business logic for announcement.
  *
  * Responsibilities:
- *  - Wraps the decoupled <CustomDragAndDrop /> (visual only)
+ *  - Wraps the decoupled <DragAndDrop /> (visual only)
  *  - Validates files (extension whitelist, max size 10MB, duplicates)
  *  - Triggers the (simulated) upload service
  *  - Holds per-file uploading/deleting UI state
@@ -158,7 +158,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
 
     return (
         <div className="space-y-5">
-            <CustomDragAndDrop
+            <DragAndDrop
                 acceptedExtensions={[...acceptedExtensions]}
                 onFilesSelected={handleOnFilesSelected}
                 disabled={disabled}
