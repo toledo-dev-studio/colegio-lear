@@ -1,3 +1,12 @@
+export type JobTitleTypeKey =
+    | "teacher" 
+    | "administrative-staff";
+
+export type AudienceTypeKey = 
+    | "administrative-staff"
+    | "teacher"
+    | "student";
+      
 export type AcademicPeriodTypeKey =
   | "annual"
   | "semester"

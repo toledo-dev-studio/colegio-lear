@@ -1,4 +1,4 @@
-import { DAY_OF_WEEKS } from "@/interfaces/entites/academic-cycle-group-school-subject-calendar";
+import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs"
 
 export const CalendarWeekDaysHeader = () => {
     return (

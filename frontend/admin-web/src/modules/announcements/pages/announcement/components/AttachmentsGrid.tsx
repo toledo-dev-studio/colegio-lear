@@ -4,12 +4,12 @@ import { toast } from "sonner";
 import { AttachmentCard } from "./AttachmentCard";
 import { promisePool } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import type { Attachment } from "@/interfaces/entites/attachment";
 import { extractFileExtension } from "@/lib/extensions/attachments";
 import { CustomDragAndDrop } from "@/shared/components/CustomDragAndDrop";
 import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/constants/attachment.constants";
 import { useDeleteAttachmentForAnnouncementById } from "@/modules/announcements/hooks/attachments/useDeleteAttachmentForAnnouncementById";
 import { useUploadAttachmentForAnnouncement } from "@/modules/announcements/hooks/attachments/useUploadAttachmentForAnnouncement";
+import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 
 /**
  * Attachments — owner of all attachment business logic for announcement.
@@ -34,7 +34,7 @@ interface UploadAttachment {
 
 interface Props {
     announcementId: string;
-    attachments: Attachment[];
+    attachments: AttachmentResponse[];
     acceptedExtensions?: readonly string[];
     /** Disable all interaction */
     disabled?: boolean;
@@ -42,8 +42,8 @@ interface Props {
     /** Handle actions */
     onChange: (
         next:
-            | Attachment[]
-            | ((prev: Attachment[]) => Attachment[])
+            | AttachmentResponse[]
+            | ((prev: AttachmentResponse[]) => AttachmentResponse[])
     ) => void;
 }
 
@@ -139,7 +139,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
     /**
      * Handle on delete attachment from server.
      */
-    const handleOnDeleteAttachment = useCallback(async (attachment: Attachment) => {
+    const handleOnDeleteAttachment = useCallback(async (attachment: AttachmentResponse) => {
         if (disabled)
             return;
         setDeletingIds((prev) => [...prev, attachment.id]);

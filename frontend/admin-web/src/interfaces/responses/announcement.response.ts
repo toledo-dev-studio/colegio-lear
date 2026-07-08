@@ -1,5 +1,5 @@
-import type { AudienceType } from "../entites/announcement";
 import type { AttachmentResponse } from "./attachment.response";
+import type { AudienceTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Response
@@ -21,7 +21,7 @@ export interface AnnouncementResponse {
     /**
      * Announcement's main audiences
      */
-    audience: AudienceType[];
+    audience: AudienceTypeKey[];
     /**
      * Announcement's content
      */

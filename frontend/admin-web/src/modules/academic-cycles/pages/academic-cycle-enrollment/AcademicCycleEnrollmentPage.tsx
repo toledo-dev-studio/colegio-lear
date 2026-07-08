@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import { Loader } from "@/shared/components/loader/Loader";
 import { OverviewRibbon } from "./components/OverviewRibbon";
+import { StudentGradesGrid } from "./components/StudentGradesGrid";
 import { StudentWalletTable } from "./components/StudentWalletTable";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
@@ -14,7 +15,6 @@ import { useAcademicCycleEnrollmentPage } from "./hooks/useAcademicCycleEnrollme
 import { StudentWalletPaymentPanelForm } from "./components/StudentWalletPaymentPanelForm";
 import type { StudentWalletItemRequest } from "@/interfaces/requests/student-wallet-item.request";
 import type { StudentWalletPaymentRequest } from "@/interfaces/requests/student-wallet-payment.request";
-import { StudentGradesGrid } from "./components/StudentGradesGrid";
 
 export const AcademicCycleEnrollmentPage = () => {
   // Component hooks & stores

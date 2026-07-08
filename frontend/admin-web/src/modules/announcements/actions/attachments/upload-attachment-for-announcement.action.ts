@@ -1,16 +1,16 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import type { Attachment } from "@/interfaces/entites/attachment";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import { extractFileExtension, sanitizeFileName } from "@/lib/extensions/attachments";
+import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 
 interface Options {
     announcementId: string;
     file: File;
 };
 
-export const uploadAttachmentForAnnouncementActionAsync = async ({ announcementId, file }: Options): Promise<Attachment> => {
+export const uploadAttachmentForAnnouncementActionAsync = async ({ announcementId, file }: Options): Promise<AttachmentResponse> => {
     await sleep();
 
     if (!announcementId)
@@ -23,20 +23,17 @@ export const uploadAttachmentForAnnouncementActionAsync = async ({ announcementI
             name: file.name,
             extension: extractFileExtension(file.name),
             relatedRecordId: announcementId
-        } as Attachment;
+        } as AttachmentResponse;
 
 
     const formData = new FormData();
     formData.append("file", file);
 
-    const { data, request } = await api<Attachment>({
+    const { data } = await api<AttachmentResponse>({
         url: `attachments/announcement/${announcementId}`,
         method: "POST",
         data: formData
     });
-
-    console.log(data, request);
-
 
     return data;
 }

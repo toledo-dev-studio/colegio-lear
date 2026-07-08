@@ -6,7 +6,6 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { AttachmentsGrid } from "./AttachmentsGrid";
-import { AUDIENCE } from "@/interfaces/entites/announcement";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { CardAlert } from "@/shared/components/card-alert/CardAlert";
@@ -18,6 +17,7 @@ import type { AnnouncementRequest } from "@/interfaces/requests/announcement.req
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { CustomTipTapEditor } from "@/shared/components/custom-text-editor/CustomTipTapEditor";
 import { Switch } from "@/shared/ui/switch";
+import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 
 interface Props {
     isNew: boolean;
@@ -84,7 +84,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                             control={control}
                             rules={{ validate: (v) => (v && v.length > 0) || "Selecciona al menos una audiencia" }}
                             render={({ field }) => (
-                                <MultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE} value={field.value || []} onChange={field.onChange} />
+                                <MultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE_TYPES} value={field.value as any || []} onChange={field.onChange} />
                             )}
                         />
                         {

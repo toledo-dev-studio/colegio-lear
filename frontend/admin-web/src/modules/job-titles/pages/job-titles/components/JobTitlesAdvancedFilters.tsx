@@ -5,10 +5,10 @@ import { X } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
-import type { JobTitleTypes } from "@/interfaces/entites/job-title";
 import type { JobTitleFilter } from "@/interfaces/filters/job-title.filter";
 import { isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import type { JobTitleTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 interface Props {
     open: boolean;
@@ -21,7 +21,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
     const [searchParams, setSearchParams] = useSearchParams();
     const jobTitleLikeFilter: Partial<JobTitleFilter> = {
         name: isValidValueWithDefault(searchParams.get("name"), ""),
-        jobTitleType: isValidValueWithDefault(searchParams.get("job-title-type") as JobTitleTypes, undefined),
+        jobTitleType: isValidValueWithDefault(searchParams.get("job-title-type") as JobTitleTypeKey, undefined),
         isActive: stringToBooleanWithDefault(searchParams.get("is-active"))
     };
 
@@ -64,8 +64,8 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
-                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground !px-0">
-                            <X className="!w-5 !h-5 text-muted-foreground" />
+                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground px-0!">
+                            <X className="w-5! h-5! text-muted-foreground" />
                         </Button>
                     </div>
 

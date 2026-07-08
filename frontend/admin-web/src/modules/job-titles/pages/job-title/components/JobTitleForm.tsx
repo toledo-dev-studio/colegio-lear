@@ -6,11 +6,11 @@ import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
 import { CustomSpinner } from "@/shared/components/CustomSpinner";
-import type { JobTitleTypes } from "@/interfaces/entites/job-title"
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { JobTitleRequest } from "@/interfaces/requests/job-title.request";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
+import type { JobTitleTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 interface Props {
@@ -26,7 +26,7 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
             name: isValidValueWithDefault(jobTitleResponse?.name, ""),
             description: isValidValueWithDefault(jobTitleResponse?.description, ""),
             isActive: isValidValueWithDefault(jobTitleResponse?.isActive, false),
-            jobTitleType: isValidValueWithDefault(jobTitleResponse?.jobTitleType as JobTitleTypes, undefined)
+            jobTitleType: isValidValueWithDefault(jobTitleResponse?.jobTitleType as JobTitleTypeKey, undefined)
         }
     });
 

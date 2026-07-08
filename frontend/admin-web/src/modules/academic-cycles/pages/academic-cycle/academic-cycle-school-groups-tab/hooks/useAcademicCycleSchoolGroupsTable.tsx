@@ -6,7 +6,7 @@ import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
-import { ACADEMIC_CYCLE_SCHOOL_GROUP_STATUSES } from "@/interfaces/entites/academic-cycle-school-group";
+import { ACADEMIC_CYCLE_SCHOOL_GROUP_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { AcademicCycleSchoolGroupResponse } from "@/interfaces/responses/academic-cycle-school-group.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 
