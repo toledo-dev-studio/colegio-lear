@@ -10,7 +10,7 @@ import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
-import { CustomPhotoUploader } from "@/shared/components/CustomPhotoUploader";
+import { PhotoUploader } from "@/shared/components/photo-uploader/PhotoUploader";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
@@ -88,7 +88,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                         render={({ field, fieldState }) => (
                             <>
                                 <div className="w-full flex flex-col items-center justify-center">
-                                    <CustomPhotoUploader
+                                    <PhotoUploader
                                         value={field.value ? URL.createObjectURL(field.value) : (employeeResponse?.image ?? undefined)}
                                         changedImage={field.value && fieldState.isTouched}
                                         onChange={(file) => {
