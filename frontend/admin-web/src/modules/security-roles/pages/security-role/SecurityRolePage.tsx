@@ -6,9 +6,9 @@ import { SecurityRoleForm } from "./components/SecurityRoleForm";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { useGetSecurityRoleById } from "../../hooks/useGetSecurityRoleById";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdateSecurityRole } from "../../hooks/useCreateUpdateSecurityRole";
 import type { SecurityRoleRequest } from "@/interfaces/requests/security-role.request";
+import { Loader } from "@/shared/components/loader/Loader";
 
 export const SecurityRolePage = () => {
   // Hooks & stores
@@ -47,7 +47,7 @@ export const SecurityRolePage = () => {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">
-          <CustomFullScreenLoading title="Cargando información" subtitle="Por favor espere..." />
+          <Loader title="Cargando información" subtitle="Por favor espere..." />
         </div>
       </>
     )

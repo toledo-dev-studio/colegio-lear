@@ -1,11 +1,11 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
+import { Loader } from "@/shared/components/loader/Loader";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { AcademicLevelForm } from "./components/AcademicLevelForm";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import type { AcademicLevelRequest } from "@/interfaces/requests/academic-level.request";
 import { useGetAcademicLevelById } from "../../hooks/academic-levels/useGetAcademicLevelById";
 import { useCreateUpdateAcademicLevel } from "../../hooks/academic-levels/useCreateUpdateAcademicLevel";
@@ -46,7 +46,7 @@ export const AcademicLevelPage = () => {
         return (
             <>
                 <div className="w-full relative mx-auto h-full mt-30">
-                    <CustomFullScreenLoading title="Cargando información" subtitle="Por favor espere..." />
+                    <Loader title="Cargando información" subtitle="Por favor espere..." />
                 </div>
             </>
         )

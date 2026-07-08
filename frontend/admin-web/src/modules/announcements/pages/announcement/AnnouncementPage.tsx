@@ -1,12 +1,12 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
+import { Loader } from "@/shared/components/loader/Loader";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { AnnouncementForm } from "./components/AnnouncementForm";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useGetAnnouncementById } from "../../hooks/announcements/useGetAnnouncementById";
 import { useCreateUpdateAnnouncement } from "../../hooks/announcements/useCreateUpdateAnnouncement";
 
@@ -46,7 +46,7 @@ export const AnnouncementPage = () => {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">
-          <CustomFullScreenLoading title="Cargando información" subtitle="Por favor espere..." />
+          <Loader title="Cargando información" subtitle="Por favor espere..." />
         </div>
       </>
     )

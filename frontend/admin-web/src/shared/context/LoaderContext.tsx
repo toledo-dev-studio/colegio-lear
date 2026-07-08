@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 
-import { useLoaderStore } from "../stores/LoaderStore"
-import { CustomFullScreenLoading } from "../components/CustomFullScreenLoading";
+import { Loader } from "../components/loader/Loader";
+import { useLoaderStore } from "../stores/LoaderStore";
 
 export const LoaderContextProvider = ({ children }: PropsWithChildren) => {
 
@@ -9,7 +9,7 @@ export const LoaderContextProvider = ({ children }: PropsWithChildren) => {
 
     return (
         <>
-            {isLoading && <CustomFullScreenLoading className="fixed" title={title!} subtitle={subTitle} />}
+            {isLoading && <Loader className="fixed" title={title!} subtitle={subTitle} />}
             {children}
         </>
 
