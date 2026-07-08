@@ -63,7 +63,8 @@ export const AcademicCycleEnrollmentsPanelFilters = ({ academicCycleSchoolGroups
         <>
             <SidePanel
                 title="FILTROS AVANZADOS"
-                closeButton={{ show: true, disabled: false, type: "button", label: "Limpiar filtros", handleClick: handleClickClearFilters }}
+                handleClickClose={handleClickClose}
+                cancelButton={{ show: true, disabled: false, type: "button", label: "Limpiar filtros", handleClick: handleClickClearFilters }}
                 submitButton={{ show: true, disabled: false, type: "submit", label: "Aplicar filtros", handleClick: handleSubmit(onSubmit) }}>
 
                 <form className="flex flex-col gap-8">

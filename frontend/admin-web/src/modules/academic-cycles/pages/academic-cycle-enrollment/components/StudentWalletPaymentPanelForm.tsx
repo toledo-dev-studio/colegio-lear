@@ -28,7 +28,8 @@ export const StudentWalletPaymentPanelForm = ({ studentWalletItemResponse, handl
         <>
             <SidePanel
                 title="REGISTRO DE PAGO EN CAJA"
-                closeButton={{ show: true, disabled: false, type: "button", label: "Cancelar", handleClick: handleClickClose }}
+                handleClickClose={handleClickClose}
+                cancelButton={{ show: true, disabled: false, type: "button", label: "Cancelar", handleClick: handleClickClose }}
                 submitButton={{ show: true, disabled: false, type: "submit", label: "Guardar", handleClick: handleSubmit(onSubmit) }}>
                 <form className="flex flex-col gap-8">
 

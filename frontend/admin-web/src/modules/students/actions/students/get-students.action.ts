@@ -1,19 +1,14 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { Student } from "@/interfaces/entites/student";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { StudentFilter } from "@/interfaces/filters/student.filter";
+import type { StudentResponse } from "@/interfaces/responses/student.response";
 
-interface Options {
+interface Options extends StudentFilter {
     query?: string;
-    name?: string;
-    curp?: string;
-    enrollment?: string;
-    email?: string;
-    phoneNumber?: string;
-    status?: boolean
 }
 
-export const getStudentsActionAsync = async ({ query, name, curp, enrollment, email, phoneNumber, status }: Options): Promise<Student[]> => {
+export const getStudentsActionAsync = async ({ query, fullName, curp, enrollment, email, phoneNumber, isActive }: Options): Promise<StudentResponse[]> => {
     await sleep();
 
     let endpoint = "/students";
@@ -24,15 +19,15 @@ export const getStudentsActionAsync = async ({ query, name, curp, enrollment, em
     // REMOVE
     endpoint = "http://localhost/api/students/students/students.json";
 
-    const { data } = await api.get<Student[]>(endpoint, {
+    const { data } = await api.get<StudentResponse[]>(endpoint, {
         params: {
             q: query,
-            name,
+            fullName,
             curp,
             enrollment,
             email,
             phoneNumber,
-            status
+            isActive
         }
     });
 

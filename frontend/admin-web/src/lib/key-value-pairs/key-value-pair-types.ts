@@ -19,7 +19,7 @@ export type AcademicCycleSchoolGroupStatusKey =
   | "active"
   | "discharged";
 
-export type StudentGuardianTypeKey =
+export type StudentGuardianRelationshipKey =
   | "father"
   | "mother"
   | "grandmother"

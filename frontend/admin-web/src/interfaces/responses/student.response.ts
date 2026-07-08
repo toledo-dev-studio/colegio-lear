@@ -1,3 +1,5 @@
+import type { BloodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
+
 /**
  * Type: Response
  * Description: Represents a student enrolled in the school, containing their personal information, contact details, medical information, and guardians.
@@ -43,6 +45,14 @@ export interface StudentResponse {
      * Indicates if the student is active
      */
     isActive: boolean;
+    /**
+     * Indicates the student's blood type
+     */
+    bloodType: BloodTypeKey;
+    /**
+     * Addicional medical notes
+     */
+    medicalNotes?: string;
     /**
      * Contact email for the student
      */

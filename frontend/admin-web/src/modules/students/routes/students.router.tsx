@@ -6,9 +6,8 @@ import { StudentsPage } from "../pages/students/StudentsPage";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 import { StudentTab } from "../pages/student/student-tab/StudentTab";
 import { StudentGuardiansTab } from "../pages/student/student-guardians-tab/StudentGuardiansTab";
-import { StudentAcademicCyclesTab } from "../pages/student/student-academic-cycles-tab/StudentAcademicCyclesTab";
-import { StudentMedicalInformationTab } from "../pages/student/student-medical-information-tab/StudentMedicalInformationTab";
-import { StudentAcademicCycleSchoolGroupEnrollmentPage } from "../pages/student-academic-cycle-school-group-enrollment/StudentAcademicCycleSchoolGroupEnrollmentPage";
+import { StudentAllergiesTab } from "../pages/student/student-allergies-tab/StudentAllergiesTab";
+import { StudentAcademicCyclesTab } from "../pages/student/student-enrollments/StudentAcademicCyclesTab";
 
 const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
 const StudentsLayout = lazy(() => import("@/modules/students/layouts/StudentsLayout"));
@@ -35,8 +34,8 @@ export const studentsRouter: RouteObject = {
                     element: <StudentTab />
                 },
                 {
-                    path: "medical-information",
-                    element: <StudentMedicalInformationTab />
+                    path: "allergies",
+                    element: <StudentAllergiesTab />
                 },
                 {
                     path: "guardians",
@@ -47,10 +46,6 @@ export const studentsRouter: RouteObject = {
                     element: <StudentAcademicCyclesTab />
                 }
             ]
-        },
-        {
-            path: ":studentId/enrollments/:academicCycleSchoolGroupId",
-            element: <StudentAcademicCycleSchoolGroupEnrollmentPage />
         },
         {
             path: "*",

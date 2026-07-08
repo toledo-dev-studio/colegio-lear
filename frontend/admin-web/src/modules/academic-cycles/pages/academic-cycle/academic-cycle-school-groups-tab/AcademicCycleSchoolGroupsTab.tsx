@@ -97,17 +97,13 @@ export const AcademicCycleSchoolGroupsTab = () => {
                 />
             </section>
 
-            {/* <SectionTitle
-                title="DETALLE DE HORARIO ESCOLAR"
-                description="Selecciona un grupo escolar para poder consultar el horario configurado" /> */}
-
             {/* Delete single record modal */}
             {
                 (!context.isLocked && deleteModal.record) && (
                     <Modal
                         open={deleteModal.isOpen}
                         type="delete"
-                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.name}`}
+                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.name}?`}
                         message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
                         isLoading={mutations.schoolGroups.delete.isPending}
                         cancelButton={{

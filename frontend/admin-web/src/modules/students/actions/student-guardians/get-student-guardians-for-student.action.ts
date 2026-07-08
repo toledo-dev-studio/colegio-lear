@@ -1,17 +1,14 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
-import type { StudentGuardian } from "@/interfaces/entites/student-guardian";
+import type { StudentGuardianResponse } from "@/interfaces/responses/student-guardian.response";
 
 interface Options {
-    studentId?: string;
+    studentId: string;
 }
 
-export const getStudentGuardiansForStudentActionAsync = async ({ studentId }: Options): Promise<StudentGuardian[]> => {
+export const getStudentGuardiansForStudentActionAsync = async ({ studentId }: Options): Promise<StudentGuardianResponse[]> => {
     await sleep();
-
-    if (!studentId)
-        throw new Error("El identificador del registro es requerido");
 
     let endpoint = `/students/${studentId}/guardians`;
 
@@ -21,7 +18,7 @@ export const getStudentGuardiansForStudentActionAsync = async ({ studentId }: Op
     // REMOVE
     endpoint = "http://localhost/api/students/student-guardians/student-guardians.json";
 
-    const { data } = await api.get<StudentGuardian[]>(endpoint);
+    const { data } = await api.get<StudentGuardianResponse[]>(endpoint);
 
     return data;
 }

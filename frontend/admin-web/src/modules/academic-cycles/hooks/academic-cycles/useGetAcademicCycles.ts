@@ -18,7 +18,7 @@ export const useGetAcademicCycles = () => {
     const endDate = isValidValueWithDefault(searchParams.get("end-date")?.trim(), undefined);
     const periodType = isValidValueWithDefault(searchParams.get("period-type")?.trim() as AcademicPeriodTypeKey, undefined);
     const status = isValidValueWithDefault(searchParams.get("status")?.trim() as AcademicCycleStatusKey, undefined);
-    const enrollmentOpen = isValidBooleanString(searchParams.get("enrollment-open")) ? stringToBooleanWithDefault(searchParams.get("enrollmentOpen")) : undefined;
+    const enrollmentOpen = isValidBooleanString(searchParams.get("enrollment-open")) ? stringToBooleanWithDefault(searchParams.get("enrollment-open")) : undefined;
     const academicLevelId = isValidValueWithDefault(searchParams.get("academic-level-id")?.trim(), undefined);
     const educationLevelId = isValidValueWithDefault(searchParams.get("education-level-id")?.trim(), undefined);
 

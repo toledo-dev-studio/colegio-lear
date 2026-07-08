@@ -1,103 +1,202 @@
 [
     {
-        "id": "a2f4c2d7-9f8b-4f43-a7a0-11c3f8c90001",
-        "status": "completed",
-        "observations": "Alumno inscrito correctamente al grupo.",
-        "studentId": "550e8400-e29b-41d4-a716-446655440001",
-        "academicCycleId": "e4b67d5a-1d32-4c28-a9f2-100000000001",
-        "academicCycle": {
-            "id": "e4b67d5a-1d32-4c28-a9f2-100000000001",
-            "code": "AC-2026-2027",
-            "name": "Ciclo Escolar 2026-2027",
-            "status": "completed"
-        },
-        "academicCycleSchoolGroupId": "c11f5d9d-13d0-45f6-a5a8-200000000001",
-        "academicCycleSchoolGroup": {
-            "id": "c11f5d9d-13d0-45f6-a5a8-200000000001",
-            "name": "Primaria Primero A"
-        },
-        "scholarshipId": "b87e10e2-4c87-49df-b87d-300000000001",
-        "scholarship": {
-            "id": "b87e10e2-4c87-49df-b87d-300000000001",
-            "name": "Beca Académica 50%"
-        }
-    },
-    {
-        "id": "b3d5e1f8-8e9a-4d72-b4c3-11c3f8c90002",
-        "status": "completed",
-        "observations": "Alumno concluyó satisfactoriamente el ciclo.",
-        "studentId": "550e8400-e29b-41d4-a716-446655440001",
-        "academicCycleId": "e4b67d5a-1d32-4c28-a9f2-100000000002",
-        "academicCycle": {
-            "id": "e4b67d5a-1d32-4c28-a9f2-100000000002",
-            "code": "AC-2025-2026",
-            "name": "Ciclo Escolar 2025-2026",
-            "status": "completed"
-        },
-        "academicCycleSchoolGroupId": "c11f5d9d-13d0-45f6-a5a8-200000000002",
-        "academicCycleSchoolGroup": {
-            "id": "c11f5d9d-13d0-45f6-a5a8-200000000002",
-            "name": "Primaria Segundo B"
-        }
-    },
-    {
-        "id": "c4a6f3d2-2b5d-49d3-90b1-11c3f8c90003",
-        "status": "dropped",
-        "observations": "Baja solicitada por cambio de institución.",
-        "droppedNotes": "El alumno fue transferido a otra escuela.",
-        "studentId": "550e8400-e29b-41d4-a716-446655440001",
-        "academicCycleId": "e4b67d5a-1d32-4c28-a9f2-100000000003",
-        "academicCycle": {
-            "id": "e4b67d5a-1d32-4c28-a9f2-100000000003",
-            "code": "AC-2024-2025",
-            "name": "Ciclo Escolar 2024-2025",
-            "status": "completed"
-        },
-        "academicCycleSchoolGroupId": "c11f5d9d-13d0-45f6-a5a8-200000000003",
-        "academicCycleSchoolGroup": {
-            "id": "c11f5d9d-13d0-45f6-a5a8-200000000003",
-            "name": "Primaria Tercero A"
-        }
-    },
-    {
-        "id": "d5f7a8c3-0e2f-4b0f-b2d5-11c3f8c90004",
-        "status": "completed",
-        "observations": "Inscripción realizada durante el periodo extraordinario.",
-        "studentId": "550e8400-e29b-41d4-a716-446655440001",
-        "academicCycleId": "e4b67d5a-1d32-4c28-a9f2-100000000004",
-        "academicCycle": {
-            "id": "e4b67d5a-1d32-4c28-a9f2-100000000004",
-            "code": "CV-2026",
-            "name": "Curso de Verano 2026",
-            "status": "completed"
-        },
-        "academicCycleSchoolGroupId": "c11f5d9d-13d0-45f6-a5a8-200000000004",
-        "academicCycleSchoolGroup": {
-            "id": "c11f5d9d-13d0-45f6-a5a8-200000000004",
-            "name": "Secundaria Primero A"
-        },
-        "scholarshipId": "b87e10e2-4c87-49df-b87d-300000000002",
-        "scholarship": {
-            "id": "b87e10e2-4c87-49df-b87d-300000000002",
-            "name": "Beca Deportiva"
-        }
-    },
-    {
-        "id": "e6a8b9d4-4d3a-46f2-b1a7-11c3f8c90005",
+        "id": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+        "code": "INS-2026-0001",
         "status": "enrolled",
-        "observations": "Alumno promovido al siguiente grado.",
+        "observations": "Inscripción regular sin observaciones.",
         "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "student": {
+            "id": "550e8400-e29b-41d4-a716-446655440001",
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "García",
+            "dateOfBirth": "2012-03-14T00:00:00.000Z",
+            "curp": "PEGJ120314HGTLRNA1",
+            "age": 14,
+            "enrollment": "ENR-2026-001",
+            "image": "https://example.com/students/std-001.jpg",
+            "observations": "Excelente desempeño académico.",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "juan.perez@example.com",
+            "phoneNumber": "4771234567",
+            "address": "Calle Primavera 123",
+            "state": "Guanajuato",
+            "municipality": "León",
+            "postalCode": "37200"
+        },
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycle": {
             "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-            "code": "AC-2023-2024",
-            "name": "Ciclo Escolar 2023-2024",
-            "status": "active"
+            "name": "Ciclo Escolar 2026-2027"
         },
-        "academicCycleSchoolGroupId": "da05ab17-8c9d-4151-eb14-3a8c9f0b1d24",
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
         "academicCycleSchoolGroup": {
-            "id": "da05ab17-8c9d-4151-eb14-3a8c9f0b1d24",
-            "name": "Secundaria Segundo B"
-        }
+            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+            "name": "Primero A"
+        },
+        "scholarshipId": "0d8e1f23-c456-4f9a-a1b2-3c4d5e6f7890",
+        "scholarship": {
+            "id": "0d8e1f23-c456-4f9a-a1b2-3c4d5e6f7890",
+            "name": "Beca Excelencia Académica",
+            "discountPercentage": 40
+        },
+        "createdAt": "2023-08-14T00:00:00.000Z"
+    },
+    {
+        "id": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345",
+        "code": "INS-2026-0002",
+        "status": "enrolled",
+        "observations": "Alumno con excelente desempeño académico.",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "student": {
+            "id": "550e8400-e29b-41d4-a716-446655440001",
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "García",
+            "dateOfBirth": "2012-03-14T00:00:00.000Z",
+            "curp": "PEGJ120314HGTLRNA1",
+            "age": 14,
+            "enrollment": "ENR-2026-001",
+            "image": "https://example.com/students/std-001.jpg",
+            "observations": "Excelente desempeño académico.",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "juan.perez@example.com",
+            "phoneNumber": "4771234567",
+            "address": "Calle Primavera 123",
+            "state": "Guanajuato",
+            "municipality": "León",
+            "postalCode": "37200"
+        },
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycle": {
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "name": "Ciclo Escolar 2026-2027"
+        },
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroup": {
+            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+            "name": "Primero B"
+        },
+        "createdAt": "2023-08-14T00:00:00.000Z"
+    },
+    {
+        "id": "e8c7a3f2-4d91-4e2f-a9d8-6b1c2f3a4567",
+        "code": "INS-2026-0003",
+        "status": "completed",
+        "observations": "Finalizó satisfactoriamente el ciclo escolar.",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "student": {
+            "id": "550e8400-e29b-41d4-a716-446655440001",
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "García",
+            "dateOfBirth": "2012-03-14T00:00:00.000Z",
+            "curp": "PEGJ120314HGTLRNA1",
+            "age": 14,
+            "enrollment": "ENR-2026-001",
+            "image": "https://example.com/students/std-001.jpg",
+            "observations": "Excelente desempeño académico.",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "juan.perez@example.com",
+            "phoneNumber": "4771234567",
+            "address": "Calle Primavera 123",
+            "state": "Guanajuato",
+            "municipality": "León",
+            "postalCode": "37200"
+        },
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycle": {
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "name": "Ciclo Escolar 2026-2027"
+        },
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroup": {
+            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+            "name": "Segundo A"
+        },
+        "createdAt": "2023-08-14T00:00:00.000Z"
+    },
+    {
+        "id": "a3f9d1c7-7b6a-42e1-8d4c-1e2f3a4b5678",
+        "code": "INS-2026-0004",
+        "status": "dropped",
+        "observations": "Baja voluntaria por cambio de institución.",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "student": {
+            "id": "550e8400-e29b-41d4-a716-446655440001",
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "García",
+            "dateOfBirth": "2012-03-14T00:00:00.000Z",
+            "curp": "PEGJ120314HGTLRNA1",
+            "age": 14,
+            "enrollment": "ENR-2026-001",
+            "image": "https://example.com/students/std-001.jpg",
+            "observations": "Excelente desempeño académico.",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "juan.perez@example.com",
+            "phoneNumber": "4771234567",
+            "address": "Calle Primavera 123",
+            "state": "Guanajuato",
+            "municipality": "León",
+            "postalCode": "37200"
+        },
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycle": {
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "name": "Ciclo Escolar 2026-2027"
+        },
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroup": {
+            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+            "name": "Segundo B"
+        },
+        "createdAt": "2023-08-14T00:00:00.000Z"
+    },
+    {
+        "id": "f1e2d3c4-b5a6-47d8-91e2-3f4a5b6c7d8e",
+        "code": "INS-2026-0005",
+        "status": "enrolled",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "student": {
+            "id": "550e8400-e29b-41d4-a716-446655440001",
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "García",
+            "dateOfBirth": "2012-03-14T00:00:00.000Z",
+            "curp": "PEGJ120314HGTLRNA1",
+            "age": 14,
+            "enrollment": "ENR-2026-001",
+            "image": "https://example.com/students/std-001.jpg",
+            "observations": "Excelente desempeño académico.",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "juan.perez@example.com",
+            "phoneNumber": "4771234567",
+            "address": "Calle Primavera 123",
+            "state": "Guanajuato",
+            "municipality": "León",
+            "postalCode": "37200"
+        },
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycle": {
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "name": "Ciclo Escolar 2026-2027"
+        },
+        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroup": {
+            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+            "name": "Tercero A"
+        },
+        "createdAt": "2023-08-14T00:00:00.000Z"
     }
 ]

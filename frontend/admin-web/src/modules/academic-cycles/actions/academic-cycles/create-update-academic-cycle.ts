@@ -26,7 +26,9 @@ export const createUpdateAcademicCycleActionAsync = async ({ id, academicCycleRe
     const { data } = await api<AcademicCycleResponse>({
         url: isCreating ? "/academic-cycles" : `/academic-cycles/${id}`,
         method: isCreating ? "POST" : "PATCH",
-        data: academicCycleRequestLike
+        data: {
+            ...academicCycleRequestLike
+        }
     });
 
     return {

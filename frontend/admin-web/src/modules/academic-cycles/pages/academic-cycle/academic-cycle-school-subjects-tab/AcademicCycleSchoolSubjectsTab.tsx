@@ -155,7 +155,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
                     <Modal
                         open={deleteModal.isOpen}
                         type="delete"
-                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.schoolSubject?.name}`}
+                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.schoolSubject?.name}?`}
                         message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
                         isLoading={mutations.schoolSubject.delete.isPending}
                         cancelButton={{

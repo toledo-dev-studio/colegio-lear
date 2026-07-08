@@ -96,10 +96,8 @@ export const AcademicCycleTab = () => {
 
     return (
         <>
-            {/* Academic cycle form */}
             <form onSubmit={handleSubmit(validateForm)}>
 
-                {/* Main student information */}
                 <section className="flex flex-col gap-y-6">
 
                     <SectionTitle
@@ -390,7 +388,6 @@ export const AcademicCycleTab = () => {
                                 render={({ field }) => (
                                     <SearchInput
                                         {...field}
-                                        // ref={academicLevelSearchInputRef}
                                         disabled={isLocked}
                                         defaultValue={academicLevel?.name}
                                         selected={!!academicLevelId}
@@ -431,7 +428,6 @@ export const AcademicCycleTab = () => {
                                 render={({ field }) => (
                                     <SearchInput
                                         {...field}
-                                        // ref={educationLevelSearchInputRef}
                                         disabled={!academicLevelId || isLocked}
                                         defaultValue={educationLevel?.name}
                                         selected={!!educationLevelId}

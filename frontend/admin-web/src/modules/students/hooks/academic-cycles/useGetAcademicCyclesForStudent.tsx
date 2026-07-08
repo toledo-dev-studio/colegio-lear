@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { GET_ACADEMIC_CYCLES_FOR_STUDENT_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
-import { getAcademicCyclesForStudentActionAsync } from "../../actions/academic-cycles/get-academic-cycles-for-student";
+import { getAcademicCyclesForStudentActionAsync } from "../../actions/student-enrollments/get-student-enrollments.action";
 
 interface Options {
     studentId: string;

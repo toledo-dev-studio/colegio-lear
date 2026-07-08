@@ -152,7 +152,7 @@ export const AcademicCycleWalletTab = () => {
                     <Modal
                         open={deleteModal.isOpen}
                         type="delete"
-                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.name}`}
+                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.name}?`}
                         message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
                         isLoading={mutations.wallet.delete.isPending}
                         cancelButton={{

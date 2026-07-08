@@ -1,4 +1,4 @@
-import type { Student } from "@/interfaces/entites/student";
+import type { StudentResponse } from "@/interfaces/responses/student.response";
 
 /**
  * Interface to define context for single student record used in StudentLayout and his routes tabs.
@@ -11,7 +11,7 @@ export interface StudentLayoutContext {
     /**
      * Student information or undefined if is new record
      */
-    student: Student;
+    student: StudentResponse;
     /**
      * Student unique identifier or undefined if is a new record
      */

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import type { StudentGuardian } from "@/interfaces/entites/student-guardian";
 import { GET_STUDENT_GUARDIANS_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
+import type { StudentGuardianResponse } from "@/interfaces/responses/student-guardian.response";
 import { createUpdateStudentGuardianForStudentActionAsync } from "../../actions/student-guardians/create-update-student-guardian-for-student";
 
 export const useCreateUpdateStudentGuardianForStudent = () => {
@@ -9,9 +9,18 @@ export const useCreateUpdateStudentGuardianForStudent = () => {
 
     return useMutation({
         mutationFn: createUpdateStudentGuardianForStudentActionAsync,
-        onSuccess: (response: StudentGuardian) => {
-            // Set query data for student guardians list to avoid refetch api
-            queryClient.setQueryData([GET_STUDENT_GUARDIANS_QUERY_KEY, { studentId: response.studentId }], (prev: StudentGuardian[] = []) => [...prev.filter(item => item.id !== response.id), response]);
+        onSuccess: (response: StudentGuardianResponse) => {
+            // Set query data to avoid refetch api
+            queryClient.setQueryData(
+                [GET_STUDENT_GUARDIANS_QUERY_KEY, { studentId: response.studentId }],
+                (prev: StudentGuardianResponse[] = []) => {
+                    const index = prev.findIndex(item => item.id === response.id);
+                    if (index === -1)
+                        return [...prev, response]
+                    prev[index] = response;
+                    return [...prev];
+                }
+            );
         }
     });
 }
