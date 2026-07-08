@@ -1,17 +1,14 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { JobTitleTypes } from "@/interfaces/entites/job-title";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
+import type { JobTitleFilter } from "@/interfaces/filters/job-title.filter";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 
-interface Options {
+interface Options extends JobTitleFilter {
     query?: string;
     page?: number;
     pageSize?: number;
-    name?: string;
-    jobTitleType?: JobTitleTypes;
-    isActive?: boolean,
 }
 
 export const getPagedJobTitlesActionAsync = async ({ query, page = 1, pageSize = 1, name, jobTitleType, isActive, }: Options): Promise<PagedResponse<JobTitleResponse>> => {

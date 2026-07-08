@@ -1,4 +1,4 @@
-import type { AudienceType } from "../entites/announcement";
+import type { AudienceTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Request
@@ -16,7 +16,7 @@ export interface AnnouncementRequest {
     /**
      * Announcement's main audiences
      */
-    audience: AudienceType[];
+    audience: AudienceTypeKey[];
     /**
      * Announcement's content
      */

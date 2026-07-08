@@ -1,12 +1,12 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
+import { Loader } from "@/shared/components/loader/Loader";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { PaymentConceptForm } from "./components/PaymentConceptForm";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { useGetPaymentConceptById } from "../../hooks/useGetPaymentConceptById";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import { useCreateUpdatePaymentConcept } from "../../hooks/useCreateUpdatePaymentConcept";
 import type { PaymentConceptRequest } from "@/interfaces/requests/payment-concept.request";
 
@@ -46,7 +46,7 @@ export const PaymentConceptPage = () => {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">
-          <CustomFullScreenLoading title="Cargando información" subtitle="Por favor espere..." />
+          <Loader title="Cargando información" subtitle="Por favor espere..." />
         </div>
       </>
     )

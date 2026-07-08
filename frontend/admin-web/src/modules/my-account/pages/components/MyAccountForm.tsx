@@ -4,9 +4,9 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Controller, useForm } from "react-hook-form";
 import { isValidPhone } from "@/lib/extensions/validators";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { extractFileExtension } from "@/lib/extensions/attachments";
-import { CustomPhotoUploader } from "@/shared/components/CustomPhotoUploader";
+import { PhotoUploader } from "@/shared/components/photo-uploader/PhotoUploader";
 import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
@@ -49,7 +49,7 @@ export const MyAccountForm = ({ employeeResponse, isSubmitting, onSubmit }: Prop
                         render={({ field, fieldState }) => (
                             <>
                                 <div className="w-full flex flex-col items-center justify-center">
-                                    <CustomPhotoUploader
+                                    <PhotoUploader
                                         value={field.value ? URL.createObjectURL(field.value) : (employeeResponse?.image ?? undefined)}
                                         changedImage={field.value && fieldState.isTouched}
                                         onChange={(file) => {
@@ -232,7 +232,7 @@ export const MyAccountForm = ({ employeeResponse, isSubmitting, onSubmit }: Prop
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
                         Guardar
                         {
-                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
+                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

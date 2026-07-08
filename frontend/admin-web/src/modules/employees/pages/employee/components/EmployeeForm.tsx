@@ -5,22 +5,22 @@ import { Mail, Phone, User } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Switch } from "@/shared/ui/switch";
+import { Loader } from "@/shared/components/loader/Loader";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
-import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
-import { CustomPhotoUploader } from "@/shared/components/CustomPhotoUploader";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
+import { PhotoUploader } from "@/shared/components/photo-uploader/PhotoUploader";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 import { useSearchJobTitles } from "@/modules/job-titles/hooks/useSearchJobTitles";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 import { useSearchSecurityRoles } from "@/modules/security-roles/hooks/useSearchSecurityRoles";
 import { SecurityRolePermissionsGrid } from "@/modules/security-roles/components/SecurityRolePermissionsGrid";
 import { useGetSecurityRoleByIdForEmployee } from "@/modules/employees/hooks/security-roles/useGetSecurityRoleByIdForEmployee";
-import { Switch } from "@/shared/ui/switch";
 
 interface Props {
     isSubmitting: boolean;
@@ -88,7 +88,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                         render={({ field, fieldState }) => (
                             <>
                                 <div className="w-full flex flex-col items-center justify-center">
-                                    <CustomPhotoUploader
+                                    <PhotoUploader
                                         value={field.value ? URL.createObjectURL(field.value) : (employeeResponse?.image ?? undefined)}
                                         changedImage={field.value && fieldState.isTouched}
                                         onChange={(file) => {
@@ -349,7 +349,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                         }
                         <div className="w-full relative my-10">
                             {
-                                getByIdSecurityRoleForEmployee.isPending && (<CustomFullScreenLoading title="Cargando privilegios" subtitle="Cargando privilegios del rol de seguridad seleccionado" className="relative" />)
+                                getByIdSecurityRoleForEmployee.isPending && (<Loader title="Cargando privilegios" subtitle="Cargando privilegios del rol de seguridad seleccionado" className="relative" />)
                             }
                             {
                                 getByIdSecurityRoleForEmployee.securityRole && (<SecurityRolePermissionsGrid disabled={true} permissions={getByIdSecurityRoleForEmployee.securityRole.permissions ?? []}></SecurityRolePermissionsGrid>)
@@ -368,7 +368,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
                         Guardar
                         {
-                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
+                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

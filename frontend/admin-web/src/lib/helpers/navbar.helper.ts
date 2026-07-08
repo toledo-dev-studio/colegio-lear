@@ -1,7 +1,7 @@
 import type { Navbar } from "@/interfaces/components/navbar";
-import type { SecurityRolePermission } from "@/interfaces/entites/security-role-permission";
+import type { SecurityRolePermissionResponse } from "@/interfaces/responses/security-role-permission.response";
 
-export const filterNavbarByPermissions = (navbar: Navbar[], permissions: SecurityRolePermission[]): Navbar[] => {
+export const filterNavbarByPermissions = (navbar: Navbar[], permissions: SecurityRolePermissionResponse[]): Navbar[] => {
     // Convert permissions to Set for fast lookup O(1)
     const allowedModules = new Set(
         permissions

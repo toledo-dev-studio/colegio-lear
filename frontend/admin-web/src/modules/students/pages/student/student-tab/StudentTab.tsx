@@ -10,7 +10,7 @@ import { Textarea } from "@/shared/ui/textarea";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { MEXICAN_STATES } from "@/lib/constants/mexican-states";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
@@ -507,7 +507,7 @@ export const StudentTab = () => {
                     <Button type="submit" disabled={createUpdateStudentMutation.isPending} aria-label="save-record">
                         Guardar
                         {
-                            createUpdateStudentMutation.isPending && (<CustomSpinner variant="primary" className="ml-4" />)
+                            createUpdateStudentMutation.isPending && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

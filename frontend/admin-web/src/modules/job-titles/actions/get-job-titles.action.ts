@@ -1,17 +1,15 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
-import type { JobTitleTypes } from "@/interfaces/entites/job-title";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { JobTitleFilter } from "@/interfaces/filters/job-title.filter";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 
-interface Options {
+interface Options extends JobTitleFilter {
     query?: string;
     name?: string;
-    jobTitleType?: JobTitleTypes;
-    isActive?: boolean;
 }
 
-export const getJobTitlesActionAsync = async ({ query = '', name, jobTitleType, isActive }: Options): Promise<JobTitleResponse[]> => {
+export const getJobTitlesActionAsync = async ({ query, name, jobTitleType, isActive }: Options): Promise<JobTitleResponse[]> => {
     await sleep();
 
     let endpoint = "/job-titles";

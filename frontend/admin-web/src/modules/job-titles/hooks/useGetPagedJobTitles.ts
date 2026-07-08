@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
-import type { JobTitleTypes } from "@/interfaces/entites/job-title";
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
+import type { JobTitleTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { getPagedJobTitlesActionAsync } from "../actions/get-paged-job-titles.action";
 import { GET_PAGED_JOB_TITLES_QUERY_KEY } from "@/lib/queries-key/job-titles-queries-key";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
@@ -17,7 +17,7 @@ export const useGetPagedJobTitles = () => {
 
     // Advanced query filters
     const name = isValidValueWithDefault(searchParams.get("name")?.trim(), undefined)
-    const jobTitleType = isValidValueWithDefault(searchParams.get("job-title-type")?.trim() as JobTitleTypes, undefined);
+    const jobTitleType = isValidValueWithDefault(searchParams.get("job-title-type")?.trim() as JobTitleTypeKey, undefined);
     const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
 
     const queryResult = useQuery({

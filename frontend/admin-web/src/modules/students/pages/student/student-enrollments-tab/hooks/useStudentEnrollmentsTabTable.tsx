@@ -3,12 +3,11 @@ import { GraduationCap } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
-import { ACADEMIC_CYCLE_STATUSES } from "@/interfaces/entites/academic-cycle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { StudentResponse } from "@/interfaces/responses/student.response";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
-import { ACADEMIC_CYCLE_ENROLLMENT_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { ACADEMIC_CYCLE_ENROLLMENT_STATUSES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
 
 interface Options {

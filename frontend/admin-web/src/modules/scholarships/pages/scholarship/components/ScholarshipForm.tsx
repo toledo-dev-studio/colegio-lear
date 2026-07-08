@@ -6,7 +6,7 @@ import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Slider } from "@/shared/ui/slider";
 import { Textarea } from "@/shared/ui/textarea";
-import { CustomSpinner } from "@/shared/components/CustomSpinner";
+import { Spinner } from "@/shared/components/spinner/Spinner";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { ScholarshipRequest } from "@/interfaces/requests/scholarship.request";
 import type { ScholarshipResponse } from "@/interfaces/responses/scholarship.response";
@@ -133,7 +133,7 @@ export const ScholarshipForm = ({ scholarshipResponse, isSubmitting, onSubmit }:
                     <Button type="submit" disabled={isSubmitting} aria-label="save-record">
                         Guardar
                         {
-                            isSubmitting && (<CustomSpinner variant="primary" className="ml-4" />)
+                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
                         }
                     </Button>
                 </section>

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Camera, User as UserIcon, X } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
 
 interface Props {
     value?: string;
@@ -8,7 +8,7 @@ interface Props {
     onChange: (file?: File) => void;
 }
 
-export const CustomPhotoUploader = ({ value, changedImage, onChange }: Props) => {
+export const PhotoUploader = ({ value, changedImage, onChange }: Props) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     return (

@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
+import { meActionAsync } from "../actions/me.action";
 import { loginActionAsync } from "../actions/login.action";
 import { logoutActionAsync } from "../actions/logout.action";
-import type { AuthCredentials } from "../interfaces/auth-credentials";
-import { meActionAsync } from "../actions/me.action";
-import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import type { SecurityRolePermission } from "@/interfaces/entites/security-role-permission";
+import type { AuthCredentials } from "../interfaces/auth-credentials";
+import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
+import type { SecurityRolePermissionResponse } from "@/interfaces/responses/security-role-permission.response";
 
 type AuthStatus = "authenticated" | "not-authenticated" | "checking";
 
@@ -15,7 +15,7 @@ export type AuthState = {
     // Properties
     user: EmployeeResponse | null,
     authStatus: AuthStatus,
-    permissions: SecurityRolePermission[],
+    permissions: SecurityRolePermissionResponse[],
 
     // Actions
     setUser: (user: EmployeeResponse) => void,

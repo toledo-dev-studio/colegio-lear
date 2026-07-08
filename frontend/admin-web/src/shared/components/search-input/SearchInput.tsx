@@ -3,7 +3,7 @@ import { Search, X } from "lucide-react";
 
 import { Input } from "../../ui/input";
 import { cn } from "@/lib/extensions/utils";
-import { CustomSpinner } from "../CustomSpinner";
+import { Spinner } from "../spinner/Spinner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
 
 interface Props {
@@ -91,7 +91,7 @@ export const SearchInput = forwardRef<SearchInputRef, Props>((props, ref) => {
                         (!isSearching && !selected && !query.length) && <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     }
                     {
-                        isSearching && <CustomSpinner className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" variant="foreground" />
+                        isSearching && <Spinner className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" variant="foreground" />
                     }
                     {
                         ((selected || query) && !isSearching) && (

@@ -2,13 +2,13 @@ import { Navigate, useNavigate, useParams } from "react-router"
 import { toast } from "sonner";
 
 import { JobTitleForm } from "./components/JobTitleForm";
+import { Loader } from "@/shared/components/loader/Loader";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { useGetByIdJobTitle } from "../../hooks/useGetByIdJobTitle";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { useCreateUpdateJobTitle } from "../../hooks/useCreateUpdateJobTitle";
 import type { JobTitleRequest } from "@/interfaces/requests/job-title.request";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
 
 export const JobTitlePage = () => {
   // Hooks & stores
@@ -47,7 +47,7 @@ export const JobTitlePage = () => {
     return (
       <>
         <div className="w-full relative mx-auto h-full mt-30">
-          <CustomFullScreenLoading title="Cargando información" subtitle="Por favor espere..." />
+          <Loader title="Cargando información" subtitle="Por favor espere..." />
         </div>
       </>
     )

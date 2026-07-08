@@ -1,4 +1,4 @@
-import type { JobTitleTypes } from "../entites/job-title";
+import type { JobTitleTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Request
@@ -18,7 +18,7 @@ export interface JobTitleRequest {
     /**
      * Type of the job title, indicating whether it is a teaching position or an administrative staff position
      */
-    jobTitleType: JobTitleTypes;
+    jobTitleType: JobTitleTypeKey;
     /**
      * Indicates if the job title is active
      */
