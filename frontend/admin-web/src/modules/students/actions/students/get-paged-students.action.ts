@@ -1,22 +1,17 @@
 import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
+import type { StudentFilter } from "@/interfaces/filters/student.filter";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
-import type { Student } from "@/interfaces/entites/student";
+import type { StudentResponse } from "@/interfaces/responses/student.response";
 
-interface Options {
+interface Options extends StudentFilter {
     query?: string;
     page?: number;
     pageSize?: number;
-    name?: string;
-    curp?: string;
-    enrollment?: string;
-    email?: string;
-    phoneNumber?: string;
-    status?: boolean,
 }
 
-export const getPagedStudentsActionAsync = async ({ query, page = 1, pageSize = 1, name, curp, enrollment, email, phoneNumber, status }: Options): Promise<PagedResponse<Student>> => {
+export const getPagedStudentsActionAsync = async ({ query, page = 1, pageSize = 1, fullName, curp, enrollment, email, phoneNumber, isActive }: Options): Promise<PagedResponse<StudentResponse>> => {
     await sleep();
 
     let endpoint = "/students/paged";
@@ -27,17 +22,17 @@ export const getPagedStudentsActionAsync = async ({ query, page = 1, pageSize = 
     // REMOVE
     endpoint = "http://localhost/api/students/students/paged-students.json";
 
-    const { data } = await api.get<PagedResponse<Student>>(endpoint, {
+    const { data } = await api.get<PagedResponse<StudentResponse>>(endpoint, {
         params: {
             q: query,
             page,
             pageSize,
-            name,
+            fullName,
             curp,
             enrollment,
             email,
             phoneNumber,
-            status,
+            isActive
         }
     });
 

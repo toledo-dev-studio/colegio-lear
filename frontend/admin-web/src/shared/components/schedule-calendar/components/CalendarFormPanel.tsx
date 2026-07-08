@@ -5,14 +5,14 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import type { Calendar } from "../types/calendar";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
+import { generateTemporalId } from "@/lib/extensions/utils";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
-import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
-import { generateTemporalId } from "@/lib/extensions/utils";
 
 interface Props {
     disabled: boolean;
@@ -33,9 +33,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
             startTime: isValidValueWithDefault(calendar?.startTime, ""),
             endTime: isValidValueWithDefault(calendar?.endTime, ""),
             academicCycleId: isValidValueWithDefault(calendar?.academicCycleId, ""),
-            academicCycle: isValidValueWithDefault(calendar?.academicCycle, undefined),
             academicCycleSchoolGroupId: isValidValueWithDefault(calendar?.academicCycleSchoolGroupId, ""),
-            academicCycleSchoolGroup: isValidValueWithDefault(calendar?.academicCycleSchoolGroup, undefined),
             schoolSubjectId: isValidValueWithDefault(calendar?.schoolSubjectId, ""),
             schoolSubject: isValidValueWithDefault(calendar?.schoolSubject, undefined),
             teacherId: isValidValueWithDefault(calendar?.teacherId, ""),
@@ -44,7 +42,12 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
     });
 
     // Component functions
-    const validateForm = async (calendarLike: Partial<Calendar>) => {    
+    const validateForm = async (calendarLike: Partial<Calendar>) => {
+        if (disabled) {
+            onCancel();
+            return;
+        }
+        
         const isValid = await trigger();
 
         if (!isValid) {
@@ -69,9 +72,9 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
             <section className="fixed inset-0 z-50 flex justify-end" data-testid="filter-drawer">
 
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onCancel} />
-                
+
                 <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
-                
+
                     <div className="h-22 flex items-center justify-between px-10 border-b border-border">
                         <h3 className="font-heading text-xl font-bold uppercase">
                             ASIGNACIÓN DE HORARIO
@@ -80,7 +83,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                             <X className="w-5! h-5! text-muted-foreground" />
                         </Button>
                     </div>
-                
+
                     {/* Schedule calendar fiels */}
                     <section className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
 
@@ -173,7 +176,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                                 {
                                     errors.endTime && (
                                         <p className="error">
-                                            { errors.endTime.message || "La hora de termino de clase es requerido" }
+                                            {errors.endTime.message || "La hora de termino de clase es requerido"}
                                         </p>
                                     )
                                 }
@@ -270,7 +273,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                             </div>
 
                         </div>
-                        
+
                     </section>
 
                     {/* Actions Buttons */}
@@ -278,13 +281,9 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                         <Button type="button" aria-label="cancel" variant={"ghost"} onClick={onCancel}>
                             Cancelar
                         </Button>
-                        {
-                            !disabled && (
-                                <Button type="submit" aria-label="save-record" onClick={handleSubmit(validateForm)}>
-                                    Guardar
-                                </Button>
-                            )
-                        }
+                        <Button type="submit" aria-label="save-record" onClick={handleSubmit(validateForm)}>
+                            {disabled ? "Aceptar" : "Guardar"}
+                        </Button>
                     </section>
                 </aside>
             </section>

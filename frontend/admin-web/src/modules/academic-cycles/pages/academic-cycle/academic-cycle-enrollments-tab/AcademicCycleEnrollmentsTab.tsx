@@ -76,6 +76,7 @@ export const AcademicCycleEnrollmentsTab = () => {
         <TableRibbon
           exportButton={{ disabled: true, show: false }}
           addButton={{
+            show: context.academicCycle?.enrollmentOpen && (context.academicCycle.status === "active" || context.academicCycle.status === "upcoming"),
             label: "Nueva incripción",
             disabled: queries.enrollments.paged.isLoading || queries.enrollments.paged.isError,
             handleClick: () => enrollmentPanel.open({})

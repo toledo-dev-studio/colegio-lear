@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import type { Student } from "@/interfaces/entites/student";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
+import type { StudentResponse } from "@/interfaces/responses/student.response";
 import { getPagedStudentsActionAsync } from "../../actions/students/get-paged-students.action";
+import type { StudentFilter } from "@/interfaces/filters/student.filter";
 
-interface Options {
+interface Options extends StudentFilter {
     query?: string;
-    isActive?: boolean;
-    enrollment?: string;
-    fullName?: string;
-    status?: boolean,
-    academicLevelId?: string;
-    educationLevelId?: string;
 }
 
 export const useSearchStudents = () => {
-    const [students, setStudents] = useState<Student[]>([])
+    const [students, setStudents] = useState<StudentResponse[]>([])
 
     const mutation = useMutation({
         mutationFn: (options: Options) =>
@@ -25,7 +20,7 @@ export const useSearchStudents = () => {
 
     const searchAsync = async (options: Options) => {
         mutation.mutateAsync(options, {
-            onSuccess: (response: PagedResponse<Student>) => {
+            onSuccess: (response: PagedResponse<StudentResponse>) => {
                 setStudents(response.data);
             },
             onError: () => {

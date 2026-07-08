@@ -107,7 +107,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
                     filterButton={{ show: false }}
                     exportButton={{ show: false }}
                     addButton={{
-                        show: true,
+                        show: !context.isLocked,
                         label: "Asociar nueva materia",
                         disabled: queries.schoolSubject.get.isLoading || queries.schoolSubject.get.isError,
                         handleClick: () => {
@@ -155,7 +155,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
                     <Modal
                         open={deleteModal.isOpen}
                         type="delete"
-                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.schoolSubject?.name}`}
+                        title={`¿Estas seguro de eliminar el registro ${deleteModal.record.schoolSubject?.name}?`}
                         message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
                         isLoading={mutations.schoolSubject.delete.isPending}
                         cancelButton={{

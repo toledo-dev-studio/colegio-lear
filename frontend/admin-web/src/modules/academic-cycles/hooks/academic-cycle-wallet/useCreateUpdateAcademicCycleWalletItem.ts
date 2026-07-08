@@ -18,7 +18,7 @@ export const useCreateUpdateAcademicCycleWalletItem = () => {
                     if (index === -1)
                         return [...prev, response]
                     prev[index] = response;
-                    return prev;
+                    return [...prev];
                 }
             );
         }

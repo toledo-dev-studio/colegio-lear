@@ -4,7 +4,7 @@ import { DAY_START_MIN, SLOT_MIN, SLOT_PX, TOTAL_SLOTS } from "../lib/schedule-c
 export const CalendarTimeGuide = () => {
     return (
         <>
-            <div className="w-16 flex-shrink-0 border-r border-border bg-muted/20">
+            <div className="w-16 shrink-0 border-r border-border bg-muted/20">
                 {
                     Array.from({ length: TOTAL_SLOTS }).map((_, i) => {
                         const m = DAY_START_MIN + i * SLOT_MIN;

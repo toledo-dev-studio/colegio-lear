@@ -13,19 +13,20 @@ interface ButtonProps {
 
 interface Props extends PropsWithChildren {
     title: string;
-    closeButton: ButtonProps,
+    handleClickClose: () => void;
+    cancelButton: ButtonProps,
     submitButton: ButtonProps;
 }
 
 export const SidePanel = (props: Props) => {
 
-    const { title, closeButton, submitButton, children } = props;
+    const { title, cancelButton, submitButton, children } = props;
 
     return (
         <>
             <section className="fixed inset-0 z-50 flex justify-end">
 
-                <section className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={closeButton.handleClick} />
+                <section className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={cancelButton.handleClick} />
 
                 <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
 
@@ -34,7 +35,7 @@ export const SidePanel = (props: Props) => {
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
-                        <Button onClick={closeButton.handleClick} className="min-w-10 min-h-10 bg-card text-foreground px-0!">
+                        <Button onClick={cancelButton.handleClick} className="min-w-10 min-h-10 bg-card text-foreground px-0!">
                             <X className="w-5! h-5! text-muted-foreground" />
                         </Button>
                     </header>
@@ -54,9 +55,9 @@ export const SidePanel = (props: Props) => {
                     <section className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
 
                         {
-                            closeButton.show && (
-                                <Button type={closeButton.type} disabled={closeButton.disabled} variant={"ghost"} onClick={closeButton.handleClick}>
-                                    {closeButton.label}
+                            cancelButton.show && (
+                                <Button type={cancelButton.type} disabled={cancelButton.disabled} variant={"ghost"} onClick={cancelButton.handleClick}>
+                                    {cancelButton.label}
                                 </Button>
                             )
                         }

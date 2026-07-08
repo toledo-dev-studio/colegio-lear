@@ -395,7 +395,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
                     <Modal
                         open={isOpenSingleDeleteModal}
                         type="delete"
-                        title={`¿Estas seguro de eliminar el registro seleccionado`}
+                        title={`¿Estas seguro de eliminar el registro seleccionado?`}
                         message={"Esta acción no se podrá deshacer y deberás generar un nuevo registro en caso de necesitarlo"}
                         isLoading={false}
                         cancelButton={{

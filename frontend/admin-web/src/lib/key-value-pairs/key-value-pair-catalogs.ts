@@ -1,5 +1,5 @@
 import type { KeyValuePair } from "./key-value-pair";
-import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, BloodTypeKey, DayOfWeekKey, PaymentMethodKey, StudentGuardianTypeKey, StudentWalletStatusKey } from "./key-value-pair-types";
+import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, BloodTypeKey, DayOfWeekKey, PaymentMethodKey, StudentGuardianRelationshipKey, StudentWalletStatusKey } from "./key-value-pair-types";
 
 /**
  * DAY_OF_WEEKS represents a list of all possible days of the week with their corresponding keys and labels.
@@ -73,7 +73,7 @@ export const ALLERGY_SEVERITIES: KeyValuePair<AllergySeverityKey>[] = [
 /**
  * STUDENT_GUARDIANS defines the possible relationships a guardian can have with a student, along with their display labels.
  */
-export const STUDENT_GUARDIANS: KeyValuePair<StudentGuardianTypeKey>[] = [
+export const STUDENT_GUARDIANS_RELATIONSHIPS: KeyValuePair<StudentGuardianRelationshipKey>[] = [
     { key: "father", label: "Padre" },
     { key: "mother", label: "Madre" },
     { key: "grandmother", label: "Abuela" },

@@ -1,13 +1,15 @@
-import { toast } from "sonner";
 import { matchPath, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router";
-import { CalendarDays, HeartPlus, InfoIcon, ShieldPlus, UserCircle2 } from "lucide-react";
+import { CalendarDays, HeartPlus, ShieldPlus, UserCircle2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { cn } from "@/lib/extensions/utils";
 import type { Tab } from "@/interfaces/components/tab";
-import { CustomPageTitle } from "@/shared/components/CustomPageTitle";
-import { CustomBreadcrumb } from "@/shared/components/CustomBreadcrumb";
-import { CustomFullScreenLoading } from "@/shared/components/CustomFullScreenLoading";
-import { useGetByIdStudentGeneralInformation } from "../hooks/students/useGetByIdStudentGeneralInformation";
+import { Loader } from "@/shared/components/loader/Loader";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { CardAlert } from "@/shared/components/card-alert/CardAlert";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { useGetStudentById } from "../hooks/students/useGetStudentById";
+import type { StudentLayoutContext } from "../interfaces/student-layout-context";
 
 const TABS: Tab[] = [
     {
@@ -17,8 +19,8 @@ const TABS: Tab[] = [
         protected: false
     },
     {
-        to: "medical-information",
-        label: "Información médica",
+        to: "allergies",
+        label: "Alergias & padecimientos",
         icon: HeartPlus,
         protected: true
     },
@@ -37,18 +39,23 @@ const TABS: Tab[] = [
 ];
 
 export const StudentLayout = () => {
-
-    // Hooks & stores
+    // Component hooks & stores
     const { id } = useParams();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const studentQuery = useGetByIdStudentGeneralInformation(id || "");
+    const studentQuery = useGetStudentById({ id: id! })
 
     // Constant configuration variables
     const isNew = id === "new";
     const title = isNew ? "Registro de estudiante" : "Edición de estudiante";
-
     const isProtectedRoute = TABS.some(tab => tab.protected && pathname.endsWith(tab.to));
+
+    // Layout context information
+    const context: StudentLayoutContext = {
+        isNew: isNew,
+        studentId: id!,
+        student: studentQuery.data!,
+    };
 
     const isActiveRoute = (to: string): boolean => {
         if (to === "") {
@@ -70,7 +77,7 @@ export const StudentLayout = () => {
         return (
             <>
                 <div className="w-full relative mx-auto h-full mt-30">
-                    <CustomFullScreenLoading title="Cargando información" subtitle="Por favor espere..." />
+                    <Loader title="Cargando información" subtitle="Por favor espere..." size="default" fullScreen={true} />
                 </div>
             </>
         )
@@ -81,19 +88,19 @@ export const StudentLayout = () => {
             <div className="w-full py-12 px-10 lg:px-15">
 
                 <div className="mb-10">
-                    <CustomBreadcrumb items={[
+                    <Breadcrumb items={[
                         { label: "Seguimiento escolar" },
                         { label: "Estudiantes", to: "/students" },
                         { label: isNew ? "Nuevo estudiante" : studentQuery.data?.enrollment || "Edición de estudiante" },
                     ]} />
                 </div>
 
-                <CustomPageTitle
+                <PageTitle
                     title={title}
                     subtitle="Gestiona la información de los estudiantes que estará disponible en la organización" />
 
-                <div className="flex-1">
-                    <div className="flex flex-col min-h-full gap-5 mt-6">
+                <section className="flex-1">
+                    <section className="flex flex-col min-h-full gap-5">
 
                         {/* Form tabs */}
                         <div className="border-b border-default overflow-x-auto no-scrollbar w-full">
@@ -107,7 +114,7 @@ export const StudentLayout = () => {
                                                     onClick={() => navigate(tab.to)}
                                                     disabled={(tab.to !== "" && isNew)}
                                                     className={
-                                                        cn("cursor-pointer inline-flex items-center justify-center p-4 border-b border-transparent rounded-t-base hover:text-fg-brand hover:border-brand group transition transition-all",
+                                                        cn("cursor-pointer inline-flex items-center justify-center p-4 border-b border-transparent rounded-t-base hover:text-fg-brand hover:border-brand group transition-all",
                                                             isActiveRoute(tab.to) && "border-primary text-primary",
                                                             (tab.to !== "" && isNew) && "cursor-not-allowed opacity-50"
                                                         )}>
@@ -126,25 +133,23 @@ export const StudentLayout = () => {
 
                         {
                             isNew && (
-                                <div className="flex flex-col items-start gap-y-4 border-b border-border mt-2 mb-2 border-solid border p-6 rounded-xl bg-primary/90 dark:bg-primary/20">
-                                    <h2 className="w-full text-white flex gap-x-4 items-center">
-                                        <InfoIcon /> RECORDATORIO SOBRE EL REGISTRO DEL ESTUDIANTE
-                                    </h2>
-                                    <p className="text-xs text-white">
-                                        Una vez guardada la información general del estudiante, se generará automáticamente su matrícula, de igual modo podrás dar seguimiento a los ciclos escolares, así como para llevar el registro de sus pagos, además de que podrás
-                                        complementar su información general con su información médica, así como también agregar a sus tutores legales para que puedan tener acceso al portal del alumno y recibir notificaciones importantes sobre el estudiante.
-                                    </p>
-                                </div>
+                                <CardAlert
+                                    type="info"
+                                    title="RECORDATORIO SOBRE EL REGISTRO DEL ESTUDIANTE"
+                                    message="Una vez que guardes la información general del estudiante, el sistema generará automáticamente su matrícula. 
+                                    A partir de ese momento, podrás dar seguimiento a su historial de ciclos escolares, administrar el registro de sus pagos y complementar su expediente con información médica.
+                                    Además, podrás registrar a sus tutores legales para que tengan acceso al Portal del Alumno y reciban notificaciones importantes relacionadas con el estudiante."
+                                />
                             )
                         }
 
                         {/* Router outlet container */}
                         <div className="w-full flex flex-col gap-y-6">
-                            <Outlet context={{ student: studentQuery.data, studentId: id, isNew: isNew }} />
+                            <Outlet context={context} />
                         </div>
 
-                    </div>
-                </div>
+                    </section>
+                </section>
             </div>
         </>
     )

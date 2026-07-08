@@ -62,73 +62,67 @@ export const SchoolSubjectsPage = () => {
 
   return (
     <>
-      <div className="w-full py-12 px-10 lg:px-15">
+      <section className="page-main-section">
 
-        <div className="mb-10">
-          <Breadcrumb items={[
-            { label: "Configuración escolar" },
-            { label: "Materias escolares", to: "/school-subjects" }
-          ]} />
-        </div>
+        <Breadcrumb items={[
+          { label: "Configuración escolar" },
+          { label: "Materias escolares", to: "/school-subjects" }
+        ]} />
 
         <PageTitle title="Materias escolares" subtitle="Gestiona las materias escolares que estarán disponibles en el colegio" />
 
-        <section className="flex flex-col gap-8 mt-14">
+        {/* Table ribbon options */}
+        <TableRibbon
+          addButton={{ handleClick: () => navigate("/school-subjects/new") }}
+          filterButton={{ handleClick: advancedFilters.open }}
+          exportButton={{ handleClick: handleClickExport }}
+          searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
+        />
 
-          {/* Table ribbon options */}
-          <TableRibbon
-            addButton={{ handleClick: () => navigate("/school-subjects/new") }}
-            filterButton={{ handleClick: advancedFilters.open }}
-            exportButton={{ handleClick: handleClickExport }}
-            searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
-          />
+        {/* Table content*/}
+        <Table
+          data={queries.schoolSubjects.paged.data}
+          isLoading={queries.schoolSubjects.paged.isFetching}
+          enablePagination={true}
+          columns={columns}
+          properties={properties}
+          actions={actions}
+          totalPages={queries.schoolSubjects.paged.totalPages}
+        />
 
-          {/* Table content*/}
-          <Table
-            data={queries.schoolSubjects.paged.data}
-            isLoading={queries.schoolSubjects.paged.isFetching}
-            enablePagination={true}
-            columns={columns}
-            properties={properties}
-            actions={actions}
-            totalPages={queries.schoolSubjects.paged.totalPages}
-          />
+        {/* Delete single record modal */}
+        {
+          (deleteModal.isOpen && deleteModal.record) && (
+            <Modal
+              open={deleteModal.isOpen}
+              type="delete"
+              title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
+              message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
+              isLoading={mutations.schoolSubjects.delete.isPending}
+              cancelButton={{
+                label: "Cancelar",
+                onClick: () => deleteModal.close()
+              }}
+              confirmButton={{
+                label: "Sí, eliminar",
+                onClick: handleClickConfirmDeleteSchoolSubject
+              }}
+            />
+          )
+        }
 
-          {/* Delete single record modal */}
-          {
-            (deleteModal.isOpen && deleteModal.record) && (
-              <Modal
-                open={deleteModal.isOpen}
-                type="delete"
-                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
-                message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={mutations.schoolSubjects.delete.isPending}
-                cancelButton={{
-                  label: "Cancelar",
-                  onClick: () => deleteModal.close()
-                }}
-                confirmButton={{
-                  label: "Sí, eliminar",
-                  onClick: handleClickConfirmDeleteSchoolSubject
-                }}
-              />
-            )
-          }
+        {/* Advanced filters panel */}
+        {
+          advancedFilters.isOpen && (
+            <SchoolSubjectsAdvancedFilters
+              open={advancedFilters.isOpen}
+              title="Filtros avanzados"
+              handleClickClose={advancedFilters.close}
+            />
+          )
+        }
 
-          {/* Advanced filters panel */}
-          {
-            advancedFilters.isOpen && (
-              <SchoolSubjectsAdvancedFilters
-                open={advancedFilters.isOpen}
-                title="Filtros avanzados"
-                handleClickClose={advancedFilters.close}
-              />
-            )
-          }
-
-        </section>
-
-      </div>
+      </section>
     </>
   )
 }

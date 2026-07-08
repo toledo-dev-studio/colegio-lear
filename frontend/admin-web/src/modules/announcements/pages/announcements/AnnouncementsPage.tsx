@@ -62,72 +62,67 @@ export const AnnouncementsPage = () => {
 
   return (
     <>
-      <div className="w-full py-12 px-10 lg:px-15">
+      <section className="page-main-section">
 
-        <div className="mb-10">
-          <Breadcrumb items={[
-            { label: "Seguimiento escolar" },
-            { label: "Comunicados & campañas", to: "/announcements" },
-          ]} />
-        </div>
+        <Breadcrumb items={[
+          { label: "Seguimiento escolar" },
+          { label: "Comunicados & campañas", to: "/announcements" },
+        ]} />
 
         <PageTitle title="Comunicados & campañas" subtitle="Gestiona las comunicados & campañas disponibles en el colegio y la organización" />
 
-        <section className="flex flex-col gap-8 mt-14">
+        {/* Table ribbon options */}
+        <TableRibbon
+          addButton={{ handleClick: () => navigate("/announcements/new") }}
+          filterButton={{ handleClick: advancedFilters.open }}
+          exportButton={{ handleClick: handleClickExport }}
+          searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
+        />
 
-          {/* Table ribbon options */}
-          <TableRibbon
-            addButton={{ handleClick: () => navigate("/announcements/new") }}
-            filterButton={{ handleClick: advancedFilters.open }}
-            exportButton={{ handleClick: handleClickExport }}
-            searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
-          />
+        {/* Table content*/}
+        <Table
+          data={queries.announcements.paged.data}
+          isLoading={queries.announcements.paged.isFetching}
+          enablePagination={true}
+          columns={columns}
+          properties={properties}
+          actions={actions}
+          totalPages={queries.announcements.paged.totalPages}
+        />
 
-          {/* Table content*/}
-          <Table
-            data={queries.announcements.paged.data}
-            isLoading={queries.announcements.paged.isFetching}
-            enablePagination={true}
-            columns={columns}
-            properties={properties}
-            actions={actions}
-            totalPages={queries.announcements.paged.totalPages}
-          />
+        {/* Delete single record modal */}
+        {
+          (deleteModal.isOpen && deleteModal.record) && (
+            <Modal
+              open={deleteModal.isOpen}
+              type="delete"
+              title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
+              message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
+              isLoading={mutations.announcements.delete.isPending}
+              cancelButton={{
+                label: "Cancelar",
+                onClick: () => deleteModal.close()
+              }}
+              confirmButton={{
+                label: "Sí, eliminar",
+                onClick: handleClickConfirmDeleteAnnouncement
+              }}
+            />
+          )
+        }
 
-          {/* Delete single record modal */}
-          {
-            (deleteModal.isOpen && deleteModal.record) && (
-              <Modal
-                open={deleteModal.isOpen}
-                type="delete"
-                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
-                message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={mutations.announcements.delete.isPending}
-                cancelButton={{
-                  label: "Cancelar",
-                  onClick: () => deleteModal.close()
-                }}
-                confirmButton={{
-                  label: "Sí, eliminar",
-                  onClick: handleClickConfirmDeleteAnnouncement
-                }}
-              />
-            )
-          }
+        {/* Advanced filters panel */}
+        {
+          advancedFilters.isOpen && (
+            <AnnouncementsAdvancedFilters
+              open={advancedFilters.isOpen}
+              title="Filtros avanzados"
+              handleClickClose={advancedFilters.close}
+            />
+          )
+        }
 
-          {/* Advanced filters panel */}
-          {
-            advancedFilters.isOpen && (
-              <AnnouncementsAdvancedFilters
-                open={advancedFilters.isOpen}
-                title="Filtros avanzados"
-                handleClickClose={advancedFilters.close}
-              />
-            )
-          }
-
-        </section>
-      </div>
+      </section>
     </>
   )
 }

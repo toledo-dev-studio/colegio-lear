@@ -26,7 +26,7 @@ interface Props {
 
 export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentResponse, academicCycleSchoolGroups, onSubmit, handleClickClose }: Props) => {
     // Get context from layout
-    const { academicCycleId } = useOutletContext<AcademicCycleLayoutContext>();
+    const { academicCycleId, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Component hooks & stores
     const searchStudentsMutation = useSearchStudents();
@@ -42,7 +42,6 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
             studentId: isValidValueWithDefault(academicCycleEnrollmentResponse?.studentId, ""),
             student: isValidValueWithDefault(academicCycleEnrollmentResponse?.student, undefined),
             academicCycleSchoolGroupId: isValidValueWithDefault(academicCycleEnrollmentResponse?.academicCycleSchoolGroupId, ""),
-            academicCycleSchoolGroup: isValidValueWithDefault(academicCycleEnrollmentResponse?.academicCycleSchoolGroup, undefined),
             scholarshipId: isValidValueWithDefault(academicCycleEnrollmentResponse?.scholarshipId, ""),
             scholarship: isValidValueWithDefault(academicCycleEnrollmentResponse?.scholarship, undefined),
         }
@@ -56,7 +55,8 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
         <>
             <SidePanel
                 title="REGISTRO DE INSCRIPCIÓN"
-                closeButton={{ show: true, disabled: false, type: "button", label: "Cancelar", handleClick: handleClickClose }}
+                handleClickClose={handleClickClose}
+                cancelButton={{ show: true, disabled: false, type: "button", label: "Cancelar", handleClick: handleClickClose }}
                 submitButton={{ show: true, disabled: false, type: "submit", label: "Guardar", handleClick: handleSubmit(onSubmit) }}>
 
                 <form className="flex flex-col gap-8">
@@ -173,34 +173,38 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
                         }
                     </div>
 
-                    <div className="control-container">
-                        <label className="label">Beca asignada:</label>
-                        <Controller
-                            name="scholarshipId"
-                            control={control}
-                            render={({ field }) => (
-                                <SearchInput
-                                    {...field}
+                    {
+                        !isLocked && (
+                            <div className="control-container">
+                                <label className="label">Beca asignada:</label>
+                                <Controller
                                     name="scholarshipId"
-                                    defaultValue={scholarship?.name}
-                                    selected={!!scholarship}
-                                    placeholder="Busqueda de estudiante"
-                                    options={searchScholarshipsMutation.scholarships}
-                                    isSearching={searchScholarshipsMutation.isPending}
-                                    onClearSelection={() => {
-                                        setValue("scholarshipId", undefined);
-                                        setValue("scholarship", undefined);
-                                    }}
-                                    onOptionChange={async (option: ScholarshipResponse) => {
-                                        setValue("scholarshipId", option.id);
-                                        setValue("scholarship", option);
-                                        searchScholarshipsMutation.clearSearchResult();
-                                    }}
-                                    onSearch={async (query) => searchScholarshipsMutation.searchAsync({ query, isActive: true })}
+                                    control={control}
+                                    render={({ field }) => (
+                                        <SearchInput
+                                            {...field}
+                                            name="scholarshipId"
+                                            defaultValue={scholarship?.name}
+                                            selected={!!scholarship}
+                                            placeholder="Busqueda de estudiante"
+                                            options={searchScholarshipsMutation.scholarships}
+                                            isSearching={searchScholarshipsMutation.isPending}
+                                            onClearSelection={() => {
+                                                setValue("scholarshipId", undefined);
+                                                setValue("scholarship", undefined);
+                                            }}
+                                            onOptionChange={async (option: ScholarshipResponse) => {
+                                                setValue("scholarshipId", option.id);
+                                                setValue("scholarship", option);
+                                                searchScholarshipsMutation.clearSearchResult();
+                                            }}
+                                            onSearch={async (query) => searchScholarshipsMutation.searchAsync({ query, isActive: true })}
+                                        />
+                                    )}
                                 />
-                            )}
-                        />
-                    </div>
+                            </div>
+                        )
+                    }
 
                     <div className="control-container">
                         <label className="label">Observaciones:</label>

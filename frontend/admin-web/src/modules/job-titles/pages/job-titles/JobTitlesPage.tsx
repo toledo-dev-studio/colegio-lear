@@ -58,72 +58,67 @@ export const JobTitlesPage = () => {
 
   return (
     <>
-      <div className="w-full py-12 px-10 lg:px-15">
+      <section className="page-main-section">
 
-        <div className="mb-10">
-          <Breadcrumb items={[
-            { label: "Seguridad" },
-            { label: "Puestos de trabajo", to: "/job-titles" },
-          ]} />
-        </div>
+        <Breadcrumb items={[
+          { label: "Seguridad" },
+          { label: "Puestos de trabajo", to: "/job-titles" },
+        ]} />
 
         <PageTitle title="Puestos de trabajo" subtitle="Gestiona los puestos de trabajo disponibles en la organización" />
 
-        <section className="flex flex-col gap-8 mt-14">
+        {/* Table ribbon options */}
+        <TableRibbon
+          addButton={{ handleClick: () => navigate("/job-titles/new") }}
+          filterButton={{ handleClick: advancedFilters.open }}
+          exportButton={{ handleClick: handleClickExport }}
+          searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
+        />
 
-          {/* Table ribbon options */}
-          <TableRibbon
-            addButton={{ handleClick: () => navigate("/job-titles/new") }}
-            filterButton={{ handleClick: advancedFilters.open }}
-            exportButton={{ handleClick: handleClickExport }}
-            searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}
-          />
+        {/* Table content*/}
+        <Table
+          data={queries.jobTitles.paged.data}
+          isLoading={queries.jobTitles.paged.isFetching}
+          enablePagination={true}
+          columns={columns}
+          properties={properties}
+          actions={actions}
+          totalPages={queries.jobTitles.paged.totalPages}
+        />
 
-          {/* Table content*/}
-          <Table
-            data={queries.jobTitles.paged.data}
-            isLoading={queries.jobTitles.paged.isFetching}
-            enablePagination={true}
-            columns={columns}
-            properties={properties}
-            actions={actions}
-            totalPages={queries.jobTitles.paged.totalPages}
-          />
+        {/* Delete single record modal */}
+        {
+          (deleteModal.isOpen && deleteModal.record) && (
+            <Modal
+              open={deleteModal.isOpen}
+              type="delete"
+              title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
+              message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
+              isLoading={mutations.jobTitles.delete.isPending}
+              cancelButton={{
+                label: "Cancelar",
+                onClick: () => deleteModal.close()
+              }}
+              confirmButton={{
+                label: "Sí, eliminar",
+                onClick: handleClickConfirmDeleteJobTitle
+              }}
+            />
+          )
+        }
 
-          {/* Delete single record modal */}
-          {
-            (deleteModal.isOpen && deleteModal.record) && (
-              <Modal
-                open={deleteModal.isOpen}
-                type="delete"
-                title={`¿Estas seguro de eliminar el registro "${deleteModal.record.name}"?`}
-                message={"El registro se eliminará del sistema y solo el administrador del sistema podrán recuperarlo"}
-                isLoading={mutations.jobTitles.delete.isPending}
-                cancelButton={{
-                  label: "Cancelar",
-                  onClick: () => deleteModal.close()
-                }}
-                confirmButton={{
-                  label: "Sí, eliminar",
-                  onClick: handleClickConfirmDeleteJobTitle
-                }}
-              />
-            )
-          }
+        {/* Advanced filters panel */}
+        {
+          advancedFilters.isOpen && (
+            <JobTitlesAdvancedFilters
+              open={advancedFilters.isOpen}
+              title="Filtros avanzados"
+              handleClickClose={advancedFilters.close}
+            />
+          )
+        }
 
-          {/* Advanced filters panel */}
-          {
-            advancedFilters.isOpen && (
-              <JobTitlesAdvancedFilters
-                open={advancedFilters.isOpen}
-                title="Filtros avanzados"
-                handleClickClose={advancedFilters.close}
-              />
-            )
-          }
-
-        </section>
-      </div>
+      </section>
     </>
   )
 }
