@@ -27,16 +27,18 @@ const service = new EmployeeService(prisma, storageService, mailService);
 
 /**
  * Builds an EmployeeFilters object from validated query parameters.
- * Converts the `status` string ("true"/"false") to a boolean.
+ * Converts the `isActive` string ("true"/"false") to a boolean.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
  */
 function buildFilters(query: Record<string, unknown>): EmployeeFilters {
   const filters: EmployeeFilters = {};
 
   if (query.q !== undefined) filters.q = query.q as string;
-  if (query.name !== undefined) filters.name = query.name as string;
-  if (query.status !== undefined) filters.status = query.status === "true";
-  if (query.roleId !== undefined) filters.roleId = query.roleId as string;
+  if (query.fullName !== undefined) filters.fullName = query.fullName as string;
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
+  if (query.securityRoleId !== undefined)
+    filters.securityRoleId = query.securityRoleId as string;
   if (query.jobTitleId !== undefined)
     filters.jobTitleId = query.jobTitleId as string;
 

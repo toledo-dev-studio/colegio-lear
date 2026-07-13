@@ -33,6 +33,17 @@ function optionalSecondLastName() {
     .pipe(z.string().max(100, "Must be at most 100 characters").optional());
 }
 
+/**
+ * Boolean field that also accepts multipart/form-data string values
+ * ("true"/"false"), since multer sends every field as a string.
+ */
+function multipartBoolean() {
+  return z
+    .union([z.boolean(), z.enum(["true", "false"])])
+    .transform((val) => (typeof val === "boolean" ? val : val === "true"))
+    .optional();
+}
+
 // ─── Schemas ────────────────────────────────────────────────────────────────
 
 /**
@@ -45,18 +56,21 @@ export const idParamSchema = z.object({
 /**
  * Validates optional query filters for employee list endpoints.
  * - q: free-text search on name, firstLastName, secondLastName, or email (case-insensitive, max 100 chars)
- * - name: filter by name (case-insensitive contains, max 100 chars)
- * - status: filter by active/inactive status ("true" | "false")
- * - roleId: filter by securityRoleId (UUID)
+ * - fullName: filter by name (case-insensitive contains, max 100 chars)
+ * - isActive: filter by active/inactive status ("true" | "false")
+ * - securityRoleId: filter by securityRoleId (UUID)
  * - jobTitleId: filter by jobTitleId (UUID)
  */
 export const employeeFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
-  name: z.string().max(100, "name must be at most 100 characters").optional(),
-  status: z.enum(["true", "false"]).optional(),
-  roleId: z
+  fullName: z
     .string()
-    .uuid({ message: "roleId must be a valid UUID" })
+    .max(100, "fullName must be at most 100 characters")
+    .optional(),
+  isActive: z.enum(["true", "false"]).optional(),
+  securityRoleId: z
+    .string()
+    .uuid({ message: "securityRoleId must be a valid UUID" })
     .optional(),
   jobTitleId: z
     .string()
@@ -107,6 +121,7 @@ export const createEmployeeSchema = z.object({
     .string()
     .uuid({ message: "securityRoleId must be a valid UUID" }),
   jobTitleId: z.string().uuid({ message: "jobTitleId must be a valid UUID" }),
+  isActive: multipartBoolean(),
 });
 
 /**
@@ -145,5 +160,5 @@ export const updateEmployeeSchema = z.object({
     .string()
     .uuid({ message: "jobTitleId must be a valid UUID" })
     .optional(),
-  status: z.boolean({ message: "status must be a boolean" }).optional(),
+  isActive: multipartBoolean(),
 });

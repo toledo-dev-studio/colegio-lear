@@ -29,8 +29,9 @@ function toPrismaJobTitleType(value: JobTitleTypes): JobTitleType {
 /**
  * Maps Prisma enum values to frontend string values.
  * Prisma uses "administrative_staff" (underscore), frontend uses "administrative-staff" (hyphen).
+ * Exported for reuse by other modules that embed JobTitle (e.g. employees).
  */
-function toFrontendJobTitleType(value: JobTitleType): JobTitleTypes {
+export function toFrontendJobTitleType(value: JobTitleType): JobTitleTypes {
   if (value === JobTitleType.administrative_staff) {
     return "administrative-staff";
   }
