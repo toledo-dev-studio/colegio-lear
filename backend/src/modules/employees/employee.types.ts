@@ -13,7 +13,7 @@ export interface EmployeeJobTitle {
   name: string;
   description: string | null;
   jobTitleType: string;
-  status: boolean;
+  isActive: boolean;
 }
 
 /** Nested SecurityRole in list responses (no permissions) */
@@ -21,7 +21,7 @@ export interface EmployeeSecurityRoleBasic {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
 }
 
 /** Permission view for security role detail */
@@ -121,7 +121,7 @@ export interface PagedResult<T> {
 export const EMPLOYEE_LIST_INCLUDE = {
   jobTitle: true,
   securityRole: {
-    select: { id: true, name: true, description: true, status: true },
+    select: { id: true, name: true, description: true, isActive: true },
   },
 } as const;
 

@@ -22,7 +22,7 @@ export type ModuleKey =
 export interface SecurityRoleFilters {
   q?: string;
   name?: string;
-  status?: boolean;
+  isActive?: boolean;
 }
 
 /** Row returned from list endpoints (no permissions included) */
@@ -30,7 +30,7 @@ export interface SecurityRoleRecord {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
 }
 
 /** Permission object as returned in responses (excludes id and securityRoleId) */
@@ -46,7 +46,7 @@ export interface SecurityRoleDetail {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
   permissions: SecurityRolePermissionView[];
 }
 
@@ -61,14 +61,16 @@ export interface SecurityRolePermissionInput {
 /** Input DTO for creating a security role */
 export interface CreateSecurityRoleDto {
   name: string;
-  description: string;
-  permissions: SecurityRolePermissionInput[];
+  description?: string;
+  isActive?: boolean;
+  permissions?: SecurityRolePermissionInput[];
 }
 
 /** Input DTO for updating a security role (all fields optional) */
 export interface UpdateSecurityRoleDto {
   name?: string;
   description?: string;
+  isActive?: boolean;
   permissions?: SecurityRolePermissionInput[];
 }
 

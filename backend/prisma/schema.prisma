@@ -135,7 +135,7 @@ model JobTitle {
   name         String       @unique @db.VarChar(100)
   description  String?      @db.VarChar(500)
   jobTitleType JobTitleType @map("job_title_type")
-  status       Boolean      @default(true)
+  isActive     Boolean      @default(true) @map("is_active")
   isDeleted    Boolean      @default(false) @map("is_deleted")
   employees    Employee[]
 
@@ -149,7 +149,7 @@ model SecurityRole {
   id          String                   @id @default(uuid()) @db.Uuid
   name        String                   @unique @db.VarChar(100)
   description String?                  @db.VarChar(500)
-  status      Boolean                  @default(true)
+  isActive    Boolean                  @default(true) @map("is_active")
   isDeleted   Boolean                  @default(false) @map("is_deleted")
   permissions SecurityRolePermission[]
   employees   Employee[]

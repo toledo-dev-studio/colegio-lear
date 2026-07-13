@@ -94,7 +94,7 @@ async function main() {
       name: "SuperAdmin",
       description:
         "Rol con acceso total al sistema, incluyendo gestión de roles de seguridad",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -120,7 +120,7 @@ async function main() {
       name: "Administrador",
       description:
         "Rol administrativo con acceso completo excepto roles de seguridad",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -148,7 +148,7 @@ async function main() {
       name: "Director General",
       description: "Dirección general del colegio",
       jobTitleType: "administrative_staff",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -160,7 +160,7 @@ async function main() {
       name: "Coordinador Académico",
       description: "Coordinación de actividades académicas",
       jobTitleType: "administrative_staff",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -172,7 +172,7 @@ async function main() {
       name: "Docente",
       description: "Profesor de aula",
       jobTitleType: "teacher",
-      status: true,
+      isActive: true,
     },
   });
 

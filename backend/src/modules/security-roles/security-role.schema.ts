@@ -63,12 +63,12 @@ export const idParamSchema = z.object({
  * Validates optional query filters for security roles list endpoints.
  * - q: free-text search on name and description (case-insensitive, max 100 chars)
  * - name: filter by name (case-insensitive contains, max 100 chars)
- * - status: filter by active/inactive status ("true" | "false")
+ * - isActive: filter by active/inactive status ("true" | "false")
  */
 export const securityRoleFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(100, "name must be at most 100 characters").optional(),
-  status: z.enum(["true", "false"]).optional(),
+  isActive: z.enum(["true", "false"]).optional(),
 });
 
 /**
@@ -94,6 +94,7 @@ export const securityRolePagedQuerySchema = securityRoleFiltersSchema.extend({
  * Validates POST body for creating a security role.
  * - name: 1-100 chars, trimmed, non-blank
  * - description: 1-500 chars, trimmed, non-blank
+ * - isActive: optional, defaults to true when omitted
  * - permissions: array of permission objects with unique moduleKeys
  */
 export const createSecurityRoleSchema = z.object({
@@ -108,6 +109,7 @@ export const createSecurityRoleSchema = z.object({
       return trimmed === "" ? undefined : trimmed;
     })
     .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+  isActive: z.boolean().optional(),
   permissions: z
     .array(permissionSchema)
     .refine(
@@ -136,6 +138,7 @@ export const updateSecurityRoleSchema = z
         return trimmed === "" ? undefined : trimmed;
       })
       .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+    isActive: z.boolean().optional(),
     permissions: z
       .array(permissionSchema)
       .refine(

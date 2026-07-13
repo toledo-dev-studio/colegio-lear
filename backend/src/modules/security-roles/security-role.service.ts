@@ -51,9 +51,9 @@ export class SecurityRoleService {
       });
     }
 
-    // Status filter (exact boolean match)
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    // isActive filter (exact boolean match)
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     if (andConditions.length > 0) {
@@ -76,7 +76,7 @@ export class SecurityRoleService {
       id: role.id,
       name: role.name,
       description: role.description,
-      status: role.status,
+      isActive: role.isActive,
     }));
   }
 
@@ -108,7 +108,7 @@ export class SecurityRoleService {
         id: role.id,
         name: role.name,
         description: role.description,
-        status: role.status,
+        isActive: role.isActive,
       })),
       totalPages: meta.totalPages,
       currentPage: meta.page,
@@ -136,7 +136,7 @@ export class SecurityRoleService {
       id: role.id,
       name: role.name,
       description: role.description,
-      status: role.status,
+      isActive: role.isActive,
       permissions: role.permissions.map((p) => ({
         moduleKey: p.moduleKey as ModuleKey,
         canRead: p.canRead,
@@ -170,8 +170,8 @@ export class SecurityRoleService {
       const role = await tx.securityRole.create({
         data: {
           name: dto.name,
-          description: dto.description,
-          status: true,
+          description: dto.description ?? null,
+          isActive: dto.isActive ?? true,
         },
       });
 
@@ -240,6 +240,7 @@ export class SecurityRoleService {
       if (dto.name !== undefined) updateData.name = dto.name;
       if (dto.description !== undefined)
         updateData.description = dto.description;
+      if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
 
       // Update role fields (only if there's something to update)
       if (Object.keys(updateData).length > 0) {

@@ -41,7 +41,7 @@ const router: Router = Router();
  *           maxLength: 100
  *         description: Filter by name (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -85,7 +85,7 @@ router.get(
  *           maxLength: 100
  *         description: Filter by name (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -143,7 +143,7 @@ router.get(
  *     tags:
  *       - Security Roles
  *     summary: Create a new security role
- *     description: Creates a new security role with the provided name, description, and permissions. Status defaults to true.
+ *     description: Creates a new security role with the provided name, description, isActive, and permissions. isActive defaults to true.
  *     requestBody:
  *       required: true
  *       content:
@@ -255,7 +255,7 @@ router.patch(
  *     tags:
  *       - Security Roles
  *     summary: Soft delete a security role
- *     description: Sets the security role status to false (logical deletion). Does not remove the record.
+ *     description: Sets the security role isDeleted flag to true (logical deletion). Does not remove the record.
  *     parameters:
  *       - in: path
  *         name: id

@@ -170,13 +170,13 @@ export class EmployeeService {
         name: record.jobTitle.name,
         description: record.jobTitle.description,
         jobTitleType: record.jobTitle.jobTitleType,
-        status: record.jobTitle.status,
+        isActive: record.jobTitle.isActive,
       },
       securityRole: {
         id: record.securityRole.id,
         name: record.securityRole.name,
         description: record.securityRole.description,
-        status: record.securityRole.status,
+        isActive: record.securityRole.isActive,
         permissions,
       },
     };

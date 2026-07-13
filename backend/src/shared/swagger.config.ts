@@ -150,7 +150,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               enum: ["teacher", "administrative-staff"],
               example: "teacher",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
           },
         },
         CreateJobTitleDto: {
@@ -174,12 +174,13 @@ const swaggerOptions: swaggerJsdoc.Options = {
               enum: ["teacher", "administrative-staff"],
               example: "administrative-staff",
             },
+            isActive: { type: "boolean", default: true },
           },
         },
         UpdateJobTitleDto: {
           type: "object",
           description:
-            "At least one field required (name, description, jobTitleType, or status).",
+            "At least one field required (name, description, jobTitleType, or isActive).",
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
             description: { type: "string", minLength: 1, maxLength: 500 },
@@ -187,7 +188,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               type: "string",
               enum: ["teacher", "administrative-staff"],
             },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         SecurityRole: {
@@ -200,7 +201,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Rol con acceso completo al sistema",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
           },
         },
         SecurityRoleDetail: {
@@ -213,7 +214,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Rol con acceso completo al sistema",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             permissions: {
               type: "array",
               items: {
@@ -266,6 +267,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               maxLength: 500,
               example: "Rol de coordinación académica",
             },
+            isActive: { type: "boolean", default: true },
             permissions: {
               type: "array",
               items: {
@@ -277,11 +279,11 @@ const swaggerOptions: swaggerJsdoc.Options = {
         UpdateSecurityRoleDto: {
           type: "object",
           description:
-            "At least one field required (name, description, status, or permissions).",
+            "At least one field required (name, description, isActive, or permissions).",
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
             description: { type: "string", minLength: 1, maxLength: 500 },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
             permissions: {
               type: "array",
               items: {
@@ -393,7 +395,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
                   type: "string",
                   example: "Rol con acceso completo",
                 },
-                status: { type: "boolean", example: true },
+                isActive: { type: "boolean", example: true },
               },
             },
           },
@@ -434,7 +436,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
                   type: "string",
                   example: "Rol con acceso completo",
                 },
-                status: { type: "boolean", example: true },
+                isActive: { type: "boolean", example: true },
                 permissions: {
                   type: "array",
                   items: {

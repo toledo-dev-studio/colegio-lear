@@ -45,14 +45,14 @@ function toJobTitleRecord(row: {
   name: string;
   description: string | null;
   jobTitleType: JobTitleType;
-  status: boolean;
+  isActive: boolean;
 }): JobTitleRecord {
   return {
     id: row.id,
     name: row.name,
     description: row.description,
     jobTitleType: toFrontendJobTitleType(row.jobTitleType),
-    status: row.status,
+    isActive: row.isActive,
   };
 }
 
@@ -98,9 +98,9 @@ export class JobTitleService {
       });
     }
 
-    // Status filter (exact boolean match)
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    // isActive filter (exact boolean match)
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     if (andConditions.length > 0) {
@@ -171,7 +171,7 @@ export class JobTitleService {
   /**
    * Create a new job title.
    * Validates name uniqueness (case-insensitive).
-   * Sets status = true by default.
+   * Sets isActive = true by default when not provided.
    * Maps the frontend jobTitleType string to the Prisma enum value.
    * Throws ConflictError if a record with the same name already exists.
    */
@@ -192,7 +192,7 @@ export class JobTitleService {
         name: dto.name,
         description: dto.description ?? null,
         jobTitleType: toPrismaJobTitleType(dto.jobTitleType),
-        status: true,
+        isActive: dto.isActive ?? true,
       },
     });
 
@@ -238,7 +238,7 @@ export class JobTitleService {
     if (dto.jobTitleType !== undefined) {
       updateData.jobTitleType = toPrismaJobTitleType(dto.jobTitleType);
     }
-    if (dto.status !== undefined) updateData.status = dto.status;
+    if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
 
     const updated = await this.prisma.jobTitle.update({
       where: { id },

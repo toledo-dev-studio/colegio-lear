@@ -47,7 +47,7 @@ const router = Router();
  *           enum: [teacher, administrative-staff]
  *         description: Filter by job title type
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -97,7 +97,7 @@ router.get(
  *           enum: [teacher, administrative-staff]
  *         description: Filter by job title type
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -155,7 +155,7 @@ router.get(
  *     tags:
  *       - Job Titles
  *     summary: Create a new job title
- *     description: Creates a new job title with the provided name, description, and type. Status defaults to true.
+ *     description: Creates a new job title with the provided name, description, type, and isActive. isActive defaults to true.
  *     requestBody:
  *       required: true
  *       content:
@@ -267,7 +267,7 @@ router.patch(
  *     tags:
  *       - Job Titles
  *     summary: Soft delete a job title
- *     description: Sets the job title status to false (logical deletion). Does not remove the record.
+ *     description: Sets the job title isDeleted flag to true (logical deletion). Does not remove the record.
  *     parameters:
  *       - in: path
  *         name: id
