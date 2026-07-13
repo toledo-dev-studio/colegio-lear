@@ -765,7 +765,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
             amount: { type: "number", format: "float", example: 1500 },
             allowForgiveness: { type: "boolean", example: true },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             createdAt: { type: "string", format: "date-time" },
             updatedAt: { type: "string", format: "date-time" },
           },
@@ -792,7 +792,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: 1500,
             },
             allowForgiveness: { type: "boolean", example: true },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", default: true, example: true },
           },
         },
         UpdatePaymentConceptBody: {
@@ -803,7 +803,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             description: { type: "string", minLength: 1, maxLength: 500 },
             amount: { type: "number", minimum: 0 },
             allowForgiveness: { type: "boolean" },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── School Subjects ────────────────────────────────────────────────────

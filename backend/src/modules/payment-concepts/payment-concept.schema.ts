@@ -59,7 +59,7 @@ export const idParamSchema = z.object({
  *       description: Filter by payment concept name (case-insensitive contains)
  *     PaymentConceptFilterStatus:
  *       in: query
- *       name: status
+ *       name: isActive
  *       schema:
  *         type: string
  *         enum: [true, false]
@@ -82,7 +82,7 @@ export const idParamSchema = z.object({
 export const paymentConceptFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(100, "name must be at most 100 characters").optional(),
-  status: z.enum(["true", "false"]).optional(),
+  isActive: z.enum(["true", "false"]).optional(),
   allowForgiveness: z.enum(["true", "false"]).optional(),
   amount: z.coerce
     .number({ message: "amount must be a number" })
@@ -163,6 +163,10 @@ export const paymentConceptPagedQuerySchema =
  *           type: boolean
  *           default: false
  *           description: Whether the concept allows forgiveness (waiver)
+ *         isActive:
+ *           type: boolean
+ *           default: true
+ *           description: Whether the payment concept is active
  */
 export const createPaymentConceptSchema = z.object({
   name: nonBlankString(100),
@@ -183,6 +187,7 @@ export const createPaymentConceptSchema = z.object({
   allowForgiveness: z
     .boolean({ message: "allowForgiveness must be a boolean" })
     .default(false),
+  isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
 });
 
 /**
@@ -214,6 +219,9 @@ export const createPaymentConceptSchema = z.object({
  *         allowForgiveness:
  *           type: boolean
  *           description: Whether the concept allows forgiveness (waiver)
+ *         isActive:
+ *           type: boolean
+ *           description: Whether the payment concept is active
  */
 export const updatePaymentConceptSchema = z
   .object({
@@ -236,7 +244,7 @@ export const updatePaymentConceptSchema = z
     allowForgiveness: z
       .boolean({ message: "allowForgiveness must be a boolean" })
       .optional(),
-    status: z.boolean({ message: "status must be a boolean" }).optional(),
+    isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",

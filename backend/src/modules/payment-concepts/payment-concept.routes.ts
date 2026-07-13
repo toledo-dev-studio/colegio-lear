@@ -26,7 +26,7 @@ const router = Router();
  *     tags:
  *       - Payment Concepts
  *     summary: List all payment concepts
- *     description: Returns all payment concepts with optional filters (q, name, status, allowForgiveness, amount).
+ *     description: Returns all payment concepts with optional filters (q, name, isActive, allowForgiveness, amount).
  *     parameters:
  *       - $ref: '#/components/parameters/PaymentConceptFilterQ'
  *       - $ref: '#/components/parameters/PaymentConceptFilterName'
@@ -206,7 +206,7 @@ router.patch(
  *     tags:
  *       - Payment Concepts
  *     summary: Soft delete a payment concept
- *     description: Sets the payment concept status to inactive (soft delete).
+ *     description: Sets the payment concept isDeleted flag to true (soft delete).
  *     parameters:
  *       - $ref: '#/components/parameters/PaymentConceptIdParam'
  *     responses:

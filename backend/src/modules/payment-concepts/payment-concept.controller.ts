@@ -16,7 +16,7 @@ const service = new PaymentConceptService(prisma);
 
 /**
  * Builds a PaymentConceptFilters object from validated query parameters.
- * Converts `status` and `allowForgiveness` strings ("true"/"false") to booleans.
+ * Converts `isActive` and `allowForgiveness` strings ("true"/"false") to booleans.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
  */
 function buildFilters(query: Record<string, unknown>): PaymentConceptFilters {
@@ -24,7 +24,8 @@ function buildFilters(query: Record<string, unknown>): PaymentConceptFilters {
 
   if (query.q !== undefined) filters.q = query.q as string;
   if (query.name !== undefined) filters.name = query.name as string;
-  if (query.status !== undefined) filters.status = query.status === "true";
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
   if (query.allowForgiveness !== undefined)
     filters.allowForgiveness = query.allowForgiveness === "true";
   if (query.amount !== undefined) filters.amount = query.amount as number;
@@ -102,7 +103,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
 /**
  * DELETE /payment-concepts/:id
- * Soft-deletes a payment concept by setting status to false.
+ * Soft-deletes a payment concept by setting isDeleted to true.
  */
 export async function softDelete(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };

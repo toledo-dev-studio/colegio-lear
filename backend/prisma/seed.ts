@@ -508,7 +508,7 @@ async function main() {
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: true,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.paymentConcept.upsert({
@@ -520,7 +520,7 @@ async function main() {
         description: "Pago mensual de colegiatura",
         amount: 4200.0,
         allowForgiveness: true,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.paymentConcept.upsert({
@@ -532,7 +532,7 @@ async function main() {
         description: "Costo de materiales educativos del ciclo",
         amount: 1800.0,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.paymentConcept.upsert({
@@ -544,7 +544,7 @@ async function main() {
         description: "Paquete completo de uniforme escolar",
         amount: 2500.0,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.paymentConcept.upsert({
@@ -556,7 +556,7 @@ async function main() {
         description: "Seguro de accidentes y gastos médicos escolares",
         amount: 950.0,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       },
     }),
   ]);
