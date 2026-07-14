@@ -118,7 +118,7 @@ export const DragAndDrop = ({ acceptedExtensions, onFilesSelected, multiple = tr
                     <UploadCloudIcon className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
-                    <p className="text-sm font-medium text-foreground">{label}</p>
+                    <p className="label">{label}</p>
                     <p className="text-xs text-muted-foreground">{extensionsLabel}</p>
                 </div>
             </div>

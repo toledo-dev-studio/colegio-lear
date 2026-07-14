@@ -108,10 +108,10 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
                                 name="isActive"
                                 control={control}
                                 render={({ field }) => (
-                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                    <label className="switch-control-container">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
-                                            <p className="text-xs text-muted-foreground mt-1">El puesto de trabajo se encuentra activo o inactivo.</p>
+                                            <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="description">El puesto de trabajo se encuentra activo o inactivo.</p>
                                         </div>
                                         <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     </label>

@@ -161,10 +161,10 @@ export const SchoolSubjectForm = ({ schoolSubjectResponse, isSubmitting, onSubmi
                                 name="isActive"
                                 control={control}
                                 render={({ field }) => (
-                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                    <label className="switch-control-container">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
-                                            <p className="text-xs text-muted-foreground mt-1">La materia escolarse encuentra activa o inactiva.</p>
+                                            <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="description">La materia escolarse encuentra activa o inactiva.</p>
                                         </div>
                                         <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     </label>

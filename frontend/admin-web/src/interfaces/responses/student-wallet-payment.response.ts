@@ -19,6 +19,10 @@ export interface StudentWalletPaymentResponse {
      */
     amount: number;
     /**
+     * Date and time when payment where register in the database (ISO string)
+     */
+    createAt: string;
+    /**
      * Payment method used for the payment
      * Example: "Online payment", "Cash"
      */

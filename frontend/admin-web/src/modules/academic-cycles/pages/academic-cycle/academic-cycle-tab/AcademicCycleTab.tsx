@@ -470,10 +470,10 @@ export const AcademicCycleTab = () => {
                                     control={control}
                                     defaultValue={false}
                                     render={({ field }) => (
-                                        <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors">
+                                        <label className="switch-control-container">
                                             <div>
-                                                <p className="text-sm font-medium text-foreground">{field.value ? "Inscripciones abiertas" : "Inscripciones cerradas"}</p>
-                                                <p className="text-xs text-muted-foreground mt-1">Ciclo escolar con posibilidad de inscribir nuevos estudiantes.</p>
+                                                <p className="label">{field.value ? "Inscripciones abiertas" : "Inscripciones cerradas"}</p>
+                                                <p className="description">Ciclo escolar con posibilidad de inscribir nuevos estudiantes.</p>
                                             </div>
                                             <Switch checked={field.value} onCheckedChange={field.onChange} />
                                         </label>
