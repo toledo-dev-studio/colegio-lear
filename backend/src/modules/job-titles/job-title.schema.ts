@@ -30,13 +30,13 @@ export const idParamSchema = z.object({
  * - q: free-text search on name and description (case-insensitive, max 100 chars)
  * - name: filter by name (case-insensitive contains, max 100 chars)
  * - jobTitleType: filter by job title type enum
- * - status: filter by active/inactive status ("true" | "false")
+ * - isActive: filter by active/inactive status ("true" | "false")
  */
 export const jobTitleFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(100, "name must be at most 100 characters").optional(),
   jobTitleType: z.enum(["teacher", "administrative-staff"]).optional(),
-  status: z.enum(["true", "false"]).optional(),
+  isActive: z.enum(["true", "false"]).optional(),
 });
 
 /**
@@ -63,6 +63,7 @@ export const jobTitlePagedQuerySchema = jobTitleFiltersSchema.extend({
  * - name: 1-100 chars, trimmed, non-blank
  * - description: 1-500 chars, trimmed, non-blank
  * - jobTitleType: enum with values "teacher" or "administrative-staff"
+ * - isActive: optional, defaults to true when omitted
  */
 export const createJobTitleSchema = z.object({
   name: nonBlankString(100),
@@ -77,6 +78,7 @@ export const createJobTitleSchema = z.object({
     })
     .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
   jobTitleType: z.enum(["teacher", "administrative-staff"]),
+  isActive: z.boolean().optional(),
 });
 
 /**
@@ -98,7 +100,7 @@ export const updateJobTitleSchema = z
       })
       .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
     jobTitleType: z.enum(["teacher", "administrative-staff"]).optional(),
-    status: z.boolean({ message: "status must be a boolean" }).optional(),
+    isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",

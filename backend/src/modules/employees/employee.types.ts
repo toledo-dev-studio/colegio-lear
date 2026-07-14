@@ -1,9 +1,9 @@
 /** Filters applicable to employee list endpoints */
 export interface EmployeeFilters {
   q?: string;
-  name?: string;
-  status?: boolean;
-  roleId?: string;
+  fullName?: string;
+  isActive?: boolean;
+  securityRoleId?: string;
   jobTitleId?: string;
 }
 
@@ -13,7 +13,7 @@ export interface EmployeeJobTitle {
   name: string;
   description: string | null;
   jobTitleType: string;
-  status: boolean;
+  isActive: boolean;
 }
 
 /** Nested SecurityRole in list responses (no permissions) */
@@ -21,7 +21,7 @@ export interface EmployeeSecurityRoleBasic {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
 }
 
 /** Permission view for security role detail */
@@ -47,7 +47,7 @@ export interface EmployeeRecord {
   email: string;
   username: string;
   image: string | null;
-  status: boolean;
+  isActive: boolean;
   securityRoleId: string;
   jobTitleId: string;
   jobTitle: EmployeeJobTitle;
@@ -64,7 +64,7 @@ export interface EmployeeDetail {
   email: string;
   username: string;
   image: string | null;
-  status: boolean;
+  isActive: boolean;
   securityRoleId: string;
   jobTitleId: string;
   jobTitle: EmployeeJobTitle;
@@ -87,6 +87,7 @@ export interface CreateEmployeeDto {
   email: string;
   securityRoleId: string;
   jobTitleId: string;
+  isActive?: boolean;
 }
 
 /** Input DTO for updating an employee (all fields optional) */
@@ -98,7 +99,7 @@ export interface UpdateEmployeeDto {
   email?: string;
   securityRoleId?: string;
   jobTitleId?: string;
-  status?: boolean;
+  isActive?: boolean;
 }
 
 /** Input DTO for updating the authenticated employee's own account */
@@ -117,11 +118,35 @@ export interface PagedResult<T> {
   itemsCount: number;
 }
 
-/** Prisma include for list endpoints — jobTitle + securityRole without permissions */
-export const EMPLOYEE_LIST_INCLUDE = {
-  jobTitle: true,
+/**
+ * Prisma select for list endpoints — whitelists exactly the scalar fields
+ * exposed in EmployeeRecord (jobTitle + securityRole without permissions).
+ * Uses `select` instead of `include` so sensitive fields (password, isDeleted,
+ * mustChangePassword) are never fetched, let alone returned to the client.
+ */
+export const EMPLOYEE_LIST_SELECT = {
+  id: true,
+  name: true,
+  firstLastName: true,
+  secondLastName: true,
+  phoneNumber: true,
+  email: true,
+  username: true,
+  image: true,
+  isActive: true,
+  securityRoleId: true,
+  jobTitleId: true,
+  jobTitle: {
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      jobTitleType: true,
+      isActive: true,
+    },
+  },
   securityRole: {
-    select: { id: true, name: true, description: true, status: true },
+    select: { id: true, name: true, description: true, isActive: true },
   },
 } as const;
 

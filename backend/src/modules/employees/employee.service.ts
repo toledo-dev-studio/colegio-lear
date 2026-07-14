@@ -16,9 +16,10 @@ import type {
   SecurityRolePermissionView,
 } from "./employee.types";
 import {
-  EMPLOYEE_LIST_INCLUDE,
+  EMPLOYEE_LIST_SELECT,
   EMPLOYEE_DETAIL_INCLUDE,
 } from "./employee.types";
+import { toFrontendJobTitleType } from "../job-titles/job-title.service";
 import type { PaginationParams } from "../../shared/helpers/pagination.helper";
 import {
   calculateSkip,
@@ -68,21 +69,21 @@ export class EmployeeService {
       });
     }
 
-    // Name filter (case-insensitive contains)
-    if (filters.name) {
+    // fullName filter (case-insensitive contains on the name column)
+    if (filters.fullName) {
       andConditions.push({
-        name: { contains: filters.name, mode: "insensitive" },
+        name: { contains: filters.fullName, mode: "insensitive" },
       });
     }
 
-    // Status filter (exact boolean match)
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    // isActive filter (exact boolean match)
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     // SecurityRole filter (exact match)
-    if (filters.roleId) {
-      andConditions.push({ securityRoleId: filters.roleId });
+    if (filters.securityRoleId) {
+      andConditions.push({ securityRoleId: filters.securityRoleId });
     }
 
     // JobTitle filter (exact match)
@@ -162,22 +163,38 @@ export class EmployeeService {
       email: record.email,
       username: record.username,
       image: record.image,
-      status: record.status,
+      isActive: record.isActive,
       securityRoleId: record.securityRoleId,
       jobTitleId: record.jobTitleId,
       jobTitle: {
         id: record.jobTitle.id,
         name: record.jobTitle.name,
         description: record.jobTitle.description,
-        jobTitleType: record.jobTitle.jobTitleType,
-        status: record.jobTitle.status,
+        jobTitleType: toFrontendJobTitleType(record.jobTitle.jobTitleType),
+        isActive: record.jobTitle.isActive,
       },
       securityRole: {
         id: record.securityRole.id,
         name: record.securityRole.name,
         description: record.securityRole.description,
-        status: record.securityRole.status,
+        isActive: record.securityRole.isActive,
         permissions,
+      },
+    };
+  }
+
+  /**
+   * Map a Prisma employee result (selected via EMPLOYEE_LIST_SELECT) to EmployeeRecord.
+   * EMPLOYEE_LIST_SELECT already whitelists the exact fields needed, so this only
+   * normalizes jobTitleType to the frontend-compatible hyphenated format.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private toEmployeeRecord(record: any): EmployeeRecord {
+    return {
+      ...record,
+      jobTitle: {
+        ...record.jobTitle,
+        jobTitleType: toFrontendJobTitleType(record.jobTitle.jobTitleType),
       },
     };
   }
@@ -197,10 +214,10 @@ export class EmployeeService {
 
     const results = await this.prisma.employee.findMany({
       where,
-      include: EMPLOYEE_LIST_INCLUDE,
+      select: EMPLOYEE_LIST_SELECT,
     });
 
-    return results as unknown as EmployeeRecord[];
+    return results.map((r) => this.toEmployeeRecord(r));
   }
 
   /**
@@ -211,13 +228,13 @@ export class EmployeeService {
     const results = await this.prisma.employee.findMany({
       where: {
         isDeleted: false,
-        status: true,
+        isActive: true,
         jobTitle: { jobTitleType: "teacher" as never },
       },
-      include: EMPLOYEE_LIST_INCLUDE,
+      select: EMPLOYEE_LIST_SELECT,
     });
 
-    return results as unknown as EmployeeRecord[];
+    return results.map((r) => this.toEmployeeRecord(r));
   }
 
   /**
@@ -240,7 +257,7 @@ export class EmployeeService {
         where,
         skip,
         take: pagination.limit,
-        include: EMPLOYEE_LIST_INCLUDE,
+        select: EMPLOYEE_LIST_SELECT,
       }),
       this.prisma.employee.count({ where }),
     ]);
@@ -248,7 +265,7 @@ export class EmployeeService {
     const meta = buildPaginationMeta(itemsCount, pagination);
 
     return {
-      data: data as unknown as EmployeeRecord[],
+      data: data.map((r) => this.toEmployeeRecord(r)),
       totalPages: meta.totalPages,
       currentPage: meta.page,
       itemsCount,
@@ -278,7 +295,7 @@ export class EmployeeService {
    * - Validates FK references (securityRoleId, jobTitleId)
    * - Generates username with collision resolution
    * - Uploads file if present
-   * - Creates record with status=true
+   * - Creates record with isActive=true by default (or dto.isActive when provided)
    * - Sends invitation email (non-blocking, logs failure)
    * - Returns EmployeeDetail with full relations
    */
@@ -364,7 +381,7 @@ export class EmployeeService {
         password: hashedPassword,
         mustChangePassword: true,
         image,
-        status: true,
+        isActive: dto.isActive ?? true,
         securityRoleId: dto.securityRoleId,
         jobTitleId: dto.jobTitleId,
       },
@@ -457,7 +474,7 @@ export class EmployeeService {
     if (dto.securityRoleId !== undefined)
       updateData.securityRoleId = dto.securityRoleId;
     if (dto.jobTitleId !== undefined) updateData.jobTitleId = dto.jobTitleId;
-    if (dto.status !== undefined) updateData.status = dto.status;
+    if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
     if (image !== undefined) updateData.image = image;
 
     // Update the record
@@ -552,7 +569,7 @@ export class EmployeeService {
       where: { id: employeeId },
     });
 
-    if (!existing || !existing.status) {
+    if (!existing || !existing.isActive) {
       throw new NotFoundError("Empleado no encontrado o inactivo");
     }
 
@@ -615,7 +632,7 @@ export class EmployeeService {
       jobTitle: {
         id: updated!.jobTitle.id,
         name: updated!.jobTitle.name,
-        jobTitleType: String(updated!.jobTitle.jobTitleType),
+        jobTitleType: toFrontendJobTitleType(updated!.jobTitle.jobTitleType),
       },
     };
   }

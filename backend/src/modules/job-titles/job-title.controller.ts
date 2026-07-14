@@ -17,7 +17,7 @@ const service = new JobTitleService(prisma);
 /**
  * Builds a JobTitleFilters object from validated query parameters.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
- * Converts string "true"/"false" to boolean for the status field.
+ * Converts string "true"/"false" to boolean for the isActive field.
  * Converts jobTitleType from query string to the correct JobTitleTypes type.
  */
 function buildFilters(query: Record<string, unknown>): JobTitleFilters {
@@ -27,7 +27,8 @@ function buildFilters(query: Record<string, unknown>): JobTitleFilters {
   if (query.name !== undefined) filters.name = query.name as string;
   if (query.jobTitleType !== undefined)
     filters.jobTitleType = query.jobTitleType as JobTitleTypes;
-  if (query.status !== undefined) filters.status = query.status === "true";
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
 
   return filters;
 }
@@ -105,7 +106,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
 /**
  * DELETE /job-titles/:id
- * Soft-deletes a job title by setting status to false.
+ * Soft-deletes a job title by setting isDeleted to true.
  */
 export async function softDelete(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };

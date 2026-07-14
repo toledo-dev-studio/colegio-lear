@@ -69,19 +69,19 @@ const router = Router();
  *           maxLength: 100
  *         description: Free-text search on name, firstLastName, secondLastName, or email (case-insensitive)
  *       - in: query
- *         name: name
+ *         name: fullName
  *         schema:
  *           type: string
  *           maxLength: 100
  *         description: Filter by name (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
  *         description: Filter by active/inactive status
  *       - in: query
- *         name: roleId
+ *         name: securityRoleId
  *         schema:
  *           type: string
  *           format: uuid
@@ -125,19 +125,19 @@ router.get(
  *           maxLength: 100
  *         description: Free-text search on name, firstLastName, secondLastName, or email (case-insensitive)
  *       - in: query
- *         name: name
+ *         name: fullName
  *         schema:
  *           type: string
  *           maxLength: 100
  *         description: Filter by name (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
  *         description: Filter by active/inactive status
  *       - in: query
- *         name: roleId
+ *         name: securityRoleId
  *         schema:
  *           type: string
  *           format: uuid
@@ -237,6 +237,9 @@ router.get(
  *               jobTitleId:
  *                 type: string
  *                 format: uuid
+ *               isActive:
+ *                 type: boolean
+ *                 default: true
  *     responses:
  *       201:
  *         description: Employee created successfully
@@ -310,6 +313,28 @@ router.patch(
   validate(updateMyAccountSchema, "body"),
   updateMyAccount,
 );
+
+/**
+ * @openapi
+ * /employees/teachers:
+ *   get:
+ *     tags:
+ *       - Employees
+ *     summary: List active teachers
+ *     description: Returns all active employees whose job title type is "teacher". Useful for dropdowns in other modules.
+ *     responses:
+ *       200:
+ *         description: List of teacher employees
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Employee'
+ */
+// Must be registered BEFORE "/:id" — otherwise Express matches "/:id" first
+// and "teachers" gets treated as a UUID path param, failing validation.
+router.get("/teachers", authorize("employees"), findAllTeachers);
 
 /**
  * @openapi
@@ -390,6 +415,8 @@ router.get(
  *               jobTitleId:
  *                 type: string
  *                 format: uuid
+ *               isActive:
+ *                 type: boolean
  *     responses:
  *       200:
  *         description: Employee updated successfully
@@ -480,25 +507,5 @@ router.post(
   validate(idParamSchema, "params"),
   resendInvitation,
 );
-
-/**
- * @openapi
- * /employees/teachers:
- *   get:
- *     tags:
- *       - Employees
- *     summary: List active teachers
- *     description: Returns all active employees whose job title type is "teacher". Useful for dropdowns in other modules.
- *     responses:
- *       200:
- *         description: List of teacher employees
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Employee'
- */
-router.get("/teachers", authorize("employees"), findAllTeachers);
 
 export default router;

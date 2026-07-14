@@ -85,7 +85,7 @@ model PaymentConcept {
   description          String?               @db.VarChar(500)
   amount               Decimal               @map("amount") @db.Decimal(10, 2)
   allowForgiveness     Boolean               @default(false) @map("allow_remission")
-  status               Boolean               @default(true)
+  isActive             Boolean               @default(true) @map("is_active")
   isDeleted            Boolean               @default(false) @map("is_deleted")
   academicCycleWallets AcademicCycleWallet[]
 
@@ -135,7 +135,7 @@ model JobTitle {
   name         String       @unique @db.VarChar(100)
   description  String?      @db.VarChar(500)
   jobTitleType JobTitleType @map("job_title_type")
-  status       Boolean      @default(true)
+  isActive     Boolean      @default(true) @map("is_active")
   isDeleted    Boolean      @default(false) @map("is_deleted")
   employees    Employee[]
 
@@ -149,7 +149,7 @@ model SecurityRole {
   id          String                   @id @default(uuid()) @db.Uuid
   name        String                   @unique @db.VarChar(100)
   description String?                  @db.VarChar(500)
-  status      Boolean                  @default(true)
+  isActive    Boolean                  @default(true) @map("is_active")
   isDeleted   Boolean                  @default(false) @map("is_deleted")
   permissions SecurityRolePermission[]
   employees   Employee[]
@@ -187,7 +187,7 @@ model Employee {
   password           String       @db.VarChar(255)
   mustChangePassword Boolean      @default(false) @map("must_change_password")
   image              String?      @db.VarChar(500)
-  status             Boolean      @default(true)
+  isActive           Boolean      @default(true) @map("is_active")
   isDeleted          Boolean      @default(false) @map("is_deleted")
   securityRoleId     String       @map("security_role_id") @db.Uuid
   jobTitleId         String       @map("job_title_id") @db.Uuid

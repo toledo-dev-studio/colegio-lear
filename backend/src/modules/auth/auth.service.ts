@@ -51,7 +51,7 @@ export class AuthService {
     }
 
     // Check if account is active
-    if (!employee.status) {
+    if (!employee.isActive) {
       throw new UnauthorizedError("Cuenta deshabilitada");
     }
 
@@ -224,7 +224,7 @@ export class AuthService {
       },
     });
 
-    if (!employee || !employee.status) {
+    if (!employee || !employee.isActive) {
       throw new UnauthorizedError("Empleado no encontrado o inactivo");
     }
 

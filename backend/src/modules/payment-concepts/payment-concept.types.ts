@@ -2,7 +2,7 @@
 export interface PaymentConceptFilters {
   q?: string;
   name?: string;
-  status?: boolean;
+  isActive?: boolean;
   allowForgiveness?: boolean;
   amount?: number;
 }
@@ -14,7 +14,7 @@ export interface PaymentConceptRecord {
   description: string | null;
   amount: number;
   allowForgiveness: boolean;
-  status: boolean;
+  isActive: boolean;
 }
 
 /** Result of a paginated query */
@@ -31,6 +31,7 @@ export interface CreatePaymentConceptDto {
   description?: string;
   amount: number;
   allowForgiveness?: boolean;
+  isActive?: boolean;
 }
 
 /** Input DTO for updating a payment concept (all fields optional) */
@@ -39,5 +40,5 @@ export interface UpdatePaymentConceptDto {
   description?: string;
   amount?: number;
   allowForgiveness?: boolean;
-  status?: boolean;
+  isActive?: boolean;
 }

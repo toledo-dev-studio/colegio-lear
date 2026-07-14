@@ -48,9 +48,9 @@ export class PaymentConceptService {
       });
     }
 
-    // Status filter (exact match)
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    // isActive filter (exact match)
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     // Allow forgiveness filter (exact match)
@@ -81,7 +81,7 @@ export class PaymentConceptService {
       description: raw.description as string,
       amount: Number(raw.amount),
       allowForgiveness: raw.allowForgiveness as boolean,
-      status: raw.status as boolean,
+      isActive: raw.isActive as boolean,
     };
   }
 
@@ -151,7 +151,7 @@ export class PaymentConceptService {
   /**
    * Create a new payment concept.
    * Validates name uniqueness (case-insensitive) before insert.
-   * Sets status = true and allowForgiveness to dto value or false by default.
+   * Sets isActive = true by default (or dto.isActive) and allowForgiveness to dto value or false by default.
    */
   async create(dto: CreatePaymentConceptDto): Promise<PaymentConceptRecord> {
     // Check uniqueness: name (case-insensitive)
@@ -173,7 +173,7 @@ export class PaymentConceptService {
         description: dto.description ?? null,
         amount: dto.amount,
         allowForgiveness: dto.allowForgiveness ?? false,
-        status: true,
+        isActive: dto.isActive ?? true,
       },
     });
 
@@ -220,7 +220,7 @@ export class PaymentConceptService {
     if (dto.amount !== undefined) updateData.amount = dto.amount;
     if (dto.allowForgiveness !== undefined)
       updateData.allowForgiveness = dto.allowForgiveness;
-    if (dto.status !== undefined) updateData.status = dto.status;
+    if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
 
     const updated = await this.prisma.paymentConcept.update({
       where: { id },

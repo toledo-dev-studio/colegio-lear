@@ -6,7 +6,7 @@ export interface JobTitleFilters {
   q?: string;
   name?: string;
   jobTitleType?: JobTitleTypes;
-  status?: boolean;
+  isActive?: boolean;
 }
 
 /** Record returned from the job_titles table (used for all responses) */
@@ -15,7 +15,7 @@ export interface JobTitleRecord {
   name: string;
   description: string | null;
   jobTitleType: JobTitleTypes;
-  status: boolean;
+  isActive: boolean;
 }
 
 /** Result of a paginated query */
@@ -31,6 +31,7 @@ export interface CreateJobTitleDto {
   name: string;
   description?: string;
   jobTitleType: JobTitleTypes;
+  isActive?: boolean;
 }
 
 /** Input DTO for updating a job title (all fields optional) */
@@ -38,5 +39,5 @@ export interface UpdateJobTitleDto {
   name?: string;
   description?: string;
   jobTitleType?: JobTitleTypes;
-  status?: boolean;
+  isActive?: boolean;
 }

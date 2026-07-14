@@ -42,7 +42,7 @@ describe("PaymentConceptService", () => {
           description: "Cuota de inscripción",
           amount: 3500.0,
           allowForgiveness: true,
-          status: true,
+          isActive: true,
         },
       ];
       prisma.paymentConcept.findMany.mockResolvedValue(mockData);
@@ -56,11 +56,11 @@ describe("PaymentConceptService", () => {
           description: "Cuota de inscripción",
           amount: 3500.0,
           allowForgiveness: true,
-          status: true,
+          isActive: true,
         },
       ]);
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { isDeleted: false },
       });
     });
 
@@ -71,6 +71,7 @@ describe("PaymentConceptService", () => {
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [
             {
               OR: [
@@ -95,19 +96,21 @@ describe("PaymentConceptService", () => {
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [{ name: { contains: "Colegiatura", mode: "insensitive" } }],
         },
       });
     });
 
-    it("should apply status filter", async () => {
+    it("should apply isActive filter", async () => {
       prisma.paymentConcept.findMany.mockResolvedValue([]);
 
-      await service.findAll({ status: true });
+      await service.findAll({ isActive: true });
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [{ status: true }],
+          isDeleted: false,
+          AND: [{ isActive: true }],
         },
       });
     });
@@ -119,6 +122,7 @@ describe("PaymentConceptService", () => {
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [{ allowForgiveness: false }],
         },
       });
@@ -131,6 +135,7 @@ describe("PaymentConceptService", () => {
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [{ amount: 3500.0 }],
         },
       });
@@ -142,13 +147,14 @@ describe("PaymentConceptService", () => {
       await service.findAll({
         q: "pago",
         name: "Inscripción",
-        status: true,
+        isActive: true,
         allowForgiveness: true,
         amount: 1500.0,
       });
 
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [
             {
               OR: [
@@ -157,7 +163,7 @@ describe("PaymentConceptService", () => {
               ],
             },
             { name: { contains: "Inscripción", mode: "insensitive" } },
-            { status: true },
+            { isActive: true },
             { allowForgiveness: true },
             { amount: 1500.0 },
           ],
@@ -176,7 +182,7 @@ describe("PaymentConceptService", () => {
           description: "Cuota de inscripción",
           amount: 3500.0,
           allowForgiveness: true,
-          status: true,
+          isActive: true,
         },
       ];
       prisma.paymentConcept.findMany.mockResolvedValue(mockData);
@@ -192,7 +198,7 @@ describe("PaymentConceptService", () => {
             description: "Cuota de inscripción",
             amount: 3500.0,
             allowForgiveness: true,
-            status: true,
+            isActive: true,
           },
         ],
         totalPages: 3,
@@ -200,11 +206,13 @@ describe("PaymentConceptService", () => {
         itemsCount: 15,
       });
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { isDeleted: false },
         skip: 5,
         take: 5,
       });
-      expect(prisma.paymentConcept.count).toHaveBeenCalledWith({ where: {} });
+      expect(prisma.paymentConcept.count).toHaveBeenCalledWith({
+        where: { isDeleted: false },
+      });
     });
 
     it("should apply filters together with pagination", async () => {
@@ -212,7 +220,7 @@ describe("PaymentConceptService", () => {
       prisma.paymentConcept.count.mockResolvedValue(0);
 
       const result = await service.findAllPaged(
-        { status: false },
+        { isActive: false },
         { page: 1, pageSize: 10 },
       );
 
@@ -223,7 +231,7 @@ describe("PaymentConceptService", () => {
         itemsCount: 0,
       });
       expect(prisma.paymentConcept.findMany).toHaveBeenCalledWith({
-        where: { AND: [{ status: false }] },
+        where: { isDeleted: false, AND: [{ isActive: false }] },
         skip: 0,
         take: 10,
       });
@@ -249,7 +257,7 @@ describe("PaymentConceptService", () => {
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: true,
-        status: true,
+        isActive: true,
       };
       prisma.paymentConcept.findUnique.mockResolvedValue(mockPaymentConcept);
 
@@ -261,7 +269,7 @@ describe("PaymentConceptService", () => {
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: true,
-        status: true,
+        isActive: true,
       });
       expect(prisma.paymentConcept.findUnique).toHaveBeenCalledWith({
         where: { id: "uuid-1" },
@@ -294,7 +302,7 @@ describe("PaymentConceptService", () => {
         id: "new-uuid",
         ...validDto,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       });
 
       const result = await service.create(validDto);
@@ -305,7 +313,7 @@ describe("PaymentConceptService", () => {
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       });
       expect(prisma.paymentConcept.create).toHaveBeenCalledWith({
         data: {
@@ -313,7 +321,7 @@ describe("PaymentConceptService", () => {
           description: validDto.description,
           amount: validDto.amount,
           allowForgiveness: false,
-          status: true,
+          isActive: true,
         },
       });
     });
@@ -330,21 +338,21 @@ describe("PaymentConceptService", () => {
       );
     });
 
-    it("should set status=true by default", async () => {
+    it("should set isActive=true by default", async () => {
       prisma.paymentConcept.findFirst.mockResolvedValue(null);
       prisma.paymentConcept.create.mockResolvedValue({
         id: "new-uuid",
         ...validDto,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       });
 
       const result = await service.create(validDto);
 
-      expect(result.status).toBe(true);
+      expect(result.isActive).toBe(true);
       expect(prisma.paymentConcept.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({ status: true }),
+          data: expect.objectContaining({ isActive: true }),
         }),
       );
     });
@@ -355,7 +363,7 @@ describe("PaymentConceptService", () => {
         id: "new-uuid",
         ...validDto,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       });
 
       const result = await service.create(validDto);
@@ -374,7 +382,7 @@ describe("PaymentConceptService", () => {
       prisma.paymentConcept.create.mockResolvedValue({
         id: "new-uuid",
         ...dtoWithRemission,
-        status: true,
+        isActive: true,
       });
 
       const result = await service.create(dtoWithRemission);
@@ -393,7 +401,7 @@ describe("PaymentConceptService", () => {
         id: "new-uuid",
         ...validDto,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       });
 
       await service.create(validDto);
@@ -414,7 +422,7 @@ describe("PaymentConceptService", () => {
       description: "Cuota de inscripción al ciclo escolar",
       amount: 3500.0,
       allowForgiveness: true,
-      status: true,
+      isActive: true,
     };
 
     it("should update a payment concept with valid partial data", async () => {
@@ -503,23 +511,23 @@ describe("PaymentConceptService", () => {
 
   // --- softDelete ---
   describe("softDelete", () => {
-    it("should set status to false for an active payment concept", async () => {
+    it("should set isDeleted to true for an existing payment concept", async () => {
       prisma.paymentConcept.findUnique.mockResolvedValue({
         id: "uuid-1",
         name: "Inscripción",
-        status: true,
+        isDeleted: false,
       });
       prisma.paymentConcept.update.mockResolvedValue({
         id: "uuid-1",
         name: "Inscripción",
-        status: false,
+        isDeleted: true,
       });
 
       await service.softDelete("uuid-1");
 
       expect(prisma.paymentConcept.update).toHaveBeenCalledWith({
         where: { id: "uuid-1" },
-        data: { status: false },
+        data: { isDeleted: true },
       });
     });
 
@@ -534,16 +542,16 @@ describe("PaymentConceptService", () => {
       );
     });
 
-    it("should throw ConflictError when payment concept is already inactive", async () => {
+    it("should throw ConflictError when payment concept is already deleted", async () => {
       prisma.paymentConcept.findUnique.mockResolvedValue({
         id: "uuid-1",
         name: "Inscripción",
-        status: false,
+        isDeleted: true,
       });
 
       await expect(service.softDelete("uuid-1")).rejects.toThrow(ConflictError);
       await expect(service.softDelete("uuid-1")).rejects.toThrow(
-        "Payment concept is already inactive",
+        "Payment concept is already deleted",
       );
     });
   });

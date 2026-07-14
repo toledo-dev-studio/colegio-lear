@@ -94,7 +94,7 @@ async function main() {
       name: "SuperAdmin",
       description:
         "Rol con acceso total al sistema, incluyendo gestión de roles de seguridad",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -120,7 +120,7 @@ async function main() {
       name: "Administrador",
       description:
         "Rol administrativo con acceso completo excepto roles de seguridad",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -148,7 +148,7 @@ async function main() {
       name: "Director General",
       description: "Dirección general del colegio",
       jobTitleType: "administrative_staff",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -160,7 +160,7 @@ async function main() {
       name: "Coordinador Académico",
       description: "Coordinación de actividades académicas",
       jobTitleType: "administrative_staff",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -172,7 +172,7 @@ async function main() {
       name: "Docente",
       description: "Profesor de aula",
       jobTitleType: "teacher",
-      status: true,
+      isActive: true,
     },
   });
 
@@ -204,7 +204,7 @@ async function main() {
       username: admin1Username,
       password: admin1HashedPassword,
       mustChangePassword: false,
-      status: true,
+      isActive: true,
       securityRoleId: superAdminRole.id,
       jobTitleId: directorGeneral.id,
     },
@@ -231,7 +231,7 @@ async function main() {
       username: admin2Username,
       password: admin2HashedPassword,
       mustChangePassword: false,
-      status: true,
+      isActive: true,
       securityRoleId: adminRole.id,
       jobTitleId: directorGeneral.id,
     },
@@ -508,7 +508,7 @@ async function main() {
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: true,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.paymentConcept.upsert({
@@ -520,7 +520,7 @@ async function main() {
         description: "Pago mensual de colegiatura",
         amount: 4200.0,
         allowForgiveness: true,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.paymentConcept.upsert({
@@ -532,7 +532,7 @@ async function main() {
         description: "Costo de materiales educativos del ciclo",
         amount: 1800.0,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.paymentConcept.upsert({
@@ -544,7 +544,7 @@ async function main() {
         description: "Paquete completo de uniforme escolar",
         amount: 2500.0,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.paymentConcept.upsert({
@@ -556,7 +556,7 @@ async function main() {
         description: "Seguro de accidentes y gastos médicos escolares",
         amount: 950.0,
         allowForgiveness: false,
-        status: true,
+        isActive: true,
       },
     }),
   ]);
