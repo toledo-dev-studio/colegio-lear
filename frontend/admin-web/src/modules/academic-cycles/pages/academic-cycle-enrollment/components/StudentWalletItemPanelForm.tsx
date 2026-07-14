@@ -55,10 +55,10 @@ export const StudentWalletItemPanelForm = ({ studentWalletItemResponse, handleCl
                                 name="allowForgiveness"
                                 control={control}
                                 render={({ field }) => (
-                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                    <label className="switch-control-container">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{field.value ? "Permitido" : "No permitido"}</p>
-                                            <p className="text-xs text-muted-foreground mt-1">El concepto de pago permite la condonación del pago.</p>
+                                            <p className="label">{field.value ? "Permitido" : "No permitido"}</p>
+                                            <p className="description">El concepto de pago permite la condonación del pago.</p>
                                         </div>
                                         <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     </label>
@@ -76,10 +76,10 @@ export const StudentWalletItemPanelForm = ({ studentWalletItemResponse, handleCl
                                         name="isForgiven"
                                         control={control}
                                         render={({ field }) => (
-                                            <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                            <label className="switch-control-container">
                                                 <div>
-                                                    <p className="text-sm font-medium text-foreground">{field.value ? "Condonado" : "No condonado"}</p>
-                                                    <p className="text-xs text-muted-foreground mt-1">El pago pendiente quedará saldado cuando se active esta opción.</p>
+                                                    <p className="label">{field.value ? "Condonado" : "No condonado"}</p>
+                                                    <p className="description">El pago pendiente quedará saldado cuando se active esta opción.</p>
                                                 </div>
                                                 <Switch checked={field.value} onCheckedChange={field.onChange} />
                                             </label>

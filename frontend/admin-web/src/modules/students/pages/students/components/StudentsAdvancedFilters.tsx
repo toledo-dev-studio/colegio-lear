@@ -1,5 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
+import { Controller, useForm } from "react-hook-form";
 import { Mail, Phone } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
@@ -47,7 +47,7 @@ export const StudentsAdvancedFilters = ({ open, title = "Filtros avanzados", han
         handleClickClose();
     }
 
-    const handleSubmitForm = (filter: Partial<StudentFilter>) => {
+    const onSubmit = (filter: Partial<StudentFilter>) => {
         searchParams.set("is-active", `${filter.isActive}`);
         filter.fullName ? searchParams.set("full-name", filter.fullName) : searchParams.delete("full-name");
         filter.enrollment ? searchParams.set("enrollment", filter.enrollment) : searchParams.delete("enrollment");
@@ -64,7 +64,8 @@ export const StudentsAdvancedFilters = ({ open, title = "Filtros avanzados", han
                 title={title}
                 handleClickClose={handleClickClose}
                 cancelButton={{ show: true, disabled: false, type: "button", label: "Limpiar filtros", handleClick: handleClickClearFilters }}
-                submitButton={{ show: true, disabled: false, type: "submit", label: "Aplicar filtros", handleClick: handleSubmit(handleSubmitForm) }}>
+                submitButton={{ show: true, disabled: false, type: "submit", label: "Aplicar filtros", handleClick: handleSubmit(onSubmit) }}>
+                
                 <form className="flex flex-col gap-8">
 
                     <div className="control-container">
@@ -169,10 +170,10 @@ export const StudentsAdvancedFilters = ({ open, title = "Filtros avanzados", han
                                 name="isActive"
                                 control={control}
                                 render={({ field }) => (
-                                    <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
+                                    <label className="switch-control-container">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
-                                            <p className="text-xs text-muted-foreground mt-1">El estudiante se encuentra activo o inactivo.</p>
+                                            <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="description">El estudiante se encuentra activo o inactivo.</p>
                                         </div>
                                         <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     </label>

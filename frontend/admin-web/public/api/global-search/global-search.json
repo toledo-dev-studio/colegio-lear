@@ -1,0 +1,107 @@
+[
+    {
+        "module": "students",
+        "records": [
+            {
+                "id": "9c4c2c61-7a90-4f34-b61e-12d3f5e41001",
+                "label": "Juan Pérez López",
+                "subtitle": "Matrícula: A240015 · Primaria 3° A",
+                "route": "/students/9c4c2c61-7a90-4f34-b61e-12d3f5e41001"
+            },
+            {
+                "id": "5e1d88b2-cfa8-4b8b-8d7b-6afec3d21002",
+                "label": "María Hernández Torres",
+                "subtitle": "Matrícula: A240016 · Primaria 2° B",
+                "route": "/students/5e1d88b2-cfa8-4b8b-8d7b-6afec3d21002"
+            }
+        ]
+    },
+    {
+        "module": "employees",
+        "records": [
+            {
+                "id": "1bfe3279-cb14-49d0-9825-8e81f4312001",
+                "label": "Ana Torres Vega",
+                "subtitle": "Docente · Matemáticas",
+                "route": "/employees/1bfe3279-cb14-49d0-9825-8e81f4312001"
+            }
+        ]
+    },
+    {
+        "module": "academic-cycles",
+        "records": [
+            {
+                "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+                "label": "Ciclo Escolar 2026 - 2027",
+                "subtitle": "En curso",
+                "route": "/academic-cycles/f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
+            }
+        ]
+    },
+    {
+        "module": "school-subjects",
+        "records": [
+            {
+                "id": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+                "label": "Matemáticas",
+                "subtitle": "Materia del ciclo escolar",
+                "route": "/school-subjects/a1b2c3d4-e5f6-4a7b-8c9d-123456789001"
+            }
+        ]
+    },
+    {
+        "module": "announcements",
+        "records": [
+            {
+                "id": "2cb0cb75-f3fd-4e45-a246-59ab73bc3001",
+                "label": "Suspensión de clases por Consejo Técnico",
+                "subtitle": "Publicado el 12/07/2026",
+                "route": "/announcements/2cb0cb75-f3fd-4e45-a246-59ab73bc3001"
+            }
+        ]
+    },
+    {
+        "module": "payment-concepts",
+        "records": [
+            {
+                "id": "0f4ea66d-b6b5-4fa5-aed8-f75df20b4001",
+                "label": "Colegiatura Mensual",
+                "subtitle": "$2,500.00 MXN",
+                "route": "/payment-concepts/0f4ea66d-b6b5-4fa5-aed8-f75df20b4001"
+            }
+        ]
+    },
+    {
+        "module": "scholarships",
+        "records": [
+            {
+                "id": "7f7640f4-d67d-4d88-8b8f-95d2d1d95001",
+                "label": "Beca Académica 50%",
+                "subtitle": "Descuento del 50% en colegiatura",
+                "route": "/scholarships/7f7640f4-d67d-4d88-8b8f-95d2d1d95001"
+            }
+        ]
+    },
+    {
+        "module": "security-roles",
+        "records": [
+            {
+                "id": "68c5c845-0f44-44b7-a1e5-4f6cb23f6001",
+                "label": "Administrador",
+                "subtitle": "Acceso completo al sistema",
+                "route": "/security-roles/68c5c845-0f44-44b7-a1e5-4f6cb23f6001"
+            }
+        ]
+    },
+    {
+        "module": "job-titles",
+        "records": [
+            {
+                "id": "5e4d7b6a-4f62-4ef3-83fb-a2c4d6d47001",
+                "label": "Director Académico",
+                "subtitle": "Puesto administrativo",
+                "route": "/job-titles/5e4d7b6a-4f62-4ef3-83fb-a2c4d6d47001"
+            }
+        ]
+    }
+]

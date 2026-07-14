@@ -1,10 +1,9 @@
 import { useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
-import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
+import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import type { EmployeeFilter } from "@/interfaces/filters/employee.filter";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
@@ -76,126 +75,109 @@ export const EmployeesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)} className="fixed inset-0 z-50 flex justify-end" data-testid="filter-drawer">
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleClickClose} />
-                <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
-                    <div className="h-22 flex items-center justify-between px-10 border-b border-border">
-                        <h3 className="font-heading text-xl font-bold uppercase">
-                            {title}
-                        </h3>
-                        <Button onClick={handleClickClose} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground !px-0">
-                            <X className="!w-5 !h-5 text-muted-foreground" />
-                        </Button>
+            <SidePanel
+                title={title}
+                handleClickClose={handleClickClose}
+                cancelButton={{ show: true, disabled: false, type: "button", label: "Limpiar filtros", handleClick: handleClickClearFilters }}
+                submitButton={{ show: true, disabled: false, type: "submit", label: "Aplicar filtros", handleClick: handleSubmit(onSubmit) }}>
+
+                <form className="flex flex-col gap-8">
+
+                    <div className="control-container">
+                        <label className="label">Nombre completo:</label>
+                        <Controller
+                            name="fullName"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    {...field}
+                                    type="text"
+                                    placeholder="Nombre completo..."
+                                />
+                            )}
+                        />
                     </div>
 
-                    <section className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
-                        <section className="flex flex-col gap-8">
-                            <div className="control-container">
-                                <label className="label">Nombre completo:</label>
-                                <Controller
-                                    name="fullName"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <Input
-                                            {...field}
-                                            type="text"
-                                            placeholder="Nombre completo..."
-                                        />
-                                    )}
+                    <div className="control-container">
+                        <label className="label">Puesto de trabajo:</label>
+                        <Controller
+                            name="jobTitleId"
+                            control={control}
+                            render={({ field }) => (
+                                <SearchInput
+                                    {...field}
+                                    defaultValue={jobTitle?.name}
+                                    selected={!!jobTitleId}
+                                    placeholder="Busqueda de puesto de trabajo"
+                                    options={searchJobTitlesMutation.jobTitles}
+                                    isSearching={searchJobTitlesMutation.isPending}
+                                    onClearSelection={() => {
+                                        setValue("jobTitle", undefined);
+                                        setValue("jobTitleId", undefined);
+                                        searchJobTitlesMutation.clearSearchResult();
+                                    }}
+                                    onOptionChange={async (option: JobTitleResponse) => {
+                                        setValue("jobTitle", option);
+                                        setValue("jobTitleId", option.id);
+                                        searchJobTitlesMutation.clearSearchResult();
+                                    }}
+                                    onSearch={async (query) => searchJobTitlesMutation.searchAsync({ query, isActive: true })}
                                 />
-                            </div>
+                            )}
+                        />
+                    </div>
 
-                            <div className="control-container">
-                                <label className="label">Puesto de trabajo:</label>
-                                <Controller
-                                    name="jobTitleId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <SearchInput
-                                            {...field}
-                                            defaultValue={jobTitle?.name}
-                                            selected={!!jobTitleId}
-                                            placeholder="Busqueda de puesto de trabajo"
-                                            options={searchJobTitlesMutation.jobTitles}
-                                            isSearching={searchJobTitlesMutation.isPending}
-                                            onClearSelection={() => {
-                                                setValue("jobTitle", undefined);
-                                                setValue("jobTitleId", undefined);
-                                                searchJobTitlesMutation.clearSearchResult();
-                                            }}
-                                            onOptionChange={async (option: JobTitleResponse) => {
-                                                setValue("jobTitle", option);
-                                                setValue("jobTitleId", option.id);
-                                                searchJobTitlesMutation.clearSearchResult();
-                                            }}
-                                            onSearch={async (query) => searchJobTitlesMutation.searchAsync({ query, isActive: true })}
-                                        />
-                                    )}
+                    <div className="control-container">
+                        <label className="label">Rol de seguridad:</label>
+                        <Controller
+                            name="securityRoleId"
+                            control={control}
+                            render={({ field }) => (
+                                <SearchInput
+                                    {...field}
+                                    defaultValue={securityRole?.name}
+                                    selected={!!securityRoleId}
+                                    placeholder="Busqueda de rol de seguridad"
+                                    options={searchSecurityRolesMutation.securityRoles}
+                                    isSearching={searchSecurityRolesMutation.isPending}
+                                    onClearSelection={() => {
+                                        setValue("securityRole", undefined);
+                                        setValue("securityRoleId", undefined);
+                                        searchSecurityRolesMutation.clearSearchResult();
+                                    }}
+                                    onOptionChange={async (option: SecurityRoleResponse) => {
+                                        setValue("securityRole", option);
+                                        setValue("securityRoleId", option.id);
+                                        searchSecurityRolesMutation.clearSearchResult();
+                                    }}
+                                    onSearch={async (query) => searchSecurityRolesMutation.searchAsync({ query, isActive: true })}
                                 />
-                            </div>
+                            )}
+                        />
+                    </div>
 
-                            <div className="control-container">
-                                <label className="label">Rol de seguridad:</label>
-                                <Controller
-                                    name="securityRoleId"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <SearchInput
-                                            {...field}
-                                            defaultValue={securityRole?.name}
-                                            selected={!!securityRoleId}
-                                            placeholder="Busqueda de rol de seguridad"
-                                            options={searchSecurityRolesMutation.securityRoles}
-                                            isSearching={searchSecurityRolesMutation.isPending}
-                                            onClearSelection={() => {
-                                                setValue("securityRole", undefined);
-                                                setValue("securityRoleId", undefined);
-                                                searchSecurityRolesMutation.clearSearchResult();
-                                            }}
-                                            onOptionChange={async (option: SecurityRoleResponse) => {
-                                                setValue("securityRole", option);
-                                                setValue("securityRoleId", option.id);
-                                                searchSecurityRolesMutation.clearSearchResult();
-                                            }}
-                                            onSearch={async (query) => searchSecurityRolesMutation.searchAsync({ query, isActive: true })}
-                                        />
-                                    )}
-                                />
-                            </div>
+                    <div className="control-container">
+                        <label className="label">¿Registro activo?:</label>
+                        <div className="flex items-center justify-center">
+                            <Controller
+                                name="isActive"
+                                control={control}
+                                render={({ field }) => (
+                                    <label className="switch-control-container">
+                                        <div>
+                                            <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
+                                            <p className="description">El registro de empleado se encuentra activo o inactivo.</p>
+                                        </div>
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                    </label>
+                                )}
+                            />
+                        </div>
+                    </div>
 
-                            <div className="control-container">
-                                <label className="label">¿Registro activo?:</label>
-                                <div className="flex items-center justify-center">
-                                    <Controller
-                                        name="isActive"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <label className="flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-transparent dark:bg-muted/40 border border-border cursor-pointer transition-colors">
-                                                <div>
-                                                    <p className="text-sm font-medium text-foreground">{field.value ? "Activo" : "Inactivo"}</p>
-                                                    <p className="text-xs text-muted-foreground mt-1">El registro de empleado se encuentra activo o inactivo.</p>
-                                                </div>
-                                                <Switch checked={field.value} onCheckedChange={field.onChange} />
-                                            </label>
-                                        )}
-                                    />
-                                </div>
-                            </div>
-                        </section>
-                    </section>
+                </form>
 
-                    <section className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
-                        <Button type="button" variant={"ghost"} onClick={handleClickClearFilters}>
-                            Limpiar filtros
-                        </Button>
-                        <Button type="submit" variant={"default"}>
-                            Aplicar filtros
-                        </Button>
-                    </section>
-
-                </aside>
-                
-            </form>
+            </SidePanel>
         </>
     );
 }

@@ -1,9 +1,8 @@
 import { Controller, useForm } from "react-hook-form";
-import { X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
 import type { Calendar } from "../types/calendar";
+import { SidePanel } from "../../side-panel/SidePanel";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
 import { generateTemporalId } from "@/lib/extensions/utils";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
@@ -47,7 +46,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
             onCancel();
             return;
         }
-        
+
         const isValid = await trigger();
 
         if (!isValid) {
@@ -69,224 +68,200 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
     return (
         <>
             {/* Schedule calendar form */}
-            <section className="fixed inset-0 z-50 flex justify-end" data-testid="filter-drawer">
+            <SidePanel
+                title="ASOCIACIÓN DE HORARIO"
+                handleClickClose={onCancel}
+                cancelButton={{ show: true, disabled: false, type: "button", label: "Cancelar", handleClick: onCancel }}
+                submitButton={{ show: true, disabled: false, type: "submit", label: "Guardar", handleClick: handleSubmit(validateForm) }}>
 
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onCancel} />
+                <form className="flex flex-col gap-8">
 
-                <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
-
-                    <div className="h-22 flex items-center justify-between px-10 border-b border-border">
-                        <h3 className="font-heading text-xl font-bold uppercase">
-                            ASIGNACIÓN DE HORARIO
-                        </h3>
-                        <Button onClick={onCancel} data-testid="filter-drawer-close" className="min-w-10 min-h-10 bg-card text-foreground px-0!">
-                            <X className="w-5! h-5! text-muted-foreground" />
-                        </Button>
+                    <div className="control-container">
+                        <label className="label">Día de la semana <span className="required">*</span>:</label>
+                        <Controller
+                            control={control}
+                            name="day"
+                            disabled={disabled}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Select
+                                    disabled={disabled}
+                                    value={field.value ?? ""}
+                                    onValueChange={(value) => setValue("day", value as DayOfWeekKey)}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecciona una opción">
+                                            {!field.value ? "Selecciona una opción" : labelOf(DAY_OF_WEEKS, field.value)}
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Día de la semana</SelectLabel>
+                                            {DAY_OF_WEEKS.map((item) => (
+                                                <SelectItem key={item.key} value={item.key} label={item.label}>
+                                                    {item.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                        {
+                            errors.day && (
+                                <p className="error">
+                                    El día de la asignación de la materia es requerido
+                                </p>
+                            )
+                        }
                     </div>
 
-                    {/* Schedule calendar fiels */}
-                    <section className="flex-1 overflow-y-auto px-10 py-10 space-y-5">
-
-                        <div className="flex flex-col gap-8">
-
-                            <div className="control-container">
-                                <label className="label">Día de la semana <span className="required">*</span>:</label>
-                                <Controller
-                                    control={control}
-                                    name="day"
+                    <div className="control-container">
+                        <label className="label">Hora de inicio de clase <span className="required">*</span>:</label>
+                        <Controller
+                            control={control}
+                            name="startTime"
+                            rules={{ required: true }}
+                            disabled={disabled}
+                            render={({ field }) => (
+                                <Input
+                                    type="time"
                                     disabled={disabled}
-                                    rules={{ required: true }}
-                                    render={({ field }) => (
-                                        <Select
-                                            disabled={disabled}
-                                            value={field.value ?? ""}
-                                            onValueChange={(value) => setValue("day", value as DayOfWeekKey)}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecciona una opción">
-                                                    {!field.value ? "Selecciona una opción" : labelOf(DAY_OF_WEEKS, field.value)}
-                                                </SelectValue>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Día de la semana</SelectLabel>
-                                                    {DAY_OF_WEEKS.map((item) => (
-                                                        <SelectItem key={item.key} value={item.key} label={item.label}>
-                                                            {item.label}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    )}
+                                    placeholder="Inicio de clase"
+                                    step={60 * SLOT_MIN}
+                                    value={field.value ?? ""}
+                                    onChange={field.onChange}
                                 />
-                                {
-                                    errors.day && (
-                                        <p className="error">
-                                            El día de la asignación de la materia es requerido
-                                        </p>
-                                    )
-                                }
-                            </div>
+                            )}
+                        />
+                        {
+                            errors.startTime && (
+                                <p className="error">
+                                    La hora de inicio de clase es requerido
+                                </p>
+                            )
+                        }
+                    </div>
 
-                            <div className="control-container">
-                                <label className="label">Hora de inicio de clase <span className="required">*</span>:</label>
-                                <Controller
-                                    control={control}
-                                    name="startTime"
-                                    rules={{ required: true }}
+                    <div className="control-container">
+                        <label className="label">Hora de termino de clase <span className="required">*</span>:</label>
+                        <Controller
+                            control={control}
+                            name="endTime"
+                            disabled={disabled}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Input
+                                    type="time"
                                     disabled={disabled}
-                                    render={({ field }) => (
-                                        <Input
-                                            type="time"
-                                            disabled={disabled}
-                                            placeholder="Inicio de clase"
-                                            step={60 * SLOT_MIN}
-                                            value={field.value ?? ""}
-                                            onChange={field.onChange}
-                                        />
-                                    )}
+                                    placeholder="Termino de clase"
+                                    step={60 * SLOT_MIN}
+                                    value={field.value ?? ""}
+                                    onChange={field.onChange}
                                 />
-                                {
-                                    errors.startTime && (
-                                        <p className="error">
-                                            La hora de inicio de clase es requerido
-                                        </p>
-                                    )
-                                }
-                            </div>
+                            )}
+                        />
+                        {
+                            errors.endTime && (
+                                <p className="error">
+                                    {errors.endTime.message || "La hora de termino de clase es requerido"}
+                                </p>
+                            )
+                        }
+                    </div>
 
-                            <div className="control-container">
-                                <label className="label">Hora de termino de clase <span className="required">*</span>:</label>
-                                <Controller
-                                    control={control}
-                                    name="endTime"
+                    <div className="control-container">
+                        <label className="label">Materia escolar<span className="required">*</span>:</label>
+                        <Controller
+                            control={control}
+                            name="schoolSubjectId"
+                            rules={{ required: true }}
+                            disabled={disabled}
+                            render={({ field }) => (
+                                <Select
                                     disabled={disabled}
-                                    rules={{ required: true }}
-                                    render={({ field }) => (
-                                        <Input
-                                            type="time"
-                                            disabled={disabled}
-                                            placeholder="Termino de clase"
-                                            step={60 * SLOT_MIN}
-                                            value={field.value ?? ""}
-                                            onChange={field.onChange}
-                                        />
-                                    )}
-                                />
-                                {
-                                    errors.endTime && (
-                                        <p className="error">
-                                            {errors.endTime.message || "La hora de termino de clase es requerido"}
-                                        </p>
-                                    )
-                                }
-                            </div>
+                                    value={field.value ?? ""}
+                                    onValueChange={(value) => {
+                                        setValue("schoolSubject", schoolSubjects.find(item => item.id === value));
+                                        setValue("schoolSubjectId", value ?? "")
+                                    }}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecciona una opción">
+                                            {!field.value ? "Selecciona una opción" : schoolSubjects.find(item => item.id === field.value)?.name}
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Materias escolares disponibles</SelectLabel>
+                                            {
+                                                schoolSubjects.map((item) => (
+                                                    <SelectItem key={item.id} value={item.id} label={item.name}>
+                                                        {item.name}
+                                                    </SelectItem>
+                                                ))
+                                            }
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                        {
+                            errors.schoolSubjectId && (
+                                <p className="error">
+                                    La materia escolar es requerida
+                                </p>
+                            )
+                        }
+                    </div>
 
-                            <div className="control-container">
-                                <label className="label">Materia escolar<span className="required">*</span>:</label>
-                                <Controller
-                                    control={control}
-                                    name="schoolSubjectId"
-                                    rules={{ required: true }}
+                    <div className="control-container">
+                        <label className="label">Docente <span className="required">*</span>:</label>
+                        <Controller
+                            control={control}
+                            name="teacherId"
+                            disabled={disabled}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Select
                                     disabled={disabled}
-                                    render={({ field }) => (
-                                        <Select
-                                            disabled={disabled}
-                                            value={field.value ?? ""}
-                                            onValueChange={(value) => {
-                                                setValue("schoolSubject", schoolSubjects.find(item => item.id === value));
-                                                setValue("schoolSubjectId", value ?? "")
-                                            }}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecciona una opción">
-                                                    {!field.value ? "Selecciona una opción" : schoolSubjects.find(item => item.id === field.value)?.name}
-                                                </SelectValue>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Materias escolares disponibles</SelectLabel>
-                                                    {
-                                                        schoolSubjects.map((item) => (
-                                                            <SelectItem key={item.id} value={item.id} label={item.name}>
-                                                                {item.name}
-                                                            </SelectItem>
-                                                        ))
-                                                    }
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    )}
-                                />
-                                {
-                                    errors.schoolSubjectId && (
-                                        <p className="error">
-                                            La materia escolar es requerida
-                                        </p>
-                                    )
-                                }
-                            </div>
+                                    value={field.value ?? ""}
+                                    onValueChange={(value) => {
+                                        setValue("teacher", teachers.find(item => item.id === value));
+                                        setValue("teacherId", value ?? "");
+                                    }}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecciona una opción">
+                                            {!field.value ? "Selecciona una opción" : teachers.find(item => item.id === field.value)?.name}
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Docentes registrados</SelectLabel>
+                                            {
+                                                teachers.map((item) => (
+                                                    <SelectItem key={item.id} value={item.id} label={item.email}>
+                                                        {`${item.name ?? ""} ${item.firstLastName ?? ""} ${item.secondLastName ?? ""}`}
+                                                        <br />
+                                                        {item.email}
+                                                    </SelectItem>
+                                                ))
+                                            }
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                        {
+                            errors.teacherId && (
+                                <p className="error">
+                                    El docente que imparte la materia requerido
+                                </p>
+                            )
+                        }
+                    </div>
 
-                            <div className="control-container">
-                                <label className="label">Docente <span className="required">*</span>:</label>
-                                <Controller
-                                    control={control}
-                                    name="teacherId"
-                                    disabled={disabled}
-                                    rules={{ required: true }}
-                                    render={({ field }) => (
-                                        <Select
-                                            disabled={disabled}
-                                            value={field.value ?? ""}
-                                            onValueChange={(value) => {
-                                                setValue("teacher", teachers.find(item => item.id === value));
-                                                setValue("teacherId", value ?? "");
-                                            }}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecciona una opción">
-                                                    {!field.value ? "Selecciona una opción" : teachers.find(item => item.id === field.value)?.name}
-                                                </SelectValue>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Docentes registrados</SelectLabel>
-                                                    {
-                                                        teachers.map((item) => (
-                                                            <SelectItem key={item.id} value={item.id} label={item.email}>
-                                                                {`${item.name ?? ""} ${item.firstLastName ?? ""} ${item.secondLastName ?? ""}`}
-                                                                <br />
-                                                                {item.email}
-                                                            </SelectItem>
-                                                        ))
-                                                    }
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    )}
-                                />
-                                {
-                                    errors.teacherId && (
-                                        <p className="error">
-                                            El docente que imparte la materia requerido
-                                        </p>
-                                    )
-                                }
-                            </div>
+                </form>
 
-                        </div>
-
-                    </section>
-
-                    {/* Actions Buttons */}
-                    <section className="px-8 py-6 border-t border-border flex items-center justify-between gap-3 box-border">
-                        <Button type="button" aria-label="cancel" variant={"ghost"} onClick={onCancel}>
-                            Cancelar
-                        </Button>
-                        <Button type="submit" aria-label="save-record" onClick={handleSubmit(validateForm)}>
-                            {disabled ? "Aceptar" : "Guardar"}
-                        </Button>
-                    </section>
-                </aside>
-            </section>
+            </SidePanel>
         </>
     )
 }

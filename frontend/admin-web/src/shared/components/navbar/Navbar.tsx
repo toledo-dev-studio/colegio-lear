@@ -1,15 +1,16 @@
 import { use, useState } from "react";
 import { useNavigate } from "react-router";
-import { Search, Sun, Bell, Menu, ChevronDown, User, LogOut, Moon, UserIcon } from "lucide-react";
+import { Sun, Bell, Menu, ChevronDown, User, LogOut, Moon, UserIcon } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
+import { NavbarSearchInput } from "./components/NavbarSearchInput";
 import { ThemeContext } from "@/shared/context/ThemeContext";
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { userStoreFullName, userStoreImage } from "@/modules/auth/stores/auth.store.selectors";
 
 interface Props {
+    logout: () => void;
     toggleSidebar: () => void;
-    logout: () => void
 }
 
 export const Navbar = ({ toggleSidebar, logout }: Props) => {
@@ -31,13 +32,7 @@ export const Navbar = ({ toggleSidebar, logout }: Props) => {
             </div>
 
             <div className="flex-1 w-full mx-auto relative">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                    type="text"
-                    placeholder="Búsqueda..."
-                    data-testid="header-search-input"
-                    className="w-full h-11 pl-12"
-                />
+                <NavbarSearchInput />
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4">
@@ -90,7 +85,7 @@ export const Navbar = ({ toggleSidebar, logout }: Props) => {
                             className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-2xl shadow-lg py-2 animate-fade-in"
                             onMouseLeave={() => setToggleDropdown(false)}>
                             <button
-                                onClick={() => { 
+                                onClick={() => {
                                     setToggleDropdown(false);
                                     navigate("/my-account");
                                 }}
@@ -100,7 +95,7 @@ export const Navbar = ({ toggleSidebar, logout }: Props) => {
                                 Mi cuenta
                             </button>
                             <button
-                                onClick={() => { 
+                                onClick={() => {
                                     setToggleDropdown(false);
                                     logout();
                                 }}

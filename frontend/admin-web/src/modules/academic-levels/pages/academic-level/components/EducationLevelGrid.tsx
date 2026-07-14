@@ -53,7 +53,7 @@ export const EducationLevelGrid = ({ educationLevels = [], handleAddEducationLev
                                 {!level.isEditing ? (
                                     <div className="flex items-center justify-between gap-4 px-6">
                                         <div>
-                                            <p className="text-sm font-medium text-foreground">{level.name}</p>
+                                            <p className="label">{level.name}</p>
                                             {level.description && (<p className="text-xs text-muted-foreground mt-2">{level.description}</p>)}
                                         </div>
                                         <Button
