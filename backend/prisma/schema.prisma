@@ -208,7 +208,7 @@ model Announcement {
   content     String       @db.Text
   publishedAt DateTime     @map("published_at")
   expiresAt   DateTime     @map("expires_at")
-  status      Boolean      @default(true)
+  isActive    Boolean      @default(true) @map("is_active")
   isDeleted   Boolean      @default(false) @map("is_deleted")
   attachments Attachment[]
 

@@ -30,16 +30,17 @@ export const AUDIENCE_KEYS = [
 // ─── Audience Schema ────────────────────────────────────────────────────────
 
 /**
- * Validates a single audience item object.
- * - key: must be one of the allowed audience keys
- * - label: non-empty string
+ * Validates the audience array: a list of audience keys.
+ * The human-readable label is a frontend-only presentation concern
+ * (AUDIENCE_TYPES catalog) and is not sent or persisted.
  */
-export const audienceItemSchema = z.object({
-  key: z.enum(AUDIENCE_KEYS, {
-    error: `key must be one of: ${AUDIENCE_KEYS.join(", ")}`,
-  }),
-  label: z.string().min(1, "label must not be empty"),
-});
+export const audienceSchema = z
+  .array(
+    z.enum(AUDIENCE_KEYS, {
+      error: `audience items must be one of: ${AUDIENCE_KEYS.join(", ")}`,
+    }),
+  )
+  .min(1, "audience must have at least 1 element");
 
 // ─── Schemas ────────────────────────────────────────────────────────────────
 
@@ -54,7 +55,7 @@ export const idParamSchema = z.object({
  * Validates POST body for creating an announcement.
  * - name: 1-200 chars, trimmed, non-blank
  * - description: 1-500 chars, trimmed, non-blank (optional)
- * - audience: array of audienceItemSchema, min 1 element
+ * - audience: array of audience keys, min 1 element
  * - content: optional (added later when editing)
  * - publishedAt: valid ISO date string
  * - expiresAt: valid ISO date string, must be >= publishedAt
@@ -72,9 +73,7 @@ export const createAnnouncementSchema = z
         return trimmed === "" ? undefined : trimmed;
       })
       .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
-    audience: z
-      .array(audienceItemSchema)
-      .min(1, "audience must have at least 1 element"),
+    audience: audienceSchema,
     content: z.string().nullable().optional(),
     publishedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
       message: "publishedAt must be a valid ISO date string",
@@ -82,6 +81,7 @@ export const createAnnouncementSchema = z
     expiresAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
       message: "expiresAt must be a valid ISO date string",
     }),
+    isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
   })
   .refine((data) => new Date(data.expiresAt) >= new Date(data.publishedAt), {
     message: "expiresAt must be on or after publishedAt",
@@ -106,10 +106,7 @@ export const updateAnnouncementSchema = z
         return trimmed === "" ? undefined : trimmed;
       })
       .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
-    audience: z
-      .array(audienceItemSchema)
-      .min(1, "audience must have at least 1 element")
-      .optional(),
+    audience: audienceSchema.optional(),
     content: z.string().nullable().optional(),
     publishedAt: z
       .string()
@@ -123,7 +120,7 @@ export const updateAnnouncementSchema = z
         message: "expiresAt must be a valid ISO date string",
       })
       .optional(),
-    status: z.boolean().optional(),
+    isActive: z.boolean().optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",
@@ -145,14 +142,14 @@ export const updateAnnouncementSchema = z
  * Validates optional query filters for announcements list endpoints.
  * - q: free-text search on name and description (case-insensitive, max 100 chars)
  * - name: filter by name (case-insensitive contains, max 200 chars)
- * - status: filter by active/inactive status ("true" | "false")
+ * - isActive: filter by active/inactive status ("true" | "false")
  * - publishedAt: filter by publication date (ISO date string)
  * - expiresAt: filter by expiration date (ISO date string)
  */
 export const announcementFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(200, "name must be at most 200 characters").optional(),
-  status: z.enum(["true", "false"]).optional(),
+  isActive: z.enum(["true", "false"]).optional(),
   publishedAt: z
     .string()
     .refine((val) => !isNaN(Date.parse(val)), {

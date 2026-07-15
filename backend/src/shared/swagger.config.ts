@@ -533,15 +533,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             audience: {
               type: "array",
               items: {
-                type: "object",
-                properties: {
-                  key: {
-                    type: "string",
-                    enum: ["administrative-staff", "teacher", "student"],
-                    example: "teacher",
-                  },
-                  label: { type: "string", example: "Docentes" },
-                },
+                type: "string",
+                enum: ["administrative-staff", "teacher", "student"],
+                example: "teacher",
               },
             },
             content: {
@@ -558,7 +552,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "date-time",
               example: "2025-06-30T00:00:00.000Z",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
           },
         },
         AnnouncementDetail: {
@@ -574,15 +568,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             audience: {
               type: "array",
               items: {
-                type: "object",
-                properties: {
-                  key: {
-                    type: "string",
-                    enum: ["administrative-staff", "teacher", "student"],
-                    example: "teacher",
-                  },
-                  label: { type: "string", example: "Docentes" },
-                },
+                type: "string",
+                enum: ["administrative-staff", "teacher", "student"],
+                example: "teacher",
               },
             },
             content: {
@@ -599,7 +587,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "date-time",
               example: "2025-06-30T00:00:00.000Z",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             attachments: {
               type: "array",
               items: { $ref: "#/components/schemas/Attachment" },
@@ -639,15 +627,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
               type: "array",
               minItems: 1,
               items: {
-                type: "object",
-                required: ["key", "label"],
-                properties: {
-                  key: {
-                    type: "string",
-                    enum: ["administrative-staff", "teacher", "student"],
-                  },
-                  label: { type: "string" },
-                },
+                type: "string",
+                enum: ["administrative-staff", "teacher", "student"],
               },
             },
             content: {
@@ -665,6 +646,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "date-time",
               example: "2025-06-30T00:00:00.000Z",
             },
+            isActive: { type: "boolean", default: true },
           },
         },
         UpdateAnnouncementDto: {
@@ -677,20 +659,14 @@ const swaggerOptions: swaggerJsdoc.Options = {
               type: "array",
               minItems: 1,
               items: {
-                type: "object",
-                properties: {
-                  key: {
-                    type: "string",
-                    enum: ["administrative-staff", "teacher", "student"],
-                  },
-                  label: { type: "string" },
-                },
+                type: "string",
+                enum: ["administrative-staff", "teacher", "student"],
               },
             },
             content: { type: "string", minLength: 1 },
             publishedAt: { type: "string", format: "date-time" },
             expiresAt: { type: "string", format: "date-time" },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── Scholarships ───────────────────────────────────────────────────────
