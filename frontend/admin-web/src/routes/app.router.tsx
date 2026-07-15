@@ -19,7 +19,7 @@ import academicCyclesRouter from "@/modules/academic-cycles/routes/academic-cycl
 
 export const appRouter = createBrowserRouter([
     /** auth */
-    authRouter,
+    ...authRouter,
     /** dashboard */
     dashboardRouter,
     /** my-account */

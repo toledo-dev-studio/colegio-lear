@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 export const useDeleteRecord = <T extends Record<string, any>>() => {
     const [isOpenSingleDeleteModal, setIsOpenSingleDeleteModal] = useState<boolean>(false);

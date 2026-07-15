@@ -13,13 +13,20 @@ interface AuthenticatedRouteProps extends PropsWithChildren {
  * @returns Children, null or redirect view depending auth status.
  */
 export const AuthenticatedRoute = ({ moduleKey, children }: AuthenticatedRouteProps) => {
-    const { authStatus, permissions } = useAuthStore();
+    const { authStatus, user, permissions } = useAuthStore();
+
+    console.log(user);
+    
 
     if (authStatus === "checking")
         return null;
 
     if (authStatus === "not-authenticated")
         return <Navigate to="/auth/login" />
+
+    // If user is authenticated but the password were reset before login
+    if (authStatus === "authenticated" && user?.mustChangePassword === true)
+        return <Navigate to="/auth/reset-password" />;
 
     // If user is authenticated and has read permission to a module return the view
     if (authStatus === "authenticated" && permissions.some(permission => permission.moduleKey === moduleKey && permission.canRead))
@@ -55,6 +62,21 @@ export const ForbiddenRoute = ({ children }: PropsWithChildren) => {
 
     // Check if user is authenticated and does not have any permission
     if (!permissions.length && authStatus === "authenticated")
+        return children;
+
+    return <Navigate to="/dashboard" />;
+}
+
+/**
+ * Validate if a user has pending reset password.
+ * @param param Children content for view.
+ * @returns Children, null or redirect view depending user permissions.
+ */
+export const PendingResetPasswordRoute = ({ children }: PropsWithChildren) => {
+    const { authStatus, user } = useAuthStore();
+
+    // If user is authenticated but the password were reset before login
+    if (authStatus === "authenticated" && user?.mustChangePassword === true)
         return children;
 
     return <Navigate to="/dashboard" />;
