@@ -158,6 +158,37 @@ arreglarlos de una vez:
   si fueran un id. Encontrado en `employees` (`GET /employees/teachers`
   nunca respondía).
 
+## Patrón de sincronización de arreglos 1:N (id con prefijo "new")
+
+Cuando un formulario del front maneja una lista 1:N completa dentro de un
+mismo `PATCH` (en vez de endpoints propios como `attachments`), el id de
+cada elemento indica la operación: si el id empieza con el prefijo "new"
+→ crear; si es un UUID existente → actualizar; si un id existente ya no
+viene en el arreglo recibido → eliminar (delete de los que faltan).
+
+**Ojo: el prefijo exacto no es uniforme en todo el front.** Hay al menos
+dos generadores distintos de id temporal:
+
+- `AcademicLevelForm.tsx` arma el id a mano: `` `new-${n}` `` (**guion**).
+  Ya implementado así en `academic-level.service.ts`
+  (`el.id.startsWith("new-")`).
+- `generateTemporalId()` (`lib/extensions/utils.ts`) genera
+  `` `new_${timestamp}_${random}` `` (**guion bajo**). Se usa en
+  `CalendarFormPanel.tsx` para el campo `calendars` dentro de
+  `AcademicCycleSchoolGroupRequest` (horarios de un grupo escolar) — este
+  es el próximo caso real de este patrón, pendiente en `academic-cycles`.
+
+Antes de implementar el sync en un módulo nuevo, **verificar el prefijo
+real** que genera el componente del front para ese campo específico (grep
+por `generateTemporalId\|"new-"` en el módulo correspondiente) — no asumir
+que es el mismo que en `academic-levels`.
+
+**Dónde NO aplica** (confirmado): `announcements.attachments`,
+`students.guardians`, `students` info médica/alergias — todos estos ya
+tienen sus propios endpoints dedicados (crear/listar/eliminar por
+separado, atados al id del padre), igual que `attachments`. No se manejan
+como arreglo sincronizado.
+
 ## Vistas sin usar (`v_school_subjects`, `v_academic_levels`)
 
 Existen como vistas de Postgres definidas en la migración inicial, y como
