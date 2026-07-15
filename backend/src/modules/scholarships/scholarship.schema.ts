@@ -59,7 +59,7 @@ export const idParamSchema = z.object({
  *       description: Filter by scholarship name (case-insensitive contains)
  *     ScholarshipFilterStatus:
  *       in: query
- *       name: status
+ *       name: isActive
  *       schema:
  *         type: string
  *         enum: [true, false]
@@ -76,7 +76,7 @@ export const idParamSchema = z.object({
 export const scholarshipFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(100, "name must be at most 100 characters").optional(),
-  status: z.enum(["true", "false"]).optional(),
+  isActive: z.enum(["true", "false"]).optional(),
   discountPercentage: z.coerce
     .number({ message: "discountPercentage must be a number" })
     .min(0, "discountPercentage must be at least 0")
@@ -152,6 +152,10 @@ export const scholarshipPagedQuerySchema = scholarshipFiltersSchema.extend({
  *           minimum: 0
  *           maximum: 100
  *           description: Discount percentage (0-100)
+ *         isActive:
+ *           type: boolean
+ *           default: true
+ *           description: Whether the scholarship is active
  */
 export const createScholarshipSchema = z.object({
   name: nonBlankString(100),
@@ -169,6 +173,7 @@ export const createScholarshipSchema = z.object({
     .number({ message: "discountPercentage must be a number" })
     .min(0, "discountPercentage must be at least 0")
     .max(100, "discountPercentage must be at most 100"),
+  isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
 });
 
 /**
@@ -197,6 +202,9 @@ export const createScholarshipSchema = z.object({
  *           minimum: 0
  *           maximum: 100
  *           description: Discount percentage (0-100)
+ *         isActive:
+ *           type: boolean
+ *           description: Whether the scholarship is active
  */
 export const updateScholarshipSchema = z
   .object({
@@ -216,7 +224,7 @@ export const updateScholarshipSchema = z
       .min(0, "discountPercentage must be at least 0")
       .max(100, "discountPercentage must be at most 100")
       .optional(),
-    status: z.boolean({ message: "status must be a boolean" }).optional(),
+    isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",

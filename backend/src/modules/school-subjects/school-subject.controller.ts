@@ -23,7 +23,8 @@ function buildFilters(query: Record<string, unknown>): SubjectFilters {
 
   if (query.q !== undefined) filters.q = query.q as string;
   if (query.name !== undefined) filters.name = query.name as string;
-  if (query.status !== undefined) filters.status = query.status === "true";
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
   if (query.academicLevelId !== undefined)
     filters.academicLevelId = query.academicLevelId as string;
   if (query.educationLevelId !== undefined)
@@ -105,7 +106,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
 /**
  * DELETE /school-subjects/:id
- * Soft-deletes a school subject by setting status to false.
+ * Soft-deletes a school subject by setting isDeleted to true.
  */
 export async function softDelete(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };

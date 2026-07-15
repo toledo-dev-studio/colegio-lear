@@ -26,7 +26,7 @@ const router = Router();
  *     tags:
  *       - School Subjects
  *     summary: List all school subjects
- *     description: Returns all school subjects with optional filters (q, name, status, academicLevelId, educationLevelId).
+ *     description: Returns all school subjects with optional filters (q, name, isActive, academicLevelId, educationLevelId).
  *     parameters:
  *       - $ref: '#/components/parameters/SubjectFilterQ'
  *       - $ref: '#/components/parameters/SubjectFilterName'
@@ -208,7 +208,7 @@ router.patch(
  *     tags:
  *       - School Subjects
  *     summary: Soft delete a school subject
- *     description: Sets the school subject status to inactive (soft delete).
+ *     description: Sets the school subject isDeleted flag to true (soft delete).
  *     parameters:
  *       - $ref: '#/components/parameters/IdParam'
  *     responses:
@@ -219,7 +219,7 @@ router.patch(
  *       404:
  *         description: School subject not found
  *       409:
- *         description: School subject is already inactive
+ *         description: School subject is already deleted
  */
 router.delete(
   "/:id",

@@ -708,7 +708,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "float",
               example: 50,
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             createdAt: { type: "string", format: "date-time" },
             updatedAt: { type: "string", format: "date-time" },
           },
@@ -735,7 +735,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               maximum: 100,
               example: 50,
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", default: true, example: true },
           },
         },
         UpdateScholarshipBody: {
@@ -749,7 +749,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               minimum: 0,
               maximum: 100,
             },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── Payment Concepts ───────────────────────────────────────────────────
@@ -817,7 +817,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Materia de matemáticas básicas",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
             academicLevel: { $ref: "#/components/schemas/AcademicLevel" },
@@ -847,7 +847,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", default: true, example: true },
           },
         },
         UpdateSchoolSubjectBody: {
@@ -858,7 +858,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             description: { type: "string", minLength: 1, maxLength: 500 },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── Students ───────────────────────────────────────────────────────────

@@ -26,7 +26,7 @@ const router = Router();
  *     tags:
  *       - Scholarships
  *     summary: List all scholarships
- *     description: Returns all scholarships with optional filters (q, name, status, discountPercentage). Filters are combined with AND logic.
+ *     description: Returns all scholarships with optional filters (q, name, isActive, discountPercentage). Filters are combined with AND logic.
  *     parameters:
  *       - $ref: '#/components/parameters/ScholarshipFilterQ'
  *       - $ref: '#/components/parameters/ScholarshipFilterName'
@@ -204,7 +204,7 @@ router.patch(
  *     tags:
  *       - Scholarships
  *     summary: Soft delete a scholarship
- *     description: Sets the scholarship status to inactive (soft delete). Returns 409 if already inactive.
+ *     description: Sets the scholarship isDeleted flag to true (soft delete). Returns 409 if already deleted.
  *     parameters:
  *       - $ref: '#/components/parameters/ScholarshipIdParam'
  *     responses:
@@ -215,7 +215,7 @@ router.patch(
  *       404:
  *         description: Scholarship not found
  *       409:
- *         description: Scholarship is already inactive
+ *         description: Scholarship is already deleted
  */
 router.delete(
   "/:id",

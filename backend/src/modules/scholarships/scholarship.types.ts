@@ -2,7 +2,7 @@
 export interface ScholarshipFilters {
   q?: string;
   name?: string;
-  status?: boolean;
+  isActive?: boolean;
   discountPercentage?: number;
 }
 
@@ -12,7 +12,7 @@ export interface ScholarshipRecord {
   name: string;
   description: string | null;
   discountPercentage: number;
-  status: boolean;
+  isActive: boolean;
 }
 
 /** Result of a paginated query */
@@ -28,6 +28,7 @@ export interface CreateScholarshipDto {
   name: string;
   description?: string;
   discountPercentage: number;
+  isActive?: boolean;
 }
 
 /** Input DTO for updating a scholarship (all fields optional) */
@@ -35,5 +36,5 @@ export interface UpdateScholarshipDto {
   name?: string;
   description?: string;
   discountPercentage?: number;
-  status?: boolean;
+  isActive?: boolean;
 }

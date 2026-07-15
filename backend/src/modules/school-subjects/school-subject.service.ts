@@ -13,7 +13,7 @@ import type { PaginationParams } from "../../shared/helpers/pagination.helper";
 /**
  * Business logic layer for the School Subjects module.
  * Handles CRUD operations, filtering, pagination, FK validation, and uniqueness checks.
- * Read operations use Prisma include for nested objects; write operations target the `schoolSubject` table.
+ * Read operations use an explicit Prisma select (whitelisting fields, excluding isDeleted) with nested objects; write operations target the `schoolSubject` table.
  */
 export class SchoolSubjectService {
   constructor(private readonly prisma: PrismaClient) {}
@@ -44,9 +44,9 @@ export class SchoolSubjectService {
       });
     }
 
-    // Status filter
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    // isActive filter
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     // Academic level filter
@@ -68,14 +68,20 @@ export class SchoolSubjectService {
 
   /**
    * List all subjects (no pagination) with optional filters.
-   * Uses Prisma include to return nested academicLevel and educationLevel objects.
+   * Uses an explicit Prisma select to return nested academicLevel and educationLevel objects.
    */
   async findAll(filters: SubjectFilters): Promise<SubjectView[]> {
     const where = this.buildWhereClause(filters);
 
     const results = await this.prisma.schoolSubject.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        isActive: true,
+        academicLevelId: true,
+        educationLevelId: true,
         academicLevel: { select: { id: true, name: true } },
         educationLevel: { select: { id: true, name: true } },
       },
@@ -86,7 +92,7 @@ export class SchoolSubjectService {
 
   /**
    * List subjects with pagination and optional filters.
-   * Uses Prisma include to return nested academicLevel and educationLevel objects.
+   * Uses an explicit Prisma select to return nested academicLevel and educationLevel objects.
    * Returns a PagedResult with metadata (totalPages, currentPage, itemsCount).
    */
   async findAllPaged(
@@ -100,7 +106,13 @@ export class SchoolSubjectService {
         where,
         skip: (pagination.page - 1) * pagination.limit,
         take: pagination.limit,
-        include: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          isActive: true,
+          academicLevelId: true,
+          educationLevelId: true,
           academicLevel: { select: { id: true, name: true } },
           educationLevel: { select: { id: true, name: true } },
         },
@@ -120,13 +132,20 @@ export class SchoolSubjectService {
 
   /**
    * Find a single subject by ID.
-   * Uses Prisma include to return nested academicLevel and educationLevel objects.
+   * Uses an explicit Prisma select to return nested academicLevel and educationLevel objects.
    * Throws NotFoundError if the subject does not exist.
    */
   async findById(id: string): Promise<SubjectView> {
     const subject = await this.prisma.schoolSubject.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        isActive: true,
+        isDeleted: true,
+        academicLevelId: true,
+        educationLevelId: true,
         academicLevel: { select: { id: true, name: true } },
         educationLevel: { select: { id: true, name: true } },
       },
@@ -136,14 +155,16 @@ export class SchoolSubjectService {
       throw new NotFoundError("School subject not found");
     }
 
-    return subject as unknown as SubjectView;
+    const { isDeleted: _isDeleted, ...subjectView } = subject;
+
+    return subjectView as unknown as SubjectView;
   }
 
   /**
    * Create a new school subject.
    * Validates that academicLevelId and educationLevelId reference existing records.
    * Checks uniqueness of name + educationLevelId (case-insensitive).
-   * Sets status = true by default.
+   * Sets isActive = true by default (or dto.isActive when provided).
    */
   async create(dto: CreateSchoolSubjectDto): Promise<SchoolSubjectRecord> {
     // Validate academicLevelId exists (checked first per Requirement 5.7)
@@ -182,9 +203,17 @@ export class SchoolSubjectService {
       data: {
         name: dto.name,
         description: dto.description ?? null,
-        status: true,
+        isActive: dto.isActive ?? true,
         academicLevelId: dto.academicLevelId,
         educationLevelId: dto.educationLevelId,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        isActive: true,
+        academicLevelId: true,
+        educationLevelId: true,
       },
     });
 
@@ -256,6 +285,14 @@ export class SchoolSubjectService {
     const updated = await this.prisma.schoolSubject.update({
       where: { id },
       data: dto,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        isActive: true,
+        academicLevelId: true,
+        educationLevelId: true,
+      },
     });
 
     return updated as SchoolSubjectRecord;

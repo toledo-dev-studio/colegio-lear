@@ -2,7 +2,7 @@
 export interface SubjectFilters {
   q?: string;
   name?: string;
-  status?: boolean;
+  isActive?: boolean;
   academicLevelId?: string;
   educationLevelId?: string;
 }
@@ -12,7 +12,7 @@ export interface SubjectView {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
   academicLevelId: string;
   academicLevel: {
     id: string;
@@ -39,13 +39,14 @@ export interface CreateSchoolSubjectDto {
   description?: string;
   academicLevelId: string;
   educationLevelId: string;
+  isActive?: boolean;
 }
 
 /** Input DTO for updating a subject (all fields optional) */
 export interface UpdateSchoolSubjectDto {
   name?: string;
   description?: string;
-  status?: boolean;
+  isActive?: boolean;
   academicLevelId?: string;
   educationLevelId?: string;
 }
@@ -55,7 +56,7 @@ export interface SchoolSubjectRecord {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
   academicLevelId: string;
   educationLevelId: string;
 }

@@ -59,7 +59,7 @@ export const idParamSchema = z.object({
  *       description: Filter by subject name (case-insensitive contains)
  *     SubjectFilterStatus:
  *       in: query
- *       name: status
+ *       name: isActive
  *       schema:
  *         type: string
  *         enum: [true, false]
@@ -82,7 +82,7 @@ export const idParamSchema = z.object({
 export const subjectFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(150, "name must be at most 150 characters").optional(),
-  status: z.enum(["true", "false"]).optional(),
+  isActive: z.enum(["true", "false"]).optional(),
   academicLevelId: z
     .string()
     .uuid({ message: "academicLevelId must be a valid UUID" })
@@ -165,6 +165,10 @@ export const pagedQuerySchema = subjectFiltersSchema.extend({
  *           type: string
  *           format: uuid
  *           description: UUID of the education level
+ *         isActive:
+ *           type: boolean
+ *           default: true
+ *           description: Whether the subject is active
  */
 export const createSchoolSubjectSchema = z.object({
   name: nonBlankString(150),
@@ -184,6 +188,7 @@ export const createSchoolSubjectSchema = z.object({
   educationLevelId: z
     .string()
     .uuid({ message: "educationLevelId must be a valid UUID" }),
+  isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
 });
 
 /**
@@ -207,7 +212,7 @@ export const createSchoolSubjectSchema = z.object({
  *           minLength: 1
  *           maxLength: 500
  *           description: Subject description (trimmed, non-blank)
- *         status:
+ *         isActive:
  *           type: boolean
  *           description: Active/inactive status
  *         academicLevelId:
@@ -232,7 +237,7 @@ export const updateSchoolSubjectSchema = z
         return trimmed === "" ? undefined : trimmed;
       })
       .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
-    status: z.boolean({ message: "status must be a boolean" }).optional(),
+    isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
     academicLevelId: z
       .string()
       .uuid({ message: "academicLevelId must be a valid UUID" })

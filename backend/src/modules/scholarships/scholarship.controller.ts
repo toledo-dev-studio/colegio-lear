@@ -16,7 +16,7 @@ const service = new ScholarshipService(prisma);
 
 /**
  * Builds a ScholarshipFilters object from validated query parameters.
- * Converts the `status` string ("true"/"false") to a boolean.
+ * Converts the `isActive` string ("true"/"false") to a boolean.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
  */
 function buildFilters(query: Record<string, unknown>): ScholarshipFilters {
@@ -24,7 +24,8 @@ function buildFilters(query: Record<string, unknown>): ScholarshipFilters {
 
   if (query.q !== undefined) filters.q = query.q as string;
   if (query.name !== undefined) filters.name = query.name as string;
-  if (query.status !== undefined) filters.status = query.status === "true";
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
   if (query.discountPercentage !== undefined)
     filters.discountPercentage = query.discountPercentage as number;
 
@@ -101,7 +102,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
 /**
  * DELETE /scholarships/:id
- * Soft-deletes a scholarship by setting status to false.
+ * Soft-deletes a scholarship by setting isDeleted to true.
  */
 export async function softDelete(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };
