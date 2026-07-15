@@ -5,23 +5,23 @@ import { loginActionAsync } from "../actions/login.action";
 import { logoutActionAsync } from "../actions/logout.action";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import type { AuthCredentials } from "../interfaces/auth-credentials";
-import type { LoginResponse } from "@/interfaces/responses/login.response";
+import { resetPasswordActionAsync } from "../actions/reset-password.action";
 import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
+import type { ResetPasswordRequest } from "@/interfaces/requests/reset-password.request";
 import { requestResetPasswordActionAsync } from "../actions/request-reset-password.action";
 import type { SecurityRolePermissionResponse } from "@/interfaces/responses/security-role-permission.response";
-import type { ResetPasswordRequest } from "@/interfaces/requests/reset-password.request";
-import { resetPasswordActionAsync } from "../actions/reset-password.action";
 
 // Store types
 type AuthStatus = "authenticated" | "not-authenticated" | "checking";
 export type AuthState = {
     // Properties
-    user: LoginResponse | null,
+    user: EmployeeResponse | null,
     authStatus: AuthStatus,
     permissions: SecurityRolePermissionResponse[],
 
     // Actions
-    setUser: (user: LoginResponse) => void,
+    setUser: (user: EmployeeResponse) => void,
     clearSession: () => void,
     checkPermission: (moduleKey: ModuleKey, permission: "can-read" | "can-write" | "can-delete") => boolean,
     checkAuthStatus: () => Promise<boolean>,
@@ -107,7 +107,7 @@ export const useAuthStore = create<AuthState>()((set, get) => (
         permissions: [],
 
         // Actions
-        setUser: (user: LoginResponse) => set({ user: user }),
+        setUser: (user: EmployeeResponse) => set({ user: user }),
         clearSession: () => {
             set({
                 user: null,

@@ -2,10 +2,9 @@ import { use, useState } from "react";
 import { useNavigate } from "react-router";
 import { Sun, Bell, Menu, ChevronDown, User, LogOut, Moon, UserIcon } from "lucide-react";
 
-import { NavbarSearchInput } from "./components/NavbarSearchInput";
 import { ThemeContext } from "@/shared/context/ThemeContext";
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { NavbarSearchInput } from "./components/NavbarSearchInput";
 import { userStoreFullName, userStoreImage } from "@/modules/auth/stores/auth.store.selectors";
 
 interface Props {

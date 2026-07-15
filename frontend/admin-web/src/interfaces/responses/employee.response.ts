@@ -43,6 +43,10 @@ export interface EmployeeResponse {
      */
     isActive?: boolean;
     /**
+     * Flag to indicate if user must change password for a reset password request
+     */
+    mustChangePassword: boolean;
+    /**
      * Security role unique identifier
      */
     securityRoleId?: string;
