@@ -29,12 +29,12 @@ export const idParamSchema = z.object({
  * Validates optional query filters for academic levels list endpoints.
  * - q: free-text search on name and description (case-insensitive, max 100 chars)
  * - name: filter by name (case-insensitive contains, max 100 chars)
- * - status: filter by active/inactive status ("true" | "false")
+ * - isActive: filter by active/inactive status ("true" | "false")
  */
 export const academicLevelFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(100, "name must be at most 100 characters").optional(),
-  status: z.enum(["true", "false"]).optional(),
+  isActive: z.enum(["true", "false"]).optional(),
 });
 
 /**
@@ -59,13 +59,15 @@ export const academicLevelPagedQuerySchema = academicLevelFiltersSchema.extend({
 /**
  * Validates query for the education levels paged endpoint.
  * - q: free-text search on name (case-insensitive, max 100 chars)
- * - status: filter by parent academic level status ("true" | "false")
+ * - name: filter by education level name (case-insensitive contains, max 100 chars)
+ * - isActive: filter by parent academic level status ("true" | "false")
  * - academicLevelId: filter by parent academic level UUID
  * - page/pageSize: pagination parameters
  */
 export const educationLevelPagedQuerySchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
-  status: z.enum(["true", "false"]).optional(),
+  name: z.string().max(100, "name must be at most 100 characters").optional(),
+  isActive: z.enum(["true", "false"]).optional(),
   academicLevelId: z
     .string()
     .uuid({ message: "academicLevelId must be a valid UUID" })
@@ -124,6 +126,7 @@ export const createAcademicLevelSchema = z.object({
       return trimmed === "" ? undefined : trimmed;
     })
     .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+  isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
   educationLevels: z.array(educationLevelInputSchema).optional(),
 });
 
@@ -145,7 +148,7 @@ export const updateAcademicLevelSchema = z
         return trimmed === "" ? undefined : trimmed;
       })
       .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
-    status: z.boolean().optional(),
+    isActive: z.boolean().optional(),
     educationLevels: z.array(educationLevelInputSchema).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {

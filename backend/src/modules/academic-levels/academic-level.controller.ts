@@ -21,14 +21,15 @@ const service = new AcademicLevelService(prisma);
 /**
  * Builds an AcademicLevelFilters object from validated query parameters.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
- * Converts string "true"/"false" to boolean for the status field.
+ * Converts string "true"/"false" to boolean for the isActive field.
  */
 function buildFilters(query: Record<string, unknown>): AcademicLevelFilters {
   const filters: AcademicLevelFilters = {};
 
   if (query.q !== undefined) filters.q = query.q as string;
   if (query.name !== undefined) filters.name = query.name as string;
-  if (query.status !== undefined) filters.status = query.status === "true";
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
 
   return filters;
 }
@@ -36,7 +37,7 @@ function buildFilters(query: Record<string, unknown>): AcademicLevelFilters {
 /**
  * Builds an EducationLevelFilters object from validated query parameters.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
- * Converts string "true"/"false" to boolean for the status field.
+ * Converts string "true"/"false" to boolean for the isActive field.
  */
 function buildEducationLevelFilters(
   query: Record<string, unknown>,
@@ -44,7 +45,9 @@ function buildEducationLevelFilters(
   const filters: EducationLevelFilters = {};
 
   if (query.q !== undefined) filters.q = query.q as string;
-  if (query.status !== undefined) filters.status = query.status === "true";
+  if (query.name !== undefined) filters.name = query.name as string;
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
   if (query.academicLevelId !== undefined)
     filters.academicLevelId = query.academicLevelId as string;
 
@@ -124,7 +127,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
 /**
  * DELETE /academic-levels/:id
- * Soft-deletes an academic level by setting status to false.
+ * Soft-deletes an academic level by setting isDeleted to true.
  */
 export async function softDelete(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };

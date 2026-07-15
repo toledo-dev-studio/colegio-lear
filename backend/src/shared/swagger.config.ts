@@ -36,7 +36,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Educación primaria básica",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
           },
         },
         AcademicLevelDetail: {
@@ -49,7 +49,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Educación primaria básica",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             educationLevels: {
               type: "array",
               items: { $ref: "#/components/schemas/EducationLevel" },
@@ -85,6 +85,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               maxLength: 500,
               example: "Educación media superior",
             },
+            isActive: { type: "boolean", default: true },
             educationLevels: {
               type: "array",
               description:
@@ -100,7 +101,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
             description: { type: "string", minLength: 1, maxLength: 500 },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
             educationLevels: {
               type: "array",
               description:

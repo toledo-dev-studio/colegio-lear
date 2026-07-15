@@ -249,7 +249,7 @@ async function main() {
       id: ACADEMIC_LEVELS.preescolar,
       name: "Preescolar",
       description: "Educación preescolar (3 grados)",
-      status: true,
+      isActive: true,
     },
   });
   const primaria = await prisma.academicLevel.upsert({
@@ -259,7 +259,7 @@ async function main() {
       id: ACADEMIC_LEVELS.primaria,
       name: "Primaria",
       description: "Educación primaria básica (6 grados)",
-      status: true,
+      isActive: true,
     },
   });
   const secundaria = await prisma.academicLevel.upsert({
@@ -269,7 +269,7 @@ async function main() {
       id: ACADEMIC_LEVELS.secundaria,
       name: "Secundaria",
       description: "Educación secundaria básica (3 grados)",
-      status: true,
+      isActive: true,
     },
   });
   console.log(
