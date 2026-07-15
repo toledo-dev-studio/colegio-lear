@@ -817,7 +817,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Materia de matemáticas básicas",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
             academicLevel: { $ref: "#/components/schemas/AcademicLevel" },
@@ -847,7 +847,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", default: true, example: true },
           },
         },
         UpdateSchoolSubjectBody: {
@@ -858,7 +858,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             description: { type: "string", minLength: 1, maxLength: 500 },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── Students ───────────────────────────────────────────────────────────
