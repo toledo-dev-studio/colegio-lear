@@ -41,7 +41,7 @@ describe("ScholarshipService", () => {
           name: "Beca Excelencia",
           description: "Beca por excelencia académica",
           discountPercentage: 50,
-          status: true,
+          isActive: true,
         },
       ];
       prisma.scholarship.findMany.mockResolvedValue(mockScholarships);
@@ -54,10 +54,12 @@ describe("ScholarshipService", () => {
           name: "Beca Excelencia",
           description: "Beca por excelencia académica",
           discountPercentage: 50,
-          status: true,
+          isActive: true,
         },
       ]);
-      expect(prisma.scholarship.findMany).toHaveBeenCalledWith({ where: {} });
+      expect(prisma.scholarship.findMany).toHaveBeenCalledWith({
+        where: { isDeleted: false },
+      });
     });
 
     it("should apply q filter searching name and description", async () => {
@@ -67,6 +69,7 @@ describe("ScholarshipService", () => {
 
       expect(prisma.scholarship.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [
             {
               OR: [
@@ -86,19 +89,21 @@ describe("ScholarshipService", () => {
 
       expect(prisma.scholarship.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [{ name: { contains: "Excelencia", mode: "insensitive" } }],
         },
       });
     });
 
-    it("should apply status filter", async () => {
+    it("should apply isActive filter", async () => {
       prisma.scholarship.findMany.mockResolvedValue([]);
 
-      await service.findAll({ status: true });
+      await service.findAll({ isActive: true });
 
       expect(prisma.scholarship.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [{ status: true }],
+          isDeleted: false,
+          AND: [{ isActive: true }],
         },
       });
     });
@@ -110,6 +115,7 @@ describe("ScholarshipService", () => {
 
       expect(prisma.scholarship.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [{ discountPercentage: 50 }],
         },
       });
@@ -121,12 +127,13 @@ describe("ScholarshipService", () => {
       await service.findAll({
         q: "beca",
         name: "Excelencia",
-        status: true,
+        isActive: true,
         discountPercentage: 50,
       });
 
       expect(prisma.scholarship.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [
             {
               OR: [
@@ -135,7 +142,7 @@ describe("ScholarshipService", () => {
               ],
             },
             { name: { contains: "Excelencia", mode: "insensitive" } },
-            { status: true },
+            { isActive: true },
             { discountPercentage: 50 },
           ],
         },
@@ -152,7 +159,7 @@ describe("ScholarshipService", () => {
           name: "Beca Excelencia",
           description: "Desc",
           discountPercentage: 50,
-          status: true,
+          isActive: true,
         },
       ];
       prisma.scholarship.findMany.mockResolvedValue(mockData);
@@ -167,7 +174,7 @@ describe("ScholarshipService", () => {
             name: "Beca Excelencia",
             description: "Desc",
             discountPercentage: 50,
-            status: true,
+            isActive: true,
           },
         ],
         totalPages: 3,
@@ -175,11 +182,13 @@ describe("ScholarshipService", () => {
         itemsCount: 15,
       });
       expect(prisma.scholarship.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { isDeleted: false },
         skip: 5,
         take: 5,
       });
-      expect(prisma.scholarship.count).toHaveBeenCalledWith({ where: {} });
+      expect(prisma.scholarship.count).toHaveBeenCalledWith({
+        where: { isDeleted: false },
+      });
     });
 
     it("should apply filters together with pagination", async () => {
@@ -187,7 +196,7 @@ describe("ScholarshipService", () => {
       prisma.scholarship.count.mockResolvedValue(0);
 
       const result = await service.findAllPaged(
-        { status: false },
+        { isActive: false },
         { page: 1, pageSize: 10 },
       );
 
@@ -198,7 +207,7 @@ describe("ScholarshipService", () => {
         itemsCount: 0,
       });
       expect(prisma.scholarship.findMany).toHaveBeenCalledWith({
-        where: { AND: [{ status: false }] },
+        where: { isDeleted: false, AND: [{ isActive: false }] },
         skip: 0,
         take: 10,
       });
@@ -223,7 +232,7 @@ describe("ScholarshipService", () => {
         name: "Beca Excelencia",
         description: "Beca por excelencia académica",
         discountPercentage: 50,
-        status: true,
+        isActive: true,
       };
       prisma.scholarship.findUnique.mockResolvedValue(mockScholarship);
 
@@ -234,7 +243,7 @@ describe("ScholarshipService", () => {
         name: "Beca Excelencia",
         description: "Beca por excelencia académica",
         discountPercentage: 50,
-        status: true,
+        isActive: true,
       });
       expect(prisma.scholarship.findUnique).toHaveBeenCalledWith({
         where: { id: "uuid-1" },
@@ -266,7 +275,7 @@ describe("ScholarshipService", () => {
       prisma.scholarship.create.mockResolvedValue({
         id: "new-uuid",
         ...validDto,
-        status: true,
+        isActive: true,
       });
 
       const result = await service.create(validDto);
@@ -276,14 +285,14 @@ describe("ScholarshipService", () => {
         name: "Beca Excelencia",
         description: "Beca por excelencia académica",
         discountPercentage: 50,
-        status: true,
+        isActive: true,
       });
       expect(prisma.scholarship.create).toHaveBeenCalledWith({
         data: {
           name: validDto.name,
           description: validDto.description,
           discountPercentage: validDto.discountPercentage,
-          status: true,
+          isActive: true,
         },
       });
     });
@@ -300,20 +309,20 @@ describe("ScholarshipService", () => {
       );
     });
 
-    it("should set status=true by default", async () => {
+    it("should set isActive=true by default", async () => {
       prisma.scholarship.findFirst.mockResolvedValue(null);
       prisma.scholarship.create.mockResolvedValue({
         id: "new-uuid",
         ...validDto,
-        status: true,
+        isActive: true,
       });
 
       const result = await service.create(validDto);
 
-      expect(result.status).toBe(true);
+      expect(result.isActive).toBe(true);
       expect(prisma.scholarship.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({ status: true }),
+          data: expect.objectContaining({ isActive: true }),
         }),
       );
     });
@@ -323,7 +332,7 @@ describe("ScholarshipService", () => {
       prisma.scholarship.create.mockResolvedValue({
         id: "new-uuid",
         ...validDto,
-        status: true,
+        isActive: true,
       });
 
       await service.create(validDto);
@@ -343,7 +352,7 @@ describe("ScholarshipService", () => {
       name: "Beca Excelencia",
       description: "Beca por excelencia académica",
       discountPercentage: 50,
-      status: true,
+      isActive: true,
     };
 
     it("should update a scholarship with valid partial data", async () => {
@@ -422,23 +431,23 @@ describe("ScholarshipService", () => {
 
   // --- softDelete ---
   describe("softDelete", () => {
-    it("should set status to false for an active scholarship", async () => {
+    it("should set isDeleted to true for an existing scholarship", async () => {
       prisma.scholarship.findUnique.mockResolvedValue({
         id: "uuid-1",
         name: "Beca Excelencia",
-        status: true,
+        isDeleted: false,
       });
       prisma.scholarship.update.mockResolvedValue({
         id: "uuid-1",
         name: "Beca Excelencia",
-        status: false,
+        isDeleted: true,
       });
 
       await service.softDelete("uuid-1");
 
       expect(prisma.scholarship.update).toHaveBeenCalledWith({
         where: { id: "uuid-1" },
-        data: { status: false },
+        data: { isDeleted: true },
       });
     });
 
@@ -453,16 +462,16 @@ describe("ScholarshipService", () => {
       );
     });
 
-    it("should throw ConflictError when scholarship is already inactive", async () => {
+    it("should throw ConflictError when scholarship is already deleted", async () => {
       prisma.scholarship.findUnique.mockResolvedValue({
         id: "uuid-1",
         name: "Beca Excelencia",
-        status: false,
+        isDeleted: true,
       });
 
       await expect(service.softDelete("uuid-1")).rejects.toThrow(ConflictError);
       await expect(service.softDelete("uuid-1")).rejects.toThrow(
-        "Scholarship is already inactive",
+        "Scholarship is already deleted",
       );
     });
   });

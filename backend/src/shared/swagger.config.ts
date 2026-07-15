@@ -708,7 +708,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "float",
               example: 50,
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             createdAt: { type: "string", format: "date-time" },
             updatedAt: { type: "string", format: "date-time" },
           },
@@ -735,7 +735,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               maximum: 100,
               example: 50,
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", default: true, example: true },
           },
         },
         UpdateScholarshipBody: {
@@ -749,7 +749,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               minimum: 0,
               maximum: 100,
             },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── Payment Concepts ───────────────────────────────────────────────────

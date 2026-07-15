@@ -48,9 +48,9 @@ export class ScholarshipService {
       });
     }
 
-    // Status filter (exact match)
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    // isActive filter (exact match)
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     // Discount percentage filter (exact match)
@@ -75,7 +75,7 @@ export class ScholarshipService {
       name: raw.name as string,
       description: raw.description as string,
       discountPercentage: Number(raw.discountPercentage),
-      status: raw.status as boolean,
+      isActive: raw.isActive as boolean,
     };
   }
 
@@ -143,7 +143,7 @@ export class ScholarshipService {
   /**
    * Create a new scholarship.
    * Validates name uniqueness (case-insensitive) before insert.
-   * Sets status = true by default.
+   * Sets isActive = true by default (or dto.isActive when provided).
    */
   async create(dto: CreateScholarshipDto): Promise<ScholarshipRecord> {
     // Check uniqueness: name (case-insensitive)
@@ -162,7 +162,7 @@ export class ScholarshipService {
         name: dto.name,
         description: dto.description ?? null,
         discountPercentage: dto.discountPercentage,
-        status: true,
+        isActive: dto.isActive ?? true,
       },
     });
 

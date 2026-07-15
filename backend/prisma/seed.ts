@@ -458,7 +458,7 @@ async function main() {
         name: "Beca Excelencia Académica",
         description: "Beca para estudiantes con promedio sobresaliente",
         discountPercentage: 50,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.scholarship.upsert({
@@ -469,7 +469,7 @@ async function main() {
         name: "Beca Deportiva",
         description: "Beca para representantes deportivos del colegio",
         discountPercentage: 30,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.scholarship.upsert({
@@ -480,7 +480,7 @@ async function main() {
         name: "Beca Hermanos",
         description: "Descuento para familias con dos o más hermanos inscritos",
         discountPercentage: 15,
-        status: true,
+        isActive: true,
       },
     }),
     prisma.scholarship.upsert({
@@ -491,7 +491,7 @@ async function main() {
         name: "Beca Necesidad Económica",
         description: "Apoyo para familias con necesidad económica comprobable",
         discountPercentage: 80,
-        status: true,
+        isActive: true,
       },
     }),
   ]);
