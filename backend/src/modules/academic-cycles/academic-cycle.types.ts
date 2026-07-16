@@ -24,7 +24,7 @@ export interface AcademicCycleFilters {
   code?: string;
   startDate?: string;
   endDate?: string;
-  type?: AcademicPeriodType;
+  periodType?: AcademicPeriodType;
   enrollmentOpen?: boolean;
   status?: AcademicCycleStatus;
 }
@@ -36,8 +36,10 @@ export interface AcademicCycleRecord {
   code: string;
   startDate: string;
   endDate: string;
-  type: AcademicPeriodType;
+  periodType: AcademicPeriodType;
   status: AcademicCycleStatus;
+  minimumPassingGrade: number;
+  evaluationCount: number;
   enrollmentOpen: boolean;
   description: string | null;
   observations: string | null;
@@ -63,8 +65,10 @@ export interface CreateAcademicCycleDto {
   code: string;
   startDate: string;
   endDate: string;
-  type: AcademicPeriodType;
+  periodType: AcademicPeriodType;
   status?: AcademicCycleStatus;
+  minimumPassingGrade?: number;
+  evaluationCount?: number;
   enrollmentOpen?: boolean;
   description?: string;
   observations?: string;
@@ -78,8 +82,10 @@ export interface UpdateAcademicCycleDto {
   code?: string;
   startDate?: string;
   endDate?: string;
-  type?: AcademicPeriodType;
+  periodType?: AcademicPeriodType;
   status?: AcademicCycleStatus;
+  minimumPassingGrade?: number;
+  evaluationCount?: number;
   enrollmentOpen?: boolean;
   description?: string | null;
   observations?: string | null;

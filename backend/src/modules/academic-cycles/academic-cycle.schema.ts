@@ -64,7 +64,7 @@ export const academicCycleFiltersSchema = z.object({
   code: z.string().max(50).optional(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
-  type: academicPeriodTypeEnum.optional(),
+  periodType: academicPeriodTypeEnum.optional(),
   enrollmentOpen: z.enum(["true", "false"]).optional(),
   status: academicCycleStatusEnum.optional(),
 });
@@ -77,6 +77,8 @@ export const academicCyclePagedQuerySchema = academicCycleFiltersSchema.extend({
 
 // ─── Body Schemas ───────────────────────────────────────────────────────────
 
+const gradeIntField = z.number().int().min(1).max(10);
+
 /** Validates POST body for creating an academic cycle */
 export const createAcademicCycleSchema = z.object({
   name: nonBlankString(150),
@@ -85,8 +87,10 @@ export const createAcademicCycleSchema = z.object({
     .string()
     .datetime({ message: "startDate must be a valid ISO date" }),
   endDate: z.string().datetime({ message: "endDate must be a valid ISO date" }),
-  type: academicPeriodTypeEnum,
+  periodType: academicPeriodTypeEnum,
   status: academicCycleStatusEnum.optional(),
+  minimumPassingGrade: gradeIntField,
+  evaluationCount: gradeIntField,
   enrollmentOpen: z.boolean().optional(),
   description: z.string().max(500).optional(),
   observations: z.string().max(1000).optional(),
@@ -105,8 +109,10 @@ export const updateAcademicCycleSchema = z
     code: nonBlankString(50).optional(),
     startDate: z.string().datetime().optional(),
     endDate: z.string().datetime().optional(),
-    type: academicPeriodTypeEnum.optional(),
+    periodType: academicPeriodTypeEnum.optional(),
     status: academicCycleStatusEnum.optional(),
+    minimumPassingGrade: gradeIntField.optional(),
+    evaluationCount: gradeIntField.optional(),
     enrollmentOpen: z.boolean().optional(),
     description: z.string().max(500).nullable().optional(),
     observations: z.string().max(1000).nullable().optional(),

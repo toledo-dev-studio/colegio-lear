@@ -368,8 +368,10 @@ model AcademicCycle {
   code             String              @unique @db.VarChar(20)
   startDate        DateTime            @map("start_date")
   endDate          DateTime            @map("end_date")
-  type             AcademicPeriodType
+  periodType       AcademicPeriodType  @map("period_type")
   status           AcademicCycleStatus @default(upcoming)
+  minimumPassingGrade Int              @default(6) @map("minimum_passing_grade")
+  evaluationCount     Int              @default(3) @map("evaluation_count")
   enrollmentOpen   Boolean             @default(false) @map("enrollment_open")
   description      String?             @db.VarChar(500)
   observations     String?             @db.VarChar(1000)

@@ -295,6 +295,54 @@ enums está bien solo porque los nombres de campo coinciden.
   reflejar la API real hasta que el front limpie esas líneas — seguimos
   validando por `curl` contra la API real.
 
+## `academic-cycles` — trabajo en progreso, por secciones
+
+Igual que `students`, se está alineando por partes. Plan acordado con el
+usuario: sección 1 = `academic-cycle` núcleo (**hecho**, ver abajo),
+sección 2 = `academic-cycle-school-subject`, sección 3 =
+`academic-cycle-wallet`, sección 4 = `academic-cycle-school-group` (+
+calendarios + maestros — aquí sí aplica el patrón de sync `new_` de
+`CalendarFormPanel.tsx`, ver arriba), sección 5 =
+`academic-cycle-enrollment` (resuelve el hallazgo pendiente de
+`GET /students/:studentId/enrollments`), sección 6 = `student-grades`,
+sección 7 = `student-wallet` (cierra también la sección 4 pendiente de
+`students`).
+
+**Metodología confirmada con el usuario para este módulo**: la fuente de
+verdad son las interfaces `filters`/`requests`/`responses` de TS y los
+action files reales del front — los JSON mock/dummy solo se consultan como
+último recurso o para validación final, no como primer paso.
+
+**Sección 1 (`academic-cycle` núcleo) — completada** en la migración
+`20260716000000_rename_academic_cycle_type_and_add_grade_fields`:
+
+- El backend tenía el campo `type`, el front (filter/request/response +
+  los 5 action files de `academic-cycles/actions/academic-cycles/`) espera
+  `periodType` — mismo enum, solo el nombre cambiaba. Se renombró la
+  columna (`type` → `period_type`) y se actualizó
+  `types/schema/service/controller/routes/swagger.config.ts`. El mapeo
+  existente `TYPE_TO_PRISMA`/`TYPE_FROM_PRISMA` (para
+  `four-month-period` ↔ `four_month_period`, el único valor del enum con
+  guion) se mantuvo intacto, solo se le cambió el nombre de campo que
+  envuelve.
+- El front tiene `minimumPassingGrade` y `evaluationCount` (enteros,
+  1-10, requeridos en el formulario — `AcademicCycleTab.tsx`, usados
+  también en las tablas de calificaciones de
+  `academic-cycle-enrollment/components/`) que **no existían en la tabla**
+  `academic_cycles`. Se agregaron como columnas nuevas
+  (`minimum_passing_grade INT DEFAULT 6`, `evaluation_count INT DEFAULT 3`
+  — mismos defaults que usa el form del front) y se validan con Zod
+  (`z.number().int().min(1).max(10)`, requeridos en create, opcionales en
+  update).
+- El campo `description` existe en la tabla pero el front no lo usa en
+  ningún lado (ni filter, ni request, ni response) — se dejó tal cual, no
+  es un bug, solo queda sin exponer desde el front.
+- Probado en vivo: create con `periodType` normal y con
+  `four-month-period` (confirma que el mapeo de guion sigue funcionando
+  después del rename), filtro por `periodType` (ambos casos), PATCH de
+  `minimumPassingGrade`/`evaluationCount`/`periodType`, y DELETE (cancela,
+  no hay `isDeleted` en este modelo).
+
 ## Módulos ya alineados (8)
 
 | Módulo | Migración | Notas |
@@ -310,12 +358,12 @@ enums está bien solo porque los nombres de campo coinciden.
 
 ## Módulos pendientes (más complejos, sin tests todavía)
 
-- `students` — sección 1 (núcleo) hecha, ver detalle arriba. Faltan:
-  sección 2 (`student-guardian`, ya casi alineado), sección 3 (alergias,
-  hay que construir endpoints nuevos), sección 4 (wallet del alumno, sin
-  analizar).
-- `academic-cycles` (+ sub-entidades: school-subject, wallet, group) — sin
-  empezar.
+- `students` — secciones 1, 2 y 3 hechas (núcleo, `student-guardian`,
+  alergias — ver detalle arriba). Falta sección 4 (wallet del alumno,
+  `student-wallet-item`/`student-wallet-payment`), pospuesta a propósito
+  hasta terminar `academic-cycles` porque depende de datos que se crean ahí.
+- `academic-cycles` (+ sub-entidades: school-subject, wallet, school-group,
+  enrollment) — en progreso por secciones, ver detalle abajo.
 
 Ninguno tiene `*.test.ts` todavía y tienen relaciones más profundas — vale
 la pena revisar si también usan `status`/`isActive` y si conviene generar

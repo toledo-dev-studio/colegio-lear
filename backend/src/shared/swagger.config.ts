@@ -1085,7 +1085,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             code: { type: "string", example: "2026-A" },
             startDate: { type: "string", format: "date-time" },
             endDate: { type: "string", format: "date-time" },
-            type: {
+            periodType: {
               type: "string",
               enum: [
                 "annual",
@@ -1108,6 +1108,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "archived",
               ],
             },
+            minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
+            evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean", example: false },
             description: { type: "string", nullable: true },
             observations: { type: "string", nullable: true },
@@ -1138,7 +1140,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             "code",
             "startDate",
             "endDate",
-            "type",
+            "periodType",
+            "minimumPassingGrade",
+            "evaluationCount",
             "academicLevelId",
             "educationLevelId",
           ],
@@ -1147,7 +1151,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             code: { type: "string", maxLength: 50 },
             startDate: { type: "string", format: "date-time" },
             endDate: { type: "string", format: "date-time" },
-            type: {
+            periodType: {
               type: "string",
               enum: [
                 "annual",
@@ -1170,6 +1174,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "archived",
               ],
             },
+            minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
+            evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean" },
             description: { type: "string", maxLength: 500 },
             observations: { type: "string", maxLength: 1000 },
@@ -1185,7 +1191,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             code: { type: "string", maxLength: 50 },
             startDate: { type: "string", format: "date-time" },
             endDate: { type: "string", format: "date-time" },
-            type: {
+            periodType: {
               type: "string",
               enum: [
                 "annual",
@@ -1208,6 +1214,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "archived",
               ],
             },
+            minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
+            evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean" },
             description: { type: "string", maxLength: 500, nullable: true },
             observations: { type: "string", maxLength: 1000, nullable: true },
