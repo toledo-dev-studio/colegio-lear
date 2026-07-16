@@ -14,10 +14,7 @@ interface AuthenticatedRouteProps extends PropsWithChildren {
  */
 export const AuthenticatedRoute = ({ moduleKey, children }: AuthenticatedRouteProps) => {
     const { authStatus, user, permissions } = useAuthStore();
-
-    console.log(user);
     
-
     if (authStatus === "checking")
         return null;
 

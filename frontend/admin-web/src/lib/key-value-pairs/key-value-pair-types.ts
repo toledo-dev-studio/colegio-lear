@@ -80,3 +80,7 @@ export type BloodTypeKey =
   | "AB-"
   | "O+"
   | "O-";
+
+export type NotificationTypeKey =
+  | "announcement"
+  | "message"

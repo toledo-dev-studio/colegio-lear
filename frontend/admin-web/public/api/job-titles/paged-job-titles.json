@@ -5,70 +5,70 @@
       "name": "Profesor de Matemáticas",
       "description": "Responsable de impartir clases de matemáticas en nivel secundaria",
       "jobTitleType": "teacher",
-      "status": true
+      "isActive": true
     },
     {
       "id": "2a4c5d66-8e1f-4a2b-b222-1c2d3e4f5a6b",
       "name": "Profesor de Inglés",
       "description": "Encargado de impartir clases de inglés y evaluación de alumnos",
       "jobTitleType": "teacher",
-      "status": true
+      "isActive": true
     },
     {
       "id": "3b5d6e77-7f2a-4b3c-c333-2d3e4f5a6b7c",
       "name": "Profesor de Ciencias",
       "description": "Imparte materias relacionadas con ciencias naturales",
       "jobTitleType": "teacher",
-      "status": true
+      "isActive": true
     },
     {
       "id": "4c6e7f88-6a3b-4c4d-d444-3e4f5a6b7c8d",
       "name": "Coordinador Académico",
       "description": "Supervisa y coordina actividades académicas",
       "jobTitleType": "administrative-staff",
-      "status": true
+      "isActive": true
     },
     {
       "id": "5d7f8a99-5b4c-4d5e-e555-4f5a6b7c8d9e",
       "name": "Auxiliar Administrativo",
       "description": "Apoya en tareas administrativas y documentación",
       "jobTitleType": "administrative-staff",
-      "status": true
+      "isActive": true
     },
     {
       "id": "6e8a9b00-4c5d-4e6f-f666-5a6b7c8d9e0f",
       "name": "Director Escolar",
       "description": "Responsable de la gestión general de la institución",
       "jobTitleType": "administrative-staff",
-      "status": true
+      "isActive": true
     },
     {
       "id": "7f9b0c11-3d6e-4f70-a777-6b7c8d9e0f1a",
       "name": "Profesor de Historia",
       "description": "Imparte clases de historia y formación cívica",
       "jobTitleType": "teacher",
-      "status": false
+      "isActive": false
     },
     {
       "id": "8a0c1d22-2e7f-4071-b888-7c8d9e0f1a2b",
       "name": "Encargado de Recursos Humanos",
       "description": "Gestiona personal y procesos administrativos internos",
       "jobTitleType": "administrative-staff",
-      "status": true
+      "isActive": true
     },
     {
       "id": "9b1d2e33-1f8a-4172-c999-8d9e0f1a2b3c",
       "name": "Profesor de Educación Física",
       "description": "Coordina actividades deportivas y recreativas",
       "jobTitleType": "teacher",
-      "status": true
+      "isActive": true
     },
     {
       "id": "0c2e3f44-0a9b-4273-d000-9e0f1a2b3c4d",
       "name": "Secretaria Escolar",
       "description": "Atiende recepción y apoyo administrativo escolar",
       "jobTitleType": "administrative-staff",
-      "status": true
+      "isActive": true
     }
   ],
   "totalPages": 1,
