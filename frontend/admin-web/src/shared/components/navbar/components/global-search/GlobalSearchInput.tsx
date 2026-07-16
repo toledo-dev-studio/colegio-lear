@@ -3,11 +3,11 @@ import { useNavigate } from "react-router";
 import { Search, X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
-import { ResultsDropdown } from "./ResultsDropdown";
 import { useDebounce } from "@/shared/hooks/useDebounce";
-import { useGetGlobalSearch } from "../hooks/useGetGlobalSearch";
+import { useGetGlobalSearch } from "../../hooks/useGetGlobalSearch";
+import { GlobalSearchResultsDropdown } from "./GlobalSearchResultsDropdown";
 
-export const NavbarSearchInput = () => {
+export const GlobalSearchInput = () => {
     // Navigation hooks
     const navigate = useNavigate();
 
@@ -53,7 +53,7 @@ export const NavbarSearchInput = () => {
                 {/* Results dropdown */}
                 <div className="flex-1 w-full mx-auto z-10">
                     {openDropdown && (query.trim().length >= 5) && (
-                        <ResultsDropdown
+                        <GlobalSearchResultsDropdown
                             isLoading={isFetching}
                             query={query}
                             results={data}

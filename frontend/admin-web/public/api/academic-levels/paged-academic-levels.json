@@ -4,61 +4,61 @@
       "id": "1",
       "name": "Primaria",
       "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
-      "status": true
+      "isActive": true
     },
     {
       "id": "2",
       "name": "Secundaria",
       "description": "Nivel de educación secundaria, preparación para la educación media",
-      "status": true
+      "isActive": true
     },
     {
       "id": "3",
       "name": "Bachillerato",
       "description": "Nivel de educación bachillerato, formación avanzada",
-      "status": true
+      "isActive": true
     },
     {
       "id": "4",
       "name": "Profesional",
       "description": "Nivel de educación profesional y técnica",
-      "status": true
+      "isActive": true
     },
     {
       "id": "5",
       "name": "Preescolar",
       "description": "Nivel de educación preescolar, preparación inicial",
-      "status": true
+      "isActive": true
     },
     {
       "id": "6",
       "name": "Educación especial",
       "description": "Nivel de educación especial para estudiantes con necesidades especiales",
-      "status": true
+      "isActive": true
     },
     {
       "id": "7",
       "name": "Educación de adultos",
       "description": "Programas de educación para adultos",
-      "status": true
+      "isActive": true
     },
     {
       "id": "8",
       "name": "Diplomado",
       "description": "Nivel de diplomado y educación superior",
-      "status": false
+      "isActive": false
     },
     {
       "id": "9",
       "name": "Postgrado",
       "description": "Nivel de postgrado y educación avanzada",
-      "status": true
+      "isActive": true
     },
     {
       "id": "10",
       "name": "Maestría",
       "description": "Nivel de maestría y especialización",
-      "status": true
+      "isActive": true
     }
   ],
   "totalPages": 1,

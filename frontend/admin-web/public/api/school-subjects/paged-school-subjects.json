@@ -4,12 +4,12 @@
       "id": "1",
       "name": "Matemáticas",
       "description": "Materia de matemáticas básicas",
-      "status": true,
+      "isActive": true,
       "academicLevel": {
         "id": "1",
         "name": "Primaria",
         "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
-        "status": true,
+        "isActive": true,
         "educationLevels": []
       },
       "educationLevel": {
@@ -21,12 +21,12 @@
       "id": "2",
       "name": "Lenguaje",
       "description": "Materia de lenguaje y comunicación",
-      "status": true,
+      "isActive": true,
       "academicLevel": {
         "id": "1",
         "name": "Primaria",
         "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
-        "status": true,
+        "isActive": true,
         "educationLevels": []
       },
       "educationLevel": {
@@ -38,12 +38,12 @@
       "id": "3",
       "name": "Ciencias",
       "description": "Materia de ciencias naturales",
-      "status": true,
+      "isActive": true,
       "academicLevel": {
         "id": "2",
         "name": "Secundaria",
         "description": "Nivel de educación secundaria, preparación para la educación media",
-        "status": true,
+        "isActive": true,
         "educationLevels": []
       },
       "educationLevel": {
@@ -55,12 +55,12 @@
       "id": "4",
       "name": "Historia",
       "description": "Materia de historia universal",
-      "status": true,
+      "isActive": true,
       "academicLevel": {
         "id": "3",
         "name": "Bachillerato",
         "description": "Nivel de educación bachillerato, formación avanzada",
-        "status": true,
+        "isActive": true,
         "educationLevels": []
       },
       "educationLevel": {
@@ -72,12 +72,12 @@
       "id": "5",
       "name": "Ingeniería de Software",
       "description": "Materia de desarrollo de software",
-      "status": true,
+      "isActive": true,
       "academicLevel": {
         "id": "4",
         "name": "Profesional",
         "description": "Nivel de educación profesional y técnica",
-        "status": true,
+        "isActive": true,
         "educationLevels": []
       },
       "educationLevel": {

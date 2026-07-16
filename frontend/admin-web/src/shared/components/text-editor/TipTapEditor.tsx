@@ -27,7 +27,7 @@ interface TipTapEditorProps {
 const DEFAULT_FONT_SIZE = "16px";
 const FONT_SIZES = ["14px", "16px", "18px", "24px", "32px"];
 
-export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el contenido...", testid = "tiptap-editor" }: TipTapEditorProps) => {
+export const TipTapEditor = ({ value, onChange, placeholder = "Escribe el contenido...", testid = "tiptap-editor" }: TipTapEditorProps) => {
 
   const [linkModal, setLinkModal] = useState<{ open: boolean, type: "link" | "image-url" }>();
 
@@ -129,7 +129,7 @@ export const CustomTipTapEditor = ({ value, onChange, placeholder = "Escribe el 
         <EditorContent editor={editor} />
         {
           (editorState.isEmpty && !editorState.hasContentNodes) && (
-            <p className="pointer-events-none px-5 -mt-[235px] mb-[200px] text-sm text-muted-foreground select-none">{placeholder}</p>
+            <p className="pointer-events-none px-5 -mt-58.75 mb-50 text-sm text-muted-foreground select-none">{placeholder}</p>
           )
         }
       </div>

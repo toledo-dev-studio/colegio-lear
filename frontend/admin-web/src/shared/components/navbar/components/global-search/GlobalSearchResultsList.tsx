@@ -11,7 +11,7 @@ interface Props {
     onClick: (record: GlobalSearchRecordResponse) => void;
 }
 
-export const ResultsList = ({ isLoading, query, results, testid, onClick }: Props) => {
+export const GlobalSearchResultsList = ({ isLoading, query, results, testid, onClick }: Props) => {
     if (isLoading) {
         return (
             <div className="px-6 py-8 flex items-center justify-center text-sm text-muted-foreground" data-testid={`${testid}-loading`}>

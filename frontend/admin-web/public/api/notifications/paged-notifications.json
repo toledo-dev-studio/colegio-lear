@@ -1,0 +1,97 @@
+{
+    "totalPages": 2,
+    "currentPage": 1,
+    "itemsCount": 10,
+    "data": [
+        {
+            "id": "d5c0a8d7-7b4f-4d79-8bfa-100000000001",
+            "title": "Nuevo anuncio publicado",
+            "message": "Se ha publicado el calendario de actividades correspondiente al ciclo escolar 2026-2027.",
+            "type": "announcement",
+            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "createdAt": "2026-07-15T08:15:00Z",
+            "read": false
+        },
+        {
+            "id": "c8b4d2f1-5e2a-4b3d-9f11-100000000002",
+            "title": "Mensaje del Director",
+            "message": "Te invitamos a revisar las indicaciones para el inicio del próximo periodo escolar.",
+            "type": "message",
+            "relatedRecordId": "/messages/2",
+            "createdAt": "2026-07-15T09:30:00Z",
+            "read": false
+        },
+        {
+            "id": "f2d5a1c8-8e43-4b12-a91c-100000000003",
+            "title": "Recordatorio de colegiatura",
+            "message": "La fecha límite para el pago de la colegiatura de julio es el 20 de julio.",
+            "type": "announcement",
+            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "createdAt": "2026-07-14T14:20:00Z",
+            "read": true
+        },
+        {
+            "id": "7d1e9f4b-9c21-42f8-b1a4-100000000004",
+            "title": "Nuevo mensaje de un docente",
+            "message": "La profesora Ana Torres ha enviado un mensaje relacionado con la tarea de Matemáticas.",
+            "type": "message",
+            "relatedRecordId": "/messages/4",
+            "createdAt": "2026-07-14T18:45:00Z",
+            "read": false
+        },
+        {
+            "id": "1e6f8a3b-4c55-4d6f-91d7-100000000005",
+            "title": "Cambio de horario",
+            "message": "Se actualizó el horario del grupo Primaria 3° A para la próxima semana.",
+            "type": "announcement",
+            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "createdAt": "2026-07-13T11:10:00Z",
+            "read": true
+        },
+        {
+            "id": "b3f7d9c2-6e19-4f23-a84d-100000000006",
+            "title": "Mensaje de Administración",
+            "message": "Tu comprobante de pago ha sido validado correctamente.",
+            "type": "message",
+            "relatedRecordId": "/messages/6",
+            "createdAt": "2026-07-13T16:05:00Z",
+            "read": true
+        },
+        {
+            "id": "4c8b2f6e-3d47-4e12-b91f-100000000007",
+            "title": "Suspensión de clases",
+            "message": "Las actividades académicas se suspenderán el próximo viernes por Consejo Técnico Escolar.",
+            "type": "announcement",
+            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "createdAt": "2026-07-12T10:00:00Z",
+            "read": false
+        },
+        {
+            "id": "a9d3f1b5-2c64-40b8-a2f6-100000000008",
+            "title": "Mensaje del Tutor",
+            "message": "Has recibido una respuesta del tutor legal del estudiante Juan Pérez López.",
+            "type": "message",
+            "relatedRecordId": "/messages/8",
+            "createdAt": "2026-07-12T13:50:00Z",
+            "read": true
+        },
+        {
+            "id": "6f2c1d9a-8b34-45e0-9cf2-100000000009",
+            "title": "Nueva convocatoria",
+            "message": "Ya se encuentra disponible la convocatoria para solicitar becas del siguiente ciclo escolar.",
+            "type": "announcement",
+            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "createdAt": "2026-07-11T09:15:00Z",
+            "read": false
+        },
+        {
+            "id": "2b7d4c9e-5a18-4d31-8ef4-100000000010",
+            "title": "Mensaje del área de Control Escolar",
+            "message": "La documentación del estudiante fue revisada y aprobada satisfactoriamente.",
+            "type": "message",
+            "relatedRecordId": "/messages/10",
+            "createdAt": "2026-07-11T15:40:00Z",
+            "read": true
+        }
+    ]
+}

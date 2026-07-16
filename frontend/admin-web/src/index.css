@@ -132,7 +132,7 @@ h6 {
 
 @layer components {
 
-  @import "shared/components/custom-text-editor/css/index.css";
+  @import "shared/components/text-editor/css/index.css";
 
   .page-main-section {
     @apply flex flex-col w-full py-12 px-10 lg:px-15 gap-y-10;

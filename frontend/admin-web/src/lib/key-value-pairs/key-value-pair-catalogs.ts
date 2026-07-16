@@ -1,5 +1,5 @@
 import type { KeyValuePair } from "./key-value-pair";
-import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, AudienceTypeKey, BloodTypeKey, DayOfWeekKey, PaymentMethodKey, StudentGuardianRelationshipKey, StudentWalletStatusKey } from "./key-value-pair-types";
+import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, AudienceTypeKey, BloodTypeKey, DayOfWeekKey, NotificationTypeKey, PaymentMethodKey, StudentGuardianRelationshipKey, StudentWalletStatusKey } from "./key-value-pair-types";
 
 /**
  * DAY_OF_WEEKS represents a list of all possible days of the week with their corresponding keys and labels.
@@ -131,4 +131,13 @@ export const AUDIENCE_TYPES: KeyValuePair<AudienceTypeKey>[] = [
     { key: "administrative-staff", label: "Personal administrativo" },
     { key: "teacher", label: "Docentes" },
     { key: "student", label: "Alumnos" }
+];
+
+/**
+ * NOTIFICATION_TYPES defines the possible types for a notification.
+ * Each status has a key and a label for display purposes.
+ */
+export const NOTIFICATION_TYPES: KeyValuePair<NotificationTypeKey>[] = [
+    { key: "announcement", label: "Comunicado" },
+    { key: "message", label: "Chat" },
 ];

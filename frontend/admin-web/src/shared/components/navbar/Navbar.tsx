@@ -1,11 +1,9 @@
-import { use, useState } from "react";
-import { useNavigate } from "react-router";
-import { Sun, Bell, Menu, ChevronDown, User, LogOut, Moon, UserIcon } from "lucide-react";
+import { Menu } from "lucide-react";
 
-import { ThemeContext } from "@/shared/context/ThemeContext";
-import { useAuthStore } from "@/modules/auth/stores/auth.store";
-import { NavbarSearchInput } from "./components/NavbarSearchInput";
-import { userStoreFullName, userStoreImage } from "@/modules/auth/stores/auth.store.selectors";
+import { AccountInfoButton } from "./components/account-info/AccountInfoButton";
+import { ThemeToggleButton } from "./components/theme-toggle/ThemeToggleButton";
+import { GlobalSearchInput } from "./components/global-search/GlobalSearchInput";
+import { NotificationButton } from "./components/notifications/NotificationButton";
 
 interface Props {
     logout: () => void;
@@ -13,100 +11,26 @@ interface Props {
 }
 
 export const Navbar = ({ toggleSidebar, logout }: Props) => {
-    const navigate = useNavigate();
-
-    const loggedInUserFullName = useAuthStore(userStoreFullName);
-    const loggedInUserImage = useAuthStore(userStoreImage); // "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x"
-
-    const { theme, toggleTheme } = use(ThemeContext);
-    const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
-
     return (
-        <header className="sticky top-0 z-20 h-20 bg-card border-b border-border flex items-center gap-2 px-4 sm:px-8">
+        <header className="sticky top-0 z-50 h-20 bg-card border-b border-border flex items-center gap-2 px-4 sm:px-8">
 
-            <div className="flex flex-row items-center gap-2 lg:hidden">
+            <section className="flex flex-row items-center gap-2 lg:hidden">
                 <button data-testid="header-menu-button" className="icon-btn" onClick={toggleSidebar}>
                     <Menu className="w-4.5 h-4.5" />
                 </button>
-            </div>
+            </section>
 
-            <div className="flex-1 w-full mx-auto relative">
-                <NavbarSearchInput />
-            </div>
+            <section className="flex-1 w-full mx-auto relative">
+                <GlobalSearchInput />
+            </section>
 
-            <div className="flex items-center gap-2 sm:gap-4">
-                <button
-                    onClick={toggleTheme}
-                    data-testid="theme-toggle"
-                    className="icon-btn"
-                    aria-label="Cambiar tema"
-                >
-                    {theme === "dark" ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
-                </button>
-                <button
-                    data-testid="header-notifications"
-                    className="icon-btn"
-                    aria-label="Notificaciones"
-                >
-                    <Bell className="w-4.5 h-4.5" />
-                    <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary" />
-                </button>
+            <section className="flex items-center gap-2 sm:gap-4">
+                <ThemeToggleButton />
 
-                <div className="relative">
-                    <button
-                        data-testid="header-user-menu"
-                        className="cursor-pointer flex items-center gap-3 pl-2 pr-1 py-1 rounded-full"
-                        onClick={() => setToggleDropdown(!toggleDropdown)}>
-                        <span className="hidden md:inline text-sm font-medium text-foreground">
-                            {loggedInUserFullName || "Usuario"}
-                        </span>
-                        {
-                            loggedInUserImage ?
-                                (
-                                    <>
-                                        <img className="ml-2 w-10 h-10 rounded-full object-cover ring-2 ring-primary/30"
-                                            alt="avatar"
-                                            src={loggedInUserImage} />
-                                    </>
-                                ) :
-                                (
-                                    <div className="ml-2 w-10 h-10 rounded-full bg-muted ring-2 ring-primary/15 flex items-center justify-center overflow-hidden">
-                                        <UserIcon className="w-5 h-5 text-muted-foreground/60" />
-                                    </div>
-                                )
-                        }
-                        <ChevronDown className="hidden md:inline w-4 h-4 text-muted-foreground" />
+                <NotificationButton />
 
-                    </button>
-
-                    {toggleDropdown && (
-                        <div data-testid="user-menu-dropdown"
-                            className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-2xl shadow-lg py-2 animate-fade-in"
-                            onMouseLeave={() => setToggleDropdown(false)}>
-                            <button
-                                onClick={() => {
-                                    setToggleDropdown(false);
-                                    navigate("/my-account");
-                                }}
-                                data-testid="user-menu-profile"
-                                className="cursor-pointer w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
-                                <User className="w-4 h-4" />
-                                Mi cuenta
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setToggleDropdown(false);
-                                    logout();
-                                }}
-                                data-testid="user-menu-logout"
-                                className="cursor-pointer w-full flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/5 transition-colors">
-                                <LogOut className="w-4 h-4" />
-                                Cerrar sesión
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </div>
+                <AccountInfoButton logout={logout} />
+            </section>
         </header>
     );
 }

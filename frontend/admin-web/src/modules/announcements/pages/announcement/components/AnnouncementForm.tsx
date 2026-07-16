@@ -15,9 +15,10 @@ import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
-import { CustomTipTapEditor } from "@/shared/components/custom-text-editor/CustomTipTapEditor";
+import { TipTapEditor } from "@/shared/components/text-editor/TipTapEditor";
 import { Switch } from "@/shared/ui/switch";
 import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { TextEditor } from "@/shared/components/text-editor/TextEditor";
 
 interface Props {
     isNew: boolean;
@@ -233,7 +234,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                                                     return text.length > 0 || "El contenido de la campaña no puede estar vacío";
                                                 },
                                             }}
-                                            render={({ field }) => <CustomTipTapEditor value={field.value ?? ""} onChange={field.onChange} />}
+                                            render={({ field }) => <TextEditor value={field.value ?? ""} onChange={field.onChange} />}
                                         />
                                         {
                                             errors.content && (

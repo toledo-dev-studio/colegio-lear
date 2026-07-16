@@ -51,7 +51,7 @@ export const LinkModal = (props: Props) => {
     return (
         <>
             <AlertDialog open={open}>
-                <AlertDialogContent className={cn("!max-w-md")}>
+                <AlertDialogContent className={cn("max-w-md!")}>
                     <AlertDialogHeader>
                         <AlertDialogTitle>{title}</AlertDialogTitle>
                         <AlertDialogDescription>{description}</AlertDialogDescription>

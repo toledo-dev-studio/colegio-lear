@@ -3,7 +3,7 @@
         "id": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
         "name": "Administrador General",
         "description": "Acceso total a todos los módulos del sistema",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
@@ -29,7 +29,7 @@
         "id": "b2c3d4e5-f6a7-4890-9234-56789abcdef0",
         "name": "Supervisor Académico",
         "description": "Gestiona niveles académicos y materias",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
@@ -49,7 +49,7 @@
         "id": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
         "name": "Recursos Humanos",
         "description": "Administra empleados y puestos",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
@@ -69,7 +69,7 @@
         "id": "d4e5f6a7-b8c9-4012-b456-789abcdef012",
         "name": "Consulta",
         "description": "Solo lectura en módulos generales",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
@@ -89,7 +89,7 @@
         "id": "e5f6a7b8-c9d0-4123-c567-89abcdef0123",
         "name": "Coordinador",
         "description": "Gestiona becas y materias",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
@@ -109,7 +109,7 @@
         "id": "f6a7b8c9-d0e1-4234-d678-9abcdef01234",
         "name": "Auditor",
         "description": "Acceso de auditoría sin modificaciones",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
@@ -129,7 +129,7 @@
         "id": "07b8c9d0-e1f2-4345-e789-abcdef012345",
         "name": "Capturista",
         "description": "Puede registrar información básica",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
@@ -143,7 +143,7 @@
         "id": "18c9d0e1-f2a3-4456-f890-bcdef0123456",
         "name": "Invitado",
         "description": "Acceso limitado al dashboard",
-        "status": false,
+        "isActive": false,
         "permissions": [
             {
                 "canRead": true,
@@ -157,7 +157,7 @@
         "id": "29d0e1f2-a3b4-4567-a901-cdef01234567",
         "name": "Administrador Académico",
         "description": "Control total sobre módulos académicos",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
@@ -183,7 +183,7 @@
         "id": "3ae1f2a3-b4c5-4678-b012-def012345678",
         "name": "Administrador de Seguridad",
         "description": "Gestiona roles y permisos del sistema",
-        "status": true,
+        "isActive": true,
         "permissions": [
             {
                 "canRead": true,
