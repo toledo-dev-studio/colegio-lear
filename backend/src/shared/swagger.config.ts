@@ -1263,31 +1263,19 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             id: { type: "string", format: "uuid" },
             academicCycleId: { type: "string", format: "uuid" },
-            paymentConceptId: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Inscripción" },
+            description: { type: "string", nullable: true },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", example: 1500 },
             allowForgiveness: { type: "boolean", example: false },
-            paymentConcept: {
-              type: "object",
-              properties: {
-                id: { type: "string", format: "uuid" },
-                name: { type: "string" },
-                amount: { type: "number" },
-                allowForgiveness: { type: "boolean" },
-              },
-            },
           },
         },
         CreateAcademicCycleWalletBody: {
           type: "object",
-          required: [
-            "paymentConceptId",
-            "dueDate",
-            "amount",
-            "allowForgiveness",
-          ],
+          required: ["name", "dueDate", "amount"],
           properties: {
-            paymentConceptId: { type: "string", format: "uuid" },
+            name: { type: "string", maxLength: 100 },
+            description: { type: "string", maxLength: 500 },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", minimum: 0.01 },
             allowForgiveness: { type: "boolean" },
@@ -1297,7 +1285,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
           type: "object",
           description: "At least one field required.",
           properties: {
-            paymentConceptId: { type: "string", format: "uuid" },
+            name: { type: "string", maxLength: 100 },
+            description: { type: "string", maxLength: 500 },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", minimum: 0.01 },
             allowForgiveness: { type: "boolean" },

@@ -299,8 +299,9 @@ enums está bien solo porque los nombres de campo coinciden.
 
 Igual que `students`, se está alineando por partes. Plan acordado con el
 usuario: sección 1 = `academic-cycle` núcleo (**hecho**, ver abajo),
-sección 2 = `academic-cycle-school-subject`, sección 3 =
-`academic-cycle-wallet`, sección 4 = `academic-cycle-school-group` (+
+sección 2 = `academic-cycle-school-subject` (pendiente), sección 3 =
+`academic-cycle-wallet` (**hecho**, ver abajo), sección 4 =
+`academic-cycle-school-group` (+
 calendarios + maestros — aquí sí aplica el patrón de sync `new_` de
 `CalendarFormPanel.tsx`, ver arriba), sección 5 =
 `academic-cycle-enrollment` (resuelve el hallazgo pendiente de
@@ -342,6 +343,42 @@ action files reales del front — los JSON mock/dummy solo se consultan como
   después del rename), filtro por `periodType` (ambos casos), PATCH de
   `minimumPassingGrade`/`evaluationCount`/`periodType`, y DELETE (cancela,
   no hay `isDeleted` en este modelo).
+
+**Sección 3 (`academic-cycle-wallet`, "cartera de pagos") — completada**
+en la migración
+`20260716010000_academic_cycle_wallet_decouple_payment_concept`. Este fue
+un cambio de arquitectura confirmado con el usuario, no solo un rename:
+
+- El back modelaba `AcademicCycleWallet` con `paymentConceptId` como FK
+  **obligatoria** a `PaymentConcept`, sin columnas propias de
+  `name`/`description` (dependía del include para mostrarlas). Pero
+  `AcademicCycleWalletPanelForm.tsx` (front) usa el concepto de pago
+  **solo como plantilla de autollenado**: al buscarlo y seleccionarlo,
+  copia `name`/`description`/`amount`/`allowForgiveness` a los campos del
+  formulario, y el usuario puede editarlos libremente antes de guardar
+  (ej. concepto "Inscripción" con base 1000, pero en un ciclo específico
+  se ajusta a 800). El `create-update-academic-cycle-wallet-item.action.ts`
+  **nunca envía `paymentConceptId`** al backend — confirmado con el
+  usuario que es el diseño intencional, no un bug del front.
+- Se desacopló la relación: se quitó `paymentConceptId` (columna y FK) de
+  `academic_cycle_wallet`, se agregaron columnas propias `name`
+  (`VARCHAR(100)`, requerido) y `description` (`VARCHAR(500)`, opcional).
+  Cada item de cartera de un ciclo es ahora un snapshot independiente,
+  totalmente editable, sin relación viva con `PaymentConcept` después de
+  creado. La migración hace backfill de `name`/`description` desde el
+  concepto relacionado antes de dropear la columna, por si había filas
+  existentes (no las había en este momento, pero es correcto para
+  cualquier ambiente con datos).
+- Se quitó también el lado inverso de la relación
+  (`PaymentConcept.academicCycleWallets`) del schema — ya no aplica.
+- Probado en vivo: crear un item simulando el flujo real (nombre/monto
+  "copiados" de un concepto e inmediatamente editados, ej. 1000 → 800),
+  listar, PATCH de `amount`/`allowForgiveness`, DELETE. Nota operativa:
+  durante la prueba el servidor de `pnpm run dev` tenía un proceso viejo
+  que no había recogido el cliente de Prisma regenerado tras la migración
+  (daba 500 genérico) — se reinició limpio y quedó confirmado que el
+  código en sí estaba bien (se verificó llamando al service directamente
+  con `ts-node` antes de asumir que había un bug real).
 
 ## Módulos ya alineados (8)
 

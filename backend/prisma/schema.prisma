@@ -87,7 +87,6 @@ model PaymentConcept {
   allowForgiveness     Boolean               @default(false) @map("allow_remission")
   isActive             Boolean               @default(true) @map("is_active")
   isDeleted            Boolean               @default(false) @map("is_deleted")
-  academicCycleWallets AcademicCycleWallet[]
 
   @@map("payment_concepts")
   @@schema("core")
@@ -408,14 +407,14 @@ model AcademicCycleSchoolSubject {
 // ─── Academic Cycle Wallet ───────────────────────────────────────────────────
 
 model AcademicCycleWallet {
-  id               String         @id @default(uuid()) @db.Uuid
-  academicCycleId  String         @map("academic_cycle_id") @db.Uuid
-  paymentConceptId String         @map("payment_concept_id") @db.Uuid
-  dueDate          DateTime       @map("due_date")
-  amount           Decimal        @db.Decimal(10, 2)
-  allowForgiveness Boolean        @default(false) @map("allow_forgiveness")
-  academicCycle    AcademicCycle  @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
-  paymentConcept   PaymentConcept @relation(fields: [paymentConceptId], references: [id], onDelete: Restrict)
+  id               String        @id @default(uuid()) @db.Uuid
+  academicCycleId  String        @map("academic_cycle_id") @db.Uuid
+  name             String        @db.VarChar(100)
+  description      String?       @db.VarChar(500)
+  dueDate          DateTime      @map("due_date")
+  amount           Decimal       @db.Decimal(10, 2)
+  allowForgiveness Boolean       @default(false) @map("allow_forgiveness")
+  academicCycle    AcademicCycle @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
 
   @@map("academic_cycle_wallet")
   @@schema("core")
