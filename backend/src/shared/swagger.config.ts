@@ -855,7 +855,13 @@ const swaggerOptions: swaggerJsdoc.Options = {
             enrollment: { type: "string", example: "LR-2025-0001" },
             image: { type: "string", nullable: true },
             observations: { type: "string", nullable: true },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
+            bloodType: {
+              type: "string",
+              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+              example: "O+",
+            },
+            medicalNotes: { type: "string", nullable: true },
             email: {
               type: "string",
               format: "email",
@@ -876,6 +882,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             "secondLastName",
             "dateOfBirth",
             "curp",
+            "bloodType",
             "email",
             "phoneNumber",
             "address",
@@ -891,12 +898,19 @@ const swaggerOptions: swaggerJsdoc.Options = {
             curp: { type: "string", maxLength: 18 },
             image: { type: "string", maxLength: 500 },
             observations: { type: "string", maxLength: 1000 },
+            bloodType: {
+              type: "string",
+              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+              example: "O+",
+            },
+            medicalNotes: { type: "string", maxLength: 1000 },
             email: { type: "string", format: "email", maxLength: 150 },
             phoneNumber: { type: "string", maxLength: 20 },
             address: { type: "string", maxLength: 300 },
             state: { type: "string", maxLength: 100 },
             municipality: { type: "string", maxLength: 100 },
             postalCode: { type: "string", maxLength: 10 },
+            isActive: { type: "boolean", default: true },
           },
         },
         UpdateStudentBody: {
@@ -910,13 +924,18 @@ const swaggerOptions: swaggerJsdoc.Options = {
             curp: { type: "string", maxLength: 18 },
             image: { type: "string", maxLength: 500, nullable: true },
             observations: { type: "string", maxLength: 1000, nullable: true },
+            bloodType: {
+              type: "string",
+              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+            },
+            medicalNotes: { type: "string", maxLength: 1000, nullable: true },
             email: { type: "string", format: "email", maxLength: 150 },
             phoneNumber: { type: "string", maxLength: 20 },
             address: { type: "string", maxLength: 300 },
             state: { type: "string", maxLength: 100 },
             municipality: { type: "string", maxLength: 100 },
             postalCode: { type: "string", maxLength: 10 },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── Student Guardians ──────────────────────────────────────────────────
@@ -1016,11 +1035,15 @@ const swaggerOptions: swaggerJsdoc.Options = {
             observations: { type: "string", maxLength: 500, nullable: true },
           },
         },
-        // ─── Student Medical Information ────────────────────────────────────────
+        // ─── Student Allergies ───────────────────────────────────────────────────
+        // NOTE: bloodType/medicalNotes now live directly on StudentRecord.
+        // AllergyRecord is kept here for when the /students/:studentId/allergies
+        // CRUD endpoints are implemented (not yet built).
         AllergyRecord: {
           type: "object",
           properties: {
             id: { type: "string", format: "uuid" },
+            studentId: { type: "string", format: "uuid" },
             name: { type: "string", example: "Penicilina" },
             severity: {
               type: "string",
@@ -1028,63 +1051,6 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "moderate",
             },
             observations: { type: "string", nullable: true },
-          },
-        },
-        StudentMedicalInformationRecord: {
-          type: "object",
-          nullable: true,
-          properties: {
-            id: { type: "string", format: "uuid" },
-            studentId: { type: "string", format: "uuid" },
-            bloodType: {
-              type: "string",
-              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
-              example: "O+",
-            },
-            emergencyNotes: {
-              type: "string",
-              nullable: true,
-              example: "Alérgico a la penicilina",
-            },
-            allergies: {
-              type: "array",
-              items: { $ref: "#/components/schemas/AllergyRecord" },
-            },
-          },
-        },
-        UpsertMedicalInformationBody: {
-          type: "object",
-          required: ["bloodType"],
-          properties: {
-            bloodType: {
-              type: "string",
-              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
-            },
-            emergencyNotes: { type: "string", maxLength: 1000, nullable: true },
-            allergies: {
-              type: "array",
-              items: {
-                type: "object",
-                required: ["name", "severity"],
-                properties: {
-                  id: {
-                    type: "string",
-                    format: "uuid",
-                    description: "Optional, ignored on upsert",
-                  },
-                  name: { type: "string", maxLength: 100 },
-                  severity: {
-                    type: "string",
-                    enum: ["mild", "moderate", "severe"],
-                  },
-                  observations: {
-                    type: "string",
-                    maxLength: 500,
-                    nullable: true,
-                  },
-                },
-              },
-            },
           },
         },
         // ─── Academic Cycles ────────────────────────────────────────────────────

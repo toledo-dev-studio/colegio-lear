@@ -12,6 +12,18 @@ function nonBlankString(maxLength: number) {
     });
 }
 
+/** Blood type values, matching the frontend's BloodTypeKey format exactly. */
+const BLOOD_TYPES = [
+  "A+",
+  "A-",
+  "B+",
+  "B-",
+  "AB+",
+  "AB-",
+  "O+",
+  "O-",
+] as const;
+
 // ─── Schemas ────────────────────────────────────────────────────────────────
 
 /** Validates UUID path parameter */
@@ -33,12 +45,12 @@ export const studentSubResourceParamSchema = z.object({
 /** Validates optional query filters for student list endpoints */
 export const studentFiltersSchema = z.object({
   q: z.string().max(100).optional(),
-  name: z.string().max(100).optional(),
+  fullName: z.string().max(100).optional(),
   curp: z.string().max(18).optional(),
   enrollment: z.string().max(20).optional(),
   email: z.string().max(150).optional(),
   phoneNumber: z.string().max(20).optional(),
-  status: z.enum(["true", "false"]).optional(),
+  isActive: z.enum(["true", "false"]).optional(),
 });
 
 /** Validates paged query (filters + pagination) */
@@ -58,12 +70,17 @@ export const createStudentSchema = z.object({
   curp: nonBlankString(18),
   image: z.string().max(500).optional(),
   observations: z.string().max(1000).optional(),
+  bloodType: z.enum(BLOOD_TYPES, {
+    error: `bloodType must be one of: ${BLOOD_TYPES.join(", ")}`,
+  }),
+  medicalNotes: z.string().max(1000).optional(),
   email: z.string().email("email must be a valid email").max(150),
   phoneNumber: nonBlankString(20),
   address: nonBlankString(300),
   state: nonBlankString(100),
   municipality: nonBlankString(100),
   postalCode: nonBlankString(10),
+  isActive: z.boolean().optional(),
 });
 
 /** Validates PATCH body for updating a student */
@@ -76,13 +93,15 @@ export const updateStudentSchema = z
     curp: nonBlankString(18).optional(),
     image: z.string().max(500).nullable().optional(),
     observations: z.string().max(1000).nullable().optional(),
+    bloodType: z.enum(BLOOD_TYPES).optional(),
+    medicalNotes: z.string().max(1000).nullable().optional(),
     email: z.string().email().max(150).optional(),
     phoneNumber: nonBlankString(20).optional(),
     address: nonBlankString(300).optional(),
     state: nonBlankString(100).optional(),
     municipality: nonBlankString(100).optional(),
     postalCode: nonBlankString(10).optional(),
-    status: z.boolean().optional(),
+    isActive: z.boolean().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "At least one field is required",

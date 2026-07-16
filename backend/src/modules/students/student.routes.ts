@@ -14,7 +14,6 @@ import {
   createStudentGuardianSchema,
   updateStudentGuardianSchema,
 } from "./student-guardian.schema";
-import { upsertMedicalInformationSchema } from "./student-medical-information.schema";
 import {
   findAll,
   findAllPaged,
@@ -30,10 +29,6 @@ import {
   updateGuardian,
   deleteGuardian,
 } from "./student-guardian.controller";
-import {
-  getMedicalInfo,
-  upsertMedicalInfo,
-} from "./student-medical-information.controller";
 
 const router = Router();
 
@@ -46,7 +41,7 @@ const router = Router();
  *     tags:
  *       - Students
  *     summary: List all students
- *     description: Returns all students with optional filters (q, name, curp, enrollment, email, phoneNumber, status).
+ *     description: Returns all students with optional filters (q, fullName, curp, enrollment, email, phoneNumber, isActive).
  *     parameters:
  *       - in: query
  *         name: q
@@ -55,7 +50,7 @@ const router = Router();
  *           maxLength: 100
  *         description: Free-text search on name, lastNames, email, curp, enrollment
  *       - in: query
- *         name: name
+ *         name: fullName
  *         schema:
  *           type: string
  *           maxLength: 100
@@ -85,7 +80,7 @@ const router = Router();
  *           maxLength: 20
  *         description: Filter by phone number (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -124,7 +119,7 @@ router.get(
  *           type: string
  *         description: Free-text search
  *       - in: query
- *         name: name
+ *         name: fullName
  *         schema:
  *           type: string
  *         description: Filter by name
@@ -149,7 +144,7 @@ router.get(
  *           type: string
  *         description: Filter by phone number
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -523,77 +518,10 @@ router.delete(
   deleteGuardian,
 );
 
-// ─── Student Medical Information ─────────────────────────────────────────────
-
-/**
- * @openapi
- * /students/{studentId}/medical-information:
- *   get:
- *     tags:
- *       - Student Medical Information
- *     summary: Get medical information for a student
- *     description: Returns the medical information record including allergies. Returns null data if not yet created.
- *     parameters:
- *       - in: path
- *         name: studentId
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *     responses:
- *       200:
- *         description: Medical information (or null if not created yet)
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/StudentMedicalInformationRecord'
- *       404:
- *         description: Student not found
- */
-router.get(
-  "/:studentId/medical-information",
-  authorize("students"),
-  validate(studentIdParamSchema, "params"),
-  getMedicalInfo,
-);
-
-/**
- * @openapi
- * /students/{studentId}/medical-information:
- *   patch:
- *     tags:
- *       - Student Medical Information
- *     summary: Upsert medical information for a student
- *     description: Creates medical information if it does not exist, or updates it. Allergies are fully synced (replaced).
- *     parameters:
- *       - in: path
- *         name: studentId
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/UpsertMedicalInformationBody'
- *     responses:
- *       200:
- *         description: Medical information upserted
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/StudentMedicalInformationRecord'
- *       404:
- *         description: Student not found
- */
-router.patch(
-  "/:studentId/medical-information",
-  authorize("students"),
-  validate(studentIdParamSchema, "params"),
-  validate(upsertMedicalInformationSchema, "body"),
-  upsertMedicalInfo,
-);
+// ─── Student Allergies ────────────────────────────────────────────────────────
+// NOTE: bloodType/medicalNotes now live directly on the student record
+// (see StudentRecord). Allergy sub-resource endpoints
+// (GET/POST/PATCH/DELETE /students/:studentId/allergies) are not implemented
+// yet — planned for a follow-up pass; the frontend already calls these paths.
 
 export default router;

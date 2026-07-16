@@ -1,12 +1,23 @@
+/** Blood type key, matches the frontend's BloodTypeKey format exactly ("A+", "O-", etc.) */
+export type BloodTypeKey =
+  | "A+"
+  | "A-"
+  | "B+"
+  | "B-"
+  | "AB+"
+  | "AB-"
+  | "O+"
+  | "O-";
+
 /** Filters applicable to student list endpoints */
 export interface StudentFilters {
   q?: string;
-  name?: string;
+  fullName?: string;
   curp?: string;
   enrollment?: string;
   email?: string;
   phoneNumber?: string;
-  status?: boolean;
+  isActive?: boolean;
 }
 
 /** Record returned from the students table */
@@ -20,7 +31,9 @@ export interface StudentRecord {
   enrollment: string;
   image: string | null;
   observations: string | null;
-  status: boolean;
+  isActive: boolean;
+  bloodType: BloodTypeKey;
+  medicalNotes: string | null;
   email: string;
   phoneNumber: string;
   address: string;
@@ -46,12 +59,15 @@ export interface CreateStudentDto {
   curp: string;
   image?: string;
   observations?: string;
+  bloodType: BloodTypeKey;
+  medicalNotes?: string;
   email: string;
   phoneNumber: string;
   address: string;
   state: string;
   municipality: string;
   postalCode: string;
+  isActive?: boolean;
 }
 
 /** Input DTO for updating a student (all fields optional) */
@@ -63,11 +79,13 @@ export interface UpdateStudentDto {
   curp?: string;
   image?: string;
   observations?: string;
+  bloodType?: BloodTypeKey;
+  medicalNotes?: string;
   email?: string;
   phoneNumber?: string;
   address?: string;
   state?: string;
   municipality?: string;
   postalCode?: string;
-  status?: boolean;
+  isActive?: boolean;
 }

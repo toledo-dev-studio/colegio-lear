@@ -242,7 +242,9 @@ model Student {
   enrollment     String   @unique @db.VarChar(20)
   image          String?  @db.VarChar(500)
   observations   String?  @db.VarChar(1000)
-  status         Boolean  @default(true)
+  isActive       Boolean  @default(true) @map("is_active")
+  bloodType      BloodType @map("blood_type")
+  medicalNotes   String?  @map("medical_notes") @db.VarChar(1000)
   email          String   @unique @db.VarChar(150)
   phoneNumber    String   @map("phone_number") @db.VarChar(20)
   address        String   @db.VarChar(300)
@@ -255,14 +257,14 @@ model Student {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-  medicalInformation StudentMedicalInformation?
   guardians          StudentGuardian[]
+  allergies          StudentAllergy[]
 
   @@map("students")
   @@schema("core")
 }
 
-// ─── Student Medical Information ─────────────────────────────────────────────
+// ─── Student Medical Info (blood type / allergies) ───────────────────────────
 
 enum BloodType {
   A_POSITIVE  @map("A+")
@@ -285,27 +287,15 @@ enum AllergySeverity {
   @@schema("core")
 }
 
-model StudentMedicalInformation {
-  id             String           @id @default(uuid()) @db.Uuid
-  studentId      String           @unique @map("student_id") @db.Uuid
-  bloodType      BloodType        @map("blood_type")
-  emergencyNotes String?          @map("emergency_notes") @db.VarChar(1000)
-  student        Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  allergies      StudentAllergy[]
-
-  @@map("student_medical_information")
-  @@schema("core")
-}
-
 // ─── Student Allergy ─────────────────────────────────────────────────────────
 
 model StudentAllergy {
-  id                   String                    @id @default(uuid()) @db.Uuid
-  medicalInformationId String                    @map("medical_information_id") @db.Uuid
-  name                 String                    @db.VarChar(100)
-  severity             AllergySeverity
-  observations         String?                   @db.VarChar(500)
-  medicalInformation   StudentMedicalInformation @relation(fields: [medicalInformationId], references: [id], onDelete: Cascade)
+  id           String          @id @default(uuid()) @db.Uuid
+  studentId    String          @map("student_id") @db.Uuid
+  name         String          @db.VarChar(100)
+  severity     AllergySeverity
+  observations String?         @db.VarChar(500)
+  student      Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("student_allergies")
   @@schema("core")

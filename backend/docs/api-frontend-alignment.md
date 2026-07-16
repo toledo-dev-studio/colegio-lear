@@ -210,6 +210,54 @@ avisar antes de asumir que siguen bien.
 - Login de prueba: `aone` / `Admin123!` (SuperAdmin, permisos completos).
 - `pnpm run dev` levanta el server en `http://localhost:3000`.
 
+## `students` — trabajo en progreso, por secciones
+
+Este módulo se está alineando por partes (así lo pidió el usuario, es grande):
+sección 1 = `student` núcleo (hecho), sección 2 = `student-guardian`
+(pendiente, pero ya se ve casi perfectamente alineado campo por campo, sin
+`status`/`isActive` de por medio), sección 3 = alergias (pendiente,
+requiere construir endpoints nuevos, ver abajo), sección 4 = wallet del
+alumno (`student-wallet-item`, `student-wallet-payment`) — sin analizar
+todavía, probablemente se cruza con `payment-concepts`/`academic-cycles`.
+
+**Sección 1 (`student` núcleo) — completada** en la migración
+`20260713080000_student_medical_info_and_is_active`:
+
+- `status` → `isActive`, filtro `name` → `fullName` (mismo patrón de
+  siempre).
+- **Cambio de arquitectura confirmado con el usuario**: el front espera
+  `bloodType` (requerido) y `medicalNotes` como campos planos del alumno
+  en `POST/PATCH/GET /students`, no anidados. El backend los tenía en una
+  entidad separada `StudentMedicalInformation` (1:1, campo llamado
+  `emergencyNotes`). Se eliminó `StudentMedicalInformation` por completo:
+  `bloodType`/`medicalNotes` ahora son columnas directas en `students`, y
+  `StudentAllergy` pasó a depender de `studentId` directo (antes
+  `medicalInformationId`), coincidiendo con la ruta que el front ya usa:
+  `/students/:studentId/allergies`. Se borraron los 4 archivos de
+  `student-medical-information.*` y sus 2 rutas.
+- El mapeo `BloodType` (Prisma usa `A_POSITIVE`, DB/API usan `"A+"`) se
+  conservó tal cual estaba en el service viejo, reutilizado en
+  `student.service.ts`.
+- **Hallazgo importante para cuando se aborde alergias (sección 3)**: el
+  front ya tiene las acciones (`get/create-update/delete-allergy-for-student`)
+  apuntando a `GET/POST/PATCH/DELETE /students/:studentId/allergies` como
+  recurso independiente — el backend no tiene ningún endpoint de alergias
+  todavía (antes solo existía como sync completo dentro del payload de
+  medical-information, que ya no existe). Hay que **construir estos
+  endpoints desde cero**, no es un rename.
+- **Hallazgo, no es para nosotros**: `GET /students/:studentId/enrollments`
+  también lo espera el front pero es del dominio de `academic-cycles`
+  (inscripción alumno↔ciclo), no de `students`. Queda pendiente para
+  cuando se aborde ese módulo.
+- **Aviso del lado del front (no lo tocamos)**: varios action files de
+  `students` tienen líneas `// REMOVE` que fuerzan el endpoint a un JSON
+  falso sin importar el ambiente (`get-students`, `get-student-by-id`,
+  `get-allergies-for-student`, `get-academic-cycle-enrollments-for-student`),
+  o usan `VITE_ENVIRONMENT === "development"` en vez del patrón
+  `"mockable"` del resto del proyecto. Probar desde el navegador no va a
+  reflejar la API real hasta que el front limpie esas líneas — seguimos
+  validando por `curl` contra la API real.
+
 ## Módulos ya alineados (8)
 
 | Módulo | Migración | Notas |
@@ -225,10 +273,14 @@ avisar antes de asumir que siguen bien.
 
 ## Módulos pendientes (más complejos, sin tests todavía)
 
-- `academic-cycles` (+ sub-entidades: school-subject, wallet, group)
-- `students` (+ sub-entidades: guardian, medical-information)
+- `students` — sección 1 (núcleo) hecha, ver detalle arriba. Faltan:
+  sección 2 (`student-guardian`, ya casi alineado), sección 3 (alergias,
+  hay que construir endpoints nuevos), sección 4 (wallet del alumno, sin
+  analizar).
+- `academic-cycles` (+ sub-entidades: school-subject, wallet, group) — sin
+  empezar.
 
-Estos no tienen `*.test.ts` todavía y tienen relaciones más profundas — vale
+Ninguno tiene `*.test.ts` todavía y tienen relaciones más profundas — vale
 la pena revisar si también usan `status`/`isActive` y si conviene generar
 specs (tests) al mismo tiempo que se alinean, siguiendo el patrón de los
 módulos que sí tenían tests (`academic-levels`, `payment-concepts`,
