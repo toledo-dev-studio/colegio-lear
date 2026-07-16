@@ -53,7 +53,7 @@ export const AnnouncementViewerOverlay = ({ announcementId, onClose }: Props) =>
                         {data && (
                             <article
                                 data-testid="announcement-viewer-content"
-                                className="tiptap-content prose prose-neutral dark:prose-invert max-w-none"
+                                className="tiptap-content prose prose-neutral dark:prose-invert max-w-none ProseMirror"
                                 /* Only the TipTap HTML content — no title, no metadata, per requirement */
                                 dangerouslySetInnerHTML={{ __html: data.content || "" }}
                             />
