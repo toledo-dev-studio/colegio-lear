@@ -1036,9 +1036,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
           },
         },
         // ─── Student Allergies ───────────────────────────────────────────────────
-        // NOTE: bloodType/medicalNotes now live directly on StudentRecord.
-        // AllergyRecord is kept here for when the /students/:studentId/allergies
-        // CRUD endpoints are implemented (not yet built).
+        // NOTE: bloodType/medicalNotes live directly on StudentRecord.
+        // Allergies are their own sub-resource, one record at a time.
         AllergyRecord: {
           type: "object",
           properties: {
@@ -1051,6 +1050,30 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "moderate",
             },
             observations: { type: "string", nullable: true },
+          },
+        },
+        CreateAllergyBody: {
+          type: "object",
+          required: ["name", "severity"],
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            severity: {
+              type: "string",
+              enum: ["mild", "moderate", "severe"],
+            },
+            observations: { type: "string", maxLength: 500 },
+          },
+        },
+        UpdateAllergyBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            severity: {
+              type: "string",
+              enum: ["mild", "moderate", "severe"],
+            },
+            observations: { type: "string", maxLength: 500, nullable: true },
           },
         },
         // ─── Academic Cycles ────────────────────────────────────────────────────

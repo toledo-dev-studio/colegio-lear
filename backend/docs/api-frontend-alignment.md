@@ -215,10 +215,10 @@ avisar antes de asumir que siguen bien.
 Este módulo se está alineando por partes (así lo pidió el usuario, es grande):
 sección 1 = `student` núcleo (hecho), sección 2 = `student-guardian`
 (pendiente, pero ya se ve casi perfectamente alineado campo por campo, sin
-`status`/`isActive` de por medio), sección 3 = alergias (pendiente,
-requiere construir endpoints nuevos, ver abajo), sección 4 = wallet del
-alumno (`student-wallet-item`, `student-wallet-payment`) — sin analizar
-todavía, probablemente se cruza con `payment-concepts`/`academic-cycles`.
+`status`/`isActive` de por medio, probablemente rápido), sección 3 =
+alergias (**hecho**, ver abajo), sección 4 = wallet del alumno
+(`student-wallet-item`, `student-wallet-payment`) — sin analizar todavía,
+probablemente se cruza con `payment-concepts`/`academic-cycles`.
 
 **Sección 1 (`student` núcleo) — completada** en la migración
 `20260713080000_student_medical_info_and_is_active`:
@@ -238,13 +238,31 @@ todavía, probablemente se cruza con `payment-concepts`/`academic-cycles`.
 - El mapeo `BloodType` (Prisma usa `A_POSITIVE`, DB/API usan `"A+"`) se
   conservó tal cual estaba en el service viejo, reutilizado en
   `student.service.ts`.
-- **Hallazgo importante para cuando se aborde alergias (sección 3)**: el
-  front ya tiene las acciones (`get/create-update/delete-allergy-for-student`)
-  apuntando a `GET/POST/PATCH/DELETE /students/:studentId/allergies` como
-  recurso independiente — el backend no tiene ningún endpoint de alergias
-  todavía (antes solo existía como sync completo dentro del payload de
-  medical-information, que ya no existe). Hay que **construir estos
-  endpoints desde cero**, no es un rename.
+**Sección 3 (alergias) — completada**, módulo nuevo `student-allergy.*`
+(no existía nada antes, se construyó desde cero — ver más abajo por qué):
+
+- Antes de construir, se aclaró con el usuario si hacía falta el algoritmo
+  de sync tipo "new-" (comparar arreglo recibido contra existentes y
+  borrar los que faltan, como `educationLevels`). **No hacía falta**: el
+  front ya llama endpoints dedicados por registro
+  (`GET/POST/PATCH/DELETE /students/:studentId/allergies`), un alergia a
+  la vez — el `id === "new"` en `create-update-allergy-for-student.action.ts`
+  es solo el mismo check de "¿formulario de crear o editar?" que usan
+  todos los demás módulos, no el patrón de prefijo `new-`/`new_` de sync
+  masivo. Antes de asumir que un campo 1:N necesita el algoritmo de sync,
+  hay que revisar si el front realmente manda el arreglo completo en un
+  solo PATCH (sí lo necesita) o si llama un endpoint por registro (no lo
+  necesita, como aquí, como `attachments`, y como `student-guardian`).
+- Módulo nuevo `student-allergy.types.ts` / `.schema.ts` / `.service.ts` /
+  `.controller.ts`, mismo patrón que `student-guardian.*` (verificación de
+  que el `studentId` del alumno padre coincide antes de update/delete, sin
+  soft delete — es hard delete real, igual que guardianes). Rutas
+  conectadas en `student.routes.ts`. No requirió migración nueva (el
+  esquema de `StudentAllergy.studentId` ya había quedado listo en la
+  migración de la sección 1).
+- Probado en vivo: crear 2 alergias para un alumno, listar, editar una sin
+  afectar la otra, eliminar una, y confirmado que no se puede borrar una
+  alergia usando el `studentId` de otro alumno (404, no cross-tenant leak).
 - **Hallazgo, no es para nosotros**: `GET /students/:studentId/enrollments`
   también lo espera el front pero es del dominio de `academic-cycles`
   (inscripción alumno↔ciclo), no de `students`. Queda pendiente para

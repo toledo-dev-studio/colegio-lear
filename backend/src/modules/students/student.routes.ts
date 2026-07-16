@@ -15,6 +15,10 @@ import {
   updateStudentGuardianSchema,
 } from "./student-guardian.schema";
 import {
+  createAllergySchema,
+  updateAllergySchema,
+} from "./student-allergy.schema";
+import {
   findAll,
   findAllPaged,
   findById,
@@ -29,6 +33,12 @@ import {
   updateGuardian,
   deleteGuardian,
 } from "./student-guardian.controller";
+import {
+  findAllAllergies,
+  createAllergy,
+  updateAllergy,
+  deleteAllergy,
+} from "./student-allergy.controller";
 
 const router = Router();
 
@@ -519,9 +529,159 @@ router.delete(
 );
 
 // ─── Student Allergies ────────────────────────────────────────────────────────
-// NOTE: bloodType/medicalNotes now live directly on the student record
-// (see StudentRecord). Allergy sub-resource endpoints
-// (GET/POST/PATCH/DELETE /students/:studentId/allergies) are not implemented
-// yet — planned for a follow-up pass; the frontend already calls these paths.
+// NOTE: bloodType/medicalNotes live directly on the student record (see
+// StudentRecord). Allergies are their own sub-resource, one record at a
+// time (no bulk array sync) — same shape as guardians above.
+
+/**
+ * @openapi
+ * /students/{studentId}/allergies:
+ *   get:
+ *     tags:
+ *       - Student Allergies
+ *     summary: List allergies for a student
+ *     description: Returns all allergies associated with the given student.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of allergies
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AllergyRecord'
+ *       404:
+ *         description: Student not found
+ */
+router.get(
+  "/:studentId/allergies",
+  authorize("students"),
+  validate(studentIdParamSchema, "params"),
+  findAllAllergies,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/allergies:
+ *   post:
+ *     tags:
+ *       - Student Allergies
+ *     summary: Create an allergy for a student
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateAllergyBody'
+ *     responses:
+ *       201:
+ *         description: Allergy created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AllergyRecord'
+ *       404:
+ *         description: Student not found
+ */
+router.post(
+  "/:studentId/allergies",
+  authorize("students"),
+  validate(studentIdParamSchema, "params"),
+  validate(createAllergySchema, "body"),
+  createAllergy,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/allergies/{id}:
+ *   patch:
+ *     tags:
+ *       - Student Allergies
+ *     summary: Update an allergy
+ *     description: Partially updates an allergy. At least one field must be provided.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateAllergyBody'
+ *     responses:
+ *       200:
+ *         description: Allergy updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AllergyRecord'
+ *       404:
+ *         description: Student or allergy not found
+ */
+router.patch(
+  "/:studentId/allergies/:id",
+  authorize("students"),
+  validate(studentSubResourceParamSchema, "params"),
+  validate(updateAllergySchema, "body"),
+  updateAllergy,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/allergies/{id}:
+ *   delete:
+ *     tags:
+ *       - Student Allergies
+ *     summary: Delete an allergy
+ *     description: Permanently removes an allergy from the student.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Student or allergy not found
+ */
+router.delete(
+  "/:studentId/allergies/:id",
+  authorize("students"),
+  validate(studentSubResourceParamSchema, "params"),
+  deleteAllergy,
+);
 
 export default router;
