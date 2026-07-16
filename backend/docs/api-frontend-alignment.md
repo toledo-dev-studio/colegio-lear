@@ -214,11 +214,30 @@ avisar antes de asumir que siguen bien.
 
 Este módulo se está alineando por partes (así lo pidió el usuario, es grande):
 sección 1 = `student` núcleo (hecho), sección 2 = `student-guardian`
-(pendiente, pero ya se ve casi perfectamente alineado campo por campo, sin
-`status`/`isActive` de por medio, probablemente rápido), sección 3 =
-alergias (**hecho**, ver abajo), sección 4 = wallet del alumno
-(`student-wallet-item`, `student-wallet-payment`) — sin analizar todavía,
-probablemente se cruza con `payment-concepts`/`academic-cycles`.
+(**hecho**, ver abajo), sección 3 = alergias (**hecho**, ver abajo),
+sección 4 = wallet del alumno (`student-wallet-item`,
+`student-wallet-payment`) — sin analizar todavía, probablemente se cruza
+con `payment-concepts`/`academic-cycles`.
+
+**Sección 2 (`student-guardian`) — completada.** Los nombres de campo,
+rutas y valores del enum `relationship` ya coincidían 1:1 con el front (no
+hubo que renombrar nada) — **pero probando en vivo apareció un bug real**:
+`relationship: "legal-guardian"` (y `"step-father"`/`"step-mother"`)
+tronaban con 500 (`PrismaClientValidationError`). Mismo problema que
+`JobTitleType` en `employees`: el enum de Prisma
+(`StudentGuardianType`) usa guion bajo en el nombre del miembro
+(`legal_guardian`) pero `@map` lo guarda como `"legal-guardian"` (guion) en
+la base — y el service pasaba el valor crudo del front (`dto.relationship
+as never`) directo a Prisma sin traducir. Se agregó `GUARDIAN_TYPE_MAP` /
+`GUARDIAN_TYPE_REVERSE` en `student-guardian.service.ts` (mismo patrón que
+`BLOOD_TYPE_MAP` en `student.service.ts` y `toPrismaJobTitleType` en
+`job-title.service.ts`), usado en `create()`, `update()`, y `toRecord()`.
+Probado en vivo con los 3 valores que tienen guion (antes fallaban) más
+`PATCH` y la lógica de "un solo tutor principal" (ya existía, sigue bien).
+**Regla general para lo que sigue**: cualquier enum de Prisma con `@map` a
+un valor con guion (`-`) es sospechoso — buscar si el service pasa el
+valor del DTO directo sin traducir antes de asumir que un módulo con
+enums está bien solo porque los nombres de campo coinciden.
 
 **Sección 1 (`student` núcleo) — completada** en la migración
 `20260713080000_student_medical_info_and_is_active`:
