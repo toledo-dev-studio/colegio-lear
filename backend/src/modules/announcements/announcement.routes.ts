@@ -41,7 +41,7 @@ const router = Router();
  *           maxLength: 200
  *         description: Filter by name (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -97,7 +97,7 @@ router.get(
  *           maxLength: 200
  *         description: Filter by name (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -167,7 +167,7 @@ router.get(
  *     tags:
  *       - Announcements
  *     summary: Create a new announcement
- *     description: Creates a new announcement (without content). Content and attachments are added later via PATCH. Status defaults to true.
+ *     description: Creates a new announcement (without content). Content and attachments are added later via PATCH. isActive defaults to true.
  *     requestBody:
  *       required: true
  *       content:
@@ -275,7 +275,7 @@ router.patch(
  *     tags:
  *       - Announcements
  *     summary: Soft delete an announcement
- *     description: Sets the announcement status to false (logical deletion). Does not remove the record.
+ *     description: Sets the announcement isDeleted flag to true (logical deletion). Does not remove the record.
  *     parameters:
  *       - in: path
  *         name: id
@@ -292,7 +292,7 @@ router.patch(
  *       404:
  *         description: Announcement not found
  *       409:
- *         description: Announcement is already inactive
+ *         description: Announcement is already deleted
  */
 router.delete(
   "/:id",

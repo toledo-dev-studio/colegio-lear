@@ -85,9 +85,9 @@ export class AcademicCycleService {
       });
     }
 
-    if (filters.type) {
+    if (filters.periodType) {
       andConditions.push({
-        type: typeToPrisma(filters.type) as never,
+        periodType: typeToPrisma(filters.periodType) as never,
       });
     }
 
@@ -113,8 +113,10 @@ export class AcademicCycleService {
       code: raw.code as string,
       startDate: (raw.startDate as Date).toISOString(),
       endDate: (raw.endDate as Date).toISOString(),
-      type: typeFromPrisma(raw.type as string),
+      periodType: typeFromPrisma(raw.periodType as string),
       status: raw.status as AcademicCycleRecord["status"],
+      minimumPassingGrade: raw.minimumPassingGrade as number,
+      evaluationCount: raw.evaluationCount as number,
       enrollmentOpen: raw.enrollmentOpen as boolean,
       description: raw.description as string | null,
       observations: raw.observations as string | null,
@@ -202,8 +204,10 @@ export class AcademicCycleService {
         code: dto.code,
         startDate: new Date(dto.startDate),
         endDate: new Date(dto.endDate),
-        type: typeToPrisma(dto.type) as never,
+        periodType: typeToPrisma(dto.periodType) as never,
         status: (dto.status ?? "upcoming") as never,
+        minimumPassingGrade: dto.minimumPassingGrade ?? 6,
+        evaluationCount: dto.evaluationCount ?? 3,
         enrollmentOpen: dto.enrollmentOpen ?? false,
         description: dto.description ?? null,
         observations: dto.observations ?? null,
@@ -244,8 +248,13 @@ export class AcademicCycleService {
     if (dto.startDate !== undefined)
       updateData.startDate = new Date(dto.startDate);
     if (dto.endDate !== undefined) updateData.endDate = new Date(dto.endDate);
-    if (dto.type !== undefined) updateData.type = typeToPrisma(dto.type);
+    if (dto.periodType !== undefined)
+      updateData.periodType = typeToPrisma(dto.periodType);
     if (dto.status !== undefined) updateData.status = dto.status;
+    if (dto.minimumPassingGrade !== undefined)
+      updateData.minimumPassingGrade = dto.minimumPassingGrade;
+    if (dto.evaluationCount !== undefined)
+      updateData.evaluationCount = dto.evaluationCount;
     if (dto.enrollmentOpen !== undefined)
       updateData.enrollmentOpen = dto.enrollmentOpen;
     if (dto.description !== undefined) updateData.description = dto.description;

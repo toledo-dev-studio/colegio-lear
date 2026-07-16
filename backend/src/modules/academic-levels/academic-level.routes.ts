@@ -43,7 +43,7 @@ const router = Router();
  *           maxLength: 100
  *         description: Filter by name (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -87,7 +87,7 @@ router.get(
  *           maxLength: 100
  *         description: Filter by name (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -154,7 +154,13 @@ router.get(
  *           maxLength: 100
  *         description: Search by education level name (case-insensitive)
  *       - in: query
- *         name: status
+ *         name: name
+ *         schema:
+ *           type: string
+ *           maxLength: 100
+ *         description: Filter by education level name (case-insensitive contains)
+ *       - in: query
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -218,7 +224,7 @@ router.get(
  *     tags:
  *       - Academic Levels
  *     summary: Create a new academic level
- *     description: Creates a new academic level with the provided name and description. Status defaults to true.
+ *     description: Creates a new academic level with the provided name and description. isActive defaults to true.
  *     requestBody:
  *       required: true
  *       content:
@@ -330,7 +336,7 @@ router.patch(
  *     tags:
  *       - Academic Levels
  *     summary: Soft delete an academic level
- *     description: Sets the academic level status to false (logical deletion). Does not remove the record.
+ *     description: Sets the academic level isDeleted flag to true (logical deletion). Does not remove the record.
  *     parameters:
  *       - in: path
  *         name: id
@@ -347,7 +353,7 @@ router.patch(
  *       404:
  *         description: Academic level not found
  *       409:
- *         description: Academic level is already inactive
+ *         description: Academic level is already deleted
  */
 router.delete(
   "/:id",

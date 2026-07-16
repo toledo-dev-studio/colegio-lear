@@ -4,7 +4,7 @@
 export interface AcademicLevelFilters {
   q?: string;
   name?: string;
-  status?: boolean;
+  isActive?: boolean;
 }
 
 /**
@@ -14,7 +14,7 @@ export interface AcademicLevelView {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
 }
 
 /**
@@ -34,7 +34,7 @@ export interface AcademicLevelDetail {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
   educationLevels: EducationLevelView[];
 }
 
@@ -43,7 +43,8 @@ export interface AcademicLevelDetail {
  */
 export interface EducationLevelFilters {
   q?: string;
-  status?: boolean;
+  name?: string;
+  isActive?: boolean;
   academicLevelId?: string;
 }
 
@@ -64,6 +65,7 @@ export interface PagedResult<T> {
 export interface CreateAcademicLevelDto {
   name: string;
   description?: string;
+  isActive?: boolean;
   educationLevels?: EducationLevelInput[];
 }
 
@@ -74,7 +76,7 @@ export interface CreateAcademicLevelDto {
 export interface UpdateAcademicLevelDto {
   name?: string;
   description?: string;
-  status?: boolean;
+  isActive?: boolean;
   educationLevels?: EducationLevelInput[];
 }
 
@@ -95,5 +97,5 @@ export interface AcademicLevelRecord {
   id: string;
   name: string;
   description: string | null;
-  status: boolean;
+  isActive: boolean;
 }

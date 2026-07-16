@@ -53,9 +53,9 @@ export class AcademicLevelService {
       });
     }
 
-    // Status filter (exact boolean match)
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    // isActive filter (exact boolean match)
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     if (andConditions.length > 0) {
@@ -67,8 +67,8 @@ export class AcademicLevelService {
 
   /**
    * Build a Prisma `where` clause for education levels filters.
-   * Supports `q` (name contains), `academicLevelId` (exact match),
-   * and `status` (relation filter on parent academic level status).
+   * Supports `q` (name contains), `name` (name contains), `academicLevelId` (exact match),
+   * and `isActive` (relation filter on parent academic level status).
    * All active filters are combined with AND logic.
    */
   private buildEducationLevelWhereClause(
@@ -84,15 +84,22 @@ export class AcademicLevelService {
       });
     }
 
+    // Name filter (case-insensitive contains)
+    if (filters.name) {
+      andConditions.push({
+        name: { contains: filters.name, mode: "insensitive" },
+      });
+    }
+
     // Filter by parent academic level ID
     if (filters.academicLevelId) {
       andConditions.push({ academicLevelId: filters.academicLevelId });
     }
 
-    // Filter by parent academic level status (relation filter)
-    if (filters.status !== undefined) {
+    // Filter by parent academic level isActive (relation filter)
+    if (filters.isActive !== undefined) {
       andConditions.push({
-        academicLevel: { status: filters.status },
+        academicLevel: { isActive: filters.isActive },
       });
     }
 
@@ -119,7 +126,7 @@ export class AcademicLevelService {
       id: al.id,
       name: al.name,
       description: al.description,
-      status: al.status,
+      isActive: al.isActive,
       educationLevels: al.educationLevels.map((el) => ({
         id: el.id,
         name: el.name,
@@ -158,7 +165,7 @@ export class AcademicLevelService {
         id: al.id,
         name: al.name,
         description: al.description,
-        status: al.status,
+        isActive: al.isActive,
         educationLevels: al.educationLevels.map((el) => ({
           id: el.id,
           name: el.name,
@@ -191,7 +198,7 @@ export class AcademicLevelService {
       id: academicLevel.id,
       name: academicLevel.name,
       description: academicLevel.description,
-      status: academicLevel.status,
+      isActive: academicLevel.isActive,
       educationLevels: academicLevel.educationLevels.map((el) => ({
         id: el.id,
         name: el.name,
@@ -204,7 +211,7 @@ export class AcademicLevelService {
   /**
    * Create a new academic level with optional nested education levels.
    * Validates name uniqueness (case-insensitive).
-   * Sets status = true by default.
+   * Sets isActive = true by default (or dto.isActive when provided).
    * Creates education levels in the same transaction if provided.
    * Throws ConflictError if a record with the same name already exists.
    */
@@ -226,7 +233,7 @@ export class AcademicLevelService {
       data: {
         name: dto.name,
         description: dto.description ?? null,
-        status: true,
+        isActive: dto.isActive ?? true,
         ...(dto.educationLevels && dto.educationLevels.length > 0
           ? {
               educationLevels: {
@@ -245,7 +252,7 @@ export class AcademicLevelService {
       id: created.id,
       name: created.name,
       description: created.description,
-      status: created.status,
+      isActive: created.isActive,
       educationLevels: created.educationLevels.map((el) => ({
         id: el.id,
         name: el.name,
@@ -297,7 +304,7 @@ export class AcademicLevelService {
     const updateData: Record<string, unknown> = {};
     if (dto.name !== undefined) updateData.name = dto.name;
     if (dto.description !== undefined) updateData.description = dto.description;
-    if (dto.status !== undefined) updateData.status = dto.status;
+    if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
 
     // Sync education levels if provided
     if (dto.educationLevels !== undefined) {
@@ -358,7 +365,7 @@ export class AcademicLevelService {
       id: updated.id,
       name: updated.name,
       description: updated.description,
-      status: updated.status,
+      isActive: updated.isActive,
       educationLevels: updated.educationLevels.map((el) => ({
         id: el.id,
         name: el.name,
@@ -395,7 +402,7 @@ export class AcademicLevelService {
   /**
    * List education levels with pagination and optional filters.
    * Reads from the educationLevel table.
-   * Supports filtering by `q` (name contains), `academicLevelId`, and `status` (parent relation).
+   * Supports filtering by `q` (name contains), `name`, `academicLevelId`, and `isActive` (parent relation).
    * Returns a PagedResult with metadata (totalPages, currentPage, itemsCount).
    */
   async findEducationLevelsPaged(

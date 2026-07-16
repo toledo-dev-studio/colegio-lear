@@ -1,11 +1,9 @@
 /**
- * Represents a single audience target for an announcement.
- * The key identifies the audience group; the label is the human-readable name.
+ * Audience key identifying a target group for an announcement.
+ * The human-readable label is a presentation-layer concern owned by the
+ * frontend catalog (AUDIENCE_TYPES) and is not persisted.
  */
-export interface AudienceItem {
-  key: "administrative-staff" | "teacher" | "student";
-  label: string;
-}
+export type AudienceKey = "administrative-staff" | "teacher" | "student";
 
 /**
  * Filters applicable to announcements list endpoints.
@@ -13,7 +11,7 @@ export interface AudienceItem {
 export interface AnnouncementFilters {
   q?: string;
   name?: string;
-  status?: boolean;
+  isActive?: boolean;
   publishedAt?: string; // ISO date string (day filter)
   expiresAt?: string; // ISO date string (day filter)
 }
@@ -25,11 +23,11 @@ export interface AnnouncementRecord {
   id: string;
   name: string;
   description: string | null;
-  audience: AudienceItem[];
+  audience: AudienceKey[];
   content: string;
   publishedAt: Date;
   expiresAt: Date;
-  status: boolean;
+  isActive: boolean;
 }
 
 /**
@@ -58,10 +56,11 @@ export interface AnnouncementDetail extends AnnouncementRecord {
 export interface CreateAnnouncementDto {
   name: string;
   description?: string;
-  audience: AudienceItem[];
+  audience: AudienceKey[];
   content?: string;
   publishedAt: string;
   expiresAt: string;
+  isActive?: boolean;
 }
 
 /**
@@ -70,11 +69,11 @@ export interface CreateAnnouncementDto {
 export interface UpdateAnnouncementDto {
   name?: string;
   description?: string;
-  audience?: AudienceItem[];
+  audience?: AudienceKey[];
   content?: string;
   publishedAt?: string;
   expiresAt?: string;
-  status?: boolean;
+  isActive?: boolean;
 }
 
 /**

@@ -36,7 +36,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Educación primaria básica",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
           },
         },
         AcademicLevelDetail: {
@@ -49,7 +49,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               nullable: true,
               example: "Educación primaria básica",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             educationLevels: {
               type: "array",
               items: { $ref: "#/components/schemas/EducationLevel" },
@@ -85,6 +85,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               maxLength: 500,
               example: "Educación media superior",
             },
+            isActive: { type: "boolean", default: true },
             educationLevels: {
               type: "array",
               description:
@@ -100,7 +101,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
             description: { type: "string", minLength: 1, maxLength: 500 },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
             educationLevels: {
               type: "array",
               description:
@@ -532,15 +533,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             audience: {
               type: "array",
               items: {
-                type: "object",
-                properties: {
-                  key: {
-                    type: "string",
-                    enum: ["administrative-staff", "teacher", "student"],
-                    example: "teacher",
-                  },
-                  label: { type: "string", example: "Docentes" },
-                },
+                type: "string",
+                enum: ["administrative-staff", "teacher", "student"],
+                example: "teacher",
               },
             },
             content: {
@@ -557,7 +552,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "date-time",
               example: "2025-06-30T00:00:00.000Z",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
           },
         },
         AnnouncementDetail: {
@@ -573,15 +568,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             audience: {
               type: "array",
               items: {
-                type: "object",
-                properties: {
-                  key: {
-                    type: "string",
-                    enum: ["administrative-staff", "teacher", "student"],
-                    example: "teacher",
-                  },
-                  label: { type: "string", example: "Docentes" },
-                },
+                type: "string",
+                enum: ["administrative-staff", "teacher", "student"],
+                example: "teacher",
               },
             },
             content: {
@@ -598,7 +587,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "date-time",
               example: "2025-06-30T00:00:00.000Z",
             },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
             attachments: {
               type: "array",
               items: { $ref: "#/components/schemas/Attachment" },
@@ -638,15 +627,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
               type: "array",
               minItems: 1,
               items: {
-                type: "object",
-                required: ["key", "label"],
-                properties: {
-                  key: {
-                    type: "string",
-                    enum: ["administrative-staff", "teacher", "student"],
-                  },
-                  label: { type: "string" },
-                },
+                type: "string",
+                enum: ["administrative-staff", "teacher", "student"],
               },
             },
             content: {
@@ -664,6 +646,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "date-time",
               example: "2025-06-30T00:00:00.000Z",
             },
+            isActive: { type: "boolean", default: true },
           },
         },
         UpdateAnnouncementDto: {
@@ -676,20 +659,14 @@ const swaggerOptions: swaggerJsdoc.Options = {
               type: "array",
               minItems: 1,
               items: {
-                type: "object",
-                properties: {
-                  key: {
-                    type: "string",
-                    enum: ["administrative-staff", "teacher", "student"],
-                  },
-                  label: { type: "string" },
-                },
+                type: "string",
+                enum: ["administrative-staff", "teacher", "student"],
               },
             },
             content: { type: "string", minLength: 1 },
             publishedAt: { type: "string", format: "date-time" },
             expiresAt: { type: "string", format: "date-time" },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── Scholarships ───────────────────────────────────────────────────────
@@ -878,7 +855,13 @@ const swaggerOptions: swaggerJsdoc.Options = {
             enrollment: { type: "string", example: "LR-2025-0001" },
             image: { type: "string", nullable: true },
             observations: { type: "string", nullable: true },
-            status: { type: "boolean", example: true },
+            isActive: { type: "boolean", example: true },
+            bloodType: {
+              type: "string",
+              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+              example: "O+",
+            },
+            medicalNotes: { type: "string", nullable: true },
             email: {
               type: "string",
               format: "email",
@@ -899,6 +882,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             "secondLastName",
             "dateOfBirth",
             "curp",
+            "bloodType",
             "email",
             "phoneNumber",
             "address",
@@ -914,12 +898,19 @@ const swaggerOptions: swaggerJsdoc.Options = {
             curp: { type: "string", maxLength: 18 },
             image: { type: "string", maxLength: 500 },
             observations: { type: "string", maxLength: 1000 },
+            bloodType: {
+              type: "string",
+              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+              example: "O+",
+            },
+            medicalNotes: { type: "string", maxLength: 1000 },
             email: { type: "string", format: "email", maxLength: 150 },
             phoneNumber: { type: "string", maxLength: 20 },
             address: { type: "string", maxLength: 300 },
             state: { type: "string", maxLength: 100 },
             municipality: { type: "string", maxLength: 100 },
             postalCode: { type: "string", maxLength: 10 },
+            isActive: { type: "boolean", default: true },
           },
         },
         UpdateStudentBody: {
@@ -933,13 +924,18 @@ const swaggerOptions: swaggerJsdoc.Options = {
             curp: { type: "string", maxLength: 18 },
             image: { type: "string", maxLength: 500, nullable: true },
             observations: { type: "string", maxLength: 1000, nullable: true },
+            bloodType: {
+              type: "string",
+              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+            },
+            medicalNotes: { type: "string", maxLength: 1000, nullable: true },
             email: { type: "string", format: "email", maxLength: 150 },
             phoneNumber: { type: "string", maxLength: 20 },
             address: { type: "string", maxLength: 300 },
             state: { type: "string", maxLength: 100 },
             municipality: { type: "string", maxLength: 100 },
             postalCode: { type: "string", maxLength: 10 },
-            status: { type: "boolean" },
+            isActive: { type: "boolean" },
           },
         },
         // ─── Student Guardians ──────────────────────────────────────────────────
@@ -1039,11 +1035,14 @@ const swaggerOptions: swaggerJsdoc.Options = {
             observations: { type: "string", maxLength: 500, nullable: true },
           },
         },
-        // ─── Student Medical Information ────────────────────────────────────────
+        // ─── Student Allergies ───────────────────────────────────────────────────
+        // NOTE: bloodType/medicalNotes live directly on StudentRecord.
+        // Allergies are their own sub-resource, one record at a time.
         AllergyRecord: {
           type: "object",
           properties: {
             id: { type: "string", format: "uuid" },
+            studentId: { type: "string", format: "uuid" },
             name: { type: "string", example: "Penicilina" },
             severity: {
               type: "string",
@@ -1053,61 +1052,28 @@ const swaggerOptions: swaggerJsdoc.Options = {
             observations: { type: "string", nullable: true },
           },
         },
-        StudentMedicalInformationRecord: {
+        CreateAllergyBody: {
           type: "object",
-          nullable: true,
+          required: ["name", "severity"],
           properties: {
-            id: { type: "string", format: "uuid" },
-            studentId: { type: "string", format: "uuid" },
-            bloodType: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            severity: {
               type: "string",
-              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
-              example: "O+",
+              enum: ["mild", "moderate", "severe"],
             },
-            emergencyNotes: {
-              type: "string",
-              nullable: true,
-              example: "Alérgico a la penicilina",
-            },
-            allergies: {
-              type: "array",
-              items: { $ref: "#/components/schemas/AllergyRecord" },
-            },
+            observations: { type: "string", maxLength: 500 },
           },
         },
-        UpsertMedicalInformationBody: {
+        UpdateAllergyBody: {
           type: "object",
-          required: ["bloodType"],
+          description: "At least one field required.",
           properties: {
-            bloodType: {
+            name: { type: "string", minLength: 1, maxLength: 100 },
+            severity: {
               type: "string",
-              enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+              enum: ["mild", "moderate", "severe"],
             },
-            emergencyNotes: { type: "string", maxLength: 1000, nullable: true },
-            allergies: {
-              type: "array",
-              items: {
-                type: "object",
-                required: ["name", "severity"],
-                properties: {
-                  id: {
-                    type: "string",
-                    format: "uuid",
-                    description: "Optional, ignored on upsert",
-                  },
-                  name: { type: "string", maxLength: 100 },
-                  severity: {
-                    type: "string",
-                    enum: ["mild", "moderate", "severe"],
-                  },
-                  observations: {
-                    type: "string",
-                    maxLength: 500,
-                    nullable: true,
-                  },
-                },
-              },
-            },
+            observations: { type: "string", maxLength: 500, nullable: true },
           },
         },
         // ─── Academic Cycles ────────────────────────────────────────────────────
@@ -1119,7 +1085,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             code: { type: "string", example: "2026-A" },
             startDate: { type: "string", format: "date-time" },
             endDate: { type: "string", format: "date-time" },
-            type: {
+            periodType: {
               type: "string",
               enum: [
                 "annual",
@@ -1142,6 +1108,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "archived",
               ],
             },
+            minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
+            evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean", example: false },
             description: { type: "string", nullable: true },
             observations: { type: "string", nullable: true },
@@ -1172,7 +1140,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             "code",
             "startDate",
             "endDate",
-            "type",
+            "periodType",
+            "minimumPassingGrade",
+            "evaluationCount",
             "academicLevelId",
             "educationLevelId",
           ],
@@ -1181,7 +1151,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             code: { type: "string", maxLength: 50 },
             startDate: { type: "string", format: "date-time" },
             endDate: { type: "string", format: "date-time" },
-            type: {
+            periodType: {
               type: "string",
               enum: [
                 "annual",
@@ -1204,6 +1174,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "archived",
               ],
             },
+            minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
+            evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean" },
             description: { type: "string", maxLength: 500 },
             observations: { type: "string", maxLength: 1000 },
@@ -1219,7 +1191,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             code: { type: "string", maxLength: 50 },
             startDate: { type: "string", format: "date-time" },
             endDate: { type: "string", format: "date-time" },
-            type: {
+            periodType: {
               type: "string",
               enum: [
                 "annual",
@@ -1242,6 +1214,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "archived",
               ],
             },
+            minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
+            evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean" },
             description: { type: "string", maxLength: 500, nullable: true },
             observations: { type: "string", maxLength: 1000, nullable: true },
@@ -1289,31 +1263,19 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             id: { type: "string", format: "uuid" },
             academicCycleId: { type: "string", format: "uuid" },
-            paymentConceptId: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Inscripción" },
+            description: { type: "string", nullable: true },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", example: 1500 },
             allowForgiveness: { type: "boolean", example: false },
-            paymentConcept: {
-              type: "object",
-              properties: {
-                id: { type: "string", format: "uuid" },
-                name: { type: "string" },
-                amount: { type: "number" },
-                allowForgiveness: { type: "boolean" },
-              },
-            },
           },
         },
         CreateAcademicCycleWalletBody: {
           type: "object",
-          required: [
-            "paymentConceptId",
-            "dueDate",
-            "amount",
-            "allowForgiveness",
-          ],
+          required: ["name", "dueDate", "amount"],
           properties: {
-            paymentConceptId: { type: "string", format: "uuid" },
+            name: { type: "string", maxLength: 100 },
+            description: { type: "string", maxLength: 500 },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", minimum: 0.01 },
             allowForgiveness: { type: "boolean" },
@@ -1323,7 +1285,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
           type: "object",
           description: "At least one field required.",
           properties: {
-            paymentConceptId: { type: "string", format: "uuid" },
+            name: { type: "string", maxLength: 100 },
+            description: { type: "string", maxLength: 500 },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", minimum: 0.01 },
             allowForgiveness: { type: "boolean" },

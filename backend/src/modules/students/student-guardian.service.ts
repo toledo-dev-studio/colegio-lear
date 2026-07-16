@@ -1,10 +1,36 @@
 import { PrismaClient } from "../../generated/prisma/client";
+import { StudentGuardianType } from "../../generated/prisma/enums";
 import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 import type {
   StudentGuardianRecord,
   CreateStudentGuardianDto,
   UpdateStudentGuardianDto,
 } from "./student-guardian.types";
+
+/**
+ * Maps frontend/DB relationship strings ("legal-guardian") to Prisma enum
+ * member names ("legal_guardian"). Most values are identical in both forms;
+ * only the hyphenated ones actually need translating.
+ */
+const GUARDIAN_TYPE_MAP: Record<string, StudentGuardianType> = {
+  father: "father",
+  mother: "mother",
+  grandmother: "grandmother",
+  grandfather: "grandfather",
+  uncle: "uncle",
+  aunt: "aunt",
+  brother: "brother",
+  sister: "sister",
+  "legal-guardian": "legal_guardian",
+  "step-father": "step_father",
+  "step-mother": "step_mother",
+  other: "other",
+};
+
+/** Maps Prisma enum member names back to frontend/DB relationship strings */
+const GUARDIAN_TYPE_REVERSE: Record<string, string> = Object.fromEntries(
+  Object.entries(GUARDIAN_TYPE_MAP).map(([k, v]) => [v, k]),
+);
 
 /**
  * Business logic for student guardians sub-resource.
@@ -17,7 +43,9 @@ export class StudentGuardianService {
       id: raw.id as string,
       studentId: raw.studentId as string,
       fullName: raw.fullName as string,
-      relationship: raw.relationship as string,
+      relationship:
+        GUARDIAN_TYPE_REVERSE[raw.relationship as string] ??
+        (raw.relationship as string),
       phoneNumber: raw.phoneNumber as string,
       email: raw.email as string,
       isPrincipal: raw.isPrincipal as boolean,
@@ -65,7 +93,9 @@ export class StudentGuardianService {
       data: {
         studentId,
         fullName: dto.fullName,
-        relationship: dto.relationship as never,
+        relationship:
+          GUARDIAN_TYPE_MAP[dto.relationship] ??
+          (dto.relationship as StudentGuardianType),
         phoneNumber: dto.phoneNumber,
         email: dto.email,
         isPrincipal: dto.isPrincipal ?? false,
@@ -103,7 +133,9 @@ export class StudentGuardianService {
     const updateData: Record<string, unknown> = {};
     if (dto.fullName !== undefined) updateData.fullName = dto.fullName;
     if (dto.relationship !== undefined)
-      updateData.relationship = dto.relationship;
+      updateData.relationship =
+        GUARDIAN_TYPE_MAP[dto.relationship] ??
+        (dto.relationship as StudentGuardianType);
     if (dto.phoneNumber !== undefined) updateData.phoneNumber = dto.phoneNumber;
     if (dto.email !== undefined) updateData.email = dto.email;
     if (dto.isPrincipal !== undefined) updateData.isPrincipal = dto.isPrincipal;

@@ -15,14 +15,15 @@ function buildFilters(query: Record<string, unknown>): StudentFilters {
   const filters: StudentFilters = {};
 
   if (query.q !== undefined) filters.q = query.q as string;
-  if (query.name !== undefined) filters.name = query.name as string;
+  if (query.fullName !== undefined) filters.fullName = query.fullName as string;
   if (query.curp !== undefined) filters.curp = query.curp as string;
   if (query.enrollment !== undefined)
     filters.enrollment = query.enrollment as string;
   if (query.email !== undefined) filters.email = query.email as string;
   if (query.phoneNumber !== undefined)
     filters.phoneNumber = query.phoneNumber as string;
-  if (query.status !== undefined) filters.status = query.status === "true";
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
 
   return filters;
 }

@@ -83,7 +83,7 @@ const router = Router();
  *           format: date-time
  *         description: Filter cycles ending on or before this date
  *       - in: query
- *         name: type
+ *         name: periodType
  *         schema:
  *           type: string
  *           enum: [annual, semester, four-month-period, trimester, bimester, monthly, intensive, special]
@@ -156,7 +156,7 @@ router.get(
  *           format: date-time
  *         description: Filter cycles ending on or before this date
  *       - in: query
- *         name: type
+ *         name: periodType
  *         schema:
  *           type: string
  *           enum: [annual, semester, four-month-period, trimester, bimester, monthly, intensive, special]

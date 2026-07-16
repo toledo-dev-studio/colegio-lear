@@ -18,7 +18,7 @@ model AcademicLevel {
   id              String           @id @default(uuid()) @db.Uuid
   name            String           @unique @db.VarChar(100)
   description     String?          @db.VarChar(500)
-  status          Boolean          @default(true)
+  isActive        Boolean          @default(true) @map("is_active")
   isDeleted       Boolean          @default(false) @map("is_deleted")
   educationLevels EducationLevel[]
   schoolSubjects  SchoolSubject[]
@@ -87,7 +87,6 @@ model PaymentConcept {
   allowForgiveness     Boolean               @default(false) @map("allow_remission")
   isActive             Boolean               @default(true) @map("is_active")
   isDeleted            Boolean               @default(false) @map("is_deleted")
-  academicCycleWallets AcademicCycleWallet[]
 
   @@map("payment_concepts")
   @@schema("core")
@@ -208,7 +207,7 @@ model Announcement {
   content     String       @db.Text
   publishedAt DateTime     @map("published_at")
   expiresAt   DateTime     @map("expires_at")
-  status      Boolean      @default(true)
+  isActive    Boolean      @default(true) @map("is_active")
   isDeleted   Boolean      @default(false) @map("is_deleted")
   attachments Attachment[]
 
@@ -242,7 +241,9 @@ model Student {
   enrollment     String   @unique @db.VarChar(20)
   image          String?  @db.VarChar(500)
   observations   String?  @db.VarChar(1000)
-  status         Boolean  @default(true)
+  isActive       Boolean  @default(true) @map("is_active")
+  bloodType      BloodType @map("blood_type")
+  medicalNotes   String?  @map("medical_notes") @db.VarChar(1000)
   email          String   @unique @db.VarChar(150)
   phoneNumber    String   @map("phone_number") @db.VarChar(20)
   address        String   @db.VarChar(300)
@@ -255,14 +256,14 @@ model Student {
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
-  medicalInformation StudentMedicalInformation?
   guardians          StudentGuardian[]
+  allergies          StudentAllergy[]
 
   @@map("students")
   @@schema("core")
 }
 
-// ─── Student Medical Information ─────────────────────────────────────────────
+// ─── Student Medical Info (blood type / allergies) ───────────────────────────
 
 enum BloodType {
   A_POSITIVE  @map("A+")
@@ -285,27 +286,15 @@ enum AllergySeverity {
   @@schema("core")
 }
 
-model StudentMedicalInformation {
-  id             String           @id @default(uuid()) @db.Uuid
-  studentId      String           @unique @map("student_id") @db.Uuid
-  bloodType      BloodType        @map("blood_type")
-  emergencyNotes String?          @map("emergency_notes") @db.VarChar(1000)
-  student        Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  allergies      StudentAllergy[]
-
-  @@map("student_medical_information")
-  @@schema("core")
-}
-
 // ─── Student Allergy ─────────────────────────────────────────────────────────
 
 model StudentAllergy {
-  id                   String                    @id @default(uuid()) @db.Uuid
-  medicalInformationId String                    @map("medical_information_id") @db.Uuid
-  name                 String                    @db.VarChar(100)
-  severity             AllergySeverity
-  observations         String?                   @db.VarChar(500)
-  medicalInformation   StudentMedicalInformation @relation(fields: [medicalInformationId], references: [id], onDelete: Cascade)
+  id           String          @id @default(uuid()) @db.Uuid
+  studentId    String          @map("student_id") @db.Uuid
+  name         String          @db.VarChar(100)
+  severity     AllergySeverity
+  observations String?         @db.VarChar(500)
+  student      Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("student_allergies")
   @@schema("core")
@@ -378,8 +367,10 @@ model AcademicCycle {
   code             String              @unique @db.VarChar(20)
   startDate        DateTime            @map("start_date")
   endDate          DateTime            @map("end_date")
-  type             AcademicPeriodType
+  periodType       AcademicPeriodType  @map("period_type")
   status           AcademicCycleStatus @default(upcoming)
+  minimumPassingGrade Int              @default(6) @map("minimum_passing_grade")
+  evaluationCount     Int              @default(3) @map("evaluation_count")
   enrollmentOpen   Boolean             @default(false) @map("enrollment_open")
   description      String?             @db.VarChar(500)
   observations     String?             @db.VarChar(1000)
@@ -416,14 +407,14 @@ model AcademicCycleSchoolSubject {
 // ─── Academic Cycle Wallet ───────────────────────────────────────────────────
 
 model AcademicCycleWallet {
-  id               String         @id @default(uuid()) @db.Uuid
-  academicCycleId  String         @map("academic_cycle_id") @db.Uuid
-  paymentConceptId String         @map("payment_concept_id") @db.Uuid
-  dueDate          DateTime       @map("due_date")
-  amount           Decimal        @db.Decimal(10, 2)
-  allowForgiveness Boolean        @default(false) @map("allow_forgiveness")
-  academicCycle    AcademicCycle  @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
-  paymentConcept   PaymentConcept @relation(fields: [paymentConceptId], references: [id], onDelete: Restrict)
+  id               String        @id @default(uuid()) @db.Uuid
+  academicCycleId  String        @map("academic_cycle_id") @db.Uuid
+  name             String        @db.VarChar(100)
+  description      String?       @db.VarChar(500)
+  dueDate          DateTime      @map("due_date")
+  amount           Decimal       @db.Decimal(10, 2)
+  allowForgiveness Boolean       @default(false) @map("allow_forgiveness")
+  academicCycle    AcademicCycle @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
 
   @@map("academic_cycle_wallet")
   @@schema("core")

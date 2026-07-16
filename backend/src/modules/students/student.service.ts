@@ -1,4 +1,5 @@
 import { PrismaClient } from "../../generated/prisma/client";
+import { BloodType } from "../../generated/prisma/enums";
 import bcrypt from "bcrypt";
 import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 import { env } from "../../shared/config/env.config";
@@ -11,12 +12,30 @@ import type {
   PagedResult,
   CreateStudentDto,
   UpdateStudentDto,
+  BloodTypeKey,
 } from "./student.types";
 
 interface PaginationParams {
   page: number;
   pageSize: number;
 }
+
+/** Maps frontend blood type strings ("O+") to Prisma enum values ("O_POSITIVE") */
+const BLOOD_TYPE_MAP: Record<string, BloodType> = {
+  "A+": "A_POSITIVE",
+  "A-": "A_NEGATIVE",
+  "B+": "B_POSITIVE",
+  "B-": "B_NEGATIVE",
+  "AB+": "AB_POSITIVE",
+  "AB-": "AB_NEGATIVE",
+  "O+": "O_POSITIVE",
+  "O-": "O_NEGATIVE",
+};
+
+/** Maps Prisma enum values back to frontend blood type strings */
+const BLOOD_TYPE_REVERSE: Record<string, BloodTypeKey> = Object.fromEntries(
+  Object.entries(BLOOD_TYPE_MAP).map(([k, v]) => [v, k]),
+) as Record<string, BloodTypeKey>;
 
 /**
  * Business logic layer for the Students module.
@@ -44,12 +63,22 @@ export class StudentService {
       });
     }
 
-    if (filters.name) {
+    if (filters.fullName) {
       andConditions.push({
         OR: [
-          { name: { contains: filters.name, mode: "insensitive" } },
-          { firstLastName: { contains: filters.name, mode: "insensitive" } },
-          { secondLastName: { contains: filters.name, mode: "insensitive" } },
+          { name: { contains: filters.fullName, mode: "insensitive" } },
+          {
+            firstLastName: {
+              contains: filters.fullName,
+              mode: "insensitive",
+            },
+          },
+          {
+            secondLastName: {
+              contains: filters.fullName,
+              mode: "insensitive",
+            },
+          },
         ],
       });
     }
@@ -78,8 +107,8 @@ export class StudentService {
       });
     }
 
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     if (andConditions.length > 0) {
@@ -100,7 +129,11 @@ export class StudentService {
       enrollment: raw.enrollment as string,
       image: raw.image as string | null,
       observations: raw.observations as string | null,
-      status: raw.status as boolean,
+      isActive: raw.isActive as boolean,
+      bloodType:
+        BLOOD_TYPE_REVERSE[raw.bloodType as string] ??
+        (raw.bloodType as BloodTypeKey),
+      medicalNotes: raw.medicalNotes as string | null,
       email: raw.email as string,
       phoneNumber: raw.phoneNumber as string,
       address: raw.address as string,
@@ -221,6 +254,8 @@ export class StudentService {
         enrollment,
         image: dto.image ?? null,
         observations: dto.observations ?? null,
+        bloodType: BLOOD_TYPE_MAP[dto.bloodType] ?? (dto.bloodType as BloodType),
+        medicalNotes: dto.medicalNotes ?? null,
         email: dto.email,
         phoneNumber: dto.phoneNumber,
         address: dto.address,
@@ -229,7 +264,7 @@ export class StudentService {
         postalCode: dto.postalCode,
         password: hashedPassword,
         mustChangePassword: true,
-        status: true,
+        isActive: dto.isActive ?? true,
       },
     });
 
@@ -268,6 +303,11 @@ export class StudentService {
     if (dto.image !== undefined) updateData.image = dto.image;
     if (dto.observations !== undefined)
       updateData.observations = dto.observations;
+    if (dto.bloodType !== undefined)
+      updateData.bloodType =
+        BLOOD_TYPE_MAP[dto.bloodType] ?? (dto.bloodType as BloodType);
+    if (dto.medicalNotes !== undefined)
+      updateData.medicalNotes = dto.medicalNotes;
     if (dto.email !== undefined) updateData.email = dto.email;
     if (dto.phoneNumber !== undefined) updateData.phoneNumber = dto.phoneNumber;
     if (dto.address !== undefined) updateData.address = dto.address;
@@ -275,7 +315,7 @@ export class StudentService {
     if (dto.municipality !== undefined)
       updateData.municipality = dto.municipality;
     if (dto.postalCode !== undefined) updateData.postalCode = dto.postalCode;
-    if (dto.status !== undefined) updateData.status = dto.status;
+    if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
 
     const updated = await this.prisma.student.update({
       where: { id },

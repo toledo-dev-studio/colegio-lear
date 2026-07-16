@@ -2,21 +2,17 @@
 export interface AcademicCycleWalletRecord {
   id: string;
   academicCycleId: string;
-  paymentConceptId: string;
+  name: string;
+  description: string | null;
   dueDate: string;
   amount: number;
   allowForgiveness: boolean;
-  paymentConcept: {
-    id: string;
-    name: string;
-    amount: number;
-    allowForgiveness: boolean;
-  };
 }
 
 /** Input DTO for creating an academic cycle wallet item */
 export interface CreateAcademicCycleWalletDto {
-  paymentConceptId: string;
+  name: string;
+  description?: string;
   dueDate: string;
   amount: number;
   allowForgiveness?: boolean;
@@ -24,7 +20,8 @@ export interface CreateAcademicCycleWalletDto {
 
 /** Input DTO for updating an academic cycle wallet item */
 export interface UpdateAcademicCycleWalletDto {
-  paymentConceptId?: string;
+  name?: string;
+  description?: string;
   dueDate?: string;
   amount?: number;
   allowForgiveness?: boolean;

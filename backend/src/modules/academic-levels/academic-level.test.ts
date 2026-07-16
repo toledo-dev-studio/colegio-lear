@@ -48,14 +48,14 @@ describe("AcademicLevelService", () => {
           id: "uuid-1",
           name: "Preescolar",
           description: "Nivel preescolar",
-          status: true,
+          isActive: true,
           educationLevels: [],
         },
         {
           id: "uuid-2",
           name: "Primaria",
           description: "Nivel primaria",
-          status: true,
+          isActive: true,
           educationLevels: [],
         },
       ];
@@ -68,19 +68,19 @@ describe("AcademicLevelService", () => {
           id: "uuid-1",
           name: "Preescolar",
           description: "Nivel preescolar",
-          status: true,
+          isActive: true,
           educationLevels: [],
         },
         {
           id: "uuid-2",
           name: "Primaria",
           description: "Nivel primaria",
-          status: true,
+          isActive: true,
           educationLevels: [],
         },
       ]);
       expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { isDeleted: false },
         include: { educationLevels: true },
       });
     });
@@ -92,6 +92,7 @@ describe("AcademicLevelService", () => {
 
       expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [
             {
               OR: [
@@ -105,14 +106,15 @@ describe("AcademicLevelService", () => {
       });
     });
 
-    it("should apply status filter", async () => {
+    it("should apply isActive filter", async () => {
       prisma.academicLevel.findMany.mockResolvedValue([]);
 
-      await service.findAll({ status: true });
+      await service.findAll({ isActive: true });
 
       expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [{ status: true }],
+          isDeleted: false,
+          AND: [{ isActive: true }],
         },
         include: { educationLevels: true },
       });
@@ -121,10 +123,11 @@ describe("AcademicLevelService", () => {
     it("should combine multiple filters with AND logic", async () => {
       prisma.academicLevel.findMany.mockResolvedValue([]);
 
-      await service.findAll({ q: "nivel", name: "Primaria", status: true });
+      await service.findAll({ q: "nivel", name: "Primaria", isActive: true });
 
       expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
         where: {
+          isDeleted: false,
           AND: [
             {
               OR: [
@@ -133,7 +136,7 @@ describe("AcademicLevelService", () => {
               ],
             },
             { name: { contains: "Primaria", mode: "insensitive" } },
-            { status: true },
+            { isActive: true },
           ],
         },
         include: { educationLevels: true },
@@ -149,7 +152,7 @@ describe("AcademicLevelService", () => {
           id: "uuid-1",
           name: "Preescolar",
           description: "Nivel preescolar",
-          status: true,
+          isActive: true,
           educationLevels: [],
         },
       ];
@@ -164,7 +167,7 @@ describe("AcademicLevelService", () => {
             id: "uuid-1",
             name: "Preescolar",
             description: "Nivel preescolar",
-            status: true,
+            isActive: true,
             educationLevels: [],
           },
         ],
@@ -173,12 +176,14 @@ describe("AcademicLevelService", () => {
         itemsCount: 15,
       });
       expect(prisma.academicLevel.findMany).toHaveBeenCalledWith({
-        where: {},
+        where: { isDeleted: false },
         skip: 5,
         take: 5,
         include: { educationLevels: true },
       });
-      expect(prisma.academicLevel.count).toHaveBeenCalledWith({ where: {} });
+      expect(prisma.academicLevel.count).toHaveBeenCalledWith({
+        where: { isDeleted: false },
+      });
     });
   });
 
@@ -189,7 +194,7 @@ describe("AcademicLevelService", () => {
         id: "uuid-1",
         name: "Primaria",
         description: "Nivel primaria",
-        status: true,
+        isActive: true,
         educationLevels: [
           {
             id: "el-1",
@@ -213,7 +218,7 @@ describe("AcademicLevelService", () => {
         id: "uuid-1",
         name: "Primaria",
         description: "Nivel primaria",
-        status: true,
+        isActive: true,
         educationLevels: [
           {
             id: "el-1",
@@ -254,13 +259,13 @@ describe("AcademicLevelService", () => {
       description: "Nivel preparatoria",
     };
 
-    it("should create an academic level successfully with status=true", async () => {
+    it("should create an academic level successfully with isActive=true", async () => {
       prisma.academicLevel.findFirst.mockResolvedValue(null);
       prisma.academicLevel.create.mockResolvedValue({
         id: "new-uuid",
         name: validDto.name,
         description: validDto.description,
-        status: true,
+        isActive: true,
         educationLevels: [],
       });
 
@@ -270,14 +275,14 @@ describe("AcademicLevelService", () => {
         id: "new-uuid",
         name: "Preparatoria",
         description: "Nivel preparatoria",
-        status: true,
+        isActive: true,
         educationLevels: [],
       });
       expect(prisma.academicLevel.create).toHaveBeenCalledWith({
         data: {
           name: validDto.name,
           description: validDto.description,
-          status: true,
+          isActive: true,
         },
         include: { educationLevels: true },
       });
@@ -288,7 +293,7 @@ describe("AcademicLevelService", () => {
         id: "existing-uuid",
         name: "preparatoria",
         description: "Existing",
-        status: true,
+        isActive: true,
       });
 
       await expect(service.create(validDto)).rejects.toThrow(ConflictError);
@@ -304,7 +309,7 @@ describe("AcademicLevelService", () => {
       id: "uuid-1",
       name: "Primaria",
       description: "Nivel primaria",
-      status: true,
+      isActive: true,
     };
 
     it("should update an academic level successfully", async () => {
@@ -346,7 +351,7 @@ describe("AcademicLevelService", () => {
         id: "other-uuid",
         name: "Secundaria",
         description: "Nivel secundaria",
-        status: true,
+        isActive: true,
       });
 
       await expect(
@@ -360,23 +365,23 @@ describe("AcademicLevelService", () => {
 
   // --- softDelete ---
   describe("softDelete", () => {
-    it("should set status to false for an active academic level", async () => {
+    it("should set isDeleted to true for an existing academic level", async () => {
       prisma.academicLevel.findUnique.mockResolvedValue({
         id: "uuid-1",
         name: "Primaria",
-        status: true,
+        isDeleted: false,
       });
       prisma.academicLevel.update.mockResolvedValue({
         id: "uuid-1",
         name: "Primaria",
-        status: false,
+        isDeleted: true,
       });
 
       await service.softDelete("uuid-1");
 
       expect(prisma.academicLevel.update).toHaveBeenCalledWith({
         where: { id: "uuid-1" },
-        data: { status: false },
+        data: { isDeleted: true },
       });
     });
 
@@ -391,16 +396,16 @@ describe("AcademicLevelService", () => {
       );
     });
 
-    it("should throw ConflictError when academic level is already inactive", async () => {
+    it("should throw ConflictError when academic level is already deleted", async () => {
       prisma.academicLevel.findUnique.mockResolvedValue({
         id: "uuid-1",
         name: "Primaria",
-        status: false,
+        isDeleted: true,
       });
 
       await expect(service.softDelete("uuid-1")).rejects.toThrow(ConflictError);
       await expect(service.softDelete("uuid-1")).rejects.toThrow(
-        "Academic level is already inactive",
+        "Academic level is already deleted",
       );
     });
   });
@@ -456,6 +461,42 @@ describe("AcademicLevelService", () => {
       });
       expect(prisma.educationLevel.count).toHaveBeenCalledWith({
         where: { AND: [{ academicLevelId: "uuid-1" }] },
+      });
+    });
+
+    it("should apply name filter with case-insensitive contains", async () => {
+      prisma.educationLevel.findMany.mockResolvedValue([]);
+      prisma.educationLevel.count.mockResolvedValue(0);
+
+      await service.findEducationLevelsPaged(
+        { name: "Primaria" },
+        { page: 1, limit: 10 },
+      );
+
+      expect(prisma.educationLevel.findMany).toHaveBeenCalledWith({
+        where: {
+          AND: [{ name: { contains: "Primaria", mode: "insensitive" } }],
+        },
+        skip: 0,
+        take: 10,
+      });
+    });
+
+    it("should apply isActive filter as a parent academicLevel relation filter", async () => {
+      prisma.educationLevel.findMany.mockResolvedValue([]);
+      prisma.educationLevel.count.mockResolvedValue(0);
+
+      await service.findEducationLevelsPaged(
+        { isActive: true },
+        { page: 1, limit: 10 },
+      );
+
+      expect(prisma.educationLevel.findMany).toHaveBeenCalledWith({
+        where: {
+          AND: [{ academicLevel: { isActive: true } }],
+        },
+        skip: 0,
+        take: 10,
       });
     });
   });

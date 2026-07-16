@@ -6,14 +6,6 @@ import type {
   UpdateAcademicCycleWalletDto,
 } from "./academic-cycle-wallet.types";
 
-// ─── Include clause for related entities ────────────────────────────────────
-
-const INCLUDE_RELATIONS = {
-  paymentConcept: {
-    select: { id: true, name: true, amount: true, allowForgiveness: true },
-  },
-};
-
 /**
  * Business logic layer for the Academic Cycle Wallet sub-resource.
  */
@@ -30,20 +22,14 @@ export class AcademicCycleWalletService {
   }
 
   private toRecord(raw: Record<string, unknown>): AcademicCycleWalletRecord {
-    const paymentConcept = raw.paymentConcept as Record<string, unknown>;
     return {
       id: raw.id as string,
       academicCycleId: raw.academicCycleId as string,
-      paymentConceptId: raw.paymentConceptId as string,
+      name: raw.name as string,
+      description: raw.description as string | null,
       dueDate: (raw.dueDate as Date).toISOString(),
       amount: Number(raw.amount),
       allowForgiveness: raw.allowForgiveness as boolean,
-      paymentConcept: {
-        id: paymentConcept.id as string,
-        name: paymentConcept.name as string,
-        amount: Number(paymentConcept.amount),
-        allowForgiveness: paymentConcept.allowForgiveness as boolean,
-      },
     };
   }
 
@@ -53,7 +39,6 @@ export class AcademicCycleWalletService {
 
     const results = await this.prisma.academicCycleWallet.findMany({
       where: { academicCycleId },
-      include: INCLUDE_RELATIONS,
       orderBy: { dueDate: "asc" },
     });
 
@@ -72,12 +57,12 @@ export class AcademicCycleWalletService {
     const created = await this.prisma.academicCycleWallet.create({
       data: {
         academicCycleId,
-        paymentConceptId: dto.paymentConceptId,
+        name: dto.name,
+        description: dto.description ?? null,
         dueDate: new Date(dto.dueDate),
         amount: dto.amount,
         allowForgiveness: dto.allowForgiveness ?? false,
       },
-      include: INCLUDE_RELATIONS,
     });
 
     return this.toRecord(created as unknown as Record<string, unknown>);
@@ -99,8 +84,8 @@ export class AcademicCycleWalletService {
     }
 
     const updateData: Record<string, unknown> = {};
-    if (dto.paymentConceptId !== undefined)
-      updateData.paymentConceptId = dto.paymentConceptId;
+    if (dto.name !== undefined) updateData.name = dto.name;
+    if (dto.description !== undefined) updateData.description = dto.description;
     if (dto.dueDate !== undefined) updateData.dueDate = new Date(dto.dueDate);
     if (dto.amount !== undefined) updateData.amount = dto.amount;
     if (dto.allowForgiveness !== undefined)
@@ -109,7 +94,6 @@ export class AcademicCycleWalletService {
     const updated = await this.prisma.academicCycleWallet.update({
       where: { id },
       data: updateData,
-      include: INCLUDE_RELATIONS,
     });
 
     return this.toRecord(updated as unknown as Record<string, unknown>);

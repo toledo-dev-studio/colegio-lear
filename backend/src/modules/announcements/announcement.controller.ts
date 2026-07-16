@@ -16,7 +16,7 @@ const service = new AnnouncementService(prisma);
 
 /**
  * Builds an AnnouncementFilters object from validated query parameters.
- * Converts status string to boolean; passes publishedAt/expiresAt as-is.
+ * Converts isActive string to boolean; passes publishedAt/expiresAt as-is.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
  */
 function buildFilters(query: Record<string, unknown>): AnnouncementFilters {
@@ -24,7 +24,8 @@ function buildFilters(query: Record<string, unknown>): AnnouncementFilters {
 
   if (query.q !== undefined) filters.q = query.q as string;
   if (query.name !== undefined) filters.name = query.name as string;
-  if (query.status !== undefined) filters.status = query.status === "true";
+  if (query.isActive !== undefined)
+    filters.isActive = query.isActive === "true";
   if (query.publishedAt !== undefined)
     filters.publishedAt = query.publishedAt as string;
   if (query.expiresAt !== undefined)
@@ -106,7 +107,7 @@ export async function update(req: Request, res: Response): Promise<void> {
 
 /**
  * DELETE /announcements/:id
- * Soft-deletes an announcement by setting status to false.
+ * Soft-deletes an announcement by setting isDeleted to true.
  */
 export async function remove(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };

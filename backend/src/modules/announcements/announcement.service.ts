@@ -15,6 +15,38 @@ import {
 } from "../../shared/helpers/pagination.helper";
 
 /**
+ * Explicit select for list endpoints (no attachments).
+ * Excludes isDeleted so it never leaks into API responses.
+ */
+const LIST_SELECT = {
+  id: true,
+  name: true,
+  description: true,
+  audience: true,
+  content: true,
+  publishedAt: true,
+  expiresAt: true,
+  isActive: true,
+} as const;
+
+/**
+ * Explicit select for detail endpoints (includes attachments).
+ * Excludes isDeleted so it never leaks into API responses.
+ */
+const DETAIL_SELECT = {
+  ...LIST_SELECT,
+  attachments: {
+    select: {
+      id: true,
+      url: true,
+      name: true,
+      extension: true,
+      relatedRecordId: true,
+    },
+  },
+} as const;
+
+/**
  * Business logic layer for the Announcements module.
  * Handles CRUD operations, filtering (including day-range date filtering),
  * pagination, and soft delete.
@@ -28,7 +60,7 @@ export class AnnouncementService {
    * All active filters are combined with AND logic.
    * - `q` searches both `name` and `description` with OR logic (case-insensitive).
    * - `name` filters by contains (case-insensitive).
-   * - `status` filters by exact boolean match.
+   * - `isActive` filters by exact boolean match.
    * - `publishedAt` / `expiresAt` filter by day range (start-of-day inclusive to next day exclusive).
    */
   private buildWhereClause(
@@ -54,9 +86,9 @@ export class AnnouncementService {
       });
     }
 
-    // Status filter (exact boolean match)
-    if (filters.status !== undefined) {
-      andConditions.push({ status: filters.status });
+    // isActive filter (exact boolean match)
+    if (filters.isActive !== undefined) {
+      andConditions.push({ isActive: filters.isActive });
     }
 
     // PublishedAt day-range filter
@@ -91,7 +123,10 @@ export class AnnouncementService {
   async findAll(filters: AnnouncementFilters): Promise<AnnouncementRecord[]> {
     const where = this.buildWhereClause(filters);
 
-    const results = await this.prisma.announcement.findMany({ where });
+    const results = await this.prisma.announcement.findMany({
+      where,
+      select: LIST_SELECT,
+    });
 
     return results as unknown as AnnouncementRecord[];
   }
@@ -113,6 +148,7 @@ export class AnnouncementService {
         where,
         skip,
         take: pagination.limit,
+        select: LIST_SELECT,
       }),
       this.prisma.announcement.count({ where }),
     ]);
@@ -129,25 +165,28 @@ export class AnnouncementService {
 
   /**
    * Find a single announcement by ID with its attachments.
-   * Uses Prisma `include` to fetch related attachments in a single query.
+   * Uses an explicit Prisma select to fetch related attachments in a single query
+   * while excluding isDeleted from the response.
    * Throws NotFoundError if the announcement does not exist or is deleted.
    */
   async findById(id: string): Promise<AnnouncementDetail> {
     const announcement = await this.prisma.announcement.findUnique({
       where: { id },
-      include: { attachments: true },
+      select: { ...DETAIL_SELECT, isDeleted: true },
     });
 
     if (!announcement || announcement.isDeleted) {
       throw new NotFoundError("Comunicado no encontrado");
     }
 
-    return announcement as unknown as AnnouncementDetail;
+    const { isDeleted: _isDeleted, ...detail } = announcement;
+
+    return detail as unknown as AnnouncementDetail;
   }
 
   /**
    * Create a new announcement.
-   * Parses date strings to Date objects and sets status = true by default.
+   * Parses date strings to Date objects. isActive defaults to true (or dto.isActive when provided).
    * Content defaults to empty string when not provided (added later via update).
    * Returns the created announcement with empty attachments array.
    */
@@ -156,13 +195,13 @@ export class AnnouncementService {
       data: {
         name: dto.name,
         description: dto.description ?? null,
-        audience: JSON.parse(JSON.stringify(dto.audience)),
+        audience: dto.audience,
         content: dto.content ?? "",
         publishedAt: new Date(dto.publishedAt),
         expiresAt: new Date(dto.expiresAt),
-        status: true,
+        isActive: dto.isActive ?? true,
       },
-      include: { attachments: true },
+      select: DETAIL_SELECT,
     });
 
     return created as unknown as AnnouncementDetail;
@@ -193,19 +232,18 @@ export class AnnouncementService {
 
     if (dto.name !== undefined) updateData.name = dto.name;
     if (dto.description !== undefined) updateData.description = dto.description;
-    if (dto.audience !== undefined)
-      updateData.audience = JSON.parse(JSON.stringify(dto.audience));
+    if (dto.audience !== undefined) updateData.audience = dto.audience;
     if (dto.content !== undefined) updateData.content = dto.content;
     if (dto.publishedAt !== undefined)
       updateData.publishedAt = new Date(dto.publishedAt);
     if (dto.expiresAt !== undefined)
       updateData.expiresAt = new Date(dto.expiresAt);
-    if (dto.status !== undefined) updateData.status = dto.status;
+    if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
 
     const updated = await this.prisma.announcement.update({
       where: { id },
       data: updateData,
-      include: { attachments: true },
+      select: DETAIL_SELECT,
     });
 
     return updated as unknown as AnnouncementDetail;

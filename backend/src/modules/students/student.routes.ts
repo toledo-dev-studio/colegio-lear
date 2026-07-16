@@ -14,7 +14,10 @@ import {
   createStudentGuardianSchema,
   updateStudentGuardianSchema,
 } from "./student-guardian.schema";
-import { upsertMedicalInformationSchema } from "./student-medical-information.schema";
+import {
+  createAllergySchema,
+  updateAllergySchema,
+} from "./student-allergy.schema";
 import {
   findAll,
   findAllPaged,
@@ -31,9 +34,11 @@ import {
   deleteGuardian,
 } from "./student-guardian.controller";
 import {
-  getMedicalInfo,
-  upsertMedicalInfo,
-} from "./student-medical-information.controller";
+  findAllAllergies,
+  createAllergy,
+  updateAllergy,
+  deleteAllergy,
+} from "./student-allergy.controller";
 
 const router = Router();
 
@@ -46,7 +51,7 @@ const router = Router();
  *     tags:
  *       - Students
  *     summary: List all students
- *     description: Returns all students with optional filters (q, name, curp, enrollment, email, phoneNumber, status).
+ *     description: Returns all students with optional filters (q, fullName, curp, enrollment, email, phoneNumber, isActive).
  *     parameters:
  *       - in: query
  *         name: q
@@ -55,7 +60,7 @@ const router = Router();
  *           maxLength: 100
  *         description: Free-text search on name, lastNames, email, curp, enrollment
  *       - in: query
- *         name: name
+ *         name: fullName
  *         schema:
  *           type: string
  *           maxLength: 100
@@ -85,7 +90,7 @@ const router = Router();
  *           maxLength: 20
  *         description: Filter by phone number (case-insensitive contains)
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -124,7 +129,7 @@ router.get(
  *           type: string
  *         description: Free-text search
  *       - in: query
- *         name: name
+ *         name: fullName
  *         schema:
  *           type: string
  *         description: Filter by name
@@ -149,7 +154,7 @@ router.get(
  *           type: string
  *         description: Filter by phone number
  *       - in: query
- *         name: status
+ *         name: isActive
  *         schema:
  *           type: string
  *           enum: [true, false]
@@ -523,16 +528,19 @@ router.delete(
   deleteGuardian,
 );
 
-// ─── Student Medical Information ─────────────────────────────────────────────
+// ─── Student Allergies ────────────────────────────────────────────────────────
+// NOTE: bloodType/medicalNotes live directly on the student record (see
+// StudentRecord). Allergies are their own sub-resource, one record at a
+// time (no bulk array sync) — same shape as guardians above.
 
 /**
  * @openapi
- * /students/{studentId}/medical-information:
+ * /students/{studentId}/allergies:
  *   get:
  *     tags:
- *       - Student Medical Information
- *     summary: Get medical information for a student
- *     description: Returns the medical information record including allergies. Returns null data if not yet created.
+ *       - Student Allergies
+ *     summary: List allergies for a student
+ *     description: Returns all allergies associated with the given student.
  *     parameters:
  *       - in: path
  *         name: studentId
@@ -542,29 +550,30 @@ router.delete(
  *           format: uuid
  *     responses:
  *       200:
- *         description: Medical information (or null if not created yet)
+ *         description: List of allergies
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/StudentMedicalInformationRecord'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AllergyRecord'
  *       404:
  *         description: Student not found
  */
 router.get(
-  "/:studentId/medical-information",
+  "/:studentId/allergies",
   authorize("students"),
   validate(studentIdParamSchema, "params"),
-  getMedicalInfo,
+  findAllAllergies,
 );
 
 /**
  * @openapi
- * /students/{studentId}/medical-information:
- *   patch:
+ * /students/{studentId}/allergies:
+ *   post:
  *     tags:
- *       - Student Medical Information
- *     summary: Upsert medical information for a student
- *     description: Creates medical information if it does not exist, or updates it. Allergies are fully synced (replaced).
+ *       - Student Allergies
+ *     summary: Create an allergy for a student
  *     parameters:
  *       - in: path
  *         name: studentId
@@ -577,23 +586,102 @@ router.get(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UpsertMedicalInformationBody'
+ *             $ref: '#/components/schemas/CreateAllergyBody'
  *     responses:
- *       200:
- *         description: Medical information upserted
+ *       201:
+ *         description: Allergy created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/StudentMedicalInformationRecord'
+ *               $ref: '#/components/schemas/AllergyRecord'
  *       404:
  *         description: Student not found
  */
-router.patch(
-  "/:studentId/medical-information",
+router.post(
+  "/:studentId/allergies",
   authorize("students"),
   validate(studentIdParamSchema, "params"),
-  validate(upsertMedicalInformationSchema, "body"),
-  upsertMedicalInfo,
+  validate(createAllergySchema, "body"),
+  createAllergy,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/allergies/{id}:
+ *   patch:
+ *     tags:
+ *       - Student Allergies
+ *     summary: Update an allergy
+ *     description: Partially updates an allergy. At least one field must be provided.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateAllergyBody'
+ *     responses:
+ *       200:
+ *         description: Allergy updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AllergyRecord'
+ *       404:
+ *         description: Student or allergy not found
+ */
+router.patch(
+  "/:studentId/allergies/:id",
+  authorize("students"),
+  validate(studentSubResourceParamSchema, "params"),
+  validate(updateAllergySchema, "body"),
+  updateAllergy,
+);
+
+/**
+ * @openapi
+ * /students/{studentId}/allergies/{id}:
+ *   delete:
+ *     tags:
+ *       - Student Allergies
+ *     summary: Delete an allergy
+ *     description: Permanently removes an allergy from the student.
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Student or allergy not found
+ */
+router.delete(
+  "/:studentId/allergies/:id",
+  authorize("students"),
+  validate(studentSubResourceParamSchema, "params"),
+  deleteAllergy,
 );
 
 export default router;

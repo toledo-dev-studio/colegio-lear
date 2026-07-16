@@ -19,8 +19,10 @@ function buildFilters(query: Record<string, unknown>): AcademicCycleFilters {
   if (query.startDate !== undefined)
     filters.startDate = query.startDate as string;
   if (query.endDate !== undefined) filters.endDate = query.endDate as string;
-  if (query.type !== undefined)
-    filters.type = query.type as NonNullable<AcademicCycleFilters["type"]>;
+  if (query.periodType !== undefined)
+    filters.periodType = query.periodType as NonNullable<
+      AcademicCycleFilters["periodType"]
+    >;
   if (query.enrollmentOpen !== undefined)
     filters.enrollmentOpen = query.enrollmentOpen === "true";
   if (query.status !== undefined)
