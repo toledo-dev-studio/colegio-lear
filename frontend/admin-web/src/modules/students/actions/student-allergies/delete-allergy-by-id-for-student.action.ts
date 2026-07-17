@@ -10,8 +10,7 @@ interface Options {
 export const deleteAllergyByIForStudentdActionAsync = async ({ id, studentId }: Options): Promise<Options> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development")
+    if (VITE_ENVIRONMENT === "mockable")
         return { studentId, id };
 
     await api.delete(`/students/${studentId}/allergies/${id}`);

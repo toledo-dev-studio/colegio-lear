@@ -54,7 +54,7 @@ export const StudentTab = () => {
     const onSubmit = async (studentRequestLike: Partial<StudentRequest>) => {
         try {
             showLoading("Guardando registro");
-            await createUpdateStudentMutation.mutateAsync({ id: studentId, studentRequestLike }, {
+            await createUpdateStudentMutation.mutateAsync({ id: isNew ? "new" : studentId, studentRequestLike }, {
                 onSuccess: (response) => {
                     toast.success(isNew ? "Estudiante creado correctamente" : "Estudiante actualizado correctamente", { position: "top-right" });
                     hideLoading();

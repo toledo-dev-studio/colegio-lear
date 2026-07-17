@@ -36,9 +36,6 @@ interface Props {
     announcementId: string;
     attachments: AttachmentResponse[];
     acceptedExtensions?: readonly string[];
-    /** Disable all interaction */
-    disabled?: boolean;
-
     /** Handle actions */
     onChange: (
         next:
@@ -47,12 +44,13 @@ interface Props {
     ) => void;
 }
 
-export const AttachmentsGrid = ({ announcementId, attachments, disabled, acceptedExtensions = DEFAULT_ACCEPTED_FILE_EXTENSIONS, onChange }: Props) => {
+export const AttachmentsGrid = ({ announcementId, attachments, acceptedExtensions = DEFAULT_ACCEPTED_FILE_EXTENSIONS, onChange }: Props) => {
     // Coomponent hooks & stores
     const [uploadingAttachments, setUploadingAttachments] = useState<UploadAttachment[]>([]);
     const [deletingIds, setDeletingIds] = useState<string[]>([]);
     const deleteAttachmentByIdMutation = useDeleteAttachmentForAnnouncementById();
-    const useUploadAttachmentMutation = useUploadAttachmentForAnnouncement();
+    const uploadAttachmentMutation = useUploadAttachmentForAnnouncement();
+    const disabled = uploadAttachmentMutation.isPending || deleteAttachmentByIdMutation.isPending;
 
     // Revoke object URLs on unmount to avoid leaks
     useEffect(() => {
@@ -121,7 +119,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
         // Process uploads in parallel in pool of 3 requests; each finishes independently
         await promisePool(attachmentsToUpload, 3, async ({ id, name, previewUrl, file }) => {
             try {
-                const attachment = await useUploadAttachmentMutation.mutateAsync({ announcementId, file });
+                const attachment = await uploadAttachmentMutation.mutateAsync({ announcementId, file });
                 onChange((prev) => [...(prev ?? []), attachment]);
                 toast.success(`Archivo "${name}" cargado correctamente.`, { position: "top-right" });
                 return attachment;
@@ -176,7 +174,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, disabled, accepte
                                     key={attachment.id}
                                     attachment={attachment}
                                     isDeleting={deletingIds.includes(attachment.id)}
-                                    onDelete={handleOnDeleteAttachment}
+                                    onDelete={async(attachment) => !disabled && await handleOnDeleteAttachment(attachment)}
                                 />
                             ))
                         }

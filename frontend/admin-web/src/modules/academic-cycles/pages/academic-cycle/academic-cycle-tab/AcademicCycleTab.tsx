@@ -72,7 +72,7 @@ export const AcademicCycleTab = () => {
     const onSubmit = async (academicCycleRequestLike: Partial<AcademicCycleRequest>) => {
         try {
             showLoading("Guardando registro");
-            await createUpdateAcademicCycleMutation.mutateAsync({ id: academicCycle?.id!, academicCycleRequestLike }, {
+            await createUpdateAcademicCycleMutation.mutateAsync({ id: isNew ? "new" : academicCycle?.id!, academicCycleRequestLike }, {
                 onSuccess: (response) => {
                     toast.success(isNew ? "Ciclo escolar creado correctamente" : "Ciclo escolar actualizado correctamente", { position: "top-right" });
                     hideLoading();

@@ -16,8 +16,7 @@ export const createStudentWalletPaymentActionAsync = async ({ academicCycleId, a
 
     const { studentWalletItemId } = studentWalletPaymentRequestLike;
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         return {
             ...studentWalletPaymentRequestLike,
             academicCycleId,

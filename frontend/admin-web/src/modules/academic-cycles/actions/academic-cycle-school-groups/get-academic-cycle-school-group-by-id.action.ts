@@ -12,8 +12,7 @@ interface Options {
 export const getAcademicCycleSchoolGroupByIdActionAsync = async ({ id, academicCycleId }: Options): Promise<AcademicCycleSchoolGroupResponse> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         const { data } = await api.get<AcademicCycleSchoolGroupResponse[]>("http://localhost/api/academic-cycles/school-groups/school-groups.json");
         const record = data.find(item => item.id === id);
         if (!record)

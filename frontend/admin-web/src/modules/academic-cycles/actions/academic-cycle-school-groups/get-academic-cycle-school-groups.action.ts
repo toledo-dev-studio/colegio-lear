@@ -17,9 +17,6 @@ export const getAcademicCycleSchoolGroupsActionAsync = async ({ query, academicC
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-cycles/school-groups/school-groups.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/school-groups/school-groups.json";
-
     const { data } = await api.get<AcademicCycleSchoolGroupResponse[]>(endpoint, {
         params: {
             q: query

@@ -16,9 +16,6 @@ export const getStudentsActionAsync = async ({ query, fullName, curp, enrollment
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/students/students.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/students/students/students.json";
-
     const { data } = await api.get<StudentResponse[]>(endpoint, {
         params: {
             q: query,

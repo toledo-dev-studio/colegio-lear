@@ -15,8 +15,7 @@ export const createUpdateAcademicCycleWalletItemActionAsync = async ({ id, acade
 
     const isCreating = id === "new";
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         return {
             ...academicCycleWalletItemRequestLike,
             id: isCreating ? generateTemporalId() : id,

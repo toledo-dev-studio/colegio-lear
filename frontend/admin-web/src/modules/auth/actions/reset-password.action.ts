@@ -10,8 +10,7 @@ interface Options {
 export const resetPasswordActionAsync = async ({ credentials }: Options): Promise<void> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development")
+    if (VITE_ENVIRONMENT === "mockable")
         return;
 
     await api.post("/auth/reset-password", { ...credentials });

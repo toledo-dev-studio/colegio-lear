@@ -3,22 +3,21 @@ import { Link } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
+import { Switch } from "@/shared/ui/switch";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { AttachmentsGrid } from "./AttachmentsGrid";
 import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { CardAlert } from "@/shared/components/card-alert/CardAlert";
+import { TextEditor } from "@/shared/components/text-editor/TextEditor";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { MultiSelect } from "@/shared/components/multi-select/MultiSelect";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
+import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
-import { TipTapEditor } from "@/shared/components/text-editor/TipTapEditor";
-import { Switch } from "@/shared/ui/switch";
-import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
-import { TextEditor } from "@/shared/components/text-editor/TextEditor";
 
 interface Props {
     isNew: boolean;

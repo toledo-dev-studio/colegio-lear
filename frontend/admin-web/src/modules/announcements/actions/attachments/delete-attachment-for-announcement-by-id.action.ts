@@ -7,7 +7,7 @@ interface Options {
     attachmentId: string;
 }
 
-export const deleteAttachmentForAnnouncementByIdActionAsync = async ({ announcementId, attachmentId }: Options): Promise<void> => {
+export const deleteAttachmentForAnnouncementByIdActionAsync = async ({ announcementId, attachmentId }: Options): Promise<Options> => {
     await sleep();
 
     if (!announcementId)
@@ -17,8 +17,9 @@ export const deleteAttachmentForAnnouncementByIdActionAsync = async ({ announcem
         throw ("Attachment unique identifier can not be undefined");
 
     if (VITE_ENVIRONMENT === "mockable")
-        return;
+        return { announcementId, attachmentId };
 
     await api.delete(`attachments/announcement/${announcementId}/${attachmentId}`);    
-    return;
+    
+    return { announcementId, attachmentId };
 }

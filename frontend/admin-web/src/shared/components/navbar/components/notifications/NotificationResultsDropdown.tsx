@@ -75,14 +75,14 @@ export const NotificationResultsDropdown = ({ open, currentPage, totalPages, tot
                             <MailOpen className="w-9 h-9 text-muted-foreground mx-auto mb-2 opacity-60" />
                             <p className="text-sm font-medium">Sin notificaciones</p>
                             <p className="text-[11px] text-muted-foreground mt-1">
-                                Aquí verás las campañas del sistema.
+                                Aquí verás tus notificaciones pendientes en el sistema.
                             </p>
                         </div>
                     )}
 
                     {/* Notifications list */}
                     {
-                        (notifications.length) && (
+                        (notifications.length > 0) && (
                             <section data-testid="notifications-group-section">
                                 <div className="px-4 py-1.5 top-0 bg-card/95 backdrop-blur border-b border-border/60">
                                     <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">

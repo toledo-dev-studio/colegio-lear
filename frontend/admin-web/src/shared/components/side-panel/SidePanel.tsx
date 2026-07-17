@@ -20,13 +20,13 @@ interface Props extends PropsWithChildren {
 
 export const SidePanel = (props: Props) => {
 
-    const { title, cancelButton, submitButton, children } = props;
+    const { title, handleClickClose, cancelButton, submitButton, children } = props;
 
     return (
         <>
             <section className="fixed inset-0 z-50 flex justify-end">
 
-                <section className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={cancelButton.handleClick} />
+                <section className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleClickClose} />
 
                 <aside className="relative box-border bg-card w-full max-w-md h-full border-l border-border shadow-2xl flex flex-col animate-slide-in-right">
 
@@ -35,7 +35,7 @@ export const SidePanel = (props: Props) => {
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
-                        <Button onClick={cancelButton.handleClick} className="min-w-10 min-h-10 bg-card text-foreground px-0!">
+                        <Button onClick={handleClickClose} className="min-w-10 min-h-10 bg-card text-foreground px-0!">
                             <X className="w-5! h-5! text-muted-foreground" />
                         </Button>
                     </header>

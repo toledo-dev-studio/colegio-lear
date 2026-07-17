@@ -16,8 +16,7 @@ export const createUpdateStudentGuardianForStudentActionAsync = async ({ id, stu
 
     const isCreating = id === "new";
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         return {
             ...studentGuardianRequestLike,
             studentId,

@@ -90,7 +90,7 @@ export const PaymentConceptsAdvancedFilters = ({ open, title = "Filtros avanzado
                             control={control}
                             rules={{
                                 validate: {
-                                    integer: (v) => Number.isInteger(v) || "No se permiten decimales",
+                                    integer: (v) => !v ? true : Number.isInteger(v) || "No se permiten decimales",
                                     nonNegative: (v) => v! >= 0 || "El monto de pago no puede ser negativo",
                                 },
                             }}

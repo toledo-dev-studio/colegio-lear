@@ -10,8 +10,7 @@ interface Options {
 export const deleteAcademicCycleEnrollmentByIdActionAsync = async ({ id, academicCycleId }: Options): Promise<Options> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development")
+    if (VITE_ENVIRONMENT === "mockable")
         return { id, academicCycleId };
 
     await api.delete(`/academic-cycles/${academicCycleId}/enrollments/${id}`);

@@ -34,6 +34,7 @@ export type AuthState = {
 // Store functions
 const checkPermission = (get: any, moduleKey: ModuleKey, permission: "can-read" | "can-write" | "can-delete") => {
     const user = get().user;
+    // TODO:
     console.log(moduleKey, permission, user);
     return true;
 }
@@ -43,7 +44,6 @@ const checkAuthStatus = async (set: any, get: any) => {
     try {
         showLoading("Validando credenciales");
         const user = await meActionAsync();
-        // REMOVE: mustChangePassword: true
         set({ user: { ...user }, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
         return true;
     } catch (error) {
@@ -58,7 +58,6 @@ const checkAuthStatus = async (set: any, get: any) => {
 const login = async (set: any, get: any, credentials: AuthCredentials) => {
     try {
         const user = await loginActionAsync(credentials);
-        // REMOVE: mustChangePassword: true
         set({ user: { ...user }, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
         return true;
     } catch (error) {

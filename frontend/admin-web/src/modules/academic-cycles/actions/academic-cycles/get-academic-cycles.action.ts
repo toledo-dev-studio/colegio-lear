@@ -18,20 +18,17 @@ export const getAcademicCyclesActionAsync = async (options: Options): Promise<Ac
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-cycles/academic-cycles.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/academic-cycles/academic-cycles.json";
-
     const { data } = await api.get<AcademicCycleResponse[]>(endpoint, {
         params: {
             q: query,
-            name, 
-            code, 
-            startDate, 
-            endDate, 
-            periodType, 
-            status, 
-            enrollmentOpen, 
-            academicLevelId, 
+            name,
+            code,
+            startDate,
+            endDate,
+            periodType,
+            status,
+            enrollmentOpen,
+            academicLevelId,
             educationLevelId
         }
     });

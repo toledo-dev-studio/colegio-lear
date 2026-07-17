@@ -129,7 +129,6 @@ export const AcademicLevelForm = ({ isNew, isSubmitting, academicLevelResponse, 
                         <Controller
                             name="description"
                             control={control}
-                            rules={{ required: true }}
                             render={({ field }) => (
                                 <Textarea
                                     {...field}

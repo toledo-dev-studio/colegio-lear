@@ -23,12 +23,14 @@ export const createUpdateSchoolSubjectActionAsync = async ({ id, schoolSubjectRe
     }
 
     const { data } = await api<SchoolSubjectResponse>({
-        url: isCreating ? '/school-subjects' : `/school-subjects/${id}`,
-        method: isCreating ? 'POST' : 'PATCH',
+        url: isCreating ? "/school-subjects" : `/school-subjects/${id}`,
+        method: isCreating ? "POST" : "PATCH",
         data: schoolSubjectRequestLike
     });
 
     return {
         ...data,
+        academicLevel: { id: schoolSubjectRequestLike.academicLevelId, name: schoolSubjectRequestLike.academicLevel?.name },
+        educationLevel: { id: schoolSubjectRequestLike.educationLevelId, name: schoolSubjectRequestLike.educationLevel?.name }
     };
 }

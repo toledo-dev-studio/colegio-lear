@@ -11,8 +11,7 @@ interface Options {
 export const getAcademicCycleEnrollmentByIdActionAsync = async ({ id, academicCycleId }: Options): Promise<AcademicCycleEnrollmentResponse> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         const { data } = await api.get<AcademicCycleEnrollmentResponse[]>("http://localhost/api/academic-cycles/enrollments/enrollments.json");
         const record = data.find(item => item.id === id);
         if (!record)

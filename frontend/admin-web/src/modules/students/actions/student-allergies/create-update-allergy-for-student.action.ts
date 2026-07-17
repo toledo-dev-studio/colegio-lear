@@ -16,8 +16,7 @@ export const createUpdateAllergyForStudentActionAsync = async ({ id, studentId, 
 
     const isCreating = id === "new";
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         return {
             ...allergyRequestLike,
             studentId,

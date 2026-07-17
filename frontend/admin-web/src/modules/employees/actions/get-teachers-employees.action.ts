@@ -11,9 +11,6 @@ export const getTeachersEmployeesActionAsync = async (): Promise<EmployeeRespons
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/employees/employees.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/employees/employees.json";
-
     const { data } = await api.get<EmployeeResponse[]>(endpoint);
 
     return data;

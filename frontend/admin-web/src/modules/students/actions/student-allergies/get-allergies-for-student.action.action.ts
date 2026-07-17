@@ -15,9 +15,6 @@ export const getAllergiesForStudentActionAsync = async ({ studentId }: Options):
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/students/student-allergies/student-allergies.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/students/student-allergies/student-allergies.json";
-
     const { data } = await api.get<AllergyResponse[]>(endpoint);
 
     return data;

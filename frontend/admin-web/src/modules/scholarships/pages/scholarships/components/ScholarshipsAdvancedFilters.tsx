@@ -15,7 +15,6 @@ interface Props {
 }
 
 export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados", handleClickClose }: Props) => {
-
     // Component hooks & stores
     const [searchParams, setSearchParams] = useSearchParams();
     const scholarshipFilterLike: Partial<ScholarshipFilter> = {
@@ -38,7 +37,7 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
         searchParams.delete("name");
         searchParams.delete("is-active");
         searchParams.delete("discount-percentage");
-        reset({ name: "", isActive: true, discountPercentage: 0 }, { keepTouched: false });
+        reset({});
         setSearchParams(searchParams);
         handleClickClose();
     }
@@ -63,7 +62,7 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
                 <form className="flex flex-col gap-8">
 
                     <div className="control-container">
-                        <label className="label">Nombre del concepto de pago:</label>
+                        <label className="label">Nombre de la beca:</label>
                         <Controller
                             name="name"
                             control={control}
@@ -71,7 +70,8 @@ export const ScholarshipsAdvancedFilters = ({ open, title = "Filtros avanzados",
                                 <Input
                                     type="text"
                                     {...field}
-                                    placeholder="Nombre del concepto de pago..."
+                                    onKeyDown={(e) => e.code === "Enter" && e.preventDefault()}
+                                    placeholder="Nombre de la beca..."
                                 />
                             )}
                         />

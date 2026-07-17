@@ -4,6 +4,6 @@ import { uploadAttachmentForAnnouncementActionAsync } from "../../actions/attach
 
 export const useUploadAttachmentForAnnouncement = () => {
     return useMutation({
-        mutationFn: uploadAttachmentForAnnouncementActionAsync,
+        mutationFn: uploadAttachmentForAnnouncementActionAsync
     });
 }

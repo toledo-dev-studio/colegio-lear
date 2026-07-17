@@ -14,10 +14,7 @@ export const getStudentGuardiansForStudentActionAsync = async ({ studentId }: Op
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/students/student-guardians/student-guardians.json";
-
-    // REMOVE
-    endpoint = "http://localhost/api/students/student-guardians/student-guardians.json";
-
+    
     const { data } = await api.get<StudentGuardianResponse[]>(endpoint);
 
     return data;

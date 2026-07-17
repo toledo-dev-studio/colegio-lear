@@ -16,9 +16,6 @@ export const getAcademicCycleWalletActionAsync = async ({ query, academicCycleId
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-cycles/academic-cycles.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/academic-cycles-wallet/academic-cycles-wallet.json";
-
     const { data } = await api.get<AcademicCycleWalletItemResponse[]>(endpoint, {
         params: {
             q: query,

@@ -14,10 +14,7 @@ export const getAcademicCycleEnrollmentsForStudentActionAsync = async ({ student
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/students/enrollments/enrollments.json";
-
-    // REMOVE
-    endpoint = "http://localhost/api/students/enrollments/enrollments.json";
-
+    
     const { data } = await api.get<AcademicCycleEnrollmentResponse[]>(endpoint);
 
     return data;
