@@ -11,7 +11,7 @@ interface Props {
 
 export const AccountInfoButton = ({ logout }: Props) => {
     const loggedInUserFullName = useAuthStore(userStoreFullName);
-    const loggedInUserImage = useAuthStore(userStoreImage) || "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x"
+    const loggedInUserImage = useAuthStore(userStoreImage); //|| "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x"
 
     const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
 

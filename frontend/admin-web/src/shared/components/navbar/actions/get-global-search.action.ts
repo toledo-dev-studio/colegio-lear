@@ -15,10 +15,6 @@ export const getGlobalSearchActionAsync = async ({ query }: Options): Promise<Gl
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/global-search/global-search.json";
 
-
-    // REMOVE
-    endpoint = "http://localhost/api/global-search/global-search.json";
-
     const { data } = await api.get<GlobalSearchResponse[]>(endpoint, {
         params: {
             q: query,

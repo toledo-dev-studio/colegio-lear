@@ -18,7 +18,7 @@ export const GlobalSearchInput = () => {
     // Components hooks and stores
     const [openDropdown, setOpenDropdown] = useState(false);
     const { query, setQuery, debouncedValue } = useDebounce({ delay: 300, minLength: 5 });
-    const { data, isFetching } = useGetGlobalSearch({ query: debouncedValue });
+    const { data, isLoading, isError } = useGetGlobalSearch({ query: debouncedValue });
 
     // Click outside container to close results dropdown
     useEffect(() => {
@@ -54,7 +54,8 @@ export const GlobalSearchInput = () => {
                 <div className="flex-1 w-full mx-auto z-10">
                     {openDropdown && (query.trim().length >= 5) && (
                         <GlobalSearchResultsDropdown
-                            isLoading={isFetching}
+                            isLoading={isLoading}
+                            isError={isError}
                             query={query}
                             results={data}
                             onClick={(record) => {

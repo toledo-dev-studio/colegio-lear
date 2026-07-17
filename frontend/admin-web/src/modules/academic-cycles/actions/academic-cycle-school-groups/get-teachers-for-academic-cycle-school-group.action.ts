@@ -13,11 +13,8 @@ export const getTeachersForAcademicCycleSchoolGroupActionAsync = async ({ academ
 
     let endpoint = `/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/teachers`;
 
-        if (VITE_ENVIRONMENT === "mockable")
+    if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-cycles/school-groups/teachers.json";
-
-    // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/school-groups/teachers.json";
 
     const { data } = await api.get<AcademicCycleSchoolGroupTeacherResponse[]>(endpoint);
 

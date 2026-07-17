@@ -10,8 +10,7 @@ interface Options {
 export const deleteAcademicCycleWalletItemByIdActionAsync = async ({ academicCycleId, id }: Options): Promise<Options> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development")
+    if (VITE_ENVIRONMENT === "mockable")
         return { academicCycleId, id };
 
     await api.delete(`/academic-cycles/${academicCycleId}/wallet/${id}`);

@@ -13,11 +13,8 @@ export const getCalendarsForAcademicCycleSchoolGroupActionAsync = async ({ acade
 
     let endpoint = `/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/calendars`;
 
-        if (VITE_ENVIRONMENT === "mockable")
+    if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-cycles/school-groups/calendars.json";
-
-    // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/school-groups/calendars.json";
 
     const { data } = await api.get<AcademicCycleSchoolGroupCalendarResponse[]>(endpoint);
 

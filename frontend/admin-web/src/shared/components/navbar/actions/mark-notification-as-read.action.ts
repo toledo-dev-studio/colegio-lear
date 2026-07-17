@@ -10,8 +10,7 @@ interface Options {
 export const markNotificationAsReadActionAsync = async ({ id, employeeId }: Options): Promise<Options> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development")
+    if (VITE_ENVIRONMENT === "mockable")
         return { id, employeeId };
 
     await api.post(`/notifications/employees/${employeeId}/${id}/read`, {});

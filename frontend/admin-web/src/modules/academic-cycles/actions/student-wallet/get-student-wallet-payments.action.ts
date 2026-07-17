@@ -16,9 +16,6 @@ export const getStudentWalletPaymentsActionAsync = async ({ academicCycleId, aca
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/students/student-wallet/student-wallet.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/students/student-wallet-payments/student-wallet-payments.json";
-
     const { data } = await api.get<StudentWalletPaymentResponse[]>(endpoint);
 
     return data;

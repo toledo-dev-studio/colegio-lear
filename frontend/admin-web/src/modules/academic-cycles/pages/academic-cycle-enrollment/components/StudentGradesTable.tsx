@@ -9,9 +9,6 @@ interface Props {
 }
 
 export const StudentGradesTable = ({ academicCycleResponse, studentSchoolSubjectGradeSummary, schoolGroupTeachersResponse }: Props) => {
-    console.log(studentSchoolSubjectGradeSummary);
-    console.log(schoolGroupTeachersResponse);
-    
 
     return (
         <>

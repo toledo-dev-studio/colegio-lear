@@ -16,8 +16,7 @@ export const createUpdateAcademicCycleSchoolGroupActionAsync = async ({ id, acad
     const isCreating = id === "new";
     const { academicCycleId } = academicCycleSchoolGroupRequestLike;
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         return {
             ...academicCycleSchoolGroupRequestLike,
             id: isCreating ? generateTemporalId() : id,

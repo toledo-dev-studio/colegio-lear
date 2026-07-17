@@ -12,13 +12,4 @@ export const GET_STUDENT_GRADES_QUERY_KEY = "student-grades";
 
 export const GET_STUDENT_GUARDIANS_QUERY_KEY = "student-guardians";
 
-
-
-// REMOVE
-
-
-
-
 export const GET_ACADEMIC_CYCLES_FOR_STUDENT_QUERY_KEY = "student-academic-cycles";
-
-export const GET_ENROLLMENT_FOR_STUDENT_QUERY_KEY = "student-enrollment";

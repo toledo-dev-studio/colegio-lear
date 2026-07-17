@@ -22,9 +22,6 @@ export const getPagedAcademicCyclesActionAsync = async (options: Options): Promi
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-cycles/paged-academic-cycles.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/academic-cycles/paged-academic-cycles.json";
-
     const { data } = await api.get<PagedResponse<AcademicCycleResponse>>(endpoint, {
         params: {
             q: query,

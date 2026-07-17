@@ -14,8 +14,7 @@ interface Options {
 export const updateStudentWalletItemActionAsync = async ({ id, academicCycleId, academicCycleEnrollmentId, studentWalletItemRequestLike }: Options): Promise<StudentWalletItemResponse> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         return {
             ...studentWalletItemRequestLike,
             academicCycleEnrollmentId,

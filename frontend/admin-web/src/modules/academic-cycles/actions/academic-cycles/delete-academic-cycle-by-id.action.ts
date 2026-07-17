@@ -9,8 +9,7 @@ interface Options {
 export const deleteAcademicCycleByIdActionAsync = async ({ id }: Options): Promise<string> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development")
+    if (VITE_ENVIRONMENT === "mockable")
         return id;
 
     await api.delete(`/academic-cycles/${id}`);

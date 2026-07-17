@@ -1,17 +1,31 @@
-import { ArrowRight, Loader2, Search } from "lucide-react";
+import { ArrowRight, Loader2, Search, SearchAlert } from "lucide-react";
+
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { MODULE_ICON, MODULE_LABELS } from "@/lib/key-value-pairs/key-value-pair-modules";
 import type { GlobalSearchRecordResponse, GlobalSearchResponse } from "@/interfaces/responses/global-search.response";
 
 interface Props {
     isLoading: boolean;
+    isError: boolean;
     query: string;
     results: GlobalSearchResponse[];
     testid: string;
     onClick: (record: GlobalSearchRecordResponse) => void;
 }
 
-export const GlobalSearchResultsList = ({ isLoading, query, results, testid, onClick }: Props) => {
+export const GlobalSearchResultsList = ({ isLoading, isError, query, results, testid, onClick }: Props) => {
+    if (isError) {
+        return (
+            <div className="px-6 py-10 text-center" data-testid={`${testid}-empty`}>
+                <SearchAlert className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-60" />
+                <p className="text-sm font-medium text-foreground">Lo sentimos</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                    No fue posible realizar la búsqueda solicitada :(
+                </p>
+            </div>
+        );
+    }
+
     if (isLoading) {
         return (
             <div className="px-6 py-8 flex items-center justify-center text-sm text-muted-foreground" data-testid={`${testid}-loading`}>
@@ -19,6 +33,7 @@ export const GlobalSearchResultsList = ({ isLoading, query, results, testid, onC
             </div>
         );
     }
+
     if (results.length === 0 && !isLoading) {
         return (
             <div className="px-6 py-10 text-center" data-testid={`${testid}-empty`}>

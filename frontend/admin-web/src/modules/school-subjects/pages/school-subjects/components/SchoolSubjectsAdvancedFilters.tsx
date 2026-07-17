@@ -62,6 +62,7 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
     }
 
     const onSubmit = (filter: Partial<SchoolSubjectFilter>) => {
+        searchParams.delete("query");
         searchParams.set("is-active", `${filter.isActive}`);
         filter.name ? searchParams.set("name", filter.name) : searchParams.delete("name");
         filter.academicLevelId ? searchParams.set("academic-level-id", filter.academicLevelId) : searchParams.delete("academic-level-id");
@@ -79,19 +80,19 @@ export const SchoolSubjectsAdvancedFilters = ({ open, title = "Filtros avanzados
                 handleClickClose={handleClickClose}
                 cancelButton={{ show: true, disabled: false, type: "button", label: "Limpiar filtros", handleClick: handleClickClearFilters }}
                 submitButton={{ show: true, disabled: false, type: "submit", label: "Aplicar filtros", handleClick: handleSubmit(onSubmit) }}>
-                
+
                 <form className="flex flex-col gap-8">
 
                     <div className="control-container">
-                        <label className="label">Nombre:</label>
+                        <label className="label">Nombre de la materia:</label>
                         <Controller
                             name="name"
                             control={control}
                             render={({ field }) => (
                                 <Input
-                                    {...field}
                                     type="text"
-                                    placeholder="Nombre..."
+                                    {...field}
+                                    placeholder="Nombre de la materia..."
                                 />
                             )}
                         />

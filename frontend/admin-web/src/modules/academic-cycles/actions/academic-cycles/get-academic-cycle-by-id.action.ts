@@ -10,8 +10,7 @@ interface Options {
 export const getAcademicCycleByIdActionAsync = async ({ id }: Options): Promise<AcademicCycleResponse> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         const { data } = await api.get<AcademicCycleResponse[]>("http://localhost/api/academic-cycles/academic-cycles/academic-cycles.json");
         const record = data.find(item => item.id === id);
         if (!record)

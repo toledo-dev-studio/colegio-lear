@@ -69,7 +69,7 @@ export const AttachmentCard = ({ attachment, isUploading, isDeleting, previewUrl
             ].join(" ")}
         >
             {/* Preview area */}
-            <div className="relative aspect-[4/3] w-full bg-muted/40 flex items-center justify-center overflow-hidden">
+            <div className="relative aspect-4/3 w-full bg-muted/40 flex items-center justify-center overflow-hidden">
                 {showImage && imgSrc ? (
                     <img
                         src={imgSrc}

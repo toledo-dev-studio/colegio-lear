@@ -16,9 +16,6 @@ export const getAcademicCycleSchoolSubjectsActionAsync = async ({ query, academi
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-cycles/school-subjects/school-subjects.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/school-subjects/school-subjects.json";
-
     const { data } = await api.get<AcademicCycleSchoolSubjectResponse[]>(endpoint, {
         params: {
             q: query

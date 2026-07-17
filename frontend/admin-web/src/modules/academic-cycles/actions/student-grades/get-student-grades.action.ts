@@ -16,9 +16,6 @@ export const getStudentGradesActionAsync = async ({ academicCycleId, academicCyc
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/students/student-grades/student-grades.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/students/student-grades/student-grades.json";
-
     const { data } = await api.get<StudentGradeResponse[]>(endpoint);
     
     return data;

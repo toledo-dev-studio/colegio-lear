@@ -10,8 +10,7 @@ interface Options {
 export const getStudentByIdActionAsync = async ({ id }: Options): Promise<StudentResponse> => {
     await sleep();
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         const { data } = await api.get<StudentResponse[]>("http://localhost/api/students/students/students.json");
         const record = data.find(item => item.id === id);
         if (!record)

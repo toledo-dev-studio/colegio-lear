@@ -19,9 +19,6 @@ export const getPagedAcademicCycleEnrollmentsActionAsync = async ({ query, page 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/academic-cycles/enrollments/paged-enrollments.json";
 
-    // REMOVE
-    endpoint = "http://localhost/api/academic-cycles/enrollments/paged-enrollments.json";
-
     const { data } = await api.get<PagedResponse<AcademicCycleEnrollmentResponse>>(endpoint, {
         params: {
             q: query,

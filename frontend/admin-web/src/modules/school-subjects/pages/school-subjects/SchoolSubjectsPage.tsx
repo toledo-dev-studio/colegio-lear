@@ -19,26 +19,26 @@ export const SchoolSubjectsPage = () => {
 
   // Component functions
   const handleClickExport = async () => {
-    loader.show('Descargando información', 'Por favor espere...');
+    loader.show("Descargando información", "Por favor espere...");
 
     const data = await mutations.schoolSubjects.export.mutateAsync();
 
     if (!data || !Array.isArray(data)) {
       loader.hide();
-      toast.info('No se cuenta con información para descargar', { position: "top-right" });
+      toast.info("No se cuenta con información para descargar", { position: "top-right" });
       return;
     }
 
     const headers = [
-      { label: 'Id', key: 'id' },
-      { label: 'Nombre', key: 'name' },
-      { label: 'Descripción', key: 'description' },
-      { label: 'Estado', key: 'status' },
-      { label: 'Nivel Académico', key: 'academicLevel.name' },
-      { label: 'Grado Educativo', key: 'educationLevel.name' }
+      { label: "Id", key: "id" },
+      { label: "Nombre", key: "name" },
+      { label: "Descripción", key: "description" },
+      { label: "Estado", key: "status" },
+      { label: "Nivel Académico", key: "academicLevel.name" },
+      { label: "Grado Educativo", key: "educationLevel.name" }
     ];
 
-    downloadDataToCsvFile('Materias escolares', headers, data);
+    downloadDataToCsvFile("Materias escolares", headers, data);
 
     setTimeout(() => loader.hide(), 500);
   }
@@ -49,12 +49,12 @@ export const SchoolSubjectsPage = () => {
     await mutations.schoolSubjects.delete.mutateAsync({ id: deleteModal.record.id },
       {
         onSuccess: () => {
-          toast.success('Materia escolar eliminada correctamente', { position: "top-right" });
+          toast.success("Materia escolar eliminada correctamente", { position: "top-right" });
           deleteModal.close();
         },
         onError: (error: any) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar la materia escolar', { position: "top-right" });
+          toast.error("Ocurrio un error al tratar de eliminar la materia escolar", { position: "top-right" });
         }
       }
     );

@@ -15,8 +15,7 @@ export const createUpdateStudentActionAsync = async ({ id, studentRequestLike }:
 
     const isCreating = id === "new";
 
-    // REMOVE
-    if (VITE_ENVIRONMENT === "development") {
+    if (VITE_ENVIRONMENT === "mockable") {
         return {
             ...studentRequestLike,
             id: isCreating ? generateTemporalId() : id
