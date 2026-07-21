@@ -53,9 +53,11 @@ export class ScholarshipService {
       andConditions.push({ isActive: filters.isActive });
     }
 
-    // Discount percentage filter (exact match)
+    // Discount percentage filter (maximum — matches scholarships at or below this value)
     if (filters.discountPercentage !== undefined) {
-      andConditions.push({ discountPercentage: filters.discountPercentage });
+      andConditions.push({
+        discountPercentage: { lte: filters.discountPercentage },
+      });
     }
 
     if (andConditions.length > 0) {

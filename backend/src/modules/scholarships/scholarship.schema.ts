@@ -71,7 +71,7 @@ export const idParamSchema = z.object({
  *         type: number
  *         minimum: 0
  *         maximum: 100
- *       description: Filter by exact discount percentage
+ *       description: Filter by maximum discount percentage (matches scholarships at or below this value)
  */
 export const scholarshipFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),

@@ -143,8 +143,9 @@ export const updateAnnouncementSchema = z
  * - q: free-text search on name and description (case-insensitive, max 100 chars)
  * - name: filter by name (case-insensitive contains, max 200 chars)
  * - isActive: filter by active/inactive status ("true" | "false")
- * - publishedAt: filter by publication date (ISO date string)
- * - expiresAt: filter by expiration date (ISO date string)
+ * - publishedAt / expiresAt: together define one selected date range;
+ *   matches announcements whose own publishedAt AND expiresAt both fall
+ *   within that range (not two independent exact-date filters).
  */
 export const announcementFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),

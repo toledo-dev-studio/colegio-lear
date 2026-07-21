@@ -61,7 +61,9 @@ export class AnnouncementService {
    * - `q` searches both `name` and `description` with OR logic (case-insensitive).
    * - `name` filters by contains (case-insensitive).
    * - `isActive` filters by exact boolean match.
-   * - `publishedAt` / `expiresAt` filter by day range (start-of-day inclusive to next day exclusive).
+   * - `publishedAt` / `expiresAt` together define one selected date range;
+   *   matches announcements whose own publishedAt AND expiresAt both fall
+   *   within that range.
    */
   private buildWhereClause(
     filters: AnnouncementFilters,
@@ -91,22 +93,29 @@ export class AnnouncementService {
       andConditions.push({ isActive: filters.isActive });
     }
 
-    // PublishedAt day-range filter
-    if (filters.publishedAt) {
-      const start = new Date(filters.publishedAt);
-      start.setUTCHours(0, 0, 0, 0);
-      const end = new Date(start);
-      end.setUTCDate(end.getUTCDate() + 1);
-      andConditions.push({ publishedAt: { gte: start, lt: end } });
-    }
+    // publishedAt/expiresAt together define one selected date range
+    // ("Entre fecha de publicación" → "Hasta fecha de vencimiento" in the
+    // front's advanced filters panel). Both the record's own publishedAt
+    // AND its expiresAt must fall within that range — this is not two
+    // independent exact-date filters, it's "does this announcement's
+    // whole active window sit inside the selected window".
+    if (filters.publishedAt || filters.expiresAt) {
+      const rangeStart = filters.publishedAt
+        ? new Date(filters.publishedAt)
+        : undefined;
+      if (rangeStart) rangeStart.setUTCHours(0, 0, 0, 0);
 
-    // ExpiresAt day-range filter
-    if (filters.expiresAt) {
-      const start = new Date(filters.expiresAt);
-      start.setUTCHours(0, 0, 0, 0);
-      const end = new Date(start);
-      end.setUTCDate(end.getUTCDate() + 1);
-      andConditions.push({ expiresAt: { gte: start, lt: end } });
+      const rangeEnd = filters.expiresAt
+        ? new Date(filters.expiresAt)
+        : undefined;
+      if (rangeEnd) rangeEnd.setUTCHours(23, 59, 59, 999);
+
+      const withinRange: Record<string, Date> = {};
+      if (rangeStart) withinRange.gte = rangeStart;
+      if (rangeEnd) withinRange.lte = rangeEnd;
+
+      andConditions.push({ publishedAt: withinRange });
+      andConditions.push({ expiresAt: withinRange });
     }
 
     if (andConditions.length > 0) {

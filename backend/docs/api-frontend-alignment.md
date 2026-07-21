@@ -600,3 +600,53 @@ Ambos módulos quedaron sin `*.test.ts` — vale la pena generar specs ahora
 que están completos, siguiendo el patrón de los módulos que sí tenían
 tests (`academic-levels`, `payment-concepts`, `scholarships`,
 `school-subjects`).
+
+## Correcciones puntuales reportadas por el usuario (2026-07-21)
+
+Lista de 8 bugs reportados; se validó cada uno antes de tocar código —
+solo 3 eran del backend.
+
+**Corregidos:**
+
+1. `payment-concepts`: filtro `amount` en `payment-concept.service.ts`
+   pasó de igualdad exacta a `{ lte: amount }` (monto máximo).
+2. `scholarships`: filtro `discountPercentage` en
+   `scholarship.service.ts` pasó de igualdad exacta a `{ lte: ... }`
+   (porcentaje máximo).
+3. `announcements`: el filtro de `publishedAt`/`expiresAt` comparaba
+   cada campo contra un solo día exacto de forma independiente. Ahora
+   ambos valores del filtro definen un solo rango de fechas
+   (`publishedAt` = inicio del rango, `expiresAt` = fin del rango), y se
+   exige que **tanto** el `publishedAt` **como** el `expiresAt` del
+   registro caigan dentro de ese rango — no dos filtros de fecha exacta
+   independientes. Confirmado con el usuario antes de implementar.
+
+**Investigados y descartados (no son bugs del backend):**
+
+4. `academic-levels` "sigue usando status" — no se reprodujo. Ya usa
+   `isActive` en DB, service, schema, swagger y las interfaces del
+   front. Probado en vivo.
+5. `scholarships` "el export no aplica filtros" — el backend
+   (`GET /scholarships`, sin paginar) sí aplica los filtros
+   correctamente cuando se le mandan (probado en vivo). El bug está en
+   el front: `ScholarshipsPage.tsx` → `handleClickExport` llama
+   `mutations.scholarships.export.mutateAsync()` **sin argumentos**, o
+   sea nunca manda `query`/`name`/`discountPercentage`/`isActive` al
+   exportar. No es nuestro.
+6. `announcements` "sigue usando status" — no se reprodujo, mismo caso
+   que #4 (ya usa `isActive` en todos lados). Probado en vivo.
+7. `my-account` / 8. `employees` "la imagen regresa null" — no se
+   reprodujo en el backend. Probado subiendo una imagen real por
+   `multipart/form-data` directo a `POST /employees`: el archivo se
+   guardó en disco (`uploads/employees/<uuid>.png`) y el campo `image`
+   regresó la ruta real, no `null`. El bug está en el front:
+   `create-update-employee.action.ts` y `update-my-account.action.ts`
+   arman un `FormData` (`fileFormData`) pero **nunca lo mandan como body
+   de la petición** — lo anidan dentro de un objeto plano
+   (`data: { ...employeeRequestLike, file: fileFormData }`), así que el
+   request nunca sale como `multipart/form-data` y el middleware de
+   multer del backend jamás recibe el archivo. El patrón correcto ya
+   existe en el propio proyecto:
+   `upload-attachment-for-announcement.action.ts` manda
+   `data: formData` directo. No es nuestro, pero ahí está el fix exacto
+   que le hace falta al front.
