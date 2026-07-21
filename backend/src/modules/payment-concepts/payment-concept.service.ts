@@ -58,9 +58,9 @@ export class PaymentConceptService {
       andConditions.push({ allowForgiveness: filters.allowForgiveness });
     }
 
-    // Amount filter (exact match)
+    // Amount filter (maximum amount — matches concepts at or below this value)
     if (filters.amount !== undefined) {
-      andConditions.push({ amount: filters.amount });
+      andConditions.push({ amount: { lte: filters.amount } });
     }
 
     if (andConditions.length > 0) {

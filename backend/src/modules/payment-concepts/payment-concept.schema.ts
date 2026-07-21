@@ -77,7 +77,7 @@ export const idParamSchema = z.object({
  *       schema:
  *         type: number
  *         minimum: 0.01
- *       description: Filter by exact amount
+ *       description: Filter by maximum amount (matches concepts at or below this value)
  */
 export const paymentConceptFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
