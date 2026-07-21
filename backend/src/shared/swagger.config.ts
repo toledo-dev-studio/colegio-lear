@@ -1410,6 +1410,78 @@ const swaggerOptions: swaggerJsdoc.Options = {
             teacher: { $ref: "#/components/schemas/Employee" },
           },
         },
+        // ─── Academic Cycle Enrollments ──────────────────────────────────────────
+        AcademicCycleEnrollmentRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            code: { type: "string", example: "INS-2026-0001" },
+            status: { type: "string", enum: ["enrolled", "completed", "dropped"] },
+            observations: { type: "string", nullable: true },
+            droppedNotes: { type: "string", nullable: true },
+            studentId: { type: "string", format: "uuid" },
+            student: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+                firstLastName: { type: "string" },
+                secondLastName: { type: "string" },
+                enrollment: { type: "string", example: "LR-2026-0001" },
+              },
+            },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycle: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+              },
+            },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroup: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+              },
+            },
+            scholarshipId: { type: "string", format: "uuid", nullable: true },
+            scholarship: {
+              type: "object",
+              nullable: true,
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+                discountPercentage: { type: "number" },
+              },
+            },
+            createdAt: { type: "string", format: "date-time" },
+          },
+        },
+        CreateAcademicCycleEnrollmentBody: {
+          type: "object",
+          required: ["studentId", "academicCycleSchoolGroupId"],
+          properties: {
+            status: { type: "string", enum: ["enrolled", "completed", "dropped"] },
+            observations: { type: "string", maxLength: 1000 },
+            droppedNotes: { type: "string", maxLength: 1000 },
+            studentId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            scholarshipId: { type: "string", format: "uuid" },
+          },
+        },
+        UpdateAcademicCycleEnrollmentBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            status: { type: "string", enum: ["enrolled", "completed", "dropped"] },
+            observations: { type: "string", maxLength: 1000, nullable: true },
+            droppedNotes: { type: "string", maxLength: 1000, nullable: true },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            scholarshipId: { type: "string", format: "uuid", nullable: true },
+          },
+        },
       },
     },
   },

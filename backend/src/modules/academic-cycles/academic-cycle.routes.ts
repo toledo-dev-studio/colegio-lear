@@ -25,6 +25,11 @@ import {
   updateAcademicCycleSchoolGroupSchema,
 } from "./academic-cycle-school-group.schema";
 import {
+  academicCycleEnrollmentPagedQuerySchema,
+  createAcademicCycleEnrollmentSchema,
+  updateAcademicCycleEnrollmentSchema,
+} from "./academic-cycle-enrollment.schema";
+import {
   findAll,
   findAllPaged,
   findById,
@@ -53,6 +58,13 @@ import {
   findAllCalendars,
   findAllTeachers,
 } from "./academic-cycle-school-group.controller";
+import {
+  findAllPaged as findAllEnrollmentsPaged,
+  findById as findEnrollmentById,
+  create as createEnrollment,
+  update as updateEnrollment,
+  remove as removeEnrollment,
+} from "./academic-cycle-enrollment.controller";
 
 const router = Router();
 
@@ -957,6 +969,239 @@ router.get(
   validate(academicCycleSchoolGroupIdParamSchema, "params"),
   validate(academicCycleSchoolGroupTeachersQuerySchema, "query"),
   findAllTeachers,
+);
+
+// ─── Academic Cycle Enrollments ──────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/paged:
+ *   get:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: List enrollments for an academic cycle (paginated)
+ *     description: Returns a paginated list of student enrollments for the academic cycle, with optional filters.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         description: Free-text search on enrollment code, student name, or student enrollment
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [enrolled, completed, dropped]
+ *       - in: query
+ *         name: academicCycleSchoolGroupId
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: scholarshipId
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: Paginated list of enrollments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *                 totalPages:
+ *                   type: integer
+ *                 currentPage:
+ *                   type: integer
+ *                 itemsCount:
+ *                   type: integer
+ *       404:
+ *         description: Academic cycle not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/paged",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  validate(academicCycleEnrollmentPagedQuerySchema, "query"),
+  findAllEnrollmentsPaged,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{id}:
+ *   get:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: Get an enrollment by ID
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Enrollment found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  findEnrollmentById,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments:
+ *   post:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: Enroll a student in an academic cycle
+ *     description: Creates a new enrollment. Requires the academic cycle to have enrollmentOpen=true and status active/upcoming. Auto-generates `code` (e.g. INS-2026-0001).
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateAcademicCycleEnrollmentBody'
+ *     responses:
+ *       201:
+ *         description: Enrollment created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ *       409:
+ *         description: Enrollment is closed for this academic cycle
+ */
+router.post(
+  "/:academicCycleId/enrollments",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  validate(createAcademicCycleEnrollmentSchema, "body"),
+  createEnrollment,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{id}:
+ *   patch:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: Update an enrollment
+ *     description: Partially updates an enrollment (status, group, scholarship, notes). Not gated by enrollmentOpen — editing an existing record (e.g. marking completed/dropped) is always allowed.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateAcademicCycleEnrollmentBody'
+ *     responses:
+ *       200:
+ *         description: Enrollment updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.patch(
+  "/:academicCycleId/enrollments/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  validate(updateAcademicCycleEnrollmentSchema, "body"),
+  updateEnrollment,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{id}:
+ *   delete:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: Delete an enrollment
+ *     description: Permanently removes a student's enrollment from the academic cycle.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.delete(
+  "/:academicCycleId/enrollments/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  removeEnrollment,
 );
 
 export default router;

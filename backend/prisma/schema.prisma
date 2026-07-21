@@ -67,12 +67,13 @@ model SchoolSubject {
 // ─── Scholarship ────────────────────────────────────────────────────────────────
 
 model Scholarship {
-  id                 String  @id @default(uuid()) @db.Uuid
-  name               String  @unique @db.VarChar(100)
-  description        String? @db.VarChar(500)
-  discountPercentage Decimal @map("discount_percentage") @db.Decimal(5, 2)
-  isActive           Boolean @default(true) @map("is_active")
-  isDeleted          Boolean @default(false) @map("is_deleted")
+  id                       String                    @id @default(uuid()) @db.Uuid
+  name                     String                    @unique @db.VarChar(100)
+  description              String?                   @db.VarChar(500)
+  discountPercentage       Decimal                   @map("discount_percentage") @db.Decimal(5, 2)
+  isActive                 Boolean                   @default(true) @map("is_active")
+  isDeleted                Boolean                   @default(false) @map("is_deleted")
+  academicCycleEnrollments AcademicCycleEnrollment[]
 
   @@map("scholarships")
   @@schema("core")
@@ -258,8 +259,9 @@ model Student {
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime  @updatedAt @map("updated_at")
 
-  guardians StudentGuardian[]
-  allergies StudentAllergy[]
+  guardians                StudentGuardian[]
+  allergies                StudentAllergy[]
+  academicCycleEnrollments AcademicCycleEnrollment[]
 
   @@map("students")
   @@schema("core")
@@ -387,6 +389,7 @@ model AcademicCycle {
   walletItems    AcademicCycleWallet[]
   groups         AcademicCycleGroup[]
   groupCalendars AcademicCycleGroupCalendar[]
+  enrollments    AcademicCycleEnrollment[]
 
   @@map("academic_cycles")
   @@schema("core")
@@ -453,6 +456,7 @@ model AcademicCycleGroup {
   academicCycleId       String                         @map("academic_cycle_id") @db.Uuid
   academicCycle         AcademicCycle                  @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
   calendars             AcademicCycleGroupCalendar[]
+  enrollments           AcademicCycleEnrollment[]
   createdAt             DateTime                       @default(now()) @map("created_at")
   updatedAt             DateTime                       @updatedAt @map("updated_at")
 
@@ -477,5 +481,36 @@ model AcademicCycleGroupCalendar {
   teacher                    Employee           @relation(fields: [teacherId], references: [id], onDelete: Restrict)
 
   @@map("academic_cycle_group_calendars")
+  @@schema("core")
+}
+
+// ─── Academic Cycle Enrollment ────────────────────────────────────────────────
+
+enum AcademicCycleEnrollmentStatus {
+  enrolled  @map("enrolled")
+  completed @map("completed")
+  dropped   @map("dropped")
+
+  @@schema("core")
+}
+
+model AcademicCycleEnrollment {
+  id                         String                        @id @default(uuid()) @db.Uuid
+  code                       String                        @unique @db.VarChar(20)
+  status                     AcademicCycleEnrollmentStatus @default(enrolled)
+  observations               String?                       @db.VarChar(1000)
+  droppedNotes               String?                       @map("dropped_notes") @db.VarChar(1000)
+  studentId                  String                        @map("student_id") @db.Uuid
+  academicCycleId            String                        @map("academic_cycle_id") @db.Uuid
+  academicCycleSchoolGroupId String                        @map("academic_cycle_school_group_id") @db.Uuid
+  scholarshipId              String?                       @map("scholarship_id") @db.Uuid
+  student                    Student                       @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  academicCycle              AcademicCycle                 @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleSchoolGroup   AcademicCycleGroup            @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Restrict)
+  scholarship                Scholarship?                  @relation(fields: [scholarshipId], references: [id], onDelete: SetNull)
+  createdAt                  DateTime                      @default(now()) @map("created_at")
+  updatedAt                  DateTime                      @updatedAt @map("updated_at")
+
+  @@map("academic_cycle_enrollments")
   @@schema("core")
 }

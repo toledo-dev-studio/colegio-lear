@@ -301,10 +301,10 @@ Igual que `students`, se está alineando por partes. Plan acordado con el
 usuario: sección 1 = `academic-cycle` núcleo (**hecho**, ver abajo),
 sección 2 = `academic-cycle-school-subject` (**hecho**, ver abajo),
 sección 3 = `academic-cycle-wallet` (**hecho**, ver abajo), sección 4 =
-`academic-cycle-school-group` (**hecho**, ver abajo) (+
-calendarios + maestros — aquí sí aplica el patrón de sync `new_` de
-`CalendarFormPanel.tsx`, ver arriba), sección 5 =
-`academic-cycle-enrollment` (resuelve el hallazgo pendiente de
+`academic-cycle-school-group` (**hecho**, ver abajo; incluye calendarios +
+maestros, aquí sí aplica el patrón de sync `new_` de
+`CalendarFormPanel.tsx`), sección 5 = `academic-cycle-enrollment`
+(**hecho**, ver abajo; resolvió el hallazgo pendiente de
 `GET /students/:studentId/enrollments`), sección 6 = `student-grades`,
 sección 7 = `student-wallet` (cierra también la sección 4 pendiente de
 `students`).
@@ -456,6 +456,50 @@ Módulo construido desde cero (no existía nada en el back salvo un modelo
   él, 200 con él); list sin `calendars` vs detail con `calendars`; DELETE
   real + cascada confirmada (404 después).
 
+**Sección 5 (`academic-cycle-enrollment`) — completada** en la migración
+`20260716030000_academic_cycle_enrollments`. Módulo nuevo desde cero:
+
+- `code` (folio de la inscripción, ej. `INS-2026-0001`) es **distinto**
+  de `student.enrollment` (ej. `LR-2026-0001`) — confirmado en el mock
+  del front (`academic-cycles/enrollments/enrollments.json`, único caso
+  en el que hizo falta mirar el mock, porque el campo `code` no traía
+  ejemplo en las interfaces de TS y no aparece en el formulario de
+  creación, solo se auto-genera y se muestra). Mismo algoritmo que
+  `generateEnrollment()` de `student.service.ts`
+  (`INS-<año>-<secuencial de 4 dígitos>`, secuencia reinicia por año),
+  replicado como `generateCode()` en el nuevo service.
+- Regla de negocio replicada del front al backend: el botón "Nueva
+  inscripción" solo aparece si `academicCycle.enrollmentOpen === true` y
+  `status` es `active` o `upcoming` (visto en
+  `AcademicCycleEnrollmentsTab.tsx`). Se aplicó la misma regla en
+  `create()` (409 si no se cumple) — **solo en create**, no en
+  `update()`, porque cerrar la inscripción no debería impedir editar
+  registros ya existentes (marcar como `completed`/`dropped` al cierre
+  del ciclo, por ejemplo).
+- `droppedNotes` obligatorio cuando `status === "dropped"`, mismo patrón
+  que `dischargedDescription` en `school-group` (ya se ve en el form del
+  front, se replicó la regla en Zod).
+- Se valida que `academicCycleSchoolGroupId` pertenezca al mismo
+  `academicCycleId` de la URL (404 si no), igual que el resto de
+  sub-recursos anidados.
+- **Resuelve el hallazgo pendiente de `students`**: se agregó
+  `GET /students/:studentId/enrollments` (todas las inscripciones de un
+  alumno a través de todos los ciclos) en `student.routes.ts`, importando
+  el controller de `academic-cycles` directamente — es la única ruta que
+  cruza dominios (URL vive en `students`, la lógica y la tabla son de
+  `academic-cycles`).
+- `DELETE` es hard delete real (el modal del front dice "se eliminará del
+  sistema"). No se agregó ninguna restricción de unicidad
+  estudiante+ciclo (ej. "no puede haber dos inscripciones activas del
+  mismo alumno en el mismo ciclo") porque no hay evidencia de esa regla
+  en el front — si se necesita, avisar antes de asumir.
+- Probado en vivo: crear inscripción (código autogenerado correcto),
+  listar paginado, buscar por `code` (`q`), `GET` por id, PATCH a
+  `dropped` sin `droppedNotes` (400) y con él (200), cerrar
+  `enrollmentOpen` del ciclo y confirmar que crear una nueva inscripción
+  da 409 pero editar una existente sigue funcionando (200),
+  `GET /students/:studentId/enrollments`, DELETE + confirmación 404.
+
 ## Módulos ya alineados (8)
 
 | Módulo | Migración | Notas |
@@ -475,8 +519,10 @@ Módulo construido desde cero (no existía nada en el back salvo un modelo
   alergias — ver detalle arriba). Falta sección 4 (wallet del alumno,
   `student-wallet-item`/`student-wallet-payment`), pospuesta a propósito
   hasta terminar `academic-cycles` porque depende de datos que se crean ahí.
-- `academic-cycles` (+ sub-entidades: school-subject, wallet, school-group,
-  enrollment) — en progreso por secciones, ver detalle abajo.
+- `academic-cycles` — secciones 1 a 5 hechas (núcleo, school-subject,
+  wallet, school-group + calendarios/maestros, enrollment). Faltan
+  sección 6 (`student-grades`) y sección 7 (`student-wallet`, cierra
+  también la sección 4 pendiente de `students`). Ver detalle abajo.
 
 Ninguno tiene `*.test.ts` todavía y tienen relaciones más profundas — vale
 la pena revisar si también usan `status`/`isActive` y si conviene generar
