@@ -19,6 +19,23 @@ import {
   updateAcademicCycleWalletSchema,
 } from "./academic-cycle-wallet.schema";
 import {
+  academicCycleSchoolGroupIdParamSchema,
+  academicCycleSchoolGroupTeachersQuerySchema,
+  createAcademicCycleSchoolGroupSchema,
+  updateAcademicCycleSchoolGroupSchema,
+} from "./academic-cycle-school-group.schema";
+import {
+  academicCycleEnrollmentPagedQuerySchema,
+  academicCycleEnrollmentIdParamSchema,
+  academicCycleEnrollmentWalletItemParamSchema,
+  createAcademicCycleEnrollmentSchema,
+  updateAcademicCycleEnrollmentSchema,
+} from "./academic-cycle-enrollment.schema";
+import {
+  updateStudentWalletItemSchema,
+  createStudentWalletPaymentSchema,
+} from "./student-wallet.schema";
+import {
   findAll,
   findAllPaged,
   findById,
@@ -38,6 +55,29 @@ import {
   updateWalletItem,
   deleteWalletItem,
 } from "./academic-cycle-wallet.controller";
+import {
+  findAllSchoolGroups,
+  findSchoolGroupById,
+  createSchoolGroup,
+  updateSchoolGroup,
+  deleteSchoolGroup,
+  findAllCalendars,
+  findAllTeachers,
+} from "./academic-cycle-school-group.controller";
+import {
+  findAllPaged as findAllEnrollmentsPaged,
+  findById as findEnrollmentById,
+  create as createEnrollment,
+  update as updateEnrollment,
+  remove as removeEnrollment,
+} from "./academic-cycle-enrollment.controller";
+import { findAllGrades } from "./student-grade.controller";
+import {
+  findWallet,
+  findPayments as findWalletPayments,
+  updateItem as updateStudentWalletItem,
+  createPayment as createStudentWalletPayment,
+} from "./student-wallet.controller";
 
 const router = Router();
 
@@ -663,6 +703,746 @@ router.delete(
   authorize("academic-cycles"),
   validate(academicCycleSubResourceParamSchema, "params"),
   deleteWalletItem,
+);
+
+// ─── Academic Cycle School Groups ────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups:
+ *   get:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: List school groups for an academic cycle
+ *     description: Returns all school groups for the given academic cycle (list view, without calendars).
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of school groups
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AcademicCycleSchoolGroupRecord'
+ *       404:
+ *         description: Academic cycle not found
+ */
+router.get(
+  "/:academicCycleId/school-groups",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  findAllSchoolGroups,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{id}:
+ *   get:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: Get a school group by ID
+ *     description: Returns a single school group with its calendar entries.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: School group found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleSchoolGroupRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.get(
+  "/:academicCycleId/school-groups/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  findSchoolGroupById,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups:
+ *   post:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: Create a new school group
+ *     description: Creates a new school group for the academic cycle, optionally with initial calendar entries.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateAcademicCycleSchoolGroupBody'
+ *     responses:
+ *       201:
+ *         description: School group created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleSchoolGroupRecord'
+ *       404:
+ *         description: Academic cycle not found
+ */
+router.post(
+  "/:academicCycleId/school-groups",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  validate(createAcademicCycleSchoolGroupSchema, "body"),
+  createSchoolGroup,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{id}:
+ *   patch:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: Update a school group
+ *     description: Partially updates a school group. If `calendars` is provided, syncs the full set (creates ids prefixed "new_"/"new-", updates existing UUIDs, deletes any existing calendar not present in the array).
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateAcademicCycleSchoolGroupBody'
+ *     responses:
+ *       200:
+ *         description: School group updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleSchoolGroupRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.patch(
+  "/:academicCycleId/school-groups/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  validate(updateAcademicCycleSchoolGroupSchema, "body"),
+  updateSchoolGroup,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{id}:
+ *   delete:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: Delete a school group
+ *     description: Permanently removes a school group and its calendar entries.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.delete(
+  "/:academicCycleId/school-groups/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  deleteSchoolGroup,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/calendars:
+ *   get:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: List calendar entries for a school group
+ *     description: Returns the schedule (day/time/subject/teacher) configured for the school group.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of calendar entries
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AcademicCycleSchoolGroupCalendarRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.get(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/calendars",
+  authorize("academic-cycles"),
+  validate(academicCycleSchoolGroupIdParamSchema, "params"),
+  findAllCalendars,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/teachers:
+ *   get:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: List distinct teachers assigned to a school group
+ *     description: Derived (not its own table) list of distinct subject/teacher pairs from the group's calendar entries. Only active teachers by default.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: includeInactive
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *         description: Include teachers whose employee record is inactive (default false, active only)
+ *     responses:
+ *       200:
+ *         description: List of distinct subject/teacher pairs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AcademicCycleSchoolGroupTeacherRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.get(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/teachers",
+  authorize("academic-cycles"),
+  validate(academicCycleSchoolGroupIdParamSchema, "params"),
+  validate(academicCycleSchoolGroupTeachersQuerySchema, "query"),
+  findAllTeachers,
+);
+
+// ─── Academic Cycle Enrollments ──────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/paged:
+ *   get:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: List enrollments for an academic cycle (paginated)
+ *     description: Returns a paginated list of student enrollments for the academic cycle, with optional filters.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         description: Free-text search on enrollment code, student name, or student enrollment
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [enrolled, completed, dropped]
+ *       - in: query
+ *         name: academicCycleSchoolGroupId
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: scholarshipId
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: Paginated list of enrollments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *                 totalPages:
+ *                   type: integer
+ *                 currentPage:
+ *                   type: integer
+ *                 itemsCount:
+ *                   type: integer
+ *       404:
+ *         description: Academic cycle not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/paged",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  validate(academicCycleEnrollmentPagedQuerySchema, "query"),
+  findAllEnrollmentsPaged,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{id}:
+ *   get:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: Get an enrollment by ID
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Enrollment found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  findEnrollmentById,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments:
+ *   post:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: Enroll a student in an academic cycle
+ *     description: Creates a new enrollment. Requires the academic cycle to have enrollmentOpen=true and status active/upcoming. Auto-generates `code` (e.g. INS-2026-0001).
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateAcademicCycleEnrollmentBody'
+ *     responses:
+ *       201:
+ *         description: Enrollment created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ *       409:
+ *         description: Enrollment is closed for this academic cycle
+ */
+router.post(
+  "/:academicCycleId/enrollments",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  validate(createAcademicCycleEnrollmentSchema, "body"),
+  createEnrollment,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{id}:
+ *   patch:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: Update an enrollment
+ *     description: Partially updates an enrollment (status, group, scholarship, notes). Not gated by enrollmentOpen — editing an existing record (e.g. marking completed/dropped) is always allowed.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateAcademicCycleEnrollmentBody'
+ *     responses:
+ *       200:
+ *         description: Enrollment updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.patch(
+  "/:academicCycleId/enrollments/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  validate(updateAcademicCycleEnrollmentSchema, "body"),
+  updateEnrollment,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{id}:
+ *   delete:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: Delete an enrollment
+ *     description: Permanently removes a student's enrollment from the academic cycle.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.delete(
+  "/:academicCycleId/enrollments/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  removeEnrollment,
+);
+
+// ─── Student Grades (read-only) ──────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/grades:
+ *   get:
+ *     tags:
+ *       - Student Grades
+ *     summary: List a student's grades for an enrollment
+ *     description: Read-only — grades have no create/update/delete endpoint yet (pending a future teacher-facing module).
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of grades
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/StudentGradeRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/grades",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentIdParamSchema, "params"),
+  findAllGrades,
+);
+
+// ─── Student Wallet ───────────────────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/wallet:
+ *   get:
+ *     tags:
+ *       - Student Wallet
+ *     summary: Get a student's wallet (summary + items) for an enrollment
+ *     description: Items are snapshotted from the academic cycle's wallet catalog when the student enrolls. `status` (pending/paid/overdue/forgiven) is computed on every read, never stored.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Wallet summary and items
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentWalletRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/wallet",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentIdParamSchema, "params"),
+  findWallet,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/wallet/payments:
+ *   get:
+ *     tags:
+ *       - Student Wallet
+ *     summary: List payments registered against a student's wallet
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of payments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/StudentWalletPaymentRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/wallet/payments",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentIdParamSchema, "params"),
+  findWalletPayments,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/wallet/{id}:
+ *   patch:
+ *     tags:
+ *       - Student Wallet
+ *     summary: Update a student wallet item (forgiveness / payment extension)
+ *     description: Setting isForgiven=true requires allowForgiveness=true (existing or in the same request), and settles the outstanding balance to 0.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateStudentWalletItemBody'
+ *     responses:
+ *       200:
+ *         description: Wallet item updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentWalletItemRecord'
+ *       404:
+ *         description: Academic cycle, enrollment, or wallet item not found
+ *       409:
+ *         description: isForgiven requires allowForgiveness
+ */
+router.patch(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/wallet/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentWalletItemParamSchema, "params"),
+  validate(updateStudentWalletItemSchema, "body"),
+  updateStudentWalletItem,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/wallet/{id}/payments:
+ *   post:
+ *     tags:
+ *       - Student Wallet
+ *     summary: Register a payment against a student wallet item
+ *     description: Auto-generates `folio` (e.g. PAG-2026-000001). amount cannot exceed the item's outstanding balance, and the item cannot already be paid/forgiven.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: studentWalletItemId
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateStudentWalletPaymentBody'
+ *     responses:
+ *       201:
+ *         description: Payment registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentWalletPaymentRecord'
+ *       404:
+ *         description: Academic cycle, enrollment, or wallet item not found
+ *       409:
+ *         description: Amount exceeds outstanding balance, or item already settled
+ */
+router.post(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/wallet/:id/payments",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentWalletItemParamSchema, "params"),
+  validate(createStudentWalletPaymentSchema, "body"),
+  createStudentWalletPayment,
 );
 
 export default router;

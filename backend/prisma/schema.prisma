@@ -57,6 +57,8 @@ model SchoolSubject {
   academicLevel               AcademicLevel                @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
   educationLevel              EducationLevel               @relation(fields: [educationLevelId], references: [id], onDelete: Restrict)
   academicCycleSchoolSubjects AcademicCycleSchoolSubject[]
+  academicCycleGroupCalendars AcademicCycleGroupCalendar[]
+  studentGrades               StudentGrade[]
 
   @@unique([name, educationLevelId])
   @@map("school_subjects")
@@ -66,12 +68,13 @@ model SchoolSubject {
 // ─── Scholarship ────────────────────────────────────────────────────────────────
 
 model Scholarship {
-  id                 String  @id @default(uuid()) @db.Uuid
-  name               String  @unique @db.VarChar(100)
-  description        String? @db.VarChar(500)
-  discountPercentage Decimal @map("discount_percentage") @db.Decimal(5, 2)
-  isActive           Boolean @default(true) @map("is_active")
-  isDeleted          Boolean @default(false) @map("is_deleted")
+  id                       String                    @id @default(uuid()) @db.Uuid
+  name                     String                    @unique @db.VarChar(100)
+  description              String?                   @db.VarChar(500)
+  discountPercentage       Decimal                   @map("discount_percentage") @db.Decimal(5, 2)
+  isActive                 Boolean                   @default(true) @map("is_active")
+  isDeleted                Boolean                   @default(false) @map("is_deleted")
+  academicCycleEnrollments AcademicCycleEnrollment[]
 
   @@map("scholarships")
   @@schema("core")
@@ -80,13 +83,13 @@ model Scholarship {
 // ─── Payment Concept ────────────────────────────────────────────────────────────
 
 model PaymentConcept {
-  id                   String                @id @default(uuid()) @db.Uuid
-  name                 String                @unique @db.VarChar(100)
-  description          String?               @db.VarChar(500)
-  amount               Decimal               @map("amount") @db.Decimal(10, 2)
-  allowForgiveness     Boolean               @default(false) @map("allow_remission")
-  isActive             Boolean               @default(true) @map("is_active")
-  isDeleted            Boolean               @default(false) @map("is_deleted")
+  id               String  @id @default(uuid()) @db.Uuid
+  name             String  @unique @db.VarChar(100)
+  description      String? @db.VarChar(500)
+  amount           Decimal @map("amount") @db.Decimal(10, 2)
+  allowForgiveness Boolean @default(false) @map("allow_remission")
+  isActive         Boolean @default(true) @map("is_active")
+  isDeleted        Boolean @default(false) @map("is_deleted")
 
   @@map("payment_concepts")
   @@schema("core")
@@ -176,22 +179,23 @@ model SecurityRolePermission {
 // ─── Employee ───────────────────────────────────────────────────────────────────
 
 model Employee {
-  id                 String       @id @default(uuid()) @db.Uuid
-  name               String       @db.VarChar(100)
-  firstLastName      String       @map("first_last_name") @db.VarChar(100)
-  secondLastName     String?      @map("second_last_name") @db.VarChar(100)
-  phoneNumber        String       @map("phone_number") @db.VarChar(20)
-  email              String       @unique @db.VarChar(150)
-  username           String       @unique @db.VarChar(50)
-  password           String       @db.VarChar(255)
-  mustChangePassword Boolean      @default(false) @map("must_change_password")
-  image              String?      @db.VarChar(500)
-  isActive           Boolean      @default(true) @map("is_active")
-  isDeleted          Boolean      @default(false) @map("is_deleted")
-  securityRoleId     String       @map("security_role_id") @db.Uuid
-  jobTitleId         String       @map("job_title_id") @db.Uuid
-  securityRole       SecurityRole @relation(fields: [securityRoleId], references: [id], onDelete: Restrict)
-  jobTitle           JobTitle     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
+  id                          String                       @id @default(uuid()) @db.Uuid
+  name                        String                       @db.VarChar(100)
+  firstLastName               String                       @map("first_last_name") @db.VarChar(100)
+  secondLastName              String?                      @map("second_last_name") @db.VarChar(100)
+  phoneNumber                 String                       @map("phone_number") @db.VarChar(20)
+  email                       String                       @unique @db.VarChar(150)
+  username                    String                       @unique @db.VarChar(50)
+  password                    String                       @db.VarChar(255)
+  mustChangePassword          Boolean                      @default(false) @map("must_change_password")
+  image                       String?                      @db.VarChar(500)
+  isActive                    Boolean                      @default(true) @map("is_active")
+  isDeleted                   Boolean                      @default(false) @map("is_deleted")
+  securityRoleId              String                       @map("security_role_id") @db.Uuid
+  jobTitleId                  String                       @map("job_title_id") @db.Uuid
+  securityRole                SecurityRole                 @relation(fields: [securityRoleId], references: [id], onDelete: Restrict)
+  jobTitle                    JobTitle                     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
+  academicCycleGroupCalendars AcademicCycleGroupCalendar[]
 
   @@map("employees")
   @@schema("core")
@@ -232,32 +236,34 @@ model Attachment {
 // ─── Student ─────────────────────────────────────────────────────────────────
 
 model Student {
-  id             String   @id @default(uuid()) @db.Uuid
-  name           String   @db.VarChar(100)
-  firstLastName  String   @map("first_last_name") @db.VarChar(100)
-  secondLastName String   @map("second_last_name") @db.VarChar(100)
-  dateOfBirth    DateTime @map("date_of_birth")
-  curp           String   @unique @db.VarChar(18)
-  enrollment     String   @unique @db.VarChar(20)
-  image          String?  @db.VarChar(500)
-  observations   String?  @db.VarChar(1000)
-  isActive       Boolean  @default(true) @map("is_active")
-  bloodType      BloodType @map("blood_type")
-  medicalNotes   String?  @map("medical_notes") @db.VarChar(1000)
-  email          String   @unique @db.VarChar(150)
-  phoneNumber    String   @map("phone_number") @db.VarChar(20)
-  address        String   @db.VarChar(300)
-  state          String   @db.VarChar(100)
-  municipality   String   @db.VarChar(100)
-  postalCode     String   @map("postal_code") @db.VarChar(10)
-  password       String   @db.VarChar(255)
-  mustChangePassword Boolean @default(true) @map("must_change_password")
-  isDeleted      Boolean  @default(false) @map("is_deleted")
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  id                 String    @id @default(uuid()) @db.Uuid
+  name               String    @db.VarChar(100)
+  firstLastName      String    @map("first_last_name") @db.VarChar(100)
+  secondLastName     String    @map("second_last_name") @db.VarChar(100)
+  dateOfBirth        DateTime  @map("date_of_birth")
+  curp               String    @unique @db.VarChar(18)
+  enrollment         String    @unique @db.VarChar(20)
+  image              String?   @db.VarChar(500)
+  observations       String?   @db.VarChar(1000)
+  isActive           Boolean   @default(true) @map("is_active")
+  bloodType          BloodType @map("blood_type")
+  medicalNotes       String?   @map("medical_notes") @db.VarChar(1000)
+  email              String    @unique @db.VarChar(150)
+  phoneNumber        String    @map("phone_number") @db.VarChar(20)
+  address            String    @db.VarChar(300)
+  state              String    @db.VarChar(100)
+  municipality       String    @db.VarChar(100)
+  postalCode         String    @map("postal_code") @db.VarChar(10)
+  password           String    @db.VarChar(255)
+  mustChangePassword Boolean   @default(true) @map("must_change_password")
+  isDeleted          Boolean   @default(false) @map("is_deleted")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
 
-  guardians          StudentGuardian[]
-  allergies          StudentAllergy[]
+  guardians                StudentGuardian[]
+  allergies                StudentAllergy[]
+  academicCycleEnrollments AcademicCycleEnrollment[]
+  walletItems              StudentWalletItem[]
 
   @@map("students")
   @@schema("core")
@@ -362,28 +368,32 @@ enum AcademicCycleStatus {
 }
 
 model AcademicCycle {
-  id               String              @id @default(uuid()) @db.Uuid
-  name             String              @db.VarChar(100)
-  code             String              @unique @db.VarChar(20)
-  startDate        DateTime            @map("start_date")
-  endDate          DateTime            @map("end_date")
-  periodType       AcademicPeriodType  @map("period_type")
-  status           AcademicCycleStatus @default(upcoming)
-  minimumPassingGrade Int              @default(6) @map("minimum_passing_grade")
-  evaluationCount     Int              @default(3) @map("evaluation_count")
-  enrollmentOpen   Boolean             @default(false) @map("enrollment_open")
-  description      String?             @db.VarChar(500)
-  observations     String?             @db.VarChar(1000)
-  academicLevelId  String              @map("academic_level_id") @db.Uuid
-  educationLevelId String              @map("education_level_id") @db.Uuid
-  academicLevel    AcademicLevel       @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
-  educationLevel   EducationLevel      @relation(fields: [educationLevelId], references: [id], onDelete: Restrict)
-  createdAt        DateTime            @default(now()) @map("created_at")
-  updatedAt        DateTime            @updatedAt @map("updated_at")
+  id                  String              @id @default(uuid()) @db.Uuid
+  name                String              @db.VarChar(100)
+  code                String              @unique @db.VarChar(20)
+  startDate           DateTime            @map("start_date")
+  endDate             DateTime            @map("end_date")
+  periodType          AcademicPeriodType  @map("period_type")
+  status              AcademicCycleStatus @default(upcoming)
+  minimumPassingGrade Int                 @default(6) @map("minimum_passing_grade")
+  evaluationCount     Int                 @default(3) @map("evaluation_count")
+  enrollmentOpen      Boolean             @default(false) @map("enrollment_open")
+  description         String?             @db.VarChar(500)
+  observations        String?             @db.VarChar(1000)
+  academicLevelId     String              @map("academic_level_id") @db.Uuid
+  educationLevelId    String              @map("education_level_id") @db.Uuid
+  academicLevel       AcademicLevel       @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
+  educationLevel      EducationLevel      @relation(fields: [educationLevelId], references: [id], onDelete: Restrict)
+  createdAt           DateTime            @default(now()) @map("created_at")
+  updatedAt           DateTime            @updatedAt @map("updated_at")
 
-  schoolSubjects AcademicCycleSchoolSubject[]
-  walletItems    AcademicCycleWallet[]
-  groups         AcademicCycleGroup[]
+  schoolSubjects        AcademicCycleSchoolSubject[]
+  walletItems           AcademicCycleWallet[]
+  groups                AcademicCycleGroup[]
+  groupCalendars        AcademicCycleGroupCalendar[]
+  enrollments           AcademicCycleEnrollment[]
+  studentWalletItems    StudentWalletItem[]
+  studentWalletPayments StudentWalletPayment[]
 
   @@map("academic_cycles")
   @@schema("core")
@@ -407,14 +417,15 @@ model AcademicCycleSchoolSubject {
 // ─── Academic Cycle Wallet ───────────────────────────────────────────────────
 
 model AcademicCycleWallet {
-  id               String        @id @default(uuid()) @db.Uuid
-  academicCycleId  String        @map("academic_cycle_id") @db.Uuid
-  name             String        @db.VarChar(100)
-  description      String?       @db.VarChar(500)
-  dueDate          DateTime      @map("due_date")
-  amount           Decimal       @db.Decimal(10, 2)
-  allowForgiveness Boolean       @default(false) @map("allow_forgiveness")
-  academicCycle    AcademicCycle @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  id                 String              @id @default(uuid()) @db.Uuid
+  academicCycleId    String              @map("academic_cycle_id") @db.Uuid
+  name               String              @db.VarChar(100)
+  description        String?             @db.VarChar(500)
+  dueDate            DateTime            @map("due_date")
+  amount             Decimal             @db.Decimal(10, 2)
+  allowForgiveness   Boolean             @default(false) @map("allow_forgiveness")
+  academicCycle      AcademicCycle       @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  studentWalletItems StudentWalletItem[]
 
   @@map("academic_cycle_wallet")
   @@schema("core")
@@ -422,16 +433,159 @@ model AcademicCycleWallet {
 
 // ─── Academic Cycle Group ────────────────────────────────────────────────────
 
+enum AcademicCycleSchoolGroupStatus {
+  active     @map("active")
+  discharged @map("discharged")
+
+  @@schema("core")
+}
+
+enum DayOfWeek {
+  monday    @map("monday")
+  tuesday   @map("tuesday")
+  wednesday @map("wednesday")
+  thursday  @map("thursday")
+  friday    @map("friday")
+  saturday  @map("saturday")
+  sunday    @map("sunday")
+
+  @@schema("core")
+}
+
 model AcademicCycleGroup {
-  id              String        @id @default(uuid()) @db.Uuid
-  name            String        @db.VarChar(100)
-  status          Boolean       @default(true)
-  description     String?       @db.VarChar(500)
-  academicCycleId String        @map("academic_cycle_id") @db.Uuid
-  academicCycle   AcademicCycle @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
+  id                    String                         @id @default(uuid()) @db.Uuid
+  name                  String                         @db.VarChar(100)
+  status                AcademicCycleSchoolGroupStatus @default(active)
+  description           String?                        @db.VarChar(500)
+  dischargedDescription String?                        @map("discharged_description") @db.VarChar(500)
+  academicCycleId       String                         @map("academic_cycle_id") @db.Uuid
+  academicCycle         AcademicCycle                  @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  calendars             AcademicCycleGroupCalendar[]
+  enrollments           AcademicCycleEnrollment[]
+  createdAt             DateTime                       @default(now()) @map("created_at")
+  updatedAt             DateTime                       @updatedAt @map("updated_at")
 
   @@map("academic_cycle_groups")
+  @@schema("core")
+}
+
+// ─── Academic Cycle Group Calendar ───────────────────────────────────────────
+
+model AcademicCycleGroupCalendar {
+  id                         String             @id @default(uuid()) @db.Uuid
+  day                        DayOfWeek
+  startTime                  DateTime           @map("start_time") @db.Time
+  endTime                    DateTime           @map("end_time") @db.Time
+  academicCycleId            String             @map("academic_cycle_id") @db.Uuid
+  academicCycleSchoolGroupId String             @map("academic_cycle_school_group_id") @db.Uuid
+  schoolSubjectId            String             @map("school_subject_id") @db.Uuid
+  teacherId                  String             @map("teacher_id") @db.Uuid
+  academicCycle              AcademicCycle      @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleSchoolGroup   AcademicCycleGroup @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Cascade)
+  schoolSubject              SchoolSubject      @relation(fields: [schoolSubjectId], references: [id], onDelete: Restrict)
+  teacher                    Employee           @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+
+  @@map("academic_cycle_group_calendars")
+  @@schema("core")
+}
+
+// ─── Academic Cycle Enrollment ────────────────────────────────────────────────
+
+enum AcademicCycleEnrollmentStatus {
+  enrolled  @map("enrolled")
+  completed @map("completed")
+  dropped   @map("dropped")
+
+  @@schema("core")
+}
+
+model AcademicCycleEnrollment {
+  id                         String                        @id @default(uuid()) @db.Uuid
+  code                       String                        @unique @db.VarChar(20)
+  status                     AcademicCycleEnrollmentStatus @default(enrolled)
+  observations               String?                       @db.VarChar(1000)
+  droppedNotes               String?                       @map("dropped_notes") @db.VarChar(1000)
+  studentId                  String                        @map("student_id") @db.Uuid
+  academicCycleId            String                        @map("academic_cycle_id") @db.Uuid
+  academicCycleSchoolGroupId String                        @map("academic_cycle_school_group_id") @db.Uuid
+  scholarshipId              String?                       @map("scholarship_id") @db.Uuid
+  student                    Student                       @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  academicCycle              AcademicCycle                 @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleSchoolGroup   AcademicCycleGroup            @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Restrict)
+  scholarship                Scholarship?                  @relation(fields: [scholarshipId], references: [id], onDelete: SetNull)
+  createdAt                  DateTime                      @default(now()) @map("created_at")
+  updatedAt                  DateTime                      @updatedAt @map("updated_at")
+
+  grades      StudentGrade[]
+  walletItems StudentWalletItem[]
+  payments    StudentWalletPayment[]
+
+  @@map("academic_cycle_enrollments")
+  @@schema("core")
+}
+
+// ─── Student Grade ────────────────────────────────────────────────────────────
+
+model StudentGrade {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  grade                     Decimal                 @db.Decimal(4, 2)
+  evaluationNumber          Int                     @map("evaluation_number")
+  schoolSubjectId           String                  @map("school_subject_id") @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  schoolSubject             SchoolSubject           @relation(fields: [schoolSubjectId], references: [id], onDelete: Restrict)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+
+  @@unique([academicCycleEnrollmentId, schoolSubjectId, evaluationNumber])
+  @@map("student_grades")
+  @@schema("core")
+}
+
+// ─── Student Wallet ───────────────────────────────────────────────────────────
+
+model StudentWalletItem {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  name                      String                  @db.VarChar(100)
+  description               String?                 @db.VarChar(500)
+  amount                    Decimal                 @db.Decimal(10, 2)
+  allowForgiveness          Boolean                 @default(false) @map("allow_forgiveness")
+  outstandingAmount         Decimal                 @map("outstanding_amount") @db.Decimal(10, 2)
+  isForgiven                Boolean                 @default(false) @map("is_forgiven")
+  extensionDate             DateTime?               @map("extension_date")
+  dueDate                   DateTime                @map("due_date")
+  studentId                 String                  @map("student_id") @db.Uuid
+  academicCycleId           String                  @map("academic_cycle_id") @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  academicCycleWalletId     String                  @map("academic_cycle_wallet_id") @db.Uuid
+  student                   Student                 @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  academicCycle             AcademicCycle           @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  academicCycleWallet       AcademicCycleWallet     @relation(fields: [academicCycleWalletId], references: [id], onDelete: Restrict)
+  payments                  StudentWalletPayment[]
+
+  @@map("student_wallet_items")
+  @@schema("core")
+}
+
+enum PaymentMethod {
+  online_payment @map("online-payment")
+  cash           @map("cash")
+
+  @@schema("core")
+}
+
+model StudentWalletPayment {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  folio                     String                  @unique @db.VarChar(20)
+  amount                    Decimal                 @db.Decimal(10, 2)
+  paymentMethod             PaymentMethod           @map("payment_method")
+  academicCycleId           String                  @map("academic_cycle_id") @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  studentWalletItemId       String                  @map("student_wallet_item_id") @db.Uuid
+  academicCycle             AcademicCycle           @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  studentWalletItem         StudentWalletItem       @relation(fields: [studentWalletItemId], references: [id], onDelete: Restrict)
+  createdAt                 DateTime                @default(now()) @map("created_at")
+
+  @@map("student_wallet_payments")
   @@schema("core")
 }

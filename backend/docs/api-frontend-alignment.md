@@ -176,7 +176,8 @@ dos generadores distintos de id temporal:
   `` `new_${timestamp}_${random}` `` (**guion bajo**). Se usa en
   `CalendarFormPanel.tsx` para el campo `calendars` dentro de
   `AcademicCycleSchoolGroupRequest` (horarios de un grupo escolar) — este
-  es el próximo caso real de este patrón, pendiente en `academic-cycles`.
+  es el caso real de este patrón, ya implementado en
+  `academic-cycle-school-group.service.ts` (sección 4 de `academic-cycles`).
 
 Antes de implementar el sync en un módulo nuevo, **verificar el prefijo
 real** que genera el componente del front para ese campo específico (grep
@@ -210,14 +211,17 @@ avisar antes de asumir que siguen bien.
 - Login de prueba: `aone` / `Admin123!` (SuperAdmin, permisos completos).
 - `pnpm run dev` levanta el server en `http://localhost:3000`.
 
-## `students` — trabajo en progreso, por secciones
+## `students` — completo, alineado por secciones
 
-Este módulo se está alineando por partes (así lo pidió el usuario, es grande):
+Este módulo se alineó por partes (así lo pidió el usuario, es grande):
 sección 1 = `student` núcleo (hecho), sección 2 = `student-guardian`
 (**hecho**, ver abajo), sección 3 = alergias (**hecho**, ver abajo),
 sección 4 = wallet del alumno (`student-wallet-item`,
-`student-wallet-payment`) — sin analizar todavía, probablemente se cruza
-con `payment-concepts`/`academic-cycles`.
+`student-wallet-payment`) — **cerrada**, resultó ser exactamente la
+misma cartera del alumno que se construyó como secciones 6/7 de
+`academic-cycles` (mismas tablas, mismo servicio); no hizo falta código
+adicional en `students`, solo confirmar que el hueco quedó cubierto. Ver
+detalle completo en la sección de `academic-cycles` más abajo.
 
 **Sección 2 (`student-guardian`) — completada.** Los nombres de campo,
 rutas y valores del enum `relationship` ya coincidían 1:1 con el front (no
@@ -282,10 +286,10 @@ enums está bien solo porque los nombres de campo coinciden.
 - Probado en vivo: crear 2 alergias para un alumno, listar, editar una sin
   afectar la otra, eliminar una, y confirmado que no se puede borrar una
   alergia usando el `studentId` de otro alumno (404, no cross-tenant leak).
-- **Hallazgo, no es para nosotros**: `GET /students/:studentId/enrollments`
+- **Hallazgo, no era para nosotros en ese momento**: `GET /students/:studentId/enrollments`
   también lo espera el front pero es del dominio de `academic-cycles`
-  (inscripción alumno↔ciclo), no de `students`. Queda pendiente para
-  cuando se aborde ese módulo.
+  (inscripción alumno↔ciclo), no de `students`. Ya implementado —
+  ver sección 5 de `academic-cycles` más abajo.
 - **Aviso del lado del front (no lo tocamos)**: varios action files de
   `students` tienen líneas `// REMOVE` que fuerzan el endpoint a un JSON
   falso sin importar el ambiente (`get-students`, `get-student-by-id`,
@@ -295,18 +299,20 @@ enums está bien solo porque los nombres de campo coinciden.
   reflejar la API real hasta que el front limpie esas líneas — seguimos
   validando por `curl` contra la API real.
 
-## `academic-cycles` — trabajo en progreso, por secciones
+## `academic-cycles` — completo, alineado por secciones
 
 Igual que `students`, se está alineando por partes. Plan acordado con el
 usuario: sección 1 = `academic-cycle` núcleo (**hecho**, ver abajo),
-sección 2 = `academic-cycle-school-subject` (pendiente), sección 3 =
-`academic-cycle-wallet` (**hecho**, ver abajo), sección 4 =
-`academic-cycle-school-group` (+
-calendarios + maestros — aquí sí aplica el patrón de sync `new_` de
-`CalendarFormPanel.tsx`, ver arriba), sección 5 =
-`academic-cycle-enrollment` (resuelve el hallazgo pendiente de
-`GET /students/:studentId/enrollments`), sección 6 = `student-grades`,
-sección 7 = `student-wallet` (cierra también la sección 4 pendiente de
+sección 2 = `academic-cycle-school-subject` (**hecho**, ver abajo),
+sección 3 = `academic-cycle-wallet` (**hecho**, ver abajo), sección 4 =
+`academic-cycle-school-group` (**hecho**, ver abajo; incluye calendarios +
+maestros, aquí sí aplica el patrón de sync `new_` de
+`CalendarFormPanel.tsx`), sección 5 = `academic-cycle-enrollment`
+(**hecho**, ver abajo; resolvió el hallazgo pendiente de
+`GET /students/:studentId/enrollments`), secciones 6 y 7 =
+`student-grades` + `student-wallet` (**hecho**, ver abajo — resultaron
+ser una sola pantalla del front, `AcademicCycleEnrollmentPage.tsx`, así
+que se hicieron juntas; cierra también la sección 4 pendiente de
 `students`).
 
 **Metodología confirmada con el usuario para este módulo**: la fuente de
@@ -380,6 +386,193 @@ un cambio de arquitectura confirmado con el usuario, no solo un rename:
   código en sí estaba bien (se verificó llamando al service directamente
   con `ts-node` antes de asumir que había un bug real).
 
+**Sección 2 (`academic-cycle-school-subject`) — validada, sin cambios.**
+A diferencia de `academic-cycle-wallet` (sección 3), aquí sí es una
+relación viva por FK: el front manda `schoolSubjectId` (no copia
+name/description) tanto en request como en response, y el back ya lo
+maneja así — `schoolSubjectId` obligatorio, valida duplicados
+(`academicCycleId_schoolSubjectId` único, 409 si ya está asignada), y
+devuelve el `schoolSubject` anidado (`id`/`name`/`description`) solo para
+mostrar en el front. Nombres de campo, rutas y forma de la respuesta
+coinciden 1:1 con `filter/request/response` y los 3 action files. No
+hubo que tocar nada. Probado en vivo: crear, listar, intentar duplicado
+(409 correcto), PATCH de `observations`, DELETE.
+
+**Sección 4 (`academic-cycle-school-group` + calendarios + docentes) —
+completada** en la migración `20260716020000_academic_cycle_school_group_calendars`.
+Módulo construido desde cero (no existía nada en el back salvo un modelo
+`AcademicCycleGroup` muy básico sin usar):
+
+- **Aquí sí aplicó el algoritmo de sync `new_`/`new-`** documentado
+  arriba: `AcademicCycleSchoolGroupForm.tsx` manda el arreglo completo de
+  `calendars` dentro del mismo POST/PATCH del grupo
+  (`CalendarFormPanel.tsx` genera el id con `generateTemporalId()` →
+  prefijo `new_`). El service (`update()`) compara contra lo existente en
+  una transacción: ids que ya no vienen → DELETE, ids nuevos
+  (`new_`/`new-`/sin id) → CREATE, resto → UPDATE. Igual que
+  `academic-level.service.ts` pero con Prisma `$transaction` porque acá sí
+  hay create+update+delete mezclados en la misma operación.
+- `status` pasó de `Boolean` a enum (`active`/`discharged`) porque así lo
+  espera el front (`AcademicCycleSchoolGroupStatusKey`), y se agregó
+  `dischargedDescription` (no existía). Se replicó en Zod la regla del
+  front: si `status === "discharged"`, `dischargedDescription` es
+  obligatorio (antes solo se validaba en el cliente).
+- `AcademicCycleSchoolGroupCalendarResponse.startTime`/`endTime` son
+  strings `"HH:mm"` (vienen de un `<input type="time">`, no ISO
+  datetime). Se guardan como Postgres `TIME` (`@db.Time`) y se
+  convierten a/desde `"HH:mm"` en el service — no había precedente de un
+  campo tipo `TIME` puro en el proyecto.
+- `AcademicCycleSchoolGroupTeacherResponse` (endpoint
+  `GET .../teachers`) **no tiene tabla propia**: confirmado revisando el
+  front que es una vista derivada de los pares distintos
+  `(schoolSubjectId, teacherId)` dentro de los calendarios del grupo (se
+  usa en la página de inscripciones, para saber qué docentes/materias
+  tiene un grupo). El service arma esto en memoria a partir de
+  `findMany` sobre calendarios, sin tabla ni endpoint separado de
+  escritura. **Filtra solo docentes activos por default**
+  (`teacher.isActive: true`), con `?includeInactive=true` opcional para
+  ver el historial completo — pedido explícito del usuario, mismo
+  criterio que ya aplicaba `GET /employees/teachers` (el que alimenta el
+  dropdown de `CalendarFormPanel.tsx`, ya filtraba
+  `isActive && jobTitleType === "teacher"` desde antes, confirmado que ya
+  estaba bien documentado en swagger). `GET .../calendars` (el horario
+  completo) **no** se filtra — ahí sí interesa ver la realidad del
+  calendario aunque el docente asignado haya quedado inactivo.
+- El campo `teacher` anidado reutiliza `EMPLOYEE_LIST_SELECT` +
+  `toFrontendJobTitleType` de `employees`/`job-titles` (mismo whitelist
+  que ya evita filtrar password/isDeleted, mismo fix de `jobTitleType`
+  crudo que se hizo en `employees`).
+- `academicCycleId`/`academicCycleSchoolGroupId` en cada entrada de
+  `calendars` **se ignoran si vienen en el body** — se usan los de la URL
+  (`:academicCycleId` y el id del grupo), mismo criterio que
+  `academic-cycle-wallet`/`school-subject`: los params de ruta mandan
+  sobre cualquier id que el front incluya en el cuerpo.
+- `DELETE` es hard delete real (cascada a calendarios vía FK). A
+  diferencia de `academic-cycle` (cuyo DELETE solo cancela), acá
+  `status: "discharged"` ya es el camino de baja "suave" expuesto por
+  PATCH normal del formulario — el botón de eliminar en el listado es un
+  borrado real, consistente con el resto de sub-recursos dedicados
+  (`school-subject`, `wallet`).
+- Probado en vivo: crear grupo con 2 horarios iniciales, PATCH que en una
+  sola llamada actualiza uno (nuevo horario), borra otro, y crea uno con
+  id `new_...` (confirmado id nuevo real en la respuesta); `GET
+  .../calendars`; `GET .../teachers` (pares distintos, confirmado que no
+  duplica); validación de `startTime < endTime` (400); validación de
+  `dischargedDescription` requerido con `status: "discharged"` (400 sin
+  él, 200 con él); list sin `calendars` vs detail con `calendars`; DELETE
+  real + cascada confirmada (404 después).
+
+**Sección 5 (`academic-cycle-enrollment`) — completada** en la migración
+`20260716030000_academic_cycle_enrollments`. Módulo nuevo desde cero:
+
+- `code` (folio de la inscripción, ej. `INS-2026-0001`) es **distinto**
+  de `student.enrollment` (ej. `LR-2026-0001`) — confirmado en el mock
+  del front (`academic-cycles/enrollments/enrollments.json`, único caso
+  en el que hizo falta mirar el mock, porque el campo `code` no traía
+  ejemplo en las interfaces de TS y no aparece en el formulario de
+  creación, solo se auto-genera y se muestra). Mismo algoritmo que
+  `generateEnrollment()` de `student.service.ts`
+  (`INS-<año>-<secuencial de 4 dígitos>`, secuencia reinicia por año),
+  replicado como `generateCode()` en el nuevo service.
+- Regla de negocio replicada del front al backend: el botón "Nueva
+  inscripción" solo aparece si `academicCycle.enrollmentOpen === true` y
+  `status` es `active` o `upcoming` (visto en
+  `AcademicCycleEnrollmentsTab.tsx`). Se aplicó la misma regla en
+  `create()` (409 si no se cumple) — **solo en create**, no en
+  `update()`, porque cerrar la inscripción no debería impedir editar
+  registros ya existentes (marcar como `completed`/`dropped` al cierre
+  del ciclo, por ejemplo).
+- `droppedNotes` obligatorio cuando `status === "dropped"`, mismo patrón
+  que `dischargedDescription` en `school-group` (ya se ve en el form del
+  front, se replicó la regla en Zod).
+- Se valida que `academicCycleSchoolGroupId` pertenezca al mismo
+  `academicCycleId` de la URL (404 si no), igual que el resto de
+  sub-recursos anidados.
+- **Resuelve el hallazgo pendiente de `students`**: se agregó
+  `GET /students/:studentId/enrollments` (todas las inscripciones de un
+  alumno a través de todos los ciclos) en `student.routes.ts`, importando
+  el controller de `academic-cycles` directamente — es la única ruta que
+  cruza dominios (URL vive en `students`, la lógica y la tabla son de
+  `academic-cycles`).
+- `DELETE` es hard delete real (el modal del front dice "se eliminará del
+  sistema"). No se agregó ninguna restricción de unicidad
+  estudiante+ciclo (ej. "no puede haber dos inscripciones activas del
+  mismo alumno en el mismo ciclo") porque no hay evidencia de esa regla
+  en el front — si se necesita, avisar antes de asumir.
+- Probado en vivo: crear inscripción (código autogenerado correcto),
+  listar paginado, buscar por `code` (`q`), `GET` por id, PATCH a
+  `dropped` sin `droppedNotes` (400) y con él (200), cerrar
+  `enrollmentOpen` del ciclo y confirmar que crear una nueva inscripción
+  da 409 pero editar una existente sigue funcionando (200),
+  `GET /students/:studentId/enrollments`, DELETE + confirmación 404.
+
+**Secciones 6 y 7 (`student-grades` + `student-wallet`) — completadas**
+en la migración `20260721000000_student_grades_and_wallet`. Se hicieron
+juntas porque en el front son la misma pantalla
+(`AcademicCycleEnrollmentPage.tsx`, el detalle de una inscripción) y
+comparten el mismo contexto de estudio. Antes de escribir código se
+confirmaron 2 decisiones de arquitectura con el usuario:
+
+- **Calificaciones son 100% de solo lectura por ahora**: no existe
+  ningún `create`/`update`/`delete` en el front, ni el módulo
+  "my-classes" (docentes) que presumiblemente las generaría — solo es un
+  permiso reservado (`moduleKey: "my-classes"`), sin pantallas. Se
+  construyó únicamente `GET /academic-cycles/:academicCycleId/enrollments/:academicCycleEnrollmentId/grades`.
+  No hay forma de cargar calificaciones reales hasta que exista esa
+  pantalla — probado insertando un registro directo en la base para
+  confirmar que el `GET` funciona.
+- **`StudentWalletItem` no tiene create propio**: el front nunca lo
+  crea, solo lo edita (condonación/prórroga) y paga contra él. Se generan
+  automáticamente como snapshot de `academic-cycle-wallet` cuando el
+  alumno se inscribe — se modificó `AcademicCycleEnrollmentService.create()`
+  (sección 5) para, en la misma transacción, copiar cada item del catálogo
+  del ciclo hacia `student_wallet_items` del alumno
+  (`outstandingAmount` inicial = `amount`). Confirmado con el usuario
+  antes de tocar código ya construido.
+- **`status` del item (pending/paid/overdue/forgiven) se calcula en cada
+  `GET`, no se persiste**: no hay ningún endpoint que lo actualice
+  directamente ni evidencia de un cron en el front. Regla:
+  `isForgiven` → `forgiven`; `outstandingAmount <= 0` → `paid`; hoy >
+  (`extensionDate` ?? `dueDate`) → `overdue`; si no, `pending`.
+- **Bug real encontrado y corregido en vivo**: mismo patrón de
+  `@map()` con guion que ya nos había mordido con `StudentGuardianType`
+  y `JobTitleType`, pero esta vez el error estaba en la migración, no en
+  el service. El enum `PaymentMethod` (`online-payment`/`cash`) se creó
+  en Postgres con guion bajo (`online_payment`) en vez de guion
+  (`online-payment`), rompiendo la convención: Prisma siempre espera que
+  el enum de la base de datos tenga como labels el valor de `@map()`
+  (guion), y el cliente recibe/envía el nombre del miembro TS (guion
+  bajo) — el mapeo `PAYMENT_METHOD_MAP`/`REVERSE` en el service ya
+  estaba bien escrito desde el inicio, era la migración la que tenía las
+  etiquetas de Postgres al revés. Se corrigió editando la migración
+  directamente (no estaba comiteada todavía) y reaplicando.
+- `folio` de pago = `PAG-<año>-<6 dígitos>` (distinto padding que
+  `INS-`/`LR-`, que usan 4 — confirmado en el mock, único caso donde
+  hizo falta consultarlo porque no había ejemplo en las interfaces TS).
+- El campo `createAt` (no `createdAt`) en `StudentWalletPaymentResponse`
+  es un typo real del front, no un error nuestro — se respetó tal cual
+  en la respuesta del backend para que el front lo pueda leer.
+- `isForgiven: true` requiere `allowForgiveness: true` (existente o en
+  el mismo PATCH) — 409 si no. Al condonar, se pone
+  `outstandingAmount = 0` en la misma operación, tal como lo describe el
+  copy del propio formulario del front ("El pago pendiente quedará
+  saldado cuando se active esta opción").
+- Pagos: valida `amount <= outstandingAmount` (permite pagos parciales,
+  igual que el front) y rechaza pagar un item que ya está `paid` o
+  `forgiven` (409).
+- `summary` (`total`/`paid`/`outstanding`/`overdue`) se calcula a partir
+  de los items en cada `GET` de la cartera — no hay tabla ni columna
+  propia. `paid` excluye los items condonados (condonar no es lo mismo
+  que cobrar).
+- Probado en vivo end-to-end: inscribir un alumno con 2 conceptos en el
+  catálogo del ciclo → confirmar que se generó su cartera automática con
+  los montos correctos y el `status` calculado bien (uno vencido por
+  fecha pasada); pago parcial + pago restante (folio autogenerado,
+  `online-payment` y `cash`); rechazo de pago a item ya saldado (409);
+  rechazo de condonar un item con `allowForgiveness: false` (409);
+  condonar uno válido y confirmar que salda el saldo; `GET` de
+  calificaciones vacío y luego con un registro insertado directo en BD.
+
 ## Módulos ya alineados (8)
 
 | Módulo | Migración | Notas |
@@ -393,17 +586,17 @@ un cambio de arquitectura confirmado con el usuario, no solo un rename:
 | `academic-levels` | `20260713060000_rename_academic_level_status_to_is_active` | fix filtro `name` faltante en `education-levels/paged`; fix tests de softDelete/isDeleted |
 | `announcements` (+ `attachments`) | `20260713070000_rename_announcement_status_to_is_active` | fix breaking: `audience` pasó de `[{key,label}]` a `string[]` (confirmado con el usuario); fix leak de `isDeleted`; verificado el flujo completo de 2 fases (crear sin contenido/adjuntos → editar para agregar contenido + subir/borrar adjuntos, físico y en BD); `attachments` en sí ya estaba bien alineado, no necesitó cambios; storage local↔Azure ya está abstraído vía `IStorageService`, solo falta implementar `AzureStorageService` cuando se decida hacer el swap |
 
-## Módulos pendientes (más complejos, sin tests todavía)
+## Módulos completados por secciones (sin tests todavía)
 
-- `students` — secciones 1, 2 y 3 hechas (núcleo, `student-guardian`,
-  alergias — ver detalle arriba). Falta sección 4 (wallet del alumno,
-  `student-wallet-item`/`student-wallet-payment`), pospuesta a propósito
-  hasta terminar `academic-cycles` porque depende de datos que se crean ahí.
-- `academic-cycles` (+ sub-entidades: school-subject, wallet, school-group,
-  enrollment) — en progreso por secciones, ver detalle abajo.
+- `students` — **completo**, las 4 secciones hechas (núcleo,
+  `student-guardian`, alergias, y la sección 4 —wallet del alumno—
+  cerrada indirectamente por las secciones 6/7 de `academic-cycles`, ver
+  detalle abajo). Ver detalle arriba.
+- `academic-cycles` — **completo**, las 7 secciones hechas (núcleo,
+  school-subject, wallet, school-group + calendarios/maestros,
+  enrollment, grades, student-wallet). Ver detalle abajo.
 
-Ninguno tiene `*.test.ts` todavía y tienen relaciones más profundas — vale
-la pena revisar si también usan `status`/`isActive` y si conviene generar
-specs (tests) al mismo tiempo que se alinean, siguiendo el patrón de los
-módulos que sí tenían tests (`academic-levels`, `payment-concepts`,
-`scholarships`, `school-subjects`).
+Ambos módulos quedaron sin `*.test.ts` — vale la pena generar specs ahora
+que están completos, siguiendo el patrón de los módulos que sí tenían
+tests (`academic-levels`, `payment-concepts`, `scholarships`,
+`school-subjects`).

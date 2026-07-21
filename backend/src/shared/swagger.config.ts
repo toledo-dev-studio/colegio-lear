@@ -1292,6 +1292,285 @@ const swaggerOptions: swaggerJsdoc.Options = {
             allowForgiveness: { type: "boolean" },
           },
         },
+        // ─── Academic Cycle School Groups ────────────────────────────────────────
+        AcademicCycleSchoolGroupCalendarRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            day: {
+              type: "string",
+              enum: [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday",
+              ],
+            },
+            startTime: { type: "string", example: "08:00" },
+            endTime: { type: "string", example: "09:00" },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            schoolSubjectId: { type: "string", format: "uuid" },
+            schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            teacherId: { type: "string", format: "uuid" },
+            teacher: { $ref: "#/components/schemas/Employee" },
+          },
+        },
+        AcademicCycleSchoolGroupCalendarBody: {
+          type: "object",
+          required: ["day", "startTime", "endTime", "schoolSubjectId", "teacherId"],
+          properties: {
+            id: {
+              type: "string",
+              description:
+                'Existing UUID = update; absent or prefixed "new_"/"new-" = create.',
+            },
+            day: {
+              type: "string",
+              enum: [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday",
+              ],
+            },
+            startTime: { type: "string", example: "08:00" },
+            endTime: { type: "string", example: "09:00" },
+            schoolSubjectId: { type: "string", format: "uuid" },
+            teacherId: { type: "string", format: "uuid" },
+          },
+        },
+        AcademicCycleSchoolGroupRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Primero A (2026-2027)" },
+            status: { type: "string", enum: ["active", "discharged"] },
+            description: { type: "string", nullable: true },
+            dischargedDescription: { type: "string", nullable: true },
+            academicCycleId: { type: "string", format: "uuid" },
+            calendars: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/AcademicCycleSchoolGroupCalendarRecord",
+              },
+            },
+          },
+        },
+        CreateAcademicCycleSchoolGroupBody: {
+          type: "object",
+          required: ["name"],
+          properties: {
+            name: { type: "string", maxLength: 100 },
+            status: { type: "string", enum: ["active", "discharged"] },
+            description: { type: "string", maxLength: 500 },
+            dischargedDescription: { type: "string", maxLength: 500 },
+            calendars: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/AcademicCycleSchoolGroupCalendarBody",
+              },
+            },
+          },
+        },
+        UpdateAcademicCycleSchoolGroupBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            name: { type: "string", maxLength: 100 },
+            status: { type: "string", enum: ["active", "discharged"] },
+            description: { type: "string", maxLength: 500, nullable: true },
+            dischargedDescription: {
+              type: "string",
+              maxLength: 500,
+              nullable: true,
+            },
+            calendars: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/AcademicCycleSchoolGroupCalendarBody",
+              },
+              description:
+                "Full replacement set: syncs creates/updates/deletes against existing calendars.",
+            },
+          },
+        },
+        AcademicCycleSchoolGroupTeacherRecord: {
+          type: "object",
+          properties: {
+            schoolSubjectId: { type: "string", format: "uuid" },
+            schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            teacherId: { type: "string", format: "uuid" },
+            teacher: { $ref: "#/components/schemas/Employee" },
+          },
+        },
+        // ─── Academic Cycle Enrollments ──────────────────────────────────────────
+        AcademicCycleEnrollmentRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            code: { type: "string", example: "INS-2026-0001" },
+            status: { type: "string", enum: ["enrolled", "completed", "dropped"] },
+            observations: { type: "string", nullable: true },
+            droppedNotes: { type: "string", nullable: true },
+            studentId: { type: "string", format: "uuid" },
+            student: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+                firstLastName: { type: "string" },
+                secondLastName: { type: "string" },
+                enrollment: { type: "string", example: "LR-2026-0001" },
+              },
+            },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycle: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+              },
+            },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroup: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+              },
+            },
+            scholarshipId: { type: "string", format: "uuid", nullable: true },
+            scholarship: {
+              type: "object",
+              nullable: true,
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string" },
+                discountPercentage: { type: "number" },
+              },
+            },
+            createdAt: { type: "string", format: "date-time" },
+          },
+        },
+        CreateAcademicCycleEnrollmentBody: {
+          type: "object",
+          required: ["studentId", "academicCycleSchoolGroupId"],
+          properties: {
+            status: { type: "string", enum: ["enrolled", "completed", "dropped"] },
+            observations: { type: "string", maxLength: 1000 },
+            droppedNotes: { type: "string", maxLength: 1000 },
+            studentId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            scholarshipId: { type: "string", format: "uuid" },
+          },
+        },
+        UpdateAcademicCycleEnrollmentBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            status: { type: "string", enum: ["enrolled", "completed", "dropped"] },
+            observations: { type: "string", maxLength: 1000, nullable: true },
+            droppedNotes: { type: "string", maxLength: 1000, nullable: true },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            scholarshipId: { type: "string", format: "uuid", nullable: true },
+          },
+        },
+        // ─── Student Grades ────────────────────────────────────────────────────
+        StudentGradeRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            grade: { type: "number", example: 9.5 },
+            evaluationNumber: { type: "integer", example: 1 },
+            schoolSubjectId: { type: "string", format: "uuid" },
+            schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            academicCycleEnrollmentId: { type: "string", format: "uuid" },
+          },
+        },
+        // ─── Student Wallet ─────────────────────────────────────────────────────
+        StudentWalletItemRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string" },
+            description: { type: "string", nullable: true },
+            dueDate: { type: "string", format: "date-time" },
+            amount: { type: "number" },
+            allowForgiveness: { type: "boolean" },
+            outstandingAmount: { type: "number" },
+            isForgiven: { type: "boolean" },
+            extensionDate: { type: "string", format: "date-time", nullable: true },
+            status: {
+              type: "string",
+              enum: ["pending", "paid", "overdue", "forgiven"],
+              description: "Computed on every read, not stored.",
+            },
+            academicCycleEnrollmentId: { type: "string", format: "uuid" },
+            academicCycleId: { type: "string", format: "uuid" },
+            studentId: { type: "string", format: "uuid" },
+            academicCycleWalletId: { type: "string", format: "uuid" },
+          },
+        },
+        StudentWalletRecord: {
+          type: "object",
+          properties: {
+            summary: {
+              type: "object",
+              properties: {
+                total: { type: "number" },
+                outstanding: { type: "number" },
+                paid: { type: "number" },
+                overdue: { type: "number" },
+              },
+            },
+            items: {
+              type: "array",
+              items: { $ref: "#/components/schemas/StudentWalletItemRecord" },
+            },
+          },
+        },
+        UpdateStudentWalletItemBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            allowForgiveness: { type: "boolean" },
+            isForgiven: { type: "boolean" },
+            extensionDate: { type: "string", format: "date-time", nullable: true },
+          },
+        },
+        StudentWalletPaymentRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            folio: { type: "string", example: "PAG-2026-000001" },
+            amount: { type: "number" },
+            createAt: { type: "string", format: "date-time" },
+            paymentMethod: { type: "string", enum: ["online-payment", "cash"] },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycleEnrollmentId: { type: "string", format: "uuid" },
+            studentWalletItemId: { type: "string", format: "uuid" },
+          },
+        },
+        CreateStudentWalletPaymentBody: {
+          type: "object",
+          required: ["amount", "paymentMethod"],
+          properties: {
+            amount: { type: "integer", minimum: 1 },
+            paymentMethod: { type: "string", enum: ["online-payment", "cash"] },
+            studentWalletItemId: {
+              type: "string",
+              format: "uuid",
+              description: "Ignored — the item id in the URL path is authoritative.",
+            },
+          },
+        },
       },
     },
   },

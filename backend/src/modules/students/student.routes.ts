@@ -39,6 +39,7 @@ import {
   updateAllergy,
   deleteAllergy,
 } from "./student-allergy.controller";
+import { findAllForStudent as findAllEnrollmentsForStudent } from "../academic-cycles/academic-cycle-enrollment.controller";
 
 const router = Router();
 
@@ -682,6 +683,42 @@ router.delete(
   authorize("students"),
   validate(studentSubResourceParamSchema, "params"),
   deleteAllergy,
+);
+
+// ─── Student Academic Cycle Enrollments (read-only, cross academic cycles) ──
+
+/**
+ * @openapi
+ * /students/{studentId}/enrollments:
+ *   get:
+ *     tags:
+ *       - Students
+ *     summary: List a student's enrollments across all academic cycles
+ *     description: Returns every academic cycle enrollment for the student (owned by the academic-cycles domain).
+ *     parameters:
+ *       - in: path
+ *         name: studentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of enrollments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AcademicCycleEnrollmentRecord'
+ *       404:
+ *         description: Student not found
+ */
+router.get(
+  "/:studentId/enrollments",
+  authorize("students"),
+  validate(studentIdParamSchema, "params"),
+  findAllEnrollmentsForStudent,
 );
 
 export default router;
