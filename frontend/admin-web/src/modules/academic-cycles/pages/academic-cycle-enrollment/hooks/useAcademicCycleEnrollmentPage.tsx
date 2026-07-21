@@ -103,6 +103,6 @@ export const useAcademicCycleEnrollmentPage = ({ id }: Props) => {
             }
         },
         isLoadingPage: getAcademicCycleEnrollmentByIdQuery.isLoading || getStudentWalletQuery.isLoading || getStudentWalletPaymentsQuery.isLoading || getStudentGradesQuery.isLoading || getTeachersForAcademicCycleSchoolGroupQuery.isLoading,
-        isLoadingPageError: getAcademicCycleEnrollmentByIdQuery.isError || getStudentWalletQuery.isError || getStudentWalletPaymentsQuery.isError || getStudentGradesQuery.isError || getTeachersForAcademicCycleSchoolGroupQuery.isError,
+        isError: getAcademicCycleEnrollmentByIdQuery.isError || getStudentWalletQuery.isError || getStudentWalletPaymentsQuery.isError || getStudentGradesQuery.isError || getTeachersForAcademicCycleSchoolGroupQuery.isError,
     }
 }

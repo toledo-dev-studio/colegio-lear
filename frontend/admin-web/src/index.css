@@ -73,6 +73,7 @@
   --warning-foreground: #1f2937;
   --success: #0F9D58;
   --border: #E2E8F0;
+  --scrollbar-border: 214 32% 91%;
   --input: #D4E4F0;
   --ring: #1E6FDB;
   --radius: 0.75rem;
@@ -99,6 +100,7 @@
   --warning-foreground: #0f172a;
   --success: #16A34A;
   --border: #1E293B;
+  --scrollbar-border: 217 33% 17%;
   --input: #1E293B;
   --ring: #3B82F6;
 }
@@ -163,7 +165,7 @@ h6 {
   }
 
   .icon-btn-sm {
-    @apply w-11! h-11! px-0!;
+    @apply w-11! h-11! min-w-11! min-h-11! px-0!;
   }
 
   .icon-btn-ribbon {
@@ -277,10 +279,10 @@ h6 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
+  background: hsl(var(--scrollbar-border));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsl(var(--scrollbar-border) / 0.5);
 }

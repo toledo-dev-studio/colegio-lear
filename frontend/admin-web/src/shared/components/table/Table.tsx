@@ -1,21 +1,22 @@
-import { generateTemporalId } from "@/lib/extensions/utils";
-import type { TableProperty } from "./interfaces/table-property";
-import type { TableAction } from "./interfaces/table-action";
-import { TablePagination } from "../table-pagination/TablePagination";
+import { Skeleton } from "@/shared/ui/skeleton";
 import { getNestedValue } from "@/lib/extensions/objects";
-import { Loader } from "../loader/Loader";
+import { generateTemporalId } from "@/lib/extensions/utils";
+import type { TableAction } from "./interfaces/table-action";
+import type { TableProperty } from "./interfaces/table-property";
+import { TablePagination } from "../table-pagination/TablePagination";
 
 interface Props<T extends Record<string, any>> {
     data: T[];
     isLoading: boolean;
     enablePagination: boolean;
+    skeletonRows?: number;
     totalPages?: number;
     columns: string[];
     properties: TableProperty<T>[];
     actions: TableAction<T>[];
 }
 
-export const Table = <T extends Record<string, any>>({ data = [], isLoading, enablePagination = false, totalPages, columns, properties, actions = [] }: Props<T>) => {
+export const Table = <T extends Record<string, any>>({ data = [], isLoading, enablePagination = false, skeletonRows = 10, totalPages, columns, properties, actions = [] }: Props<T>) => {
     return (
         <>
             <section className="table-container">
@@ -37,11 +38,34 @@ export const Table = <T extends Record<string, any>>({ data = [], isLoading, ena
                         {/* Loading */}
                         {
                             isLoading && (
-                                <tr>
-                                    <td colSpan={columns.length} className="no-content-row">
-                                        <Loader title="Cargando información" subtitle="por favor espere..." fullScreen={false} size="sm" />
-                                    </td>
-                                </tr>
+                                Array.from({ length: skeletonRows }).map((_, rowIndex) => (
+                                    <tr key={`skeleton-row-${rowIndex}`}>
+                                        {
+                                            properties.map((property) => (
+                                                <td key={property.key} className="row">
+                                                    <Skeleton className="h-5 w-full rounded-md" />
+                                                </td>
+                                            ))
+                                        }
+
+                                        {
+                                            actions.length > 0 && (
+                                                <td className="row">
+                                                    <div className="flex gap-2">
+                                                        {
+                                                            actions.map((action) => (
+                                                                <Skeleton
+                                                                    key={action.key}
+                                                                    className="h-8 w-8 rounded-full"
+                                                                />
+                                                            ))
+                                                        }
+                                                    </div>
+                                                </td>
+                                            )
+                                        }
+                                    </tr>
+                                ))
                             )
                         }
 

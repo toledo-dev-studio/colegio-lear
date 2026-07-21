@@ -8,5 +8,6 @@ export interface Navbar {
 export interface NavbarItem {
     module: Module;
     icon: React.ComponentType<{ className?: string }>;
-    testId: string;
+    testId?: string;
+    colorClass?: string;
 }

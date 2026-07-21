@@ -14,7 +14,7 @@ interface AuthenticatedRouteProps extends PropsWithChildren {
  */
 export const AuthenticatedRoute = ({ moduleKey, children }: AuthenticatedRouteProps) => {
     const { authStatus, user, permissions } = useAuthStore();
-    
+
     if (authStatus === "checking")
         return null;
 
@@ -30,8 +30,12 @@ export const AuthenticatedRoute = ({ moduleKey, children }: AuthenticatedRoutePr
         return children;
 
     // Check if user is authenticated and does not have any permission
-    if (!permissions.length)
+    if (!permissions.some(permission => permission.canRead))
         return <Navigate to="/forbidden" />
+
+    // If user is authenticated and has read permission for others module except dashboard, redirect to first one
+    const firstModule = permissions.find(permission => permission.canRead);
+    return <Navigate to={`/${firstModule?.moduleKey ?? "forbidden"}`} />
 }
 
 /**

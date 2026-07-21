@@ -21,7 +21,7 @@ export const AcademicCycleEnrollmentPage = () => {
   const { enrollmentId } = useParams();
 
   // Context hooks & stores configuration
-  const { context, queries, mutations, loader, sidePanels, isLoadingPage, isLoadingPageError } = useAcademicCycleEnrollmentPage({ id: enrollmentId! });
+  const { context, queries, mutations, loader, sidePanels, isLoadingPage, isError } = useAcademicCycleEnrollmentPage({ id: enrollmentId! });
   const enrolledStudent = queries.enrollment.getById.data?.status === "enrolled";
   const academicCycleEnrollment = queries.enrollment.getById.data;
   const studentWallet = queries.studentWallet.get.data;
@@ -73,7 +73,7 @@ export const AcademicCycleEnrollmentPage = () => {
     }
   }
 
-  if (isLoadingPageError) {
+  if (isError) {
     toast.error("No fue posible obtener la información relacionada en alumno seleccionado", { position: "top-right" });
     return <Navigate to={`/academic-cycles/${context.academicCycleId}/enrollments`} />;
   }
