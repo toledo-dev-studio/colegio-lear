@@ -26,9 +26,15 @@ import {
 } from "./academic-cycle-school-group.schema";
 import {
   academicCycleEnrollmentPagedQuerySchema,
+  academicCycleEnrollmentIdParamSchema,
+  academicCycleEnrollmentWalletItemParamSchema,
   createAcademicCycleEnrollmentSchema,
   updateAcademicCycleEnrollmentSchema,
 } from "./academic-cycle-enrollment.schema";
+import {
+  updateStudentWalletItemSchema,
+  createStudentWalletPaymentSchema,
+} from "./student-wallet.schema";
 import {
   findAll,
   findAllPaged,
@@ -65,6 +71,13 @@ import {
   update as updateEnrollment,
   remove as removeEnrollment,
 } from "./academic-cycle-enrollment.controller";
+import { findAllGrades } from "./student-grade.controller";
+import {
+  findWallet,
+  findPayments as findWalletPayments,
+  updateItem as updateStudentWalletItem,
+  createPayment as createStudentWalletPayment,
+} from "./student-wallet.controller";
 
 const router = Router();
 
@@ -1202,6 +1215,234 @@ router.delete(
   authorize("academic-cycles"),
   validate(academicCycleSubResourceParamSchema, "params"),
   removeEnrollment,
+);
+
+// ─── Student Grades (read-only) ──────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/grades:
+ *   get:
+ *     tags:
+ *       - Student Grades
+ *     summary: List a student's grades for an enrollment
+ *     description: Read-only — grades have no create/update/delete endpoint yet (pending a future teacher-facing module).
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of grades
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/StudentGradeRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/grades",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentIdParamSchema, "params"),
+  findAllGrades,
+);
+
+// ─── Student Wallet ───────────────────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/wallet:
+ *   get:
+ *     tags:
+ *       - Student Wallet
+ *     summary: Get a student's wallet (summary + items) for an enrollment
+ *     description: Items are snapshotted from the academic cycle's wallet catalog when the student enrolls. `status` (pending/paid/overdue/forgiven) is computed on every read, never stored.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Wallet summary and items
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentWalletRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/wallet",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentIdParamSchema, "params"),
+  findWallet,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/wallet/payments:
+ *   get:
+ *     tags:
+ *       - Student Wallet
+ *     summary: List payments registered against a student's wallet
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of payments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/StudentWalletPaymentRecord'
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ */
+router.get(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/wallet/payments",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentIdParamSchema, "params"),
+  findWalletPayments,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/wallet/{id}:
+ *   patch:
+ *     tags:
+ *       - Student Wallet
+ *     summary: Update a student wallet item (forgiveness / payment extension)
+ *     description: Setting isForgiven=true requires allowForgiveness=true (existing or in the same request), and settles the outstanding balance to 0.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateStudentWalletItemBody'
+ *     responses:
+ *       200:
+ *         description: Wallet item updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentWalletItemRecord'
+ *       404:
+ *         description: Academic cycle, enrollment, or wallet item not found
+ *       409:
+ *         description: isForgiven requires allowForgiveness
+ */
+router.patch(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/wallet/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentWalletItemParamSchema, "params"),
+  validate(updateStudentWalletItemSchema, "body"),
+  updateStudentWalletItem,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/wallet/{id}/payments:
+ *   post:
+ *     tags:
+ *       - Student Wallet
+ *     summary: Register a payment against a student wallet item
+ *     description: Auto-generates `folio` (e.g. PAG-2026-000001). amount cannot exceed the item's outstanding balance, and the item cannot already be paid/forgiven.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: studentWalletItemId
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateStudentWalletPaymentBody'
+ *     responses:
+ *       201:
+ *         description: Payment registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StudentWalletPaymentRecord'
+ *       404:
+ *         description: Academic cycle, enrollment, or wallet item not found
+ *       409:
+ *         description: Amount exceeds outstanding balance, or item already settled
+ */
+router.post(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/wallet/:id/payments",
+  authorize("academic-cycles"),
+  validate(academicCycleEnrollmentWalletItemParamSchema, "params"),
+  validate(createStudentWalletPaymentSchema, "body"),
+  createStudentWalletPayment,
 );
 
 export default router;

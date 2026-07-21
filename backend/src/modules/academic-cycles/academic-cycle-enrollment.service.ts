@@ -198,18 +198,46 @@ export class AcademicCycleEnrollmentService {
 
     const code = await this.generateCode();
 
-    const created = await this.prisma.academicCycleEnrollment.create({
-      data: {
-        code,
-        status: dto.status ?? "enrolled",
-        observations: dto.observations ?? null,
-        droppedNotes: dto.droppedNotes ?? null,
-        studentId: dto.studentId,
-        academicCycleId,
-        academicCycleSchoolGroupId: dto.academicCycleSchoolGroupId,
-        scholarshipId: dto.scholarshipId ?? null,
-      },
-      include: INCLUDE_RELATIONS,
+    const created = await this.prisma.$transaction(async (tx) => {
+      const enrollment = await tx.academicCycleEnrollment.create({
+        data: {
+          code,
+          status: dto.status ?? "enrolled",
+          observations: dto.observations ?? null,
+          droppedNotes: dto.droppedNotes ?? null,
+          studentId: dto.studentId,
+          academicCycleId,
+          academicCycleSchoolGroupId: dto.academicCycleSchoolGroupId,
+          scholarshipId: dto.scholarshipId ?? null,
+        },
+        include: INCLUDE_RELATIONS,
+      });
+
+      // Snapshot the cycle's wallet catalog into the student's own wallet
+      // items — the front never creates these directly, only edits
+      // (forgiveness/extension) and pays against them.
+      const walletCatalog = await tx.academicCycleWallet.findMany({
+        where: { academicCycleId },
+      });
+
+      if (walletCatalog.length > 0) {
+        await tx.studentWalletItem.createMany({
+          data: walletCatalog.map((w) => ({
+            name: w.name,
+            description: w.description,
+            amount: w.amount,
+            allowForgiveness: w.allowForgiveness,
+            outstandingAmount: w.amount,
+            dueDate: w.dueDate,
+            studentId: dto.studentId,
+            academicCycleId,
+            academicCycleEnrollmentId: enrollment.id,
+            academicCycleWalletId: w.id,
+          })),
+        });
+      }
+
+      return enrollment;
     });
 
     return this.toRecord(created);

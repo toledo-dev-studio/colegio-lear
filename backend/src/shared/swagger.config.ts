@@ -1482,6 +1482,95 @@ const swaggerOptions: swaggerJsdoc.Options = {
             scholarshipId: { type: "string", format: "uuid", nullable: true },
           },
         },
+        // ─── Student Grades ────────────────────────────────────────────────────
+        StudentGradeRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            grade: { type: "number", example: 9.5 },
+            evaluationNumber: { type: "integer", example: 1 },
+            schoolSubjectId: { type: "string", format: "uuid" },
+            schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            academicCycleEnrollmentId: { type: "string", format: "uuid" },
+          },
+        },
+        // ─── Student Wallet ─────────────────────────────────────────────────────
+        StudentWalletItemRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string" },
+            description: { type: "string", nullable: true },
+            dueDate: { type: "string", format: "date-time" },
+            amount: { type: "number" },
+            allowForgiveness: { type: "boolean" },
+            outstandingAmount: { type: "number" },
+            isForgiven: { type: "boolean" },
+            extensionDate: { type: "string", format: "date-time", nullable: true },
+            status: {
+              type: "string",
+              enum: ["pending", "paid", "overdue", "forgiven"],
+              description: "Computed on every read, not stored.",
+            },
+            academicCycleEnrollmentId: { type: "string", format: "uuid" },
+            academicCycleId: { type: "string", format: "uuid" },
+            studentId: { type: "string", format: "uuid" },
+            academicCycleWalletId: { type: "string", format: "uuid" },
+          },
+        },
+        StudentWalletRecord: {
+          type: "object",
+          properties: {
+            summary: {
+              type: "object",
+              properties: {
+                total: { type: "number" },
+                outstanding: { type: "number" },
+                paid: { type: "number" },
+                overdue: { type: "number" },
+              },
+            },
+            items: {
+              type: "array",
+              items: { $ref: "#/components/schemas/StudentWalletItemRecord" },
+            },
+          },
+        },
+        UpdateStudentWalletItemBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            allowForgiveness: { type: "boolean" },
+            isForgiven: { type: "boolean" },
+            extensionDate: { type: "string", format: "date-time", nullable: true },
+          },
+        },
+        StudentWalletPaymentRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            folio: { type: "string", example: "PAG-2026-000001" },
+            amount: { type: "number" },
+            createAt: { type: "string", format: "date-time" },
+            paymentMethod: { type: "string", enum: ["online-payment", "cash"] },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycleEnrollmentId: { type: "string", format: "uuid" },
+            studentWalletItemId: { type: "string", format: "uuid" },
+          },
+        },
+        CreateStudentWalletPaymentBody: {
+          type: "object",
+          required: ["amount", "paymentMethod"],
+          properties: {
+            amount: { type: "integer", minimum: 1 },
+            paymentMethod: { type: "string", enum: ["online-payment", "cash"] },
+            studentWalletItemId: {
+              type: "string",
+              format: "uuid",
+              description: "Ignored — the item id in the URL path is authoritative.",
+            },
+          },
+        },
       },
     },
   },

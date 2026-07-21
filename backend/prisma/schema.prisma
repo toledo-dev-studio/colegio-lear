@@ -58,6 +58,7 @@ model SchoolSubject {
   educationLevel              EducationLevel               @relation(fields: [educationLevelId], references: [id], onDelete: Restrict)
   academicCycleSchoolSubjects AcademicCycleSchoolSubject[]
   academicCycleGroupCalendars AcademicCycleGroupCalendar[]
+  studentGrades               StudentGrade[]
 
   @@unique([name, educationLevelId])
   @@map("school_subjects")
@@ -262,6 +263,7 @@ model Student {
   guardians                StudentGuardian[]
   allergies                StudentAllergy[]
   academicCycleEnrollments AcademicCycleEnrollment[]
+  walletItems              StudentWalletItem[]
 
   @@map("students")
   @@schema("core")
@@ -385,11 +387,13 @@ model AcademicCycle {
   createdAt           DateTime            @default(now()) @map("created_at")
   updatedAt           DateTime            @updatedAt @map("updated_at")
 
-  schoolSubjects AcademicCycleSchoolSubject[]
-  walletItems    AcademicCycleWallet[]
-  groups         AcademicCycleGroup[]
-  groupCalendars AcademicCycleGroupCalendar[]
-  enrollments    AcademicCycleEnrollment[]
+  schoolSubjects        AcademicCycleSchoolSubject[]
+  walletItems           AcademicCycleWallet[]
+  groups                AcademicCycleGroup[]
+  groupCalendars        AcademicCycleGroupCalendar[]
+  enrollments           AcademicCycleEnrollment[]
+  studentWalletItems    StudentWalletItem[]
+  studentWalletPayments StudentWalletPayment[]
 
   @@map("academic_cycles")
   @@schema("core")
@@ -413,14 +417,15 @@ model AcademicCycleSchoolSubject {
 // ─── Academic Cycle Wallet ───────────────────────────────────────────────────
 
 model AcademicCycleWallet {
-  id               String        @id @default(uuid()) @db.Uuid
-  academicCycleId  String        @map("academic_cycle_id") @db.Uuid
-  name             String        @db.VarChar(100)
-  description      String?       @db.VarChar(500)
-  dueDate          DateTime      @map("due_date")
-  amount           Decimal       @db.Decimal(10, 2)
-  allowForgiveness Boolean       @default(false) @map("allow_forgiveness")
-  academicCycle    AcademicCycle @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  id                 String              @id @default(uuid()) @db.Uuid
+  academicCycleId    String              @map("academic_cycle_id") @db.Uuid
+  name               String              @db.VarChar(100)
+  description        String?             @db.VarChar(500)
+  dueDate            DateTime            @map("due_date")
+  amount             Decimal             @db.Decimal(10, 2)
+  allowForgiveness   Boolean             @default(false) @map("allow_forgiveness")
+  academicCycle      AcademicCycle       @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  studentWalletItems StudentWalletItem[]
 
   @@map("academic_cycle_wallet")
   @@schema("core")
@@ -511,6 +516,76 @@ model AcademicCycleEnrollment {
   createdAt                  DateTime                      @default(now()) @map("created_at")
   updatedAt                  DateTime                      @updatedAt @map("updated_at")
 
+  grades      StudentGrade[]
+  walletItems StudentWalletItem[]
+  payments    StudentWalletPayment[]
+
   @@map("academic_cycle_enrollments")
+  @@schema("core")
+}
+
+// ─── Student Grade ────────────────────────────────────────────────────────────
+
+model StudentGrade {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  grade                     Decimal                 @db.Decimal(4, 2)
+  evaluationNumber          Int                     @map("evaluation_number")
+  schoolSubjectId           String                  @map("school_subject_id") @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  schoolSubject             SchoolSubject           @relation(fields: [schoolSubjectId], references: [id], onDelete: Restrict)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+
+  @@unique([academicCycleEnrollmentId, schoolSubjectId, evaluationNumber])
+  @@map("student_grades")
+  @@schema("core")
+}
+
+// ─── Student Wallet ───────────────────────────────────────────────────────────
+
+model StudentWalletItem {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  name                      String                  @db.VarChar(100)
+  description               String?                 @db.VarChar(500)
+  amount                    Decimal                 @db.Decimal(10, 2)
+  allowForgiveness          Boolean                 @default(false) @map("allow_forgiveness")
+  outstandingAmount         Decimal                 @map("outstanding_amount") @db.Decimal(10, 2)
+  isForgiven                Boolean                 @default(false) @map("is_forgiven")
+  extensionDate             DateTime?               @map("extension_date")
+  dueDate                   DateTime                @map("due_date")
+  studentId                 String                  @map("student_id") @db.Uuid
+  academicCycleId           String                  @map("academic_cycle_id") @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  academicCycleWalletId     String                  @map("academic_cycle_wallet_id") @db.Uuid
+  student                   Student                 @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  academicCycle             AcademicCycle           @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  academicCycleWallet       AcademicCycleWallet     @relation(fields: [academicCycleWalletId], references: [id], onDelete: Restrict)
+  payments                  StudentWalletPayment[]
+
+  @@map("student_wallet_items")
+  @@schema("core")
+}
+
+enum PaymentMethod {
+  online_payment @map("online-payment")
+  cash           @map("cash")
+
+  @@schema("core")
+}
+
+model StudentWalletPayment {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  folio                     String                  @unique @db.VarChar(20)
+  amount                    Decimal                 @db.Decimal(10, 2)
+  paymentMethod             PaymentMethod           @map("payment_method")
+  academicCycleId           String                  @map("academic_cycle_id") @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  studentWalletItemId       String                  @map("student_wallet_item_id") @db.Uuid
+  academicCycle             AcademicCycle           @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  studentWalletItem         StudentWalletItem       @relation(fields: [studentWalletItemId], references: [id], onDelete: Restrict)
+  createdAt                 DateTime                @default(now()) @map("created_at")
+
+  @@map("student_wallet_payments")
   @@schema("core")
 }

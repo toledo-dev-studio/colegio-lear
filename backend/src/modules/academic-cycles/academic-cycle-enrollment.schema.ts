@@ -4,6 +4,29 @@ import { z } from "zod";
 
 const statusEnum = z.enum(["enrolled", "completed", "dropped"]);
 
+// ─── Param Schemas ──────────────────────────────────────────────────────────
+
+/** Validates academicCycleId + academicCycleEnrollmentId path parameters */
+export const academicCycleEnrollmentIdParamSchema = z.object({
+  academicCycleId: z
+    .string()
+    .uuid({ message: "academicCycleId must be a valid UUID" }),
+  academicCycleEnrollmentId: z
+    .string()
+    .uuid({ message: "academicCycleEnrollmentId must be a valid UUID" }),
+});
+
+/** Validates academicCycleId + academicCycleEnrollmentId + id (wallet item) path parameters */
+export const academicCycleEnrollmentWalletItemParamSchema = z.object({
+  academicCycleId: z
+    .string()
+    .uuid({ message: "academicCycleId must be a valid UUID" }),
+  academicCycleEnrollmentId: z
+    .string()
+    .uuid({ message: "academicCycleEnrollmentId must be a valid UUID" }),
+  id: z.string().uuid({ message: "id must be a valid UUID" }),
+});
+
 // ─── Filter Schemas ─────────────────────────────────────────────────────────
 
 export const academicCycleEnrollmentFiltersSchema = z.object({
