@@ -3,12 +3,12 @@
  * - Uses "es-MX" locale formatting.
  * - No decimal places (rounded to integers).
  */
-export const formatMoney = (n: number): string =>
+export const formatMoney = (value: number, currency = "MXN"): string =>
     new Intl.NumberFormat("es-MX", {
         style: "currency",
-        currency: "MXN",
-        maximumFractionDigits: 0
-    }).format(n);
+        currency,
+        maximumFractionDigits: 0,
+    }).format(value);
 
 /**
  * Formats an ISO date string into a human-readable date format (Spanish locale).
@@ -66,3 +66,11 @@ export const calculateYears = (dateString: string): number => {
 
     return years;
 };
+
+/**
+ * Convert a value in a percentege value string
+ * @param value Value to format in percentage
+ * @returns Percentage value text
+ */
+export const formatPercentage = (value: number): string =>
+  `${value.toFixed(1)}%`;

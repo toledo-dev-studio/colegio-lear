@@ -38,7 +38,7 @@ export const Sidebar = ({ isOpenSidebar, toggleSidebar, logout }: Props) => {
 
         <ColegioLearLogo title="COLEGIO LEAR" subtitle="ADMIN SUITE" />
 
-        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-6">
+        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-6 no-scrollbar">
           {
             navbar.map((nav) => (
               <div key={nav.title}>

@@ -12,7 +12,7 @@ interface Options extends EmployeeFilter {
 }
 
 export const getPagedEmployeesActionAsync = async (options: Options): Promise<PagedResponse<EmployeeResponse>> => {
-    await sleep();
+    await sleep(3000);
 
     const { query, page = 1, pageSize = 1, fullName, isActive, securityRoleId, jobTitleId } = options;
 

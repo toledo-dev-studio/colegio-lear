@@ -42,3 +42,96 @@ export const NAVBAR: Navbar[] = [
         ],
     },
 ];
+
+/**
+ * Quick access navbar configuration for the application. 
+ * Each section contains a title and a list of items, where each item represents a module with its corresponding icon and test ID.
+ */
+export const QUICK_ACCESS_NAVBAR: Navbar[] = [
+    {
+        title: "Accesos rápidos",
+        items: [
+            {
+                module: MY_ACCOUNT_MODULE,
+                icon: Fingerprint,
+                colorClass: "text-violet-500",
+                testId: "nav-my-account"
+            },
+        ],
+    },
+    {
+        title: "Seguimiento escolar",
+        items: [
+            {
+                module: STUDENTS_MODULE,
+                icon: Users,
+                colorClass: "text-blue-500",
+                testId: "nav-students"
+            },
+            {
+                module: ACADEMIC_CYCLES_MODULE,
+                icon: CalendarDays,
+                colorClass: "text-amber-500",
+                testId: "nav-academic-cycles"
+            },
+            {
+                module: ANNOUNCEMENTS_MODULE,
+                icon: Megaphone,
+                colorClass: "text-rose-500",
+                testId: "nav-announcements"
+            },
+        ],
+    },
+    {
+        title: "Configuración escolar",
+        items: [
+            {
+                module: ACADEMIC_LEVELS_MODULE,
+                icon: Ruler,
+                colorClass: "text-cyan-500",
+                testId: "nav-academic-levels"
+            },
+            {
+                module: SCHOOL_SUBJECTS_MODULE,
+                icon: GraduationCap,
+                colorClass: "text-indigo-500",
+                testId: "nav-school-subjects"
+            },
+            {
+                module: SCHOLARSHIPS_MODULE,
+                icon: Telescope,
+                colorClass: "text-fuchsia-500",
+                testId: "nav-scholarships"
+            },
+            {
+                module: PAYMENT_CONCEPTS_MODULE,
+                icon: Wallet,
+                colorClass: "text-green-600",
+                testId: "nav-payment-concepts"
+            },
+        ],
+    },
+    {
+        title: "Seguridad",
+        items: [
+            {
+                module: EMPLOYEES_MODULE,
+                icon: UserCog,
+                colorClass: "text-orange-500",
+                testId: "nav-employees"
+            },
+            {
+                module: JOB_TITLES_MODULE,
+                icon: Briefcase,
+                colorClass: "text-stone-500",
+                testId: "nav-job-titles"
+            },
+            {
+                module: SECURITY_ROLES_MODULE,
+                icon: ShieldCheck,
+                colorClass: "text-red-600",
+                testId: "nav-security-roles"
+            },
+        ],
+    },
+];

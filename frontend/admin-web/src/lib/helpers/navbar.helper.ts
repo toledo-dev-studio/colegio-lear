@@ -19,5 +19,5 @@ export const filterNavbarByPermissions = (navbar: Navbar[], permissions: Securit
         }))
         // Remove empty sections
         .filter((section) => section.items.length > 0);
-    return navbar;
+    
 };
