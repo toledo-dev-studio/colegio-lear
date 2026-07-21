@@ -19,6 +19,12 @@ import {
   updateAcademicCycleWalletSchema,
 } from "./academic-cycle-wallet.schema";
 import {
+  academicCycleSchoolGroupIdParamSchema,
+  academicCycleSchoolGroupTeachersQuerySchema,
+  createAcademicCycleSchoolGroupSchema,
+  updateAcademicCycleSchoolGroupSchema,
+} from "./academic-cycle-school-group.schema";
+import {
   findAll,
   findAllPaged,
   findById,
@@ -38,6 +44,15 @@ import {
   updateWalletItem,
   deleteWalletItem,
 } from "./academic-cycle-wallet.controller";
+import {
+  findAllSchoolGroups,
+  findSchoolGroupById,
+  createSchoolGroup,
+  updateSchoolGroup,
+  deleteSchoolGroup,
+  findAllCalendars,
+  findAllTeachers,
+} from "./academic-cycle-school-group.controller";
 
 const router = Router();
 
@@ -663,6 +678,285 @@ router.delete(
   authorize("academic-cycles"),
   validate(academicCycleSubResourceParamSchema, "params"),
   deleteWalletItem,
+);
+
+// ─── Academic Cycle School Groups ────────────────────────────────────────────
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups:
+ *   get:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: List school groups for an academic cycle
+ *     description: Returns all school groups for the given academic cycle (list view, without calendars).
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of school groups
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AcademicCycleSchoolGroupRecord'
+ *       404:
+ *         description: Academic cycle not found
+ */
+router.get(
+  "/:academicCycleId/school-groups",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  findAllSchoolGroups,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{id}:
+ *   get:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: Get a school group by ID
+ *     description: Returns a single school group with its calendar entries.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: School group found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleSchoolGroupRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.get(
+  "/:academicCycleId/school-groups/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  findSchoolGroupById,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups:
+ *   post:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: Create a new school group
+ *     description: Creates a new school group for the academic cycle, optionally with initial calendar entries.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateAcademicCycleSchoolGroupBody'
+ *     responses:
+ *       201:
+ *         description: School group created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleSchoolGroupRecord'
+ *       404:
+ *         description: Academic cycle not found
+ */
+router.post(
+  "/:academicCycleId/school-groups",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  validate(createAcademicCycleSchoolGroupSchema, "body"),
+  createSchoolGroup,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{id}:
+ *   patch:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: Update a school group
+ *     description: Partially updates a school group. If `calendars` is provided, syncs the full set (creates ids prefixed "new_"/"new-", updates existing UUIDs, deletes any existing calendar not present in the array).
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateAcademicCycleSchoolGroupBody'
+ *     responses:
+ *       200:
+ *         description: School group updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AcademicCycleSchoolGroupRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.patch(
+  "/:academicCycleId/school-groups/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  validate(updateAcademicCycleSchoolGroupSchema, "body"),
+  updateSchoolGroup,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{id}:
+ *   delete:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: Delete a school group
+ *     description: Permanently removes a school group and its calendar entries.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.delete(
+  "/:academicCycleId/school-groups/:id",
+  authorize("academic-cycles"),
+  validate(academicCycleSubResourceParamSchema, "params"),
+  deleteSchoolGroup,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/calendars:
+ *   get:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: List calendar entries for a school group
+ *     description: Returns the schedule (day/time/subject/teacher) configured for the school group.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: List of calendar entries
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AcademicCycleSchoolGroupCalendarRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.get(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/calendars",
+  authorize("academic-cycles"),
+  validate(academicCycleSchoolGroupIdParamSchema, "params"),
+  findAllCalendars,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/teachers:
+ *   get:
+ *     tags:
+ *       - Academic Cycle School Groups
+ *     summary: List distinct teachers assigned to a school group
+ *     description: Derived (not its own table) list of distinct subject/teacher pairs from the group's calendar entries. Only active teachers by default.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *       - in: query
+ *         name: includeInactive
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *         description: Include teachers whose employee record is inactive (default false, active only)
+ *     responses:
+ *       200:
+ *         description: List of distinct subject/teacher pairs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/AcademicCycleSchoolGroupTeacherRecord'
+ *       404:
+ *         description: Academic cycle or school group not found
+ */
+router.get(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/teachers",
+  authorize("academic-cycles"),
+  validate(academicCycleSchoolGroupIdParamSchema, "params"),
+  validate(academicCycleSchoolGroupTeachersQuerySchema, "query"),
+  findAllTeachers,
 );
 
 export default router;

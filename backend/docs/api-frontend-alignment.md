@@ -299,9 +299,9 @@ enums está bien solo porque los nombres de campo coinciden.
 
 Igual que `students`, se está alineando por partes. Plan acordado con el
 usuario: sección 1 = `academic-cycle` núcleo (**hecho**, ver abajo),
-sección 2 = `academic-cycle-school-subject` (pendiente), sección 3 =
-`academic-cycle-wallet` (**hecho**, ver abajo), sección 4 =
-`academic-cycle-school-group` (+
+sección 2 = `academic-cycle-school-subject` (**hecho**, ver abajo),
+sección 3 = `academic-cycle-wallet` (**hecho**, ver abajo), sección 4 =
+`academic-cycle-school-group` (**hecho**, ver abajo) (+
 calendarios + maestros — aquí sí aplica el patrón de sync `new_` de
 `CalendarFormPanel.tsx`, ver arriba), sección 5 =
 `academic-cycle-enrollment` (resuelve el hallazgo pendiente de
@@ -379,6 +379,82 @@ un cambio de arquitectura confirmado con el usuario, no solo un rename:
   (daba 500 genérico) — se reinició limpio y quedó confirmado que el
   código en sí estaba bien (se verificó llamando al service directamente
   con `ts-node` antes de asumir que había un bug real).
+
+**Sección 2 (`academic-cycle-school-subject`) — validada, sin cambios.**
+A diferencia de `academic-cycle-wallet` (sección 3), aquí sí es una
+relación viva por FK: el front manda `schoolSubjectId` (no copia
+name/description) tanto en request como en response, y el back ya lo
+maneja así — `schoolSubjectId` obligatorio, valida duplicados
+(`academicCycleId_schoolSubjectId` único, 409 si ya está asignada), y
+devuelve el `schoolSubject` anidado (`id`/`name`/`description`) solo para
+mostrar en el front. Nombres de campo, rutas y forma de la respuesta
+coinciden 1:1 con `filter/request/response` y los 3 action files. No
+hubo que tocar nada. Probado en vivo: crear, listar, intentar duplicado
+(409 correcto), PATCH de `observations`, DELETE.
+
+**Sección 4 (`academic-cycle-school-group` + calendarios + docentes) —
+completada** en la migración `20260716020000_academic_cycle_school_group_calendars`.
+Módulo construido desde cero (no existía nada en el back salvo un modelo
+`AcademicCycleGroup` muy básico sin usar):
+
+- **Aquí sí aplicó el algoritmo de sync `new_`/`new-`** documentado
+  arriba: `AcademicCycleSchoolGroupForm.tsx` manda el arreglo completo de
+  `calendars` dentro del mismo POST/PATCH del grupo
+  (`CalendarFormPanel.tsx` genera el id con `generateTemporalId()` →
+  prefijo `new_`). El service (`update()`) compara contra lo existente en
+  una transacción: ids que ya no vienen → DELETE, ids nuevos
+  (`new_`/`new-`/sin id) → CREATE, resto → UPDATE. Igual que
+  `academic-level.service.ts` pero con Prisma `$transaction` porque acá sí
+  hay create+update+delete mezclados en la misma operación.
+- `status` pasó de `Boolean` a enum (`active`/`discharged`) porque así lo
+  espera el front (`AcademicCycleSchoolGroupStatusKey`), y se agregó
+  `dischargedDescription` (no existía). Se replicó en Zod la regla del
+  front: si `status === "discharged"`, `dischargedDescription` es
+  obligatorio (antes solo se validaba en el cliente).
+- `AcademicCycleSchoolGroupCalendarResponse.startTime`/`endTime` son
+  strings `"HH:mm"` (vienen de un `<input type="time">`, no ISO
+  datetime). Se guardan como Postgres `TIME` (`@db.Time`) y se
+  convierten a/desde `"HH:mm"` en el service — no había precedente de un
+  campo tipo `TIME` puro en el proyecto.
+- `AcademicCycleSchoolGroupTeacherResponse` (endpoint
+  `GET .../teachers`) **no tiene tabla propia**: confirmado revisando el
+  front que es una vista derivada de los pares distintos
+  `(schoolSubjectId, teacherId)` dentro de los calendarios del grupo (se
+  usa en la página de inscripciones, para saber qué docentes/materias
+  tiene un grupo). El service arma esto en memoria a partir de
+  `findMany` sobre calendarios, sin tabla ni endpoint separado de
+  escritura. **Filtra solo docentes activos por default**
+  (`teacher.isActive: true`), con `?includeInactive=true` opcional para
+  ver el historial completo — pedido explícito del usuario, mismo
+  criterio que ya aplicaba `GET /employees/teachers` (el que alimenta el
+  dropdown de `CalendarFormPanel.tsx`, ya filtraba
+  `isActive && jobTitleType === "teacher"` desde antes, confirmado que ya
+  estaba bien documentado en swagger). `GET .../calendars` (el horario
+  completo) **no** se filtra — ahí sí interesa ver la realidad del
+  calendario aunque el docente asignado haya quedado inactivo.
+- El campo `teacher` anidado reutiliza `EMPLOYEE_LIST_SELECT` +
+  `toFrontendJobTitleType` de `employees`/`job-titles` (mismo whitelist
+  que ya evita filtrar password/isDeleted, mismo fix de `jobTitleType`
+  crudo que se hizo en `employees`).
+- `academicCycleId`/`academicCycleSchoolGroupId` en cada entrada de
+  `calendars` **se ignoran si vienen en el body** — se usan los de la URL
+  (`:academicCycleId` y el id del grupo), mismo criterio que
+  `academic-cycle-wallet`/`school-subject`: los params de ruta mandan
+  sobre cualquier id que el front incluya en el cuerpo.
+- `DELETE` es hard delete real (cascada a calendarios vía FK). A
+  diferencia de `academic-cycle` (cuyo DELETE solo cancela), acá
+  `status: "discharged"` ya es el camino de baja "suave" expuesto por
+  PATCH normal del formulario — el botón de eliminar en el listado es un
+  borrado real, consistente con el resto de sub-recursos dedicados
+  (`school-subject`, `wallet`).
+- Probado en vivo: crear grupo con 2 horarios iniciales, PATCH que en una
+  sola llamada actualiza uno (nuevo horario), borra otro, y crea uno con
+  id `new_...` (confirmado id nuevo real en la respuesta); `GET
+  .../calendars`; `GET .../teachers` (pares distintos, confirmado que no
+  duplica); validación de `startTime < endTime` (400); validación de
+  `dischargedDescription` requerido con `status: "discharged"` (400 sin
+  él, 200 con él); list sin `calendars` vs detail con `calendars`; DELETE
+  real + cascada confirmada (404 después).
 
 ## Módulos ya alineados (8)
 

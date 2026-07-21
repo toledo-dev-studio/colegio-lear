@@ -1292,6 +1292,124 @@ const swaggerOptions: swaggerJsdoc.Options = {
             allowForgiveness: { type: "boolean" },
           },
         },
+        // ─── Academic Cycle School Groups ────────────────────────────────────────
+        AcademicCycleSchoolGroupCalendarRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            day: {
+              type: "string",
+              enum: [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday",
+              ],
+            },
+            startTime: { type: "string", example: "08:00" },
+            endTime: { type: "string", example: "09:00" },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            schoolSubjectId: { type: "string", format: "uuid" },
+            schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            teacherId: { type: "string", format: "uuid" },
+            teacher: { $ref: "#/components/schemas/Employee" },
+          },
+        },
+        AcademicCycleSchoolGroupCalendarBody: {
+          type: "object",
+          required: ["day", "startTime", "endTime", "schoolSubjectId", "teacherId"],
+          properties: {
+            id: {
+              type: "string",
+              description:
+                'Existing UUID = update; absent or prefixed "new_"/"new-" = create.',
+            },
+            day: {
+              type: "string",
+              enum: [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday",
+              ],
+            },
+            startTime: { type: "string", example: "08:00" },
+            endTime: { type: "string", example: "09:00" },
+            schoolSubjectId: { type: "string", format: "uuid" },
+            teacherId: { type: "string", format: "uuid" },
+          },
+        },
+        AcademicCycleSchoolGroupRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "Primero A (2026-2027)" },
+            status: { type: "string", enum: ["active", "discharged"] },
+            description: { type: "string", nullable: true },
+            dischargedDescription: { type: "string", nullable: true },
+            academicCycleId: { type: "string", format: "uuid" },
+            calendars: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/AcademicCycleSchoolGroupCalendarRecord",
+              },
+            },
+          },
+        },
+        CreateAcademicCycleSchoolGroupBody: {
+          type: "object",
+          required: ["name"],
+          properties: {
+            name: { type: "string", maxLength: 100 },
+            status: { type: "string", enum: ["active", "discharged"] },
+            description: { type: "string", maxLength: 500 },
+            dischargedDescription: { type: "string", maxLength: 500 },
+            calendars: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/AcademicCycleSchoolGroupCalendarBody",
+              },
+            },
+          },
+        },
+        UpdateAcademicCycleSchoolGroupBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            name: { type: "string", maxLength: 100 },
+            status: { type: "string", enum: ["active", "discharged"] },
+            description: { type: "string", maxLength: 500, nullable: true },
+            dischargedDescription: {
+              type: "string",
+              maxLength: 500,
+              nullable: true,
+            },
+            calendars: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/AcademicCycleSchoolGroupCalendarBody",
+              },
+              description:
+                "Full replacement set: syncs creates/updates/deletes against existing calendars.",
+            },
+          },
+        },
+        AcademicCycleSchoolGroupTeacherRecord: {
+          type: "object",
+          properties: {
+            schoolSubjectId: { type: "string", format: "uuid" },
+            schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            teacherId: { type: "string", format: "uuid" },
+            teacher: { $ref: "#/components/schemas/Employee" },
+          },
+        },
       },
     },
   },
