@@ -650,3 +650,21 @@ solo 3 eran del backend.
    `upload-attachment-for-announcement.action.ts` manda
    `data: formData` directo. No es nuestro, pero ahí está el fix exacto
    que le hace falta al front.
+
+**Ajuste adicional pedido por el usuario**: como antes esto fallaba en
+silencio (la petición "tenía éxito" pero `image` quedaba `null` sin
+ningún error), se agregó `requireMultipart` (nuevo middleware en
+`shared/middleware/require-multipart.middleware.ts`) en las 3 rutas de
+`employees` que aceptan archivo (`POST /employees`, `PATCH /employees/:id`,
+`PATCH /employees/me`) — rechaza con 400 explícito
+("Content-Type must be multipart/form-data") cualquier request que no
+venga como `multipart/form-data`, antes de que llegue a multer. **Efecto
+colateral esperado y buscado**: como el front hoy nunca manda
+multipart (ni siquiera en updates sin imagen, por el mismo bug de
+`create-update-employee.action.ts`/`update-my-account.action.ts`),
+**todas** las llamadas de creación/edición de empleados y "mi cuenta"
+van a devolver 400 hasta que el front corrija el armado del `FormData`
+— es intencional, para que el bug sea imposible de ignorar en vez de
+fallar en silencio. Probado en vivo: JSON body → 400 con mensaje claro;
+multipart real con imagen → 201, archivo guardado en disco, `image` con
+ruta real.

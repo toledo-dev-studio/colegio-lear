@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import { validate } from "../../shared/middleware/validate.middleware";
 import { authorize } from "../../shared/middleware/rbac.middleware";
+import { requireMultipart } from "../../shared/middleware/require-multipart.middleware";
 import { ValidationError } from "../../shared/errors/app-error";
 import {
   idParamSchema,
@@ -255,6 +256,7 @@ router.get(
 router.post(
   "/",
   authorize("employees"),
+  requireMultipart,
   uploadSingle,
   validate(createEmployeeSchema, "body"),
   create,
@@ -309,6 +311,7 @@ router.post(
 // PATCH /me does NOT require RBAC — any authenticated employee can update their own profile
 router.patch(
   "/me",
+  requireMultipart,
   uploadSingle,
   validate(updateMyAccountSchema, "body"),
   updateMyAccount,
@@ -434,6 +437,7 @@ router.get(
 router.patch(
   "/:id",
   authorize("employees"),
+  requireMultipart,
   uploadSingle,
   validate(idParamSchema, "params"),
   validate(updateEmployeeSchema, "body"),
