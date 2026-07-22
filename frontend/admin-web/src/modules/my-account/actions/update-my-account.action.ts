@@ -19,6 +19,7 @@ export const updateMyAccountActionAsync = async ({ employeeRequestLike }: Option
     if (employeeRequestLike.file)
         fileFormData.append('file', employeeRequestLike.file);
 
+    // employees/me/avatar
     const { data } = await api.patch<EmployeeResponse>("/employees/me", {
         name: employeeRequestLike.name,
         firstLastName: employeeRequestLike.firstLastName,

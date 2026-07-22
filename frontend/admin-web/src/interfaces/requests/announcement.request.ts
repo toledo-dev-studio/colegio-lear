@@ -1,4 +1,4 @@
-import type { AudienceTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
+import type { AnnouncementsStatusKey, AudienceTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Request
@@ -35,4 +35,9 @@ export interface AnnouncementRequest {
      * Announcement's is active flag
      */
     isActive: boolean;
+
+    /**
+     * Announcement status key
+     */
+    status: AnnouncementsStatusKey;
 }

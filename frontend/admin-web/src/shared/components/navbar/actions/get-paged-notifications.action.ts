@@ -16,6 +16,9 @@ export const getPagedNotificationsActionAsync = async ({ page, employeeId }: Opt
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/notifications/paged-notifications.json";
+
+    // REMOVE MOCKABLE
+    endpoint = "http://localhost/api/notifications/paged-notifications.json"
     
     const { data } = await api.get<PagedResponse<NotificationResponse>>(endpoint, {
         params: {

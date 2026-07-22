@@ -118,16 +118,17 @@ export const Table = <T extends Record<string, any>>({ data = [], isLoading, ena
                         }
                     </tbody>
                 </table>
-
-                {
-                    !isLoading && data.length > 0 && (
-                        <div className="flex flex-col items-center justify-center md:flex-row md:justify-between">
-                            <p className="text-sm text-muted-foreground mt-6">Viendo {data.length} registro(s)</p>
-                            {enablePagination && <p className="text-sm text-muted-foreground mt-6">Total de páginas: {totalPages}</p>}
-                        </div>
-                    )
-                }
             </section>
+
+            {/* Table pages info */}
+            {
+                !isLoading && data.length > 0 && (
+                    <div className="flex flex-col items-center justify-center md:flex-row md:justify-between gap-6">
+                        <p className="text-sm text-muted-foreground">Viendo {data.length} registro(s)</p>
+                        {enablePagination && <p className="text-sm text-muted-foreground">Total de páginas: {totalPages}</p>}
+                    </div>
+                )
+            }
 
             {/* Pagination */}
             {

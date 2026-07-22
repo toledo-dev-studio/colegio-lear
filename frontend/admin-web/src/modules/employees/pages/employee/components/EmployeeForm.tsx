@@ -45,7 +45,6 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
             secondLastName: isValidValueWithDefault(employeeResponse?.secondLastName, ""),
             phoneNumber: isValidValueWithDefault(employeeResponse?.phoneNumber, ""),
             email: isValidValueWithDefault(employeeResponse?.email, ""),
-            image: isValidValueWithDefault(employeeResponse?.image, ""),
             isActive: isValidValueWithDefault(employeeResponse?.isActive, false),
             securityRoleId: isValidValueWithDefault(employeeResponse?.securityRoleId, ""),
             securityRole: isValidValueWithDefault(employeeResponse?.securityRole, undefined),
@@ -89,7 +88,7 @@ export const EmployeeForm = ({ isSubmitting, employeeResponse, onSubmit }: Props
                             <>
                                 <div className="w-full flex flex-col items-center justify-center">
                                     <PhotoUploader
-                                        value={field.value ? URL.createObjectURL(field.value) : (employeeResponse?.image ?? undefined)}
+                                        value={field.value ? URL.createObjectURL(field.value) : (employeeResponse?.avatar ?? undefined)}
                                         changedImage={field.value && fieldState.isTouched}
                                         onChange={(file) => {
                                             field.onChange(file);

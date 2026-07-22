@@ -1,6 +1,7 @@
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch"
 
 import { cn } from "@/lib/extensions/utils"
+import { useFormPermission } from "../components/form/FormPermissionContext";
 
 function Switch({
   className,
@@ -9,6 +10,7 @@ function Switch({
 }: SwitchPrimitive.Root.Props & {
   size?: "sm" | "default"
 }) {
+  const { disabled } = useFormPermission();
   return (
     <SwitchPrimitive.Root
       data-slot="switch"
@@ -19,6 +21,7 @@ function Switch({
         className
       )}
       {...props}
+      disabled={disabled || props.disabled}
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"

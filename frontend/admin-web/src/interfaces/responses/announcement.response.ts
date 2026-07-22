@@ -44,4 +44,9 @@ export interface AnnouncementResponse {
      * Announcement's related attachments 
      */
     attachments: AttachmentResponse[];
+
+    // TODO:
+    peopleCount: number // conteo de personas a los que se les asigno la campaña (universo incial)
+    rededPeopleCount: number // conteo de personas que leyeron la campaña
+    percentage: number // Porcentaje de personas que vieron la campaña
 }

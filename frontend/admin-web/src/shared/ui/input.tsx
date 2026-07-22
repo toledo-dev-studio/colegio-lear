@@ -1,8 +1,11 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/extensions/utils"
+import { cn } from "@/lib/extensions/utils";
+import { useFormPermission } from "../components/form/FormPermissionContext";
 
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+  const { disabled } = useFormPermission();
+
   return (
     <input
       type={type}
@@ -13,6 +16,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         className
       )}
       {...props}
+      disabled={disabled || props.disabled}
     />
   )
 }

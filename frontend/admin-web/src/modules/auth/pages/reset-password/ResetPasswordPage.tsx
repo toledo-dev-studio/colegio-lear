@@ -14,17 +14,17 @@ import type { ResetPasswordRequest } from "@/interfaces/requests/reset-password.
 export const ResetPasswordPage = () => {
     // Component hooks & stores
     const navigate = useNavigate();
+    const { resetPassword, logout, user } = useAuthStore();
+    const { showLoading, hideLoading, isLoading } = useLoaderStore();
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const { control, handleSubmit, formState: { errors }, watch } = useForm<ResetPasswordRequest>({
-        defaultValues: { code: "", password: "", confirmPassword: "" }
+        defaultValues: { id: user?.id, code: "", password: "", confirmPassword: "" }
     });
     const password = watch("password");
     const confirmPassword = watch("confirmPassword");
-
-    const { resetPassword, logout } = useAuthStore();
-    const { showLoading, hideLoading, isLoading } = useLoaderStore();
 
     const onSubmit = async (credentials: ResetPasswordRequest) => {
         showLoading("Restableciendo contraseña");
@@ -70,7 +70,7 @@ export const ResetPasswordPage = () => {
                 </div>
 
                 <div className="control-container">
-                    <label className="label">Contraseña <span className="required">*</span>:</label>
+                    <label className="label">Nueva contraseña <span className="required">*</span>:</label>
                     <Controller
                         name="password"
                         control={control}
@@ -97,7 +97,7 @@ export const ResetPasswordPage = () => {
                 </div>
 
                 <div className="control-container">
-                    <label className="label">Confirmar contraseña <span className="required">*</span>:</label>
+                    <label className="label">Confirmar nueva contraseña <span className="required">*</span>:</label>
                     <Controller
                         name="confirmPassword"
                         control={control}

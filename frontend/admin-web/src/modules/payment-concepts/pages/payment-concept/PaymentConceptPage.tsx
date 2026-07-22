@@ -1,12 +1,12 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
-import { Loader } from "@/shared/components/loader/Loader";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { PaymentConceptForm } from "./components/PaymentConceptForm";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { useGetPaymentConceptById } from "../../hooks/useGetPaymentConceptById";
+import { PaymentConceptSkeletonForm } from "./components/PaymentConceptSkeletonForm";
 import { useCreateUpdatePaymentConcept } from "../../hooks/useCreateUpdatePaymentConcept";
 import type { PaymentConceptRequest } from "@/interfaces/requests/payment-concept.request";
 
@@ -42,16 +42,6 @@ export const PaymentConceptPage = () => {
     return <Navigate to="/payment-concepts" />;
   }
 
-  if (paymentConceptQuery.isLoading) {
-    return (
-      <>
-        <div className="w-full relative mx-auto h-full mt-30">
-          <Loader title="Cargando información" subtitle="Por favor espere..." />
-        </div>
-      </>
-    )
-  }
-
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
@@ -69,12 +59,16 @@ export const PaymentConceptPage = () => {
           subtitle="Gestiona la información de los conceptos de pago que estará disponible en el colegio" />
 
         <div className="flex-1">
-          <section className="flex flex-col min-h-full gap-8 mt-14">
-            <PaymentConceptForm
-              paymentConceptResponse={paymentConceptQuery.data}
-              isSubmitting={createUpdatePaymentConceptMutation.isPending}
-              onSubmit={handleSubmit}
-            />
+          <section className="flex flex-col min-h-full gap-8 mt-5">
+            {
+              paymentConceptQuery.isLoading ?
+                <PaymentConceptSkeletonForm /> :
+                <PaymentConceptForm
+                  paymentConceptResponse={paymentConceptQuery.data}
+                  isSubmitting={createUpdatePaymentConceptMutation.isPending}
+                  onSubmit={handleSubmit}
+                />
+            }
           </section>
         </div>
       </div>

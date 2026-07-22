@@ -25,13 +25,9 @@ export interface NotificationResponse {
      * Identifier of the entity related to the notification.
      * For example:
      * - announcement -> Announcement ID
-     * - message -> Message ID
+     * - message -> Chat ID
      */
     relatedRecordId: string;
-    /**
-     * Content for an announcement notification
-     */
-    content: string;
     /**
      * Date and time when notification were created (ISO string)
      */

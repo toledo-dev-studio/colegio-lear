@@ -80,6 +80,7 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
                                     {...field}
                                     type="text"
                                     placeholder="Nombre de la campaña..."
+                                    onKeyDown={(e) => e.code === "Enter" && e.preventDefault()}
                                 />
                             )}
                         />

@@ -134,5 +134,5 @@ export interface TeacherEmployeeSummaryResponse {
     /**
      * Employee avatar
      */
-    image: string;
+    avatar: string;
 }
