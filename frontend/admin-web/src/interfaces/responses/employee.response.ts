@@ -37,7 +37,7 @@ export interface EmployeeResponse {
     /**
      * URL of the employee's profile image. This field can be used to store a link to an image hosted on a cloud storage service or a local server
      */
-    image?: string;
+    avatar?: string;
     /**
      * Employee is active flag
      */

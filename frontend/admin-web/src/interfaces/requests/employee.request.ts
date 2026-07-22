@@ -27,10 +27,6 @@ export interface EmployeeRequest {
      */
     email: string;
     /**
-     * URL of the employee's profile image. This field can be used to store a link to an image hosted on a cloud storage service or a local server
-     */
-    image?: string;
-    /**
      * Attachment file for employee's image
      */
     file?: File;

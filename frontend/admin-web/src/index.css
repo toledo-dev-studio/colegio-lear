@@ -251,7 +251,7 @@ h6 {
   }
 
   .switch-control-container {
-    @apply flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors;
+    @apply flex items-center justify-between gap-4 w-full py-4 px-8 rounded-2xl bg-muted/40 border border-border cursor-pointer hover:bg-muted/60 transition-colors select-none;
   }
 
   .switch-control-container .label {

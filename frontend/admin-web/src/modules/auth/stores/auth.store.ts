@@ -32,12 +32,31 @@ export type AuthState = {
 }
 
 // Store functions
-const checkPermission = (get: any, moduleKey: ModuleKey, permission: "can-read" | "can-write" | "can-delete") => {
-    const user = get().user;
-    // TODO:
-    console.log(moduleKey, permission, user);
-    return true;
-}
+const checkPermission = (get: any, moduleKey: ModuleKey, permission: "can-read" | "can-write" | "can-delete"): boolean => {
+    const permissions = get().permissions as SecurityRolePermissionResponse[];
+
+    const modulePermission = permissions.find(
+        x => x.moduleKey === moduleKey
+    );
+
+    if (!modulePermission)
+        return false;
+
+    switch (permission) {
+
+        case "can-read":
+            return modulePermission.canRead;
+
+        case "can-write":
+            return modulePermission.canWrite;
+
+        case "can-delete":
+            return modulePermission.canDelete;
+
+        default:
+            return false;
+    }
+};
 
 const checkAuthStatus = async (set: any, get: any) => {
     const { showLoading, hideLoading } = useLoaderStore.getState();

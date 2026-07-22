@@ -7,6 +7,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 
 interface Options {
     handleClickDelete: (item: AnnouncementResponse) => void;
@@ -45,8 +47,8 @@ export const useAnnouncementsPageTable = ({ handleClickDelete }: Options) => {
                         <div className="flex items-center gap-x-4">
                             {
                                 audience?.length && audience.map((item) => (
-                                    <span key={item.key} className="text-nowrap min-w-fit rounded-full bg-gray-400/20 px-4 py-2 text-xs font-medium text-gray-500 inset-ring inset-ring-gray-400/40 dark:text-gray-300">
-                                        {item.label}
+                                    <span key={item} className="text-nowrap min-w-fit rounded-full bg-gray-400/20 px-4 py-2 text-xs font-medium text-gray-500 inset-ring inset-ring-gray-400/40 dark:text-gray-300">
+                                        {labelOf(AUDIENCE_TYPES, item)}
                                     </span>
                                 ))
                             }

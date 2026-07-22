@@ -1,12 +1,12 @@
 export type JobTitleTypeKey =
-    | "teacher" 
-    | "administrative-staff";
+  | "teacher"
+  | "administrative-staff";
 
-export type AudienceTypeKey = 
-    | "administrative-staff"
-    | "teacher"
-    | "student";
-      
+export type AudienceTypeKey =
+  | "administrative-staff"
+  | "teacher"
+  | "student";
+
 export type AcademicPeriodTypeKey =
   | "annual"
   | "semester"
@@ -82,5 +82,12 @@ export type BloodTypeKey =
   | "O-";
 
 export type NotificationTypeKey =
+  | "info"
+  | "error"
   | "announcement"
-  | "message"
+  | "message";
+
+export type AnnouncementsStatusKey =
+  | "upcoming"
+  | "active"
+  | "completed"

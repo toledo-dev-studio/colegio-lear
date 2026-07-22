@@ -50,7 +50,7 @@ export const MyAccountForm = ({ employeeResponse, isSubmitting, onSubmit }: Prop
                             <>
                                 <div className="w-full flex flex-col items-center justify-center">
                                     <PhotoUploader
-                                        value={field.value ? URL.createObjectURL(field.value) : (employeeResponse?.image ?? undefined)}
+                                        value={field.value ? URL.createObjectURL(field.value) : (employeeResponse?.avatar ?? undefined)}
                                         changedImage={field.value && fieldState.isTouched}
                                         onChange={(file) => {
                                             field.onChange(file);

@@ -18,6 +18,7 @@ import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
+import { getKeys, getKeyValuePairsByKeys } from "@/lib/key-value-pairs/key-value-pair";
 
 interface Props {
     isNew: boolean;
@@ -84,7 +85,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                             control={control}
                             rules={{ validate: (v) => (v && v.length > 0) || "Selecciona al menos una audiencia" }}
                             render={({ field }) => (
-                                <MultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE_TYPES} value={field.value as any || []} onChange={field.onChange} />
+                                <MultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE_TYPES} value={getKeyValuePairsByKeys(AUDIENCE_TYPES, field.value as any) || []} onChange={(value) => field.onChange(getKeys(value))} />
                             )}
                         />
                         {

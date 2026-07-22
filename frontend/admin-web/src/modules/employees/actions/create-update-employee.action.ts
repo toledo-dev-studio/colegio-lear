@@ -4,6 +4,7 @@ import { generateTemporalId } from "@/lib/extensions/utils";
 import { VITE_ENVIRONMENT } from "@/lib/constants/environment.constants";
 import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
+import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 
 interface Options {
     id: string;
@@ -22,20 +23,37 @@ export const createUpdateEmployeeActionAsync = async ({ id, employeeRequestLike 
         } as EmployeeResponse;
     }
 
-    let fileFormData = new FormData();
-    if (employeeRequestLike.file)
-        fileFormData.append('file', employeeRequestLike.file);
+    const fileImage = employeeRequestLike.file;
+    delete employeeRequestLike.file;
 
     const { data } = await api<EmployeeResponse>({
         url: isCreating ? "/employees" : `/employees/${id}`,
-        method: isCreating ? 'POST' : 'PATCH',
-        data: {
-            ...employeeRequestLike,
-            file: employeeRequestLike.file ? fileFormData : undefined
-        }
+        method: isCreating ? "POST" : "PATCH",
+        data: { ...employeeRequestLike }
     });
+
+    if (fileImage) {
+        const avatar = await updateEmployeeImageActionAsync({ id: data.id, file: fileImage });
+        return {
+            ...data,
+            avatar: avatar.url
+        }
+    }
 
     return {
         ...data,
     };
+}
+
+const updateEmployeeImageActionAsync = async ({ id, file }: { id: string, file: File }) => {
+    let formData = new FormData();
+    formData.append("file", file);
+    
+    const { data } = await api<AttachmentResponse>({
+        url: `/employees/${id}/avatar`,
+        method: "POST",
+        data: formData
+    });
+
+    return data;
 }
