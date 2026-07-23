@@ -20,6 +20,7 @@ export const usePaymentConceptsPageTable = ({ handleClickDelete }: Options) => {
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre & descripción",
+        "Código",
         "Monto (MXN)",
         "¿Condonación",
         "¿Registro activo?",
@@ -38,6 +39,9 @@ export const usePaymentConceptsPageTable = ({ handleClickDelete }: Options) => {
                     <div className="text-xs text-muted-foreground truncate max-w-xs">{description}</div>
                 </Link>
             )
+        },
+        {
+            key: "code"
         },
         {
             key: "amount",

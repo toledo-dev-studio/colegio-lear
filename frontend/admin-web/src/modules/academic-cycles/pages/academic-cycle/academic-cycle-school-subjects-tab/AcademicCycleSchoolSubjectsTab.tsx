@@ -74,7 +74,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
 
             loader.show("Guardando");
             await mutations.schoolSubject.createUpdate.mutateAsync({
-                id: academicCycleSchoolSubjectToEdit?.id!,
+                id: academicCycleSchoolSubjectToEdit?.id || "new",
                 academicCycleSchoolSubjectRequestLike
             }, {
                 onSuccess: () => {

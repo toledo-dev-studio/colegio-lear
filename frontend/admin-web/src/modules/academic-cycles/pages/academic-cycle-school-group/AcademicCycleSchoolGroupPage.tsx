@@ -72,7 +72,7 @@ export const AcademicCycleSchoolGroupPage = () => {
                     title="REGISTRO & EDICIÓN DE GRUPOS ESCOLARES"
                     subtitle="En esta sección podrás configurar aquellos grupos escolares que estarán disponibles para los alumnos al momento de su incripción en el ciclo escolar." />
 
-                <section className="flex-1 flex flex-col min-h-full gap-8 mt-14">
+                <section className="flex-1 flex flex-col min-h-full gap-8 mt-5">
 
                         <AcademicCycleSchoolGroupForm
                             isSubmitting={mutations.academicCycleSchoolGroup.createUpdate.isPending}

@@ -35,7 +35,7 @@ export const TABS: Tab[] = [
     },
     {
         to: "enrollments",
-        label: "Inscripción a alumnos",
+        label: "Inscripción a estudiantes",
         icon: Users,
         protected: true
     }
@@ -58,6 +58,7 @@ export const AcademicCycleContextLayout = () => {
         academicCycle: academicCycleQuery.data,
         isActive: (academicCycleQuery.data?.status === "active"),
         isLocked: (academicCycleQuery.data?.status !== "upcoming" && academicCycleQuery.data?.status !== undefined),
+        enrollmentOpen: academicCycleQuery.data?.enrollmentOpen || false,
     }
 
     if (isNew && isProtectedRoute) {

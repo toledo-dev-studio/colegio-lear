@@ -44,7 +44,7 @@ export const AcademicCycleSchoolGroupForm = ({ isSubmitting, teachersResponse, s
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-8">
-                <section className="flex flex-col gap-y-6 mt-2">
+                <section className="flex flex-col gap-y-6">
                     <SectionTitle
                         title="INFORMACIÓN GENERAL DEL GRUPO ESCOLAR"
                         description="Consulta & edita la configuración general del grupo escolar, tales como su nombre, estatus y descripción." />

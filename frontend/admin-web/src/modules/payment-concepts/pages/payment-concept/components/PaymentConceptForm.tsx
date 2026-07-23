@@ -40,7 +40,7 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
                         title="INFORMACIÓN GENERAL DEL CONCEPTO DE PAGO"
                         description="Registro de información básica del concepto de pago así como de montos y condonaciones." />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                         <div className="control-container">
                             <label className="label">Nombre del concepto de pago <span className="required">*</span>:</label>
@@ -59,6 +59,57 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
                                 errors.name && (
                                     <p className="error">
                                         El nombre del concepto de pago es obligatorio
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">Código del concepto de pago <span className="required">*</span>:</label>
+                            <Controller
+                                name="code"
+                                control={control}
+                                rules={{
+                                    required: "El código del concepto de pago es obligatorio",
+                                    pattern: {
+                                        value: /^[A-Za-z0-9_-]+$/,
+                                        message: "Solo se permiten letras, números, guiones y guiones bajos"
+                                    }
+                                }}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        type="text"
+                                        placeholder="Código del concepto de pago..."
+                                        onKeyDown={(e) => {
+                                            if (!/^[A-Za-z0-9_-]$/.test(e.key) &&
+                                                ![
+                                                    "Backspace",
+                                                    "Delete",
+                                                    "ArrowLeft",
+                                                    "ArrowRight",
+                                                    "Tab",
+                                                    "Home",
+                                                    "End"
+                                                ].includes(e.key)) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        maxLength={10}
+                                        onChange={(e) => {
+                                            field.onChange(
+                                                e.target.value
+                                                    .toUpperCase()
+                                                    .replace(/[^A-Z0-9]/g, "")
+                                            );
+                                        }}
+                                    />
+                                )}
+                            />
+                            {
+                                errors.code && (
+                                    <p className="error">
+                                        {errors.code.message}
                                     </p>
                                 )
                             }
@@ -104,6 +155,10 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
                                 )
                             }
                         </div>
+
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                         <div className="control-container">
                             <label className="label">¿Registro activo?:</label>
@@ -164,6 +219,7 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
                                 )
                             }
                         </div>
+
                     </div>
 
                 </section>
