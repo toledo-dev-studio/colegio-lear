@@ -1,17 +1,16 @@
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
-import { Spinner } from "@/shared/components/spinner/Spinner";
+import { Form } from "@/shared/components/form/Form";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { CardAlert } from "@/shared/components/card-alert/CardAlert";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import { EducationLevelGrid, type AvailableEducationLevel } from "./EducationLevelGrid";
 import type { AcademicLevelRequest } from "@/interfaces/requests/academic-level.request";
 import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
-import { CardAlert } from "@/shared/components/card-alert/CardAlert";
 
 interface Props {
     isNew: boolean;
@@ -21,7 +20,8 @@ interface Props {
 }
 
 export const AcademicLevelForm = ({ isNew, isSubmitting, academicLevelResponse, onSubmit }: Props) => {
-
+    // Component hooks & stores
+    const navigate = useNavigate();
     const { control, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<Partial<AcademicLevelRequest>>({
         defaultValues: {
             name: isValidValueWithDefault(academicLevelResponse?.name, ""),
@@ -74,110 +74,100 @@ export const AcademicLevelForm = ({ isNew, isSubmitting, academicLevelResponse, 
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
+            <Form moduleKey="academic-levels" isSubmitting={isSubmitting} onSubmit={handleSubmit(onSubmit)} onCancel={() => navigate("/payment-concepts")}>
 
-                {/* Academic level section */}
-                <SectionTitle
-                    title="INFORMACIÓN GENERAL DEL NIVEL ACADÉMICO"
-                    description="Registro de información básica del nivel académico." />
 
-                <section className="grid grid-cols-1 gap-8">
+                <section className="flex flex-col gap-y-6">
 
-                    <div className="control-container">
-                        <label className="label">Nombre del nivel académico <span className="required">*</span>:</label>
-                        <Controller
-                            name="name"
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => (
-                                <Input
-                                    {...field}
-                                    type="text"
-                                    placeholder="Nombre del nivel académico..."
-                                />
-                            )} />
-                        {
-                            errors.name && (
-                                <p className="error">
-                                    El nombre del nivel académico es obligatorio
-                                </p>
-                            )
-                        }
-                    </div>
+                    {/* Academic level section */}
+                    <SectionTitle
+                        title="INFORMACIÓN GENERAL DEL NIVEL ACADÉMICO"
+                        description="Registro de información básica del nivel académico." />
 
-                    <div className="control-container">
-                        <label className="label">¿Registro activo?:</label>
-                        <div className="flex items-center justify-center">
+                    <section className="grid grid-cols-1 gap-8">
+
+                        <div className="control-container">
+                            <label className="label">Nombre del nivel académico <span className="required">*</span>:</label>
                             <Controller
-                                name="isActive"
+                                name="name"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        type="text"
+                                        placeholder="Nombre del nivel académico..."
+                                    />
+                                )} />
+                            {
+                                errors.name && (
+                                    <p className="error">
+                                        El nombre del nivel académico es obligatorio
+                                    </p>
+                                )
+                            }
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">¿Registro activo?:</label>
+                            <div className="flex items-center justify-center">
+                                <Controller
+                                    name="isActive"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <label className="switch-control-container">
+                                            <div>
+                                                <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
+                                                <p className="description">El concepto de pago se encuentra activo o inactivo.</p>
+                                            </div>
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                        </label>
+                                    )}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">Descripción del nivel académico:</label>
+                            <Controller
+                                name="description"
                                 control={control}
                                 render={({ field }) => (
-                                    <label className="switch-control-container">
-                                        <div>
-                                            <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
-                                            <p className="description">El concepto de pago se encuentra activo o inactivo.</p>
-                                        </div>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                                    </label>
+                                    <Textarea
+                                        {...field}
+                                        placeholder="-"
+                                    />
                                 )}
                             />
                         </div>
-                    </div>
 
-                    <div className="control-container">
-                        <label className="label">Descripción del nivel académico:</label>
-                        <Controller
-                            name="description"
-                            control={control}
-                            render={({ field }) => (
-                                <Textarea
-                                    {...field}
-                                    placeholder="-"
-                                />
-                            )}
-                        />
-                    </div>
+                    </section>
 
-                </section>
-
-                {/* Education levels section */}
-                <section className="grid grid-cols-1 gap-8">
-                    { isNew && <CardAlert type="info" title="REGISTRO DE GRADOS ESCOLARES" message="Una vez que guardes la información básica correspondiente al nivel académico podrás configurar los grados escolares diponibles para el mismo." /> }
-                    {
-                        !isNew && (
-                            <>
-                                <SectionTitle
-                                    title="INFORMACIÓN DE GRADOS ESCOLARES DISPONIBLES"
-                                    description="Crea y edita la información de los grados escolares asociados al nivel académico." />
-
-                                <EducationLevelGrid
-                                    educationLevels={educationLevels}
-                                    handleAddEducationLevel={handleAddEducationLevel}
-                                    handleChangeEducationLevel={handleChangeEducationLevel}
-                                    handleRemoveEducationLevel={handleRemoveEducationLevel}
-                                    handleToggleEditEducationLevel={handleToggleEditEducationLevel}
-                                />
-                            </>
-                        )
-                    }
-                </section>
-
-                {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                    <Link to="/academic-levels">
-                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
-                            Cancelar
-                        </Button>
-                    </Link>
-                    <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar
+                    {/* Education levels section */}
+                    <section className="grid grid-cols-1 gap-8">
+                        {isNew && <CardAlert type="info" title="REGISTRO DE GRADOS ESCOLARES" message="Una vez que guardes la información básica correspondiente al nivel académico podrás configurar los grados escolares diponibles para el mismo." />}
                         {
-                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
+                            !isNew && (
+                                <>
+                                    <SectionTitle
+                                        title="INFORMACIÓN DE GRADOS ESCOLARES DISPONIBLES"
+                                        description="Crea y edita la información de los grados escolares asociados al nivel académico." />
+
+                                    <EducationLevelGrid
+                                        educationLevels={educationLevels}
+                                        handleAddEducationLevel={handleAddEducationLevel}
+                                        handleChangeEducationLevel={handleChangeEducationLevel}
+                                        handleRemoveEducationLevel={handleRemoveEducationLevel}
+                                        handleToggleEditEducationLevel={handleToggleEditEducationLevel}
+                                    />
+                                </>
+                            )
                         }
-                    </Button>
+                    </section>
+
                 </section>
 
-            </form>
+            </Form>
         </>
     )
 }

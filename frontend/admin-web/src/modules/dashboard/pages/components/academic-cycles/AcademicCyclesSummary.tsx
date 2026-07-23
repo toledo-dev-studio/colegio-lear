@@ -14,7 +14,7 @@ export const AcademicCyclesSummary = () => {
     return (
         <>
             <section data-testid="dash-academic-summary">
-                <SectionHeader label="Resumen de alumnos & ciclos escolares" tone="primary" />
+                <SectionHeader label="Resumen de alumnos & ciclos escolares" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-5">
                     <KpiCard
                         className="col-span-1 sm:col-span-2 lg:col-span-1"

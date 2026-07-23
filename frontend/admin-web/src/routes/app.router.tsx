@@ -16,10 +16,13 @@ import { ForbiddenRoute } from "./protected.router";
 import { ForbiddenPage } from "@/shared/pages/ForbiddenPage";
 import { studentsRouter } from "@/modules/students/routes/students.router";
 import academicCyclesRouter from "@/modules/academic-cycles/routes/academic-cycles.router";
+import homeRouter from "@/modules/home/routes/home.router";
 
 export const appRouter = createBrowserRouter([
     /** auth */
     ...authRouter,
+    /** home */
+    homeRouter,
     /** dashboard */
     dashboardRouter,
     /** my-account */

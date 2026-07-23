@@ -6,12 +6,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 interface Options {
     handleClickDelete: (item: SecurityRoleResponse) => void;
 }
 
 export const useSecurityRolesPageTable = ({ handleClickDelete }: Options) => {
+    // Check permissions
+    const canDelete = usePermission("security-roles", "can-delete");
+
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre",
@@ -67,6 +71,7 @@ export const useSecurityRolesPageTable = ({ handleClickDelete }: Options) => {
         {
             key: "delete",
             render: (item: SecurityRoleResponse) => (
+                canDelete &&
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"

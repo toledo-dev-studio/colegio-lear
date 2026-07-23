@@ -69,7 +69,7 @@ export const AcademicLevelPage = () => {
                     subtitle="Gestiona la información del nivel académico para que este disponible en el sistema" />
 
                 <div className="flex-1">
-                    <div className="flex flex-col min-h-full gap-8 mt-14">
+                    <div className="flex flex-col min-h-full gap-8 mt-5">
 
                         <AcademicLevelForm
                             isNew={id === "new"}

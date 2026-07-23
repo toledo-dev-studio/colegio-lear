@@ -4,69 +4,69 @@
     "fullName": "Adriana Sánchez Torres",
     "email": "adriana.sanchez@lear.edu",
     "createdAt": "2026-02-04",
-    "image": "https://i.pravatar.cc/150?img=25"
+    "avatar": "https://i.pravatar.cc/150?img=25"
   },
   {
     "id": "emp-02",
     "fullName": "Ricardo Guzmán Reyes",
     "email": "ricardo.guzman@lear.edu",
     "createdAt": "2026-01-28",
-    "image": "https://i.pravatar.cc/150?img=12"
+    "avatar": "https://i.pravatar.cc/150?img=12"
   },
   {
     "id": "emp-03",
     "fullName": "María Elena Rojas Pérez",
     "email": "maria.rojas@lear.edu",
     "createdAt": "2026-01-22",
-    "image": "https://i.pravatar.cc/150?img=45"
+    "avatar": "https://i.pravatar.cc/150?img=45"
   },
   {
     "id": "emp-04",
     "fullName": "Andrés Castillo López",
     "email": "andres.castillo@lear.edu",
     "createdAt": "2026-01-19",
-    "image": "https://i.pravatar.cc/150?img=32"
+    "avatar": "https://i.pravatar.cc/150?img=32"
   },
   {
     "id": "emp-05",
     "fullName": "Paulina Ortega Ruiz",
     "email": "paulina.ortega@lear.edu",
     "createdAt": "2026-01-15",
-    "image": "https://i.pravatar.cc/150?img=47"
+    "avatar": "https://i.pravatar.cc/150?img=47"
   },
   {
     "id": "emp-06",
     "fullName": "Fernando Salinas Cruz",
     "email": "fernando.salinas@lear.edu",
     "createdAt": "2026-01-10",
-    "image": "https://i.pravatar.cc/150?img=15"
+    "avatar": "https://i.pravatar.cc/150?img=15"
   },
   {
     "id": "emp-07",
     "fullName": "Diana Herrera Vargas",
     "email": "diana.herrera@lear.edu",
     "createdAt": "2026-01-08",
-    "image": "https://i.pravatar.cc/150?img=48"
+    "avatar": "https://i.pravatar.cc/150?img=48"
   },
   {
     "id": "emp-08",
     "fullName": "Jorge Martínez Aguilar",
     "email": "jorge.martinez@lear.edu",
     "createdAt": "2025-12-20",
-    "image": "https://i.pravatar.cc/150?img=17"
+    "avatar": "https://i.pravatar.cc/150?img=17"
   },
   {
     "id": "emp-09",
     "fullName": "Beatriz Navarro Solís",
     "email": "beatriz.navarro@lear.edu",
     "createdAt": "2025-12-14",
-    "image": "https://i.pravatar.cc/150?img=49"
+    "avatar": "https://i.pravatar.cc/150?img=49"
   },
   {
     "id": "emp-10",
     "fullName": "Roberto Mendoza Chávez",
     "email": "roberto.mendoza@lear.edu",
     "createdAt": "2025-12-05",
-    "image": "https://i.pravatar.cc/150?img=18"
+    "avatar": "https://i.pravatar.cc/150?img=18"
   }
 ]

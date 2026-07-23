@@ -1,6 +1,7 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider"
 
 import { cn } from "@/lib/extensions/utils"
+import { useFormPermission } from "../components/form/FormPermissionContext";
 
 function Slider({
   className,
@@ -16,6 +17,8 @@ function Slider({
       ? defaultValue
       : [min, max]
 
+  const { disabled } = useFormPermission();
+
   return (
     <SliderPrimitive.Root
       className={cn("data-horizontal:w-full data-vertical:h-full", className)}
@@ -26,6 +29,7 @@ function Slider({
       max={max}
       thumbAlignment="edge"
       {...props}
+      disabled={disabled || props.disabled}
     >
       <SliderPrimitive.Control className="relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col">
         <SliderPrimitive.Track

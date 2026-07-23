@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
@@ -12,6 +13,9 @@ interface Options {
 }
 
 export const useJobTitlesPageTable = ({ handleClickDelete }: Options) => {
+    // Check permissions
+    const canDelete = usePermission("job-titles", "can-delete");
+
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre",
@@ -78,6 +82,7 @@ export const useJobTitlesPageTable = ({ handleClickDelete }: Options) => {
         {
             key: "delete",
             render: (item: JobTitleResponse) => (
+                canDelete &&
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"

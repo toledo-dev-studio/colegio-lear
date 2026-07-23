@@ -72,7 +72,7 @@ export const SecurityRolePage = () => {
           subtitle="Getiona la información del rol de seguridad para estar dispoible en la organiación" />
 
         <div className="flex-1">
-          <section className="flex flex-col min-h-full gap-8 mt-14">
+          <section className="flex flex-col min-h-full gap-8 mt-5">
             <SecurityRoleForm
               securityRoleResponse={securityRoleQuery.data}
               isSubmitting={createUpdateSecurityRoleMutation.isPending}

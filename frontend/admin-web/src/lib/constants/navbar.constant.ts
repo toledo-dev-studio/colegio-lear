@@ -1,7 +1,7 @@
-import { LayoutDashboard, Fingerprint, BookOpen, Users, CalendarDays, GraduationCap, Ruler, Telescope, Wallet, Megaphone, ShieldCheck, UserCog, Briefcase } from "lucide-react";
+import { LayoutDashboard, Fingerprint, BookOpen, Users, CalendarDays, GraduationCap, Ruler, Telescope, Wallet, Megaphone, ShieldCheck, UserCog, Briefcase, Home } from "lucide-react";
 
 import type { Navbar } from "@/interfaces/components/navbar";
-import { ACADEMIC_LEVELS_MODULE, ACADEMIC_CYCLES_MODULE, ANNOUNCEMENTS_MODULE, DASHBOARD_MODULE, EMPLOYEES_MODULE, JOB_TITLES_MODULE, MY_ACCOUNT_MODULE, MY_CLASSES_MODULE, PAYMENT_CONCEPTS_MODULE, SCHOLARSHIPS_MODULE, SCHOOL_SUBJECTS_MODULE, SECURITY_ROLES_MODULE, STUDENTS_MODULE } from "@/lib/key-value-pairs/key-value-pair-modules";
+import { ACADEMIC_LEVELS_MODULE, ACADEMIC_CYCLES_MODULE, ANNOUNCEMENTS_MODULE, DASHBOARD_MODULE, EMPLOYEES_MODULE, JOB_TITLES_MODULE, MY_ACCOUNT_MODULE, MY_CLASSES_MODULE, PAYMENT_CONCEPTS_MODULE, SCHOLARSHIPS_MODULE, SCHOOL_SUBJECTS_MODULE, SECURITY_ROLES_MODULE, STUDENTS_MODULE, HOME_MODULE } from "@/lib/key-value-pairs/key-value-pair-modules";
 
 /**
  * Default navbar configuration for the application. 
@@ -11,51 +11,33 @@ export const NAVBAR: Navbar[] = [
     {
         title: "Accesos rápidos",
         items: [
-            { module: DASHBOARD_MODULE, icon: LayoutDashboard, testId: "nav-dashboard" },
-            { module: MY_ACCOUNT_MODULE, icon: Fingerprint, testId: "nav-my-account" },
-            { module: MY_CLASSES_MODULE, icon: BookOpen, testId: "nav-my-classes" },
-        ],
-    },
-    {
-        title: "Seguimiento escolar",
-        items: [
-            { module: STUDENTS_MODULE, icon: Users, testId: "nav-students" },
-            { module: ACADEMIC_CYCLES_MODULE, icon: CalendarDays, testId: "nav-academic-cycles" },
-            { module: ANNOUNCEMENTS_MODULE, icon: Megaphone, testId: "nav-announcements" },
-        ],
-    },
-    {
-        title: "Configuración escolar",
-        items: [
-            { module: ACADEMIC_LEVELS_MODULE, icon: Ruler, testId: "nav-academic-levels" },
-            { module: SCHOOL_SUBJECTS_MODULE, icon: GraduationCap, testId: "nav-school-subjects" },
-            { module: SCHOLARSHIPS_MODULE, icon: Telescope, testId: "nav-scholarships" },
-            { module: PAYMENT_CONCEPTS_MODULE, icon: Wallet, testId: "nav-payment-concepts" },
-        ],
-    },
-    {
-        title: "Seguridad",
-        items: [
-            { module: EMPLOYEES_MODULE, icon: UserCog, testId: "nav-employees" },
-            { module: JOB_TITLES_MODULE, icon: Briefcase, testId: "nav-job-titles" },
-            { module: SECURITY_ROLES_MODULE, icon: ShieldCheck, testId: "nav-security-roles" },
-        ],
-    },
-];
-
-/**
- * Quick access navbar configuration for the application. 
- * Each section contains a title and a list of items, where each item represents a module with its corresponding icon and test ID.
- */
-export const QUICK_ACCESS_NAVBAR: Navbar[] = [
-    {
-        title: "Accesos rápidos",
-        items: [
+            {
+                module: HOME_MODULE,
+                icon: Home,
+                description: "Accesos rápidos a los principales módulos del sistema.",
+                tone: "primary",
+                testId: "nav-home"
+            },
+            {
+                module: DASHBOARD_MODULE,
+                icon: LayoutDashboard,
+                description: "Métricas y KPIs de la operación completa.",
+                tone: "primary",
+                testId: "nav-dashboard"
+            },
             {
                 module: MY_ACCOUNT_MODULE,
                 icon: Fingerprint,
-                colorClass: "text-violet-500",
+                description: "Actualiza tu perfil y preferencias.",
+                tone: "sky",
                 testId: "nav-my-account"
+            },
+            {
+                module: MY_CLASSES_MODULE,
+                icon: BookOpen,
+                description: "Consulta tus grupos, materias y horarios asignados.",
+                tone: "violet",
+                testId: "nav-my-classes"
             },
         ],
     },
@@ -65,19 +47,22 @@ export const QUICK_ACCESS_NAVBAR: Navbar[] = [
             {
                 module: STUDENTS_MODULE,
                 icon: Users,
-                colorClass: "text-blue-500",
+                description: "Ficha del alumno, ciclos y cartera.",
+                tone: "emerald",
                 testId: "nav-students"
             },
             {
                 module: ACADEMIC_CYCLES_MODULE,
                 icon: CalendarDays,
-                colorClass: "text-amber-500",
+                description: "Grupos, horarios, materias y calendario.",
+                tone: "violet",
                 testId: "nav-academic-cycles"
             },
             {
                 module: ANNOUNCEMENTS_MODULE,
                 icon: Megaphone,
-                colorClass: "text-rose-500",
+                description: "Comunicados y notificaciones a la comunidad.",
+                tone: "sky",
                 testId: "nav-announcements"
             },
         ],
@@ -88,25 +73,29 @@ export const QUICK_ACCESS_NAVBAR: Navbar[] = [
             {
                 module: ACADEMIC_LEVELS_MODULE,
                 icon: Ruler,
-                colorClass: "text-cyan-500",
+                description: "Administra los niveles educativos del colegio.",
+                tone: "primary",
                 testId: "nav-academic-levels"
             },
             {
                 module: SCHOOL_SUBJECTS_MODULE,
                 icon: GraduationCap,
-                colorClass: "text-indigo-500",
+                description: "Catálogo de materias impartidas en la institución.",
+                tone: "violet",
                 testId: "nav-school-subjects"
             },
             {
                 module: SCHOLARSHIPS_MODULE,
                 icon: Telescope,
-                colorClass: "text-fuchsia-500",
+                description: "Gestiona becas y porcentajes de descuento.",
+                tone: "emerald",
                 testId: "nav-scholarships"
             },
             {
                 module: PAYMENT_CONCEPTS_MODULE,
                 icon: Wallet,
-                colorClass: "text-green-600",
+                description: "Catálogo de cargos aplicables a alumnos.",
+                tone: "amber",
                 testId: "nav-payment-concepts"
             },
         ],
@@ -117,19 +106,22 @@ export const QUICK_ACCESS_NAVBAR: Navbar[] = [
             {
                 module: EMPLOYEES_MODULE,
                 icon: UserCog,
-                colorClass: "text-orange-500",
+                description: "Personas con acceso al panel.",
+                tone: "rose",
                 testId: "nav-employees"
             },
             {
                 module: JOB_TITLES_MODULE,
                 icon: Briefcase,
-                colorClass: "text-stone-500",
+                description: "Estructura organizacional del colegio.",
+                tone: "primary",
                 testId: "nav-job-titles"
             },
             {
                 module: SECURITY_ROLES_MODULE,
                 icon: ShieldCheck,
-                colorClass: "text-red-600",
+                description: "Permisos granulares por módulo.",
+                tone: "emerald",
                 testId: "nav-security-roles"
             },
         ],

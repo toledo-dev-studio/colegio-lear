@@ -10,10 +10,12 @@ import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useSecurityRolesPageTable } from "./hooks/useSecurityRolesPageTable";
 import { SecurityRolesAdvancedFilters } from "./components/SecurityRolesAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const SecurityRolesPage = () => {
     // Component hooks & stores
     const navigate = useNavigate();
+    const canWrite = usePermission("security-roles", "can-write");
     const { loader, advancedFilters, deleteModal, queries, mutations } = useSecurityRolesPage();
     const { columns, properties, actions } = useSecurityRolesPageTable({ handleClickDelete: deleteModal.open });
 
@@ -71,7 +73,7 @@ export const SecurityRolesPage = () => {
 
                 {/* Table ribbon options */}
                 <TableRibbon
-                    addButton={{ handleClick: () => navigate("/security-roles/new") }}
+                    addButton={{ show: canWrite, handleClick: () => navigate("/security-roles/new") }}
                     filterButton={{ handleClick: advancedFilters.open }}
                     exportButton={{ handleClick: handleClickExport }}
                     searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}

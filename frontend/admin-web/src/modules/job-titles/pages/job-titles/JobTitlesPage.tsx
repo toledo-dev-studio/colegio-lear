@@ -10,10 +10,12 @@ import { useJobTitlesPageTable } from "./hooks/useJobTitlesPageTable";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { JobTitlesAdvancedFilters } from "./components/JobTitlesAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const JobTitlesPage = () => {
   // Component hooks & stores
   const navigate = useNavigate();
+  const canWrite = usePermission("job-titles", "can-write");
   const { loader, advancedFilters, deleteModal, queries, mutations } = useJobTitlesPage();
   const { columns, properties, actions } = useJobTitlesPageTable({ handleClickDelete: deleteModal.open });
 
@@ -69,7 +71,7 @@ export const JobTitlesPage = () => {
 
         {/* Table ribbon options */}
         <TableRibbon
-          addButton={{ handleClick: () => navigate("/job-titles/new") }}
+          addButton={{ show: canWrite, handleClick: () => navigate("/job-titles/new") }}
           filterButton={{ handleClick: advancedFilters.open }}
           exportButton={{ handleClick: handleClickExport }}
           searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}

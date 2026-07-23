@@ -1,10 +1,10 @@
-import { Navigate } from "react-router";
+import { Navigate, useLocation } from "react-router";
 import { type PropsWithChildren } from "react"
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
 import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 
 interface AuthenticatedRouteProps extends PropsWithChildren {
-    moduleKey: ModuleKey,
+    moduleKey?: ModuleKey,
 }
 
 /**
@@ -13,6 +13,7 @@ interface AuthenticatedRouteProps extends PropsWithChildren {
  * @returns Children, null or redirect view depending auth status.
  */
 export const AuthenticatedRoute = ({ moduleKey, children }: AuthenticatedRouteProps) => {
+    const location = useLocation();
     const { authStatus, user, permissions } = useAuthStore();
 
     if (authStatus === "checking")
@@ -25,13 +26,17 @@ export const AuthenticatedRoute = ({ moduleKey, children }: AuthenticatedRoutePr
     if (authStatus === "authenticated" && user?.mustChangePassword === true)
         return <Navigate to="/auth/reset-password" />;
 
-    // If user is authenticated and has read permission to a module return the view
-    if (authStatus === "authenticated" && permissions.some(permission => permission.moduleKey === moduleKey && permission.canRead))
-        return children;
-
     // Check if user is authenticated and does not have any permission
     if (!permissions.some(permission => permission.canRead))
         return <Navigate to="/forbidden" />
+
+    // If user is authenticated and try to access to /home return the view 
+    if (authStatus === "authenticated" && location.pathname === "/home")
+        return children;
+    
+    // If user is authenticated and has read permission to a module return the view
+    if (authStatus === "authenticated" && permissions.some(permission => permission.moduleKey === moduleKey && permission.canRead))
+        return children;
 
     // If user is authenticated and has read permission for others module except dashboard, redirect to first one
     const firstModule = permissions.find(permission => permission.canRead);

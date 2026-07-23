@@ -26,10 +26,7 @@ export const NotFoundPage = () => {
                     </p>
 
                     <div className="mt-8">
-                        <Link
-                            to="/dashboard"
-                            className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                        >
+                        <Link to="/home" className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
                             Ir al inicio
                         </Link>
                     </div>

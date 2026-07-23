@@ -14,7 +14,7 @@ export const AnnouncementsSummary = () => {
     return (
         <>
             <section data-testid="dash-announcement-summary">
-                <SectionHeader label="Resumen de campañas" tone="emerald" />
+                <SectionHeader label="Resumen de campañas" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <KpiCard
                         label="Comunicados & campañas activas"

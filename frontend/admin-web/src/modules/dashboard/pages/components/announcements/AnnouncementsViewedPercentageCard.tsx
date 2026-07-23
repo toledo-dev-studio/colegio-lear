@@ -22,7 +22,7 @@ export const AnnouncementsViewedPercentageCard: React.FC<Props> = ({ value, load
             data-testid="dash-announcements-viewed"
         >
             <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-sky-500/10 text-sky-600">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-sky-500/10 text-sky-600">
                     <Eye className="w-5 h-5" />
                 </div>
                 <ArrowUpRight className={cn("w-4 h-4 text-muted-foreground cursor-pointer")} onClick={() => navigate("/announcements")} />

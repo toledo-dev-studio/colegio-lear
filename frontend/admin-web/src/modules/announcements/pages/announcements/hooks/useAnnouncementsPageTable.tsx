@@ -2,19 +2,23 @@ import { Link } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
-import { formatFriendlyDate } from "@/lib/extensions/formatters";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import type { TableAction } from "@/shared/components/table/interfaces/table-action";
-import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
-import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { formatFriendlyDate } from "@/lib/extensions/formatters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import type { TableAction } from "@/shared/components/table/interfaces/table-action";
+import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
+import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 
 interface Options {
     handleClickDelete: (item: AnnouncementResponse) => void;
 }
 
 export const useAnnouncementsPageTable = ({ handleClickDelete }: Options) => {
+    // Check permissions
+    const canDelete = usePermission("announcements", "can-delete");
+
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre & descripción",
@@ -98,6 +102,7 @@ export const useAnnouncementsPageTable = ({ handleClickDelete }: Options) => {
         {
             key: "delete",
             render: (item: AnnouncementResponse) => (
+                canDelete &&
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"
