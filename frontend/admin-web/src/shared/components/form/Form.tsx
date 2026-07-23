@@ -9,11 +9,12 @@ import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 interface Props extends PropsWithChildren {
     isSubmitting: boolean;
     moduleKey: ModuleKey;
+    showCancelButton?: boolean;
     onSubmit: () => void;
-    onCancel: () => void;
+    onCancel?: () => void;
 }
 
-export const Form = ({ isSubmitting, moduleKey, onSubmit, onCancel, children }: Props) => {
+export const Form = ({ isSubmitting, moduleKey, showCancelButton = true, onSubmit, onCancel, children }: Props) => {
     const canWrite = usePermission(moduleKey, "can-write");
 
     return (
@@ -26,9 +27,12 @@ export const Form = ({ isSubmitting, moduleKey, onSubmit, onCancel, children }: 
 
                 {/* Actions Buttons */}
                 <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                    <Button type="button" aria-label="cancel" variant={"ghost"} onClick={onCancel}>
-                        Cancelar
-                    </Button>
+
+                    {showCancelButton &&
+                        <Button type="button" aria-label="cancel" variant={"ghost"} onClick={onCancel && onCancel}>
+                            Cancelar
+                        </Button>
+                    }
                     {
                         canWrite && (
                             <Button type="submit" disabled={!canWrite} aria-label="save-record">

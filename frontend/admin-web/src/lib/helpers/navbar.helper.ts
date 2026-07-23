@@ -14,7 +14,7 @@ export const filterNavbarByPermissions = (navbar: Navbar[], permissions: Securit
             ...section,
             // Keep only allowed modules
             items: section.items.filter((item) =>
-                allowedModules.has(item.module.key)
+                item.module.key === "home" || allowedModules.has(item.module.key)
             ),
         }))
         // Remove empty sections

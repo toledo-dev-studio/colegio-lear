@@ -1,11 +1,10 @@
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
-import { Spinner } from "@/shared/components/spinner/Spinner";
+import { Form } from "@/shared/components/form/Form";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { JobTitleRequest } from "@/interfaces/requests/job-title.request";
@@ -20,6 +19,9 @@ interface Props {
 }
 
 export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props) => {
+    // Component hooks & stores
+    const navigate = useNavigate();
+
     // Use react hook form configuration
     const { control, handleSubmit, formState: { errors } } = useForm<Partial<JobTitleRequest>>({
         defaultValues: {
@@ -32,126 +34,115 @@ export const JobTitleForm = ({ jobTitleResponse, isSubmitting, onSubmit }: Props
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
+            <Form moduleKey="job-titles" isSubmitting={isSubmitting} onSubmit={handleSubmit(onSubmit)} onCancel={() => navigate("/job-titles")}>
 
-                {/* General section */}
-                <SectionTitle
-                    title="INFORMACIÓN GENERAL DEL PUESTO DE TRABAJO"
-                    description="Registro de información básica del puesto de trabajo en la organización." />
+                <section className="flex flex-col gap-y-6">
 
-                <section className="flex items-center flex-col gap-8">
+                    {/* General section */}
+                    <SectionTitle
+                        title="INFORMACIÓN GENERAL DEL PUESTO DE TRABAJO"
+                        description="Registro de información básica del puesto de trabajo en la organización." />
 
-                    <section className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <section className="flex items-center flex-col gap-8">
+
+                        <section className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="control-container">
+                                <label className="label">Nombre del puesto de trabajo <span className="required">*</span>:</label>
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            type="text"
+                                            placeholder="Nombre del puesto de trabajo..."
+                                        />
+                                    )} />
+                                {
+                                    errors.name && (
+                                        <p className="error">
+                                            El nombre del puesto de trabajo es obligatorio
+                                        </p>
+                                    )
+                                }
+                            </div>
+
+                            <div className="control-container">
+                                <label className="label">Tipo de puesto de trabajo <span className="required">*</span>:</label>
+                                <Controller
+                                    control={control}
+                                    name="jobTitleType"
+                                    rules={{ required: true }}
+                                    render={({ field }) => (
+                                        <Select
+                                            value={field.value ?? ""}
+                                            onValueChange={field.onChange}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Selecciona un puesto de trabajo">
+                                                    {field.value === "teacher" && "Docente"}
+                                                    {field.value === "administrative-staff" && "Administrativo"}
+                                                    {!field.value && "Selecciona una opción"}
+                                                </SelectValue>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Tipos de puesto de trabajo</SelectLabel>
+                                                    <SelectItem value="administrative-staff" label="Administrativo">Administrativo</SelectItem>
+                                                    <SelectItem value="teacher" label="Docente">Docente</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    )}
+                                />
+                                {
+                                    errors.jobTitleType && (
+                                        <p className="error">
+                                            El tipo de puesto de trabajo es obligatorio
+                                        </p>
+                                    )
+                                }
+                            </div>
+                        </section>
+
                         <div className="control-container">
-                            <label className="label">Nombre del puesto de trabajo <span className="required">*</span>:</label>
-                            <Controller
-                                name="name"
-                                control={control}
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                    <Input
-                                        {...field}
-                                        type="text"
-                                        placeholder="Nombre del puesto de trabajo..."
-                                    />
-                                )} />
-                            {
-                                errors.name && (
-                                    <p className="error">
-                                        El nombre del puesto de trabajo es obligatorio
-                                    </p>
-                                )
-                            }
+                            <label className="label">¿Registro activo?:</label>
+                            <div className="flex items-center justify-center">
+                                <Controller
+                                    name="isActive"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <label className="switch-control-container">
+                                            <div>
+                                                <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
+                                                <p className="description">El puesto de trabajo se encuentra activo o inactivo.</p>
+                                            </div>
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                        </label>
+                                    )}
+                                />
+                            </div>
                         </div>
 
                         <div className="control-container">
-                            <label className="label">Tipo de puesto de trabajo <span className="required">*</span>:</label>
+                            <label className="label">Descripción del puesto de trabajo:</label>
                             <Controller
+                                name="description"
                                 control={control}
-                                name="jobTitleType"
-                                rules={{ required: true }}
                                 render={({ field }) => (
-                                    <Select
-                                        value={field.value ?? ""}
-                                        onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Selecciona un puesto de trabajo">
-                                                {field.value === "teacher" && "Docente"}
-                                                {field.value === "administrative-staff" && "Administrativo"}
-                                                {!field.value && "Selecciona una opción"}
-                                            </SelectValue>
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>Tipos de puesto de trabajo</SelectLabel>
-                                                <SelectItem value="administrative-staff" label="Administrativo">Administrativo</SelectItem>
-                                                <SelectItem value="teacher" label="Docente">Docente</SelectItem>
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
+                                    <Textarea
+                                        {...field}
+                                        placeholder="-"
+                                    />
                                 )}
                             />
-                            {
-                                errors.jobTitleType && (
-                                    <p className="error">
-                                        El tipo de puesto de trabajo es obligatorio
-                                    </p>
-                                )
-                            }
                         </div>
+
                     </section>
 
-                    <div className="control-container">
-                        <label className="label">¿Registro activo?:</label>
-                        <div className="flex items-center justify-center">
-                            <Controller
-                                name="isActive"
-                                control={control}
-                                render={({ field }) => (
-                                    <label className="switch-control-container">
-                                        <div>
-                                            <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
-                                            <p className="description">El puesto de trabajo se encuentra activo o inactivo.</p>
-                                        </div>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                                    </label>
-                                )}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="control-container">
-                        <label className="label">Descripción del puesto de trabajo:</label>
-                        <Controller
-                            name="description"
-                            control={control}
-                            render={({ field }) => (
-                                <Textarea
-                                    {...field}
-                                    placeholder="-"
-                                />
-                            )}
-                        />
-                    </div>
-
                 </section>
 
-                {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                    <Link to="/job-titles">
-                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
-                            Cancelar
-                        </Button>
-                    </Link>
-                    <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar
-                        {
-                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
-                        }
-                    </Button>
-                </section>
-
-            </form>
+            </Form>
         </>
     )
 }

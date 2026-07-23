@@ -17,6 +17,14 @@ export type ModuleKey =
     | "job-titles"
     | "security-roles";
 
+export const HOME_MODULE: Module = {
+    key: "home",
+    label: "Home",
+    permissions: {
+        canRead: true,
+    }
+};
+
 export const DASHBOARD_MODULE: Module = {
     key: "dashboard",
     label: "Dashboard",

@@ -10,10 +10,12 @@ import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useAcademicLevelsPageTable } from "./hooks/useAcademicLevelsPageTable";
 import { AcademicLevelsAdvancedFilters } from "./components/AcademicLevelsAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const AcademicLevelsPage = () => {
   // Component hooks & stores
   const navigate = useNavigate();
+  const canWrite = usePermission("academic-levels", "can-write");
   const { loader, advancedFilters, deleteModal, queries, mutations } = useAcademicLevelsPage();
   const { columns, properties, actions } = useAcademicLevelsPageTable({ handleClickDelete: deleteModal.open });
 
@@ -71,7 +73,7 @@ export const AcademicLevelsPage = () => {
 
         {/* Table ribbon options */}
         <TableRibbon
-          addButton={{ handleClick: () => navigate("/academic-levels/new") }}
+          addButton={{ show: canWrite, handleClick: () => navigate("/academic-levels/new") }}
           filterButton={{ handleClick: advancedFilters.open }}
           exportButton={{ handleClick: handleClickExport }}
           searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}

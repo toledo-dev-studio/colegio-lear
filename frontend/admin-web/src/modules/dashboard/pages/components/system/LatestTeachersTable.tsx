@@ -35,7 +35,7 @@ export const LatestTeachersTable: React.FC<Props> = ({ data, loading }) => (
                 {(data ?? []).map((t) => (
                     <li key={t.id}>
                         <Link to={`/employees/${t.id}`} className="py-3 flex items-center gap-4">
-                            <img src={t.image} alt={t.fullName} className="w-10 h-10 rounded-full object-cover" />
+                            <img src={t.avatar} alt={t.fullName} className="w-10 h-10 rounded-full object-cover" />
                             <div className="flex-1 min-w-0">
                                 <p className="font-medium text-foreground truncate">{t.fullName}</p>
                                 <p className="text-xs text-muted-foreground truncate">{t.email}</p>

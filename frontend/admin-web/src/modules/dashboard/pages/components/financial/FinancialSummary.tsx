@@ -11,7 +11,7 @@ export const FinancialSummary = () => {
     return (
         <>
             <section data-testid="dash-payment-summary">
-                <SectionHeader label="Resumen financiero de ciclos escolares" tone="sky" />
+                <SectionHeader label="Resumen financiero de ciclos escolares" />
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-5">
                     <KpiCard
                         label="Total pagado"

@@ -25,11 +25,11 @@ export const TopGroupsTable: React.FC<Props> = ({ data, loading }) => {
         >
             <div className="flex items-center gap-2 mb-5">
                 <Trophy className="w-4 h-4 text-amber-600" />
-                <h3 className="font-heading font-bold text-lg">Top 5 grupos con mejor promedio</h3>
+                <h3 className="font-heading font-bold text-lg">Top 3 grupos con mejor promedio</h3>
             </div>
             {loading ? (
                 <ul className="divide-y divide-border">
-                    {Array.from({ length: 5 }).map((_, i) => (
+                    {Array.from({ length: 3 }).map((_, i) => (
                         <li key={i} className="py-3 flex items-center gap-4">
                             <Skeleton className="w-8 h-8 rounded-full" />
                             <div className="flex-1 space-y-2">

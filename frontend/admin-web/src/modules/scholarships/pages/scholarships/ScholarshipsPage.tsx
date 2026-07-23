@@ -10,10 +10,12 @@ import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useScholarshipsPageTable } from "./hooks/useScholarshipsPageTable";
 import { ScholarshipsAdvancedFilters } from "./components/ScholarshipsAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const ScholarshipsPage = () => {
     // Component hooks & stores
     const navigate = useNavigate();
+    const canWrite = usePermission("scholarships", "can-write");
     const { loader, advancedFilters, deleteModal, queries, mutations } = useScholarshipsPage();
     const { columns, properties, actions } = useScholarshipsPageTable({ handleClickDelete: deleteModal.open });
 
@@ -70,10 +72,9 @@ export const ScholarshipsPage = () => {
 
                 <PageTitle title="Becas escolares" subtitle="Gestiona las becas escolares que estarán disponibles en el colegio" />
 
-
                 {/* Table ribbon options */}
                 <TableRibbon
-                    addButton={{ handleClick: () => navigate("/scholarships/new") }}
+                    addButton={{ show: canWrite, handleClick: () => navigate("/scholarships/new") }}
                     filterButton={{ handleClick: advancedFilters.open }}
                     exportButton={{ handleClick: handleClickExport }}
                     searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}

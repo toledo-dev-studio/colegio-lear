@@ -2,17 +2,21 @@ import { Link } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
-import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 
 interface Options {
     handleClickDelete: (item: EmployeeResponse) => void;
 }
 
 export const useEmployeesPageTable = ({ handleClickDelete }: Options) => {
+    // Check permissions
+    const canDelete = usePermission("employees", "can-delete");
+
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre completo",
@@ -78,6 +82,7 @@ export const useEmployeesPageTable = ({ handleClickDelete }: Options) => {
         {
             key: "delete",
             render: (item: EmployeeResponse) => (
+                canDelete && 
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"

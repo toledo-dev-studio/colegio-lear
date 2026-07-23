@@ -70,7 +70,7 @@ export const JobTitlePage = () => {
           subtitle="Getiona la información del puesto de trabajo para que este dispoible en la organiación" />
 
         <div className="flex-1">
-          <div className="flex flex-col min-h-full gap-8 mt-14">
+          <div className="flex flex-col min-h-full gap-8 mt-5">
 
             <JobTitleForm
               jobTitleResponse={jobTitleQuery.data}

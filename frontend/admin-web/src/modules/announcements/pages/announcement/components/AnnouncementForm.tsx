@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
 import { Switch } from "@/shared/ui/switch";
-import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { AttachmentsGrid } from "./AttachmentsGrid";
-import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { CardAlert } from "@/shared/components/card-alert/CardAlert";
 import { TextEditor } from "@/shared/components/text-editor/TextEditor";
@@ -19,6 +17,7 @@ import type { AttachmentResponse } from "@/interfaces/responses/attachment.respo
 import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { getKeys, getKeyValuePairsByKeys } from "@/lib/key-value-pairs/key-value-pair";
+import { Form } from "@/shared/components/form/Form";
 
 interface Props {
     isNew: boolean;
@@ -28,7 +27,8 @@ interface Props {
 }
 
 export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, onSubmit }: Props) => {
-
+    // Component hooks & stores
+    const navigate = useNavigate();
     const [attachments, setAttachments] = useState<AttachmentResponse[]>(announcementResponse?.attachments ?? []);
     const { control, handleSubmit, formState: { errors } } = useForm<Partial<AnnouncementRequest>>({
         defaultValues: {
@@ -44,82 +44,35 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
+            <Form moduleKey="announcements" isSubmitting={isSubmitting} onSubmit={handleSubmit(onSubmit)} onCancel={() => navigate("/announcements")}>
 
-                <SectionTitle
-                    title="INFORMACIÓN GENERAL DE LA CAMPAÑA"
-                    description="Registro de información básica de la campaña." />
+                <section className="flex flex-col gap-y-6">
 
-                <div className="grid grid-cols-1 gap-8">
+                    <SectionTitle
+                        title="INFORMACIÓN GENERAL DE LA CAMPAÑA"
+                        description="Registro de información básica de la campaña." />
 
-                    <div className="control-container">
-                        <label className="label">
-                            Nombre de la campaña <span className="required">*</span>
-                        </label>
-                        <Controller
-                            name="name"
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => (
-                                <Input
-                                    {...field}
-                                    type="text"
-                                    placeholder="Nombre de la campaña..."
-                                />
-                            )} />
-                        {
-                            errors.name && (
-                                <p className="error">
-                                    El nombre de la campaña es obligatorio
-                                </p>
-                            )
-                        }
-                    </div>
-
-                    <div className="control-container">
-                        <label className="label">
-                            Audiencia a la que va dirigida de la campaña <span className="required">*</span>:
-                        </label>
-                        <Controller
-                            name="audience"
-                            control={control}
-                            rules={{ validate: (v) => (v && v.length > 0) || "Selecciona al menos una audiencia" }}
-                            render={({ field }) => (
-                                <MultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE_TYPES} value={getKeyValuePairsByKeys(AUDIENCE_TYPES, field.value as any) || []} onChange={(value) => field.onChange(getKeys(value))} />
-                            )}
-                        />
-                        {
-                            errors.audience && (
-                                <p className="error">
-                                    {errors.audience.message as string}
-                                </p>
-                            )
-                        }
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 gap-8">
 
                         <div className="control-container">
                             <label className="label">
-                                Fecha de publicación <span className="required">*</span>:
+                                Nombre de la campaña <span className="required">*</span>
                             </label>
                             <Controller
-                                name="publishedAt"
+                                name="name"
                                 control={control}
                                 rules={{ required: true }}
                                 render={({ field }) => (
-                                    <DatePicker
+                                    <Input
                                         {...field}
-                                        value={field.value}
-                                        onChange={field.onChange}
+                                        type="text"
+                                        placeholder="Nombre de la campaña..."
                                     />
-                                )}
-                            />
-                            <p className="control-info">A partir de que fecha la campaña estará disponible</p>
+                                )} />
                             {
-                                errors.publishedAt && (
+                                errors.name && (
                                     <p className="error">
-                                        La fecha de publicación de la campaña es obligatoria
+                                        El nombre de la campaña es obligatorio
                                     </p>
                                 )
                             }
@@ -127,145 +80,180 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
 
                         <div className="control-container">
                             <label className="label">
-                                Fecha de vencimiento <span className="required">*</span>:
+                                Audiencia a la que va dirigida de la campaña <span className="required">*</span>:
                             </label>
                             <Controller
-                                name="expiresAt"
+                                name="audience"
                                 control={control}
-                                rules={{ required: true }}
+                                rules={{ validate: (v) => (v && v.length > 0) || "Selecciona al menos una audiencia" }}
                                 render={({ field }) => (
-                                    <DatePicker
-                                        {...field}
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                    />
+                                    <MultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE_TYPES} value={getKeyValuePairsByKeys(AUDIENCE_TYPES, field.value as any) || []} onChange={(value) => field.onChange(getKeys(value))} />
                                 )}
                             />
-                            <p className="control-info">Hasta que fecha la campaña estará disponible</p>
                             {
-                                errors.expiresAt && (
+                                errors.audience && (
                                     <p className="error">
-                                        La fecha de vencimiento de la campaña es obligatoria
+                                        {errors.audience.message as string}
                                     </p>
                                 )
                             }
                         </div>
-                    </div>
 
-                    <div className="control-container">
-                        <label className="label">¿Registro activo?:</label>
-                        <div className="flex items-center justify-center">
-                            <Controller
-                                name="isActive"
-                                control={control}
-                                render={({ field }) => (
-                                    <label className="switch-control-container">
-                                        <div>
-                                            <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
-                                            <p className="description">La campaña / comunicado se encuentra activa o inactiva.</p>
-                                        </div>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                                    </label>
-                                )}
-                            />
-                        </div>
-                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                    <div className="control-container">
-                        <label className="label">Descripción de la campaña:</label>
-                        <Controller
-                            name="description"
-                            control={control}
-                            render={({ field }) => (
-                                <Textarea
-                                    {...field}
-                                    placeholder="-"
-                                />
-                            )}
-                        />
-                    </div>
-
-                </div>
-
-                {/* Content and Attachments for new announcements */}
-                {
-                    isNew && (
-                        <>
-                            <CardAlert
-                                type="info"
-                                title="CONTENIDO DE LA CAMPAÑA & ARCHIVOS ADJUNTOS"
-                                message="Una vez guardada la información general de la campaña, podrás agregar el contenido que se mostrará a los usuarios dentro del diseño de la campaña, así como también subir archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace público. Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB." />
-                        </>
-                    )
-                }
-
-                {/* Content and Attachments for existing announcements */}
-                {
-                    !isNew && (
-                        <>
-                            {/* Attachments */}
-                            <section className="flex flex-col gap-y-4">
-                                <SectionTitle
-                                    title="ARCHIVOS ADJUNTOS"
-                                    description="Sube archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace públic. Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB." />
-                                <div className="mt-2">
-                                    <AttachmentsGrid
-                                        announcementId={announcementResponse?.id!}
-                                        attachments={attachments}
-                                        onChange={(attachments) => setAttachments(attachments)}
-                                    />
-                                </div>
-                            </section>
-
-                            {/* TipTap text editor */}
-                            <section className="flex flex-col gap-y-6">
-                                <SectionTitle
-                                    title="CONTENIDO DE LA CAMPAÑA"
-                                    description="Edita el contenido de la plantilla para la campaña actual" />
-
-                                <div className="grid grid-cols-1 gap-8">
-                                    <div className="control-container">
-                                        <Controller
-                                            name="content"
-                                            control={control}
-                                            rules={{
-                                                validate: (v) => {
-                                                    const text = (v || "").replace(/<[^>]+>/g, "").trim();
-                                                    return text.length > 0 || "El contenido de la campaña no puede estar vacío";
-                                                },
-                                            }}
-                                            render={({ field }) => <TextEditor value={field.value ?? ""} onChange={field.onChange} />}
+                            <div className="control-container">
+                                <label className="label">
+                                    Fecha de publicación <span className="required">*</span>:
+                                </label>
+                                <Controller
+                                    name="publishedAt"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            {...field}
+                                            value={field.value}
+                                            onChange={field.onChange}
                                         />
-                                        {
-                                            errors.content && (
-                                                <p className="error">
-                                                    {errors.content.message as string}
-                                                </p>
-                                            )
-                                        }
+                                    )}
+                                />
+                                <p className="control-info">A partir de que fecha la campaña estará disponible</p>
+                                {
+                                    errors.publishedAt && (
+                                        <p className="error">
+                                            La fecha de publicación de la campaña es obligatoria
+                                        </p>
+                                    )
+                                }
+                            </div>
+
+                            <div className="control-container">
+                                <label className="label">
+                                    Fecha de vencimiento <span className="required">*</span>:
+                                </label>
+                                <Controller
+                                    name="expiresAt"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            {...field}
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                        />
+                                    )}
+                                />
+                                <p className="control-info">Hasta que fecha la campaña estará disponible</p>
+                                {
+                                    errors.expiresAt && (
+                                        <p className="error">
+                                            La fecha de vencimiento de la campaña es obligatoria
+                                        </p>
+                                    )
+                                }
+                            </div>
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">¿Registro activo?:</label>
+                            <div className="flex items-center justify-center">
+                                <Controller
+                                    name="isActive"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <label className="switch-control-container">
+                                            <div>
+                                                <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
+                                                <p className="description">La campaña / comunicado se encuentra activa o inactiva.</p>
+                                            </div>
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                        </label>
+                                    )}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="control-container">
+                            <label className="label">Descripción de la campaña:</label>
+                            <Controller
+                                name="description"
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea
+                                        {...field}
+                                        placeholder="-"
+                                    />
+                                )}
+                            />
+                        </div>
+
+                    </div>
+
+                    {/* Content and Attachments for new announcements */}
+                    {
+                        isNew && (
+                            <>
+                                <CardAlert
+                                    type="info"
+                                    title="CONTENIDO DE LA CAMPAÑA & ARCHIVOS ADJUNTOS"
+                                    message="Una vez guardada la información general de la campaña, podrás agregar el contenido que se mostrará a los usuarios dentro del diseño de la campaña, así como también subir archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace público. Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB." />
+                            </>
+                        )
+                    }
+
+                    {/* Content and Attachments for existing announcements */}
+                    {
+                        !isNew && (
+                            <>
+                                {/* Attachments */}
+                                <section className="flex flex-col gap-y-4">
+                                    <SectionTitle
+                                        title="ARCHIVOS ADJUNTOS"
+                                        description="Sube archivos complementarios para poder utilizarlos dentro del diseño de la campaña por medio de su enlace públic. Recuerda que pueden ser imágenes, documentos, hojas de cálculo y/o presentaciones no mayores a 10MB." />
+                                    <div className="mt-2">
+                                        <AttachmentsGrid
+                                            announcementId={announcementResponse?.id!}
+                                            attachments={attachments}
+                                            onChange={(attachments) => setAttachments(attachments)}
+                                        />
                                     </div>
-                                </div>
-                            </section>
-                        </>
-                    )
-                }
+                                </section>
 
-                {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                    <Link to="/announcements">
-                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
-                            Cancelar
-                        </Button>
-                    </Link>
-                    <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar
-                        {
-                            isSubmitting && (<Spinner variant="primary" className="ml-4" />)
-                        }
-                    </Button>
+                                {/* TipTap text editor */}
+                                <section className="flex flex-col gap-y-6">
+                                    <SectionTitle
+                                        title="CONTENIDO DE LA CAMPAÑA"
+                                        description="Edita el contenido de la plantilla para la campaña actual" />
+
+                                    <div className="grid grid-cols-1 gap-8">
+                                        <div className="control-container">
+                                            <Controller
+                                                name="content"
+                                                control={control}
+                                                rules={{
+                                                    validate: (v) => {
+                                                        const text = (v || "").replace(/<[^>]+>/g, "").trim();
+                                                        return text.length > 0 || "El contenido de la campaña no puede estar vacío";
+                                                    },
+                                                }}
+                                                render={({ field }) => <TextEditor value={field.value ?? ""} onChange={field.onChange} />}
+                                            />
+                                            {
+                                                errors.content && (
+                                                    <p className="error">
+                                                        {errors.content.message as string}
+                                                    </p>
+                                                )
+                                            }
+                                        </div>
+                                    </div>
+                                </section>
+                            </>
+                        )
+                    }
+
                 </section>
-
-            </form>
+            </Form>
         </>
     )
 }

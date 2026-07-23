@@ -28,7 +28,7 @@ export const LoginPage = () => {
         const isSuccess = await login(credentials);
         hideLoading();
         if (isSuccess) {
-            navigate("/dashboard");
+            navigate("/home");
             return;
         }
         toast.error("Correo y/o contraseña no validos", { position: "top-right" });

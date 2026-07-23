@@ -10,10 +10,12 @@ import { useEmployeesPageTable } from "./hooks/useEmployeesPageTable";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { EmployeesAdvancedFilters } from "./components/EmployeesAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const EmployeesPage = () => {
   // Component hooks & stores
   const navigate = useNavigate();
+  const canWrite = usePermission("employees", "can-write");
   const { loader, advancedFilters, deleteModal, queries, mutations } = useEmployeesPage();
   const { columns, properties, actions } = useEmployeesPageTable({ handleClickDelete: deleteModal.open });
 
@@ -75,7 +77,7 @@ export const EmployeesPage = () => {
 
         {/* Table ribbon options */}
         <TableRibbon
-          addButton={{ handleClick: () => navigate("/employees/new") }}
+          addButton={{ show: canWrite, handleClick: () => navigate("/employees/new") }}
           filterButton={{ handleClick: advancedFilters.open }}
           exportButton={{ handleClick: handleClickExport }}
           searchInput={{ tooltip: "Búsqueda general por nombre, email & usuario", placeholder: "Búsqueda general por nombre, email & usuario" }}

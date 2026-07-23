@@ -69,7 +69,7 @@ export const AnnouncementPage = () => {
           subtitle="Gestiona las campañas & comunicados disponibles en el colegio y la organización" />
 
         <div className="flex-1">
-          <section className="flex flex-col min-h-full gap-8 mt-14">
+          <section className="flex flex-col min-h-full gap-8 mt-5">
             <AnnouncementForm
               isNew={id === "new"}
               announcementResponse={announcementQuery.data}

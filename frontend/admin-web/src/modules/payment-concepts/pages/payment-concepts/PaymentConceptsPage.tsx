@@ -10,10 +10,12 @@ import { usePaymentConceptsPage } from "./hooks/usePaymentConceptsPage";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { usePaymentConceptsPageTable } from "./hooks/usePaymentConceptsPageTable";
 import { PaymentConceptsAdvancedFilters } from "./components/PaymentConceptsAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const PaymentConceptsPage = () => {
   // Component hooks & stores
   const navigate = useNavigate();
+  const canWrite = usePermission("payment-concepts", "can-write");
   const { loader, advancedFilters, deleteModal, queries, mutations } = usePaymentConceptsPage();
   const { columns, properties, actions } = usePaymentConceptsPageTable({ handleClickDelete: deleteModal.open });
 
@@ -73,7 +75,7 @@ export const PaymentConceptsPage = () => {
 
         {/* Table ribbon options */}
         <TableRibbon
-          addButton={{ handleClick: () => navigate("/payment-concepts/new") }}
+          addButton={{ show: canWrite, handleClick: () => navigate("/payment-concepts/new") }}
           filterButton={{ handleClick: advancedFilters.open }}
           exportButton={{ handleClick: handleClickExport }}
           searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}

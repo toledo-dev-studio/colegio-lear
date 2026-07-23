@@ -68,7 +68,7 @@ export const SchoolSubjectPage = () => {
           subtitle="Gestiona la información de la materia escolar que estará disponible en el colegio" />
 
         <div className="flex-1">
-          <div className="flex flex-col min-h-full gap-8 mt-14">
+          <div className="flex flex-col min-h-full gap-8 mt-5">
 
             <SchoolSubjectForm
               schoolSubjectResponse={schoolSubjectQuery.data}

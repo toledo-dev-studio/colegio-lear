@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { ScholarshipResponse } from "@/interfaces/responses/scholarship.response";
@@ -12,6 +13,9 @@ interface Options {
 }
 
 export const useScholarshipsPageTable = ({ handleClickDelete }: Options) => {
+    // Check permissions
+    const canDelete = usePermission("scholarships", "can-delete");
+
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre",
@@ -72,6 +76,7 @@ export const useScholarshipsPageTable = ({ handleClickDelete }: Options) => {
         {
             key: "delete",
             render: (item: ScholarshipResponse) => (
+                canDelete &&
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"

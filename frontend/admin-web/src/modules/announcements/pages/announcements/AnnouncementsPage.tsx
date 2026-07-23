@@ -10,10 +10,12 @@ import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useAnnouncementsPageTable } from "./hooks/useAnnouncementsPageTable";
 import { AnnouncementsAdvancedFilters } from "./components/AnnouncementsAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const AnnouncementsPage = () => {
   // Component hooks & stores
   const navigate = useNavigate();
+  const canWrite = usePermission("announcements", "can-write");
   const { loader, advancedFilters, deleteModal, queries, mutations } = useAnnouncementsPage();
   const { columns, properties, actions } = useAnnouncementsPageTable({ handleClickDelete: deleteModal.open });
 
@@ -73,7 +75,7 @@ export const AnnouncementsPage = () => {
 
         {/* Table ribbon options */}
         <TableRibbon
-          addButton={{ handleClick: () => navigate("/announcements/new") }}
+          addButton={{ show: canWrite, handleClick: () => navigate("/announcements/new") }}
           filterButton={{ handleClick: advancedFilters.open }}
           exportButton={{ handleClick: handleClickExport }}
           searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}

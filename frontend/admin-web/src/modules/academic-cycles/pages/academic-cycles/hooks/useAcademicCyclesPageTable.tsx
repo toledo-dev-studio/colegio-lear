@@ -4,6 +4,7 @@ import { Pencil, Trash } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
@@ -15,6 +16,9 @@ interface Options {
 }
 
 export const useAcademicCyclesPageTable = ({ handleClickDelete }: Options) => {
+    // Check permissions
+    const canDelete = usePermission("academic-cycles", "can-delete");
+
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre & código",
@@ -101,6 +105,7 @@ export const useAcademicCyclesPageTable = ({ handleClickDelete }: Options) => {
         {
             key: "delete",
             render: (item: AcademicCycleResponse) => (
+                canDelete &&
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"

@@ -10,10 +10,12 @@ import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useSchoolSubjectsPageTable } from "./hooks/useSchoolSubjectsPageTable";
 import { SchoolSubjectsAdvancedFilters } from "./components/SchoolSubjectsAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const SchoolSubjectsPage = () => {
   // Component hooks & stores
   const navigate = useNavigate();
+  const canWrite = usePermission("school-subjects", "can-write");
   const { loader, advancedFilters, deleteModal, queries, mutations } = useSchoolSubjectsPage();
   const { columns, properties, actions } = useSchoolSubjectsPageTable({ handleClickDelete: deleteModal.open });
 
@@ -73,7 +75,7 @@ export const SchoolSubjectsPage = () => {
 
         {/* Table ribbon options */}
         <TableRibbon
-          addButton={{ handleClick: () => navigate("/school-subjects/new") }}
+          addButton={{ show: canWrite, handleClick: () => navigate("/school-subjects/new") }}
           filterButton={{ handleClick: advancedFilters.open }}
           exportButton={{ handleClick: handleClickExport }}
           searchInput={{ tooltip: "Búsqueda general por nombre y descripción", placeholder: "Búsqueda general por nombre y descripción" }}

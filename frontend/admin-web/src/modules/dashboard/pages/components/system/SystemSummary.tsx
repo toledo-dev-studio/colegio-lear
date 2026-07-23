@@ -17,7 +17,7 @@ export const SystemSummary = () => {
     return (
         <>
             <section data-testid="dash-employee-summary">
-                <SectionHeader label="Resumen del sistema" tone="emerald" />
+                <SectionHeader label="Resumen del sistema" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-5">
                     <KpiCard
                         label="Personal administrativo registrado"

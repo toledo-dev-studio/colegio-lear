@@ -7,12 +7,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import type { PaymentConceptResponse } from "@/interfaces/responses/payment-concept.response";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 interface Options {
     handleClickDelete: (item: PaymentConceptResponse) => void;
 }
 
 export const usePaymentConceptsPageTable = ({ handleClickDelete }: Options) => {
+    // Check permissions
+    const canDelete = usePermission("payment-concepts", "can-delete");
+
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre & descripción",
@@ -83,6 +87,7 @@ export const usePaymentConceptsPageTable = ({ handleClickDelete }: Options) => {
         {
             key: "delete",
             render: (item: PaymentConceptResponse) => (
+                canDelete &&
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-destructive text-white icon-btn icon-btn-sm"

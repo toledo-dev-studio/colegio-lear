@@ -10,10 +10,12 @@ import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { StudentsAdvancedFilters } from "./components/StudentsAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const StudentsPage = () => {
     // Component hooks & stores
     const navigate = useNavigate();
+    const canWrite = usePermission("students", "can-write");
     const { loader, advancedFilters, deleteModal, queries, mutations } = useStudentsPage();
     const { columns, properties, actions } = useStudentsPageTable({ handleClickDelete: deleteModal.open });
 
@@ -76,7 +78,7 @@ export const StudentsPage = () => {
 
                 {/* Table ribbon options */}
                 <TableRibbon
-                    addButton={{ handleClick: () => navigate("/students/new") }}
+                    addButton={{ show: canWrite, handleClick: () => navigate("/students/new") }}
                     filterButton={{ handleClick: advancedFilters.open }}
                     exportButton={{ handleClick: handleClickExport }}
                     searchInput={{ tooltip: "Búsqueda general por nombre, matrícula & email", placeholder: "Búsqueda general por nombre, matrícula & email" }}

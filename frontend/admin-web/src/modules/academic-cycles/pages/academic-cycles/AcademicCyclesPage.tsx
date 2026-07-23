@@ -10,10 +10,12 @@ import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useAcademicCyclesPageTable } from "./hooks/useAcademicCyclesPageTable";
 import { AcademicCyclesAdvancedFilters } from "./components/AcademicCyclesAdvancedFilters";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const AcademicCyclesPage = () => {
     // Component hooks & stores
     const navigate = useNavigate();
+    const canWrite = usePermission("academic-cycles", "can-write");
     const { loader, advancedFilters, deleteModal, queries, mutations } = useAcademicCyclesPage();
     const { columns, properties, actions } = useAcademicCyclesPageTable({ handleClickDelete: deleteModal.open });
 
@@ -70,7 +72,7 @@ export const AcademicCyclesPage = () => {
 
                 {/* Table ribbon options */}
                 <TableRibbon
-                    addButton={{ handleClick: () => navigate("/academic-cycles/new") }}
+                    addButton={{ show: canWrite, handleClick: () => navigate("/academic-cycles/new") }}
                     filterButton={{ handleClick: advancedFilters.open }}
                     exportButton={{ handleClick: handleClickExport }}
                     searchInput={{ tooltip: "Búsqueda general por nombre, código & descripción", placeholder: "Búsqueda general por nombre, código & descripción" }}
