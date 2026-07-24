@@ -16,6 +16,7 @@ import type { AcademicCycleSchoolGroupResponse } from "@/interfaces/responses/ac
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { useState } from "react";
 
 interface Props {
     academicCycleEnrollmentResponse: Partial<AcademicCycleEnrollmentResponse>;
@@ -26,7 +27,9 @@ interface Props {
 
 export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentResponse, academicCycleSchoolGroups, onSubmit, handleClickClose }: Props) => {
     // Get context from layout
-    const { academicCycleId, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { academicCycleId, isLocked, enrollmentOpen } = useOutletContext<AcademicCycleLayoutContext>();
+    const [student, setStudent] = useState<Partial<StudentResponse>>();
+    const studentFullName = `${student?.name || ""} ${student?.firstLastName || ""} ${student?.secondLastName || ""}`;
 
     // Component hooks & stores
     const searchStudentsMutation = useSearchStudents();
@@ -40,13 +43,13 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
             observations: isValidValueWithDefault(academicCycleEnrollmentResponse?.observations, ""),
             droppedNotes: isValidValueWithDefault(academicCycleEnrollmentResponse?.droppedNotes, ""),
             studentId: isValidValueWithDefault(academicCycleEnrollmentResponse?.studentId, ""),
-            student: isValidValueWithDefault(academicCycleEnrollmentResponse?.student, undefined),
             academicCycleSchoolGroupId: isValidValueWithDefault(academicCycleEnrollmentResponse?.academicCycleSchoolGroupId, ""),
             scholarshipId: isValidValueWithDefault(academicCycleEnrollmentResponse?.scholarshipId, ""),
             scholarship: isValidValueWithDefault(academicCycleEnrollmentResponse?.scholarship, undefined),
         }
     });
-    const student = watch("student");
+
+
     const scholarship = watch("scholarship");
     const academicCycleSchoolGroupId = watch("academicCycleSchoolGroupId") ?? undefined;
     const isDropped = watch("status") === "dropped";
@@ -66,25 +69,26 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
                         <Controller
                             name="studentId"
                             control={control}
-                            disabled={isLocked}
+                            disabled={!enrollmentOpen}
                             rules={{ required: true }}
                             render={({ field }) => (
                                 <SearchInput
                                     {...field}
                                     name="studentId"
-                                    defaultValue={student?.name}
+                                    defaultValue={studentFullName.trim()}
                                     selected={!!student}
-                                    disabled={isLocked}
+                                    disabled={!enrollmentOpen}
+                                    labelSchemaName="enrollment"
                                     placeholder="Busqueda de estudiante"
                                     options={searchStudentsMutation.students}
                                     isSearching={searchStudentsMutation.isPending}
                                     onClearSelection={() => {
                                         setValue("studentId", undefined);
-                                        setValue("student", undefined);
+                                        setStudent({});
                                     }}
                                     onOptionChange={async (option: StudentResponse) => {
                                         setValue("studentId", option.id);
-                                        setValue("student", option);
+                                        setStudent(option);
                                         searchStudentsMutation.clearSearchResult();
                                     }}
                                     onSearch={async (query) => searchStudentsMutation.searchAsync({ query, isActive: true })}
@@ -192,7 +196,7 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
                                             options={searchScholarshipsMutation.scholarships}
                                             isSearching={searchScholarshipsMutation.isPending}
                                             onClearSelection={() => {
-                                                setValue("scholarshipId", undefined);
+                                                setValue("scholarshipId", "");
                                                 setValue("scholarship", undefined);
                                             }}
                                             onOptionChange={async (option: ScholarshipResponse) => {

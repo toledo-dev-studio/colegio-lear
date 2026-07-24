@@ -8,6 +8,10 @@ export interface PaymentConceptRequest {
      */
     name: string;
     /**
+     * Code of payment concept
+     */
+    code: string;
+    /**
      * Description of the payment concept
      */
     description: string;

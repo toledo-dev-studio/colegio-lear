@@ -31,16 +31,18 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
     const searchPaymentConcepts = useSearchPaymentConcepts();
 
     // Use hook form configuration
-    const { control, handleSubmit, formState: { errors }, setValue } = useForm<Partial<AcademicCycleWalletItemRequest>>({
+    const { control, handleSubmit, formState: { errors }, setValue, watch } = useForm<Partial<AcademicCycleWalletItemRequest>>({
         defaultValues: {
             academicCycleId: academicCycleId,
             name: isValidValueWithDefault(academicCycleWalletItemResponse?.name, ""),
+            code: isValidValueWithDefault(academicCycleWalletItemResponse?.code, ""),
             description: isValidValueWithDefault(academicCycleWalletItemResponse?.description, ""),
             amount: isValidValueWithDefault(academicCycleWalletItemResponse?.amount, 0),
             dueDate: isValidValueWithDefault(academicCycleWalletItemResponse?.dueDate, ""),
             allowForgiveness: isValidValueWithDefault(academicCycleWalletItemResponse?.allowForgiveness, false),
         }
     });
+    const code = watch("code") ?? "";
 
     return (
         <>
@@ -53,7 +55,7 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                 <form className="flex flex-col gap-8">
 
                     <div className="control-container border-b pb-8">
-                        <label className="label">Llenado por búsqueda de concepto:</label>
+                        <label className="label">Búsqueda de concepto:<span className="required">*</span>:</label>
                         <SearchInput
                             defaultValue={selectedPaymentConcept?.name}
                             selected={!!selectedPaymentConcept}
@@ -63,6 +65,7 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                             onClearSelection={() => {
                                 setSelectedPaymentConcept(undefined);
                                 setValue("name", "");
+                                setValue("code", "");
                                 setValue("description", "");
                                 setValue("amount", 0);
                                 setValue("allowForgiveness", false);
@@ -70,12 +73,24 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                             onOptionChange={async (option: PaymentConceptResponse) => {
                                 setSelectedPaymentConcept(option);
                                 setValue("name", option.name)
+                                setValue("code", option.code)
                                 setValue("description", option.description);
                                 setValue("amount", option.amount);
                                 setValue("allowForgiveness", option.allowForgiveness);
                                 searchPaymentConcepts.clearSearchResult();
                             }}
                             onSearch={async (query) => searchPaymentConcepts.searchAsync({ query, isActive: true })}
+                        />
+                        <span className="control-info">Selecciona un concepto de pago para llenar la información</span>
+                    </div>
+
+                    <div className="control-container">
+                        <label className="label">Código del concepto de pago <span className="required">*</span>:</label>
+                        <Input
+                            value={code}
+                            type="text"
+                            disabled={true}
+                            placeholder="Nombre del concepto de pago"
                         />
                     </div>
 
@@ -89,6 +104,7 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                                 <Input
                                     {...field}
                                     type="text"
+                                    disabled={!code}
                                     placeholder="Nombre del concepto de pago"
                                 />
                             )}
@@ -124,6 +140,7 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                                         inputMode="numeric"
                                         type="number"
                                         placeholder="100"
+                                        disabled={!code}
                                         onKeyDown={(e) => {
                                             if (["e", "E", "+", "-", ".", ","].includes(e.key))
                                                 e.preventDefault();
@@ -153,6 +170,7 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                                 <DatePicker
                                     {...field}
                                     value={field.value}
+                                    disabled={!code}
                                     onChange={field.onChange}
                                 />
                             )}
@@ -178,7 +196,7 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                                             <p className="label">{field.value ? "Permitido" : "No permitido"}</p>
                                             <p className="description">El concepto de pago permite la condonación del pago.</p>
                                         </div>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                        <Switch disabled={!code} checked={field.value} onCheckedChange={field.onChange} />
                                     </label>
                                 )}
                             />
@@ -193,6 +211,7 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                             render={({ field }) => (
                                 <Textarea
                                     {...field}
+                                    disabled={!code}
                                     placeholder="-"
                                 />
                             )}

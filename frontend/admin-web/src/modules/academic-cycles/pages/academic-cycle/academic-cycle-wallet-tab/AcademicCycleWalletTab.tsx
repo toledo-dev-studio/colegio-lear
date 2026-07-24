@@ -129,6 +129,7 @@ export const AcademicCycleWalletTab = () => {
                     columns={columns}
                     properties={properties}
                     actions={actions}
+                    skeletonRows={4}
                 />
             </section>
 

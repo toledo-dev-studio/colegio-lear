@@ -17,6 +17,10 @@ export interface AcademicCycleLayoutContext {
      */
     isActive: boolean;
     /**
+     * Academic cycle has enrollment open
+     */
+    enrollmentOpen: boolean;
+    /**
      * Academic cycle information or undefined if is new record
      */
     academicCycle?: AcademicCycleResponse;

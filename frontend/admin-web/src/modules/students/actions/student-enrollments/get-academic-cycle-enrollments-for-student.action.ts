@@ -16,6 +16,6 @@ export const getAcademicCycleEnrollmentsForStudentActionAsync = async ({ student
         endpoint = "/students/enrollments/enrollments.json";
     
     const { data } = await api.get<AcademicCycleEnrollmentResponse[]>(endpoint);
-
+    
     return data;
 }

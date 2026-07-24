@@ -74,7 +74,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                 cancelButton={{ show: true, disabled: false, type: "button", label: "Cancelar", handleClick: onCancel }}
                 submitButton={{ show: true, disabled: false, type: "submit", label: "Guardar", handleClick: handleSubmit(validateForm) }}>
 
-                <form className="flex flex-col gap-8">
+                <section className="flex flex-col gap-8">
 
                     <div className="control-container">
                         <label className="label">Día de la semana <span className="required">*</span>:</label>
@@ -259,7 +259,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                         }
                     </div>
 
-                </form>
+                </section>
 
             </SidePanel>
         </>

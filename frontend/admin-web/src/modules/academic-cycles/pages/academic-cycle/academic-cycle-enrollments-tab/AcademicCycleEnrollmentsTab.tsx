@@ -44,7 +44,7 @@ export const AcademicCycleEnrollmentsTab = () => {
     try {
       loader.show("Guardando");
       await mutations.enrollments.createUpdate.mutateAsync({
-        id: "new",
+        id: enrollmentPanel.data.id || "new",
         academicCycleEnrollmentRequestLike
       }, {
         onSuccess: () => {

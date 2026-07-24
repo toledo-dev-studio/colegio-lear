@@ -388,7 +388,7 @@ export const AcademicCycleTab = () => {
                                 render={({ field }) => (
                                     <SearchInput
                                         {...field}
-                                        disabled={isLocked}
+                                        disabled={isLocked || !isNew}
                                         defaultValue={academicLevel?.name}
                                         selected={!!academicLevelId}
                                         placeholder="Busqueda de nivel académico"
@@ -428,7 +428,7 @@ export const AcademicCycleTab = () => {
                                 render={({ field }) => (
                                     <SearchInput
                                         {...field}
-                                        disabled={!academicLevelId || isLocked}
+                                        disabled={!academicLevelId || isLocked || !isNew}
                                         defaultValue={educationLevel?.name}
                                         selected={!!educationLevelId}
                                         placeholder="Busqueda de nivel educativo"

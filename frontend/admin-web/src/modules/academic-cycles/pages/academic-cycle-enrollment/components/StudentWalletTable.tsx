@@ -42,6 +42,7 @@ export const StudentWalletTable = ({ isLoading, enableActions = true, data, summ
                             {/* Columns */}
                             <tr>
                                 <th className="column">Concepto</th>
+                                <th className="column">Código</th>
                                 <th className="column">Vencimiento</th>
                                 <th className="column">Prórroga</th>
                                 <th className="column">Monto total</th>
@@ -62,7 +63,7 @@ export const StudentWalletTable = ({ isLoading, enableActions = true, data, summ
                             {
                                 isLoading && (
                                     <tr>
-                                        <td colSpan={enableActions ? 9 : 8} className="no-content-row">
+                                        <td colSpan={enableActions ? 10 : 9} className="no-content-row">
                                             <Loader title="Cargando información" subtitle="por favor espere..." fullScreen={false} size="sm" />
                                         </td>
                                     </tr>
@@ -73,7 +74,7 @@ export const StudentWalletTable = ({ isLoading, enableActions = true, data, summ
                             {
                                 (!data.length && !isLoading) && (
                                     <tr>
-                                        <td colSpan={enableActions ? 9 : 8} className="no-content-row">
+                                        <td colSpan={enableActions ? 10: 9} className="no-content-row">
                                             Este alumno no cuenta con una cartera de pagos.
                                         </td>
                                     </tr>
@@ -88,6 +89,7 @@ export const StudentWalletTable = ({ isLoading, enableActions = true, data, summ
                                             data.map((item) => (
                                                 <tr key={item.id} className="hover:bg-muted/40 transition-colors">
                                                     <td className="row">{item.name}</td>
+                                                    <td className="row">{item.code}</td>
                                                     <td className="row">{formatFriendlyDate(item.dueDate)}</td>
                                                     <td className="row">{item.extensionDate ? formatFriendlyDate(item.extensionDate) : "-"}</td>
                                                     <td className="row">{formatMoney(item.amount)}</td>

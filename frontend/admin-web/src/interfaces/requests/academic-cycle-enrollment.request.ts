@@ -1,5 +1,4 @@
 
-import type { StudentRequest } from "./student.request";
 import type { ScholarshipRequest } from "./scholarship.request";
 import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
@@ -24,10 +23,6 @@ export interface AcademicCycleEnrollmentRequest {
      * Identifier of the associated student
      */
     studentId: string;
-    /**
-     * Reference to the associated student
-     */
-    student?: StudentRequest;
     /**
      * Identifier of the associated academic cycle
      */

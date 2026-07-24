@@ -94,6 +94,7 @@ export const AcademicCycleSchoolGroupsTab = () => {
                     columns={columns}
                     properties={properties}
                     actions={actions}
+                    skeletonRows={4}
                 />
             </section>
 

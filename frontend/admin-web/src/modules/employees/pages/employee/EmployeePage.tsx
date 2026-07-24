@@ -2,13 +2,13 @@ import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { EmployeeForm } from "./components/EmployeeForm";
-import { Loader } from "@/shared/components/loader/Loader";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
 import { useGetEmployeeById } from "../../hooks/employees/useGetEmployeeById";
 import { useCreateUpdateEmployee } from "../../hooks/employees/useCreateUpdateEmployee";
+import { EmployeeFormSkeleton } from "./components/EmployeeFormSkeleton";
 
 export const EmployeePage = () => {
   // Component hooks & stores
@@ -41,16 +41,6 @@ export const EmployeePage = () => {
     return <Navigate to="/employees" />;
   }
 
-  if (employeeQuery.isLoading) {
-    return (
-      <>
-        <div className="w-full relative mx-auto h-full mt-30">
-          <Loader title="Cargando información" subtitle="Por favor espere..." />
-        </div>
-      </>
-    )
-  }
-
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
@@ -69,11 +59,15 @@ export const EmployeePage = () => {
 
         <div className="flex-1">
           <section className="flex flex-col min-h-full gap-8 mt-5">
-            <EmployeeForm
-              employeeResponse={employeeQuery.data}
-              isSubmitting={createUpdateEmployeeMutation.isPending}
-              onSubmit={handleSubmit}
-            />
+            {
+              employeeQuery.isLoading ?
+                <EmployeeFormSkeleton /> :
+                <EmployeeForm
+                  employeeResponse={employeeQuery.data}
+                  isSubmitting={createUpdateEmployeeMutation.isPending}
+                  onSubmit={handleSubmit}
+                />
+            }
           </section>
         </div>
       </div>

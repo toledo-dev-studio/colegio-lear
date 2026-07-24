@@ -41,7 +41,7 @@ export const StudentGradesGrid = ({ academicCycleResponse, studentGradesResponse
 
                 {
                     studentGradesResponse.length === 0 && (
-                        <section className="flex items-start gap-2 text-xs text-muted-foreground bg-amber-500/10 border border-amber-200/40 rounded-md px-4 py-3 mt-4.5">
+                        <section className="flex items-start gap-2 text-xs text-muted-foreground bg-amber-500/10 border border-amber-200/40 rounded-md px-4 py-3">
                             <Info className="w-4 h-4 shrink-0" />
                             <p>Aún no se han registrado calificaciones del alumno para este ciclo escolar.</p>
                         </section>
@@ -49,7 +49,7 @@ export const StudentGradesGrid = ({ academicCycleResponse, studentGradesResponse
                 }
 
                 {
-                    studentGradesResponse.length && (
+                    studentGradesResponse.length > 0 && (
                         <section className="grid grid-cols-1 2xl:grid-cols-3 gap-5">
 
                             {/* Overall grade */}

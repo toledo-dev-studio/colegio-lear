@@ -1,11 +1,11 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
-import { Loader } from "@/shared/components/loader/Loader";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { AnnouncementForm } from "./components/AnnouncementForm";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { AnnouncementFormSkeleton } from "./components/AnnouncementFormSkeleton";
 import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
 import { useGetAnnouncementById } from "../../hooks/announcements/useGetAnnouncementById";
 import { useCreateUpdateAnnouncement } from "../../hooks/announcements/useCreateUpdateAnnouncement";
@@ -42,16 +42,6 @@ export const AnnouncementPage = () => {
     return <Navigate to="/announcements" />;
   }
 
-  if (announcementQuery.isLoading) {
-    return (
-      <>
-        <div className="w-full relative mx-auto h-full mt-30">
-          <Loader title="Cargando información" subtitle="Por favor espere..." />
-        </div>
-      </>
-    )
-  }
-
   return (
     <>
       <div className="w-full py-12 px-10 lg:px-15">
@@ -70,12 +60,16 @@ export const AnnouncementPage = () => {
 
         <div className="flex-1">
           <section className="flex flex-col min-h-full gap-8 mt-5">
-            <AnnouncementForm
-              isNew={id === "new"}
-              announcementResponse={announcementQuery.data}
-              isSubmitting={createUpdateAnnouncementMutation.isPending}
-              onSubmit={handleSubmit}
-            />
+            {
+              announcementQuery.isLoading ?
+                <AnnouncementFormSkeleton /> :
+                <AnnouncementForm
+                  isNew={id === "new"}
+                  announcementResponse={announcementQuery.data}
+                  isSubmitting={createUpdateAnnouncementMutation.isPending}
+                  onSubmit={handleSubmit}
+                />
+            }
           </section>
         </div>
       </div>

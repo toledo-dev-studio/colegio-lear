@@ -12,6 +12,10 @@ export interface AcademicCycleWalletItemResponse {
      */
     name: string;
     /**
+     * Payment concept code.
+     */
+    code: string;
+    /**
      * Description of the payment concept
      */
     description?: string;

@@ -6,9 +6,9 @@ import { SecurityRoleForm } from "./components/SecurityRoleForm";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { useGetSecurityRoleById } from "../../hooks/useGetSecurityRoleById";
+import { SecurityRoleFormSkeleton } from "./components/SecurityRoleFormSkeleton";
 import { useCreateUpdateSecurityRole } from "../../hooks/useCreateUpdateSecurityRole";
 import type { SecurityRoleRequest } from "@/interfaces/requests/security-role.request";
-import { Loader } from "@/shared/components/loader/Loader";
 
 export const SecurityRolePage = () => {
   // Hooks & stores
@@ -43,16 +43,6 @@ export const SecurityRolePage = () => {
     return <Navigate to="/security-roles" />;
   }
 
-  if (securityRoleQuery.isLoading) {
-    return (
-      <>
-        <div className="w-full relative mx-auto h-full mt-30">
-          <Loader title="Cargando información" subtitle="Por favor espere..." />
-        </div>
-      </>
-    )
-  }
-
   return (
     <>
       <section className="w-full py-12 px-10 lg:px-15">
@@ -73,11 +63,15 @@ export const SecurityRolePage = () => {
 
         <div className="flex-1">
           <section className="flex flex-col min-h-full gap-8 mt-5">
-            <SecurityRoleForm
-              securityRoleResponse={securityRoleQuery.data}
-              isSubmitting={createUpdateSecurityRoleMutation.isPending}
-              onSubmit={handleSubmit}
-            />
+            {
+              securityRoleQuery.isLoading ?
+                <SecurityRoleFormSkeleton /> :
+                <SecurityRoleForm
+                  securityRoleResponse={securityRoleQuery.data}
+                  isSubmitting={createUpdateSecurityRoleMutation.isPending}
+                  onSubmit={handleSubmit}
+                />
+            }
           </section>
         </div>
 

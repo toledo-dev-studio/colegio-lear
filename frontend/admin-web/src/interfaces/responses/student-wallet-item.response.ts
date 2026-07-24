@@ -14,6 +14,10 @@ export interface StudentWalletItemResponse {
      */
     name: string;
     /**
+     * Payment concept code.
+     */
+    code: string;
+    /**
      * Due date for the payment associated with the academic cycle wallet as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
      */
     dueDate: string;
