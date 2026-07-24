@@ -941,3 +941,99 @@ código duplicado. Se agregaron tests nuevos en
 (al escribirlos se encontró que `update()` no tenía el chequeo de
 unicidad de `code` ni lo incluía en `updateData` — se corrigió en el
 mismo cambio, antes de que llegara a producción sin probar).
+
+## Módulo Dashboard (2026-07-24)
+
+Nuevo módulo `backend/src/modules/dashboard/` (no existía nada antes —
+ni rutas, ni service, solo el moduleKey `"dashboard"` ya anticipado en
+`security-role.types.ts`). Construido leyendo directamente el front ya
+armado (componentes, hooks, interfaces en `dashboard.response.ts`,
+mocks en `public/api/dashboard/*.json`), no solo la descripción del
+usuario — dos discrepancias reales encontradas y confirmadas con el
+usuario antes de programar (ver abajo).
+
+**5 endpoints, todos `GET`, todos protegidos con `authorize("dashboard")`:**
+
+1. `GET /dashboard/academic-cycles` → `AcademicCycleSummaryRecord`
+   (`activeAcademicCyclesCount`, `activeStudentsCount`,
+   `droppedStudentsCount`, `topGroups`). Si
+   `activeAcademicCyclesCount === 0`, se corta ahí mismo y regresa todo
+   lo demás en cero/vacío — no corre las queries pesadas.
+   **Confirmado con el usuario**: `topGroups` es el **top 3 de grupos**
+   (no de alumnos individuales) por promedio de calificaciones,
+   porque así está el componente `TopGroupsTable.tsx` +
+   `TopSchoolGroupResponse` ya construidos en el front. Se calcula sin
+   SQL crudo (sin precedente de `$queryRaw`/`groupBy` cross-relation en
+   este repo): una query trae los grupos activos de ciclos activos con
+   `_count` de inscripciones (`status: "enrolled"`), otra trae las
+   `StudentGrade` de esos grupos, y el promedio se agrega en JS
+   (`Map<groupId, {sum, count}>`), se ordena desc y se recorta a 3.
+   Grupos sin calificaciones registradas quedan fuera del ranking (nada
+   que promediar).
+2. `GET /dashboard/financial` → `FinancialSummaryRecord`
+   (`totalPaidAmount`, `pendingAmount`, `forgivenPaymentsCount`,
+   `totalForgivenAmount`), agregado sobre `StudentWalletItem` filtrado
+   por `academicCycle.status = "active"` con 2 `aggregate()` de Prisma
+   (uno para `isForgiven: false` con `_sum` de `amount`/
+   `outstandingAmount`, otro para `isForgiven: true` con `_sum`/
+   `_count`) — agregación del lado de la BD, no trae filas a JS. Mismo
+   guard: sin ciclos activos, todo en cero sin correr las queries.
+3. `GET /dashboard/announcements` → `AnnouncementSummaryRecord`
+   (`activeAnnouncementsCount`: anuncios con `isActive`, no borrados, y
+   dentro de su ventana `publishedAt`/`expiresAt` respecto a `now`;
+   `viewedPercentage`: `SUM(viewedCount)/SUM(recipientsCount)*100`
+   sobre ese mismo conjunto, 0 si no hay destinatarios). Ver la sección
+   de cambios al modelo `Announcement` más abajo — este endpoint
+   depende de 3 columnas nuevas que hoy nadie llena todavía.
+4. `GET /dashboard/system` → `SystemSummaryRecord` (conteos simples:
+   `securityRolesCount`, `jobTitlesCount` con `isDeleted: false`;
+   `teachersEmployeesCount`/`administrativeEmployeesCount` via
+   `Employee.jobTitle.jobTitleType`).
+5. `GET /dashboard/teacher-employees` → `TeacherEmployeeSummaryRecord[]`
+   (hasta 10, `orderBy: createdAt desc`). **Confirmado con el
+   usuario**: es solo empleados tipo **maestro** (no administrativos,
+   no alumnos), porque así están `LatestTeachersTable.tsx` +
+   `TeacherEmployeeSummaryResponse` ya construidos en el front — no es
+   un listado genérico de "usuarios registrados".
+
+**Cambio de schema necesario y no anticipado por el usuario**:
+`Employee` no tenía ninguna columna de fecha de creación, y
+`TeacherEmployeeSummaryResponse.createdAt` (front) más el propio
+"últimos registrados" lo requieren para poder ordenar. Se agregó
+`Employee.createdAt` (`DateTime @default(now())`, migración
+`20260724080000_add_employee_created_at`) — las filas existentes
+quedan con el timestamp de cuando corrió la migración (no hay fecha de
+alta real que rescatar).
+
+**Cambios al modelo `Announcement`** (lo que pidió el usuario
+explícitamente): 3 columnas nuevas —
+`recipientsCount`/`viewedCount`/`viewsCalculatedAt`
+(migración `20260724070000_add_announcement_view_tracking_columns`,
+default 0/0/null). Diseño acordado con el usuario ("esto como lo
+pudiera hacer" — delegó el diseño): en vez de que borrar registros de
+notificación individuales pueda destruir el histórico de "cuánta gente
+vio este anuncio", el agregado calculado vive directamente en
+`Announcement`, sobreviviendo aunque las filas de notificación
+individuales se borren después. **Alcance de HOY**: solo se agregaron
+las columnas y se expusieron de solo lectura en
+`announcement.types.ts`/`.service.ts` (no en
+`Create`/`UpdateAnnouncementDto`, son cron-managed) y en swagger.
+**Explícitamente fuera de alcance por ahora** (palabras del usuario:
+"esto ahorita obtenlo, y haremos uso de cronjobs tanto para enviar
+notificaciones como para actualizar estas visualizaciones"): no existe
+todavía ninguna tabla de notificación por destinatario, ni el cron que
+calcule/actualice estas 2 columnas — hoy siempre van a estar en 0
+(`recipientsCount`/`viewedCount`) y `viewsCalculatedAt` en `null` hasta
+que se construya ese cron en un cambio futuro. El endpoint del
+dashboard ya está listo para leerlas en cuanto existan datos reales.
+
+**Pendiente del lado del frontend** (no tocado, es un repo aparte):
+las 5 `action.ts` del dashboard (`get-academic-cylces-summary.action.ts`
+[sic, typo en el nombre del archivo original],
+`get-financial-summary.action.ts`, `get-announcements-summary.action.ts`,
+`get-system-summary.action.ts`, `get-latest-teachers-summary.action.ts`)
+tienen una línea `// REMOVE MOCKABLE` que sobreescribe el endpoint real
+con un JSON mockeado estático (`http://localhost/api/dashboard/*.json`)
+sin importar el ambiente — hay que borrar esa línea en cada action para
+que el front deje de leer los mocks y empiece a pegarle a estos 5
+endpoints reales.

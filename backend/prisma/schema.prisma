@@ -199,6 +199,7 @@ model Employee {
   securityRole                SecurityRole                 @relation(fields: [securityRoleId], references: [id], onDelete: Restrict)
   jobTitle                    JobTitle                     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
   academicCycleGroupCalendars AcademicCycleGroupCalendar[]
+  createdAt                   DateTime                     @default(now()) @map("created_at")
 
   @@map("employees")
   @@schema("core")
@@ -216,6 +217,15 @@ model Announcement {
   expiresAt   DateTime     @map("expires_at")
   isActive    Boolean      @default(true) @map("is_active")
   isDeleted   Boolean      @default(false) @map("is_deleted")
+
+  // Calculated (cron-maintained) view-tracking history. Stored on the
+  // announcement itself — not on a per-recipient notification row — so this
+  // aggregate survives even if the underlying notification records are
+  // later purged.
+  recipientsCount   Int       @default(0) @map("recipients_count")
+  viewedCount       Int       @default(0) @map("viewed_count")
+  viewsCalculatedAt DateTime? @map("views_calculated_at")
+
   attachments Attachment[]
 
   @@map("announcements")

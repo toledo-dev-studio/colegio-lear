@@ -28,6 +28,12 @@ export interface AnnouncementRecord {
   publishedAt: Date;
   expiresAt: Date;
   isActive: boolean;
+  /** Calculated (cron-maintained) audience size at last recalculation. */
+  recipientsCount: number;
+  /** Calculated (cron-maintained) count of recipients who viewed it. */
+  viewedCount: number;
+  /** When recipientsCount/viewedCount were last recalculated, if ever. */
+  viewsCalculatedAt: Date | null;
 }
 
 /**

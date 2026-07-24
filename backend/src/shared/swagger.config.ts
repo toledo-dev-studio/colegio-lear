@@ -544,6 +544,22 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "2025-06-30T00:00:00.000Z",
             },
             isActive: { type: "boolean", example: true },
+            recipientsCount: {
+              type: "integer",
+              example: 120,
+              description: "Calculated (cron-maintained) audience size at last recalculation",
+            },
+            viewedCount: {
+              type: "integer",
+              example: 82,
+              description: "Calculated (cron-maintained) count of recipients who viewed it",
+            },
+            viewsCalculatedAt: {
+              type: "string",
+              format: "date-time",
+              nullable: true,
+              description: "When recipientsCount/viewedCount were last recalculated, if ever",
+            },
           },
         },
         AnnouncementDetail: {
@@ -579,6 +595,13 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "2025-06-30T00:00:00.000Z",
             },
             isActive: { type: "boolean", example: true },
+            recipientsCount: { type: "integer", example: 120 },
+            viewedCount: { type: "integer", example: 82 },
+            viewsCalculatedAt: {
+              type: "string",
+              format: "date-time",
+              nullable: true,
+            },
             attachments: {
               type: "array",
               items: { $ref: "#/components/schemas/Attachment" },
@@ -1611,6 +1634,75 @@ const swaggerOptions: swaggerJsdoc.Options = {
               format: "uuid",
               description: "Ignored — the item id in the URL path is authoritative.",
             },
+          },
+        },
+        // ─── Dashboard ──────────────────────────────────────────────────────────
+        TopSchoolGroupRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "3° A Primaria" },
+            academicCycleName: { type: "string", example: "2026 - 2027" },
+            averageGrade: { type: "number", example: 9.4 },
+            studentsCount: { type: "integer", example: 30 },
+          },
+        },
+        AcademicCycleSummaryRecord: {
+          type: "object",
+          properties: {
+            activeAcademicCyclesCount: { type: "integer", example: 2 },
+            activeStudentsCount: { type: "integer", example: 348 },
+            droppedStudentsCount: { type: "integer", example: 27 },
+            topGroups: {
+              type: "array",
+              maxItems: 3,
+              items: { $ref: "#/components/schemas/TopSchoolGroupRecord" },
+            },
+          },
+        },
+        FinancialSummaryRecord: {
+          type: "object",
+          description: "Scoped to active academic cycles only.",
+          properties: {
+            totalPaidAmount: { type: "number", example: 1284560 },
+            pendingAmount: { type: "number", example: 342100 },
+            forgivenPaymentsCount: { type: "integer", example: 18 },
+            totalForgivenAmount: { type: "number", example: 46800 },
+          },
+        },
+        AnnouncementSummaryRecord: {
+          type: "object",
+          properties: {
+            activeAnnouncementsCount: { type: "integer", example: 7 },
+            viewedPercentage: {
+              type: "number",
+              example: 68.4,
+              description:
+                "Derived from the cron-maintained recipientsCount/viewedCount fields on Announcement.",
+            },
+          },
+        },
+        SystemSummaryRecord: {
+          type: "object",
+          properties: {
+            securityRolesCount: { type: "integer", example: 10 },
+            jobTitlesCount: { type: "integer", example: 20 },
+            teachersEmployeesCount: { type: "integer", example: 46 },
+            administrativeEmployeesCount: { type: "integer", example: 22 },
+          },
+        },
+        TeacherEmployeeSummaryRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            fullName: { type: "string", example: "Omar Trejo" },
+            email: {
+              type: "string",
+              format: "email",
+              example: "omar.trejo@colegiolear.com",
+            },
+            createdAt: { type: "string", format: "date-time" },
+            avatar: { type: "string", nullable: true },
           },
         },
       },
