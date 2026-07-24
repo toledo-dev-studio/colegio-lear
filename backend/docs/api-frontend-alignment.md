@@ -720,3 +720,68 @@ dejar de armar `FormData` en la creación/edición (ahora es JSON puro), y
 agregar las llamadas nuevas a `POST /employees/:id/avatar` /
 `POST /employees/me/avatar` cuando el usuario adjunte un archivo. Todo
 campo `image` que el front use debe renombrarse a `avatar`.
+
+## Rediseño de forgot-password: flujo basado en sesión (2026-07-24)
+
+El flujo anterior (`POST /auth/forgot-password` público + `POST
+/auth/change-password` público con JWT de un link de correo) se
+reemplazó por un flujo de 2 pasos alineado con lo que el frontend ya
+tiene implementado (`ForgotPasswordPage`/`ResetPasswordPage`,
+`request-reset-password.action.ts`/`reset-password.action.ts`), que no
+usa ningún link con token — todo pasa por login + sesión autenticada.
+
+**Flujo nuevo:**
+
+1. `POST /auth/request-reset-password` (público, body `{ email }`,
+   antes `/auth/forgot-password` con body `{ username }`): busca al
+   empleado por email, genera una contraseña temporal nueva (mismo
+   patrón que `generateTempPassword()` de invitaciones) y un código de
+   6 dígitos. Actualiza de inmediato `password` (hash de la temporal),
+   `mustChangePassword = true`, y guarda el código **hasheado** +
+   `passwordResetCodeExpiresAt` (15 min). Envía un correo con la
+   contraseña temporal en claro + el código en claro (ya no hay
+   `resetLink`). Responde 200 siempre, exista o no el email (anti
+   enumeración, igual que antes).
+2. El empleado inicia sesión normal (`POST /auth/login`) con su
+   username + la contraseña temporal recibida. Esto ya funcionaba sin
+   cambios — `login()` nunca bloqueó por `mustChangePassword`, solo lo
+   regresa en la respuesta; el front (route guards en
+   `protected.router.tsx`) ya redirige a `/auth/reset-password` cuando
+   `mustChangePassword === true`.
+3. `POST /auth/reset-password` (antes `/auth/change-password`, body
+   `{ token, code, password, confirmPassword }`): ahora **requiere
+   sesión autenticada** (`authenticate` middleware, igual que
+   `/auth/me`) y el body es `{ code, password, confirmPassword }` — el
+   empleado se identifica por `req.user.employeeId` de la sesión, no
+   por ningún campo del body (el front manda además un `id` en el
+   body por compatibilidad con su tipo `ResetPasswordRequest`, pero el
+   backend lo ignora deliberadamente y confía solo en la sesión, para
+   que nadie pueda cambiarle la contraseña a otro empleado mandando un
+   `id` distinto). Verifica el código contra el hash guardado en el
+   paso 1 y su expiración, y si todo es válido actualiza `password`,
+   pone `mustChangePassword = false` y limpia
+   `passwordResetCode`/`passwordResetCodeExpiresAt`.
+
+**Cambios de esquema:** `Employee.passwordResetCode` (hash, nullable) y
+`Employee.passwordResetCodeExpiresAt` (nullable) agregados en
+`prisma/schema.prisma`, migración
+`20260724010000_add_password_reset_code_to_employees`. No se tocó
+`Student` — este flujo es solo para `Employee` (login de estudiantes no
+existe hoy).
+
+**Gap conocido, no resuelto en este cambio:** empleados creados por
+invitación (`employee.service.ts` `create()`/`resendInvitation()`)
+también quedan con `mustChangePassword = true` pero **nunca reciben un
+código** (`invitationEmail`/`resendInvitationEmail` solo mandan
+usuario+contraseña temporal, sin código). Si inician sesión con esa
+contraseña temporal, el front los manda a `/auth/reset-password`, y ahí
+se van a topar con "No hay una solicitud de restablecimiento de
+contraseña activa" porque `passwordResetCode` nunca se llenó. Como
+workaround funcional ya disponible: pueden ir a "olvidé mi contraseña"
+ellos mismos con su email, lo cual genera una contraseña temporal +
+código nuevos y sí les permite completar el flujo. No se atendió de
+raíz porque no fue parte de lo pedido (solo forgot-password); si se
+quiere cerrar del todo, la opción más simple es que
+`create()`/`resendInvitation()` también generen y envíen un código
+igual que `requestResetPassword`, usando la misma verificación en
+`resetPassword()`.

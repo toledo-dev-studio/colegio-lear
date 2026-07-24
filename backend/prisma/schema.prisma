@@ -188,6 +188,8 @@ model Employee {
   username                    String                       @unique @db.VarChar(50)
   password                    String                       @db.VarChar(255)
   mustChangePassword          Boolean                      @default(false) @map("must_change_password")
+  passwordResetCode           String?                      @map("password_reset_code") @db.VarChar(255)
+  passwordResetCodeExpiresAt  DateTime?                    @map("password_reset_code_expires_at")
   avatar                      String?                      @db.VarChar(500)
   isActive                    Boolean                      @default(true) @map("is_active")
   isDeleted                   Boolean                      @default(false) @map("is_deleted")

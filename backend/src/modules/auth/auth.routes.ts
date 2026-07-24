@@ -3,14 +3,14 @@ import { validate } from "../../shared/middleware/validate.middleware";
 import { authenticate } from "../../shared/middleware/auth.middleware";
 import {
   loginSchema,
-  forgotPasswordSchema,
-  changePasswordSchema,
+  requestResetPasswordSchema,
+  resetPasswordSchema,
 } from "./auth.schema";
 import {
   login,
   logout,
-  forgotPassword,
-  changePassword,
+  requestResetPassword,
+  resetPassword,
   me,
 } from "./auth.controller";
 
@@ -76,12 +76,12 @@ router.post("/logout", logout);
 
 /**
  * @openapi
- * /auth/forgot-password:
+ * /auth/request-reset-password:
  *   post:
  *     tags:
  *       - Auth
- *     summary: Recuperación de contraseña
- *     description: Envía un email con un código de 6 dígitos y un link con token JWT para cambiar la contraseña. Siempre responde 200 sin importar si el usuario existe.
+ *     summary: Solicitar restablecimiento de contraseña
+ *     description: Genera una nueva contraseña temporal y un código de verificación de 6 dígitos, y los envía por email. El empleado debe iniciar sesión con la contraseña temporal y luego confirmar con POST /auth/reset-password. Siempre responde 200 sin importar si el email existe.
  *     requestBody:
  *       required: true
  *       content:
@@ -89,15 +89,16 @@ router.post("/logout", logout);
  *           schema:
  *             type: object
  *             required:
- *               - username
+ *               - email
  *             properties:
- *               username:
+ *               email:
  *                 type: string
- *                 description: Username o email del empleado
- *                 example: "otrejo"
+ *                 format: email
+ *                 description: Email del empleado
+ *                 example: "otrejo@colegiolear.com"
  *     responses:
  *       200:
- *         description: Correo enviado (respuesta idéntica sin importar si el usuario existe)
+ *         description: Correo enviado (respuesta idéntica sin importar si el email existe)
  *         content:
  *           application/json:
  *             schema:
@@ -106,19 +107,19 @@ router.post("/logout", logout);
  *         description: Error de validación
  */
 router.post(
-  "/forgot-password",
-  validate(forgotPasswordSchema, "body"),
-  forgotPassword,
+  "/request-reset-password",
+  validate(requestResetPasswordSchema, "body"),
+  requestResetPassword,
 );
 
 /**
  * @openapi
- * /auth/change-password:
+ * /auth/reset-password:
  *   post:
  *     tags:
  *       - Auth
- *     summary: Cambio de contraseña con código de verificación
- *     description: Cambia la contraseña usando el token del link del email + el código de 6 dígitos. Endpoint público (no requiere sesión).
+ *     summary: Confirmar restablecimiento de contraseña
+ *     description: Completa el restablecimiento de contraseña iniciado con POST /auth/request-reset-password. Requiere sesión autenticada (el empleado ya inició sesión con la contraseña temporal recibida por email) y el código de 6 dígitos del mismo correo.
  *     requestBody:
  *       required: true
  *       content:
@@ -126,15 +127,10 @@ router.post(
  *           schema:
  *             type: object
  *             required:
- *               - token
  *               - code
  *               - password
  *               - confirmPassword
  *             properties:
- *               token:
- *                 type: string
- *                 description: JWT token recibido en el query param del link del email
- *                 example: "eyJhbGciOiJIUzI1NiIs..."
  *               code:
  *                 type: string
  *                 description: Código de 6 dígitos recibido por email
@@ -156,14 +152,15 @@ router.post(
  *             schema:
  *               type: "null"
  *       400:
- *         description: Error de validación (código incorrecto, contraseñas no coinciden, etc.)
+ *         description: Error de validación (contraseñas no coinciden, etc.)
  *       401:
- *         description: Token inválido o expirado, código incorrecto
+ *         description: No autenticado, no hay solicitud activa, código expirado o incorrecto
  */
 router.post(
-  "/change-password",
-  validate(changePasswordSchema, "body"),
-  changePassword,
+  "/reset-password",
+  authenticate,
+  validate(resetPasswordSchema, "body"),
+  resetPassword,
 );
 
 /**

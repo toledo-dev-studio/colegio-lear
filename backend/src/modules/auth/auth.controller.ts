@@ -54,32 +54,36 @@ export async function logout(_req: Request, res: Response): Promise<void> {
 }
 
 /**
- * POST /auth/forgot-password
- * Generates a temporary password and sends it via email.
- * Always responds with 200 regardless of whether the email exists (prevents account enumeration).
+ * POST /auth/request-reset-password
+ * Generates a new temporary password + 6-digit confirmation code and sends
+ * both via email. Always responds with 200 regardless of whether the email
+ * exists (prevents account enumeration).
  */
-export async function forgotPassword(
+export async function requestResetPassword(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const { username } = req.body;
-  await service.forgotPassword(username);
+  const { email } = req.body;
+  await service.requestResetPassword(email);
 
   sendSuccess(res, null);
 }
 
 /**
- * POST /auth/change-password
- * Changes the employee's password using the reset token + 6-digit code.
- * Public endpoint — no session required.
+ * POST /auth/reset-password
+ * Completes the password reset for the authenticated employee: verifies the
+ * 6-digit code emailed by requestResetPassword and sets the final password.
+ * Requires a valid session (the employee must have already logged in with
+ * the temp password emailed by requestResetPassword).
  */
-export async function changePassword(
+export async function resetPassword(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const { token, code, password } = req.body;
+  const { employeeId } = req.user!;
+  const { code, password } = req.body;
 
-  await service.changePassword(token, code, password);
+  await service.resetPassword(employeeId, code, password);
 
   sendSuccess(res, null);
 }
