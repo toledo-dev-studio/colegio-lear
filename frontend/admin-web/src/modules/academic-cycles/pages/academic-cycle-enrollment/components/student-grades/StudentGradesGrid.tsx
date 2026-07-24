@@ -2,28 +2,39 @@ import { useMemo } from "react";
 import { GraduationCap, Info, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 
 import { OverallGradeCard } from "./OverallGradeCard";
-import { HighlightGradeCard } from "./HighlightGradeCard";
 import { StudentGradesTable } from "./StudentGradesTable";
-import type { StudentGradeResponse } from "@/interfaces/responses/student-grade.response";
-import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
-import { computeOverallAverage, getStudentSchoolSubjectGradeSummary } from "../lib/student-grades";
-import type { AcademicCycleSchoolGroupTeacherResponse } from "@/interfaces/responses/academic-cycle-school-group-teacher.response";
+import { HighlightGradeCard } from "./HighlightGradeCard";
+import { StudentGradesGridSkeleton } from "./StudentGradesGridSkeleton";
+import { computeOverallAverage, getStudentSchoolSubjectGradeSummary } from "../../lib/student-grades";
+import { useGetStudentGrades } from "@/modules/academic-cycles/hooks/student-grades/useGetStudentGrades";
 
 interface Props {
-    academicCycleResponse: AcademicCycleResponse;
-    studentGradesResponse: StudentGradeResponse[];
-    schoolGroupTeachersResponse: AcademicCycleSchoolGroupTeacherResponse[];
+    enrollmentId: string;
+    academicCycleSchoolGroupId: string;
+    academicCycleId: string;
+    evaluationCount: number;
+    minimumPassingGrade: number;
 }
 
-export const StudentGradesGrid = ({ academicCycleResponse, studentGradesResponse, schoolGroupTeachersResponse }: Props) => {
+export const StudentGradesGrid = ({ enrollmentId, academicCycleSchoolGroupId, academicCycleId, evaluationCount, minimumPassingGrade }: Props) => {
+    // Component hooks & stores
+    const { data, isLoading } = useGetStudentGrades({ academicCycleId: academicCycleId, academicCycleEnrollmentId: enrollmentId });
 
-    const gradeSummary = getStudentSchoolSubjectGradeSummary(studentGradesResponse);
-    const overall = useMemo(() => computeOverallAverage(gradeSummary), [studentGradesResponse]);
-    const passingCount = gradeSummary.filter((g) => g.averageGrade >= academicCycleResponse.minimumPassingGrade).length;
+    const gradeSummary = getStudentSchoolSubjectGradeSummary(data);
+    const overall = useMemo(() => computeOverallAverage(gradeSummary), [data]);
+    const passingCount = gradeSummary.filter((g) => g.averageGrade >= minimumPassingGrade).length;
     const failingCount = gradeSummary.length - passingCount;
 
     const highest = gradeSummary.length ? gradeSummary.reduce((a, b) => (a.averageGrade >= b.averageGrade ? a : b)) : null;
     const lowest = gradeSummary.length ? gradeSummary.reduce((a, b) => (a.averageGrade <= b.averageGrade ? a : b)) : null;
+
+    if (isLoading) {
+        return (
+            <>
+                <StudentGradesGridSkeleton />
+            </>
+        )
+    }
 
     return (
         <>
@@ -40,7 +51,7 @@ export const StudentGradesGrid = ({ academicCycleResponse, studentGradesResponse
                 </header>
 
                 {
-                    studentGradesResponse.length === 0 && (
+                    data.length === 0 && (
                         <section className="flex items-start gap-2 text-xs text-muted-foreground bg-amber-500/10 border border-amber-200/40 rounded-md px-4 py-3">
                             <Info className="w-4 h-4 shrink-0" />
                             <p>Aún no se han registrado calificaciones del alumno para este ciclo escolar.</p>
@@ -49,20 +60,21 @@ export const StudentGradesGrid = ({ academicCycleResponse, studentGradesResponse
                 }
 
                 {
-                    studentGradesResponse.length > 0 && (
+                    data.length > 0 && (
                         <section className="grid grid-cols-1 2xl:grid-cols-3 gap-5">
 
                             {/* Overall grade */}
                             <section className="col-span-1">
 
-                            <OverallGradeCard
-                                overall={overall ?? 0}
-                                passingCount={passingCount}
-                                failingCount={failingCount}
-                                totalSchoolSubjects={gradeSummary.length}
-                                minimumPassingGrade={academicCycleResponse.minimumPassingGrade}
+                                <OverallGradeCard
+                                    overall={overall ?? 0}
+                                    passingCount={passingCount}
+                                    failingCount={failingCount}
+                                    totalSchoolSubjects={gradeSummary.length}
+                                    minimumPassingGrade={minimumPassingGrade}
                                 />
-                                </section>
+
+                            </section>
 
                             {/* Grades details */}
                             <section className="grid 2xl:col-span-2 gap-5">
@@ -84,7 +96,7 @@ export const StudentGradesGrid = ({ academicCycleResponse, studentGradesResponse
                                             label="Materia más baja"
                                             value={lowest.schoolSubjectName}
                                             grade={lowest.averageGrade}
-                                            tone={lowest.averageGrade >= academicCycleResponse.minimumPassingGrade ? "up" : "down"}
+                                            tone={lowest.averageGrade >= minimumPassingGrade ? "up" : "down"}
                                         />
                                     )}
                                 </section>
@@ -92,9 +104,11 @@ export const StudentGradesGrid = ({ academicCycleResponse, studentGradesResponse
                                 {/* School subjects grades details table */}
                                 <section className="grid grid-cols-1">
                                     <StudentGradesTable
-                                        academicCycleResponse={academicCycleResponse}
-                                        studentSchoolSubjectGradeSummary={gradeSummary}
-                                        schoolGroupTeachersResponse={schoolGroupTeachersResponse} />
+                                        academicCycleId={academicCycleId}
+                                        evaluationCount={evaluationCount}
+                                        minimumPassingGrade={minimumPassingGrade}
+                                        academicCycleSchoolGroupId={academicCycleSchoolGroupId}
+                                        gradeSummary={gradeSummary} />
                                 </section>
 
                             </section>
@@ -106,7 +120,7 @@ export const StudentGradesGrid = ({ academicCycleResponse, studentGradesResponse
                 }
 
                 <p className="text-[11px] text-muted-foreground flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />Mínimo aprobatorio: {academicCycleResponse.minimumPassingGrade} · Promedio calculado como media simple de todas las materias del ciclo escolar.
+                    <Sparkles className="w-3 h-3" />Mínimo aprobatorio: {minimumPassingGrade} · Promedio calculado como media simple de todas las materias del ciclo escolar.
                 </p>
 
             </section>

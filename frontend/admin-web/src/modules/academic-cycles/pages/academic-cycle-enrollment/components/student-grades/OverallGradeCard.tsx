@@ -1,5 +1,5 @@
 import { cn } from "@/lib/extensions/utils";
-import { gradeTone } from "../lib/student-grades";
+import { gradeTone } from "../../lib/student-grades";
 
 interface Props {
     overall: number;
