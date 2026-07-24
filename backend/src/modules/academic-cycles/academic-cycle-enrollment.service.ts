@@ -23,7 +23,7 @@ const STUDENT_SELECT = {
 
 const INCLUDE_RELATIONS = {
   student: { select: STUDENT_SELECT },
-  academicCycle: { select: { id: true, name: true } },
+  academicCycle: { select: { id: true, name: true, status: true } },
   academicCycleSchoolGroup: { select: { id: true, name: true } },
   scholarship: {
     select: { id: true, name: true, discountPercentage: true },
@@ -193,6 +193,17 @@ export class AcademicCycleEnrollmentService {
     if (!group) {
       throw new NotFoundError(
         "Academic cycle school group not found in this academic cycle",
+      );
+    }
+
+    // Block re-enrolling a student already in this cycle, regardless of
+    // their existing enrollment's status (enrolled/completed/dropped).
+    const existingEnrollment = await this.prisma.academicCycleEnrollment.findFirst({
+      where: { studentId: dto.studentId, academicCycleId },
+    });
+    if (existingEnrollment) {
+      throw new ConflictError(
+        "This student is already enrolled in this academic cycle",
       );
     }
 

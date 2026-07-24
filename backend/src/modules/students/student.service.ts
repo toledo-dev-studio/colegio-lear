@@ -373,8 +373,12 @@ export class StudentService {
     const studentFullName = `${student.name} ${student.firstLastName} ${student.secondLastName}`;
     const portalUrl = env.FRONTEND_URL; // Will be the student portal URL in the future
 
-    // Send email to each principal guardian (fire and forget)
+    // Send email to each principal guardian (fire and forget).
+    // Principal guardians are required to have an email (enforced by
+    // student-guardian create/update validation), but guard defensively
+    // in case older data predates that rule.
     for (const guardian of guardians) {
+      if (!guardian.email) continue;
       this.mail
         .sendMail({
           to: guardian.email,

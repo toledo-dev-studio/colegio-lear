@@ -4,20 +4,24 @@ export interface StudentGuardianRecord {
   studentId: string;
   fullName: string;
   relationship: string;
-  phoneNumber: string;
-  email: string;
+  phoneNumber: string | null;
+  email: string | null;
   isPrincipal: boolean;
   emergencyContact: boolean;
   authorizedToPickUp: boolean;
   observations: string | null;
 }
 
-/** Input DTO for creating a student guardian */
+/**
+ * Input DTO for creating a student guardian.
+ * phoneNumber/email are only required when isPrincipal is true — enforced
+ * by createStudentGuardianSchema, not by this type.
+ */
 export interface CreateStudentGuardianDto {
   fullName: string;
   relationship: string;
-  phoneNumber: string;
-  email: string;
+  phoneNumber?: string;
+  email?: string;
   isPrincipal?: boolean;
   emergencyContact?: boolean;
   authorizedToPickUp?: boolean;

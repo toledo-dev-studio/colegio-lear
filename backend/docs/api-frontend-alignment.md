@@ -785,3 +785,98 @@ quiere cerrar del todo, la opción más simple es que
 `create()`/`resendInvitation()` también generen y envíen un código
 igual que `requestResetPassword`, usando la misma verificación en
 `resetPassword()`.
+
+## Corrección de 3 bugs reportados por el usuario (2026-07-24)
+
+Se reportaron 5 bugs; 3 se confirmaron y corrigieron en el backend, 2
+no se reprodujeron (ver sección "Investigados, no reproducidos" abajo).
+
+**Corregidos:**
+
+1. **`students` tab tutores — phoneNumber/email solo obligatorios si
+   `isPrincipal=true`.** Antes eran `NOT NULL` en DB y requeridos
+   siempre en zod, sin importar el tipo de tutor. Cambios:
+   - `prisma/schema.prisma`: `StudentGuardian.phoneNumber`/`.email`
+     ahora `String?`, migración
+     `20260724020000_student_guardian_optional_contact` (`ALTER
+     COLUMN ... DROP NOT NULL` en ambas columnas, sin pérdida de
+     datos).
+   - `student-guardian.schema.ts`: `phoneNumber`/`email` pasan a
+     opcionales/nullable (helpers `optionalTrimmedString`/
+     `optionalEmail`, mismo patrón de transform-a-`undefined` que
+     `optionalSecondLastName` en `employee.schema.ts`), con
+     `.refine()` que exige ambos cuando `isPrincipal === true` en
+     `createStudentGuardianSchema`.
+   - `student-guardian.service.ts` `update()`: como es un PATCH
+     parcial, zod no puede validar la invariante contra el registro
+     ya existente — se agregó el chequeo ahí mismo, calculando el
+     `isPrincipal`/`phoneNumber`/`email` **resultante** (patch
+     fusionado sobre el registro existente) y lanzando
+     `ValidationError` si el resultante queda con `isPrincipal=true`
+     pero `phoneNumber`/`email` nulos.
+   - `student-guardian.types.ts`/`swagger.config.ts`: `phoneNumber`/
+     `email` ahora `string | null` / `nullable: true`, y
+     `CreateStudentGuardianBody.required` ya no los incluye.
+   - Efecto colateral encontrado y arreglado en el mismo cambio:
+     `student.service.ts` `sendCredentials()` mandaba correo a
+     `guardian.email` sin checar null (ahora que el tipo permite
+     `null`, TS lo marcó) — se agregó `if (!guardian.email) continue;`
+     antes de enviar, ya que un guardian principal *debería* siempre
+     tener email por la validación anterior, pero esto protege contra
+     datos previos a esta migración.
+
+2. **`academic-cycles` tab inscripciones — bloquear reinscripción del
+   mismo alumno en el mismo ciclo, sin importar el status.**
+   `academic-cycle-enrollment.service.ts` `create()` no tenía ningún
+   chequeo de duplicados — se agregó un `findFirst({ where: {
+   studentId, academicCycleId } })` (sin filtrar por `status`, para
+   que "enrolled", "completed" y "dropped" cuenten igual) justo antes
+   de generar el código, que lanza `ConflictError` (409) si ya existe.
+   Documentado el 409 en el jsdoc de `POST
+   /academic-cycles/{id}/enrollments` en `academic-cycle.routes.ts`.
+   No se agregó constraint `@@unique` a nivel DB — si se quiere
+   defensa en profundidad ahí también, es un cambio aparte.
+
+3. **`students` tab ciclos escolares inscritos — falta `status` dentro
+   de `academicCycle`.** El `INCLUDE_RELATIONS.academicCycle` en
+   `academic-cycle-enrollment.service.ts` solo seleccionaba `{id,
+   name}`; se amplió a `{id, name, status}`. Como `toRecord()` hace
+   passthrough directo de `raw.academicCycle`, ningún otro cambio de
+   service fue necesario — se propaga automáticamente a **todos** los
+   endpoints de enrollments (list, paged, byId, create, update,
+   `GET /students/:studentId/enrollments`), no solo al tab de
+   estudiantes. Actualizado `academic-cycle-enrollment.types.ts`
+   (`academicCycle.status: AcademicCycleStatus`, importado desde
+   `academic-cycle.types.ts` en vez de redeclarar el union) y
+   `swagger.config.ts` (`AcademicCycleEnrollmentRecord.academicCycle.status`).
+
+**Investigados, no reproducidos (revisar con más detalle / posible bug
+de frontend, no de backend):**
+
+4. **"Ciclos escolares: retornando propiedad `description` que no
+   existe."** Se revisó exhaustivamente todo `academic-cycles/*`
+   (core, wallet, school-groups + calendarios, school-subjects,
+   enrollments, grades, student-wallet) contra `prisma/schema.prisma`:
+   en cada lugar donde el código regresa `description`, la columna
+   real existe y está bien mapeada (`AcademicCycle.description`,
+   `AcademicCycleWallet.description`, `AcademicCycleGroup.description`,
+   `SchoolSubject.description` anidado). No se encontró ningún
+   `select`/mapeo pidiendo un campo `description` inexistente. Lo más
+   cercano a un problema real: el swagger de
+   `AcademicCycleSchoolGroupCalendarRecord`/
+   `AcademicCycleSchoolGroupTeacherRecord`/`StudentGradeRecord` documenta
+   el `schoolSubject` anidado como el shape completo de
+   `SchoolSubjectRecord`/`SubjectView` (con `isActive`,
+   `academicLevelId`, `academicLevel`, etc.), pero el código real solo
+   selecciona `{id, name, description}` para ese anidado — un
+   over-promise de swagger, no un bug funcional. Falta un
+   endpoint/respuesta concreta para confirmar a qué se refiere el
+   reporte.
+5. **"Ciclos escolares tab inscripciones: la beca debe ser opcional."**
+   `scholarshipId` ya es opcional/nullable en zod (`create`/`update`),
+   en `prisma/schema.prisma` (`String? @relation(..., onDelete:
+   SetNull)`), en la migración original, en los tipos, y en swagger
+   (`CreateAcademicCycleEnrollmentBody.required` no lo incluye). No se
+   encontró ningún punto donde el backend lo exija. Si el formulario
+   del front sigue pidiéndolo como obligatorio, es un bug de
+   validación del lado del cliente, no del backend.

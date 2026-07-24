@@ -1128,7 +1128,7 @@ router.get(
  *       404:
  *         description: Academic cycle or school group not found
  *       409:
- *         description: Enrollment is closed for this academic cycle
+ *         description: Enrollment is closed for this academic cycle, or the student is already enrolled in this academic cycle (any status)
  */
 router.post(
   "/:academicCycleId/enrollments",

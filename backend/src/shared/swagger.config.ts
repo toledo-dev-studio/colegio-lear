@@ -954,10 +954,15 @@ const swaggerOptions: swaggerJsdoc.Options = {
               ],
               example: "mother",
             },
-            phoneNumber: { type: "string", example: "5559876543" },
+            phoneNumber: {
+              type: "string",
+              nullable: true,
+              example: "5559876543",
+            },
             email: {
               type: "string",
               format: "email",
+              nullable: true,
               example: "maria.garcia@email.com",
             },
             isPrincipal: { type: "boolean", example: true },
@@ -968,7 +973,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateStudentGuardianBody: {
           type: "object",
-          required: ["fullName", "relationship", "phoneNumber", "email"],
+          required: ["fullName", "relationship"],
+          description:
+            "phoneNumber and email are only required when isPrincipal is true; otherwise they may be omitted.",
           properties: {
             fullName: { type: "string", maxLength: 200 },
             relationship: {
@@ -988,8 +995,17 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "other",
               ],
             },
-            phoneNumber: { type: "string", maxLength: 20 },
-            email: { type: "string", format: "email", maxLength: 150 },
+            phoneNumber: {
+              type: "string",
+              maxLength: 20,
+              description: "Required when isPrincipal is true",
+            },
+            email: {
+              type: "string",
+              format: "email",
+              maxLength: 150,
+              description: "Required when isPrincipal is true",
+            },
             isPrincipal: { type: "boolean", default: false },
             emergencyContact: { type: "boolean", default: false },
             authorizedToPickUp: { type: "boolean", default: false },
@@ -998,7 +1014,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         UpdateStudentGuardianBody: {
           type: "object",
-          description: "At least one field required.",
+          description:
+            "At least one field required. phoneNumber and email are only required when the resulting isPrincipal (patch merged over the existing record) is true.",
           properties: {
             fullName: { type: "string", maxLength: 200 },
             relationship: {
@@ -1018,8 +1035,17 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "other",
               ],
             },
-            phoneNumber: { type: "string", maxLength: 20 },
-            email: { type: "string", format: "email", maxLength: 150 },
+            phoneNumber: {
+              type: "string",
+              maxLength: 20,
+              description: "Required when isPrincipal is true",
+            },
+            email: {
+              type: "string",
+              format: "email",
+              maxLength: 150,
+              description: "Required when isPrincipal is true",
+            },
             isPrincipal: { type: "boolean" },
             emergencyContact: { type: "boolean" },
             authorizedToPickUp: { type: "boolean" },
@@ -1427,6 +1453,16 @@ const swaggerOptions: swaggerJsdoc.Options = {
               properties: {
                 id: { type: "string", format: "uuid" },
                 name: { type: "string" },
+                status: {
+                  type: "string",
+                  enum: [
+                    "upcoming",
+                    "active",
+                    "completed",
+                    "cancelled",
+                    "archived",
+                  ],
+                },
               },
             },
             academicCycleSchoolGroupId: { type: "string", format: "uuid" },

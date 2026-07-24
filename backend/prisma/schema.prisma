@@ -332,8 +332,8 @@ model StudentGuardian {
   studentId          String              @map("student_id") @db.Uuid
   fullName           String              @map("full_name") @db.VarChar(200)
   relationship       StudentGuardianType
-  phoneNumber        String              @map("phone_number") @db.VarChar(20)
-  email              String              @db.VarChar(150)
+  phoneNumber        String?             @map("phone_number") @db.VarChar(20)
+  email              String?             @db.VarChar(150)
   isPrincipal        Boolean             @default(false) @map("is_principal")
   emergencyContact   Boolean             @default(false) @map("emergency_contact")
   authorizedToPickUp Boolean             @default(false) @map("authorized_to_pick_up")
