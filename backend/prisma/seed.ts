@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { BloodType, DayOfWeek } from "../src/generated/prisma/enums";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import bcrypt from "bcrypt";
@@ -32,6 +33,13 @@ const SCHOOL_SUBJECTS = {
   matematicas_2p: "c3000000-0003-4000-8000-000000000004",
   matematicas_1s: "c3000000-0003-4000-8000-000000000005",
   historia_1s: "c3000000-0003-4000-8000-000000000006",
+  // 2026 dataset additions
+  historia_1p: "c3000000-0003-4000-8000-000000000007",
+  ingles_1p: "c3000000-0003-4000-8000-000000000008",
+  espanol_1pe: "c3000000-0003-4000-8000-000000000009",
+  matematicas_1pe: "c3000000-0003-4000-8000-000000000010",
+  ingles_1pe: "c3000000-0003-4000-8000-000000000011",
+  expresion_1pe: "c3000000-0003-4000-8000-000000000012",
 };
 
 const SCHOLARSHIPS = {
@@ -53,11 +61,44 @@ const JOB_TITLES = {
   director_general: "f6000000-0006-4000-8000-000000000001",
   coordinador: "f6000000-0006-4000-8000-000000000002",
   docente: "f6000000-0006-4000-8000-000000000003",
+  auxiliar_administrativo: "f6000000-0006-4000-8000-000000000004",
 };
 
 const SECURITY_ROLES = {
   superadmin: "aa000000-0007-4000-8000-000000000001",
   admin: "aa000000-0007-4000-8000-000000000002",
+  coordinador_academico: "aa000000-0007-4000-8000-000000000003",
+  auxiliar_administrativo: "aa000000-0007-4000-8000-000000000004",
+  docente: "aa000000-0007-4000-8000-000000000005",
+};
+
+// ─── Fixed UUIDs — 2026 realistic dataset (academic cycles, groups, wallet) ─────
+
+const ACADEMIC_CYCLES_2026 = {
+  primaria: "bb000000-0008-4000-8000-000000000001",
+  preescolar: "bb000000-0008-4000-8000-000000000002",
+};
+
+const ACADEMIC_CYCLE_GROUPS_2026 = {
+  primaria_a: "cc000000-0009-4000-8000-000000000001",
+  primaria_b: "cc000000-0009-4000-8000-000000000002",
+  preescolar_a: "cc000000-0009-4000-8000-000000000003",
+  preescolar_b: "cc000000-0009-4000-8000-000000000004",
+};
+
+const WALLET_CATALOG_2026 = {
+  primaria_inscripcion: "dd000000-0010-4000-8000-000000000001",
+  primaria_mantenimiento: "dd000000-0010-4000-8000-000000000002",
+  primaria_material: "dd000000-0010-4000-8000-000000000003",
+  preescolar_inscripcion: "dd000000-0010-4000-8000-000000000004",
+  preescolar_mantenimiento: "dd000000-0010-4000-8000-000000000005",
+  preescolar_material: "dd000000-0010-4000-8000-000000000006",
+};
+
+const ANNOUNCEMENTS_2026 = {
+  inicio_cursos: "ff000000-0012-4000-8000-000000000001",
+  dia_madres: "ff000000-0012-4000-8000-000000000002",
+  vacaciones_verano: "ff000000-0012-4000-8000-000000000003",
 };
 
 // ─── All module keys in the system ──────────────────────────────────────────────
@@ -137,7 +178,122 @@ async function main() {
     })),
   });
 
-  console.log(`  ✓ Security roles: ${superAdminRole.name}, ${adminRole.name}`);
+  // Helper: build a full ALL_MODULE_KEYS permission array from a per-module resolver
+  function permissionsFrom(
+    resolver: (moduleKey: string) => {
+      canRead: boolean;
+      canWrite: boolean;
+      canDelete: boolean;
+    },
+  ) {
+    return ALL_MODULE_KEYS.map((moduleKey) => ({
+      moduleKey,
+      ...resolver(moduleKey),
+    }));
+  }
+
+  // Coordinador Académico: operational read/write across academic modules,
+  // no access to employees/job-titles/security-roles/settings, no deletes at all.
+  const coordinadorWriteModules = new Set([
+    "my-account",
+    "students",
+    "academic-cycles",
+    "announcements",
+    "academic-levels",
+    "school-subjects",
+    "scholarships",
+    "payment-concepts",
+  ]);
+  const coordinadorRole = await prisma.securityRole.upsert({
+    where: { id: SECURITY_ROLES.coordinador_academico },
+    update: {},
+    create: {
+      id: SECURITY_ROLES.coordinador_academico,
+      name: "Coordinador Académico",
+      description:
+        "Acceso operativo a módulos académicos; sin gestión de empleados, roles o configuración",
+      isActive: true,
+    },
+  });
+  await prisma.securityRolePermission.deleteMany({
+    where: { securityRoleId: coordinadorRole.id },
+  });
+  await prisma.securityRolePermission.createMany({
+    data: permissionsFrom((moduleKey) => ({
+      canRead: !["employees", "job-titles", "security-roles", "settings"].includes(
+        moduleKey,
+      ),
+      canWrite: coordinadorWriteModules.has(moduleKey),
+      canDelete: false,
+    })).map((p) => ({ ...p, securityRoleId: coordinadorRole.id })),
+  });
+
+  // Auxiliar Administrativo: narrow front-desk access — read a handful of
+  // modules, write only students/announcements/my-account, no deletes.
+  const auxiliarReadModules = new Set([
+    "dashboard",
+    "my-account",
+    "students",
+    "academic-cycles",
+    "announcements",
+    "payment-concepts",
+    "scholarships",
+  ]);
+  const auxiliarWriteModules = new Set(["my-account", "students", "announcements"]);
+  const auxiliarRole = await prisma.securityRole.upsert({
+    where: { id: SECURITY_ROLES.auxiliar_administrativo },
+    update: {},
+    create: {
+      id: SECURITY_ROLES.auxiliar_administrativo,
+      name: "Auxiliar Administrativo",
+      description:
+        "Acceso limitado de mostrador: consulta general y captura de alumnos/anuncios",
+      isActive: true,
+    },
+  });
+  await prisma.securityRolePermission.deleteMany({
+    where: { securityRoleId: auxiliarRole.id },
+  });
+  await prisma.securityRolePermission.createMany({
+    data: permissionsFrom((moduleKey) => ({
+      canRead: auxiliarReadModules.has(moduleKey),
+      canWrite: auxiliarWriteModules.has(moduleKey),
+      canDelete: false,
+    })).map((p) => ({ ...p, securityRoleId: auxiliarRole.id })),
+  });
+
+  // Docente: read-only teaching context, can only write their own account.
+  const docenteReadModules = new Set([
+    "dashboard",
+    "my-account",
+    "my-classes",
+    "academic-cycles",
+    "announcements",
+  ]);
+  const docenteRole = await prisma.securityRole.upsert({
+    where: { id: SECURITY_ROLES.docente },
+    update: {},
+    create: {
+      id: SECURITY_ROLES.docente,
+      name: "Docente",
+      description: "Acceso de solo lectura a su contexto de clases; edita solo su cuenta",
+      isActive: true,
+    },
+  });
+  await prisma.securityRolePermission.deleteMany({
+    where: { securityRoleId: docenteRole.id },
+  });
+  await prisma.securityRolePermission.createMany({
+    data: permissionsFrom((moduleKey) => ({
+      canRead: docenteReadModules.has(moduleKey),
+      canWrite: moduleKey === "my-account",
+      canDelete: false,
+    })).map((p) => ({ ...p, securityRoleId: docenteRole.id })),
+  });
+
+  console.log(
+    `  ✓ Security roles: ${superAdminRole.name}, ${adminRole.name}, ${coordinadorRole.name}, ${auxiliarRole.name}, ${docenteRole.name}`,
+  );
 
   // --- Job Titles ---
   const directorGeneral = await prisma.jobTitle.upsert({
@@ -176,8 +332,20 @@ async function main() {
     },
   });
 
+  await prisma.jobTitle.upsert({
+    where: { id: JOB_TITLES.auxiliar_administrativo },
+    update: {},
+    create: {
+      id: JOB_TITLES.auxiliar_administrativo,
+      name: "Auxiliar Administrativo",
+      description: "Apoyo administrativo y de mostrador",
+      jobTitleType: "administrative_staff",
+      isActive: true,
+    },
+  });
+
   console.log(
-    "  ✓ Job titles: Director General, Coordinador Académico, Docente",
+    "  ✓ Job titles: Director General, Coordinador Académico, Docente, Auxiliar Administrativo",
   );
 
   // --- Admin Employees ---
@@ -240,6 +408,146 @@ async function main() {
   console.log(
     `  ✓ Admin employees: ${admin1Username} (SuperAdmin), ${admin2Username} (Admin)`,
   );
+
+  // --- Realistic 2026 dataset helpers ─────────────────────────────────────────
+
+  const STAFF_EMAIL_DOMAIN = "colegiolear.com.mx";
+
+  /** Strips accents so generated emails/usernames stay plain ASCII. */
+  function stripAccents(value: string): string {
+    return value
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/ñ/gi, (m) => (m === "ñ" ? "n" : "N"));
+  }
+
+  function buildUsername(
+    name: string,
+    firstLastName: string,
+    used: Set<string>,
+  ): string {
+    const base = stripAccents(
+      name.charAt(0).toLowerCase() + firstLastName.toLowerCase().replace(/\s/g, ""),
+    );
+    if (!used.has(base)) {
+      used.add(base);
+      return base;
+    }
+    let suffix = 1;
+    while (used.has(`${base}${suffix}`)) suffix++;
+    const username = `${base}${suffix}`;
+    used.add(username);
+    return username;
+  }
+
+  function buildStaffEmail(name: string, firstLastName: string, seq: number): string {
+    const local = stripAccents(`${name}.${firstLastName}`)
+      .toLowerCase()
+      .replace(/\s+/g, "");
+    return `${local}${seq}@${STAFF_EMAIL_DOMAIN}`;
+  }
+
+  // Track usernames across every employee created in this seed run (existing
+  // admins included) so nothing collides.
+  const usedUsernames = new Set<string>([admin1Username, admin2Username]);
+
+  const TEACHERS_2026 = [
+    { name: "Laura", firstLastName: "Fernández", secondLastName: "Ruiz", subjectKey: "espanol_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
+    { name: "Ricardo", firstLastName: "Salinas", secondLastName: "Ponce", subjectKey: "matematicas_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
+    { name: "Patricia", firstLastName: "Núñez", secondLastName: "Rivas", subjectKey: "ciencias_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
+    { name: "Andrés", firstLastName: "Villarreal", secondLastName: "Ochoa", subjectKey: "ingles_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
+    { name: "Mónica", firstLastName: "Escobar", secondLastName: "Luna", subjectKey: "historia_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
+    { name: "Claudia", firstLastName: "Bravo", secondLastName: "Serrano", subjectKey: "espanol_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
+    { name: "Fernando", firstLastName: "Aguilar", secondLastName: "Campos", subjectKey: "matematicas_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
+    { name: "Gabriela", firstLastName: "Soto", secondLastName: "Delgado", subjectKey: "ingles_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
+    { name: "Rosa", firstLastName: "Ibarra", secondLastName: "Montes", subjectKey: "expresion_1pe" as const, groups: ["preescolar_a"] as const },
+    { name: "Diego", firstLastName: "Paredes", secondLastName: "Cabrera", subjectKey: "expresion_1pe" as const, groups: ["preescolar_b"] as const },
+  ];
+
+  const teacherPassword = await bcrypt.hash("Docente123!", BCRYPT_ROUNDS);
+
+  // Resolved teacher records (with the created employeeId) — used below to
+  // wire up the class schedule (calendar entries).
+  const resolvedTeachers: Array<
+    (typeof TEACHERS_2026)[number] & { employeeId: string }
+  > = [];
+
+  for (let i = 0; i < TEACHERS_2026.length; i++) {
+    const t = TEACHERS_2026[i]!;
+    const username = buildUsername(t.name, t.firstLastName, usedUsernames);
+    const email = buildStaffEmail(t.name, t.firstLastName, i + 1);
+    const employee = await prisma.employee.upsert({
+      where: { email },
+      update: {},
+      create: {
+        name: t.name,
+        firstLastName: t.firstLastName,
+        secondLastName: t.secondLastName,
+        phoneNumber: `55100${String(20000 + i).padStart(5, "0")}`,
+        email,
+        username,
+        password: teacherPassword,
+        mustChangePassword: false,
+        isActive: true,
+        securityRoleId: docenteRole.id,
+        jobTitleId: JOB_TITLES.docente,
+      },
+    });
+    resolvedTeachers.push({ ...t, employeeId: employee.id });
+  }
+
+  console.log(`  ✓ Teacher employees: ${TEACHERS_2026.length} records`);
+
+  const ADMIN_STAFF_2026 = [
+    {
+      name: "Beatriz",
+      firstLastName: "Molina",
+      secondLastName: "Reyes",
+      jobTitleId: JOB_TITLES.auxiliar_administrativo,
+      securityRoleId: auxiliarRole.id,
+    },
+    {
+      name: "Jorge",
+      firstLastName: "Salcedo",
+      secondLastName: "Torres",
+      jobTitleId: JOB_TITLES.auxiliar_administrativo,
+      securityRoleId: auxiliarRole.id,
+    },
+    {
+      name: "Karla",
+      firstLastName: "Espinoza",
+      secondLastName: "Duarte",
+      jobTitleId: JOB_TITLES.coordinador,
+      securityRoleId: coordinadorRole.id,
+    },
+  ];
+
+  const adminStaffPassword = await bcrypt.hash("Admin789!", BCRYPT_ROUNDS);
+
+  for (let i = 0; i < ADMIN_STAFF_2026.length; i++) {
+    const s = ADMIN_STAFF_2026[i]!;
+    const username = buildUsername(s.name, s.firstLastName, usedUsernames);
+    const email = buildStaffEmail(s.name, s.firstLastName, i + 1 + TEACHERS_2026.length);
+    await prisma.employee.upsert({
+      where: { email },
+      update: {},
+      create: {
+        name: s.name,
+        firstLastName: s.firstLastName,
+        secondLastName: s.secondLastName,
+        phoneNumber: `55200${String(30000 + i).padStart(5, "0")}`,
+        email,
+        username,
+        password: adminStaffPassword,
+        mustChangePassword: false,
+        isActive: true,
+        securityRoleId: s.securityRoleId,
+        jobTitleId: s.jobTitleId,
+      },
+    });
+  }
+
+  console.log(`  ✓ Administrative staff employees: ${ADMIN_STAFF_2026.length} records`);
 
   // --- Academic Levels ---
   const preescolar = await prisma.academicLevel.upsert({
@@ -566,6 +874,715 @@ async function main() {
     }),
   ]);
   console.log("  ✓ Payment concepts: 5 records");
+
+  // ─── Realistic 2026 dataset: subjects, cycle, groups, schedule, wallet, students ─
+
+  // --- New School Subjects (2026 dataset) ---
+  await Promise.all([
+    prisma.schoolSubject.upsert({
+      where: { name_educationLevelId: { name: "Historia", educationLevelId: primeroPri.id } },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.historia_1p,
+        name: "Historia",
+        description: "Historia de México, línea del tiempo y hechos relevantes",
+        isActive: true,
+        academicLevelId: primaria.id,
+        educationLevelId: primeroPri.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: { name_educationLevelId: { name: "Inglés", educationLevelId: primeroPri.id } },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.ingles_1p,
+        name: "Inglés",
+        description: "Vocabulario básico y comprensión auditiva en inglés",
+        isActive: true,
+        academicLevelId: primaria.id,
+        educationLevelId: primeroPri.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: { name_educationLevelId: { name: "Español", educationLevelId: primeroPre.id } },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.espanol_1pe,
+        name: "Español",
+        description: "Lenguaje oral, cuentos y primeras grafías",
+        isActive: true,
+        academicLevelId: preescolar.id,
+        educationLevelId: primeroPre.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: { name_educationLevelId: { name: "Matemáticas", educationLevelId: primeroPre.id } },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.matematicas_1pe,
+        name: "Matemáticas",
+        description: "Conteo, formas y nociones básicas de cantidad",
+        isActive: true,
+        academicLevelId: preescolar.id,
+        educationLevelId: primeroPre.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: { name_educationLevelId: { name: "Inglés", educationLevelId: primeroPre.id } },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.ingles_1pe,
+        name: "Inglés",
+        description: "Introducción lúdica al idioma inglés",
+        isActive: true,
+        academicLevelId: preescolar.id,
+        educationLevelId: primeroPre.id,
+      },
+    }),
+    prisma.schoolSubject.upsert({
+      where: {
+        name_educationLevelId: { name: "Expresión y Creatividad", educationLevelId: primeroPre.id },
+      },
+      update: {},
+      create: {
+        id: SCHOOL_SUBJECTS.expresion_1pe,
+        name: "Expresión y Creatividad",
+        description: "Actividades artísticas, motrices y de expresión personal",
+        isActive: true,
+        academicLevelId: preescolar.id,
+        educationLevelId: primeroPre.id,
+      },
+    }),
+  ]);
+  console.log("  ✓ School subjects (2026 dataset): 6 records");
+
+  // --- Academic Cycles (2026) ---
+  const primariaCycle = await prisma.academicCycle.upsert({
+    where: { id: ACADEMIC_CYCLES_2026.primaria },
+    update: {},
+    create: {
+      id: ACADEMIC_CYCLES_2026.primaria,
+      name: "Primaria 2026",
+      code: "PRI-2026",
+      startDate: new Date("2026-08-24T00:00:00.000Z"),
+      endDate: new Date("2027-07-09T00:00:00.000Z"),
+      periodType: "annual",
+      status: "active",
+      minimumPassingGrade: 6,
+      evaluationCount: 3,
+      enrollmentOpen: true,
+      observations: "Ciclo escolar 2026-2027, primer grado de primaria.",
+      academicLevelId: primaria.id,
+      educationLevelId: primeroPri.id,
+    },
+  });
+
+  const preescolarCycle = await prisma.academicCycle.upsert({
+    where: { id: ACADEMIC_CYCLES_2026.preescolar },
+    update: {},
+    create: {
+      id: ACADEMIC_CYCLES_2026.preescolar,
+      name: "Preescolar 2026",
+      code: "PRE-2026",
+      startDate: new Date("2026-08-24T00:00:00.000Z"),
+      endDate: new Date("2027-07-09T00:00:00.000Z"),
+      periodType: "annual",
+      status: "active",
+      minimumPassingGrade: 6,
+      evaluationCount: 3,
+      enrollmentOpen: true,
+      observations: "Ciclo escolar 2026-2027, primer grado de preescolar.",
+      academicLevelId: preescolar.id,
+      educationLevelId: primeroPre.id,
+    },
+  });
+
+  console.log(`  ✓ Academic cycles: ${primariaCycle.name}, ${preescolarCycle.name}`);
+
+  // --- Academic Cycle Groups (A/B per cycle) ---
+  const groupPrimariaA = await prisma.academicCycleGroup.upsert({
+    where: { id: ACADEMIC_CYCLE_GROUPS_2026.primaria_a },
+    update: {},
+    create: {
+      id: ACADEMIC_CYCLE_GROUPS_2026.primaria_a,
+      name: "1° A Primaria",
+      status: "active",
+      academicCycleId: primariaCycle.id,
+    },
+  });
+  const groupPrimariaB = await prisma.academicCycleGroup.upsert({
+    where: { id: ACADEMIC_CYCLE_GROUPS_2026.primaria_b },
+    update: {},
+    create: {
+      id: ACADEMIC_CYCLE_GROUPS_2026.primaria_b,
+      name: "1° B Primaria",
+      status: "active",
+      academicCycleId: primariaCycle.id,
+    },
+  });
+  const groupPreescolarA = await prisma.academicCycleGroup.upsert({
+    where: { id: ACADEMIC_CYCLE_GROUPS_2026.preescolar_a },
+    update: {},
+    create: {
+      id: ACADEMIC_CYCLE_GROUPS_2026.preescolar_a,
+      name: "1° A Preescolar",
+      status: "active",
+      academicCycleId: preescolarCycle.id,
+    },
+  });
+  const groupPreescolarB = await prisma.academicCycleGroup.upsert({
+    where: { id: ACADEMIC_CYCLE_GROUPS_2026.preescolar_b },
+    update: {},
+    create: {
+      id: ACADEMIC_CYCLE_GROUPS_2026.preescolar_b,
+      name: "1° B Preescolar",
+      status: "active",
+      academicCycleId: preescolarCycle.id,
+    },
+  });
+
+  const GROUPS_BY_KEY = {
+    primaria_a: groupPrimariaA,
+    primaria_b: groupPrimariaB,
+    preescolar_a: groupPreescolarA,
+    preescolar_b: groupPreescolarB,
+  } as const;
+
+  console.log("  ✓ Academic cycle groups: 4 records (A/B × 2 cycles)");
+
+  // --- Class schedule (calendar entries) ---
+  // Group A runs 08:00-09:00, Group B runs 09:00-10:00 on the same weekday
+  // for the same subject/teacher — same teacher, no time conflict.
+  const PRIMARIA_SCHEDULE = [
+    { day: "monday", subjectKey: "espanol_1p" },
+    { day: "tuesday", subjectKey: "matematicas_1p" },
+    { day: "wednesday", subjectKey: "ciencias_1p" },
+    { day: "thursday", subjectKey: "ingles_1p" },
+    { day: "friday", subjectKey: "historia_1p" },
+  ] as const;
+  const PREESCOLAR_SCHEDULE = [
+    { day: "monday", subjectKey: "espanol_1pe" },
+    { day: "tuesday", subjectKey: "matematicas_1pe" },
+    { day: "wednesday", subjectKey: "ingles_1pe" },
+    { day: "thursday", subjectKey: "expresion_1pe" },
+  ] as const;
+
+  function findTeacher(subjectKey: string, groupKey: string) {
+    const teacher = resolvedTeachers.find(
+      (t) => t.subjectKey === subjectKey && (t.groups as readonly string[]).includes(groupKey),
+    );
+    if (!teacher) {
+      throw new Error(`No teacher found for ${subjectKey} / ${groupKey}`);
+    }
+    return teacher;
+  }
+
+  let calendarSeq = 0;
+  const calendarEntries: {
+    id: string;
+    day: DayOfWeek;
+    startTime: Date;
+    endTime: Date;
+    academicCycleId: string;
+    academicCycleSchoolGroupId: string;
+    schoolSubjectId: string;
+    teacherId: string;
+  }[] = [];
+
+  for (const [groupKey, group] of [
+    ["primaria_a", groupPrimariaA],
+    ["primaria_b", groupPrimariaB],
+  ] as const) {
+    const startTime = groupKey === "primaria_a" ? "08:00" : "09:00";
+    const endTime = groupKey === "primaria_a" ? "09:00" : "10:00";
+    for (const slot of PRIMARIA_SCHEDULE) {
+      calendarSeq++;
+      const teacher = findTeacher(slot.subjectKey, groupKey);
+      calendarEntries.push({
+        id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
+        day: slot.day,
+        startTime: new Date(`1970-01-01T${startTime}:00.000Z`),
+        endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
+        academicCycleId: primariaCycle.id,
+        academicCycleSchoolGroupId: group.id,
+        schoolSubjectId: SCHOOL_SUBJECTS[slot.subjectKey],
+        teacherId: teacher.employeeId,
+      });
+    }
+  }
+
+  for (const [groupKey, group] of [
+    ["preescolar_a", groupPreescolarA],
+    ["preescolar_b", groupPreescolarB],
+  ] as const) {
+    const startTime = groupKey === "preescolar_a" ? "08:00" : "09:00";
+    const endTime = groupKey === "preescolar_a" ? "09:00" : "10:00";
+    for (const slot of PREESCOLAR_SCHEDULE) {
+      calendarSeq++;
+      const teacher = findTeacher(slot.subjectKey, groupKey);
+      calendarEntries.push({
+        id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
+        day: slot.day,
+        startTime: new Date(`1970-01-01T${startTime}:00.000Z`),
+        endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
+        academicCycleId: preescolarCycle.id,
+        academicCycleSchoolGroupId: group.id,
+        schoolSubjectId: SCHOOL_SUBJECTS[slot.subjectKey],
+        teacherId: teacher.employeeId,
+      });
+    }
+  }
+
+  for (const entry of calendarEntries) {
+    await prisma.academicCycleGroupCalendar.upsert({
+      where: { id: entry.id },
+      update: {},
+      create: entry,
+    });
+  }
+
+  console.log(`  ✓ Class schedule: ${calendarEntries.length} calendar entries`);
+
+  // --- Wallet catalog (2026 cycles): inscripción, mantenimiento, material ---
+  const walletPrimaria = {
+    inscripcion: await prisma.academicCycleWallet.upsert({
+      where: { id: WALLET_CATALOG_2026.primaria_inscripcion },
+      update: {},
+      create: {
+        id: WALLET_CATALOG_2026.primaria_inscripcion,
+        academicCycleId: primariaCycle.id,
+        name: "Inscripción",
+        code: "INSCRIP",
+        description: "Cuota única de inscripción al ciclo escolar",
+        dueDate: new Date("2026-08-01T00:00:00.000Z"),
+        amount: 3500.0,
+        allowForgiveness: true,
+      },
+    }),
+    mantenimiento: await prisma.academicCycleWallet.upsert({
+      where: { id: WALLET_CATALOG_2026.primaria_mantenimiento },
+      update: {},
+      create: {
+        id: WALLET_CATALOG_2026.primaria_mantenimiento,
+        academicCycleId: primariaCycle.id,
+        name: "Mantenimiento mensual",
+        code: "MANTEN",
+        description: "Cuota mensual de mantenimiento e instalaciones",
+        dueDate: new Date("2026-09-05T00:00:00.000Z"),
+        amount: 1500.0,
+        allowForgiveness: true,
+      },
+    }),
+    material: await prisma.academicCycleWallet.upsert({
+      where: { id: WALLET_CATALOG_2026.primaria_material },
+      update: {},
+      create: {
+        id: WALLET_CATALOG_2026.primaria_material,
+        academicCycleId: primariaCycle.id,
+        name: "Material didáctico",
+        code: "MATERIAL",
+        description: "Paquete de material didáctico del ciclo",
+        dueDate: new Date("2026-08-15T00:00:00.000Z"),
+        amount: 800.0,
+        allowForgiveness: false,
+      },
+    }),
+  };
+
+  const walletPreescolar = {
+    inscripcion: await prisma.academicCycleWallet.upsert({
+      where: { id: WALLET_CATALOG_2026.preescolar_inscripcion },
+      update: {},
+      create: {
+        id: WALLET_CATALOG_2026.preescolar_inscripcion,
+        academicCycleId: preescolarCycle.id,
+        name: "Inscripción",
+        code: "INSCRIP",
+        description: "Cuota única de inscripción al ciclo escolar",
+        dueDate: new Date("2026-08-01T00:00:00.000Z"),
+        amount: 3200.0,
+        allowForgiveness: true,
+      },
+    }),
+    mantenimiento: await prisma.academicCycleWallet.upsert({
+      where: { id: WALLET_CATALOG_2026.preescolar_mantenimiento },
+      update: {},
+      create: {
+        id: WALLET_CATALOG_2026.preescolar_mantenimiento,
+        academicCycleId: preescolarCycle.id,
+        name: "Mantenimiento mensual",
+        code: "MANTEN",
+        description: "Cuota mensual de mantenimiento e instalaciones",
+        dueDate: new Date("2026-09-05T00:00:00.000Z"),
+        amount: 1300.0,
+        allowForgiveness: true,
+      },
+    }),
+    material: await prisma.academicCycleWallet.upsert({
+      where: { id: WALLET_CATALOG_2026.preescolar_material },
+      update: {},
+      create: {
+        id: WALLET_CATALOG_2026.preescolar_material,
+        academicCycleId: preescolarCycle.id,
+        name: "Material didáctico",
+        code: "MATERIAL",
+        description: "Paquete de material didáctico del ciclo",
+        dueDate: new Date("2026-08-15T00:00:00.000Z"),
+        amount: 700.0,
+        allowForgiveness: false,
+      },
+    }),
+  };
+
+  console.log("  ✓ Wallet catalog: 6 records (3 × 2 cycles)");
+
+  // --- Students, guardians, enrollments, wallet items & payments ─────────────
+
+  const MALE_NAMES = [
+    "Diego", "Santiago", "Mateo", "Sebastián", "Emiliano", "Leonardo", "Daniel",
+    "Alejandro", "Gael", "Ángel", "Miguel", "Luis", "Carlos", "David", "Jorge",
+    "Fernando", "Ricardo", "Iker", "Bruno", "Adrián",
+  ];
+  const FEMALE_NAMES = [
+    "Sofía", "Valentina", "Ximena", "Camila", "Regina", "Renata", "Victoria",
+    "Fernanda", "Daniela", "Paulina", "Andrea", "Gabriela", "Isabella",
+    "Natalia", "Lucía", "Mariana", "Valeria", "Emilia", "Ana", "María",
+  ];
+  const LAST_NAMES = [
+    "García", "Hernández", "López", "Martínez", "González", "Pérez",
+    "Rodríguez", "Sánchez", "Ramírez", "Torres", "Flores", "Rivera", "Gómez",
+    "Díaz", "Cruz", "Morales", "Reyes", "Jiménez", "Ortiz", "Gutiérrez",
+    "Chávez", "Ramos", "Mendoza", "Vázquez", "Castillo",
+  ];
+  const BLOOD_TYPE_VALUES = Object.values(BloodType);
+  const MUNICIPALITIES = ["Benito Juárez", "Coyoacán", "Álvaro Obregón", "Tlalpan"];
+  const POSTAL_CODES = ["03100", "04100", "01000", "14000"];
+
+  function pick<T>(arr: readonly T[], seq: number): T {
+    return arr[seq % arr.length]!;
+  }
+
+  /** Deterministic 18-char placeholder CURP (not a real/valid checksum, just unique). */
+  function buildCurp(seq: number, sex: "H" | "M"): string {
+    const n = String(seq).padStart(4, "0");
+    return `SEED${n}010101${sex}DF${n.slice(-1)}`; // 4+4+6+1+2+1 = 18 chars
+  }
+
+  function buildStudentEmail(name: string, lastName: string, seq: number): string {
+    const local = stripAccents(`${name}.${lastName}${seq}`).toLowerCase();
+    return `${local}@colegiolear.com.mx`;
+  }
+
+  function buildPhone(base: number, seq: number): string {
+    return String(base + seq).padStart(10, "0");
+  }
+
+  const studentPassword = await bcrypt.hash("Estudiante123!", BCRYPT_ROUNDS);
+
+  interface GroupSeedConfig {
+    key: keyof typeof GROUPS_BY_KEY;
+    cycle: typeof primariaCycle;
+    wallet: typeof walletPrimaria;
+    birthYear: number;
+  }
+
+  const GROUP_CONFIGS: GroupSeedConfig[] = [
+    { key: "primaria_a", cycle: primariaCycle, wallet: walletPrimaria, birthYear: 2019 },
+    { key: "primaria_b", cycle: primariaCycle, wallet: walletPrimaria, birthYear: 2019 },
+    { key: "preescolar_a", cycle: preescolarCycle, wallet: walletPreescolar, birthYear: 2022 },
+    { key: "preescolar_b", cycle: preescolarCycle, wallet: walletPreescolar, birthYear: 2022 },
+  ];
+
+  const STUDENTS_PER_GROUP = 18;
+  let enrollmentSeq = 0;
+  let paymentSeq = 0;
+  let globalStudentSeq = 0;
+
+  let totalPaidCount = 0;
+  let totalScholarshipCount = 0;
+  let totalForgivenCount = 0;
+  let totalPendingCount = 0;
+
+  for (const config of GROUP_CONFIGS) {
+    const group = GROUPS_BY_KEY[config.key];
+
+    for (let i = 0; i < STUDENTS_PER_GROUP; i++) {
+      globalStudentSeq++;
+      const isMale = globalStudentSeq % 2 === 0;
+      const studentName = isMale ? pick(MALE_NAMES, globalStudentSeq) : pick(FEMALE_NAMES, globalStudentSeq);
+      const firstLastName = pick(LAST_NAMES, globalStudentSeq);
+      const secondLastName = pick(LAST_NAMES, globalStudentSeq + 7);
+      const curp = buildCurp(globalStudentSeq, isMale ? "H" : "M");
+      const email = buildStudentEmail(studentName, firstLastName, globalStudentSeq);
+      const enrollmentCode = `LR-2026-${String(globalStudentSeq).padStart(4, "0")}`;
+
+      // category: 0,1,2 -> fully paid; 3 -> scholarship; 4 -> forgiven; 5 -> pending
+      const category = i % 6;
+
+      const student = await prisma.student.upsert({
+        where: { email },
+        update: {},
+        create: {
+          name: studentName,
+          firstLastName,
+          secondLastName,
+          dateOfBirth: new Date(
+            Date.UTC(config.birthYear, globalStudentSeq % 12, 1 + (globalStudentSeq % 27)),
+          ),
+          curp,
+          enrollment: enrollmentCode,
+          observations: null,
+          bloodType: pick(BLOOD_TYPE_VALUES, globalStudentSeq),
+          medicalNotes: null,
+          email,
+          phoneNumber: buildPhone(5520000000, globalStudentSeq),
+          address: `Calle Primavera ${100 + globalStudentSeq}, Col. Del Valle`,
+          state: "Ciudad de México",
+          municipality: pick(MUNICIPALITIES, globalStudentSeq),
+          postalCode: pick(POSTAL_CODES, globalStudentSeq),
+          password: studentPassword,
+          mustChangePassword: true,
+          isActive: true,
+        },
+      });
+
+      // Guardian (principal) — only create if this student doesn't have one yet
+      const existingGuardian = await prisma.studentGuardian.findFirst({
+        where: { studentId: student.id },
+      });
+      if (!existingGuardian) {
+        const guardianName = pick(FEMALE_NAMES, globalStudentSeq + 3);
+        const guardianLastName = firstLastName;
+        await prisma.studentGuardian.create({
+          data: {
+            studentId: student.id,
+            fullName: `${guardianName} ${guardianLastName} ${pick(LAST_NAMES, globalStudentSeq + 11)}`,
+            relationship: globalStudentSeq % 2 === 0 ? "mother" : "father",
+            phoneNumber: buildPhone(5530000000, globalStudentSeq),
+            email: `tutor.${buildStudentEmail(guardianName, guardianLastName, globalStudentSeq)}`,
+            isPrincipal: true,
+            emergencyContact: true,
+            authorizedToPickUp: true,
+            observations: null,
+          },
+        });
+      }
+
+      // Enrollment — only create if this student isn't already enrolled in this cycle
+      let enrollment = await prisma.academicCycleEnrollment.findFirst({
+        where: { studentId: student.id, academicCycleId: config.cycle.id },
+      });
+      const scholarshipId =
+        category === 3
+          ? ([
+              SCHOLARSHIPS.excelencia_academica,
+              SCHOLARSHIPS.deportiva,
+              SCHOLARSHIPS.hermanos,
+              SCHOLARSHIPS.necesidad_economica,
+            ][globalStudentSeq % 4] ?? null)
+          : null;
+
+      if (!enrollment) {
+        enrollmentSeq++;
+        // AcademicCycleEnrollment.code follows the app's real "INS-YYYY-####"
+        // convention (see AcademicCycleEnrollmentService.generateCode) — distinct
+        // from the student's own "LR-YYYY-####" enrollment folio.
+        const academicCycleEnrollmentCode = `INS-2026-${String(enrollmentSeq).padStart(4, "0")}`;
+        enrollment = await prisma.academicCycleEnrollment.create({
+          data: {
+            code: academicCycleEnrollmentCode,
+            status: "enrolled",
+            studentId: student.id,
+            academicCycleId: config.cycle.id,
+            academicCycleSchoolGroupId: group.id,
+            scholarshipId,
+          },
+        });
+      }
+
+      // Wallet items snapshot (inscripción, mantenimiento, material) — only
+      // if this enrollment doesn't have them yet.
+      const existingItems = await prisma.studentWalletItem.count({
+        where: { academicCycleEnrollmentId: enrollment.id },
+      });
+
+      if (existingItems === 0) {
+        let discountRate = 0;
+        if (scholarshipId) {
+          const scholarship = await prisma.scholarship.findUnique({
+            where: { id: scholarshipId },
+          });
+          discountRate = Number(scholarship?.discountPercentage ?? 0) / 100;
+        }
+
+        const walletEntries = [
+          config.wallet.inscripcion,
+          config.wallet.mantenimiento,
+          config.wallet.material,
+        ];
+
+        for (let w = 0; w < walletEntries.length; w++) {
+          const catalogItem = walletEntries[w]!;
+          const baseAmount = Number(catalogItem.amount);
+          const amount = discountRate > 0 ? Math.round(baseAmount * (1 - discountRate) * 100) / 100 : baseAmount;
+
+          // Forgiven category: forgive the "mantenimiento" item (index 1) only.
+          const isForgiven = category === 4 && w === 1;
+          let outstandingAmount = amount;
+          if (isForgiven) {
+            outstandingAmount = 0;
+          } else if (category === 0 || category === 1 || category === 2 || category === 3) {
+            // fully paid (also applies to scholarship students, at the discounted rate)
+            outstandingAmount = 0;
+          } else if (category === 5) {
+            // pending: 40% paid, 60% still outstanding
+            outstandingAmount = Math.round(amount * 0.6 * 100) / 100;
+          } else if (category === 4) {
+            // forgiven category, non-forgiven items: fully paid
+            outstandingAmount = 0;
+          }
+
+          const item = await prisma.studentWalletItem.create({
+            data: {
+              name: catalogItem.name,
+              code: catalogItem.code,
+              description: catalogItem.description,
+              amount,
+              allowForgiveness: catalogItem.allowForgiveness,
+              outstandingAmount,
+              isForgiven,
+              dueDate: catalogItem.dueDate,
+              studentId: student.id,
+              academicCycleId: config.cycle.id,
+              academicCycleEnrollmentId: enrollment.id,
+              academicCycleWalletId: catalogItem.id,
+            },
+          });
+
+          // Register a payment for the portion actually paid (amount - outstanding)
+          const paidAmount = Math.round((amount - outstandingAmount) * 100) / 100;
+          if (paidAmount > 0) {
+            paymentSeq++;
+            await prisma.studentWalletPayment.create({
+              data: {
+                folio: `PAG-2026-${String(paymentSeq).padStart(6, "0")}`,
+                amount: paidAmount,
+                paymentMethod: paymentSeq % 2 === 0 ? "online_payment" : "cash",
+                academicCycleId: config.cycle.id,
+                academicCycleEnrollmentId: enrollment.id,
+                studentWalletItemId: item.id,
+              },
+            });
+          }
+        }
+      }
+
+      if (category === 3) totalScholarshipCount++;
+      else if (category === 4) totalForgivenCount++;
+      else if (category === 5) totalPendingCount++;
+      else totalPaidCount++;
+    }
+  }
+
+  console.log(
+    `  ✓ Students: ${globalStudentSeq} records (${STUDENTS_PER_GROUP} × 4 groups) — ` +
+      `${totalPaidCount} al corriente, ${totalScholarshipCount} con beca, ` +
+      `${totalForgivenCount} con condonación, ${totalPendingCount} con saldo pendiente`,
+  );
+
+  // --- Announcements (with realistic HTML content) ─────────────────────────
+
+  const now = new Date();
+  const inicioCursosContent = `
+    <h2>¡Bienvenidos al ciclo escolar 2026-2027!</h2>
+    <p>Estimadas familias, docentes y personal del Colegio Lear:</p>
+    <p>Nos da mucho gusto darles la bienvenida al nuevo ciclo escolar. Las clases inician el
+    <strong>lunes 24 de agosto de 2026</strong>. Les recordamos los siguientes puntos importantes:</p>
+    <ul>
+      <li>El horario de entrada es a las 8:00 a.m. y de salida a las 13:00 p.m.</li>
+      <li>Es indispensable presentarse con el uniforme completo desde el primer día.</li>
+      <li>La cuota de inscripción y el primer pago de mantenimiento deben estar cubiertos antes del inicio de clases.</li>
+    </ul>
+    <p>¡Les deseamos un excelente regreso a clases!</p>
+    <p><em>Dirección General, Colegio Lear</em></p>
+  `.trim();
+
+  const diaMadresContent = `
+    <h2>Festival del Día de las Madres 🌸</h2>
+    <p>Con mucho cariño invitamos a todas las mamás de nuestra comunidad escolar al festival que
+    preparamos en su honor.</p>
+    <p><strong>Fecha:</strong> viernes 8 de mayo de 2026<br/>
+    <strong>Hora:</strong> 9:00 a.m.<br/>
+    <strong>Lugar:</strong> Patio principal del colegio</p>
+    <p>Los grupos de Preescolar y Primaria prepararon un pequeño programa artístico como muestra
+    de cariño y agradecimiento. ¡No falten!</p>
+    <p><em>Coordinación Académica, Colegio Lear</em></p>
+  `.trim();
+
+  const vacacionesContent = `
+    <h2>Periodo vacacional de verano</h2>
+    <p>Les informamos que el periodo vacacional de verano será del <strong>13 de julio al 21 de
+    agosto de 2026</strong>. Las actividades del nuevo ciclo escolar reinician el 24 de agosto.</p>
+    <p>Aprovechamos para recordarles mantener sus datos de contacto actualizados para el próximo
+    ciclo escolar.</p>
+    <p><em>Dirección General, Colegio Lear</em></p>
+  `.trim();
+
+  await prisma.announcement.upsert({
+    where: { id: ANNOUNCEMENTS_2026.inicio_cursos },
+    update: {},
+    create: {
+      id: ANNOUNCEMENTS_2026.inicio_cursos,
+      name: "Bienvenida — Inicio de cursos 2026-2027",
+      description: "Aviso de bienvenida e inicio de clases del ciclo 2026-2027",
+      audience: ["student", "teacher", "administrative-staff"],
+      content: inicioCursosContent,
+      publishedAt: new Date("2026-08-10T00:00:00.000Z"),
+      expiresAt: new Date("2026-09-10T00:00:00.000Z"),
+      isActive: true,
+      recipientsCount: 98,
+      viewedCount: 74,
+      viewsCalculatedAt: now,
+    },
+  });
+
+  await prisma.announcement.upsert({
+    where: { id: ANNOUNCEMENTS_2026.dia_madres },
+    update: {},
+    create: {
+      id: ANNOUNCEMENTS_2026.dia_madres,
+      name: "Festival del Día de las Madres",
+      description: "Invitación al festival del Día de las Madres",
+      audience: ["student", "teacher"],
+      content: diaMadresContent,
+      publishedAt: new Date("2026-04-20T00:00:00.000Z"),
+      expiresAt: new Date("2026-05-09T00:00:00.000Z"),
+      isActive: true,
+      recipientsCount: 85,
+      viewedCount: 63,
+      viewsCalculatedAt: now,
+    },
+  });
+
+  await prisma.announcement.upsert({
+    where: { id: ANNOUNCEMENTS_2026.vacaciones_verano },
+    update: {},
+    create: {
+      id: ANNOUNCEMENTS_2026.vacaciones_verano,
+      name: "Periodo vacacional de verano 2026",
+      description: "Fechas del periodo vacacional de verano",
+      audience: ["student", "teacher", "administrative-staff"],
+      content: vacacionesContent,
+      publishedAt: new Date("2026-07-01T00:00:00.000Z"),
+      expiresAt: new Date("2026-08-20T00:00:00.000Z"),
+      isActive: true,
+      recipientsCount: 98,
+      viewedCount: 51,
+      viewsCalculatedAt: now,
+    },
+  });
+
+  console.log("  ✓ Announcements: 3 records");
 
   console.log("🌱 Seed completed successfully.");
 }
