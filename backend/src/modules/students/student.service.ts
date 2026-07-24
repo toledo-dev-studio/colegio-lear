@@ -127,7 +127,7 @@ export class StudentService {
       dateOfBirth: (raw.dateOfBirth as Date).toISOString(),
       curp: raw.curp as string,
       enrollment: raw.enrollment as string,
-      image: raw.image as string | null,
+      avatar: raw.avatar as string | null,
       observations: raw.observations as string | null,
       isActive: raw.isActive as boolean,
       bloodType:
@@ -252,7 +252,7 @@ export class StudentService {
         dateOfBirth: new Date(dto.dateOfBirth),
         curp: dto.curp,
         enrollment,
-        image: dto.image ?? null,
+        avatar: dto.avatar ?? null,
         observations: dto.observations ?? null,
         bloodType: BLOOD_TYPE_MAP[dto.bloodType] ?? (dto.bloodType as BloodType),
         medicalNotes: dto.medicalNotes ?? null,
@@ -300,7 +300,7 @@ export class StudentService {
     if (dto.dateOfBirth !== undefined)
       updateData.dateOfBirth = new Date(dto.dateOfBirth);
     if (dto.curp !== undefined) updateData.curp = dto.curp;
-    if (dto.image !== undefined) updateData.image = dto.image;
+    if (dto.avatar !== undefined) updateData.avatar = dto.avatar;
     if (dto.observations !== undefined)
       updateData.observations = dto.observations;
     if (dto.bloodType !== undefined)

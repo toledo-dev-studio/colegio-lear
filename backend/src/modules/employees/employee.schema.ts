@@ -99,7 +99,8 @@ export const employeePagedQuerySchema = employeeFiltersSchema.extend({
 
 /**
  * Validates POST body for creating an employee.
- * All fields are required. File (image) is handled separately by multer.
+ * All fields are required. This is a plain JSON body — the avatar is
+ * uploaded separately via POST /employees/:id/avatar once the employee exists.
  * - name: 1-100 chars, trimmed, non-blank
  * - firstLastName: 1-100 chars, trimmed, non-blank
  * - secondLastName: 1-100 chars, trimmed, non-blank
@@ -127,7 +128,7 @@ export const createEmployeeSchema = z.object({
 /**
  * Validates PATCH /employees/me body for updating the authenticated employee's own account.
  * Required: name, firstLastName, phoneNumber.
- * Optional: secondLastName, file (handled by multer).
+ * Optional: secondLastName. Avatar is uploaded separately via POST /employees/me/avatar.
  */
 export const updateMyAccountSchema = z.object({
   name: nonBlankString(100),
@@ -139,8 +140,7 @@ export const updateMyAccountSchema = z.object({
 /**
  * Validates PATCH body for updating an employee.
  * All fields are optional. When present, they must satisfy the same constraints as creation.
- * Note: The "at least one field or file" refinement is checked in the controller
- * since req.file is not available in the Zod schema context.
+ * Note: The "at least one field" refinement is checked in the controller.
  */
 export const updateEmployeeSchema = z.object({
   name: nonBlankString(100).optional(),

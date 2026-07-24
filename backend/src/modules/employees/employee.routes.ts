@@ -21,6 +21,8 @@ import {
   softDelete,
   resendInvitation,
   updateMyAccount,
+  uploadMyAvatar,
+  uploadAvatarById,
   findAllTeachers,
 } from "./employee.controller";
 
@@ -202,11 +204,11 @@ router.get(
  *     tags:
  *       - Employees
  *     summary: Create a new employee
- *     description: Creates a new employee with optional image. Generates username automatically and sends an invitation email.
+ *     description: Creates a new employee. Generates username automatically and sends an invitation email. Avatar is uploaded separately via POST /employees/{id}/avatar once the employee exists.
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
@@ -217,10 +219,6 @@ router.get(
  *               - securityRoleId
  *               - jobTitleId
  *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: Optional employee image (jpeg, png, webp, gif; max 5MB)
  *               name:
  *                 type: string
  *               firstLastName:
@@ -256,8 +254,6 @@ router.get(
 router.post(
   "/",
   authorize("employees"),
-  requireMultipart,
-  uploadSingle,
   validate(createEmployeeSchema, "body"),
   create,
 );
@@ -269,11 +265,11 @@ router.post(
  *     tags:
  *       - Employees
  *     summary: Update authenticated employee's own account
- *     description: Updates the current user's profile (name, firstLastName, secondLastName, phoneNumber, image). Returns the same shape as GET /auth/me. No RBAC check — any authenticated user can update their own account.
+ *     description: Updates the current user's profile (name, firstLastName, secondLastName, phoneNumber). Avatar is updated separately via POST /employees/me/avatar. Returns the same shape as GET /auth/me. No RBAC check — any authenticated user can update their own account.
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
@@ -281,10 +277,6 @@ router.post(
  *               - firstLastName
  *               - phoneNumber
  *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: Optional profile image (jpeg, png, webp, gif; max 5MB)
  *               name:
  *                 type: string
  *               firstLastName:
@@ -311,10 +303,51 @@ router.post(
 // PATCH /me does NOT require RBAC — any authenticated employee can update their own profile
 router.patch(
   "/me",
-  requireMultipart,
-  uploadSingle,
   validate(updateMyAccountSchema, "body"),
   updateMyAccount,
+);
+
+/**
+ * @openapi
+ * /employees/me/avatar:
+ *   post:
+ *     tags:
+ *       - Employees
+ *     summary: Upload or replace authenticated employee's own avatar
+ *     description: Uploads a new avatar for the authenticated employee, replacing the previous one if present. Requires multipart/form-data with a file. Returns the same shape as GET /auth/me. No RBAC check — any authenticated user can update their own avatar.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Avatar image (jpeg, png, webp, gif; max 5MB)
+ *     responses:
+ *       200:
+ *         description: Avatar updated successfully. Returns same shape as /auth/me.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ *       400:
+ *         description: Validation error or missing file
+ *       401:
+ *         description: Not authenticated
+ *       404:
+ *         description: Employee not found or inactive
+ */
+// POST /me/avatar does NOT require RBAC — any authenticated employee can update their own avatar
+router.post(
+  "/me/avatar",
+  requireMultipart,
+  uploadSingle,
+  uploadMyAvatar,
 );
 
 /**
@@ -381,7 +414,7 @@ router.get(
  *     tags:
  *       - Employees
  *     summary: Update an employee
- *     description: Partially updates an existing employee. At least one field or file must be provided. Username is never regenerated.
+ *     description: Partially updates an existing employee. At least one field must be provided. Username is never regenerated. Avatar is updated separately via POST /employees/{id}/avatar.
  *     parameters:
  *       - in: path
  *         name: id
@@ -393,14 +426,10 @@ router.get(
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: Optional new employee image (jpeg, png, webp, gif; max 5MB)
  *               name:
  *                 type: string
  *               firstLastName:
@@ -437,11 +466,59 @@ router.get(
 router.patch(
   "/:id",
   authorize("employees"),
-  requireMultipart,
-  uploadSingle,
   validate(idParamSchema, "params"),
   validate(updateEmployeeSchema, "body"),
   update,
+);
+
+/**
+ * @openapi
+ * /employees/{id}/avatar:
+ *   post:
+ *     tags:
+ *       - Employees
+ *     summary: Upload or replace an employee's avatar
+ *     description: Uploads a new avatar for the given employee, replacing the previous one if present. Requires multipart/form-data with a file.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Employee UUID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Avatar image (jpeg, png, webp, gif; max 5MB)
+ *     responses:
+ *       200:
+ *         description: Avatar updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/EmployeeDetail'
+ *       400:
+ *         description: Validation error or missing file
+ *       404:
+ *         description: Employee not found
+ */
+router.post(
+  "/:id/avatar",
+  authorize("employees"),
+  validate(idParamSchema, "params"),
+  requireMultipart,
+  uploadSingle,
+  uploadAvatarById,
 );
 
 /**

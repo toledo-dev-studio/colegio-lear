@@ -82,7 +82,7 @@ export class AuthService {
       phoneNumber: employee.phoneNumber,
       email: employee.email,
       username: employee.username,
-      image: employee.image,
+      avatar: employee.avatar,
       mustChangePassword: employee.mustChangePassword,
       securityRole: {
         id: employee.securityRole.id,
@@ -236,7 +236,7 @@ export class AuthService {
       phoneNumber: employee.phoneNumber,
       email: employee.email,
       username: employee.username,
-      image: employee.image,
+      avatar: employee.avatar,
       mustChangePassword: employee.mustChangePassword,
       securityRole: {
         id: employee.securityRole.id,

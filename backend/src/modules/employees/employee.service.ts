@@ -162,7 +162,7 @@ export class EmployeeService {
       phoneNumber: record.phoneNumber,
       email: record.email,
       username: record.username,
-      image: record.image,
+      avatar: record.avatar,
       isActive: record.isActive,
       securityRoleId: record.securityRoleId,
       jobTitleId: record.jobTitleId,
@@ -294,15 +294,12 @@ export class EmployeeService {
    * - Validates email uniqueness (case-insensitive)
    * - Validates FK references (securityRoleId, jobTitleId)
    * - Generates username with collision resolution
-   * - Uploads file if present
-   * - Creates record with isActive=true by default (or dto.isActive when provided)
+   * - Creates record with isActive=true by default (or dto.isActive when provided).
+   *   Avatar starts as null — it is uploaded separately via uploadAvatar.
    * - Sends invitation email (non-blocking, logs failure)
    * - Returns EmployeeDetail with full relations
    */
-  async create(
-    dto: CreateEmployeeDto,
-    file?: FileUpload,
-  ): Promise<EmployeeDetail> {
+  async create(dto: CreateEmployeeDto): Promise<EmployeeDetail> {
     // Check email uniqueness (case-insensitive)
     const existingEmail = await this.prisma.employee.findFirst({
       where: { email: { equals: dto.email, mode: "insensitive" } },
@@ -350,17 +347,6 @@ export class EmployeeService {
     const base = this.generateUsername(dto.name, dto.firstLastName);
     const username = await this.resolveUsernameCollision(base);
 
-    // Upload file if present
-    let image: string | null = null;
-    if (file) {
-      image = await this.storage.upload({
-        buffer: file.buffer,
-        fileName: file.originalname,
-        mimeType: file.mimetype,
-        subfolder: "employees",
-      });
-    }
-
     // Generate temporary password for the new employee
     const bcrypt = await import("bcrypt");
     const tempPassword = Math.random().toString(36).slice(-8);
@@ -380,7 +366,6 @@ export class EmployeeService {
         username,
         password: hashedPassword,
         mustChangePassword: true,
-        image,
         isActive: dto.isActive ?? true,
         securityRoleId: dto.securityRoleId,
         jobTitleId: dto.jobTitleId,
@@ -419,15 +404,11 @@ export class EmployeeService {
    * Partial update of an employee.
    * - Verifies the employee exists (throws NotFoundError)
    * - Checks email uniqueness if email changed (excluding self)
-   * - Uploads file if present
    * - Does NOT regenerate username (username is immutable)
+   * - Avatar is updated separately via uploadAvatar
    * - Returns EmployeeDetail with full relations
    */
-  async update(
-    id: string,
-    dto: UpdateEmployeeDto,
-    file?: FileUpload,
-  ): Promise<EmployeeDetail> {
+  async update(id: string, dto: UpdateEmployeeDto): Promise<EmployeeDetail> {
     // Verify employee exists
     const existing = await this.prisma.employee.findUnique({
       where: { id },
@@ -451,17 +432,6 @@ export class EmployeeService {
       }
     }
 
-    // Upload file if present
-    let image: string | undefined;
-    if (file) {
-      image = await this.storage.upload({
-        buffer: file.buffer,
-        fileName: file.originalname,
-        mimeType: file.mimetype,
-        subfolder: "employees",
-      });
-    }
-
     // Build update data (only set defined fields)
     const updateData: Record<string, unknown> = {};
     if (dto.name !== undefined) updateData.name = dto.name;
@@ -475,7 +445,6 @@ export class EmployeeService {
       updateData.securityRoleId = dto.securityRoleId;
     if (dto.jobTitleId !== undefined) updateData.jobTitleId = dto.jobTitleId;
     if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
-    if (image !== undefined) updateData.image = image;
 
     // Update the record
     await this.prisma.employee.update({
@@ -555,14 +524,14 @@ export class EmployeeService {
 
   /**
    * Update the authenticated employee's own account (my account).
-   * Only allows updating: name, firstLastName, secondLastName, phoneNumber, and image.
+   * Only allows updating: name, firstLastName, secondLastName, phoneNumber.
+   * Avatar is updated separately via uploadMyAvatar.
    * Returns the same shape as auth/me (LoginResponse) with securityRole+permissions and jobTitle.
    * Throws NotFoundError if the employee does not exist or is inactive.
    */
   async updateMyAccount(
     employeeId: string,
     dto: UpdateMyAccountDto,
-    file?: FileUpload,
   ): Promise<LoginResponse> {
     // Verify employee exists and is active
     const existing = await this.prisma.employee.findUnique({
@@ -573,33 +542,99 @@ export class EmployeeService {
       throw new NotFoundError("Empleado no encontrado o inactivo");
     }
 
-    // Upload file if present
-    let image: string | undefined;
-    if (file) {
-      image = await this.storage.upload({
-        buffer: file.buffer,
-        fileName: file.originalname,
-        mimeType: file.mimetype,
-        subfolder: "employees",
-      });
-    }
-
-    // Build update data
-    const updateData: Record<string, unknown> = {
-      name: dto.name,
-      firstLastName: dto.firstLastName,
-      secondLastName: dto.secondLastName ?? null,
-      phoneNumber: dto.phoneNumber,
-    };
-    if (image !== undefined) updateData.image = image;
-
     // Update the record
     await this.prisma.employee.update({
       where: { id: employeeId },
-      data: updateData,
+      data: {
+        name: dto.name,
+        firstLastName: dto.firstLastName,
+        secondLastName: dto.secondLastName ?? null,
+        phoneNumber: dto.phoneNumber,
+      },
     });
 
-    // Re-fetch with full relations (same as auth/me)
+    return this.getMyAccountResponse(employeeId);
+  }
+
+  /**
+   * Replace the avatar of an employee managed by an admin (POST /employees/:id/avatar).
+   * Deletes the previous avatar file (if any) before storing the new one.
+   * Throws NotFoundError if the employee does not exist.
+   */
+  async uploadAvatar(id: string, file: FileUpload): Promise<EmployeeDetail> {
+    const existing = await this.prisma.employee.findUnique({ where: { id } });
+
+    if (!existing) {
+      throw new NotFoundError("Empleado no encontrado");
+    }
+
+    const avatar = await this.storage.upload({
+      buffer: file.buffer,
+      fileName: file.originalname,
+      mimeType: file.mimetype,
+      subfolder: "employees",
+    });
+
+    if (existing.avatar) {
+      await this.storage.delete(existing.avatar);
+    }
+
+    await this.prisma.employee.update({
+      where: { id },
+      data: { avatar },
+    });
+
+    const detail = await this.prisma.employee.findUnique({
+      where: { id },
+      include: EMPLOYEE_DETAIL_INCLUDE,
+    });
+
+    return this.mapToEmployeeDetail(detail);
+  }
+
+  /**
+   * Replace the authenticated employee's own avatar (POST /employees/me/avatar).
+   * Deletes the previous avatar file (if any) before storing the new one.
+   * Throws NotFoundError if the employee does not exist or is inactive.
+   */
+  async uploadMyAvatar(
+    employeeId: string,
+    file: FileUpload,
+  ): Promise<LoginResponse> {
+    const existing = await this.prisma.employee.findUnique({
+      where: { id: employeeId },
+    });
+
+    if (!existing || !existing.isActive) {
+      throw new NotFoundError("Empleado no encontrado o inactivo");
+    }
+
+    const avatar = await this.storage.upload({
+      buffer: file.buffer,
+      fileName: file.originalname,
+      mimeType: file.mimetype,
+      subfolder: "employees",
+    });
+
+    if (existing.avatar) {
+      await this.storage.delete(existing.avatar);
+    }
+
+    await this.prisma.employee.update({
+      where: { id: employeeId },
+      data: { avatar },
+    });
+
+    return this.getMyAccountResponse(employeeId);
+  }
+
+  /**
+   * Re-fetch an employee with full relations and map to LoginResponse shape
+   * (same shape as GET /auth/me). Shared by updateMyAccount and uploadMyAvatar.
+   */
+  private async getMyAccountResponse(
+    employeeId: string,
+  ): Promise<LoginResponse> {
     const updated = await this.prisma.employee.findUnique({
       where: { id: employeeId },
       include: {
@@ -608,7 +643,6 @@ export class EmployeeService {
       },
     });
 
-    // Map to LoginResponse shape
     return {
       id: updated!.id,
       name: updated!.name,
@@ -617,7 +651,7 @@ export class EmployeeService {
       phoneNumber: updated!.phoneNumber,
       email: updated!.email,
       username: updated!.username,
-      image: updated!.image,
+      avatar: updated!.avatar,
       mustChangePassword: updated!.mustChangePassword,
       securityRole: {
         id: updated!.securityRole.id,

@@ -68,7 +68,7 @@ export const createStudentSchema = z.object({
     .string()
     .datetime({ message: "dateOfBirth must be a valid ISO date" }),
   curp: nonBlankString(18),
-  image: z.string().max(500).optional(),
+  avatar: z.string().max(500).optional(),
   observations: z.string().max(1000).optional(),
   bloodType: z.enum(BLOOD_TYPES, {
     error: `bloodType must be one of: ${BLOOD_TYPES.join(", ")}`,
@@ -91,7 +91,7 @@ export const updateStudentSchema = z
     secondLastName: nonBlankString(100).optional(),
     dateOfBirth: z.string().datetime().optional(),
     curp: nonBlankString(18).optional(),
-    image: z.string().max(500).nullable().optional(),
+    avatar: z.string().max(500).nullable().optional(),
     observations: z.string().max(1000).nullable().optional(),
     bloodType: z.enum(BLOOD_TYPES).optional(),
     medicalNotes: z.string().max(1000).nullable().optional(),

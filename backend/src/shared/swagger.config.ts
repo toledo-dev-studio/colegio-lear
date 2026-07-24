@@ -310,7 +310,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "omar.trejo@colegiolear.com",
             },
             username: { type: "string", example: "otrejo" },
-            image: {
+            avatar: {
               type: "string",
               nullable: true,
               example: "employees/abc123.jpg",
@@ -378,7 +378,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "omar.trejo@colegiolear.com",
             },
             username: { type: "string", example: "otrejo" },
-            image: {
+            avatar: {
               type: "string",
               nullable: true,
               example: "employees/abc123.jpg",
@@ -419,7 +419,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "omar.trejo@colegiolear.com",
             },
             username: { type: "string", example: "otrejo" },
-            image: {
+            avatar: {
               type: "string",
               nullable: true,
               example: "employees/abc123.jpg",
@@ -492,13 +492,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             securityRoleId: { type: "string", format: "uuid" },
             jobTitleId: { type: "string", format: "uuid" },
             isActive: { type: "boolean", default: true },
-            file: {
-              type: "string",
-              format: "binary",
-              description: "Optional profile image (jpeg, png, webp, gif)",
-            },
           },
-          description: "Multipart/form-data body for creating an employee",
+          description:
+            "JSON body for creating an employee. Avatar is uploaded separately via POST /employees/{id}/avatar.",
         },
         UpdateEmployeeDto: {
           type: "object",
@@ -511,14 +507,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             securityRoleId: { type: "string", format: "uuid" },
             jobTitleId: { type: "string", format: "uuid" },
             isActive: { type: "boolean" },
-            file: {
-              type: "string",
-              format: "binary",
-              description: "Optional profile image (jpeg, png, webp, gif)",
-            },
           },
           description:
-            "Multipart/form-data body for updating an employee. All fields optional but at least one required.",
+            "JSON body for updating an employee. All fields optional but at least one required. Avatar is updated separately via POST /employees/{id}/avatar.",
         },
         Announcement: {
           type: "object",
@@ -853,7 +844,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
             curp: { type: "string", example: "PEGJ100515HDFRRC09" },
             enrollment: { type: "string", example: "LR-2025-0001" },
-            image: { type: "string", nullable: true },
+            avatar: { type: "string", nullable: true },
             observations: { type: "string", nullable: true },
             isActive: { type: "boolean", example: true },
             bloodType: {
@@ -896,7 +887,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             secondLastName: { type: "string", maxLength: 100 },
             dateOfBirth: { type: "string", format: "date-time" },
             curp: { type: "string", maxLength: 18 },
-            image: { type: "string", maxLength: 500 },
+            avatar: { type: "string", maxLength: 500 },
             observations: { type: "string", maxLength: 1000 },
             bloodType: {
               type: "string",
@@ -922,7 +913,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             secondLastName: { type: "string", maxLength: 100 },
             dateOfBirth: { type: "string", format: "date-time" },
             curp: { type: "string", maxLength: 18 },
-            image: { type: "string", maxLength: 500, nullable: true },
+            avatar: { type: "string", maxLength: 500, nullable: true },
             observations: { type: "string", maxLength: 1000, nullable: true },
             bloodType: {
               type: "string",

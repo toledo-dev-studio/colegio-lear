@@ -114,40 +114,57 @@ export async function findById(req: Request, res: Response): Promise<void> {
 }
 
 /**
- * POST /employees (multipart/form-data)
- * Creates a new employee with optional file upload.
- * Multer processes the file before this handler runs.
+ * POST /employees (application/json)
+ * Creates a new employee. Avatar is uploaded separately via
+ * POST /employees/:id/avatar once the employee exists.
  */
 export async function create(req: Request, res: Response): Promise<void> {
-  
-  const file = mapFile((req as unknown as { file?: MulterFile }).file);
-
-  const data = await service.create(req.body, file);
+  const data = await service.create(req.body);
 
   sendSuccess(res, data, 201);
 }
 
 /**
- * PATCH /employees/:id (multipart/form-data)
- * Partially updates an existing employee with optional file upload.
- * Validates that at least one field or file is present.
+ * PATCH /employees/:id (application/json)
+ * Partially updates an existing employee. Validates that at least one field is present.
+ * Avatar is updated separately via POST /employees/:id/avatar.
  */
 export async function update(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };
-  
-  const file = mapFile((req as unknown as { file?: MulterFile }).file);
 
-  // Validate at least one field or file is present
+  // Validate at least one field is present
   const hasFields = Object.values(req.body).some(
     (v) => v !== undefined && v !== "",
   );
-  if (!hasFields && !file) {
-    throw new ValidationError("At least one field or file is required", [
-      { field: "body", message: "At least one field or file is required" },
+  if (!hasFields) {
+    throw new ValidationError("At least one field is required", [
+      { field: "body", message: "At least one field is required" },
     ]);
   }
 
-  const data = await service.update(id, req.body, file);
+  const data = await service.update(id, req.body);
+
+  sendSuccess(res, data);
+}
+
+/**
+ * POST /employees/:id/avatar (multipart/form-data)
+ * Uploads or replaces an employee's avatar. Requires a file.
+ */
+export async function uploadAvatarById(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { id } = req.params as { id: string };
+  const file = mapFile((req as unknown as { file?: MulterFile }).file);
+
+  if (!file) {
+    throw new ValidationError("A file is required", [
+      { field: "file", message: "A file is required" },
+    ]);
+  }
+
+  const data = await service.uploadAvatar(id, file);
 
   sendSuccess(res, data);
 }
@@ -180,10 +197,10 @@ export async function resendInvitation(
 }
 
 /**
- * PATCH /employees/me (multipart/form-data)
+ * PATCH /employees/me (application/json)
  * Updates the authenticated employee's own account.
  * Required fields: name, firstLastName, phoneNumber.
- * Optional: secondLastName, file (image).
+ * Optional: secondLastName. Avatar is updated separately via POST /employees/me/avatar.
  * Returns the same shape as GET /auth/me (LoginResponse).
  */
 export async function updateMyAccount(
@@ -191,10 +208,31 @@ export async function updateMyAccount(
   res: Response,
 ): Promise<void> {
   const { employeeId } = req.user!;
-  
+
+  const data = await service.updateMyAccount(employeeId, req.body);
+
+  sendSuccess(res, data);
+}
+
+/**
+ * POST /employees/me/avatar (multipart/form-data)
+ * Uploads or replaces the authenticated employee's own avatar. Requires a file.
+ * Returns the same shape as GET /auth/me (LoginResponse).
+ */
+export async function uploadMyAvatar(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { employeeId } = req.user!;
   const file = mapFile((req as unknown as { file?: MulterFile }).file);
 
-  const data = await service.updateMyAccount(employeeId, req.body, file);
+  if (!file) {
+    throw new ValidationError("A file is required", [
+      { field: "file", message: "A file is required" },
+    ]);
+  }
+
+  const data = await service.uploadMyAvatar(employeeId, file);
 
   sendSuccess(res, data);
 }

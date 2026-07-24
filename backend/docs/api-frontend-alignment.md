@@ -668,3 +668,55 @@ van a devolver 400 hasta que el front corrija el armado del `FormData`
 fallar en silencio. Probado en vivo: JSON body → 400 con mensaje claro;
 multipart real con imagen → 201, archivo guardado en disco, `image` con
 ruta real.
+
+## Rediseño de subida de avatar + rename image→avatar (2026-07-24)
+
+El approach de la sección anterior (bloquear con 400 si la petición no
+es multipart) se revirtió a favor de un diseño distinto: separar por
+completo la subida de archivo de los endpoints de creación/edición.
+
+**Motivación:** obligar a `POST /employees`, `PATCH /employees/:id` y
+`PATCH /employees/me` a ser siempre `multipart/form-data` — incluso
+cuando no hay archivo — es una carga innecesaria para el front. El
+nuevo criterio: esas 3 rutas vuelven a ser JSON puro; el archivo solo
+viaja hacia el backend cuando el usuario realmente selecciona uno, a
+través de un endpoint dedicado.
+
+**Cambios:**
+
+1. Se quitó `requireMultipart` + `uploadSingle` (multer) de
+   `POST /employees`, `PATCH /employees/:id` y `PATCH /employees/me`.
+   Los tres vuelven a aceptar únicamente `application/json` y ya no
+   reciben `file` en el body — `EmployeeService.create/update/updateMyAccount`
+   perdieron el parámetro `file`.
+2. Se agregaron 2 endpoints nuevos, ambos `multipart/form-data` con
+   `file` obligatorio, dedicados exclusivamente a la imagen de perfil:
+   - `POST /employees/:id/avatar` (requiere permiso `employees`) —
+     `EmployeeService.uploadAvatar`.
+   - `POST /employees/me/avatar` (sin RBAC, cualquier autenticado sobre
+     sí mismo) — `EmployeeService.uploadMyAvatar`.
+   Ambos borran el archivo anterior en `IStorageService` antes de subir
+   el nuevo (evita huérfanos en `uploads/employees/`), y responden con
+   el mismo shape que sus contrapartes de solo-datos (`EmployeeDetail` /
+   `LoginResponse` respectivamente).
+3. Rename de columna `image` → `avatar` en toda la base (motivo: el
+   frontend ya usa `avatar` como nombre; no había ningún lugar donde el
+   backend dijera `avatar` antes de este cambio, así que se unificó
+   hacia ese nombre en vez de al revés): `prisma/schema.prisma`
+   (`Employee.avatar`, `Student.avatar`), migración
+   `20260724000000_rename_image_to_avatar` (`ALTER TABLE ... RENAME
+   COLUMN image TO avatar`, preserva datos existentes), y el campo
+   `image` renombrado a `avatar` en tipos/DTOs/schemas/swagger de
+   `employees`, `students` y `auth` (incluye `LoginResponse.avatar` en
+   `GET /auth/me` y `POST /auth/login`).
+4. `students` no tiene endpoint de subida de archivo — ahí `avatar`
+   sigue siendo un string plano que el cliente manda directo en el
+   JSON (URL/ruta), sin multer de por medio. Solo se le aplicó el
+   rename de columna/campo por consistencia con `employees`.
+
+**Pendiente en el frontend:** actualizar
+`create-update-employee.action.ts` y `update-my-account.action.ts` para
+dejar de armar `FormData` en la creación/edición (ahora es JSON puro), y
+agregar las llamadas nuevas a `POST /employees/:id/avatar` /
+`POST /employees/me/avatar` cuando el usuario adjunte un archivo. Todo
+campo `image` que el front use debe renombrarse a `avatar`.
