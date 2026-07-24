@@ -16,6 +16,23 @@ function nonBlankString(maxLength: number) {
     });
 }
 
+/**
+ * Internal control code: trimmed, uppercased, 1-10 chars, letters/digits only.
+ * Uniqueness is enforced in the service, not here.
+ */
+function codeField() {
+  return z
+    .string()
+    .transform((val) => val.trim().toUpperCase())
+    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length <= 10, {
+      message: "Must be at most 10 characters",
+    })
+    .refine((val) => /^[A-Z0-9]+$/.test(val), {
+      message: "Must contain only letters and numbers",
+    });
+}
+
 // ─── Schemas ────────────────────────────────────────────────────────────────
 
 /**
@@ -142,6 +159,7 @@ export const paymentConceptPagedQuerySchema =
  *       type: object
  *       required:
  *         - name
+ *         - code
  *         - amount
  *       properties:
  *         name:
@@ -149,6 +167,12 @@ export const paymentConceptPagedQuerySchema =
  *           minLength: 1
  *           maxLength: 100
  *           description: Payment concept name (trimmed, non-blank)
+ *         code:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 10
+ *           description: Internal control code, unique, letters/digits only (auto-uppercased)
+ *           example: "INSCRIP"
  *         description:
  *           type: string
  *           minLength: 1
@@ -170,6 +194,7 @@ export const paymentConceptPagedQuerySchema =
  */
 export const createPaymentConceptSchema = z.object({
   name: nonBlankString(100),
+  code: codeField(),
   description: z
     .string()
     .nullable()
@@ -206,6 +231,11 @@ export const createPaymentConceptSchema = z.object({
  *           minLength: 1
  *           maxLength: 100
  *           description: Payment concept name (trimmed, non-blank)
+ *         code:
+ *           type: string
+ *           minLength: 1
+ *           maxLength: 10
+ *           description: Internal control code, unique, letters/digits only (auto-uppercased)
  *         description:
  *           type: string
  *           minLength: 1
@@ -226,6 +256,7 @@ export const createPaymentConceptSchema = z.object({
 export const updatePaymentConceptSchema = z
   .object({
     name: nonBlankString(100).optional(),
+    code: codeField().optional(),
     description: z
       .string()
       .nullable()

@@ -501,10 +501,11 @@ async function main() {
   await Promise.all([
     prisma.paymentConcept.upsert({
       where: { id: PAYMENT_CONCEPTS.inscripcion },
-      update: {},
+      update: { code: "INSCRIP" },
       create: {
         id: PAYMENT_CONCEPTS.inscripcion,
         name: "Inscripción",
+        code: "INSCRIP",
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: true,
@@ -513,10 +514,11 @@ async function main() {
     }),
     prisma.paymentConcept.upsert({
       where: { id: PAYMENT_CONCEPTS.colegiatura_mensual },
-      update: {},
+      update: { code: "COLEGMES" },
       create: {
         id: PAYMENT_CONCEPTS.colegiatura_mensual,
         name: "Colegiatura mensual",
+        code: "COLEGMES",
         description: "Pago mensual de colegiatura",
         amount: 4200.0,
         allowForgiveness: true,
@@ -525,10 +527,11 @@ async function main() {
     }),
     prisma.paymentConcept.upsert({
       where: { id: PAYMENT_CONCEPTS.material_didactico },
-      update: {},
+      update: { code: "MATERIAL" },
       create: {
         id: PAYMENT_CONCEPTS.material_didactico,
         name: "Material didáctico",
+        code: "MATERIAL",
         description: "Costo de materiales educativos del ciclo",
         amount: 1800.0,
         allowForgiveness: false,
@@ -537,10 +540,11 @@ async function main() {
     }),
     prisma.paymentConcept.upsert({
       where: { id: PAYMENT_CONCEPTS.uniforme_escolar },
-      update: {},
+      update: { code: "UNIFORME" },
       create: {
         id: PAYMENT_CONCEPTS.uniforme_escolar,
         name: "Uniforme escolar",
+        code: "UNIFORME",
         description: "Paquete completo de uniforme escolar",
         amount: 2500.0,
         allowForgiveness: false,
@@ -549,10 +553,11 @@ async function main() {
     }),
     prisma.paymentConcept.upsert({
       where: { id: PAYMENT_CONCEPTS.seguro_escolar },
-      update: {},
+      update: { code: "SEGURO" },
       create: {
         id: PAYMENT_CONCEPTS.seguro_escolar,
         name: "Seguro escolar",
+        code: "SEGURO",
         description: "Seguro de accidentes y gastos médicos escolares",
         amount: 950.0,
         allowForgiveness: false,

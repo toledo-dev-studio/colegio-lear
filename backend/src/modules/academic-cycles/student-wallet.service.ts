@@ -59,6 +59,7 @@ export class StudentWalletService {
     return {
       id: raw.id,
       name: raw.name,
+      code: raw.code,
       description: raw.description,
       dueDate: raw.dueDate.toISOString(),
       amount: Number(raw.amount),

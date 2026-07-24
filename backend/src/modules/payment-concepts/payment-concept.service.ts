@@ -78,6 +78,7 @@ export class PaymentConceptService {
     return {
       id: raw.id as string,
       name: raw.name as string,
+      code: raw.code as string,
       description: raw.description as string,
       amount: Number(raw.amount),
       allowForgiveness: raw.allowForgiveness as boolean,
@@ -150,26 +151,40 @@ export class PaymentConceptService {
 
   /**
    * Create a new payment concept.
-   * Validates name uniqueness (case-insensitive) before insert.
+   * Validates name and code uniqueness (case-insensitive) before insert.
    * Sets isActive = true by default (or dto.isActive) and allowForgiveness to dto value or false by default.
    */
   async create(dto: CreatePaymentConceptDto): Promise<PaymentConceptRecord> {
     // Check uniqueness: name (case-insensitive)
-    const existing = await this.prisma.paymentConcept.findFirst({
+    const existingName = await this.prisma.paymentConcept.findFirst({
       where: {
         name: { equals: dto.name, mode: "insensitive" },
       },
     });
 
-    if (existing) {
+    if (existingName) {
       throw new ConflictError(
         "A payment concept with this name already exists",
+      );
+    }
+
+    // Check uniqueness: code (case-insensitive)
+    const existingCode = await this.prisma.paymentConcept.findFirst({
+      where: {
+        code: { equals: dto.code, mode: "insensitive" },
+      },
+    });
+
+    if (existingCode) {
+      throw new ConflictError(
+        "A payment concept with this code already exists",
       );
     }
 
     const created = await this.prisma.paymentConcept.create({
       data: {
         name: dto.name,
+        code: dto.code,
         description: dto.description ?? null,
         amount: dto.amount,
         allowForgiveness: dto.allowForgiveness ?? false,
@@ -182,8 +197,8 @@ export class PaymentConceptService {
 
   /**
    * Partial update of a payment concept.
-   * Verifies the payment concept exists, and checks name uniqueness
-   * when the name changes (excluding self).
+   * Verifies the payment concept exists, and checks name/code uniqueness
+   * when either changes (excluding self).
    */
   async update(
     id: string,
@@ -214,8 +229,25 @@ export class PaymentConceptService {
       }
     }
 
+    // Check uniqueness if code is being changed
+    if (dto.code !== undefined) {
+      const duplicate = await this.prisma.paymentConcept.findFirst({
+        where: {
+          code: { equals: dto.code, mode: "insensitive" },
+          id: { not: id },
+        },
+      });
+
+      if (duplicate) {
+        throw new ConflictError(
+          "A payment concept with this code already exists",
+        );
+      }
+    }
+
     const updateData: Record<string, unknown> = {};
     if (dto.name !== undefined) updateData.name = dto.name;
+    if (dto.code !== undefined) updateData.code = dto.code;
     if (dto.description !== undefined) updateData.description = dto.description;
     if (dto.amount !== undefined) updateData.amount = dto.amount;
     if (dto.allowForgiveness !== undefined)

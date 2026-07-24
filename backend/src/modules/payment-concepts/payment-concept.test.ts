@@ -39,6 +39,7 @@ describe("PaymentConceptService", () => {
         {
           id: "uuid-1",
           name: "Inscripción",
+          code: "INSCRIP",
           description: "Cuota de inscripción",
           amount: 3500.0,
           allowForgiveness: true,
@@ -53,6 +54,7 @@ describe("PaymentConceptService", () => {
         {
           id: "uuid-1",
           name: "Inscripción",
+          code: "INSCRIP",
           description: "Cuota de inscripción",
           amount: 3500.0,
           allowForgiveness: true,
@@ -179,6 +181,7 @@ describe("PaymentConceptService", () => {
         {
           id: "uuid-1",
           name: "Inscripción",
+          code: "INSCRIP",
           description: "Cuota de inscripción",
           amount: 3500.0,
           allowForgiveness: true,
@@ -195,6 +198,7 @@ describe("PaymentConceptService", () => {
           {
             id: "uuid-1",
             name: "Inscripción",
+            code: "INSCRIP",
             description: "Cuota de inscripción",
             amount: 3500.0,
             allowForgiveness: true,
@@ -254,6 +258,7 @@ describe("PaymentConceptService", () => {
       const mockPaymentConcept = {
         id: "uuid-1",
         name: "Inscripción",
+        code: "INSCRIP",
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: true,
@@ -266,6 +271,7 @@ describe("PaymentConceptService", () => {
       expect(result).toEqual({
         id: "uuid-1",
         name: "Inscripción",
+        code: "INSCRIP",
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: true,
@@ -292,6 +298,7 @@ describe("PaymentConceptService", () => {
   describe("create", () => {
     const validDto = {
       name: "Inscripción",
+      code: "INSCRIP",
       description: "Cuota de inscripción al ciclo escolar",
       amount: 3500.0,
     };
@@ -310,6 +317,7 @@ describe("PaymentConceptService", () => {
       expect(result).toEqual({
         id: "new-uuid",
         name: "Inscripción",
+        code: "INSCRIP",
         description: "Cuota de inscripción al ciclo escolar",
         amount: 3500.0,
         allowForgiveness: false,
@@ -318,6 +326,7 @@ describe("PaymentConceptService", () => {
       expect(prisma.paymentConcept.create).toHaveBeenCalledWith({
         data: {
           name: validDto.name,
+          code: validDto.code,
           description: validDto.description,
           amount: validDto.amount,
           allowForgiveness: false,
@@ -335,6 +344,21 @@ describe("PaymentConceptService", () => {
       await expect(service.create(validDto)).rejects.toThrow(ConflictError);
       await expect(service.create(validDto)).rejects.toThrow(
         "A payment concept with this name already exists",
+      );
+    });
+
+    it("should throw ConflictError when code already exists (case-insensitive)", async () => {
+      // name check (first call) passes, code check (second call) finds a match
+      prisma.paymentConcept.findFirst.mockImplementation(
+        ({ where }: { where: Record<string, unknown> }) =>
+          Promise.resolve(
+            "code" in where ? { id: "existing-uuid", code: "inscrip" } : null,
+          ),
+      );
+
+      await expect(service.create(validDto)).rejects.toThrow(ConflictError);
+      await expect(service.create(validDto)).rejects.toThrow(
+        "A payment concept with this code already exists",
       );
     });
 
@@ -419,6 +443,7 @@ describe("PaymentConceptService", () => {
     const existingPaymentConcept = {
       id: "uuid-1",
       name: "Inscripción",
+      code: "INSCRIP",
       description: "Cuota de inscripción al ciclo escolar",
       amount: 3500.0,
       allowForgiveness: true,
@@ -503,6 +528,57 @@ describe("PaymentConceptService", () => {
       expect(prisma.paymentConcept.findFirst).toHaveBeenCalledWith({
         where: {
           name: { equals: "Colegiatura mensual", mode: "insensitive" },
+          id: { not: "uuid-1" },
+        },
+      });
+    });
+
+    it("should not check code uniqueness when code is not in dto", async () => {
+      prisma.paymentConcept.findUnique.mockResolvedValue(
+        existingPaymentConcept,
+      );
+      prisma.paymentConcept.update.mockResolvedValue({
+        ...existingPaymentConcept,
+        description: "Updated description",
+      });
+
+      await service.update("uuid-1", { description: "Updated description" });
+
+      expect(prisma.paymentConcept.findFirst).not.toHaveBeenCalled();
+    });
+
+    it("should throw ConflictError when update causes code collision", async () => {
+      prisma.paymentConcept.findUnique.mockResolvedValue(
+        existingPaymentConcept,
+      );
+      prisma.paymentConcept.findFirst.mockResolvedValue({
+        id: "other-uuid",
+        code: "COLEGMES",
+      });
+
+      await expect(
+        service.update("uuid-1", { code: "COLEGMES" }),
+      ).rejects.toThrow(ConflictError);
+      await expect(
+        service.update("uuid-1", { code: "COLEGMES" }),
+      ).rejects.toThrow("A payment concept with this code already exists");
+    });
+
+    it("should check code uniqueness excluding self when code changes", async () => {
+      prisma.paymentConcept.findUnique.mockResolvedValue(
+        existingPaymentConcept,
+      );
+      prisma.paymentConcept.findFirst.mockResolvedValue(null);
+      prisma.paymentConcept.update.mockResolvedValue({
+        ...existingPaymentConcept,
+        code: "COLEGMES",
+      });
+
+      await service.update("uuid-1", { code: "COLEGMES" });
+
+      expect(prisma.paymentConcept.findFirst).toHaveBeenCalledWith({
+        where: {
+          code: { equals: "COLEGMES", mode: "insensitive" },
           id: { not: "uuid-1" },
         },
       });

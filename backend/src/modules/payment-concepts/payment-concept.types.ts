@@ -11,6 +11,7 @@ export interface PaymentConceptFilters {
 export interface PaymentConceptRecord {
   id: string;
   name: string;
+  code: string;
   description: string | null;
   amount: number;
   allowForgiveness: boolean;
@@ -28,6 +29,7 @@ export interface PagedResult<T> {
 /** Input DTO for creating a payment concept */
 export interface CreatePaymentConceptDto {
   name: string;
+  code: string;
   description?: string;
   amount: number;
   allowForgiveness?: boolean;
@@ -37,6 +39,7 @@ export interface CreatePaymentConceptDto {
 /** Input DTO for updating a payment concept (all fields optional) */
 export interface UpdatePaymentConceptDto {
   name?: string;
+  code?: string;
   description?: string;
   amount?: number;
   allowForgiveness?: boolean;

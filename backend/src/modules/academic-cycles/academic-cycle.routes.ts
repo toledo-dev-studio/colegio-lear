@@ -617,6 +617,8 @@ router.get(
  *               $ref: '#/components/schemas/AcademicCycleWalletRecord'
  *       404:
  *         description: Academic cycle not found
+ *       409:
+ *         description: A wallet item with this code already exists in this academic cycle
  */
 router.post(
   "/:academicCycleId/wallet",
@@ -662,6 +664,8 @@ router.post(
  *               $ref: '#/components/schemas/AcademicCycleWalletRecord'
  *       404:
  *         description: Academic cycle or wallet item not found
+ *       409:
+ *         description: A wallet item with this code already exists in this academic cycle
  */
 router.patch(
   "/:academicCycleId/wallet/:id",

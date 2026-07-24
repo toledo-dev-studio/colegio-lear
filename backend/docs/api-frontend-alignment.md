@@ -887,3 +887,57 @@ de frontend, no de backend):**
    trata `scholarshipId` como opcional en todas las capas; si el
    formulario del front lo sigue pidiendo como obligatorio, es un bug
    de validación del lado del cliente.
+
+## Campo `code` en conceptos de pago y cadena de wallet (2026-07-24)
+
+El front agregó un campo `code: string` (código de control interno,
+máximo 10 caracteres, único) a `PaymentConceptRequest/Response`. El
+usuario preguntó si también aplicaba al wallet del ciclo escolar —
+inicialmente investigué mal (vi que el input de `code` en
+`AcademicCycleWalletPanelForm.tsx` está deshabilitado/derivado de
+seleccionar un concepto de pago, y concluí que no había campo real
+del lado del backend). El usuario corrigió: `AcademicCycleWalletItemRequest`
+y `AcademicCycleWalletItemResponse` **sí** declaran `code: string`
+requerido, igual que `name` — es un campo real que se guarda, no solo
+UI. Revisando más a fondo también encontré que
+`StudentWalletItemResponse` (el snapshot que ve el alumno/tutor) tiene
+el mismo campo. Se agregó en las 3 tablas relacionadas:
+
+1. **`PaymentConcept.code`** — `String @unique @db.VarChar(10)`,
+   migración `20260724040000_add_payment_concept_code` (columna
+   nullable → backfill placeholder desde `id` para filas existentes →
+   `NOT NULL` + unique index). Único **globalmente**. Validado en zod
+   (`payment-concept.schema.ts`, helper `codeField()`: trim + uppercase
+   + máx 10 + solo `[A-Z0-9]`) y unicidad case-insensitive verificada
+   en `create()`/`update()` del service (como ya se hacía con `name`).
+   Seed (`prisma/seed.ts`) actualizado con códigos reales para los 5
+   conceptos ya sembrados (`INSCRIP`, `COLEGMES`, `MATERIAL`,
+   `UNIFORME`, `SEGURO`).
+2. **`AcademicCycleWallet.code`** — `String @db.VarChar(10)`, único
+   **por ciclo** (`@@unique([academicCycleId, code])`), no globalmente
+   — a propósito, porque el mismo concepto (mismo código) se repite en
+   el catálogo de wallet de ciclos distintos (el wallet está
+   desacoplado de `PaymentConcept` desde la migración
+   `academic_cycle_wallet_decouple_payment_concept`). Migración
+   `20260724050000_add_academic_cycle_wallet_code`. Mismo patrón de
+   validación zod y unicidad (ahora scoped a `academicCycleId`) en
+   `academic-cycle-wallet.schema.ts`/`.service.ts`.
+3. **`StudentWalletItem.code`** — `String @db.VarChar(10)`, sin
+   constraint de unicidad propio (es un snapshot de solo lectura, igual
+   que `name`/`amount`/`description` en esa tabla). Migración
+   `20260724060000_add_student_wallet_item_code`, backfillea desde la
+   fila de `academic_cycle_wallet` correspondiente
+   (`academic_cycle_wallet_id`) para filas existentes.
+   `AcademicCycleEnrollmentService.create()` (el snapshot que corre al
+   inscribir un alumno) actualizado para copiar `code` del catálogo del
+   wallet al crear el `StudentWalletItem`.
+
+Actualizado en las 3: tipos (`*.types.ts`), swagger
+(`PaymentConceptRecord`/`CreatePaymentConceptBody`/`UpdatePaymentConceptBody`,
+`AcademicCycleWalletRecord`/`Create.../Update...Body`,
+`StudentWalletItemRecord`), y los 409 documentados en las rutas para
+código duplicado. Se agregaron tests nuevos en
+`payment-concept.test.ts` para la unicidad de `code` en `create`/`update`
+(al escribirlos se encontró que `update()` no tenía el chequeo de
+unicidad de `code` ni lo incluía en `updateData` — se corrigió en el
+mismo cambio, antes de que llegara a producción sin probar).

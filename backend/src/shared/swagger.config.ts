@@ -726,6 +726,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             id: { type: "string", format: "uuid" },
             name: { type: "string", example: "Colegiatura mensual" },
+            code: { type: "string", maxLength: 10, example: "COLEGMES" },
             description: {
               type: "string",
               nullable: true,
@@ -740,13 +741,20 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreatePaymentConceptBody: {
           type: "object",
-          required: ["name", "amount"],
+          required: ["name", "code", "amount"],
           properties: {
             name: {
               type: "string",
               minLength: 1,
               maxLength: 100,
               example: "Colegiatura mensual",
+            },
+            code: {
+              type: "string",
+              minLength: 1,
+              maxLength: 10,
+              description: "Internal control code, unique, letters/digits only (auto-uppercased)",
+              example: "COLEGMES",
             },
             description: {
               type: "string",
@@ -768,6 +776,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           description: "At least one field required.",
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
+            code: { type: "string", minLength: 1, maxLength: 10 },
             description: { type: "string", minLength: 1, maxLength: 500 },
             amount: { type: "number", minimum: 0 },
             allowForgiveness: { type: "boolean" },
@@ -1278,6 +1287,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             id: { type: "string", format: "uuid" },
             academicCycleId: { type: "string", format: "uuid" },
             name: { type: "string", example: "Inscripción" },
+            code: { type: "string", maxLength: 10, example: "INSCRIP" },
             description: { type: "string", nullable: true },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", example: 1500 },
@@ -1286,9 +1296,15 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateAcademicCycleWalletBody: {
           type: "object",
-          required: ["name", "dueDate", "amount"],
+          required: ["name", "code", "dueDate", "amount"],
           properties: {
             name: { type: "string", maxLength: 100 },
+            code: {
+              type: "string",
+              maxLength: 10,
+              description:
+                "Internal control code, unique within this academic cycle, letters/digits only (auto-uppercased)",
+            },
             description: { type: "string", maxLength: 500 },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", minimum: 0.01 },
@@ -1300,6 +1316,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           description: "At least one field required.",
           properties: {
             name: { type: "string", maxLength: 100 },
+            code: { type: "string", maxLength: 10 },
             description: { type: "string", maxLength: 500 },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", minimum: 0.01 },
@@ -1524,6 +1541,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             id: { type: "string", format: "uuid" },
             name: { type: "string" },
+            code: { type: "string", maxLength: 10 },
             description: { type: "string", nullable: true },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number" },

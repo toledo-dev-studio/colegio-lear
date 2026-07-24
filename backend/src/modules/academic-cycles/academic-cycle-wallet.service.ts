@@ -1,5 +1,5 @@
 import { PrismaClient } from "../../generated/prisma/client";
-import { NotFoundError } from "../../shared/errors/app-error";
+import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 import type {
   AcademicCycleWalletRecord,
   CreateAcademicCycleWalletDto,
@@ -26,6 +26,7 @@ export class AcademicCycleWalletService {
       id: raw.id as string,
       academicCycleId: raw.academicCycleId as string,
       name: raw.name as string,
+      code: raw.code as string,
       description: raw.description as string | null,
       dueDate: (raw.dueDate as Date).toISOString(),
       amount: Number(raw.amount),
@@ -54,10 +55,22 @@ export class AcademicCycleWalletService {
   ): Promise<AcademicCycleWalletRecord> {
     await this.ensureCycleExists(academicCycleId);
 
+    // Check uniqueness: code, scoped to this academic cycle (case-insensitive).
+    // The same code may repeat across different cycles.
+    const existingCode = await this.prisma.academicCycleWallet.findFirst({
+      where: { academicCycleId, code: { equals: dto.code, mode: "insensitive" } },
+    });
+    if (existingCode) {
+      throw new ConflictError(
+        "A wallet item with this code already exists in this academic cycle",
+      );
+    }
+
     const created = await this.prisma.academicCycleWallet.create({
       data: {
         academicCycleId,
         name: dto.name,
+        code: dto.code,
         description: dto.description ?? null,
         dueDate: new Date(dto.dueDate),
         amount: dto.amount,
@@ -83,8 +96,25 @@ export class AcademicCycleWalletService {
       throw new NotFoundError("Academic cycle wallet item not found");
     }
 
+    // Check uniqueness if code is changing (scoped to this cycle, excluding self)
+    if (dto.code !== undefined) {
+      const duplicate = await this.prisma.academicCycleWallet.findFirst({
+        where: {
+          academicCycleId,
+          code: { equals: dto.code, mode: "insensitive" },
+          id: { not: id },
+        },
+      });
+      if (duplicate) {
+        throw new ConflictError(
+          "A wallet item with this code already exists in this academic cycle",
+        );
+      }
+    }
+
     const updateData: Record<string, unknown> = {};
     if (dto.name !== undefined) updateData.name = dto.name;
+    if (dto.code !== undefined) updateData.code = dto.code;
     if (dto.description !== undefined) updateData.description = dto.description;
     if (dto.dueDate !== undefined) updateData.dueDate = new Date(dto.dueDate);
     if (dto.amount !== undefined) updateData.amount = dto.amount;

@@ -235,6 +235,7 @@ export class AcademicCycleEnrollmentService {
         await tx.studentWalletItem.createMany({
           data: walletCatalog.map((w) => ({
             name: w.name,
+            code: w.code,
             description: w.description,
             amount: w.amount,
             allowForgiveness: w.allowForgiveness,
