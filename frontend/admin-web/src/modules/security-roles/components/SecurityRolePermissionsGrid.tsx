@@ -13,13 +13,13 @@ export const SecurityRolePermissionsGrid = ({ disabled = false, permissions = []
     return (
         <>
             <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px] border-separate border-spacing-0 bg-muted/30 rounded-2xl border border-border py-2 border-separate border-spacing-0">
+                <table className="w-full min-w-180 bg-muted/30 rounded-2xl border border-border py-2 border-separate border-spacing-0">
                     <tbody>
                         {
                             AVAILABLE_MODULES.map((module, index) => (
                                 <tr key={module.key} className="w-full text-sm">
                                     <td className={cn("border-r py-4 pl-8", index !== (AVAILABLE_MODULES.length - 1) && "border-b")}>
-                                        <div className="flex flex-col gap-y-1 min-w-[12rem]">
+                                        <div className="flex flex-col gap-y-1 min-w-48">
                                             <p className="text-xs text-muted-foreground">Módulo:</p>
                                             <p className="font-medium text-foreground">{module.label}</p>
                                         </div>

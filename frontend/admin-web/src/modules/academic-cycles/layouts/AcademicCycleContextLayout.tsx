@@ -4,9 +4,9 @@ import { CalendarDays, GraduationCap, School, Users, Wallet } from "lucide-react
 import { toast } from "sonner";
 
 import type { Tab } from "@/interfaces/components/tab";
-import { Loader } from "@/shared/components/loader/Loader";
-import type { AcademicCycleLayoutContext } from "../interfaces/academic-cycle-layout-context";
 import { useGetAcademicCycleById } from "../hooks/academic-cycles/useGetAcademicCycleById";
+import type { AcademicCycleLayoutContext } from "../interfaces/academic-cycle-layout-context";
+import { AcademicCycleTabSkeleton } from "../pages/academic-cycle/academic-cycle-tab/AcademicCycleTabSkeleton";
 
 export const TABS: Tab[] = [
     {
@@ -73,9 +73,7 @@ export const AcademicCycleContextLayout = () => {
     if (academicCycleQuery.isLoading) {
         return (
             <>
-                <div className="w-full relative mx-auto h-full mt-30">
-                    <Loader title="Cargando información" subtitle="Por favor espere..." size="default" fullScreen={true} />
-                </div>
+                <AcademicCycleTabSkeleton isNew={isNew} />
             </>
         )
     }

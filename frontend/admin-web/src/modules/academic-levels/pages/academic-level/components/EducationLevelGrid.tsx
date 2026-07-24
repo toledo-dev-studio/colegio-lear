@@ -58,7 +58,7 @@ export const EducationLevelGrid = ({ educationLevels = [], handleAddEducationLev
                                         </div>
                                         <Button
                                             type="button"
-                                            className="btn-icon btn-icon-sm bg-muted/60 rounded-full h-4 !px-4 !py-0 text-primary"
+                                            className="btn-icon btn-icon-sm bg-muted/60 rounded-full h-4 px-4! py-0! text-primary"
                                             onClick={() => handleToggleEditEducationLevel(level.id, true)}>
                                             <Pencil className="w-4 h-4" />
                                         </Button>

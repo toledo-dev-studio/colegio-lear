@@ -1,8 +1,9 @@
-import { BookOpen, Briefcase, CalendarDays, Coins, GraduationCap, Layers, LayoutDashboard, Megaphone, Presentation, Shield, UserCircle, UserCog, Users } from "lucide-react";
+import { BookOpen, Briefcase, CalendarDays, Coins, GraduationCap, Home, Layers, LayoutDashboard, Megaphone, Presentation, Shield, UserCircle, UserCog, Users } from "lucide-react";
 import type { Module } from "../../interfaces/components/module";
 import type { KeyValuePair } from "./key-value-pair";
 
 export type ModuleKey =
+    | "home"
     | "dashboard"
     | "my-account"
     | "my-classes"
@@ -191,6 +192,7 @@ export const MODULE_LABELS: KeyValuePair<ModuleKey>[] = [
 ];
 
 export const MODULE_ICON: Record<ModuleKey, { Icon: React.ComponentType<{ className?: string }>; tone: string }> = {
+    "home": { Icon: Home, tone: "text-cyan-600 bg-cyan-500/10" },
     "dashboard": { Icon: LayoutDashboard, tone: "text-sky-600 bg-sky-500/10" },
     "my-account": { Icon: UserCircle, tone: "text-indigo-600 bg-indigo-500/10" },
     "my-classes": { Icon: Presentation, tone: "text-amber-600 bg-amber-500/10" },

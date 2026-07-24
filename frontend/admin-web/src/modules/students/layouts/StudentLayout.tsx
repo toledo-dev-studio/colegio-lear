@@ -4,12 +4,12 @@ import { toast } from "sonner";
 
 import { cn } from "@/lib/extensions/utils";
 import type { Tab } from "@/interfaces/components/tab";
-import { Loader } from "@/shared/components/loader/Loader";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { CardAlert } from "@/shared/components/card-alert/CardAlert";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { useGetStudentById } from "../hooks/students/useGetStudentById";
 import type { StudentLayoutContext } from "../interfaces/student-layout-context";
+import { StudentTabSkeleton } from "../pages/student/student-tab/StudentTabSkeleton";
 
 const TABS: Tab[] = [
     {
@@ -76,9 +76,7 @@ export const StudentLayout = () => {
     if (studentQuery.isLoading) {
         return (
             <>
-                <div className="w-full relative mx-auto h-full mt-30">
-                    <Loader title="Cargando información" subtitle="Por favor espere..." size="default" fullScreen={true} />
-                </div>
+                <StudentTabSkeleton isNew={isNew} />
             </>
         )
     }
