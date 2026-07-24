@@ -41,7 +41,6 @@ export interface AcademicCycleRecord {
   minimumPassingGrade: number;
   evaluationCount: number;
   enrollmentOpen: boolean;
-  description: string | null;
   observations: string | null;
   academicLevelId: string;
   educationLevelId: string;
@@ -70,7 +69,6 @@ export interface CreateAcademicCycleDto {
   minimumPassingGrade?: number;
   evaluationCount?: number;
   enrollmentOpen?: boolean;
-  description?: string;
   observations?: string;
   academicLevelId: string;
   educationLevelId: string;
@@ -87,7 +85,6 @@ export interface UpdateAcademicCycleDto {
   minimumPassingGrade?: number;
   evaluationCount?: number;
   enrollmentOpen?: boolean;
-  description?: string | null;
   observations?: string | null;
   academicLevelId?: string;
   educationLevelId?: string;

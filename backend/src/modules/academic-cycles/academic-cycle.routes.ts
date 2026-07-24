@@ -97,7 +97,7 @@ const router = Router();
  *         schema:
  *           type: string
  *           maxLength: 100
- *         description: Free-text search on name, code, description
+ *         description: Free-text search on name, code
  *       - in: query
  *         name: name
  *         schema:

@@ -854,29 +854,36 @@ no se reprodujeron (ver sección "Investigados, no reproducidos" abajo).
 de frontend, no de backend):**
 
 4. **"Ciclos escolares: retornando propiedad `description` que no
-   existe."** Se revisó exhaustivamente todo `academic-cycles/*`
-   (core, wallet, school-groups + calendarios, school-subjects,
-   enrollments, grades, student-wallet) contra `prisma/schema.prisma`:
-   en cada lugar donde el código regresa `description`, la columna
-   real existe y está bien mapeada (`AcademicCycle.description`,
-   `AcademicCycleWallet.description`, `AcademicCycleGroup.description`,
-   `SchoolSubject.description` anidado). No se encontró ningún
-   `select`/mapeo pidiendo un campo `description` inexistente. Lo más
-   cercano a un problema real: el swagger de
-   `AcademicCycleSchoolGroupCalendarRecord`/
-   `AcademicCycleSchoolGroupTeacherRecord`/`StudentGradeRecord` documenta
-   el `schoolSubject` anidado como el shape completo de
-   `SchoolSubjectRecord`/`SubjectView` (con `isActive`,
-   `academicLevelId`, `academicLevel`, etc.), pero el código real solo
-   selecciona `{id, name, description}` para ese anidado — un
-   over-promise de swagger, no un bug funcional. Falta un
-   endpoint/respuesta concreta para confirmar a qué se refiere el
-   reporte.
+   existe."** Aclarado por el usuario: el sentido era el opuesto al
+   que se investigó primero — el frontend nunca tuvo/usó un campo
+   `description` en el ciclo escolar (core `AcademicCycle`), así que
+   había que **eliminarlo**, no que faltara. Se quitó por completo:
+   - `prisma/schema.prisma`: se eliminó
+     `AcademicCycle.description`, migración
+     `20260724030000_drop_academic_cycle_description` (`ALTER TABLE
+     ... DROP COLUMN description`).
+   - `academic-cycle.types.ts`: quitado de `AcademicCycleRecord`,
+     `CreateAcademicCycleDto`, `UpdateAcademicCycleDto`.
+   - `academic-cycle.schema.ts`: quitado de
+     `createAcademicCycleSchema`/`updateAcademicCycleSchema`.
+   - `academic-cycle.service.ts`: quitado de `buildWhereClause` (ya no
+     forma parte de la búsqueda `q`), `toRecord`, `create`, `update`.
+   - `swagger.config.ts`: quitado de `AcademicCycleRecord`,
+     `CreateAcademicCycleBody`, `UpdateAcademicCycleBody`; y el jsdoc
+     de `GET /academic-cycles` (`q`) ya no menciona "description" como
+     campo buscable.
+   - **No se tocó** `AcademicCycleWallet.description` ni
+     `AcademicCycleGroup.description` — esos sí son campos reales que
+     el frontend usa (tabs de wallet y school-groups), el reporte era
+     específicamente sobre el ciclo escolar (core), no sobre esos
+     sub-recursos.
 5. **"Ciclos escolares tab inscripciones: la beca debe ser opcional."**
-   `scholarshipId` ya es opcional/nullable en zod (`create`/`update`),
-   en `prisma/schema.prisma` (`String? @relation(..., onDelete:
-   SetNull)`), en la migración original, en los tipos, y en swagger
-   (`CreateAcademicCycleEnrollmentBody.required` no lo incluye). No se
-   encontró ningún punto donde el backend lo exija. Si el formulario
-   del front sigue pidiéndolo como obligatorio, es un bug de
-   validación del lado del cliente, no del backend.
+   Confirmado con el usuario que solo hacía falta revisar el zod:
+   `academic-cycle-enrollment.schema.ts:57`,
+   `scholarshipId: z.string().uuid().optional()` — ya es opcional ahí
+   (y en `prisma/schema.prisma`, la migración original, los tipos, y
+   `swagger.config.ts`'s `CreateAcademicCycleEnrollmentBody.required`,
+   que tampoco lo incluye). No se hizo ningún cambio — el backend ya
+   trata `scholarshipId` como opcional en todas las capas; si el
+   formulario del front lo sigue pidiendo como obligatorio, es un bug
+   de validación del lado del cliente.

@@ -380,7 +380,6 @@ model AcademicCycle {
   minimumPassingGrade Int                 @default(6) @map("minimum_passing_grade")
   evaluationCount     Int                 @default(3) @map("evaluation_count")
   enrollmentOpen      Boolean             @default(false) @map("enrollment_open")
-  description         String?             @db.VarChar(500)
   observations        String?             @db.VarChar(1000)
   academicLevelId     String              @map("academic_level_id") @db.Uuid
   educationLevelId    String              @map("education_level_id") @db.Uuid
