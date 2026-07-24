@@ -1,7 +1,6 @@
 import { Pencil, Wallet } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
-import { Loader } from "@/shared/components/loader/Loader";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import { formatFriendlyDate, formatMoney } from "@/lib/extensions/formatters";
@@ -10,7 +9,6 @@ import type { StudentWalletItemResponse } from "@/interfaces/responses/student-w
 import type { StudentWalletSummaryResponse } from "@/interfaces/responses/student-wallet-summary.response";
 
 interface Props {
-    isLoading: boolean;
     enableActions?: boolean;
     data: StudentWalletItemResponse[];
     summary: StudentWalletSummaryResponse;
@@ -18,7 +16,7 @@ interface Props {
     handleClickEdit: (item: StudentWalletItemResponse) => void;
 }
 
-export const StudentWalletTable = ({ isLoading, enableActions = true, data, summary, handleClickEdit, handleClickPay }: Props) => {
+export const StudentWalletTable = ({ enableActions, data, summary, handleClickEdit, handleClickPay }: Props) => {
     return (
         <>
             <section className="flex flex-col gap-y-1.5 bg-card rounded-xl border border-border shadow-sm p-4 sm:p-6">
@@ -59,22 +57,11 @@ export const StudentWalletTable = ({ isLoading, enableActions = true, data, summ
                         </thead>
 
                         <tbody>
-                            {/* Loading */}
-                            {
-                                isLoading && (
-                                    <tr>
-                                        <td colSpan={enableActions ? 10 : 9} className="no-content-row">
-                                            <Loader title="Cargando información" subtitle="por favor espere..." fullScreen={false} size="sm" />
-                                        </td>
-                                    </tr>
-                                )
-                            }
-
                             {/* No content */}
                             {
-                                (!data.length && !isLoading) && (
+                                (!data.length) && (
                                     <tr>
-                                        <td colSpan={enableActions ? 10: 9} className="no-content-row">
+                                        <td colSpan={enableActions ? 10 : 9} className="no-content-row">
                                             Este alumno no cuenta con una cartera de pagos.
                                         </td>
                                     </tr>
@@ -83,7 +70,7 @@ export const StudentWalletTable = ({ isLoading, enableActions = true, data, summ
 
                             {/* Content */}
                             {
-                                (data.length > 0 && !isLoading) && (
+                                (data.length > 0) && (
                                     <>
                                         {
                                             data.map((item) => (

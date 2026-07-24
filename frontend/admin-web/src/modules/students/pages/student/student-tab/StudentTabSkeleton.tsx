@@ -1,6 +1,6 @@
-import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
-import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Skeleton } from "@/shared/ui/skeleton";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 
 interface Props {
     isNew: boolean;

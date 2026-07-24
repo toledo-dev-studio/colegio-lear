@@ -1,14 +1,47 @@
-import { gradeTone, type StudentSchoolSubjectGradeSummary } from "../lib/student-grades";
-import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
-import type { AcademicCycleSchoolGroupTeacherResponse } from "@/interfaces/responses/academic-cycle-school-group-teacher.response";
+import { Skeleton } from "@/shared/ui/skeleton";
+import type { StudentGradeResponse } from "@/interfaces/responses/student-grade.response";
+import { gradeTone, type StudentSchoolSubjectGradeSummary } from "../../lib/student-grades";
+import { useGetTeachersForAcademicCycleSchoolGroup } from "@/modules/academic-cycles/hooks/academic-cycle-school-groups/useGetTeachersForAcademicCycleSchoolGroup";
 
 interface Props {
-    academicCycleResponse: AcademicCycleResponse;
-    studentSchoolSubjectGradeSummary: StudentSchoolSubjectGradeSummary[];
-    schoolGroupTeachersResponse: AcademicCycleSchoolGroupTeacherResponse[];
+    academicCycleId: string;
+    academicCycleSchoolGroupId: string;
+    evaluationCount: number;
+    minimumPassingGrade: number;
+    gradeSummary: StudentSchoolSubjectGradeSummary[]
 }
 
-export const StudentGradesTable = ({ academicCycleResponse, studentSchoolSubjectGradeSummary, schoolGroupTeachersResponse }: Props) => {
+export const StudentGradesTable = ({ academicCycleId, academicCycleSchoolGroupId, evaluationCount, minimumPassingGrade, gradeSummary }: Props) => {
+    const { data, isLoading } = useGetTeachersForAcademicCycleSchoolGroup({ academicCycleId: academicCycleId, academicCycleSchoolGroupId: academicCycleSchoolGroupId });
+
+    if (isLoading) {
+        return (
+            <>
+                <section className="rounded-xl border border-border overflow-hidden">
+
+                    {/* Header */}
+                    <div className="border-b border-border p-4">
+                        <Skeleton className="h-5 w-52" />
+                    </div>
+
+                    {/* Rows */}
+                    <div className="divide-y divide-border">
+                        {Array.from({ length: 6 }).map((_, index) => (
+                            <div
+                                key={index}
+                                className="grid grid-cols-3 items-center gap-4 p-4"
+                            >
+                                <Skeleton className="h-4 w-40" />
+                                <Skeleton className="h-4 w-20" />
+                                <Skeleton className="h-8 w-24 rounded-full justify-self-end" />
+                            </div>
+                        ))}
+                    </div>
+
+                </section>
+            </>
+        )
+    }
 
     return (
         <>
@@ -22,7 +55,7 @@ export const StudentGradesTable = ({ academicCycleResponse, studentSchoolSubject
                             <th className="column">Materia</th>
                             <th className="column">Docente</th>
                             {
-                                Array.from({ length: academicCycleResponse.evaluationCount ?? 0 }, (_, index) => index + 1).map((index: number) => (
+                                Array.from({ length: evaluationCount ?? 0 }, (_, index) => index + 1).map((index: number) => (
                                     <th key={index} className="column">Evaluación {index}º</th>
                                 ))
                             }
@@ -34,9 +67,9 @@ export const StudentGradesTable = ({ academicCycleResponse, studentSchoolSubject
                     <tbody>
                         {/* No content */}
                         {
-                            (!studentSchoolSubjectGradeSummary.length) && (
+                            (!gradeSummary.length) && (
                                 <tr>
-                                    <td colSpan={5 + academicCycleResponse.evaluationCount} className="no-content-row">
+                                    <td colSpan={5 + evaluationCount} className="no-content-row">
                                         No se encontraron registros de pagos realizados en la cartera del alumno.
                                     </td>
                                 </tr>
@@ -45,15 +78,14 @@ export const StudentGradesTable = ({ academicCycleResponse, studentSchoolSubject
 
                         {/* Content */}
                         {
-                            (studentSchoolSubjectGradeSummary.length > 0) && (
+                            (gradeSummary.length > 0) && (
                                 <>
                                     {
+                                        gradeSummary.map((item) => {
 
-                                        studentSchoolSubjectGradeSummary.map((item) => {
-
-                                            const teacher = schoolGroupTeachersResponse.find(t => t.schoolSubjectId === item.schoolSubjectId)?.teacher;
-                                            const grades = item.grades;
-                                            const tone = gradeTone(item.averageGrade, academicCycleResponse.minimumPassingGrade);
+                                            const teacher = data.find(t => t.schoolSubjectId === item.schoolSubjectId)?.teacher;
+                                            const grades: StudentGradeResponse[] = item.grades;
+                                            const tone = gradeTone(item.averageGrade, minimumPassingGrade);
 
                                             return (
                                                 <tr key={item.schoolSubjectId} className="hover:bg-muted/40 transition-colors">
@@ -64,7 +96,7 @@ export const StudentGradesTable = ({ academicCycleResponse, studentSchoolSubject
                                                         }
                                                     </td>
                                                     {
-                                                        Array.from({ length: academicCycleResponse.evaluationCount ?? 0 }, (_, index) => index + 1).map((index: number) => (
+                                                        Array.from({ length: evaluationCount ?? 0 }, (_, index) => index + 1).map((index: number) => (
                                                             <th key={index} className="row">
                                                                 {
                                                                     grades.find(g => g.evaluationNumber === index)?.grade || "-"
@@ -73,7 +105,7 @@ export const StudentGradesTable = ({ academicCycleResponse, studentSchoolSubject
                                                         ))
                                                     }
                                                     <td className="row">{item.averageGrade}</td>
-                                                    <td className={`row ${tone.text}`}>{item.averageGrade >= academicCycleResponse.minimumPassingGrade ? "Aprobado" : "No aprobado"}</td>
+                                                    <td className={`row ${tone.text}`}>{item.averageGrade >= minimumPassingGrade ? "Aprobado" : "No aprobado"}</td>
                                                 </tr>
                                             )
                                         })

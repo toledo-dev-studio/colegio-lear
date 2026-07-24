@@ -2,19 +2,17 @@ import { Banknote } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
 import { formatMoney } from "@/lib/extensions/formatters";
-import { Loader } from "@/shared/components/loader/Loader";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { STUDENT_WALLET_PAYMENT_METHODS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { StudentWalletItemResponse } from "@/interfaces/responses/student-wallet-item.response";
 import type { StudentWalletPaymentResponse } from "@/interfaces/responses/student-wallet-payment.response";
 
 interface Props {
-    isLoading: boolean;
     studentWallet: StudentWalletItemResponse[];
     studentWalletPayments: StudentWalletPaymentResponse[];
 }
 
-export const StudentWalletPaymentsTable = ({ isLoading, studentWallet, studentWalletPayments }: Props) => {
+export const StudentWalletPaymentsTable = ({ studentWallet, studentWalletPayments }: Props) => {
     const totalPaid = studentWalletPayments.reduce((acc, payment) => acc + payment.amount, 0);
     return (
         <>
@@ -40,28 +38,18 @@ export const StudentWalletPaymentsTable = ({ isLoading, studentWallet, studentWa
                             <tr>
                                 <th className="column">Folio de pago</th>
                                 <th className="column">Concepto</th>
+                                <th className="column">Código</th>
                                 <th className="column">Monto pagado</th>
                                 <th className="column">Tipo de pago</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {/* Loading */}
-                            {
-                                isLoading && (
-                                    <tr>
-                                        <td colSpan={4} className="no-content-row">
-                                            <Loader title="Cargando información" subtitle="por favor espere..." fullScreen={false} size="sm" />
-                                        </td>
-                                    </tr>
-                                )
-                            }
-
                             {/* No content */}
                             {
-                                (!studentWalletPayments.length && !isLoading) && (
+                                (!studentWalletPayments.length) && (
                                     <tr>
-                                        <td colSpan={4} className="no-content-row">
+                                        <td colSpan={5} className="no-content-row">
                                             No se encontraron registros de pagos realizados en la cartera del alumno.
                                         </td>
                                     </tr>
@@ -70,7 +58,7 @@ export const StudentWalletPaymentsTable = ({ isLoading, studentWallet, studentWa
 
                             {/* Content */}
                             {
-                                (studentWalletPayments.length > 0 && !isLoading) && (
+                                (studentWalletPayments.length > 0) && (
                                     <>
                                         {
                                             studentWalletPayments.map((item) => (
@@ -79,6 +67,11 @@ export const StudentWalletPaymentsTable = ({ isLoading, studentWallet, studentWa
                                                     <td className="row">
                                                         {
                                                             studentWallet.find((walletItem) => walletItem.id === item.studentWalletItemId)?.name || "-"
+                                                        }
+                                                    </td>
+                                                    <td className="row">
+                                                        {
+                                                            studentWallet.find((walletItem) => walletItem.id === item.studentWalletItemId)?.code || "-"
                                                         }
                                                     </td>
                                                     <td className="row">{formatMoney(item.amount)}</td>

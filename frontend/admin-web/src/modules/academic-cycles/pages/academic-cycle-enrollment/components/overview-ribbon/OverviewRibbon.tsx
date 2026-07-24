@@ -3,19 +3,17 @@ import { BookMarked, Calendar, GraduationCap, Layers } from "lucide-react";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
 import { OverviewCard } from "@/shared/components/overview-card/OverviewCard";
-import type { StudentResponse } from "@/interfaces/responses/student.response";
 import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
 import { ACADEMIC_CYCLE_ENROLLMENT_STATUSES, ACADEMIC_CYCLE_PERIOD_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 
 interface Props {
-    student: StudentResponse;
     academicCycle: AcademicCycleResponse;
     academicCycleEnrollment: AcademicCycleEnrollmentResponse;
 }
 
-export const OverviewRibbon = ({ student, academicCycle, academicCycleEnrollment }: Props) => {
-    const { academicCycleSchoolGroup, scholarship, status } = academicCycleEnrollment;
+export const OverviewRibbon = ({ academicCycle, academicCycleEnrollment }: Props) => {
+    const { academicCycleSchoolGroup, scholarship, status, student } = academicCycleEnrollment;
 
     return (
         <>
@@ -37,7 +35,7 @@ export const OverviewRibbon = ({ student, academicCycle, academicCycleEnrollment
                         icon={BookMarked}
                         label="Estatus de inscripción"
                         value={labelOf(ACADEMIC_CYCLE_ENROLLMENT_STATUSES, status)}
-                        hint={`Matricula: ${student.enrollment}`}
+                        hint={`Matricula: ${student!.enrollment}`}
                     />
                     <OverviewCard
                         icon={GraduationCap}
