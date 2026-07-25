@@ -92,7 +92,6 @@ export const createAcademicCycleSchema = z.object({
   minimumPassingGrade: gradeIntField,
   evaluationCount: gradeIntField,
   enrollmentOpen: z.boolean().optional(),
-  description: z.string().max(500).optional(),
   observations: z.string().max(1000).optional(),
   academicLevelId: z
     .string()
@@ -114,7 +113,6 @@ export const updateAcademicCycleSchema = z
     minimumPassingGrade: gradeIntField.optional(),
     evaluationCount: gradeIntField.optional(),
     enrollmentOpen: z.boolean().optional(),
-    description: z.string().max(500).nullable().optional(),
     observations: z.string().max(1000).nullable().optional(),
     academicLevelId: z.string().uuid().optional(),
     educationLevelId: z.string().uuid().optional(),

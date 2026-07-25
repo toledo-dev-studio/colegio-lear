@@ -3,6 +3,7 @@ export interface AcademicCycleWalletRecord {
   id: string;
   academicCycleId: string;
   name: string;
+  code: string;
   description: string | null;
   dueDate: string;
   amount: number;
@@ -12,6 +13,7 @@ export interface AcademicCycleWalletRecord {
 /** Input DTO for creating an academic cycle wallet item */
 export interface CreateAcademicCycleWalletDto {
   name: string;
+  code: string;
   description?: string;
   dueDate: string;
   amount: number;
@@ -21,6 +23,7 @@ export interface CreateAcademicCycleWalletDto {
 /** Input DTO for updating an academic cycle wallet item */
 export interface UpdateAcademicCycleWalletDto {
   name?: string;
+  code?: string;
   description?: string;
   dueDate?: string;
   amount?: number;

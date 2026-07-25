@@ -97,7 +97,7 @@ const router = Router();
  *         schema:
  *           type: string
  *           maxLength: 100
- *         description: Free-text search on name, code, description
+ *         description: Free-text search on name, code
  *       - in: query
  *         name: name
  *         schema:
@@ -617,6 +617,8 @@ router.get(
  *               $ref: '#/components/schemas/AcademicCycleWalletRecord'
  *       404:
  *         description: Academic cycle not found
+ *       409:
+ *         description: A wallet item with this code already exists in this academic cycle
  */
 router.post(
   "/:academicCycleId/wallet",
@@ -662,6 +664,8 @@ router.post(
  *               $ref: '#/components/schemas/AcademicCycleWalletRecord'
  *       404:
  *         description: Academic cycle or wallet item not found
+ *       409:
+ *         description: A wallet item with this code already exists in this academic cycle
  */
 router.patch(
   "/:academicCycleId/wallet/:id",
@@ -1128,7 +1132,7 @@ router.get(
  *       404:
  *         description: Academic cycle or school group not found
  *       409:
- *         description: Enrollment is closed for this academic cycle
+ *         description: Enrollment is closed for this academic cycle, or the student is already enrolled in this academic cycle (any status)
  */
 router.post(
   "/:academicCycleId/enrollments",

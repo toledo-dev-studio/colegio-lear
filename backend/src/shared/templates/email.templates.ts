@@ -107,15 +107,27 @@ export function resendInvitationEmail(params: {
   return baseLayout(content);
 }
 
-/** Forgot password email — sends 6-digit code + reset link */
+/**
+ * Forgot password email — sent when an employee requests a password reset.
+ * Contains a brand-new temporary password (to log in with) and a 6-digit
+ * confirmation code (to complete the reset after logging in).
+ */
 export function forgotPasswordEmail(params: {
   name: string;
+  tempPassword: string;
   code: string;
-  resetLink: string;
 }): string {
   const content = `
     <h2 style="margin:0 0 8px;color:#0F172A;font-size:20px;font-weight:600;">Recuperación de contraseña</h2>
-    <p style="margin:0 0 24px;color:#64748B;font-size:14px;line-height:1.6;">Hola ${params.name}, recibimos una solicitud para restablecer tu contraseña. Usa el siguiente código de verificación:</p>
+    <p style="margin:0 0 24px;color:#64748B;font-size:14px;line-height:1.6;">Hola ${params.name}, recibimos una solicitud para restablecer tu contraseña. Generamos una contraseña temporal para que puedas ingresar:</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#EFF6FF;border-radius:8px;padding:20px;margin-bottom:24px;">
+      <tr>
+        <td style="padding:12px 20px;">
+          <p style="margin:0;color:#0F172A;font-size:14px;"><strong>Contraseña temporal:</strong> <code style="background:#FFFFFF;padding:4px 8px;border-radius:4px;font-size:14px;color:#1E6FDB;border:1px solid #E2E8F0;">${params.tempPassword}</code></p>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:0 0 24px;color:#64748B;font-size:14px;line-height:1.6;">Inicia sesión con esta contraseña temporal y, cuando el sistema te lo pida, ingresa el siguiente código de verificación junto con tu nueva contraseña definitiva:</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#EFF6FF;border-radius:8px;margin-bottom:24px;">
       <tr>
         <td style="padding:24px;text-align:center;">
@@ -124,15 +136,7 @@ export function forgotPasswordEmail(params: {
         </td>
       </tr>
     </table>
-    <p style="margin:0 0 24px;color:#64748B;font-size:13px;line-height:1.5;">O haz clic en el siguiente botón para ir directamente a la página de cambio de contraseña:</p>
-    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 24px;">
-      <tr>
-        <td style="border-radius:8px;background-color:#1E6FDB;">
-          <a href="${params.resetLink}" target="_blank" style="display:inline-block;padding:14px 32px;color:#FFFFFF;font-size:14px;font-weight:600;text-decoration:none;">Cambiar contraseña</a>
-        </td>
-      </tr>
-    </table>
-    <p style="margin:0;color:#94A3B8;font-size:12px;line-height:1.5;">Este código expira en 10 minutos. Si no solicitaste este cambio, ignora este correo.</p>`;
+    <p style="margin:0;color:#94A3B8;font-size:12px;line-height:1.5;">La contraseña temporal y el código expiran en 15 minutos. Si no solicitaste este cambio, ignora este correo.</p>`;
 
   return baseLayout(content);
 }

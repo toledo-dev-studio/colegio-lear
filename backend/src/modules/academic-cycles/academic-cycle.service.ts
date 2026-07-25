@@ -56,7 +56,6 @@ export class AcademicCycleService {
         OR: [
           { name: { contains: filters.q, mode: "insensitive" } },
           { code: { contains: filters.q, mode: "insensitive" } },
-          { description: { contains: filters.q, mode: "insensitive" } },
         ],
       });
     }
@@ -118,7 +117,6 @@ export class AcademicCycleService {
       minimumPassingGrade: raw.minimumPassingGrade as number,
       evaluationCount: raw.evaluationCount as number,
       enrollmentOpen: raw.enrollmentOpen as boolean,
-      description: raw.description as string | null,
       observations: raw.observations as string | null,
       academicLevelId: raw.academicLevelId as string,
       educationLevelId: raw.educationLevelId as string,
@@ -209,7 +207,6 @@ export class AcademicCycleService {
         minimumPassingGrade: dto.minimumPassingGrade ?? 6,
         evaluationCount: dto.evaluationCount ?? 3,
         enrollmentOpen: dto.enrollmentOpen ?? false,
-        description: dto.description ?? null,
         observations: dto.observations ?? null,
         academicLevelId: dto.academicLevelId,
         educationLevelId: dto.educationLevelId,
@@ -257,7 +254,6 @@ export class AcademicCycleService {
       updateData.evaluationCount = dto.evaluationCount;
     if (dto.enrollmentOpen !== undefined)
       updateData.enrollmentOpen = dto.enrollmentOpen;
-    if (dto.description !== undefined) updateData.description = dto.description;
     if (dto.observations !== undefined)
       updateData.observations = dto.observations;
     if (dto.academicLevelId !== undefined)

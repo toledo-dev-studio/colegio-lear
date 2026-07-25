@@ -31,7 +31,7 @@ export interface LoginResponse {
   phoneNumber: string;
   email: string;
   username: string;
-  image: string | null;
+  avatar: string | null;
   mustChangePassword: boolean;
   securityRole: {
     id: string;

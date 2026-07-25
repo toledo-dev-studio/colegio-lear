@@ -27,6 +27,9 @@ const LIST_SELECT = {
   publishedAt: true,
   expiresAt: true,
   isActive: true,
+  recipientsCount: true,
+  viewedCount: true,
+  viewsCalculatedAt: true,
 } as const;
 
 /**

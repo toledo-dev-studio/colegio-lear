@@ -85,6 +85,7 @@ model Scholarship {
 model PaymentConcept {
   id               String  @id @default(uuid()) @db.Uuid
   name             String  @unique @db.VarChar(100)
+  code             String  @unique @db.VarChar(10)
   description      String? @db.VarChar(500)
   amount           Decimal @map("amount") @db.Decimal(10, 2)
   allowForgiveness Boolean @default(false) @map("allow_remission")
@@ -188,7 +189,9 @@ model Employee {
   username                    String                       @unique @db.VarChar(50)
   password                    String                       @db.VarChar(255)
   mustChangePassword          Boolean                      @default(false) @map("must_change_password")
-  image                       String?                      @db.VarChar(500)
+  passwordResetCode           String?                      @map("password_reset_code") @db.VarChar(255)
+  passwordResetCodeExpiresAt  DateTime?                    @map("password_reset_code_expires_at")
+  avatar                      String?                      @db.VarChar(500)
   isActive                    Boolean                      @default(true) @map("is_active")
   isDeleted                   Boolean                      @default(false) @map("is_deleted")
   securityRoleId              String                       @map("security_role_id") @db.Uuid
@@ -196,6 +199,7 @@ model Employee {
   securityRole                SecurityRole                 @relation(fields: [securityRoleId], references: [id], onDelete: Restrict)
   jobTitle                    JobTitle                     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
   academicCycleGroupCalendars AcademicCycleGroupCalendar[]
+  createdAt                   DateTime                     @default(now()) @map("created_at")
 
   @@map("employees")
   @@schema("core")
@@ -213,6 +217,15 @@ model Announcement {
   expiresAt   DateTime     @map("expires_at")
   isActive    Boolean      @default(true) @map("is_active")
   isDeleted   Boolean      @default(false) @map("is_deleted")
+
+  // Calculated (cron-maintained) view-tracking history. Stored on the
+  // announcement itself — not on a per-recipient notification row — so this
+  // aggregate survives even if the underlying notification records are
+  // later purged.
+  recipientsCount   Int       @default(0) @map("recipients_count")
+  viewedCount       Int       @default(0) @map("viewed_count")
+  viewsCalculatedAt DateTime? @map("views_calculated_at")
+
   attachments Attachment[]
 
   @@map("announcements")
@@ -243,7 +256,7 @@ model Student {
   dateOfBirth        DateTime  @map("date_of_birth")
   curp               String    @unique @db.VarChar(18)
   enrollment         String    @unique @db.VarChar(20)
-  image              String?   @db.VarChar(500)
+  avatar             String?   @db.VarChar(500)
   observations       String?   @db.VarChar(1000)
   isActive           Boolean   @default(true) @map("is_active")
   bloodType          BloodType @map("blood_type")
@@ -330,8 +343,8 @@ model StudentGuardian {
   studentId          String              @map("student_id") @db.Uuid
   fullName           String              @map("full_name") @db.VarChar(200)
   relationship       StudentGuardianType
-  phoneNumber        String              @map("phone_number") @db.VarChar(20)
-  email              String              @db.VarChar(150)
+  phoneNumber        String?             @map("phone_number") @db.VarChar(20)
+  email              String?             @db.VarChar(150)
   isPrincipal        Boolean             @default(false) @map("is_principal")
   emergencyContact   Boolean             @default(false) @map("emergency_contact")
   authorizedToPickUp Boolean             @default(false) @map("authorized_to_pick_up")
@@ -378,7 +391,6 @@ model AcademicCycle {
   minimumPassingGrade Int                 @default(6) @map("minimum_passing_grade")
   evaluationCount     Int                 @default(3) @map("evaluation_count")
   enrollmentOpen      Boolean             @default(false) @map("enrollment_open")
-  description         String?             @db.VarChar(500)
   observations        String?             @db.VarChar(1000)
   academicLevelId     String              @map("academic_level_id") @db.Uuid
   educationLevelId    String              @map("education_level_id") @db.Uuid
@@ -420,6 +432,7 @@ model AcademicCycleWallet {
   id                 String              @id @default(uuid()) @db.Uuid
   academicCycleId    String              @map("academic_cycle_id") @db.Uuid
   name               String              @db.VarChar(100)
+  code               String              @db.VarChar(10)
   description        String?             @db.VarChar(500)
   dueDate            DateTime            @map("due_date")
   amount             Decimal             @db.Decimal(10, 2)
@@ -427,6 +440,7 @@ model AcademicCycleWallet {
   academicCycle      AcademicCycle       @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
   studentWalletItems StudentWalletItem[]
 
+  @@unique([academicCycleId, code])
   @@map("academic_cycle_wallet")
   @@schema("core")
 }
@@ -545,6 +559,7 @@ model StudentGrade {
 model StudentWalletItem {
   id                        String                  @id @default(uuid()) @db.Uuid
   name                      String                  @db.VarChar(100)
+  code                      String                  @db.VarChar(10)
   description               String?                 @db.VarChar(500)
   amount                    Decimal                 @db.Decimal(10, 2)
   allowForgiveness          Boolean                 @default(false) @map("allow_forgiveness")

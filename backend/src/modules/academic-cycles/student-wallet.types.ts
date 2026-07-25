@@ -5,6 +5,7 @@ export type PaymentMethod = "online-payment" | "cash";
 export interface StudentWalletItemRecord {
   id: string;
   name: string;
+  code: string;
   description: string | null;
   dueDate: string;
   amount: number;

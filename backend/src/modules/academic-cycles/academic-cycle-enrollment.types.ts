@@ -1,3 +1,5 @@
+import type { AcademicCycleStatus } from "./academic-cycle.types";
+
 export type AcademicCycleEnrollmentStatus = "enrolled" | "completed" | "dropped";
 
 /** Filters applicable to academic cycle enrollment list endpoints (scoped by academicCycleId in the URL) */
@@ -24,7 +26,7 @@ export interface AcademicCycleEnrollmentRecord {
     enrollment: string;
   };
   academicCycleId: string;
-  academicCycle?: { id: string; name: string };
+  academicCycle?: { id: string; name: string; status: AcademicCycleStatus };
   academicCycleSchoolGroupId: string;
   academicCycleSchoolGroup: { id: string; name: string };
   scholarshipId: string | null;

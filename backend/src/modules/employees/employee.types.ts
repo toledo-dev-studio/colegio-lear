@@ -46,7 +46,7 @@ export interface EmployeeRecord {
   phoneNumber: string;
   email: string;
   username: string;
-  image: string | null;
+  avatar: string | null;
   isActive: boolean;
   securityRoleId: string;
   jobTitleId: string;
@@ -63,7 +63,7 @@ export interface EmployeeDetail {
   phoneNumber: string;
   email: string;
   username: string;
-  image: string | null;
+  avatar: string | null;
   isActive: boolean;
   securityRoleId: string;
   jobTitleId: string;
@@ -132,7 +132,7 @@ export const EMPLOYEE_LIST_SELECT = {
   phoneNumber: true,
   email: true,
   username: true,
-  image: true,
+  avatar: true,
   isActive: true,
   securityRoleId: true,
   jobTitleId: true,

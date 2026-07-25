@@ -668,3 +668,444 @@ van a devolver 400 hasta que el front corrija el armado del `FormData`
 fallar en silencio. Probado en vivo: JSON body → 400 con mensaje claro;
 multipart real con imagen → 201, archivo guardado en disco, `image` con
 ruta real.
+
+## Rediseño de subida de avatar + rename image→avatar (2026-07-24)
+
+El approach de la sección anterior (bloquear con 400 si la petición no
+es multipart) se revirtió a favor de un diseño distinto: separar por
+completo la subida de archivo de los endpoints de creación/edición.
+
+**Motivación:** obligar a `POST /employees`, `PATCH /employees/:id` y
+`PATCH /employees/me` a ser siempre `multipart/form-data` — incluso
+cuando no hay archivo — es una carga innecesaria para el front. El
+nuevo criterio: esas 3 rutas vuelven a ser JSON puro; el archivo solo
+viaja hacia el backend cuando el usuario realmente selecciona uno, a
+través de un endpoint dedicado.
+
+**Cambios:**
+
+1. Se quitó `requireMultipart` + `uploadSingle` (multer) de
+   `POST /employees`, `PATCH /employees/:id` y `PATCH /employees/me`.
+   Los tres vuelven a aceptar únicamente `application/json` y ya no
+   reciben `file` en el body — `EmployeeService.create/update/updateMyAccount`
+   perdieron el parámetro `file`.
+2. Se agregaron 2 endpoints nuevos, ambos `multipart/form-data` con
+   `file` obligatorio, dedicados exclusivamente a la imagen de perfil:
+   - `POST /employees/:id/avatar` (requiere permiso `employees`) —
+     `EmployeeService.uploadAvatar`.
+   - `POST /employees/me/avatar` (sin RBAC, cualquier autenticado sobre
+     sí mismo) — `EmployeeService.uploadMyAvatar`.
+   Ambos borran el archivo anterior en `IStorageService` antes de subir
+   el nuevo (evita huérfanos en `uploads/employees/`), y responden con
+   el mismo shape que sus contrapartes de solo-datos (`EmployeeDetail` /
+   `LoginResponse` respectivamente).
+3. Rename de columna `image` → `avatar` en toda la base (motivo: el
+   frontend ya usa `avatar` como nombre; no había ningún lugar donde el
+   backend dijera `avatar` antes de este cambio, así que se unificó
+   hacia ese nombre en vez de al revés): `prisma/schema.prisma`
+   (`Employee.avatar`, `Student.avatar`), migración
+   `20260724000000_rename_image_to_avatar` (`ALTER TABLE ... RENAME
+   COLUMN image TO avatar`, preserva datos existentes), y el campo
+   `image` renombrado a `avatar` en tipos/DTOs/schemas/swagger de
+   `employees`, `students` y `auth` (incluye `LoginResponse.avatar` en
+   `GET /auth/me` y `POST /auth/login`).
+4. `students` no tiene endpoint de subida de archivo — ahí `avatar`
+   sigue siendo un string plano que el cliente manda directo en el
+   JSON (URL/ruta), sin multer de por medio. Solo se le aplicó el
+   rename de columna/campo por consistencia con `employees`.
+
+**Pendiente en el frontend:** actualizar
+`create-update-employee.action.ts` y `update-my-account.action.ts` para
+dejar de armar `FormData` en la creación/edición (ahora es JSON puro), y
+agregar las llamadas nuevas a `POST /employees/:id/avatar` /
+`POST /employees/me/avatar` cuando el usuario adjunte un archivo. Todo
+campo `image` que el front use debe renombrarse a `avatar`.
+
+## Rediseño de forgot-password: flujo basado en sesión (2026-07-24)
+
+El flujo anterior (`POST /auth/forgot-password` público + `POST
+/auth/change-password` público con JWT de un link de correo) se
+reemplazó por un flujo de 2 pasos alineado con lo que el frontend ya
+tiene implementado (`ForgotPasswordPage`/`ResetPasswordPage`,
+`request-reset-password.action.ts`/`reset-password.action.ts`), que no
+usa ningún link con token — todo pasa por login + sesión autenticada.
+
+**Flujo nuevo:**
+
+1. `POST /auth/request-reset-password` (público, body `{ email }`,
+   antes `/auth/forgot-password` con body `{ username }`): busca al
+   empleado por email, genera una contraseña temporal nueva (mismo
+   patrón que `generateTempPassword()` de invitaciones) y un código de
+   6 dígitos. Actualiza de inmediato `password` (hash de la temporal),
+   `mustChangePassword = true`, y guarda el código **hasheado** +
+   `passwordResetCodeExpiresAt` (15 min). Envía un correo con la
+   contraseña temporal en claro + el código en claro (ya no hay
+   `resetLink`). Responde 200 siempre, exista o no el email (anti
+   enumeración, igual que antes).
+2. El empleado inicia sesión normal (`POST /auth/login`) con su
+   username + la contraseña temporal recibida. Esto ya funcionaba sin
+   cambios — `login()` nunca bloqueó por `mustChangePassword`, solo lo
+   regresa en la respuesta; el front (route guards en
+   `protected.router.tsx`) ya redirige a `/auth/reset-password` cuando
+   `mustChangePassword === true`.
+3. `POST /auth/reset-password` (antes `/auth/change-password`, body
+   `{ token, code, password, confirmPassword }`): ahora **requiere
+   sesión autenticada** (`authenticate` middleware, igual que
+   `/auth/me`) y el body es `{ code, password, confirmPassword }` — el
+   empleado se identifica por `req.user.employeeId` de la sesión, no
+   por ningún campo del body (el front manda además un `id` en el
+   body por compatibilidad con su tipo `ResetPasswordRequest`, pero el
+   backend lo ignora deliberadamente y confía solo en la sesión, para
+   que nadie pueda cambiarle la contraseña a otro empleado mandando un
+   `id` distinto). Verifica el código contra el hash guardado en el
+   paso 1 y su expiración, y si todo es válido actualiza `password`,
+   pone `mustChangePassword = false` y limpia
+   `passwordResetCode`/`passwordResetCodeExpiresAt`.
+
+**Cambios de esquema:** `Employee.passwordResetCode` (hash, nullable) y
+`Employee.passwordResetCodeExpiresAt` (nullable) agregados en
+`prisma/schema.prisma`, migración
+`20260724010000_add_password_reset_code_to_employees`. No se tocó
+`Student` — este flujo es solo para `Employee` (login de estudiantes no
+existe hoy).
+
+**Gap conocido, no resuelto en este cambio:** empleados creados por
+invitación (`employee.service.ts` `create()`/`resendInvitation()`)
+también quedan con `mustChangePassword = true` pero **nunca reciben un
+código** (`invitationEmail`/`resendInvitationEmail` solo mandan
+usuario+contraseña temporal, sin código). Si inician sesión con esa
+contraseña temporal, el front los manda a `/auth/reset-password`, y ahí
+se van a topar con "No hay una solicitud de restablecimiento de
+contraseña activa" porque `passwordResetCode` nunca se llenó. Como
+workaround funcional ya disponible: pueden ir a "olvidé mi contraseña"
+ellos mismos con su email, lo cual genera una contraseña temporal +
+código nuevos y sí les permite completar el flujo. No se atendió de
+raíz porque no fue parte de lo pedido (solo forgot-password); si se
+quiere cerrar del todo, la opción más simple es que
+`create()`/`resendInvitation()` también generen y envíen un código
+igual que `requestResetPassword`, usando la misma verificación en
+`resetPassword()`.
+
+## Corrección de 3 bugs reportados por el usuario (2026-07-24)
+
+Se reportaron 5 bugs; 3 se confirmaron y corrigieron en el backend, 2
+no se reprodujeron (ver sección "Investigados, no reproducidos" abajo).
+
+**Corregidos:**
+
+1. **`students` tab tutores — phoneNumber/email solo obligatorios si
+   `isPrincipal=true`.** Antes eran `NOT NULL` en DB y requeridos
+   siempre en zod, sin importar el tipo de tutor. Cambios:
+   - `prisma/schema.prisma`: `StudentGuardian.phoneNumber`/`.email`
+     ahora `String?`, migración
+     `20260724020000_student_guardian_optional_contact` (`ALTER
+     COLUMN ... DROP NOT NULL` en ambas columnas, sin pérdida de
+     datos).
+   - `student-guardian.schema.ts`: `phoneNumber`/`email` pasan a
+     opcionales/nullable (helpers `optionalTrimmedString`/
+     `optionalEmail`, mismo patrón de transform-a-`undefined` que
+     `optionalSecondLastName` en `employee.schema.ts`), con
+     `.refine()` que exige ambos cuando `isPrincipal === true` en
+     `createStudentGuardianSchema`.
+   - `student-guardian.service.ts` `update()`: como es un PATCH
+     parcial, zod no puede validar la invariante contra el registro
+     ya existente — se agregó el chequeo ahí mismo, calculando el
+     `isPrincipal`/`phoneNumber`/`email` **resultante** (patch
+     fusionado sobre el registro existente) y lanzando
+     `ValidationError` si el resultante queda con `isPrincipal=true`
+     pero `phoneNumber`/`email` nulos.
+   - `student-guardian.types.ts`/`swagger.config.ts`: `phoneNumber`/
+     `email` ahora `string | null` / `nullable: true`, y
+     `CreateStudentGuardianBody.required` ya no los incluye.
+   - Efecto colateral encontrado y arreglado en el mismo cambio:
+     `student.service.ts` `sendCredentials()` mandaba correo a
+     `guardian.email` sin checar null (ahora que el tipo permite
+     `null`, TS lo marcó) — se agregó `if (!guardian.email) continue;`
+     antes de enviar, ya que un guardian principal *debería* siempre
+     tener email por la validación anterior, pero esto protege contra
+     datos previos a esta migración.
+
+2. **`academic-cycles` tab inscripciones — bloquear reinscripción del
+   mismo alumno en el mismo ciclo, sin importar el status.**
+   `academic-cycle-enrollment.service.ts` `create()` no tenía ningún
+   chequeo de duplicados — se agregó un `findFirst({ where: {
+   studentId, academicCycleId } })` (sin filtrar por `status`, para
+   que "enrolled", "completed" y "dropped" cuenten igual) justo antes
+   de generar el código, que lanza `ConflictError` (409) si ya existe.
+   Documentado el 409 en el jsdoc de `POST
+   /academic-cycles/{id}/enrollments` en `academic-cycle.routes.ts`.
+   No se agregó constraint `@@unique` a nivel DB — si se quiere
+   defensa en profundidad ahí también, es un cambio aparte.
+
+3. **`students` tab ciclos escolares inscritos — falta `status` dentro
+   de `academicCycle`.** El `INCLUDE_RELATIONS.academicCycle` en
+   `academic-cycle-enrollment.service.ts` solo seleccionaba `{id,
+   name}`; se amplió a `{id, name, status}`. Como `toRecord()` hace
+   passthrough directo de `raw.academicCycle`, ningún otro cambio de
+   service fue necesario — se propaga automáticamente a **todos** los
+   endpoints de enrollments (list, paged, byId, create, update,
+   `GET /students/:studentId/enrollments`), no solo al tab de
+   estudiantes. Actualizado `academic-cycle-enrollment.types.ts`
+   (`academicCycle.status: AcademicCycleStatus`, importado desde
+   `academic-cycle.types.ts` en vez de redeclarar el union) y
+   `swagger.config.ts` (`AcademicCycleEnrollmentRecord.academicCycle.status`).
+
+**Investigados, no reproducidos (revisar con más detalle / posible bug
+de frontend, no de backend):**
+
+4. **"Ciclos escolares: retornando propiedad `description` que no
+   existe."** Aclarado por el usuario: el sentido era el opuesto al
+   que se investigó primero — el frontend nunca tuvo/usó un campo
+   `description` en el ciclo escolar (core `AcademicCycle`), así que
+   había que **eliminarlo**, no que faltara. Se quitó por completo:
+   - `prisma/schema.prisma`: se eliminó
+     `AcademicCycle.description`, migración
+     `20260724030000_drop_academic_cycle_description` (`ALTER TABLE
+     ... DROP COLUMN description`).
+   - `academic-cycle.types.ts`: quitado de `AcademicCycleRecord`,
+     `CreateAcademicCycleDto`, `UpdateAcademicCycleDto`.
+   - `academic-cycle.schema.ts`: quitado de
+     `createAcademicCycleSchema`/`updateAcademicCycleSchema`.
+   - `academic-cycle.service.ts`: quitado de `buildWhereClause` (ya no
+     forma parte de la búsqueda `q`), `toRecord`, `create`, `update`.
+   - `swagger.config.ts`: quitado de `AcademicCycleRecord`,
+     `CreateAcademicCycleBody`, `UpdateAcademicCycleBody`; y el jsdoc
+     de `GET /academic-cycles` (`q`) ya no menciona "description" como
+     campo buscable.
+   - **No se tocó** `AcademicCycleWallet.description` ni
+     `AcademicCycleGroup.description` — esos sí son campos reales que
+     el frontend usa (tabs de wallet y school-groups), el reporte era
+     específicamente sobre el ciclo escolar (core), no sobre esos
+     sub-recursos.
+5. **"Ciclos escolares tab inscripciones: la beca debe ser opcional."**
+   Confirmado con el usuario que solo hacía falta revisar el zod:
+   `academic-cycle-enrollment.schema.ts:57`,
+   `scholarshipId: z.string().uuid().optional()` — ya es opcional ahí
+   (y en `prisma/schema.prisma`, la migración original, los tipos, y
+   `swagger.config.ts`'s `CreateAcademicCycleEnrollmentBody.required`,
+   que tampoco lo incluye). No se hizo ningún cambio — el backend ya
+   trata `scholarshipId` como opcional en todas las capas; si el
+   formulario del front lo sigue pidiendo como obligatorio, es un bug
+   de validación del lado del cliente.
+
+## Campo `code` en conceptos de pago y cadena de wallet (2026-07-24)
+
+El front agregó un campo `code: string` (código de control interno,
+máximo 10 caracteres, único) a `PaymentConceptRequest/Response`. El
+usuario preguntó si también aplicaba al wallet del ciclo escolar —
+inicialmente investigué mal (vi que el input de `code` en
+`AcademicCycleWalletPanelForm.tsx` está deshabilitado/derivado de
+seleccionar un concepto de pago, y concluí que no había campo real
+del lado del backend). El usuario corrigió: `AcademicCycleWalletItemRequest`
+y `AcademicCycleWalletItemResponse` **sí** declaran `code: string`
+requerido, igual que `name` — es un campo real que se guarda, no solo
+UI. Revisando más a fondo también encontré que
+`StudentWalletItemResponse` (el snapshot que ve el alumno/tutor) tiene
+el mismo campo. Se agregó en las 3 tablas relacionadas:
+
+1. **`PaymentConcept.code`** — `String @unique @db.VarChar(10)`,
+   migración `20260724040000_add_payment_concept_code` (columna
+   nullable → backfill placeholder desde `id` para filas existentes →
+   `NOT NULL` + unique index). Único **globalmente**. Validado en zod
+   (`payment-concept.schema.ts`, helper `codeField()`: trim + uppercase
+   + máx 10 + solo `[A-Z0-9]`) y unicidad case-insensitive verificada
+   en `create()`/`update()` del service (como ya se hacía con `name`).
+   Seed (`prisma/seed.ts`) actualizado con códigos reales para los 5
+   conceptos ya sembrados (`INSCRIP`, `COLEGMES`, `MATERIAL`,
+   `UNIFORME`, `SEGURO`).
+2. **`AcademicCycleWallet.code`** — `String @db.VarChar(10)`, único
+   **por ciclo** (`@@unique([academicCycleId, code])`), no globalmente
+   — a propósito, porque el mismo concepto (mismo código) se repite en
+   el catálogo de wallet de ciclos distintos (el wallet está
+   desacoplado de `PaymentConcept` desde la migración
+   `academic_cycle_wallet_decouple_payment_concept`). Migración
+   `20260724050000_add_academic_cycle_wallet_code`. Mismo patrón de
+   validación zod y unicidad (ahora scoped a `academicCycleId`) en
+   `academic-cycle-wallet.schema.ts`/`.service.ts`.
+3. **`StudentWalletItem.code`** — `String @db.VarChar(10)`, sin
+   constraint de unicidad propio (es un snapshot de solo lectura, igual
+   que `name`/`amount`/`description` en esa tabla). Migración
+   `20260724060000_add_student_wallet_item_code`, backfillea desde la
+   fila de `academic_cycle_wallet` correspondiente
+   (`academic_cycle_wallet_id`) para filas existentes.
+   `AcademicCycleEnrollmentService.create()` (el snapshot que corre al
+   inscribir un alumno) actualizado para copiar `code` del catálogo del
+   wallet al crear el `StudentWalletItem`.
+
+Actualizado en las 3: tipos (`*.types.ts`), swagger
+(`PaymentConceptRecord`/`CreatePaymentConceptBody`/`UpdatePaymentConceptBody`,
+`AcademicCycleWalletRecord`/`Create.../Update...Body`,
+`StudentWalletItemRecord`), y los 409 documentados en las rutas para
+código duplicado. Se agregaron tests nuevos en
+`payment-concept.test.ts` para la unicidad de `code` en `create`/`update`
+(al escribirlos se encontró que `update()` no tenía el chequeo de
+unicidad de `code` ni lo incluía en `updateData` — se corrigió en el
+mismo cambio, antes de que llegara a producción sin probar).
+
+## Módulo Dashboard (2026-07-24)
+
+Nuevo módulo `backend/src/modules/dashboard/` (no existía nada antes —
+ni rutas, ni service, solo el moduleKey `"dashboard"` ya anticipado en
+`security-role.types.ts`). Construido leyendo directamente el front ya
+armado (componentes, hooks, interfaces en `dashboard.response.ts`,
+mocks en `public/api/dashboard/*.json`), no solo la descripción del
+usuario — dos discrepancias reales encontradas y confirmadas con el
+usuario antes de programar (ver abajo).
+
+**5 endpoints, todos `GET`, todos protegidos con `authorize("dashboard")`:**
+
+1. `GET /dashboard/academic-cycles` → `AcademicCycleSummaryRecord`
+   (`activeAcademicCyclesCount`, `activeStudentsCount`,
+   `droppedStudentsCount`, `topGroups`). Si
+   `activeAcademicCyclesCount === 0`, se corta ahí mismo y regresa todo
+   lo demás en cero/vacío — no corre las queries pesadas.
+   **Confirmado con el usuario**: `topGroups` es el **top 3 de grupos**
+   (no de alumnos individuales) por promedio de calificaciones,
+   porque así está el componente `TopGroupsTable.tsx` +
+   `TopSchoolGroupResponse` ya construidos en el front. Se calcula sin
+   SQL crudo (sin precedente de `$queryRaw`/`groupBy` cross-relation en
+   este repo): una query trae los grupos activos de ciclos activos con
+   `_count` de inscripciones (`status: "enrolled"`), otra trae las
+   `StudentGrade` de esos grupos, y el promedio se agrega en JS
+   (`Map<groupId, {sum, count}>`), se ordena desc y se recorta a 3.
+   Grupos sin calificaciones registradas quedan fuera del ranking (nada
+   que promediar).
+2. `GET /dashboard/financial` → `FinancialSummaryRecord`
+   (`totalPaidAmount`, `pendingAmount`, `forgivenPaymentsCount`,
+   `totalForgivenAmount`), agregado sobre `StudentWalletItem` filtrado
+   por `academicCycle.status = "active"` con 2 `aggregate()` de Prisma
+   (uno para `isForgiven: false` con `_sum` de `amount`/
+   `outstandingAmount`, otro para `isForgiven: true` con `_sum`/
+   `_count`) — agregación del lado de la BD, no trae filas a JS. Mismo
+   guard: sin ciclos activos, todo en cero sin correr las queries.
+3. `GET /dashboard/announcements` → `AnnouncementSummaryRecord`
+   (`activeAnnouncementsCount`: anuncios con `isActive`, no borrados, y
+   dentro de su ventana `publishedAt`/`expiresAt` respecto a `now`;
+   `viewedPercentage`: `SUM(viewedCount)/SUM(recipientsCount)*100`
+   sobre ese mismo conjunto, 0 si no hay destinatarios). Ver la sección
+   de cambios al modelo `Announcement` más abajo — este endpoint
+   depende de 3 columnas nuevas que hoy nadie llena todavía.
+4. `GET /dashboard/system` → `SystemSummaryRecord` (conteos simples:
+   `securityRolesCount`, `jobTitlesCount` con `isDeleted: false`;
+   `teachersEmployeesCount`/`administrativeEmployeesCount` via
+   `Employee.jobTitle.jobTitleType`).
+5. `GET /dashboard/teacher-employees` → `TeacherEmployeeSummaryRecord[]`
+   (hasta 10, `orderBy: createdAt desc`). **Confirmado con el
+   usuario**: es solo empleados tipo **maestro** (no administrativos,
+   no alumnos), porque así están `LatestTeachersTable.tsx` +
+   `TeacherEmployeeSummaryResponse` ya construidos en el front — no es
+   un listado genérico de "usuarios registrados".
+
+**Cambio de schema necesario y no anticipado por el usuario**:
+`Employee` no tenía ninguna columna de fecha de creación, y
+`TeacherEmployeeSummaryResponse.createdAt` (front) más el propio
+"últimos registrados" lo requieren para poder ordenar. Se agregó
+`Employee.createdAt` (`DateTime @default(now())`, migración
+`20260724080000_add_employee_created_at`) — las filas existentes
+quedan con el timestamp de cuando corrió la migración (no hay fecha de
+alta real que rescatar).
+
+**Cambios al modelo `Announcement`** (lo que pidió el usuario
+explícitamente): 3 columnas nuevas —
+`recipientsCount`/`viewedCount`/`viewsCalculatedAt`
+(migración `20260724070000_add_announcement_view_tracking_columns`,
+default 0/0/null). Diseño acordado con el usuario ("esto como lo
+pudiera hacer" — delegó el diseño): en vez de que borrar registros de
+notificación individuales pueda destruir el histórico de "cuánta gente
+vio este anuncio", el agregado calculado vive directamente en
+`Announcement`, sobreviviendo aunque las filas de notificación
+individuales se borren después. **Alcance de HOY**: solo se agregaron
+las columnas y se expusieron de solo lectura en
+`announcement.types.ts`/`.service.ts` (no en
+`Create`/`UpdateAnnouncementDto`, son cron-managed) y en swagger.
+**Explícitamente fuera de alcance por ahora** (palabras del usuario:
+"esto ahorita obtenlo, y haremos uso de cronjobs tanto para enviar
+notificaciones como para actualizar estas visualizaciones"): no existe
+todavía ninguna tabla de notificación por destinatario, ni el cron que
+calcule/actualice estas 2 columnas — hoy siempre van a estar en 0
+(`recipientsCount`/`viewedCount`) y `viewsCalculatedAt` en `null` hasta
+que se construya ese cron en un cambio futuro. El endpoint del
+dashboard ya está listo para leerlas en cuanto existan datos reales.
+
+**Pendiente del lado del frontend** (no tocado, es un repo aparte):
+las 5 `action.ts` del dashboard (`get-academic-cylces-summary.action.ts`
+[sic, typo en el nombre del archivo original],
+`get-financial-summary.action.ts`, `get-announcements-summary.action.ts`,
+`get-system-summary.action.ts`, `get-latest-teachers-summary.action.ts`)
+tienen una línea `// REMOVE MOCKABLE` que sobreescribe el endpoint real
+con un JSON mockeado estático (`http://localhost/api/dashboard/*.json`)
+sin importar el ambiente — hay que borrar esa línea en cada action para
+que el front deje de leer los mocks y empiece a pegarle a estos 5
+endpoints reales.
+
+## Módulo Global Search (2026-07-24)
+
+Nuevo módulo `backend/src/modules/global-search/`. El front **ya tenía
+todo construido** esperando este endpoint: `GlobalSearchInput.tsx` en el
+navbar, hook `useGetGlobalSearch` (debounce, `minLength: 5`), acción
+`get-global-search.action.ts` (con el mismo patrón `// REMOVE MOCKABLE`
+que el dashboard — hay que quitarle esa línea también), e interfaz
+`GlobalSearchResponse`/`GlobalSearchRecordResponse` ya definida. El
+backend implementa exactamente ese contrato.
+
+**`GET /global-search?q=<term>`** → `GlobalSearchGroup[]`
+(`{ module, records: [{ id, label, subtitle?, route }] }`), sin
+`authorize()` de un solo moduleKey en la ruta (no existe un moduleKey
+"global-search" ni en front ni en back) — en su lugar filtra **por
+módulo, internamente**, contra `req.user.permissions`.
+
+**Diseño (confirmado con el usuario antes de implementar):**
+
+1. Búsqueda simple `contains`/ILIKE case-insensitive, **no** full-text ni
+   fuzzy — reutiliza exactamente los mismos campos que cada módulo ya
+   usa en su propio filtro `q` de listado (confirmado uno por uno:
+   students, employees, academic-cycles, announcements,
+   academic-levels, school-subjects, scholarships, payment-concepts,
+   job-titles, security-roles — los 10 con `findAllPaged` real con
+   `skip`/`take`, ninguno `findAll`-only).
+2. **Top 3 por módulo**, con `take: 3` a nivel de Prisma/BD (no
+   fetch-all + slice en JS) y `select` explícito (solo los campos que
+   arman `label`/`subtitle`, no la fila completa).
+3. Si un módulo no tiene matches, **se omite del arreglo de respuesta**
+   por completo (no se manda `{module, records: []}`).
+4. `route` se genera en el backend como `/${moduleKey}/${id}` — se
+   confirmó que los 10 módulos siguen ese patrón 1:1 exacto en el router
+   del front (`/students/:id`, `/scholarships/:id`, etc.), sin
+   excepciones ni modales.
+
+**Optimización (lo que pidió el usuario explícitamente — "cómo
+pudiéramos optimizarla"):**
+
+1. Las hasta-10 queries (una por módulo) corren en **paralelo**
+   (`Promise.all`), no secuencial.
+2. **Filtrado por permisos ANTES de consultar**: si
+   `req.user.permissions` no tiene `canRead: true` para un moduleKey,
+   ese módulo ni siquiera dispara su query — no es solo un filtro de
+   seguridad post-hoc, reduce directamente cuántas queries corren.
+   Verificado en vivo contra la BD sembrada: el rol `Docente` (que solo
+   puede leer `dashboard`/`my-account`/`my-classes`/`academic-cycles`/
+   `announcements`) buscando "primaria" solo recibe el grupo
+   `academic-cycles` (no `academic-levels`, aunque también hay match
+   ahí), y buscando "auxiliar" (que solo existe en `job-titles`/
+   `security-roles`) recibe `[]` — ni siquiera se ejecutan esas 2
+   queries para ese usuario.
+3. **Mínimo de 5 caracteres** en `q`, validado en el backend
+   (`global-search.schema.ts`) además del debounce del front — mismo
+   número que ya usa el front, para que pegarle al endpoint directo (sin
+   pasar por la UI) no permita el caso más caro (buscar 1-2 caracteres
+   contra 10 tablas).
+
+**Nota de mantenimiento futura (no implementada, solo mencionada):** si
+algún día el volumen de datos crece mucho y el `ILIKE '%term%'` sin
+índice empieza a pesar, la opción natural es un índice GIN/trigram
+(`pg_trgm`) sobre las columnas de texto más buscadas — no se agregó
+ahora porque el volumen actual (cientos de filas por tabla) no lo
+justifica.
+
+Verificado end-to-end contra la BD real sembrada (no solo `tsc`):
+login como SuperAdmin y como un maestro (`Docente`), varios términos de
+búsqueda (match múltiple, sin match, término corto rechazado con 400),
+confirmando en cada caso el shape de respuesta y el filtrado por
+permisos. Al conectarlo encontré y corregí un bug propio antes de
+probarlo: se me olvidó agregar la línea `app.use("/global-search", ...)`
+en `src/index.ts` — solo había puesto el `import`.

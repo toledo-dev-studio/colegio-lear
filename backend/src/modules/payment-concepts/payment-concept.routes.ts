@@ -135,7 +135,7 @@ router.get(
  *     tags:
  *       - Payment Concepts
  *     summary: Create a new payment concept
- *     description: Creates a new payment concept. Validates uniqueness of name (case-insensitive).
+ *     description: Creates a new payment concept. Validates uniqueness of name and code (case-insensitive).
  *     requestBody:
  *       required: true
  *       content:
@@ -152,7 +152,7 @@ router.get(
  *       400:
  *         description: Validation error
  *       409:
- *         description: Duplicate payment concept name
+ *         description: Duplicate payment concept name or code
  */
 router.post(
   "/",
@@ -189,7 +189,7 @@ router.post(
  *       404:
  *         description: Payment concept not found
  *       409:
- *         description: Duplicate payment concept name
+ *         description: Duplicate payment concept name or code
  */
 router.patch(
   "/:id",

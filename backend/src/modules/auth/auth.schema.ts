@@ -13,23 +13,23 @@ export const loginSchema = z.object({
 });
 
 /**
- * Validates POST /auth/forgot-password body.
- * - username: username or email (string, non-empty)
+ * Validates POST /auth/request-reset-password body.
+ * - email: employee's email address
  */
-export const forgotPasswordSchema = z.object({
-  username: z.string().min(1, "El nombre de usuario es requerido"),
+export const requestResetPasswordSchema = z.object({
+  email: z.string().email("Debe ser un email válido"),
 });
 
 /**
- * Validates POST /auth/change-password body.
- * - token: JWT reset token from the forgot-password email link
+ * Validates POST /auth/reset-password body.
+ * The employee is identified via the authenticated session (req.user),
+ * not via any field in the body.
  * - code: 6-digit code received by email
  * - password: new password, minimum 6 characters
  * - confirmPassword: must match password
  */
-export const changePasswordSchema = z
+export const resetPasswordSchema = z
   .object({
-    token: z.string().min(1, "El token es requerido"),
     code: z.string().length(6, "El código debe ser de 6 dígitos"),
     password: z
       .string()

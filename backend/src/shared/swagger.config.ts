@@ -310,7 +310,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "omar.trejo@colegiolear.com",
             },
             username: { type: "string", example: "otrejo" },
-            image: {
+            avatar: {
               type: "string",
               nullable: true,
               example: "employees/abc123.jpg",
@@ -378,7 +378,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "omar.trejo@colegiolear.com",
             },
             username: { type: "string", example: "otrejo" },
-            image: {
+            avatar: {
               type: "string",
               nullable: true,
               example: "employees/abc123.jpg",
@@ -419,7 +419,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "omar.trejo@colegiolear.com",
             },
             username: { type: "string", example: "otrejo" },
-            image: {
+            avatar: {
               type: "string",
               nullable: true,
               example: "employees/abc123.jpg",
@@ -492,13 +492,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             securityRoleId: { type: "string", format: "uuid" },
             jobTitleId: { type: "string", format: "uuid" },
             isActive: { type: "boolean", default: true },
-            file: {
-              type: "string",
-              format: "binary",
-              description: "Optional profile image (jpeg, png, webp, gif)",
-            },
           },
-          description: "Multipart/form-data body for creating an employee",
+          description:
+            "JSON body for creating an employee. Avatar is uploaded separately via POST /employees/{id}/avatar.",
         },
         UpdateEmployeeDto: {
           type: "object",
@@ -511,14 +507,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
             securityRoleId: { type: "string", format: "uuid" },
             jobTitleId: { type: "string", format: "uuid" },
             isActive: { type: "boolean" },
-            file: {
-              type: "string",
-              format: "binary",
-              description: "Optional profile image (jpeg, png, webp, gif)",
-            },
           },
           description:
-            "Multipart/form-data body for updating an employee. All fields optional but at least one required.",
+            "JSON body for updating an employee. All fields optional but at least one required. Avatar is updated separately via POST /employees/{id}/avatar.",
         },
         Announcement: {
           type: "object",
@@ -553,6 +544,22 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "2025-06-30T00:00:00.000Z",
             },
             isActive: { type: "boolean", example: true },
+            recipientsCount: {
+              type: "integer",
+              example: 120,
+              description: "Calculated (cron-maintained) audience size at last recalculation",
+            },
+            viewedCount: {
+              type: "integer",
+              example: 82,
+              description: "Calculated (cron-maintained) count of recipients who viewed it",
+            },
+            viewsCalculatedAt: {
+              type: "string",
+              format: "date-time",
+              nullable: true,
+              description: "When recipientsCount/viewedCount were last recalculated, if ever",
+            },
           },
         },
         AnnouncementDetail: {
@@ -588,6 +595,13 @@ const swaggerOptions: swaggerJsdoc.Options = {
               example: "2025-06-30T00:00:00.000Z",
             },
             isActive: { type: "boolean", example: true },
+            recipientsCount: { type: "integer", example: 120 },
+            viewedCount: { type: "integer", example: 82 },
+            viewsCalculatedAt: {
+              type: "string",
+              format: "date-time",
+              nullable: true,
+            },
             attachments: {
               type: "array",
               items: { $ref: "#/components/schemas/Attachment" },
@@ -735,6 +749,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             id: { type: "string", format: "uuid" },
             name: { type: "string", example: "Colegiatura mensual" },
+            code: { type: "string", maxLength: 10, example: "COLEGMES" },
             description: {
               type: "string",
               nullable: true,
@@ -749,13 +764,20 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreatePaymentConceptBody: {
           type: "object",
-          required: ["name", "amount"],
+          required: ["name", "code", "amount"],
           properties: {
             name: {
               type: "string",
               minLength: 1,
               maxLength: 100,
               example: "Colegiatura mensual",
+            },
+            code: {
+              type: "string",
+              minLength: 1,
+              maxLength: 10,
+              description: "Internal control code, unique, letters/digits only (auto-uppercased)",
+              example: "COLEGMES",
             },
             description: {
               type: "string",
@@ -777,6 +799,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           description: "At least one field required.",
           properties: {
             name: { type: "string", minLength: 1, maxLength: 100 },
+            code: { type: "string", minLength: 1, maxLength: 10 },
             description: { type: "string", minLength: 1, maxLength: 500 },
             amount: { type: "number", minimum: 0 },
             allowForgiveness: { type: "boolean" },
@@ -853,7 +876,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
             curp: { type: "string", example: "PEGJ100515HDFRRC09" },
             enrollment: { type: "string", example: "LR-2025-0001" },
-            image: { type: "string", nullable: true },
+            avatar: { type: "string", nullable: true },
             observations: { type: "string", nullable: true },
             isActive: { type: "boolean", example: true },
             bloodType: {
@@ -896,7 +919,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             secondLastName: { type: "string", maxLength: 100 },
             dateOfBirth: { type: "string", format: "date-time" },
             curp: { type: "string", maxLength: 18 },
-            image: { type: "string", maxLength: 500 },
+            avatar: { type: "string", maxLength: 500 },
             observations: { type: "string", maxLength: 1000 },
             bloodType: {
               type: "string",
@@ -922,7 +945,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             secondLastName: { type: "string", maxLength: 100 },
             dateOfBirth: { type: "string", format: "date-time" },
             curp: { type: "string", maxLength: 18 },
-            image: { type: "string", maxLength: 500, nullable: true },
+            avatar: { type: "string", maxLength: 500, nullable: true },
             observations: { type: "string", maxLength: 1000, nullable: true },
             bloodType: {
               type: "string",
@@ -963,10 +986,15 @@ const swaggerOptions: swaggerJsdoc.Options = {
               ],
               example: "mother",
             },
-            phoneNumber: { type: "string", example: "5559876543" },
+            phoneNumber: {
+              type: "string",
+              nullable: true,
+              example: "5559876543",
+            },
             email: {
               type: "string",
               format: "email",
+              nullable: true,
               example: "maria.garcia@email.com",
             },
             isPrincipal: { type: "boolean", example: true },
@@ -977,7 +1005,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateStudentGuardianBody: {
           type: "object",
-          required: ["fullName", "relationship", "phoneNumber", "email"],
+          required: ["fullName", "relationship"],
+          description:
+            "phoneNumber and email are only required when isPrincipal is true; otherwise they may be omitted.",
           properties: {
             fullName: { type: "string", maxLength: 200 },
             relationship: {
@@ -997,8 +1027,17 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "other",
               ],
             },
-            phoneNumber: { type: "string", maxLength: 20 },
-            email: { type: "string", format: "email", maxLength: 150 },
+            phoneNumber: {
+              type: "string",
+              maxLength: 20,
+              description: "Required when isPrincipal is true",
+            },
+            email: {
+              type: "string",
+              format: "email",
+              maxLength: 150,
+              description: "Required when isPrincipal is true",
+            },
             isPrincipal: { type: "boolean", default: false },
             emergencyContact: { type: "boolean", default: false },
             authorizedToPickUp: { type: "boolean", default: false },
@@ -1007,7 +1046,8 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         UpdateStudentGuardianBody: {
           type: "object",
-          description: "At least one field required.",
+          description:
+            "At least one field required. phoneNumber and email are only required when the resulting isPrincipal (patch merged over the existing record) is true.",
           properties: {
             fullName: { type: "string", maxLength: 200 },
             relationship: {
@@ -1027,8 +1067,17 @@ const swaggerOptions: swaggerJsdoc.Options = {
                 "other",
               ],
             },
-            phoneNumber: { type: "string", maxLength: 20 },
-            email: { type: "string", format: "email", maxLength: 150 },
+            phoneNumber: {
+              type: "string",
+              maxLength: 20,
+              description: "Required when isPrincipal is true",
+            },
+            email: {
+              type: "string",
+              format: "email",
+              maxLength: 150,
+              description: "Required when isPrincipal is true",
+            },
             isPrincipal: { type: "boolean" },
             emergencyContact: { type: "boolean" },
             authorizedToPickUp: { type: "boolean" },
@@ -1111,7 +1160,6 @@ const swaggerOptions: swaggerJsdoc.Options = {
             minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
             evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean", example: false },
-            description: { type: "string", nullable: true },
             observations: { type: "string", nullable: true },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
@@ -1177,7 +1225,6 @@ const swaggerOptions: swaggerJsdoc.Options = {
             minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
             evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean" },
-            description: { type: "string", maxLength: 500 },
             observations: { type: "string", maxLength: 1000 },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
@@ -1217,7 +1264,6 @@ const swaggerOptions: swaggerJsdoc.Options = {
             minimumPassingGrade: { type: "integer", minimum: 1, maximum: 10 },
             evaluationCount: { type: "integer", minimum: 1, maximum: 10 },
             enrollmentOpen: { type: "boolean" },
-            description: { type: "string", maxLength: 500, nullable: true },
             observations: { type: "string", maxLength: 1000, nullable: true },
             academicLevelId: { type: "string", format: "uuid" },
             educationLevelId: { type: "string", format: "uuid" },
@@ -1264,6 +1310,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
             id: { type: "string", format: "uuid" },
             academicCycleId: { type: "string", format: "uuid" },
             name: { type: "string", example: "Inscripción" },
+            code: { type: "string", maxLength: 10, example: "INSCRIP" },
             description: { type: "string", nullable: true },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", example: 1500 },
@@ -1272,9 +1319,15 @@ const swaggerOptions: swaggerJsdoc.Options = {
         },
         CreateAcademicCycleWalletBody: {
           type: "object",
-          required: ["name", "dueDate", "amount"],
+          required: ["name", "code", "dueDate", "amount"],
           properties: {
             name: { type: "string", maxLength: 100 },
+            code: {
+              type: "string",
+              maxLength: 10,
+              description:
+                "Internal control code, unique within this academic cycle, letters/digits only (auto-uppercased)",
+            },
             description: { type: "string", maxLength: 500 },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", minimum: 0.01 },
@@ -1286,6 +1339,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           description: "At least one field required.",
           properties: {
             name: { type: "string", maxLength: 100 },
+            code: { type: "string", maxLength: 10 },
             description: { type: "string", maxLength: 500 },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number", minimum: 0.01 },
@@ -1436,6 +1490,16 @@ const swaggerOptions: swaggerJsdoc.Options = {
               properties: {
                 id: { type: "string", format: "uuid" },
                 name: { type: "string" },
+                status: {
+                  type: "string",
+                  enum: [
+                    "upcoming",
+                    "active",
+                    "completed",
+                    "cancelled",
+                    "archived",
+                  ],
+                },
               },
             },
             academicCycleSchoolGroupId: { type: "string", format: "uuid" },
@@ -1500,6 +1564,7 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             id: { type: "string", format: "uuid" },
             name: { type: "string" },
+            code: { type: "string", maxLength: 10 },
             description: { type: "string", nullable: true },
             dueDate: { type: "string", format: "date-time" },
             amount: { type: "number" },
@@ -1568,6 +1633,97 @@ const swaggerOptions: swaggerJsdoc.Options = {
               type: "string",
               format: "uuid",
               description: "Ignored — the item id in the URL path is authoritative.",
+            },
+          },
+        },
+        // ─── Dashboard ──────────────────────────────────────────────────────────
+        TopSchoolGroupRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            name: { type: "string", example: "3° A Primaria" },
+            academicCycleName: { type: "string", example: "2026 - 2027" },
+            averageGrade: { type: "number", example: 9.4 },
+            studentsCount: { type: "integer", example: 30 },
+          },
+        },
+        AcademicCycleSummaryRecord: {
+          type: "object",
+          properties: {
+            activeAcademicCyclesCount: { type: "integer", example: 2 },
+            activeStudentsCount: { type: "integer", example: 348 },
+            droppedStudentsCount: { type: "integer", example: 27 },
+            topGroups: {
+              type: "array",
+              maxItems: 3,
+              items: { $ref: "#/components/schemas/TopSchoolGroupRecord" },
+            },
+          },
+        },
+        FinancialSummaryRecord: {
+          type: "object",
+          description: "Scoped to active academic cycles only.",
+          properties: {
+            totalPaidAmount: { type: "number", example: 1284560 },
+            pendingAmount: { type: "number", example: 342100 },
+            forgivenPaymentsCount: { type: "integer", example: 18 },
+            totalForgivenAmount: { type: "number", example: 46800 },
+          },
+        },
+        AnnouncementSummaryRecord: {
+          type: "object",
+          properties: {
+            activeAnnouncementsCount: { type: "integer", example: 7 },
+            viewedPercentage: {
+              type: "number",
+              example: 68.4,
+              description:
+                "Derived from the cron-maintained recipientsCount/viewedCount fields on Announcement.",
+            },
+          },
+        },
+        SystemSummaryRecord: {
+          type: "object",
+          properties: {
+            securityRolesCount: { type: "integer", example: 10 },
+            jobTitlesCount: { type: "integer", example: 20 },
+            teachersEmployeesCount: { type: "integer", example: 46 },
+            administrativeEmployeesCount: { type: "integer", example: 22 },
+          },
+        },
+        TeacherEmployeeSummaryRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            fullName: { type: "string", example: "Omar Trejo" },
+            email: {
+              type: "string",
+              format: "email",
+              example: "omar.trejo@colegiolear.com",
+            },
+            createdAt: { type: "string", format: "date-time" },
+            avatar: { type: "string", nullable: true },
+          },
+        },
+        // ─── Global Search ──────────────────────────────────────────────────────
+        GlobalSearchRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            label: { type: "string", example: "Omar Trejo" },
+            subtitle: { type: "string", example: "otrejo@colegiolear.com" },
+            route: { type: "string", example: "/employees/9c4c2c61-7a90-4f34-b61e-12d3f5e41001" },
+          },
+        },
+        GlobalSearchGroup: {
+          type: "object",
+          description: "One entry per module with at least one match — modules with zero results are omitted.",
+          properties: {
+            module: { type: "string", example: "students" },
+            records: {
+              type: "array",
+              maxItems: 3,
+              items: { $ref: "#/components/schemas/GlobalSearchRecord" },
             },
           },
         },

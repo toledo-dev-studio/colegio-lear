@@ -10,9 +10,27 @@ function nonBlankString(maxLength: number) {
     });
 }
 
+/**
+ * Internal control code: trimmed, uppercased, 1-10 chars, letters/digits
+ * only. Unique per academic cycle, not globally — enforced in the service.
+ */
+function codeField() {
+  return z
+    .string()
+    .transform((val) => val.trim().toUpperCase())
+    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length <= 10, {
+      message: "Must be at most 10 characters",
+    })
+    .refine((val) => /^[A-Z0-9]+$/.test(val), {
+      message: "Must contain only letters and numbers",
+    });
+}
+
 /** Validates POST body for creating an academic cycle wallet item */
 export const createAcademicCycleWalletSchema = z.object({
   name: nonBlankString(100),
+  code: codeField(),
   description: z.string().max(500).optional(),
   dueDate: z.string().datetime({ message: "dueDate must be a valid ISO date" }),
   amount: z.number().positive({ message: "amount must be a positive number" }),
@@ -23,6 +41,7 @@ export const createAcademicCycleWalletSchema = z.object({
 export const updateAcademicCycleWalletSchema = z
   .object({
     name: nonBlankString(100).optional(),
+    code: codeField().optional(),
     description: z.string().max(500).optional(),
     dueDate: z.string().datetime().optional(),
     amount: z.number().positive().optional(),

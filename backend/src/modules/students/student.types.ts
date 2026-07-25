@@ -29,7 +29,7 @@ export interface StudentRecord {
   dateOfBirth: string;
   curp: string;
   enrollment: string;
-  image: string | null;
+  avatar: string | null;
   observations: string | null;
   isActive: boolean;
   bloodType: BloodTypeKey;
@@ -57,7 +57,7 @@ export interface CreateStudentDto {
   secondLastName: string;
   dateOfBirth: string;
   curp: string;
-  image?: string;
+  avatar?: string;
   observations?: string;
   bloodType: BloodTypeKey;
   medicalNotes?: string;
@@ -77,7 +77,7 @@ export interface UpdateStudentDto {
   secondLastName?: string;
   dateOfBirth?: string;
   curp?: string;
-  image?: string;
+  avatar?: string;
   observations?: string;
   bloodType?: BloodTypeKey;
   medicalNotes?: string;

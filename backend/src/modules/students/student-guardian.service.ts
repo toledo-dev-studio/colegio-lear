@@ -1,6 +1,10 @@
 import { PrismaClient } from "../../generated/prisma/client";
 import { StudentGuardianType } from "../../generated/prisma/enums";
-import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
+import {
+  NotFoundError,
+  ConflictError,
+  ValidationError,
+} from "../../shared/errors/app-error";
 import type {
   StudentGuardianRecord,
   CreateStudentGuardianDto,
@@ -46,8 +50,8 @@ export class StudentGuardianService {
       relationship:
         GUARDIAN_TYPE_REVERSE[raw.relationship as string] ??
         (raw.relationship as string),
-      phoneNumber: raw.phoneNumber as string,
-      email: raw.email as string,
+      phoneNumber: raw.phoneNumber as string | null,
+      email: raw.email as string | null,
       isPrincipal: raw.isPrincipal as boolean,
       emergencyContact: raw.emergencyContact as boolean,
       authorizedToPickUp: raw.authorizedToPickUp as boolean,
@@ -96,8 +100,8 @@ export class StudentGuardianService {
         relationship:
           GUARDIAN_TYPE_MAP[dto.relationship] ??
           (dto.relationship as StudentGuardianType),
-        phoneNumber: dto.phoneNumber,
-        email: dto.email,
+        phoneNumber: dto.phoneNumber ?? null,
+        email: dto.email ?? null,
         isPrincipal: dto.isPrincipal ?? false,
         emergencyContact: dto.emergencyContact ?? false,
         authorizedToPickUp: dto.authorizedToPickUp ?? false,
@@ -128,6 +132,26 @@ export class StudentGuardianService {
         where: { studentId, isPrincipal: true, id: { not: id } },
         data: { isPrincipal: false },
       });
+    }
+
+    // phoneNumber/email are only required for the principal guardian. Since
+    // this is a partial update, check the *resulting* record (merging the
+    // patch over the existing row) rather than just the patch fields.
+    const resultingIsPrincipal = dto.isPrincipal ?? existing.isPrincipal;
+    const resultingPhoneNumber =
+      dto.phoneNumber !== undefined ? dto.phoneNumber : existing.phoneNumber;
+    const resultingEmail =
+      dto.email !== undefined ? dto.email : existing.email;
+    if (resultingIsPrincipal && (!resultingPhoneNumber || !resultingEmail)) {
+      throw new ValidationError(
+        "phoneNumber and email are required when isPrincipal is true",
+        [
+          {
+            field: !resultingPhoneNumber ? "phoneNumber" : "email",
+            message: "Required when isPrincipal is true",
+          },
+        ],
+      );
     }
 
     const updateData: Record<string, unknown> = {};

@@ -15,25 +15,84 @@ const GUARDIAN_TYPES = [
   "other",
 ] as const;
 
-/** Validates POST body for creating a student guardian */
-export const createStudentGuardianSchema = z.object({
-  fullName: z.string().min(1).max(200),
-  relationship: z.enum(GUARDIAN_TYPES),
-  phoneNumber: z.string().min(1).max(20),
-  email: z.string().email().max(150),
-  isPrincipal: z.boolean().default(false),
-  emergencyContact: z.boolean().default(false),
-  authorizedToPickUp: z.boolean().default(false),
-  observations: z.string().max(500).optional(),
-});
+/**
+ * Optional string: null/blank become undefined; otherwise trimmed and
+ * capped at maxLength. Used for fields only required for the principal
+ * guardian (phoneNumber/email).
+ */
+function optionalTrimmedString(maxLength: number) {
+  return z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(
+      z.string().max(maxLength, `Must be at most ${maxLength} characters`).optional(),
+    );
+}
 
-/** Validates PATCH body for updating a student guardian */
+/** Same as optionalTrimmedString, but validates email format when present. */
+function optionalEmail(maxLength: number) {
+  return z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(
+      z
+        .string()
+        .email("Must be a valid email")
+        .max(maxLength, `Must be at most ${maxLength} characters`)
+        .optional(),
+    );
+}
+
+/**
+ * Validates POST body for creating a student guardian.
+ * phoneNumber/email are only required when isPrincipal is true — for any
+ * other guardian they may be omitted/null.
+ */
+export const createStudentGuardianSchema = z
+  .object({
+    fullName: z.string().min(1).max(200),
+    relationship: z.enum(GUARDIAN_TYPES),
+    phoneNumber: optionalTrimmedString(20),
+    email: optionalEmail(150),
+    isPrincipal: z.boolean().default(false),
+    emergencyContact: z.boolean().default(false),
+    authorizedToPickUp: z.boolean().default(false),
+    observations: z.string().max(500).optional(),
+  })
+  .refine((data) => !data.isPrincipal || !!data.phoneNumber, {
+    message: "phoneNumber is required when isPrincipal is true",
+    path: ["phoneNumber"],
+  })
+  .refine((data) => !data.isPrincipal || !!data.email, {
+    message: "email is required when isPrincipal is true",
+    path: ["email"],
+  });
+
+/**
+ * Validates PATCH body for updating a student guardian.
+ * Note: since this is a partial update, whether the *resulting* record
+ * satisfies "phoneNumber/email required when isPrincipal=true" can only be
+ * checked once merged with the existing record — that check happens in
+ * StudentGuardianService.update, not here.
+ */
 export const updateStudentGuardianSchema = z
   .object({
     fullName: z.string().min(1).max(200).optional(),
     relationship: z.enum(GUARDIAN_TYPES).optional(),
-    phoneNumber: z.string().min(1).max(20).optional(),
-    email: z.string().email().max(150).optional(),
+    phoneNumber: optionalTrimmedString(20),
+    email: optionalEmail(150),
     isPrincipal: z.boolean().optional(),
     emergencyContact: z.boolean().optional(),
     authorizedToPickUp: z.boolean().optional(),
