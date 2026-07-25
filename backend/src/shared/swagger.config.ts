@@ -1705,6 +1705,28 @@ const swaggerOptions: swaggerJsdoc.Options = {
             avatar: { type: "string", nullable: true },
           },
         },
+        // ─── Global Search ──────────────────────────────────────────────────────
+        GlobalSearchRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            label: { type: "string", example: "Omar Trejo" },
+            subtitle: { type: "string", example: "otrejo@colegiolear.com" },
+            route: { type: "string", example: "/employees/9c4c2c61-7a90-4f34-b61e-12d3f5e41001" },
+          },
+        },
+        GlobalSearchGroup: {
+          type: "object",
+          description: "One entry per module with at least one match — modules with zero results are omitted.",
+          properties: {
+            module: { type: "string", example: "students" },
+            records: {
+              type: "array",
+              maxItems: 3,
+              items: { $ref: "#/components/schemas/GlobalSearchRecord" },
+            },
+          },
+        },
       },
     },
   },

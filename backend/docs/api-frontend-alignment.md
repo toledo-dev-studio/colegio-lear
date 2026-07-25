@@ -1037,3 +1037,75 @@ con un JSON mockeado estático (`http://localhost/api/dashboard/*.json`)
 sin importar el ambiente — hay que borrar esa línea en cada action para
 que el front deje de leer los mocks y empiece a pegarle a estos 5
 endpoints reales.
+
+## Módulo Global Search (2026-07-24)
+
+Nuevo módulo `backend/src/modules/global-search/`. El front **ya tenía
+todo construido** esperando este endpoint: `GlobalSearchInput.tsx` en el
+navbar, hook `useGetGlobalSearch` (debounce, `minLength: 5`), acción
+`get-global-search.action.ts` (con el mismo patrón `// REMOVE MOCKABLE`
+que el dashboard — hay que quitarle esa línea también), e interfaz
+`GlobalSearchResponse`/`GlobalSearchRecordResponse` ya definida. El
+backend implementa exactamente ese contrato.
+
+**`GET /global-search?q=<term>`** → `GlobalSearchGroup[]`
+(`{ module, records: [{ id, label, subtitle?, route }] }`), sin
+`authorize()` de un solo moduleKey en la ruta (no existe un moduleKey
+"global-search" ni en front ni en back) — en su lugar filtra **por
+módulo, internamente**, contra `req.user.permissions`.
+
+**Diseño (confirmado con el usuario antes de implementar):**
+
+1. Búsqueda simple `contains`/ILIKE case-insensitive, **no** full-text ni
+   fuzzy — reutiliza exactamente los mismos campos que cada módulo ya
+   usa en su propio filtro `q` de listado (confirmado uno por uno:
+   students, employees, academic-cycles, announcements,
+   academic-levels, school-subjects, scholarships, payment-concepts,
+   job-titles, security-roles — los 10 con `findAllPaged` real con
+   `skip`/`take`, ninguno `findAll`-only).
+2. **Top 3 por módulo**, con `take: 3` a nivel de Prisma/BD (no
+   fetch-all + slice en JS) y `select` explícito (solo los campos que
+   arman `label`/`subtitle`, no la fila completa).
+3. Si un módulo no tiene matches, **se omite del arreglo de respuesta**
+   por completo (no se manda `{module, records: []}`).
+4. `route` se genera en el backend como `/${moduleKey}/${id}` — se
+   confirmó que los 10 módulos siguen ese patrón 1:1 exacto en el router
+   del front (`/students/:id`, `/scholarships/:id`, etc.), sin
+   excepciones ni modales.
+
+**Optimización (lo que pidió el usuario explícitamente — "cómo
+pudiéramos optimizarla"):**
+
+1. Las hasta-10 queries (una por módulo) corren en **paralelo**
+   (`Promise.all`), no secuencial.
+2. **Filtrado por permisos ANTES de consultar**: si
+   `req.user.permissions` no tiene `canRead: true` para un moduleKey,
+   ese módulo ni siquiera dispara su query — no es solo un filtro de
+   seguridad post-hoc, reduce directamente cuántas queries corren.
+   Verificado en vivo contra la BD sembrada: el rol `Docente` (que solo
+   puede leer `dashboard`/`my-account`/`my-classes`/`academic-cycles`/
+   `announcements`) buscando "primaria" solo recibe el grupo
+   `academic-cycles` (no `academic-levels`, aunque también hay match
+   ahí), y buscando "auxiliar" (que solo existe en `job-titles`/
+   `security-roles`) recibe `[]` — ni siquiera se ejecutan esas 2
+   queries para ese usuario.
+3. **Mínimo de 5 caracteres** en `q`, validado en el backend
+   (`global-search.schema.ts`) además del debounce del front — mismo
+   número que ya usa el front, para que pegarle al endpoint directo (sin
+   pasar por la UI) no permita el caso más caro (buscar 1-2 caracteres
+   contra 10 tablas).
+
+**Nota de mantenimiento futura (no implementada, solo mencionada):** si
+algún día el volumen de datos crece mucho y el `ILIKE '%term%'` sin
+índice empieza a pesar, la opción natural es un índice GIN/trigram
+(`pg_trgm`) sobre las columnas de texto más buscadas — no se agregó
+ahora porque el volumen actual (cientos de filas por tabla) no lo
+justifica.
+
+Verificado end-to-end contra la BD real sembrada (no solo `tsc`):
+login como SuperAdmin y como un maestro (`Docente`), varios términos de
+búsqueda (match múltiple, sin match, término corto rechazado con 400),
+confirmando en cada caso el shape de respuesta y el filtrado por
+permisos. Al conectarlo encontré y corregí un bug propio antes de
+probarlo: se me olvidó agregar la línea `app.use("/global-search", ...)`
+en `src/index.ts` — solo había puesto el `import`.

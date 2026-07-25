@@ -23,6 +23,7 @@ import attachmentRoutes from "./modules/attachments/attachment.routes";
 import studentRoutes from "./modules/students/student.routes";
 import academicCycleRoutes from "./modules/academic-cycles/academic-cycle.routes";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
+import globalSearchRoutes from "./modules/global-search/global-search.routes";
 
 /** Create Express application */
 const app = express();
@@ -55,6 +56,7 @@ app.use("/attachments", attachmentRoutes);
 app.use("/students", studentRoutes);
 app.use("/academic-cycles", academicCycleRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/global-search", globalSearchRoutes);
 
 /* --- Global Error Handler (must be last) --- */
 app.use(errorHandler);
