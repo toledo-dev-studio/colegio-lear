@@ -52,7 +52,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
 
     const validateForm = async (announcementRequestLike: Partial<AnnouncementRequest>) => {
         // If campaing is "in-progress" and have not beed with the same "in-progress" status before, the systems requires a confirmation
-        if (announcementRequestLike.status === "in-progress" && announcementResponse?.alreadyPublished === false) {
+        if (announcementRequestLike.status === "in-progress" && !announcementAlreadyPublished) {
             setConfirmationRequired(true);
             return;
         }
