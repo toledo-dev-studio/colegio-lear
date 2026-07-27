@@ -44,8 +44,16 @@ export interface AnnouncementResponse {
      * Announcement's related attachments 
      */
     attachments: AttachmentResponse[];
-
-    
-    recipientsCount: number // conteo de personas a los que se les asigno la campaña (universo incial)
-    viewedCount: number // conteo de personas que leyeron la campaña
+    /**
+     * People count whos the campaing was assigned
+     */
+    recipientsCount: number;
+    /**
+     * People count whos already read the campaing
+     */
+    viewedCount: number;
+    /**
+     * Flag to indicate that a campaing was already published or updated with "in-progress" status
+     */
+    alreadyPublished: boolean;
 }

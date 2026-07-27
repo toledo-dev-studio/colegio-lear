@@ -88,7 +88,7 @@ export type NotificationTypeKey =
   | "message";
 
 export type AnnouncementsStatusKey =
-  | "upcoming"
-  | "active"
+  | "draft"
+  | "in-progress"
   | "completed"
   | "cancelled"
