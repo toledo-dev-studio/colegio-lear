@@ -6,6 +6,7 @@ import { Input } from "@/shared/ui/input";
 import { Textarea } from "@/shared/ui/textarea";
 import { AttachmentsGrid } from "./AttachmentsGrid";
 import { Form } from "@/shared/components/form/Form";
+import { Modal } from "@/shared/components/modal/Modal";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { CardAlert } from "@/shared/components/card-alert/CardAlert";
 import { AnnouncementStatsSection } from "./AnnouncementStatsSection";
@@ -24,17 +25,23 @@ interface Props {
     isNew: boolean;
     isSubmitting: boolean;
     announcementResponse?: AnnouncementResponse;
-    onSubmit: (announcementRequestLike: Partial<AnnouncementRequest>) => void;
+    onSubmit: (announcementRequestLike: Partial<AnnouncementRequest>) => Promise<void>;
 }
 
 export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, onSubmit }: Props) => {
+    // Constant configuration variables
+    const announcementInProgress = announcementResponse?.status === "in-progress";
+    const announcementAlreadyPublished = announcementResponse?.alreadyPublished;
+    const ANNOUNCEMENTS_STATUSES_LIST = !announcementAlreadyPublished ? ANNOUNCEMENTS_STATUSES.filter(item => item.key === "draft" || item.key === "in-progress") : ANNOUNCEMENTS_STATUSES.filter(item => item.key !== "draft");
+
     // Component hooks & stores
     const navigate = useNavigate();
+    const [confirmationRequired, setConfirmationRequired] = useState<boolean>(false);
     const [attachments, setAttachments] = useState<AttachmentResponse[]>(announcementResponse?.attachments ?? []);
-    const { control, handleSubmit, formState: { errors } } = useForm<Partial<AnnouncementRequest>>({
+    const { control, handleSubmit, formState: { errors }, getValues } = useForm<Partial<AnnouncementRequest>>({
         defaultValues: {
             name: isValidValueWithDefault(announcementResponse?.name, ""),
-            status: isValidValueWithDefault(announcementResponse?.status, undefined),
+            status: isValidValueWithDefault(announcementResponse?.status, "draft"),
             description: isValidValueWithDefault(announcementResponse?.description, ""),
             audience: isValidValueWithDefault(announcementResponse?.audience, []),
             content: isValidValueWithDefault(announcementResponse?.content, ""),
@@ -43,15 +50,24 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
         }
     });
 
+    const validateForm = async (announcementRequestLike: Partial<AnnouncementRequest>) => {
+        // If campaing is "in-progress" and have not beed with the same "in-progress" status before, the systems requires a confirmation
+        if (announcementRequestLike.status === "in-progress" && announcementResponse?.alreadyPublished === false) {
+            setConfirmationRequired(true);
+            return;
+        }
+        await onSubmit(announcementRequestLike);
+    }
+
     return (
         <>
-            <Form moduleKey="announcements" isSubmitting={isSubmitting} onSubmit={handleSubmit(onSubmit)} onCancel={() => navigate("/announcements")}>
+            <Form moduleKey="announcements" isSubmitting={isSubmitting} onSubmit={handleSubmit(validateForm)} onCancel={() => navigate("/announcements")}>
 
                 <section className="flex flex-col gap-y-6">
 
                     {/* Stats information */}
                     {
-                        !isNew && (
+                        (!isNew && announcementInProgress) && (
                             <AnnouncementStatsSection recipientsCount={announcementResponse?.recipientsCount ?? 0} viewedCount={announcementResponse?.viewedCount ?? 0} />
                         )
                     }
@@ -176,13 +192,13 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                                         onValueChange={field.onChange}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Selecciona una opción">
-                                                {labelOf(ANNOUNCEMENTS_STATUSES, field.value) || "Selecciona una opción"}
+                                                {labelOf(ANNOUNCEMENTS_STATUSES_LIST, field.value) || "Selecciona una opción"}
                                             </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Estado de la campaña</SelectLabel>
-                                                {ANNOUNCEMENTS_STATUSES.map((item) => (
+                                                {ANNOUNCEMENTS_STATUSES_LIST.map((item) => (
                                                     <SelectItem key={item.key} value={item.key} label={item.label}>
                                                         {item.label}
                                                     </SelectItem>
@@ -281,6 +297,30 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                     }
 
                 </section>
+
+                {/* Save confirmation modal */}
+                <Modal
+                    open={confirmationRequired}
+                    type="info"
+                    title="¡Antes de continuar!"
+                    message={`
+                        A partir de este momento se determinarán automáticamente los destinatarios de la campaña con base en los usuarios registrados actualmente en el sistema.
+                        Los usuarios que se registren después de este cambio no serán incluidos en esta campaña. Si deseas incluirlos, será necesario crear una nueva campaña.
+                        Esta acción no podrá deshacerse.
+                        ¿Deseas continuar?`}
+                    isLoading={false}
+                    cancelButton={{
+                        label: "Cancelar",
+                        onClick: () => setConfirmationRequired(false)
+                    }}
+                    confirmButton={{
+                        label: "Aceptar",
+                        onClick: async () => {
+                            setConfirmationRequired(false);
+                            await onSubmit(getValues())
+                        },
+                    }}
+                />
 
             </Form>
         </>

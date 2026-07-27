@@ -148,8 +148,8 @@ export const NOTIFICATION_TYPES: KeyValuePair<NotificationTypeKey>[] = [
  * Each status has a key and a label for display purposes.
  */
 export const ANNOUNCEMENTS_STATUSES: KeyValuePair<AnnouncementsStatusKey>[] = [
-    { key: "upcoming", label: "Próximo" },
-    { key: "active", label: "En curso" },
+    { key: "draft", label: "Borrador" },
+    { key: "in-progress", label: "En curso" },
     { key: "completed", label: "Completado" },
     { key: "cancelled", label: "Cancelado" },
 ];
