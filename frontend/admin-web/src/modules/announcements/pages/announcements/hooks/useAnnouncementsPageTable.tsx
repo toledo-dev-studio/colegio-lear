@@ -6,7 +6,7 @@ import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
-import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { ANNOUNCEMENTS_STATUSES, AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
@@ -22,10 +22,10 @@ export const useAnnouncementsPageTable = ({ handleClickDelete }: Options) => {
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre & descripción",
-        "Público objetivo",
+        "Estatus de la campaña",
         "Fecha de públicación",
         "Fecha de expiración",
-        "¿Registro activo?",
+        "Público objetivo",
         "Acciones",
     ];
 
@@ -43,6 +43,25 @@ export const useAnnouncementsPageTable = ({ handleClickDelete }: Options) => {
             )
         },
         {
+            key: "status",
+            render: ({ status }: AnnouncementResponse) => (
+                <Badge variant={
+                    status === "upcoming" ? "default" : 
+                    status === "active" ? "success" : 
+                    status === "cancelled" ? "destructive": "ghost"} className="py-4 px-6">
+                    { labelOf(ANNOUNCEMENTS_STATUSES, status) || "-" }
+                </Badge>
+            )
+        },
+        {
+            key: "publishedAt",
+            render: ({ publishedAt }: AnnouncementResponse) => (formatFriendlyDate(publishedAt))
+        },
+        {
+            key: "expiresAt",
+            render: ({ expiresAt }: AnnouncementResponse) => (formatFriendlyDate(expiresAt))
+        },
+        {
             key: "audience",
             render: ({ audience }: AnnouncementResponse) => (
                 !audience?.length ?
@@ -58,24 +77,6 @@ export const useAnnouncementsPageTable = ({ handleClickDelete }: Options) => {
                             }
                         </div>
                     )
-            )
-        },
-        {
-            key: "publishedAt",
-            render: ({ publishedAt }: AnnouncementResponse) => (formatFriendlyDate(publishedAt))
-        },
-        {
-            key: "expiresAt",
-            render: ({ expiresAt }: AnnouncementResponse) => (formatFriendlyDate(expiresAt))
-        },
-        {
-            key: "isActive",
-            render: ({ isActive }: AnnouncementResponse) => (
-                <Badge variant={isActive ? "success" : "destructive"} className="py-4 px-6">
-                    {
-                        isActive ? "Activo" : "Inactivo"
-                    }
-                </Badge>
             )
         }
     ];

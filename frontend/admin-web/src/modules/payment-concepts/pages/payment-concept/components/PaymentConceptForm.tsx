@@ -23,6 +23,7 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
     const { control, handleSubmit, formState: { errors } } = useForm<Partial<PaymentConceptRequest>>({
         defaultValues: {
             name: isValidValueWithDefault(paymentConceptResponse?.name, ""),
+            code: isValidValueWithDefault(paymentConceptResponse?.code, ""),
             isActive: isValidValueWithDefault(paymentConceptResponse?.isActive, false),
             amount: isValidValueWithDefault(paymentConceptResponse?.amount, 1),
             description: isValidValueWithDefault(paymentConceptResponse?.description, ""),
@@ -69,6 +70,7 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
                             <Controller
                                 name="code"
                                 control={control}
+                                disabled={!!paymentConceptResponse?.id}
                                 rules={{
                                     required: "El código del concepto de pago es obligatorio",
                                     pattern: {
@@ -96,6 +98,7 @@ export const PaymentConceptForm = ({ paymentConceptResponse, isSubmitting, onSub
                                             }
                                         }}
                                         maxLength={10}
+                                        disabled={!!paymentConceptResponse?.id}
                                         onChange={(e) => {
                                             field.onChange(
                                                 e.target.value

@@ -20,5 +20,8 @@ export const getAnnouncementByIdActionAsync = async ({ id }: Options): Promise<A
 
     const { data } = await api.get<AnnouncementResponse>(`/announcements/${id}`);
 
+    console.log(data);
+    
+
     return data;
 }

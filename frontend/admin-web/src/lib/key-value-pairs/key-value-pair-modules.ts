@@ -74,7 +74,7 @@ export const ACADEMIC_CYCLES_MODULE: Module = {
 
 export const ANNOUNCEMENTS_MODULE: Module = {
     key: "announcements",
-    label: "Comunicados & campañas",
+    label: "Campañas & comunicados",
     permissions: {
         canRead: true,
         canWrite: true,

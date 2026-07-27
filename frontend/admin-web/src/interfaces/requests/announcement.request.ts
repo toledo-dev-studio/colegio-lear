@@ -32,11 +32,6 @@ export interface AnnouncementRequest {
      */
     expiresAt: string;
     /**
-     * Announcement's is active flag
-     */
-    isActive: boolean;
-
-    /**
      * Announcement status key
      */
     status: AnnouncementsStatusKey;

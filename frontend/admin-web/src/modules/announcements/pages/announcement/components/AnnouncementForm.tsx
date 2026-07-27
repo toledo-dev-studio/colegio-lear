@@ -3,21 +3,22 @@ import { useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
 import { AttachmentsGrid } from "./AttachmentsGrid";
+import { Form } from "@/shared/components/form/Form";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { CardAlert } from "@/shared/components/card-alert/CardAlert";
+import { AnnouncementStatsSection } from "./AnnouncementStatsSection";
 import { TextEditor } from "@/shared/components/text-editor/TextEditor";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { MultiSelect } from "@/shared/components/multi-select/MultiSelect";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
-import { AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 import type { AnnouncementRequest } from "@/interfaces/requests/announcement.request";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
-import { getKeys, getKeyValuePairsByKeys } from "@/lib/key-value-pairs/key-value-pair";
-import { Form } from "@/shared/components/form/Form";
+import { getKeys, getKeyValuePairsByKeys, labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { ANNOUNCEMENTS_STATUSES, AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 interface Props {
     isNew: boolean;
@@ -33,7 +34,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
     const { control, handleSubmit, formState: { errors } } = useForm<Partial<AnnouncementRequest>>({
         defaultValues: {
             name: isValidValueWithDefault(announcementResponse?.name, ""),
-            isActive: isValidValueWithDefault(announcementResponse?.isActive, false),
+            status: isValidValueWithDefault(announcementResponse?.status, undefined),
             description: isValidValueWithDefault(announcementResponse?.description, ""),
             audience: isValidValueWithDefault(announcementResponse?.audience, []),
             content: isValidValueWithDefault(announcementResponse?.content, ""),
@@ -47,6 +48,13 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
             <Form moduleKey="announcements" isSubmitting={isSubmitting} onSubmit={handleSubmit(onSubmit)} onCancel={() => navigate("/announcements")}>
 
                 <section className="flex flex-col gap-y-6">
+
+                    {/* Stats information */}
+                    {
+                        !isNew && (
+                            <AnnouncementStatsSection recipientsCount={announcementResponse?.recipientsCount ?? 0} viewedCount={announcementResponse?.viewedCount ?? 0} />
+                        )
+                    }
 
                     <SectionTitle
                         title="INFORMACIÓN GENERAL DE LA CAMPAÑA"
@@ -155,22 +163,42 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                         </div>
 
                         <div className="control-container">
-                            <label className="label">¿Registro activo?:</label>
-                            <div className="flex items-center justify-center">
-                                <Controller
-                                    name="isActive"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <label className="switch-control-container">
-                                            <div>
-                                                <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
-                                                <p className="description">La campaña / comunicado se encuentra activa o inactiva.</p>
-                                            </div>
-                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
-                                        </label>
-                                    )}
-                                />
-                            </div>
+                            <label className="label">
+                                Estado de la campaña <span className="required">*</span>:
+                            </label>
+                            <Controller
+                                control={control}
+                                name={"status"}
+                                rules={{ required: true }}
+                                render={({ field }) => (
+                                    <Select
+                                        value={field.value ?? ""}
+                                        onValueChange={field.onChange}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecciona una opción">
+                                                {labelOf(ANNOUNCEMENTS_STATUSES, field.value) || "Selecciona una opción"}
+                                            </SelectValue>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Estado de la campaña</SelectLabel>
+                                                {ANNOUNCEMENTS_STATUSES.map((item) => (
+                                                    <SelectItem key={item.key} value={item.key} label={item.label}>
+                                                        {item.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                            {
+                                errors.status && (
+                                    <p className="error">
+                                        El estado de la campaña es obligatorio
+                                    </p>
+                                )
+                            }
                         </div>
 
                         <div className="control-container">
@@ -253,7 +281,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                     }
 
                 </section>
-                
+
             </Form>
         </>
     )
