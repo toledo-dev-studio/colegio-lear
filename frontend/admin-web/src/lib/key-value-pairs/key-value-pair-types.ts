@@ -91,3 +91,4 @@ export type AnnouncementsStatusKey =
   | "upcoming"
   | "active"
   | "completed"
+  | "cancelled"

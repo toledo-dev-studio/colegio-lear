@@ -86,6 +86,7 @@ export const StudentWalletPaymentsTable = ({ studentWallet, studentWalletPayment
                                         <tr className="bg-muted/50 transition-colors">
                                             <td className="column">TOTALES</td>
                                             <td className="column"></td>
+                                            <td className="column"></td>
                                             <td className="column">{formatMoney(totalPaid)}</td>
                                             <td className="column"></td>
                                         </tr>

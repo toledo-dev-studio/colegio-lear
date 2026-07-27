@@ -1,5 +1,5 @@
 import type { AttachmentResponse } from "./attachment.response";
-import type { AudienceTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
+import type { AnnouncementsStatusKey, AudienceTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
  * Type: Response
@@ -37,16 +37,15 @@ export interface AnnouncementResponse {
      */
     expiresAt: string;
     /**
-     * Announcement's is active flag
+     * Announcement status key
      */
-    isActive: boolean;
+    status: AnnouncementsStatusKey;
     /**
      * Announcement's related attachments 
      */
     attachments: AttachmentResponse[];
 
-    // TODO:
-    peopleCount: number // conteo de personas a los que se les asigno la campaña (universo incial)
-    rededPeopleCount: number // conteo de personas que leyeron la campaña
-    percentage: number // Porcentaje de personas que vieron la campaña
+    
+    recipientsCount: number // conteo de personas a los que se les asigno la campaña (universo incial)
+    viewedCount: number // conteo de personas que leyeron la campaña
 }
