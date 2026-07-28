@@ -1109,3 +1109,86 @@ confirmando en cada caso el shape de respuesta y el filtrado por
 permisos. Al conectarlo encontré y corregí un bug propio antes de
 probarlo: se me olvidó agregar la línea `app.use("/global-search", ...)`
 en `src/index.ts` — solo había puesto el `import`.
+
+## Módulo Notifications (2026-07-25)
+
+Nuevo módulo `backend/src/modules/notifications/` + tabla `notifications`
+(migración `20260725000000_add_notifications`). El front **ya tenía la
+campanita del navbar construida** (`NotificationButton.tsx`,
+`useNotifications`, interfaz `NotificationResponse`,
+`NotificationTypeKey`) esperando exactamente estos 2 endpoints:
+
+- `GET /notifications/employees/:employeeId` (paginado) — el `employeeId`
+  del path se valida contra `req.user.employeeId`; si no coinciden, 403.
+  Nadie puede ver notificaciones ajenas aunque mande otro id.
+- `POST /notifications/:id/read` — idempotente (marcar dos veces no
+  duplica nada), 403 si la notificación no le pertenece al empleado
+  autenticado.
+
+**Solo empleados reciben notificaciones por ahora** (confirmado:
+`student-web` es un scaffold vacío de Vite, sin ninguna UI de
+notificaciones). Si `audience` incluye `"student"`, ese universo no
+genera fila de notificación — no hay dónde mostrársela todavía. Cuando
+exista la app de alumnos, esto hay que revisitarlo.
+
+**2 tipos de notificación implementados** (de los 4 que ya declara
+`NotificationTypeKey` en el front — `info`/`error`/`announcement`/
+`message` — reutilizando `info`/`error`, que hoy existen en el tipo
+pero están sin uso ni ícono en la UI; `message` queda reservado para
+cuando exista la mensajería profesor-alumno, explícitamente fuera de
+alcance por ahora):
+
+1. **`announcement`** — al crear un comunicado (`POST /announcements`),
+   se resuelve `audience` a empleados reales
+   (`teacher`→`jobTitleType: teacher`,
+   `administrative-staff`→`jobTitleType: administrative_staff`,
+   activos y no borrados), se crea su fila de notificación
+   (`createMany`, siempre síncrono — insertar filas es rápido sin
+   importar el volumen) y se actualiza
+   `Announcement.recipientsCount`/`viewedCount: 0`/`viewsCalculatedAt`
+   de inmediato. El correo (plantilla nueva
+   `announcementNotificationEmail` en `email.templates.ts`) **siempre**
+   se manda en segundo plano (fire-and-forget, nunca bloquea la
+   respuesta), con `Promise.allSettled` para que un correo fallido no
+   tumbe los demás — verificado en vivo: con las credenciales SMTP
+   vacías del `.env` de desarrollo, 5/5 correos fallaron y se logueó el
+   error correctamente sin afectar la respuesta (`POST /announcements`
+   regresó 201 en 43ms, ~500ms antes de que se registrara el fallo de
+   correos).
+2. **`info`/`error`** (notificaciones de proceso) — el umbral de **100
+   destinatarios o más** no gatea la creación de filas (eso siempre es
+   síncrono) sino el envío de correos: con 100+ destinatarios, el envío
+   de correos es lo que de verdad puede tardar (una llamada SMTP por
+   persona), así que ahí sí se manda una notificación `info` al
+   empleado que creó el comunicado antes de empezar ("Envío en
+   proceso") y otra al terminar ("Envío completado", o `error` si algún
+   correo falló). Con menos de 100, el envío de correos en segundo
+   plano es lo bastante rápido como para no justificar esa ceremonia.
+   **No se probó en vivo el umbral de 100+** (el seed solo tiene 15
+   empleados) — la lógica es un simple `if` sobre el conteo de
+   destinatarios resueltos, revisada a mano.
+3. **`viewedCount` en vivo, sin esperar al cron pendiente**: al marcar
+   una notificación tipo `announcement` como leída,
+   `Announcement.viewedCount` se incrementa ahí mismo (con guardia de
+   idempotencia — no vuelve a incrementar si ya estaba `read`). El cron
+   de recálculo periódico que quedó pendiente de una conversación
+   anterior puede servir a futuro como reconciliación, no como única
+   fuente de verdad.
+
+**Bug propio encontrado y corregido probando en vivo:** el `POST
+/announcements` regresaba `recipientsCount: 0` (el valor por default,
+antes de que corriera el dispatch de notificaciones) porque el
+controlador respondía con el objeto devuelto por `service.create()`
+sin volver a leerlo después de que `notifyAnnouncementCreated`
+actualizara esos campos. Corregido: ahora hace un
+`service.findById(created.id)` después del dispatch, así el response
+sí refleja `recipientsCount`/`viewedCount`/`viewsCalculatedAt`
+actualizados.
+
+Verificado end-to-end contra la BD real sembrada: creación de anuncio
+con audiencia `administrative-staff` (5 empleados) → 5 filas de
+notificación creadas con el shape correcto, `recipientsCount: 5` en la
+respuesta, marcar como leída incrementa `viewedCount` a 1, marcarla de
+nuevo no la duplica, y un segundo empleado (maestro) recibe 403 tanto
+al intentar ver como al intentar marcar como leídas las notificaciones
+de otro empleado.

@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { AnnouncementService } from "./announcement.service";
+import { NotificationService } from "../notifications/notification.service";
 import { prisma } from "../../shared/lib/prisma";
+import { mailService } from "../../shared/services/mail.service";
 import {
   sendSuccess,
   sendNoContent,
@@ -9,10 +11,11 @@ import {
 import type { AnnouncementFilters } from "./announcement.types";
 
 /**
- * Shared service instance used by all controller handlers.
+ * Shared service instances used by all controller handlers.
  * Receives the singleton PrismaClient for database access.
  */
 const service = new AnnouncementService(prisma);
+const notificationService = new NotificationService(prisma, mailService);
 
 /**
  * Builds an AnnouncementFilters object from validated query parameters.
@@ -85,10 +88,21 @@ export async function getById(req: Request, res: Response): Promise<void> {
 
 /**
  * POST /announcements
- * Creates a new announcement and returns the created record.
+ * Creates a new announcement, resolves its audience to real employee
+ * recipients (teacher/administrative-staff — "student" is skipped, there's
+ * no student-facing app yet to show them a notification), creates their
+ * notification rows, and fires off the email batch in the background.
+ * Re-fetches after dispatch so the response reflects the just-updated
+ * recipientsCount/viewedCount/viewsCalculatedAt (the initial create()
+ * result predates that update).
  */
 export async function create(req: Request, res: Response): Promise<void> {
-  const data = await service.create(req.body);
+  const created = await service.create(req.body);
+  const { employeeId } = req.user!;
+
+  await notificationService.notifyAnnouncementCreated(created, employeeId);
+
+  const data = await service.findById(created.id);
 
   sendSuccess(res, data, 201);
 }
