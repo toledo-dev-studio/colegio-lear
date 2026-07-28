@@ -56,6 +56,56 @@ function optionalEmail(maxLength: number) {
 }
 
 /**
+ * Optional string for PATCH bodies: blank string or explicit null both mean
+ * "clear this field" (-> null, written to the DB); omitting the key
+ * entirely (-> undefined) means "don't touch it". Using optionalTrimmedString
+ * here instead would silently drop the update whenever a client clears the
+ * field by sending "" (e.g. blanking phoneNumber/email after unchecking
+ * isPrincipal) — the value would never reach updateData.
+ */
+function optionalNullableTrimmedString(maxLength: number) {
+  return z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      if (val === null) return null;
+      const trimmed = val.trim();
+      return trimmed === "" ? null : trimmed;
+    })
+    .pipe(
+      z
+        .string()
+        .max(maxLength, `Must be at most ${maxLength} characters`)
+        .nullable()
+        .optional(),
+    );
+}
+
+/** Same as optionalNullableTrimmedString, but validates email format when present. */
+function optionalNullableEmail(maxLength: number) {
+  return z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      if (val === null) return null;
+      const trimmed = val.trim();
+      return trimmed === "" ? null : trimmed;
+    })
+    .pipe(
+      z
+        .string()
+        .email("Must be a valid email")
+        .max(maxLength, `Must be at most ${maxLength} characters`)
+        .nullable()
+        .optional(),
+    );
+}
+
+/**
  * Validates POST body for creating a student guardian.
  * phoneNumber/email are only required when isPrincipal is true — for any
  * other guardian they may be omitted/null.
@@ -91,8 +141,8 @@ export const updateStudentGuardianSchema = z
   .object({
     fullName: z.string().min(1).max(200).optional(),
     relationship: z.enum(GUARDIAN_TYPES).optional(),
-    phoneNumber: optionalTrimmedString(20),
-    email: optionalEmail(150),
+    phoneNumber: optionalNullableTrimmedString(20),
+    email: optionalNullableEmail(150),
     isPrincipal: z.boolean().optional(),
     emergencyContact: z.boolean().optional(),
     authorizedToPickUp: z.boolean().optional(),

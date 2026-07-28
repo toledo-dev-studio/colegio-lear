@@ -28,12 +28,16 @@ export interface CreateStudentGuardianDto {
   observations?: string;
 }
 
-/** Input DTO for updating a student guardian */
+/**
+ * Input DTO for updating a student guardian.
+ * phoneNumber/email: undefined = don't touch, null = clear it (allowed only
+ * when the resulting isPrincipal is false — enforced in the service).
+ */
 export interface UpdateStudentGuardianDto {
   fullName?: string;
   relationship?: string;
-  phoneNumber?: string;
-  email?: string;
+  phoneNumber?: string | null;
+  email?: string | null;
   isPrincipal?: boolean;
   emergencyContact?: boolean;
   authorizedToPickUp?: boolean;
