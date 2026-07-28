@@ -57,7 +57,6 @@ model SchoolSubject {
   academicLevel               AcademicLevel                @relation(fields: [academicLevelId], references: [id], onDelete: Restrict)
   educationLevel              EducationLevel               @relation(fields: [educationLevelId], references: [id], onDelete: Restrict)
   academicCycleSchoolSubjects AcademicCycleSchoolSubject[]
-  academicCycleGroupCalendars AcademicCycleGroupCalendar[]
   studentGrades               StudentGrade[]
 
   @@unique([name, educationLevelId])
@@ -208,6 +207,15 @@ model Employee {
 
 // ─── Announcement ───────────────────────────────────────────────────────────────
 
+enum AnnouncementStatus {
+  draft       @map("draft")
+  in_progress @map("in-progress")
+  completed   @map("completed")
+  cancelled   @map("cancelled")
+
+  @@schema("core")
+}
+
 model Announcement {
   id          String       @id @default(uuid()) @db.Uuid
   name        String       @db.VarChar(200)
@@ -216,7 +224,14 @@ model Announcement {
   content     String       @db.Text
   publishedAt DateTime     @map("published_at")
   expiresAt   DateTime     @map("expires_at")
-  isActive    Boolean      @default(true) @map("is_active")
+  status      AnnouncementStatus @default(draft)
+  // True once this campaign has been set to "in-progress" for the first
+  // time — the point where recipients are resolved and locked in. Never
+  // reset back to false afterward, even if status later moves to
+  // completed/cancelled; it exists solely to make that recipient-resolution
+  // step idempotent (run exactly once) and to stop the frontend from
+  // offering "draft" again once a campaign has gone out.
+  alreadyPublished Boolean @default(false) @map("already_published")
   isDeleted   Boolean      @default(false) @map("is_deleted")
 
   // Calculated (cron-maintained) view-tracking history. Stored on the
@@ -452,6 +467,7 @@ model AcademicCycleSchoolSubject {
   observations    String?       @db.VarChar(500)
   academicCycle   AcademicCycle @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
   schoolSubject   SchoolSubject @relation(fields: [schoolSubjectId], references: [id], onDelete: Restrict)
+  calendars       AcademicCycleGroupCalendar[]
 
   @@unique([academicCycleId, schoolSubjectId])
   @@map("academic_cycle_school_subjects")
@@ -518,18 +534,21 @@ model AcademicCycleGroup {
 // ─── Academic Cycle Group Calendar ───────────────────────────────────────────
 
 model AcademicCycleGroupCalendar {
-  id                         String             @id @default(uuid()) @db.Uuid
-  day                        DayOfWeek
-  startTime                  DateTime           @map("start_time") @db.Time
-  endTime                    DateTime           @map("end_time") @db.Time
-  academicCycleId            String             @map("academic_cycle_id") @db.Uuid
-  academicCycleSchoolGroupId String             @map("academic_cycle_school_group_id") @db.Uuid
-  schoolSubjectId            String             @map("school_subject_id") @db.Uuid
-  teacherId                  String             @map("teacher_id") @db.Uuid
-  academicCycle              AcademicCycle      @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
-  academicCycleSchoolGroup   AcademicCycleGroup @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Cascade)
-  schoolSubject              SchoolSubject      @relation(fields: [schoolSubjectId], references: [id], onDelete: Restrict)
-  teacher                    Employee           @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+  id                           String                     @id @default(uuid()) @db.Uuid
+  day                          DayOfWeek
+  startTime                    DateTime                   @map("start_time") @db.Time
+  endTime                      DateTime                   @map("end_time") @db.Time
+  academicCycleId              String                     @map("academic_cycle_id") @db.Uuid
+  academicCycleSchoolGroupId   String                     @map("academic_cycle_school_group_id") @db.Uuid
+  // References the cycle's own subject catalog entry (AcademicCycleSchoolSubject),
+  // not the global SchoolSubject catalog directly — a calendar slot can only
+  // teach a subject that was actually added to this specific academic cycle.
+  academicCycleSchoolSubjectId String                     @map("academic_cycle_school_subject_id") @db.Uuid
+  teacherId                    String                     @map("teacher_id") @db.Uuid
+  academicCycle                AcademicCycle              @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleSchoolGroup     AcademicCycleGroup         @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Cascade)
+  academicCycleSchoolSubject   AcademicCycleSchoolSubject @relation(fields: [academicCycleSchoolSubjectId], references: [id], onDelete: Restrict)
+  teacher                      Employee                   @relation(fields: [teacherId], references: [id], onDelete: Restrict)
 
   @@map("academic_cycle_group_calendars")
   @@schema("core")

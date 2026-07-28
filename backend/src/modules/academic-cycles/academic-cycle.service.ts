@@ -1,5 +1,6 @@
-import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaClient, Prisma } from "../../generated/prisma/client";
 import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
+import { logger } from "../../shared/lib/logger";
 import type {
   AcademicCycleFilters,
   AcademicCycleRecord,
@@ -45,6 +46,14 @@ const INCLUDE_RELATIONS = {
  * Business logic layer for the Academic Cycles module.
  */
 export class AcademicCycleService {
+  /**
+   * Activations affecting this many enrolled students (or more) get
+   * "started"/"completed" notifications bracketing the wallet-item
+   * generation, same threshold and reasoning as
+   * NotificationService.ASYNC_JOB_NOTIFICATION_THRESHOLD.
+   */
+  private static readonly ACTIVATION_NOTIFICATION_THRESHOLD = 100;
+
   constructor(private readonly prisma: PrismaClient) {}
 
   private buildWhereClause(filters: AcademicCycleFilters) {
@@ -221,6 +230,7 @@ export class AcademicCycleService {
   async update(
     id: string,
     dto: UpdateAcademicCycleDto,
+    actorEmployeeId?: string,
   ): Promise<AcademicCycleRecord> {
     const existing = await this.prisma.academicCycle.findUnique({
       where: { id },
@@ -261,13 +271,153 @@ export class AcademicCycleService {
     if (dto.educationLevelId !== undefined)
       updateData.educationLevelId = dto.educationLevelId;
 
+    // Activating the cycle (upcoming -> active) locks in the wallet catalog:
+    // the frontend tells the coordinator this is the point where "el sistema
+    // generará automáticamente la configuración correspondiente para los
+    // alumnos inscritos". Snapshot AcademicCycleWallet -> StudentWalletItem
+    // for every already-enrolled student, filling in only what's missing so
+    // this stays safe to run more than once.
+    const isActivating = dto.status === "active" && existing.status !== "active";
+
     const updated = await this.prisma.academicCycle.update({
       where: { id },
       data: updateData,
       include: INCLUDE_RELATIONS,
     });
 
+    // Fire-and-forget: with 100+ enrolled students this can take a while
+    // (bracketed by "started"/"completed" notifications, same pattern as
+    // the announcement email fan-out), so the request never waits on it.
+    if (isActivating && actorEmployeeId) {
+      void this.processWalletActivation(id, updated.name, actorEmployeeId);
+    }
+
     return this.toRecord(updated as unknown as Record<string, unknown>);
+  }
+
+  /**
+   * Runs the wallet-catalog snapshot for a just-activated cycle in the
+   * background, bracketed by "started"/"completed" (or "error") notifications
+   * to the coordinator who activated it — but only when there are enough
+   * enrolled students (ACTIVATION_NOTIFICATION_THRESHOLD) that it's worth the
+   * notification noise, mirroring NotificationService's announcement email
+   * batch pattern. Never awaited by the caller.
+   */
+  private async processWalletActivation(
+    academicCycleId: string,
+    cycleName: string,
+    actorEmployeeId: string,
+  ): Promise<void> {
+    const enrollmentCount = await this.prisma.academicCycleEnrollment.count({
+      where: { academicCycleId, status: "enrolled" },
+    });
+    if (enrollmentCount === 0) return;
+
+    const isBigBatch =
+      enrollmentCount >= AcademicCycleService.ACTIVATION_NOTIFICATION_THRESHOLD;
+
+    if (isBigBatch) {
+      await this.createProcessNotification(actorEmployeeId, academicCycleId, {
+        title: "Copia de cartera de pago en proceso",
+        message: `Se inició la copia de la cartera de pagos para los ${enrollmentCount} alumnos inscritos en "${cycleName}".`,
+        type: "info",
+      });
+    }
+
+    try {
+      await this.prisma.$transaction((tx) =>
+        this.generateWalletItemsForActivatedCycle(tx, academicCycleId),
+      );
+
+      if (isBigBatch) {
+        await this.createProcessNotification(actorEmployeeId, academicCycleId, {
+          title: "Copia de cartera de pago completada",
+          message: `Se completó la copia de la cartera de pagos para los ${enrollmentCount} alumnos inscritos en "${cycleName}".`,
+          type: "info",
+        });
+      }
+    } catch (error) {
+      logger.error("Failed to generate wallet items on academic cycle activation", {
+        academicCycleId,
+        error,
+      });
+      if (isBigBatch) {
+        await this.createProcessNotification(actorEmployeeId, academicCycleId, {
+          title: "Copia de cartera de pago fallida",
+          message: `Ocurrió un error al copiar la cartera de pagos para "${cycleName}". Contacta a soporte.`,
+          type: "error",
+        });
+      }
+    }
+  }
+
+  private async createProcessNotification(
+    employeeId: string,
+    relatedRecordId: string,
+    params: { title: string; message: string; type: "info" | "error" },
+  ): Promise<void> {
+    await this.prisma.notification.create({
+      data: {
+        employeeId,
+        title: params.title,
+        message: params.message,
+        type: params.type,
+        relatedRecordId,
+      },
+    });
+  }
+
+  /**
+   * Snapshots the cycle's wallet catalog (AcademicCycleWallet) into a
+   * StudentWalletItem for every enrolled student that doesn't already have
+   * one for a given catalog item — covers both students enrolled before the
+   * catalog was finished, and catalog items added after some enrollments.
+   */
+  private async generateWalletItemsForActivatedCycle(
+    tx: Prisma.TransactionClient,
+    academicCycleId: string,
+  ): Promise<void> {
+    const [walletCatalog, enrollments, existingItems] = await Promise.all([
+      tx.academicCycleWallet.findMany({ where: { academicCycleId } }),
+      tx.academicCycleEnrollment.findMany({
+        where: { academicCycleId, status: "enrolled" },
+        select: { id: true, studentId: true },
+      }),
+      tx.studentWalletItem.findMany({
+        where: { academicCycleId },
+        select: { academicCycleEnrollmentId: true, academicCycleWalletId: true },
+      }),
+    ]);
+
+    if (walletCatalog.length === 0 || enrollments.length === 0) return;
+
+    const existingKeys = new Set(
+      existingItems.map(
+        (i) => `${i.academicCycleEnrollmentId}:${i.academicCycleWalletId}`,
+      ),
+    );
+
+    const toCreate = enrollments.flatMap((enrollment) =>
+      walletCatalog
+        .filter((w) => !existingKeys.has(`${enrollment.id}:${w.id}`))
+        .map((w) => ({
+          name: w.name,
+          code: w.code,
+          description: w.description,
+          amount: w.amount,
+          allowForgiveness: w.allowForgiveness,
+          outstandingAmount: w.amount,
+          dueDate: w.dueDate,
+          studentId: enrollment.studentId,
+          academicCycleId,
+          academicCycleEnrollmentId: enrollment.id,
+          academicCycleWalletId: w.id,
+        })),
+    );
+
+    if (toCreate.length > 0) {
+      await tx.studentWalletItem.createMany({ data: toCreate });
+    }
   }
 
   /** DELETE — sets status to "cancelled" (no isDeleted field) */

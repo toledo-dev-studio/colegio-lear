@@ -19,7 +19,7 @@ const notificationService = new NotificationService(prisma, mailService);
 
 /**
  * Builds an AnnouncementFilters object from validated query parameters.
- * Converts isActive string to boolean; passes publishedAt/expiresAt as-is.
+ * Passes status/publishedAt/expiresAt as-is.
  * Only includes properties that are actually defined to satisfy exactOptionalPropertyTypes.
  */
 function buildFilters(query: Record<string, unknown>): AnnouncementFilters {
@@ -27,8 +27,8 @@ function buildFilters(query: Record<string, unknown>): AnnouncementFilters {
 
   if (query.q !== undefined) filters.q = query.q as string;
   if (query.name !== undefined) filters.name = query.name as string;
-  if (query.isActive !== undefined)
-    filters.isActive = query.isActive === "true";
+  if (query.status !== undefined)
+    filters.status = query.status as NonNullable<AnnouncementFilters["status"]>;
   if (query.publishedAt !== undefined)
     filters.publishedAt = query.publishedAt as string;
   if (query.expiresAt !== undefined)
@@ -88,35 +88,54 @@ export async function getById(req: Request, res: Response): Promise<void> {
 
 /**
  * POST /announcements
- * Creates a new announcement, resolves its audience to real employee
- * recipients (teacher/administrative-staff — "student" is skipped, there's
- * no student-facing app yet to show them a notification), creates their
- * notification rows, and fires off the email batch in the background.
- * Re-fetches after dispatch so the response reflects the just-updated
- * recipientsCount/viewedCount/viewsCalculatedAt (the initial create()
- * result predates that update).
+ * Creates a new announcement — "draft" by default, not dispatched to
+ * anyone yet. If created directly with status "in-progress" (the frontend
+ * allows picking either at creation time), resolves its audience to real
+ * employee recipients (teacher/administrative-staff — "student" is
+ * skipped, there's no student-facing app yet to show them a notification),
+ * creates their notification rows, and fires off the email batch in the
+ * background. Re-fetches after dispatch so the response reflects the
+ * just-updated recipientsCount/viewedCount/viewsCalculatedAt (the initial
+ * create() result predates that update).
  */
 export async function create(req: Request, res: Response): Promise<void> {
   const created = await service.create(req.body);
-  const { employeeId } = req.user!;
 
-  await notificationService.notifyAnnouncementCreated(created, employeeId);
+  if (created.alreadyPublished) {
+    const { employeeId } = req.user!;
+    await notificationService.notifyAnnouncementPublished(created, employeeId);
+    const data = await service.findById(created.id);
+    sendSuccess(res, data, 201);
+    return;
+  }
 
-  const data = await service.findById(created.id);
-
-  sendSuccess(res, data, 201);
+  sendSuccess(res, created, 201);
 }
 
 /**
  * PATCH /announcements/:id
- * Partially updates an existing announcement.
+ * Partially updates an existing announcement. If this update is the one
+ * that flips status to "in-progress" for the first time (alreadyPublished
+ * false -> true), dispatches recipient notifications the same way create()
+ * does for campaigns published immediately at creation. Later updates
+ * (e.g. moving on to "completed"/"cancelled") never re-dispatch — the
+ * service already guards alreadyPublished from being reset.
  */
 export async function update(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };
 
-  const data = await service.update(id, req.body);
+  const before = await service.findById(id);
+  const updated = await service.update(id, req.body);
 
-  sendSuccess(res, data);
+  if (!before.alreadyPublished && updated.alreadyPublished) {
+    const { employeeId } = req.user!;
+    await notificationService.notifyAnnouncementPublished(updated, employeeId);
+    const data = await service.findById(id);
+    sendSuccess(res, data);
+    return;
+  }
+
+  sendSuccess(res, updated);
 }
 
 /**

@@ -6,12 +6,24 @@
 export type AudienceKey = "administrative-staff" | "teacher" | "student";
 
 /**
+ * Announcement lifecycle status (frontend/API values — kebab-case).
+ * Recipients are resolved and notified on the first transition into
+ * "in-progress" (see AnnouncementService.update/create and
+ * NotificationService.notifyAnnouncementPublished), not at creation time.
+ */
+export type AnnouncementStatus =
+  | "draft"
+  | "in-progress"
+  | "completed"
+  | "cancelled";
+
+/**
  * Filters applicable to announcements list endpoints.
  */
 export interface AnnouncementFilters {
   q?: string;
   name?: string;
-  isActive?: boolean;
+  status?: AnnouncementStatus;
   publishedAt?: string; // ISO date string (day filter)
   expiresAt?: string; // ISO date string (day filter)
 }
@@ -27,7 +39,13 @@ export interface AnnouncementRecord {
   content: string;
   publishedAt: Date;
   expiresAt: Date;
-  isActive: boolean;
+  status: AnnouncementStatus;
+  /**
+   * True once this campaign was set to "in-progress" for the first time —
+   * recipients have been resolved and locked in, and the frontend no
+   * longer offers "draft" as an option.
+   */
+  alreadyPublished: boolean;
   /** Calculated (cron-maintained) audience size at last recalculation. */
   recipientsCount: number;
   /** Calculated (cron-maintained) count of recipients who viewed it. */
@@ -58,6 +76,9 @@ export interface AnnouncementDetail extends AnnouncementRecord {
 /**
  * Input DTO for creating an announcement.
  * Content is optional at creation time (added later via update).
+ * status only accepts "draft"/"in-progress" here — "completed"/"cancelled"
+ * only make sense for a campaign that has already run, so those are only
+ * reachable via update.
  */
 export interface CreateAnnouncementDto {
   name: string;
@@ -66,7 +87,7 @@ export interface CreateAnnouncementDto {
   content?: string;
   publishedAt: string;
   expiresAt: string;
-  isActive?: boolean;
+  status?: Extract<AnnouncementStatus, "draft" | "in-progress">;
 }
 
 /**
@@ -79,7 +100,7 @@ export interface UpdateAnnouncementDto {
   content?: string;
   publishedAt?: string;
   expiresAt?: string;
-  isActive?: boolean;
+  status?: AnnouncementStatus;
 }
 
 /**

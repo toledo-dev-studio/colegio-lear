@@ -73,7 +73,8 @@ export async function create(req: Request, res: Response): Promise<void> {
 /** PATCH /academic-cycles/:id */
 export async function update(req: Request, res: Response): Promise<void> {
   const { id } = req.params as { id: string };
-  const data = await service.update(id, req.body);
+  const { employeeId } = req.user!;
+  const data = await service.update(id, req.body, employeeId);
   sendSuccess(res, data);
 }
 

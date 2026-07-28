@@ -1,5 +1,5 @@
-import { PrismaClient } from "../../generated/prisma/client";
-import { NotFoundError } from "../../shared/errors/app-error";
+import { PrismaClient, Prisma } from "../../generated/prisma/client";
+import { NotFoundError, ValidationError } from "../../shared/errors/app-error";
 import { EMPLOYEE_LIST_SELECT } from "../employees/employee.types";
 import { toFrontendJobTitleType } from "../job-titles/job-title.service";
 import type {
@@ -11,10 +11,21 @@ import type {
   UpdateAcademicCycleSchoolGroupDto,
 } from "./academic-cycle-school-group.types";
 
-// ─── Include clause for calendar entries (with nested subject + teacher) ────
-
+/**
+ * Calendar entries reference the cycle's own subject catalog entry
+ * (academicCycleSchoolSubject), not the global SchoolSubject catalog
+ * directly — a class can only be scheduled for a subject that was actually
+ * added to that specific academic cycle first. The public API shape is
+ * unaffected: requests/responses still use `schoolSubjectId` (the global
+ * catalog id); this indirection is resolved internally.
+ */
 const CALENDAR_INCLUDE = {
-  schoolSubject: { select: { id: true, name: true, description: true } },
+  academicCycleSchoolSubject: {
+    select: {
+      schoolSubjectId: true,
+      schoolSubject: { select: { id: true, name: true, description: true } },
+    },
+  },
   teacher: { select: EMPLOYEE_LIST_SELECT },
 };
 
@@ -56,8 +67,8 @@ export class AcademicCycleSchoolGroupService {
       endTime: timeToString(raw.endTime),
       academicCycleId: raw.academicCycleId,
       academicCycleSchoolGroupId: raw.academicCycleSchoolGroupId,
-      schoolSubjectId: raw.schoolSubjectId,
-      schoolSubject: raw.schoolSubject,
+      schoolSubjectId: raw.academicCycleSchoolSubject.schoolSubjectId,
+      schoolSubject: raw.academicCycleSchoolSubject.schoolSubject,
       teacherId: raw.teacherId,
       teacher: {
         ...raw.teacher,
@@ -67,6 +78,42 @@ export class AcademicCycleSchoolGroupService {
         },
       },
     };
+  }
+
+  /**
+   * Resolves a (public) schoolSubjectId to this cycle's own subject catalog
+   * association id (academic_cycle_school_subjects.id). Throws if the
+   * subject was never added to this academic cycle via
+   * POST /academic-cycles/{id}/school-subjects — this is the enforcement
+   * point that keeps calendar entries from teaching a subject the cycle
+   * doesn't actually offer.
+   */
+  private async resolveAcademicCycleSchoolSubjectId(
+    client: PrismaClient | Prisma.TransactionClient,
+    academicCycleId: string,
+    schoolSubjectId: string,
+  ): Promise<string> {
+    const association = await client.academicCycleSchoolSubject.findUnique({
+      where: {
+        academicCycleId_schoolSubjectId: { academicCycleId, schoolSubjectId },
+      },
+      select: { id: true },
+    });
+
+    if (!association) {
+      throw new ValidationError(
+        "schoolSubjectId has not been added to this academic cycle's subject catalog",
+        [
+          {
+            field: "schoolSubjectId",
+            message:
+              "Add it to the academic cycle first via POST /academic-cycles/{id}/school-subjects",
+          },
+        ],
+      );
+    }
+
+    return association.id;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -122,6 +169,15 @@ export class AcademicCycleSchoolGroupService {
   ): Promise<AcademicCycleSchoolGroupRecord> {
     await this.ensureCycleExists(academicCycleId);
 
+    const calendarCreateData =
+      dto.calendars && dto.calendars.length > 0
+        ? await Promise.all(
+            dto.calendars.map((c) =>
+              this.toCalendarCreateData(this.prisma, academicCycleId, c),
+            ),
+          )
+        : [];
+
     const created = await this.prisma.academicCycleGroup.create({
       data: {
         academicCycleId,
@@ -129,14 +185,8 @@ export class AcademicCycleSchoolGroupService {
         status: dto.status ?? "active",
         description: dto.description ?? null,
         dischargedDescription: dto.dischargedDescription ?? null,
-        ...(dto.calendars && dto.calendars.length > 0
-          ? {
-              calendars: {
-                create: dto.calendars.map((c) =>
-                  this.toCalendarCreateData(academicCycleId, c),
-                ),
-              },
-            }
+        ...(calendarCreateData.length > 0
+          ? { calendars: { create: calendarCreateData } }
           : {}),
       },
       include: { calendars: { include: CALENDAR_INCLUDE } },
@@ -145,16 +195,23 @@ export class AcademicCycleSchoolGroupService {
     return this.toRecord(created);
   }
 
-  private toCalendarCreateData(
+  private async toCalendarCreateData(
+    client: PrismaClient | Prisma.TransactionClient,
     academicCycleId: string,
     c: AcademicCycleSchoolGroupCalendarInput,
   ) {
+    const academicCycleSchoolSubjectId =
+      await this.resolveAcademicCycleSchoolSubjectId(
+        client,
+        academicCycleId,
+        c.schoolSubjectId,
+      );
     return {
       academicCycleId,
       day: c.day,
       startTime: stringToTime(c.startTime),
       endTime: stringToTime(c.endTime),
-      schoolSubjectId: c.schoolSubjectId,
+      academicCycleSchoolSubjectId,
       teacherId: c.teacherId,
     };
   }
@@ -202,7 +259,7 @@ export class AcademicCycleSchoolGroupService {
         for (const c of toCreate) {
           await tx.academicCycleGroupCalendar.create({
             data: {
-              ...this.toCalendarCreateData(academicCycleId, c),
+              ...(await this.toCalendarCreateData(tx, academicCycleId, c)),
               academicCycleSchoolGroupId: id,
             },
           });
@@ -210,13 +267,19 @@ export class AcademicCycleSchoolGroupService {
 
         const toUpdate = dto.calendars.filter((c) => !isNewCalendarId(c.id));
         for (const c of toUpdate) {
+          const academicCycleSchoolSubjectId =
+            await this.resolveAcademicCycleSchoolSubjectId(
+              tx,
+              academicCycleId,
+              c.schoolSubjectId,
+            );
           await tx.academicCycleGroupCalendar.update({
             where: { id: c.id as string },
             data: {
               day: c.day,
               startTime: stringToTime(c.startTime),
               endTime: stringToTime(c.endTime),
-              schoolSubjectId: c.schoolSubjectId,
+              academicCycleSchoolSubjectId,
               teacherId: c.teacherId,
             },
           });
@@ -292,10 +355,10 @@ export class AcademicCycleSchoolGroupService {
     const seen = new Set<string>();
     const teachers: AcademicCycleSchoolGroupTeacherRecord[] = [];
     for (const r of results) {
-      const key = `${r.schoolSubjectId}:${r.teacherId}`;
+      const calendarRecord = this.toCalendarRecord(r);
+      const key = `${calendarRecord.schoolSubjectId}:${calendarRecord.teacherId}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      const calendarRecord = this.toCalendarRecord(r);
       teachers.push({
         schoolSubjectId: calendarRecord.schoolSubjectId,
         schoolSubject: calendarRecord.schoolSubject,
