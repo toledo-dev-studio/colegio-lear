@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router";
-import { Download, Filter, Plus, Search, X } from "lucide-react";
+import { Download, FunnelPlus, Plus, Search, X } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/lib/extensions/utils";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 
 interface ButtonProps {
     show?: boolean;
@@ -85,84 +84,74 @@ export const TableRibbon = (props: Props) => {
 
     return (
         <>
-            <section className={cn("flex flex-col gap-6 lg:flex-row lg:items-center", className)}>
-                {/* Advanced filters */}
-                {
-                    filterButton.show && (
-                        <Tooltip disabled={filterButton.disabled}>
-                            <TooltipTrigger>
-                                <span onClick={filterButton.handleClick} className="icon-btn icon-btn-ribbon bg-transparent dark:bg-input/30 border border-input">
-                                    <Filter className="text-primary w-4 h-4" />
-                                </span>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>{filterButton.tooltip}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    )
-                }
-
-                {/* Export data */}
-                {
-                    exportButton.show && (
-                        <Tooltip disabled={exportButton.disabled}>
-                            <TooltipTrigger>
-                                <span onClick={exportButton.handleClick} className="icon-btn icon-btn-ribbon bg-transparent dark:bg-input/30 border border-input">
-                                    <Download className="text-primary w-4 h-4" />
-                                </span>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>{exportButton.tooltip}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    )}
+            <section className={cn("flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between", className)}>
 
                 {/* Search input */}
                 {
                     searchInput.show && (
-                        <Tooltip>
-                            <TooltipTrigger className="relative w-full lg:max-w-md">
-                                <div className="relative w-full lg:max-w-md">
-                                    {query.length > 0 ?
-                                        <X className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground hover:cursor-pointer"
-                                            onClick={() => {
-                                                setQuery("");
-                                                searchInput?.onClickClear ? searchInput.onClickClear() : updateQueryParam("");
-                                            }} />
-                                        : <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />}
-                                    <Input
-                                        value={query}
-                                        onKeyDown={(e) => {
-                                            searchInput?.onKeyDown ? searchInput.onKeyDown(e, query) : handleKeyDown(e);
-                                        }}
-                                        onChange={(e) => {
-                                            setQuery(e.target.value)
-                                            searchInput?.onChange && searchInput.onChange(e);
-                                        }}
-                                        disabled={searchInput.disabled}
-                                        className={cn("pr-13", searchInput.disabled && "disabled")}
-                                        placeholder={searchInput.placeholder}
-                                    />
-                                </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>{searchInput.tooltip}</p>
-                            </TooltipContent>
-                        </Tooltip>
+                        <section className="relative w-full xl:max-w-lg">
+                            {query.length > 0 ?
+                                <X className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground hover:cursor-pointer"
+                                    onClick={() => {
+                                        setQuery("");
+                                        searchInput?.onClickClear ? searchInput.onClickClear() : updateQueryParam("");
+                                    }} />
+                                : <Search className="absolute right-6 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />}
+                            <Input
+                                value={query}
+                                onKeyDown={(e) => {
+                                    searchInput?.onKeyDown ? searchInput.onKeyDown(e, query) : handleKeyDown(e);
+                                }}
+                                onChange={(e) => {
+                                    setQuery(e.target.value)
+                                    searchInput?.onChange && searchInput.onChange(e);
+                                }}
+                                disabled={searchInput.disabled}
+                                className={cn("pr-13", searchInput.disabled && "disabled")}
+                                placeholder={searchInput.placeholder}
+                            />
+                        </section>
                     )
                 }
 
-                {/* Add new */}
-                {
-                    addButton.show && (
-                        <Button onClick={addButton.handleClick}
-                            disabled={addButton.disabled}
-                            className={cn("w-full lg:w-fit mx-auto lg:ml-auto lg:mr-0", addButton.disabled && "disabled")}>
-                            {addButton.label}
-                            <Plus className="ml-4 w-4 h-4" />
-                        </Button>
-                    )
-                }
+                <section className="flex flex-col items-center gap-6 justify-center xl:justify-end lg:flex-row lg:flex-1">
+                    {/* Export data */}
+                    {
+                        exportButton.show && (
+                            <Button onClick={exportButton.handleClick}
+                                disabled={exportButton.disabled}
+                                variant={"outline"}
+                                className={cn("w-full lg:w-fit", exportButton.disabled && "disabled")}>
+                                {exportButton.label || "Exportar datos"}
+                                <Download className="ml-4 w-4 h-4" />
+                            </Button>
+                        )
+                    }
+
+                    {/* Advanced filters */}
+                    {
+                        filterButton.show && (
+                            <Button onClick={filterButton.handleClick}
+                                disabled={filterButton.disabled}
+                                variant={"outline"}
+                                className={cn("w-full lg:w-fit", filterButton.disabled && "disabled")}>
+                                {filterButton.label || "Filtros avanzados"}
+                                <FunnelPlus className="ml-4 w-4 h-4" />
+                            </Button>
+                        )
+                    }
+                    {/* Add new */}
+                    {
+                        addButton.show && (
+                            <Button onClick={addButton.handleClick}
+                                disabled={addButton.disabled}
+                                className={cn("w-full lg:w-fit", addButton.disabled && "disabled")}>
+                                {addButton.label}
+                                <Plus className="ml-4 w-4 h-4" />
+                            </Button>
+                        )
+                    }
+                </section>
             </section>
         </>
     )
