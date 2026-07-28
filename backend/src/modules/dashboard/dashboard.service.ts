@@ -172,7 +172,7 @@ export class DashboardService {
   async getAnnouncementsSummary(): Promise<AnnouncementSummaryRecord> {
     const now = new Date();
     const activeFilter = {
-      isActive: true,
+      status: "in_progress" as never,
       isDeleted: false,
       publishedAt: { lte: now },
       expiresAt: { gte: now },

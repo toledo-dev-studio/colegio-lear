@@ -1250,3 +1250,101 @@ entrada nueva en la misma petición también resuelve correctamente
 ambos casos; y el endpoint derivado de profesores
 (`/school-groups/{id}/teachers`) sigue deduplicando bien tras el
 cambio. Grupo de prueba eliminado al terminar.
+
+## Copia de cartera de pago al activar un ciclo escolar, como job en
+segundo plano (2026-07-28)
+
+**Bug reportado por el usuario**: al inscribir un alumno y luego pasar el
+ciclo escolar a "en curso", no aparecían sus pagos por hacer. Causa: el
+snapshot de conceptos de pago (`AcademicCycleWallet` → un
+`StudentWalletItem` por alumno) solo ocurría al momento de inscribir
+(`AcademicCycleEnrollmentService.create()`), tomando lo que hubiera en la
+cartera del ciclo *en ese instante* — nada volvía a sincronizar esa copia
+después, ni siquiera al activar el ciclo. El front de hecho ya promete
+esto en su modal de confirmación de activación ("el sistema generará
+automáticamente la configuración correspondiente para los alumnos
+inscritos"), pero nunca estuvo implementado en el backend.
+
+**Corrección** en `AcademicCycleService.update()`: al detectar la
+transición real de estatus a `active` (no en cada PATCH, solo la primera
+vez), se genera un `StudentWalletItem` faltante por cada combinación
+inscripción×concepto-de-cartera que aún no lo tenga — así es seguro
+correrlo más de una vez y cubre tanto alumnos inscritos antes de que la
+cartera estuviera lista como conceptos agregados después de que algunos
+ya se habían inscrito.
+
+**Como job en segundo plano, con notificaciones**: siguiendo el usuario
+pidió explícitamente que esto se comportara como un job (pensando en
+ciclos con 100+ inscritos que pudieran tardar), se implementó con el
+mismo patrón ya usado para el envío de correos de anuncios: la
+generación corre disparada con `void` (fire-and-forget) sin bloquear la
+respuesta del PATCH, y con 100+ inscritos además manda una notificación
+de "Copia de cartera de pago en proceso" al iniciar y "completada" (o
+"fallida", con `logger.error`, si algo truena) al terminar — por debajo
+de 100 corre igual mas sin la notificación extra, para no generar ruido
+en algo casi instantáneo. Las inscripciones nuevas después de que el
+ciclo ya está activo siguen copiándose de forma síncrona, como ya
+funcionaba.
+
+Verificado en vivo: con 105 alumnos de prueba, el PATCH respondió en
+~43ms y ambas notificaciones aparecieron ~55ms después (confirmando que
+la generación en sí es casi instantánea — un `createMany` en batch, muy
+distinto al envío de correos uno por uno vía SMTP — pero el mecanismo de
+notificación queda listo para cuando el trabajo real crezca); con 1
+alumno no se generó ninguna notificación extra, como se esperaba.
+Reactivar un ciclo ya activo (o repetir el PATCH) no duplica nada.
+Datos de prueba eliminados al terminar.
+
+## Ciclo de vida de campañas: `isActive` → `status` + `alreadyPublished`
+(2026-07-28)
+
+**Cambio de contrato reportado por el usuario**: el front reemplazó el
+campo `isActive` (booleano) de `AnnouncementResponse`/`AnnouncementRequest`
+por `status` (`draft` | `in-progress` | `completed` | `cancelled`) y
+agregó `alreadyPublished` (booleano) — `true` desde la primera vez que la
+campaña pasa a `in-progress`, y ya nunca regresa a `false` aunque después
+cambie a `completed`/`cancelled`. Mientras `alreadyPublished` es `false`,
+el selector de estatus del front solo ofrece `draft`/`in-progress`; una
+vez `true`, ya no ofrece `draft` (no se puede "despublicar" una campaña).
+
+**Cambio de comportamiento real, no solo de nombre**: antes, `POST
+/announcements` **siempre** resolvía destinatarios y disparaba
+notificaciones/correos de inmediato, sin importar `isActive`. Con el
+nuevo modelo, una campaña puede crearse como `draft` (sin destinatarios
+todavía) y el despacho real (resolver audiencia → crear notificaciones →
+mandar correos en segundo plano, la misma lógica de siempre en
+`NotificationService`, ahora renombrada `notifyAnnouncementPublished`)
+solo ocurre la **primera vez** que su estatus pasa a `in-progress` — ya
+sea directamente al crearla, o después vía `PATCH`. Ese momento es
+exactamente cuando `alreadyPublished` pasa de `false` a `true`, y por
+diseño no puede volver a dispararse (repetir el PATCH a `in-progress`, o
+pasar a `completed`/`cancelled` y de regreso, nunca reenvía). Intentar
+regresar una campaña ya publicada a `draft` responde 409.
+
+**Migración** (`20260728020000_announcement_status_lifecycle`): agrega
+`status` (enum, default `draft`) y `already_published` (default `false`),
+respaldando las filas existentes como `already_published = true` (todas
+ya habían sido despachadas bajo el comportamiento anterior de
+"siempre al crear") y `status = 'in-progress'` si `is_active` era `true`,
+o `'completed'` si era `false` (no hay forma de distinguir "cancelada" de
+solo "inactiva" a partir del booleano viejo). Elimina `is_active` al
+final. El resumen de campañas activas del dashboard
+(`getAnnouncementsSummary`) se actualizó de `isActive: true` a
+`status: "in_progress"` — mismo significado que antes ("actualmente en
+curso y dentro de su ventana de publicación/vencimiento").
+
+Verificado en vivo: crear una campaña en `draft` no genera ninguna
+notificación (`recipientsCount: 0`); el `PATCH` a `in-progress` sí
+resuelve destinatarios reales y genera sus notificaciones
+(`alreadyPublished` pasa a `true`); repetir el mismo `PATCH` no duplica
+nada; pasar a `completed` funciona sin re-disparar; intentar volver a
+`draft` responde 409 con el mensaje esperado; y el resumen del dashboard
+sigue contando correctamente las campañas dentro de su ventana activa.
+Campaña de prueba y su notificación eliminadas al terminar.
+
+**Pendiente, fuera de alcance de este cambio**: el filtro avanzado del
+front (`AnnouncementsAdvancedFilters.tsx`) y sus hooks/actions todavía
+mandan `is-active` como query param — el backend ya no lo lee (ahora
+espera `status`), así que ese filtro específico queda sin efecto hasta
+que el front lo actualice para mandar `status` en su lugar. No se tocó
+nada de frontend en este cambio.

@@ -4,6 +4,7 @@ import type {
   AnnouncementFilters,
   AnnouncementRecord,
   AnnouncementDetail,
+  AnnouncementStatus,
   CreateAnnouncementDto,
   UpdateAnnouncementDto,
   PagedResult,
@@ -13,6 +14,26 @@ import {
   calculateSkip,
   buildPaginationMeta,
 } from "../../shared/helpers/pagination.helper";
+
+// ─── Enum Mappings ──────────────────────────────────────────────────────────
+
+/** Maps frontend/API status values (kebab-case) to Prisma enum member names */
+const STATUS_TO_PRISMA: Record<string, string> = {
+  "in-progress": "in_progress",
+};
+
+/** Maps Prisma enum member names back to frontend/API status values */
+const STATUS_FROM_PRISMA: Record<string, AnnouncementStatus> = {
+  in_progress: "in-progress",
+};
+
+function statusToPrisma(value: string): string {
+  return STATUS_TO_PRISMA[value] ?? value;
+}
+
+function statusFromPrisma(value: string): AnnouncementStatus {
+  return (STATUS_FROM_PRISMA[value] ?? value) as AnnouncementStatus;
+}
 
 /**
  * Explicit select for list endpoints (no attachments).
@@ -26,7 +47,8 @@ const LIST_SELECT = {
   content: true,
   publishedAt: true,
   expiresAt: true,
-  isActive: true,
+  status: true,
+  alreadyPublished: true,
   recipientsCount: true,
   viewedCount: true,
   viewsCalculatedAt: true,
@@ -63,7 +85,7 @@ export class AnnouncementService {
    * All active filters are combined with AND logic.
    * - `q` searches both `name` and `description` with OR logic (case-insensitive).
    * - `name` filters by contains (case-insensitive).
-   * - `isActive` filters by exact boolean match.
+   * - `status` filters by exact match.
    * - `publishedAt` / `expiresAt` together define one selected date range;
    *   matches announcements whose own publishedAt AND expiresAt both fall
    *   within that range.
@@ -91,9 +113,9 @@ export class AnnouncementService {
       });
     }
 
-    // isActive filter (exact boolean match)
-    if (filters.isActive !== undefined) {
-      andConditions.push({ isActive: filters.isActive });
+    // status filter (exact match)
+    if (filters.status !== undefined) {
+      andConditions.push({ status: statusToPrisma(filters.status) as never });
     }
 
     // publishedAt/expiresAt together define one selected date range
@@ -128,6 +150,12 @@ export class AnnouncementService {
     return where;
   }
 
+  private mapRecord<T extends { status: string }>(
+    raw: T,
+  ): Omit<T, "status"> & { status: AnnouncementStatus } {
+    return { ...raw, status: statusFromPrisma(raw.status) };
+  }
+
   /**
    * List all announcements (no pagination) with optional filters.
    * Does NOT include attachments in the response (list view).
@@ -140,7 +168,7 @@ export class AnnouncementService {
       select: LIST_SELECT,
     });
 
-    return results as unknown as AnnouncementRecord[];
+    return results.map((r) => this.mapRecord(r)) as unknown as AnnouncementRecord[];
   }
 
   /**
@@ -168,7 +196,7 @@ export class AnnouncementService {
     const meta = buildPaginationMeta(itemsCount, pagination);
 
     return {
-      data: data as unknown as AnnouncementRecord[],
+      data: data.map((r) => this.mapRecord(r)) as unknown as AnnouncementRecord[],
       totalPages: meta.totalPages,
       currentPage: meta.page,
       itemsCount,
@@ -193,16 +221,22 @@ export class AnnouncementService {
 
     const { isDeleted: _isDeleted, ...detail } = announcement;
 
-    return detail as unknown as AnnouncementDetail;
+    return this.mapRecord(detail) as unknown as AnnouncementDetail;
   }
 
   /**
    * Create a new announcement.
-   * Parses date strings to Date objects. isActive defaults to true (or dto.isActive when provided).
+   * Parses date strings to Date objects. status defaults to "draft" (or
+   * dto.status when provided). Setting status to "in-progress" directly at
+   * creation marks alreadyPublished=true right away — the caller (the
+   * controller) is responsible for noticing this and dispatching recipient
+   * notifications, since that lives in NotificationService, not here.
    * Content defaults to empty string when not provided (added later via update).
    * Returns the created announcement with empty attachments array.
    */
   async create(dto: CreateAnnouncementDto): Promise<AnnouncementDetail> {
+    const status = statusToPrisma(dto.status ?? "draft");
+
     const created = await this.prisma.announcement.create({
       data: {
         name: dto.name,
@@ -211,18 +245,24 @@ export class AnnouncementService {
         content: dto.content ?? "",
         publishedAt: new Date(dto.publishedAt),
         expiresAt: new Date(dto.expiresAt),
-        isActive: dto.isActive ?? true,
+        status: status as never,
+        alreadyPublished: status === "in_progress",
       },
       select: DETAIL_SELECT,
     });
 
-    return created as unknown as AnnouncementDetail;
+    return this.mapRecord(created) as unknown as AnnouncementDetail;
   }
 
   /**
    * Partial update of an announcement.
    * Verifies the announcement exists before updating.
    * Parses date strings to Date objects when present.
+   * Throws ConflictError when trying to move a published campaign back to
+   * "draft" — once recipients have been resolved there's no going back.
+   * Setting status to "in-progress" for the first time marks
+   * alreadyPublished=true here; same as create(), it's on the controller to
+   * notice that transition and dispatch recipient notifications.
    * Returns the updated announcement with attachments.
    * Throws NotFoundError if the record does not exist.
    */
@@ -250,7 +290,21 @@ export class AnnouncementService {
       updateData.publishedAt = new Date(dto.publishedAt);
     if (dto.expiresAt !== undefined)
       updateData.expiresAt = new Date(dto.expiresAt);
-    if (dto.isActive !== undefined) updateData.isActive = dto.isActive;
+
+    if (dto.status !== undefined) {
+      const targetStatus = statusToPrisma(dto.status);
+
+      if (targetStatus === "draft" && existing.alreadyPublished) {
+        throw new ConflictError(
+          "No se puede regresar a borrador una campaña que ya fue publicada",
+        );
+      }
+
+      updateData.status = targetStatus as never;
+      if (targetStatus === "in_progress" && !existing.alreadyPublished) {
+        updateData.alreadyPublished = true;
+      }
+    }
 
     const updated = await this.prisma.announcement.update({
       where: { id },
@@ -258,7 +312,7 @@ export class AnnouncementService {
       select: DETAIL_SELECT,
     });
 
-    return updated as unknown as AnnouncementDetail;
+    return this.mapRecord(updated) as unknown as AnnouncementDetail;
   }
 
   /**

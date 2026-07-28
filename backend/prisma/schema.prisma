@@ -207,6 +207,15 @@ model Employee {
 
 // ─── Announcement ───────────────────────────────────────────────────────────────
 
+enum AnnouncementStatus {
+  draft       @map("draft")
+  in_progress @map("in-progress")
+  completed   @map("completed")
+  cancelled   @map("cancelled")
+
+  @@schema("core")
+}
+
 model Announcement {
   id          String       @id @default(uuid()) @db.Uuid
   name        String       @db.VarChar(200)
@@ -215,7 +224,14 @@ model Announcement {
   content     String       @db.Text
   publishedAt DateTime     @map("published_at")
   expiresAt   DateTime     @map("expires_at")
-  isActive    Boolean      @default(true) @map("is_active")
+  status      AnnouncementStatus @default(draft)
+  // True once this campaign has been set to "in-progress" for the first
+  // time — the point where recipients are resolved and locked in. Never
+  // reset back to false afterward, even if status later moves to
+  // completed/cancelled; it exists solely to make that recipient-resolution
+  // step idempotent (run exactly once) and to stop the frontend from
+  // offering "draft" again once a campaign has gone out.
+  alreadyPublished Boolean @default(false) @map("already_published")
   isDeleted   Boolean      @default(false) @map("is_deleted")
 
   // Calculated (cron-maintained) view-tracking history. Stored on the

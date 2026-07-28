@@ -35,7 +35,7 @@ interface AnnouncementForNotification {
  * Business logic layer for the Notifications module.
  * Recipients are employees only — there is no student-facing app yet to
  * display notifications, so a "student" audience entry on an announcement
- * does not generate rows here (see notifyAnnouncementCreated).
+ * does not generate rows here (see notifyAnnouncementPublished).
  */
 export class NotificationService {
   constructor(
@@ -125,10 +125,14 @@ export class NotificationService {
    * recipients, also brackets that email batch with "job started"/"job
    * completed" notifications for the employee who created the announcement.
    *
+   * Called the moment a campaign's status first becomes "in-progress"
+   * (alreadyPublished false -> true) — not at creation time, since a
+   * campaign can now sit in "draft" indefinitely before being published.
+   *
    * "student" audience entries are skipped — there's no student-facing app
    * yet to show them a notification.
    */
-  async notifyAnnouncementCreated(
+  async notifyAnnouncementPublished(
     announcement: AnnouncementForNotification,
     actorEmployeeId: string,
   ): Promise<void> {

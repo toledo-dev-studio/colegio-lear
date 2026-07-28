@@ -27,6 +27,21 @@ export const AUDIENCE_KEYS = [
   "student",
 ] as const;
 
+/** Full announcement lifecycle, used for updates and filters. */
+export const ANNOUNCEMENT_STATUS_KEYS = [
+  "draft",
+  "in-progress",
+  "completed",
+  "cancelled",
+] as const;
+
+/**
+ * Statuses settable at creation time. "completed"/"cancelled" only make
+ * sense for a campaign that already ran, so they're only reachable via a
+ * later update.
+ */
+export const CREATE_ANNOUNCEMENT_STATUS_KEYS = ["draft", "in-progress"] as const;
+
 // ─── Audience Schema ────────────────────────────────────────────────────────
 
 /**
@@ -81,7 +96,11 @@ export const createAnnouncementSchema = z
     expiresAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
       message: "expiresAt must be a valid ISO date string",
     }),
-    isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
+    status: z
+      .enum(CREATE_ANNOUNCEMENT_STATUS_KEYS, {
+        error: `status must be one of: ${CREATE_ANNOUNCEMENT_STATUS_KEYS.join(", ")}`,
+      })
+      .optional(),
   })
   .refine((data) => new Date(data.expiresAt) >= new Date(data.publishedAt), {
     message: "expiresAt must be on or after publishedAt",
@@ -120,7 +139,11 @@ export const updateAnnouncementSchema = z
         message: "expiresAt must be a valid ISO date string",
       })
       .optional(),
-    isActive: z.boolean().optional(),
+    status: z
+      .enum(ANNOUNCEMENT_STATUS_KEYS, {
+        error: `status must be one of: ${ANNOUNCEMENT_STATUS_KEYS.join(", ")}`,
+      })
+      .optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
     message: "At least one field is required",
@@ -142,7 +165,7 @@ export const updateAnnouncementSchema = z
  * Validates optional query filters for announcements list endpoints.
  * - q: free-text search on name and description (case-insensitive, max 100 chars)
  * - name: filter by name (case-insensitive contains, max 200 chars)
- * - isActive: filter by active/inactive status ("true" | "false")
+ * - status: filter by exact lifecycle status
  * - publishedAt / expiresAt: together define one selected date range;
  *   matches announcements whose own publishedAt AND expiresAt both fall
  *   within that range (not two independent exact-date filters).
@@ -150,7 +173,7 @@ export const updateAnnouncementSchema = z
 export const announcementFiltersSchema = z.object({
   q: z.string().max(100, "q must be at most 100 characters").optional(),
   name: z.string().max(200, "name must be at most 200 characters").optional(),
-  isActive: z.enum(["true", "false"]).optional(),
+  status: z.enum(ANNOUNCEMENT_STATUS_KEYS).optional(),
   publishedAt: z
     .string()
     .refine((val) => !isNaN(Date.parse(val)), {
