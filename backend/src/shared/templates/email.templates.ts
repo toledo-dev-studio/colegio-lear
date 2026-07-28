@@ -171,3 +171,35 @@ export function studentCredentialsEmail(params: {
 
   return baseLayout(content);
 }
+
+/** Announcement notification email — sent to each resolved recipient when an announcement is created */
+export function announcementNotificationEmail(params: {
+  employeeName: string;
+  announcementName: string;
+  announcementDescription: string | null;
+  frontendUrl: string;
+}): string {
+  const content = `
+    <h2 style="margin:0 0 8px;color:#0F172A;font-size:20px;font-weight:600;">Nuevo comunicado: ${params.announcementName}</h2>
+    <p style="margin:0 0 24px;color:#64748B;font-size:14px;line-height:1.6;">Hola ${params.employeeName}, se publicó un nuevo comunicado en Colegio Lear${params.announcementDescription ? `:` : "."}</p>
+    ${
+      params.announcementDescription
+        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#EFF6FF;border-radius:8px;padding:20px;margin-bottom:24px;">
+      <tr>
+        <td style="padding:12px 20px;">
+          <p style="margin:0;color:#0F172A;font-size:14px;">${params.announcementDescription}</p>
+        </td>
+      </tr>
+    </table>`
+        : ""
+    }
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+      <tr>
+        <td style="border-radius:8px;background-color:#1E6FDB;">
+          <a href="${params.frontendUrl}" target="_blank" style="display:inline-block;padding:14px 32px;color:#FFFFFF;font-size:14px;font-weight:600;text-decoration:none;">Ver comunicado</a>
+        </td>
+      </tr>
+    </table>`;
+
+  return baseLayout(content);
+}

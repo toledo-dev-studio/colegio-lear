@@ -199,6 +199,7 @@ model Employee {
   securityRole                SecurityRole                 @relation(fields: [securityRoleId], references: [id], onDelete: Restrict)
   jobTitle                    JobTitle                     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
   academicCycleGroupCalendars AcademicCycleGroupCalendar[]
+  notifications               Notification[]
   createdAt                   DateTime                     @default(now()) @map("created_at")
 
   @@map("employees")
@@ -243,6 +244,37 @@ model Attachment {
   announcement    Announcement @relation(fields: [relatedRecordId], references: [id], onDelete: Cascade)
 
   @@map("attachments")
+  @@schema("core")
+}
+
+// ─── Notification ───────────────────────────────────────────────────────────
+// Recipients are employees only for now — there is no student-facing app yet
+// to display notifications, so an audience of "student" on an announcement
+// does not generate rows here (see AnnouncementService/NotificationService).
+
+enum NotificationType {
+  info
+  error
+  announcement
+  message
+
+  @@schema("core")
+}
+
+model Notification {
+  id              String           @id @default(uuid()) @db.Uuid
+  employeeId      String           @map("employee_id") @db.Uuid
+  title           String           @db.VarChar(200)
+  message         String           @db.VarChar(1000)
+  type            NotificationType
+  relatedRecordId String           @map("related_record_id") @db.Uuid
+  read            Boolean          @default(false)
+  readAt          DateTime?        @map("read_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  employee        Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId, createdAt])
+  @@map("notifications")
   @@schema("core")
 }
 

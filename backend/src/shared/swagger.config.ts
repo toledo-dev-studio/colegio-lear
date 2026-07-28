@@ -1727,6 +1727,27 @@ const swaggerOptions: swaggerJsdoc.Options = {
             },
           },
         },
+        // ─── Notifications ──────────────────────────────────────────────────────
+        NotificationRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            title: { type: "string", example: "Bienvenida — Inicio de cursos 2026-2027" },
+            message: { type: "string", example: "Se publicó un nuevo comunicado." },
+            type: {
+              type: "string",
+              enum: ["info", "error", "announcement", "message"],
+              example: "announcement",
+            },
+            relatedRecordId: {
+              type: "string",
+              format: "uuid",
+              description: "Announcement id for type=announcement/info/error. Not used for type=message yet (messaging is a future feature).",
+            },
+            createdAt: { type: "string", format: "date-time" },
+            read: { type: "boolean", example: false },
+          },
+        },
       },
     },
   },
