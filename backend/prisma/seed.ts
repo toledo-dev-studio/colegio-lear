@@ -1120,12 +1120,18 @@ async function main() {
     { day: "thursday", subjectKey: "ingles_1p" },
     { day: "friday", subjectKey: "historia_1p" },
   ] as const;
+  const PRIMARIA_SUBJECT_KEYS = Array.from(
+    new Set(PRIMARIA_SCHEDULE.map((s) => s.subjectKey)),
+  ) as (keyof typeof SCHOOL_SUBJECTS)[];
   const PREESCOLAR_SCHEDULE = [
     { day: "monday", subjectKey: "espanol_1pe" },
     { day: "tuesday", subjectKey: "matematicas_1pe" },
     { day: "wednesday", subjectKey: "ingles_1pe" },
     { day: "thursday", subjectKey: "expresion_1pe" },
   ] as const;
+  const PREESCOLAR_SUBJECT_KEYS = Array.from(
+    new Set(PREESCOLAR_SCHEDULE.map((s) => s.subjectKey)),
+  ) as (keyof typeof SCHOOL_SUBJECTS)[];
 
   function findTeacher(subjectKey: string, groupKey: string) {
     const teacher = resolvedTeachers.find(
@@ -1345,6 +1351,38 @@ async function main() {
     return String(base + seq).padStart(10, "0");
   }
 
+  const ALLERGY_CATALOG = [
+    { name: "Polvo", severity: "mild" as const },
+    { name: "Polen", severity: "mild" as const },
+    { name: "Pelo de gato", severity: "mild" as const },
+    { name: "Lactosa", severity: "moderate" as const },
+    { name: "Huevo", severity: "moderate" as const },
+    { name: "Penicilina", severity: "severe" as const },
+    { name: "Mariscos", severity: "severe" as const },
+    { name: "Cacahuate", severity: "severe" as const },
+    { name: "Picadura de abeja", severity: "severe" as const },
+  ];
+
+  /** ~1/3 of students get one allergy, ~1/9 get a second one (deduped). */
+  function buildAllergiesForStudent(seq: number): (typeof ALLERGY_CATALOG)[number][] {
+    if (seq % 3 !== 0) return [];
+    const assigned = [pick(ALLERGY_CATALOG, seq)];
+    if (seq % 9 === 0) {
+      const second = pick(ALLERGY_CATALOG, seq + 4);
+      if (second.name !== assigned[0]!.name) assigned.push(second);
+    }
+    return assigned;
+  }
+
+  // Grade values, weighted toward passing (minimumPassingGrade: 6) but with
+  // enough failing entries (5.0-5.75) to show realistic variety in the UI.
+  const GRADE_VARIANTS = [
+    10.0, 9.5, 9.0, 8.75, 8.5, 8.0, 7.75, 7.5, 7.0, 6.75, 6.5, 6.0, 5.75, 5.5, 5.0,
+  ] as const;
+  function buildGrade(seed: number): number {
+    return GRADE_VARIANTS[seed % GRADE_VARIANTS.length]!;
+  }
+
   const studentPassword = await bcrypt.hash("Estudiante123!", BCRYPT_ROUNDS);
 
   interface GroupSeedConfig {
@@ -1352,13 +1390,14 @@ async function main() {
     cycle: typeof primariaCycle;
     wallet: typeof walletPrimaria;
     birthYear: number;
+    subjectKeys: (keyof typeof SCHOOL_SUBJECTS)[];
   }
 
   const GROUP_CONFIGS: GroupSeedConfig[] = [
-    { key: "primaria_a", cycle: primariaCycle, wallet: walletPrimaria, birthYear: 2019 },
-    { key: "primaria_b", cycle: primariaCycle, wallet: walletPrimaria, birthYear: 2019 },
-    { key: "preescolar_a", cycle: preescolarCycle, wallet: walletPreescolar, birthYear: 2022 },
-    { key: "preescolar_b", cycle: preescolarCycle, wallet: walletPreescolar, birthYear: 2022 },
+    { key: "primaria_a", cycle: primariaCycle, wallet: walletPrimaria, birthYear: 2019, subjectKeys: PRIMARIA_SUBJECT_KEYS },
+    { key: "primaria_b", cycle: primariaCycle, wallet: walletPrimaria, birthYear: 2019, subjectKeys: PRIMARIA_SUBJECT_KEYS },
+    { key: "preescolar_a", cycle: preescolarCycle, wallet: walletPreescolar, birthYear: 2022, subjectKeys: PREESCOLAR_SUBJECT_KEYS },
+    { key: "preescolar_b", cycle: preescolarCycle, wallet: walletPreescolar, birthYear: 2022, subjectKeys: PREESCOLAR_SUBJECT_KEYS },
   ];
 
   const STUDENTS_PER_GROUP = 18;
@@ -1370,6 +1409,8 @@ async function main() {
   let totalScholarshipCount = 0;
   let totalForgivenCount = 0;
   let totalPendingCount = 0;
+  let totalAllergiesCreated = 0;
+  let totalGradesCreated = 0;
 
   for (const config of GROUP_CONFIGS) {
     const group = GROUPS_BY_KEY[config.key];
@@ -1386,6 +1427,8 @@ async function main() {
 
       // category: 0,1,2 -> fully paid; 3 -> scholarship; 4 -> forgiven; 5 -> pending
       const category = i % 6;
+      const assignedAllergies = buildAllergiesForStudent(globalStudentSeq);
+      const hasSevereAllergy = assignedAllergies.some((a) => a.severity === "severe");
 
       const student = await prisma.student.upsert({
         where: { email },
@@ -1401,7 +1444,9 @@ async function main() {
           enrollment: enrollmentCode,
           observations: null,
           bloodType: pick(BLOOD_TYPE_VALUES, globalStudentSeq),
-          medicalNotes: null,
+          medicalNotes: hasSevereAllergy
+            ? "Alumno con alergia severa; revisar expediente médico antes de excursiones o eventos con alimentos."
+            : null,
           email,
           phoneNumber: buildPhone(5520000000, globalStudentSeq),
           address: `Calle Primavera ${100 + globalStudentSeq}, Col. Del Valle`,
@@ -1434,6 +1479,27 @@ async function main() {
             observations: null,
           },
         });
+      }
+
+      // Allergies — only create if this student doesn't have any yet
+      const existingAllergies = await prisma.studentAllergy.count({
+        where: { studentId: student.id },
+      });
+      if (existingAllergies === 0) {
+        for (const allergy of assignedAllergies) {
+          await prisma.studentAllergy.create({
+            data: {
+              studentId: student.id,
+              name: allergy.name,
+              severity: allergy.severity,
+              observations:
+                allergy.severity === "severe"
+                  ? "Llevar siempre el medicamento de emergencia indicado por el médico."
+                  : null,
+            },
+          });
+          totalAllergiesCreated++;
+        }
       }
 
       // Enrollment — only create if this student isn't already enrolled in this cycle
@@ -1545,6 +1611,31 @@ async function main() {
         }
       }
 
+      // Grades — only create if this enrollment doesn't have them yet. One
+      // grade per subject taught to this group × the cycle's 3 evaluations.
+      const existingGrades = await prisma.studentGrade.count({
+        where: { academicCycleEnrollmentId: enrollment.id },
+      });
+      if (existingGrades === 0) {
+        const EVALUATION_COUNT = 3;
+        for (let s = 0; s < config.subjectKeys.length; s++) {
+          const subjectKey = config.subjectKeys[s]!;
+          const schoolSubjectId = SCHOOL_SUBJECTS[subjectKey];
+          for (let evaluationNumber = 1; evaluationNumber <= EVALUATION_COUNT; evaluationNumber++) {
+            const gradeSeed = globalStudentSeq * 13 + s * 7 + evaluationNumber * 3;
+            await prisma.studentGrade.create({
+              data: {
+                grade: buildGrade(gradeSeed),
+                evaluationNumber,
+                schoolSubjectId,
+                academicCycleEnrollmentId: enrollment.id,
+              },
+            });
+            totalGradesCreated++;
+          }
+        }
+      }
+
       if (category === 3) totalScholarshipCount++;
       else if (category === 4) totalForgivenCount++;
       else if (category === 5) totalPendingCount++;
@@ -1557,6 +1648,8 @@ async function main() {
       `${totalPaidCount} al corriente, ${totalScholarshipCount} con beca, ` +
       `${totalForgivenCount} con condonación, ${totalPendingCount} con saldo pendiente`,
   );
+  console.log(`  ✓ Student allergies: ${totalAllergiesCreated} records`);
+  console.log(`  ✓ Student grades: ${totalGradesCreated} records`);
 
   // --- Announcements (with realistic HTML content) ─────────────────────────
 
