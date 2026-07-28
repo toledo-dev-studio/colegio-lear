@@ -1192,3 +1192,61 @@ respuesta, marcar como leída incrementa `viewedCount` a 1, marcarla de
 nuevo no la duplica, y un segundo empleado (maestro) recibe 403 tanto
 al intentar ver como al intentar marcar como leídas las notificaciones
 de otro empleado.
+
+## Calendario de `academic-cycle-school-group` ahora referencia el
+catálogo de materias del propio ciclo, no el catálogo global (2026-07-28)
+
+**Bug de integridad de datos detectado por el usuario**, no reportado
+por un error visible sino razonando sobre el modelo: al agregar
+materias a un ciclo escolar (`POST
+/academic-cycles/{id}/school-subjects`) se crea una "copia"/asociación
+propia del ciclo (`AcademicCycleSchoolSubject`, con su propio id, única
+por `[academicCycleId, schoolSubjectId]`). Pero al armar el calendario
+de un grupo (`AcademicCycleGroupCalendar`), el campo `schoolSubjectId`
+apuntaba directo al catálogo global `SchoolSubject`, saltándose por
+completo esa asociación. Consecuencia real: nada impedía agendar en el
+calendario de un ciclo una materia que **nunca fue agregada a ese
+ciclo** — el calendario y el catálogo de materias del ciclo podían
+divergir sin que el sistema se diera cuenta.
+
+Se presentaron dos opciones (validar solamente vs. corregir el modelo)
+y el usuario eligió explícitamente corregir el modelo. Cambios:
+
+- **Schema**: `AcademicCycleGroupCalendar.schoolSubjectId` (→
+  `SchoolSubject`) se reemplazó por
+  `academicCycleSchoolSubjectId` (→ `AcademicCycleSchoolSubject`, con
+  `onDelete: Restrict`, igual que antes).
+- **Migración** (`20260728000000_calendar_links_cycle_school_subject`):
+  antes de tocar la columna, auto-sana cualquier fila de calendario cuyo
+  par `(academicCycleId, schoolSubjectId)` no tuviera ya su asociación
+  en `academic_cycle_school_subjects` (la crea). Después agrega la
+  columna nueva (nullable), la rellena por join, la vuelve `NOT NULL`,
+  cambia el FK y elimina la columna vieja. Aplicada sobre la BD de
+  desarrollo con `prisma migrate deploy` sin pérdida de datos.
+- **Contrato público sin cambios**: el request/response de
+  `POST/PATCH/GET` de `school-groups` y sus calendarios sigue usando
+  `schoolSubjectId` (el id del catálogo global) — la indirección se
+  resuelve internamente en `academic-cycle-school-group.service.ts` vía
+  un helper (`resolveAcademicCycleSchoolSubjectId`) que traduce
+  `schoolSubjectId` → `academicCycleSchoolSubjectId` y **lanza 400 si la
+  materia no fue agregada primero al catálogo del ciclo** (mensaje que
+  apunta a `POST /academic-cycles/{id}/school-subjects`). El front no
+  necesita ningún cambio.
+- **Seed**: se agregaron las 9 asociaciones `AcademicCycleSchoolSubject`
+  del dataset 2026 (5 primaria + 4 preescolar) antes de construir las 18
+  entradas de calendario, que ahora resuelven su
+  `academicCycleSchoolSubjectId` a través de esas asociaciones en vez
+  del id crudo del catálogo global.
+
+Verificado en vivo contra la BD real sembrada (tras `migrate deploy` +
+reseed): el `GET` de calendarios existentes sigue regresando el shape
+público sin cambios; crear una entrada de calendario con una materia
+que **sí** está en el catálogo del ciclo funciona (201); crear una con
+una materia que existe globalmente pero **nunca se agregó a ese
+ciclo** (`Matemáticas` de 2° primaria, dentro del ciclo de 1°
+primaria) fue rechazada con 400 y el mensaje de validación esperado;
+un `PATCH` que cambia la materia de una entrada existente y agrega una
+entrada nueva en la misma petición también resuelve correctamente
+ambos casos; y el endpoint derivado de profesores
+(`/school-groups/{id}/teachers`) sigue deduplicando bien tras el
+cambio. Grupo de prueba eliminado al terminar.

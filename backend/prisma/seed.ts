@@ -95,6 +95,18 @@ const WALLET_CATALOG_2026 = {
   preescolar_material: "dd000000-0010-4000-8000-000000000006",
 };
 
+const ACADEMIC_CYCLE_SCHOOL_SUBJECTS_2026 = {
+  primaria_espanol_1p: "ac000000-0013-4000-8000-000000000001",
+  primaria_matematicas_1p: "ac000000-0013-4000-8000-000000000002",
+  primaria_ciencias_1p: "ac000000-0013-4000-8000-000000000003",
+  primaria_ingles_1p: "ac000000-0013-4000-8000-000000000004",
+  primaria_historia_1p: "ac000000-0013-4000-8000-000000000005",
+  preescolar_espanol_1pe: "ac000000-0013-4000-8000-000000000006",
+  preescolar_matematicas_1pe: "ac000000-0013-4000-8000-000000000007",
+  preescolar_ingles_1pe: "ac000000-0013-4000-8000-000000000008",
+  preescolar_expresion_1pe: "ac000000-0013-4000-8000-000000000009",
+};
+
 const ANNOUNCEMENTS_2026 = {
   inicio_cursos: "ff000000-0012-4000-8000-000000000001",
   dia_madres: "ff000000-0012-4000-8000-000000000002",
@@ -1050,6 +1062,54 @@ async function main() {
 
   console.log("  ✓ Academic cycle groups: 4 records (A/B × 2 cycles)");
 
+  // --- Academic Cycle School Subjects (per-cycle subject catalog copy) ---
+  // Calendar entries below reference these associations, not the global
+  // SchoolSubject catalog directly — a class can only be scheduled for a
+  // subject that was actually added to its academic cycle first.
+  const academicCycleSchoolSubjectsBySubjectKey = Object.fromEntries(
+    await Promise.all(
+      (
+        [
+          ["primaria_espanol_1p", primariaCycle.id, SCHOOL_SUBJECTS.espanol_1p],
+          ["primaria_matematicas_1p", primariaCycle.id, SCHOOL_SUBJECTS.matematicas_1p],
+          ["primaria_ciencias_1p", primariaCycle.id, SCHOOL_SUBJECTS.ciencias_1p],
+          ["primaria_ingles_1p", primariaCycle.id, SCHOOL_SUBJECTS.ingles_1p],
+          ["primaria_historia_1p", primariaCycle.id, SCHOOL_SUBJECTS.historia_1p],
+          ["preescolar_espanol_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.espanol_1pe],
+          ["preescolar_matematicas_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.matematicas_1pe],
+          ["preescolar_ingles_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.ingles_1pe],
+          ["preescolar_expresion_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.expresion_1pe],
+        ] as const
+      ).map(async ([key, academicCycleId, schoolSubjectId]) => {
+        // Keyed on the (academicCycleId, schoolSubjectId) unique constraint,
+        // not on id: a prior run of the calendar->cycle-subject migration's
+        // auto-heal step may have already created this association (with a
+        // random id) from pre-existing calendar rows.
+        const association = await prisma.academicCycleSchoolSubject.upsert({
+          where: {
+            academicCycleId_schoolSubjectId: { academicCycleId, schoolSubjectId },
+          },
+          update: {},
+          create: {
+            id: ACADEMIC_CYCLE_SCHOOL_SUBJECTS_2026[
+              key as keyof typeof ACADEMIC_CYCLE_SCHOOL_SUBJECTS_2026
+            ],
+            academicCycleId,
+            schoolSubjectId,
+          },
+        });
+        return [key, association] as const;
+      }),
+    ),
+  ) as unknown as Record<
+    keyof typeof ACADEMIC_CYCLE_SCHOOL_SUBJECTS_2026,
+    { id: string }
+  >;
+
+  console.log(
+    `  ✓ Academic cycle school subjects: ${Object.keys(academicCycleSchoolSubjectsBySubjectKey).length} records`,
+  );
+
   // --- Class schedule (calendar entries) ---
   // Group A runs 08:00-09:00, Group B runs 09:00-10:00 on the same weekday
   // for the same subject/teacher — same teacher, no time conflict.
@@ -1085,7 +1145,7 @@ async function main() {
     endTime: Date;
     academicCycleId: string;
     academicCycleSchoolGroupId: string;
-    schoolSubjectId: string;
+    academicCycleSchoolSubjectId: string;
     teacherId: string;
   }[] = [];
 
@@ -1098,6 +1158,10 @@ async function main() {
     for (const slot of PRIMARIA_SCHEDULE) {
       calendarSeq++;
       const teacher = findTeacher(slot.subjectKey, groupKey);
+      const academicCycleSchoolSubject =
+        academicCycleSchoolSubjectsBySubjectKey[
+          `primaria_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
+        ];
       calendarEntries.push({
         id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
         day: slot.day,
@@ -1105,7 +1169,7 @@ async function main() {
         endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
         academicCycleId: primariaCycle.id,
         academicCycleSchoolGroupId: group.id,
-        schoolSubjectId: SCHOOL_SUBJECTS[slot.subjectKey],
+        academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
         teacherId: teacher.employeeId,
       });
     }
@@ -1120,6 +1184,10 @@ async function main() {
     for (const slot of PREESCOLAR_SCHEDULE) {
       calendarSeq++;
       const teacher = findTeacher(slot.subjectKey, groupKey);
+      const academicCycleSchoolSubject =
+        academicCycleSchoolSubjectsBySubjectKey[
+          `preescolar_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
+        ];
       calendarEntries.push({
         id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
         day: slot.day,
@@ -1127,7 +1195,7 @@ async function main() {
         endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
         academicCycleId: preescolarCycle.id,
         academicCycleSchoolGroupId: group.id,
-        schoolSubjectId: SCHOOL_SUBJECTS[slot.subjectKey],
+        academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
         teacherId: teacher.employeeId,
       });
     }
