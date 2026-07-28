@@ -4,6 +4,46 @@ import { z } from "zod";
 
 const statusEnum = z.enum(["enrolled", "completed", "dropped"]);
 
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+/**
+ * Optional UUID: blank string, whitespace-only, or null are all treated as
+ * "not provided" (-> undefined). Without this, a client sending "" for an
+ * unselected dropdown (instead of omitting the key) fails `.uuid()`
+ * validation even though the field is meant to be optional.
+ */
+function optionalUuid(message: string) {
+  return z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === null || val === undefined) return undefined;
+      const trimmed = val.trim();
+      return trimmed === "" ? undefined : trimmed;
+    })
+    .pipe(z.string().uuid({ message }).optional());
+}
+
+/**
+ * Optional, nullable UUID for PATCH bodies: blank string or explicit null
+ * both mean "clear this field" (-> null, written to the DB); omitting the
+ * key entirely (-> undefined) means "don't touch it".
+ */
+function optionalNullableUuid(message: string) {
+  return z
+    .string()
+    .nullable()
+    .optional()
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      if (val === null) return null;
+      const trimmed = val.trim();
+      return trimmed === "" ? null : trimmed;
+    })
+    .pipe(z.string().uuid({ message }).nullable().optional());
+}
+
 // ─── Param Schemas ──────────────────────────────────────────────────────────
 
 /** Validates academicCycleId + academicCycleEnrollmentId path parameters */
@@ -33,7 +73,7 @@ export const academicCycleEnrollmentFiltersSchema = z.object({
   q: z.string().max(100).optional(),
   status: statusEnum.optional(),
   academicCycleSchoolGroupId: z.string().uuid().optional(),
-  scholarshipId: z.string().uuid().optional(),
+  scholarshipId: optionalUuid("scholarshipId must be a valid UUID"),
 });
 
 export const academicCycleEnrollmentPagedQuerySchema =
@@ -54,7 +94,7 @@ export const createAcademicCycleEnrollmentSchema = z
     academicCycleSchoolGroupId: z
       .string()
       .uuid({ message: "academicCycleSchoolGroupId must be a valid UUID" }),
-    scholarshipId: z.string().uuid().optional(),
+    scholarshipId: optionalUuid("scholarshipId must be a valid UUID"),
   })
   .refine((data) => data.status !== "dropped" || !!data.droppedNotes, {
     message: "droppedNotes is required when status is dropped",
@@ -68,7 +108,7 @@ export const updateAcademicCycleEnrollmentSchema = z
     observations: z.string().max(1000).nullable().optional(),
     droppedNotes: z.string().max(1000).nullable().optional(),
     academicCycleSchoolGroupId: z.string().uuid().optional(),
-    scholarshipId: z.string().uuid().nullable().optional(),
+    scholarshipId: optionalNullableUuid("scholarshipId must be a valid UUID"),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "At least one field is required",
