@@ -33,9 +33,11 @@ interface AnnouncementForNotification {
 
 /**
  * Business logic layer for the Notifications module.
- * Recipients are employees only — there is no student-facing app yet to
- * display notifications, so a "student" audience entry on an announcement
- * does not generate rows here (see notifyAnnouncementPublished).
+ * Actual in-app notification rows (and emails) are only ever created for
+ * employees — there is no student-facing app yet to display them. A
+ * "student" audience entry on an announcement still counts toward
+ * recipientsCount (see notifyAnnouncementPublished), it just doesn't
+ * generate a row here.
  */
 export class NotificationService {
   constructor(
@@ -119,18 +121,22 @@ export class NotificationService {
   }
 
   /**
-   * Resolves an announcement's audience to real employee recipients, creates
-   * their notification rows, updates the announcement's recipientsCount, and
-   * fires off the (never-awaited) email batch. For ASYNC_JOB_NOTIFICATION_THRESHOLD+
-   * recipients, also brackets that email batch with "job started"/"job
-   * completed" notifications for the employee who created the announcement.
+   * Resolves an announcement's audience, updates the announcement's
+   * recipientsCount to reflect the TRUE audience size (employees matching
+   * teacher/administrative-staff + active students, when included), creates
+   * notification rows only for the resolved employees, and fires off the
+   * (never-awaited) email batch to them. For ASYNC_JOB_NOTIFICATION_THRESHOLD+
+   * employee recipients, also brackets that email batch with "job
+   * started"/"job completed" notifications for the employee who created the
+   * announcement.
    *
    * Called the moment a campaign's status first becomes "in-progress"
    * (alreadyPublished false -> true) — not at creation time, since a
    * campaign can now sit in "draft" indefinitely before being published.
    *
-   * "student" audience entries are skipped — there's no student-facing app
-   * yet to show them a notification.
+   * "student" audience entries count toward recipientsCount but never
+   * generate a notification row or email — there's no student-facing app
+   * yet to show them anything.
    */
   async notifyAnnouncementPublished(
     announcement: AnnouncementForNotification,
@@ -145,9 +151,9 @@ export class NotificationService {
     if (audience.includes("administrative-staff"))
       jobTitleTypes.push("administrative_staff");
 
-    const recipients =
+    const [employeeRecipients, studentCount] = await Promise.all([
       jobTitleTypes.length > 0
-        ? await this.prisma.employee.findMany({
+        ? this.prisma.employee.findMany({
             where: {
               isDeleted: false,
               isActive: true,
@@ -155,18 +161,25 @@ export class NotificationService {
             },
             select: { id: true, email: true, name: true },
           })
-        : [];
+        : Promise.resolve([]),
+      audience.includes("student")
+        ? this.prisma.student.count({ where: { isActive: true, isDeleted: false } })
+        : Promise.resolve(0),
+    ]);
 
-    if (recipients.length === 0) {
-      await this.prisma.announcement.update({
-        where: { id: announcement.id },
-        data: { recipientsCount: 0, viewedCount: 0, viewsCalculatedAt: new Date() },
-      });
-      return;
-    }
+    await this.prisma.announcement.update({
+      where: { id: announcement.id },
+      data: {
+        recipientsCount: employeeRecipients.length + studentCount,
+        viewedCount: 0,
+        viewsCalculatedAt: new Date(),
+      },
+    });
+
+    if (employeeRecipients.length === 0) return;
 
     await this.prisma.notification.createMany({
-      data: recipients.map((r) => ({
+      data: employeeRecipients.map((r) => ({
         employeeId: r.id,
         title: announcement.name,
         message: announcement.description ?? "Se publicó un nuevo comunicado.",
@@ -175,20 +188,17 @@ export class NotificationService {
       })),
     });
 
-    await this.prisma.announcement.update({
-      where: { id: announcement.id },
-      data: {
-        recipientsCount: recipients.length,
-        viewedCount: 0,
-        viewsCalculatedAt: new Date(),
-      },
-    });
-
     // Email is always sent in the background — never blocks the response,
     // regardless of recipient count.
-    const isBigBatch = recipients.length >= ASYNC_JOB_NOTIFICATION_THRESHOLD;
+    const isBigBatch =
+      employeeRecipients.length >= ASYNC_JOB_NOTIFICATION_THRESHOLD;
 
-    void this.sendAnnouncementEmails(announcement, recipients, actorEmployeeId, isBigBatch);
+    void this.sendAnnouncementEmails(
+      announcement,
+      employeeRecipients,
+      actorEmployeeId,
+      isBigBatch,
+    );
   }
 
   /** Fire-and-forget: never awaited by the caller. */

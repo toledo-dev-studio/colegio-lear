@@ -1482,3 +1482,38 @@ correo (sin errores registrados en el log de la app); eliminar un
 concepto **ya asignado** a un alumno inscrito responde 409 con el
 mensaje claro nuevo, en vez del genérico de llave foránea. Datos de
 prueba eliminados al terminar.
+
+## `recipientsCount` de anuncios ahora sí cuenta alumnos (2026-07-29)
+
+**Bug reportado por el usuario**: al publicar una campaña (`in-progress`)
+con `student` en la audiencia, esos alumnos no se contaban en
+`recipientsCount` — solo funcionaba bien para `teacher`/
+`administrative-staff`. Causa: `NotificationService.notifyAnnouncementPublished`
+solo consultaba la tabla `Employee` (resolviendo `teacher`/
+`administrative-staff` a `jobTitleType`); si la audiencia era `["student"]`
+sola, `jobTitleTypes` quedaba vacío y `recipientsCount` se guardaba en 0
+sin siquiera consultar la tabla `Student`.
+
+**Corrección**: ahora se consulta también `Student` (`isActive: true,
+isDeleted: false`) cuando la audiencia incluye `"student"`, y
+`recipientsCount` se guarda como la suma real de ambos universos
+(empleados resueltos + alumnos activos). Importante: esto **solo cambia
+el conteo/estadística** — no se crean filas de `Notification` ni se manda
+correo a los alumnos, porque `student-web` sigue siendo un scaffold vacío
+sin UI de notificaciones (documentado desde que se construyó el módulo).
+Cuando exista esa app, ahí sí habrá que generarles su propia notificación.
+
+**Confirmado, sin cambios**: la resolución de audiencia (y por lo tanto
+el cálculo de `recipientsCount`) sigue ocurriendo **una sola vez en la
+vida de la campaña** — exactamente en la transición
+`alreadyPublished: false -> true` (`announcement.controller.ts`,
+`create()` cuando se publica directo, `update()` cuando
+`!before.alreadyPublished && updated.alreadyPublished`). Repetir el
+mismo PATCH, o pasar después a `completed`/`cancelled`, nunca vuelve a
+recalcular ni a re-disparar el envío.
+
+Verificado en vivo: audiencia `["student"]` sola → `recipientsCount: 72`
+(coincide con el total de alumnos activos sembrados); audiencia
+`["student", "teacher"]` → `recipientsCount: 82` (72 alumnos + 10
+profesores); la profesora de prueba sigue recibiendo su notificación en
+campanita normalmente. Datos de prueba eliminados al terminar.
