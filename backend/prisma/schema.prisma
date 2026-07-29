@@ -435,6 +435,15 @@ model AcademicCycle {
   endDate             DateTime            @map("end_date")
   periodType          AcademicPeriodType  @map("period_type")
   status              AcademicCycleStatus @default(upcoming)
+  // True once this cycle has been set to "active" for the first time —
+  // the point where the wallet catalog is locked in and copied to every
+  // already-enrolled student (see AcademicCycleService.update). Never
+  // reset back to false afterward, even if status later moves on to
+  // completed/cancelled — mirrors Announcement.alreadyPublished. Manual
+  // enrollments only snapshot the wallet catalog once this is true (see
+  // AcademicCycleEnrollmentService.create) — before that, the catalog
+  // isn't considered final yet.
+  alreadyActivated    Boolean             @default(false) @map("already_activated")
   minimumPassingGrade Int                 @default(6) @map("minimum_passing_grade")
   evaluationCount     Int                 @default(3) @map("evaluation_count")
   enrollmentOpen      Boolean             @default(false) @map("enrollment_open")

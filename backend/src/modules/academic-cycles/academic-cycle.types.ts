@@ -38,6 +38,12 @@ export interface AcademicCycleRecord {
   endDate: string;
   periodType: AcademicPeriodType;
   status: AcademicCycleStatus;
+  /**
+   * True once this cycle was set to "active" for the first time — the
+   * wallet catalog is locked in and manual enrollments now snapshot it.
+   * Never client-settable; managed internally by AcademicCycleService.
+   */
+  alreadyActivated: boolean;
   minimumPassingGrade: number;
   evaluationCount: number;
   enrollmentOpen: boolean;

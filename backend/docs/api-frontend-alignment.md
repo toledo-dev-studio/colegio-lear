@@ -1389,3 +1389,52 @@ otro condonado — el resumen queda `paid: 4000, outstanding: 0` y el
 historial de pagos muestra ambas entradas (`cash` $2,000 y `forgiven`
 $2,000); repetir `isForgiven: true` sobre el mismo ítem ya condonado no
 duplica el registro de pago. Ciclo de prueba eliminado al terminar.
+
+## `AcademicCycle.alreadyActivated`: la copia de cartera de pago ya no se
+adelanta al inscribir antes de activar el ciclo (2026-07-29)
+
+**Bug de fondo reportado por el usuario**: al inscribir un alumno
+manualmente ANTES de que el ciclo pasara a "en curso", la inscripción ya
+copiaba lo que hubiera en la cartera de pagos del ciclo en ese momento
+(comportamiento heredado de como se implementó originalmente el snapshot
+en `AcademicCycleEnrollmentService.create()`). El usuario aclaró que esto
+ya no debe pasar: la copia solo debe considerarse "real" a partir de que
+el ciclo se activa por primera vez — inscribir antes no debe adelantar
+nada, aunque la cartera ya tenga conceptos cargados.
+
+**Corrección**: se agregó `AcademicCycle.alreadyActivated` (booleano,
+default `false`), igual en espíritu a `Announcement.alreadyPublished` —
+pasa a `true` la primera vez que el estatus del ciclo llega a `active` y
+ya nunca regresa a `false`. Con esto:
+
+- `AcademicCycleEnrollmentService.create()` **solo** copia la cartera de
+  pagos del ciclo al inscribir si `alreadyActivated: true` **y**
+  `status: "active"` en ese momento — inscribir mientras el ciclo sigue
+  `upcoming` ya no copia nada, sin importar qué haya en la cartera.
+- El job de `AcademicCycleService` que copia la cartera a todos los ya
+  inscritos ahora se dispara basado en `alreadyActivated` (no solo en
+  comparar el estatus anterior), garantizando que ese job masivo corra
+  **exactamente una vez en la vida del ciclo** — y ahí mismo la bandera
+  pasa a `true`.
+- Migración (`20260729010000_academic_cycle_already_activated`)
+  respalda los ciclos existentes: cualquier ciclo que no esté en
+  `upcoming` se marca `alreadyActivated: true` (ya tuvo que haber pasado
+  por su primera activación para llegar a otro estatus).
+
+**Además, se corrigió un bug real de notificaciones** encontrado en el
+mismo repaso: el job de copia de cartera al activar solo mandaba las
+notificaciones de "en proceso"/"completada" con **100+ alumnos
+inscritos** (mismo umbral que anuncios). El usuario probó activando un
+ciclo con muy pocos alumnos y no le llegó nada — ni notificación, ni
+correo (este último nunca existió para este flujo, solo para anuncios).
+Se quitó el umbral por completo: ahora **siempre** se notifica a quien
+activó el ciclo, sin importar si son 5, 100 o 1000 alumnos — nunca a los
+alumnos inscritos ni por correo, eso sigue siendo exclusivo de anuncios.
+
+Verificado en vivo: inscribir un alumno con el ciclo en `upcoming` deja
+su cartera vacía (`total: 0`); activar el ciclo genera las notificaciones
+(con solo 1 alumno inscrito) y copia su cartera retroactivamente
+(`total: 3500`); inscribir un segundo alumno después de la activación
+copia la cartera de inmediato; volver a mandar `status: "active"` sobre
+un ciclo ya activo no duplica ni el job ni las notificaciones. Datos de
+prueba eliminados al terminar.
