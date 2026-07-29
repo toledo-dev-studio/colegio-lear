@@ -635,6 +635,11 @@ model StudentWalletItem {
 enum PaymentMethod {
   online_payment @map("online-payment")
   cash           @map("cash")
+  // System-generated only (StudentWalletService.updateItem, when an item's
+  // isForgiven transitions to true) — never selectable via the create-payment
+  // endpoint. Gives forgiveness a real entry in the payment history instead
+  // of just zeroing outstandingAmount silently.
+  forgiven       @map("forgiven")
 
   @@schema("core")
 }

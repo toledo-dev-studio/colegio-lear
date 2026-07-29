@@ -1348,3 +1348,44 @@ mandan `is-active` como query param — el backend ya no lo lee (ahora
 espera `status`), así que ese filtro específico queda sin efecto hasta
 que el front lo actualice para mandar `status` en su lugar. No se tocó
 nada de frontend en este cambio.
+
+## Condonar un concepto de pago ahora cuenta como "pagado" y deja
+registro en el historial con tipo `forgiven` (2026-07-29)
+
+**Bug reportado por el usuario**: al condonar un concepto de pago en el
+detalle de la inscripción (`isForgiven: true`), el total "pagado" del
+resumen de la cartera (`GET .../wallet`) no aumentaba — con 2 conceptos
+de $2,000 c/u, pagar uno y condonar el otro mostraba `paid: 2000` en vez
+de los `4000` reales. Causa: `findWallet()` excluía explícitamente los
+ítems condonados del cálculo de `paid` (`i.isForgiven ? 0 : ...`), aunque
+su `outstandingAmount` ya se pone en 0 al condonar.
+
+**Corrección de fondo, no solo el cálculo**: se agregó un nuevo valor al
+enum `PaymentMethod` — `forgiven` (junto a `online-payment`/`cash`) — que
+`StudentWalletService.updateItem()` usa para crear un registro real en
+`StudentWalletPayment` cada vez que un ítem transiciona de
+`isForgiven: false` a `true` (nunca en un re-envío del mismo valor, así
+no se duplica), por el monto que quedaba pendiente en ese momento. Con
+esto, el historial de pagos de una inscripción muestra la condonación
+como una entrada más (folio, monto, tipo `forgiven`), no como algo que
+simplemente desaparece. `forgiven` es un valor **de solo lectura**: no es
+seleccionable al crear un pago manual (`POST .../wallet/{id}/payments`
+sigue restringido a `online-payment`/`cash`), solo lo escribe el backend
+internamente.
+
+Con el registro real ya existiendo y `outstandingAmount` en 0, el cálculo
+de `paid` en `findWallet()` se simplificó a `amount - outstandingAmount`
+para todos los ítems por igual (sin el caso especial de `isForgiven`) —
+ya cubre tanto pagos reales como condonaciones sin necesidad de sumar
+directamente de `StudentWalletPayment`.
+
+**Frontend pendiente** (no se tocó, fuera de alcance): agregar `"forgiven"`
+a `PaymentMethodKey` y a la lista/catálogo `STUDENT_WALLET_PAYMENT_METHODS`
+para que el historial de pagos pueda mostrar una etiqueta para este tipo
+(hoy solo tiene `cash`/`online-payment`).
+
+Verificado en vivo: 2 conceptos de $2,000 — uno pagado en efectivo, el
+otro condonado — el resumen queda `paid: 4000, outstanding: 0` y el
+historial de pagos muestra ambas entradas (`cash` $2,000 y `forgiven`
+$2,000); repetir `isForgiven: true` sobre el mismo ítem ya condonado no
+duplica el registro de pago. Ciclo de prueba eliminado al terminar.

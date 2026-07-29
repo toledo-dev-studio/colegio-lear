@@ -1,5 +1,13 @@
 export type StudentWalletStatus = "pending" | "paid" | "overdue" | "forgiven";
-export type PaymentMethod = "online-payment" | "cash";
+/**
+ * "forgiven" only ever appears on payment history records — it's written
+ * internally by StudentWalletService.updateItem when an item's isForgiven
+ * transitions to true, never selectable through the create-payment
+ * endpoint (see CreatablePaymentMethod).
+ */
+export type PaymentMethod = "online-payment" | "cash" | "forgiven";
+/** Payment methods a user can pick when registering a real payment. */
+export type CreatablePaymentMethod = "online-payment" | "cash";
 
 /** Record derived from the student_wallet_items table (status is computed, not stored) */
 export interface StudentWalletItemRecord {
@@ -58,5 +66,5 @@ export interface UpdateStudentWalletItemDto {
 /** Input DTO for creating a student wallet payment */
 export interface CreateStudentWalletPaymentDto {
   amount: number;
-  paymentMethod: PaymentMethod;
+  paymentMethod: CreatablePaymentMethod;
 }
