@@ -1438,3 +1438,47 @@ su cartera vacía (`total: 0`); activar el ciclo genera las notificaciones
 copia la cartera de inmediato; volver a mandar `status: "active"` sobre
 un ciclo ya activo no duplica ni el job ni las notificaciones. Datos de
 prueba eliminados al terminar.
+
+## Correo para las notificaciones de activación de ciclo + error amigable
+al eliminar un concepto de pago asignado (2026-07-29)
+
+**1. Correo para "copia de cartera en proceso/completada/fallida"**: estas
+notificaciones (ver entrada anterior) solo existían dentro de la
+plataforma — el usuario pidió que también se manden por correo, igual
+que ya pasa con los anuncios. Se agregó una plantilla genérica
+`processNotificationEmail` (`shared/templates/email.templates.ts`,
+estilo consistente con `announcementNotificationEmail` pero sin botón de
+"ver comunicado", con acento rojo cuando es de tipo `error`) y
+`AcademicCycleService` ahora recibe `IMailService` por constructor
+(mismo patrón que `NotificationService`). El correo se manda al mismo
+empleado que ya recibe la notificación en campanita (quien activó el
+ciclo) — nunca a los alumnos inscritos, eso sigue siendo exclusivo de
+anuncios. Es "best-effort": si falla el envío, se registra con
+`logger.error` pero **nunca** tumba ni bloquea la notificación dentro de
+la plataforma, que es la única garantía real de este flujo.
+
+**2. Error amigable al eliminar un concepto de pago ya asignado**: el
+usuario reportó que `DELETE` de un concepto de pago (`AcademicCycleWallet`)
+a veces marcaba error de llave foránea. Se confirmó que, con la
+corrección de `alreadyActivated` de la entrada anterior, el escenario
+original que el usuario reportó (eliminar un concepto **antes** de
+activar el ciclo) ya no puede producir ese error — porque ya no se
+generan `StudentWalletItem` prematuramente. Pero sigue existiendo un
+caso legítimo: eliminar un concepto **después** de que el ciclo ya se
+activó y hay alumnos con ese concepto ya asignado — ahí la eliminación
+debe seguir bloqueada (es lo correcto: no se puede borrar algo que un
+alumno ya tiene cargado), solo que antes tronaba con el mensaje genérico
+`"Foreign key constraint violation"` (ya mapeado a 409 por el manejador
+global de errores, pero sin explicar la causa). Se agregó una validación
+explícita en `AcademicCycleWalletService.remove()` que revisa si existen
+`StudentWalletItem` referenciando ese concepto antes de intentar
+borrarlo, y responde 409 con
+`"This wallet item is already assigned to enrolled students and cannot be deleted"`.
+
+Verificado en vivo: eliminar un concepto de pago **antes** de activar el
+ciclo funciona limpio (204); activar el ciclo (con un alumno ya
+inscrito) genera la notificación de campanita y dispara el envío de
+correo (sin errores registrados en el log de la app); eliminar un
+concepto **ya asignado** a un alumno inscrito responde 409 con el
+mensaje claro nuevo, en vez del genérico de llave foránea. Datos de
+prueba eliminados al terminar.

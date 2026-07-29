@@ -1,6 +1,9 @@
 import { PrismaClient, Prisma } from "../../generated/prisma/client";
 import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 import { logger } from "../../shared/lib/logger";
+import { env } from "../../shared/config/env.config";
+import type { IMailService } from "../../shared/services/mail.service";
+import { processNotificationEmail } from "../../shared/templates/email.templates";
 import type {
   AcademicCycleFilters,
   AcademicCycleRecord,
@@ -46,7 +49,10 @@ const INCLUDE_RELATIONS = {
  * Business logic layer for the Academic Cycles module.
  */
 export class AcademicCycleService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly mail: IMailService,
+  ) {}
 
   private buildWhereClause(filters: AcademicCycleFilters) {
     const where: Record<string, unknown> = {};
@@ -341,6 +347,12 @@ export class AcademicCycleService {
     }
   }
 
+  /**
+   * Creates the in-app notification (the one guarantee this flow makes —
+   * it must always land in the bell) and best-effort sends the matching
+   * email. A failed email is logged but never blocks or rolls back the
+   * in-app notification.
+   */
   private async createProcessNotification(
     employeeId: string,
     relatedRecordId: string,
@@ -355,6 +367,32 @@ export class AcademicCycleService {
         relatedRecordId,
       },
     });
+
+    try {
+      const employee = await this.prisma.employee.findUnique({
+        where: { id: employeeId },
+        select: { name: true, email: true },
+      });
+      if (employee) {
+        await this.mail.sendMail({
+          to: employee.email,
+          subject: params.title,
+          html: processNotificationEmail({
+            employeeName: employee.name,
+            title: params.title,
+            message: params.message,
+            frontendUrl: env.FRONTEND_URL,
+            isError: params.type === "error",
+          }),
+        });
+      }
+    } catch (error) {
+      logger.error("Failed to send process notification email", {
+        employeeId,
+        relatedRecordId,
+        error,
+      });
+    }
   }
 
   /**

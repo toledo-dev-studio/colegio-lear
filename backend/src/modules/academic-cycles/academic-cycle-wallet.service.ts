@@ -129,7 +129,14 @@ export class AcademicCycleWalletService {
     return this.toRecord(updated as unknown as Record<string, unknown>);
   }
 
-  /** DELETE hard delete a wallet item */
+  /**
+   * DELETE hard delete a wallet item.
+   * Blocked with a clear message if any student already has a
+   * StudentWalletItem snapshotted from it (only possible once the cycle
+   * has been activated at least once — see AcademicCycleService/
+   * AcademicCycleEnrollmentService) — the raw FK constraint would
+   * otherwise surface as a generic "Foreign key constraint violation".
+   */
   async remove(academicCycleId: string, id: string): Promise<void> {
     await this.ensureCycleExists(academicCycleId);
 
@@ -138,6 +145,15 @@ export class AcademicCycleWalletService {
     });
     if (!existing) {
       throw new NotFoundError("Academic cycle wallet item not found");
+    }
+
+    const assignedCount = await this.prisma.studentWalletItem.count({
+      where: { academicCycleWalletId: id },
+    });
+    if (assignedCount > 0) {
+      throw new ConflictError(
+        "This wallet item is already assigned to enrolled students and cannot be deleted",
+      );
     }
 
     await this.prisma.academicCycleWallet.delete({ where: { id } });

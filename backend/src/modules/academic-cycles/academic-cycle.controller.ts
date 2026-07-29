@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AcademicCycleService } from "./academic-cycle.service";
 import { prisma } from "../../shared/lib/prisma";
+import { mailService } from "../../shared/services/mail.service";
 import {
   sendSuccess,
   sendNoContent,
@@ -8,7 +9,7 @@ import {
 } from "../../shared/helpers/response.helper";
 import type { AcademicCycleFilters } from "./academic-cycle.types";
 
-const service = new AcademicCycleService(prisma);
+const service = new AcademicCycleService(prisma, mailService);
 
 function buildFilters(query: Record<string, unknown>): AcademicCycleFilters {
   const filters: AcademicCycleFilters = {};
