@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 import { env } from "../../shared/config/env.config";
 import { logger } from "../../shared/lib/logger";
+import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
 import type { IMailService } from "../../shared/services/mail.service";
 import { studentCredentialsEmail } from "../../shared/templates/email.templates";
 import type {
@@ -127,7 +128,7 @@ export class StudentService {
       dateOfBirth: (raw.dateOfBirth as Date).toISOString(),
       curp: raw.curp as string,
       enrollment: raw.enrollment as string,
-      avatar: raw.avatar as string | null,
+      avatar: toPublicFileUrl(raw.avatar as string | null),
       observations: raw.observations as string | null,
       isActive: raw.isActive as boolean,
       bloodType:

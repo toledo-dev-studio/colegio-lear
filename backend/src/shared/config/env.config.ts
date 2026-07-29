@@ -58,6 +58,9 @@ interface EnvConfig {
 
   // Frontend
   FRONTEND_URL: string;
+
+  // Backend (public origin, used to build absolute URLs for locally-stored files)
+  BACKEND_URL: string;
 }
 
 /**
@@ -123,6 +126,10 @@ export const env: EnvConfig = {
 
   // Frontend
   FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:5173",
+
+  // Backend
+  BACKEND_URL:
+    process.env.BACKEND_URL || `http://localhost:${process.env.PORT || "3000"}`,
 };
 
 // Validate critical environment variables

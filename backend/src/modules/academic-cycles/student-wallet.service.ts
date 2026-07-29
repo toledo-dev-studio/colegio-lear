@@ -13,6 +13,7 @@ import type {
 const PAYMENT_METHOD_MAP: Record<string, string> = {
   "online-payment": "online_payment",
   cash: "cash",
+  forgiven: "forgiven",
 };
 const PAYMENT_METHOD_REVERSE: Record<string, string> = Object.fromEntries(
   Object.entries(PAYMENT_METHOD_MAP).map(([k, v]) => [v, k]),
@@ -108,11 +109,11 @@ export class StudentWalletService {
 
     const summary = {
       total: round2(items.reduce((sum, i) => sum + i.amount, 0)),
+      // Forgiven items count toward "paid" too — their outstandingAmount is
+      // already zeroed out when forgiven, so amount - outstandingAmount
+      // naturally covers both real payments and forgiven balances.
       paid: round2(
-        items.reduce(
-          (sum, i) => sum + (i.isForgiven ? 0 : i.amount - i.outstandingAmount),
-          0,
-        ),
+        items.reduce((sum, i) => sum + (i.amount - i.outstandingAmount), 0),
       ),
       outstanding: round2(items.reduce((sum, i) => sum + i.outstandingAmount, 0)),
       overdue: round2(
@@ -163,6 +164,12 @@ export class StudentWalletService {
       );
     }
 
+    // Only a false -> true transition settles the balance and logs a
+    // "forgiven" payment — re-sending isForgiven: true on an item that's
+    // already forgiven is a no-op, so it never double-logs.
+    const isForgivingNow = dto.isForgiven === true && !existing.isForgiven;
+    const forgivenAmount = Number(existing.outstandingAmount);
+
     const updateData: Record<string, unknown> = {};
     if (dto.allowForgiveness !== undefined)
       updateData.allowForgiveness = dto.allowForgiveness;
@@ -177,9 +184,30 @@ export class StudentWalletService {
       if (dto.isForgiven) updateData.outstandingAmount = 0;
     }
 
-    const updated = await this.prisma.studentWalletItem.update({
-      where: { id },
-      data: updateData,
+    const updated = await this.prisma.$transaction(async (tx) => {
+      const item = await tx.studentWalletItem.update({
+        where: { id },
+        data: updateData,
+      });
+
+      // Give forgiveness a real entry in the payment history (type
+      // "forgiven") instead of silently zeroing outstandingAmount — this is
+      // what lets the wallet summary's "paid" total account for it too.
+      if (isForgivingNow && forgivenAmount > 0) {
+        const folio = await this.generateFolio();
+        await tx.studentWalletPayment.create({
+          data: {
+            folio,
+            amount: forgivenAmount,
+            paymentMethod: "forgiven",
+            academicCycleId,
+            academicCycleEnrollmentId,
+            studentWalletItemId: id,
+          },
+        });
+      }
+
+      return item;
     });
 
     return this.toItemRecord(updated);

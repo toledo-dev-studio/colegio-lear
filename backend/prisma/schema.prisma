@@ -276,17 +276,30 @@ enum NotificationType {
   @@schema("core")
 }
 
+enum NotificationRecipientType {
+  admin   @map("admin")
+  student @map("student")
+
+  @@schema("core")
+}
+
 model Notification {
-  id              String           @id @default(uuid()) @db.Uuid
-  employeeId      String           @map("employee_id") @db.Uuid
-  title           String           @db.VarChar(200)
-  message         String           @db.VarChar(1000)
+  id              String                    @id @default(uuid()) @db.Uuid
+  // Which audience/app this row belongs to — "admin" covers both admin and
+  // teacher employees (this app); "student" is reserved for the
+  // not-yet-built student-facing app. Lets GET /notifications/{type}/{id}
+  // filter correctly once there are two kinds of recipients sharing this
+  // same table, instead of just assuming every row is an employee's.
+  recipientType   NotificationRecipientType @default(admin) @map("recipient_type")
+  employeeId      String                    @map("employee_id") @db.Uuid
+  title           String                    @db.VarChar(200)
+  message         String                    @db.VarChar(1000)
   type            NotificationType
-  relatedRecordId String           @map("related_record_id") @db.Uuid
-  read            Boolean          @default(false)
-  readAt          DateTime?        @map("read_at")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  employee        Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  relatedRecordId String                    @map("related_record_id") @db.Uuid
+  read            Boolean                   @default(false)
+  readAt          DateTime?                 @map("read_at")
+  createdAt       DateTime                  @default(now()) @map("created_at")
+  employee        Employee                  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@index([employeeId, createdAt])
   @@map("notifications")
@@ -435,6 +448,15 @@ model AcademicCycle {
   endDate             DateTime            @map("end_date")
   periodType          AcademicPeriodType  @map("period_type")
   status              AcademicCycleStatus @default(upcoming)
+  // True once this cycle has been set to "active" for the first time —
+  // the point where the wallet catalog is locked in and copied to every
+  // already-enrolled student (see AcademicCycleService.update). Never
+  // reset back to false afterward, even if status later moves on to
+  // completed/cancelled — mirrors Announcement.alreadyPublished. Manual
+  // enrollments only snapshot the wallet catalog once this is true (see
+  // AcademicCycleEnrollmentService.create) — before that, the catalog
+  // isn't considered final yet.
+  alreadyActivated    Boolean             @default(false) @map("already_activated")
   minimumPassingGrade Int                 @default(6) @map("minimum_passing_grade")
   evaluationCount     Int                 @default(3) @map("evaluation_count")
   enrollmentOpen      Boolean             @default(false) @map("enrollment_open")
@@ -635,6 +657,11 @@ model StudentWalletItem {
 enum PaymentMethod {
   online_payment @map("online-payment")
   cash           @map("cash")
+  // System-generated only (StudentWalletService.updateItem, when an item's
+  // isForgiven transitions to true) — never selectable via the create-payment
+  // endpoint. Gives forgiveness a real entry in the payment history instead
+  // of just zeroing outstandingAmount silently.
+  forgiven       @map("forgiven")
 
   @@schema("core")
 }

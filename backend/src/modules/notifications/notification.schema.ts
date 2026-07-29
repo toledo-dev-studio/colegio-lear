@@ -1,8 +1,14 @@
 import { z } from "zod";
 
-/** Validates the employeeId path param. */
-export const employeeIdParamSchema = z.object({
-  employeeId: z.string().uuid({ message: "employeeId must be a valid UUID" }),
+/** Recipient/audience types a notification list can be scoped to. */
+export const NOTIFICATION_RECIPIENT_TYPES = ["admin", "student"] as const;
+
+/** Validates the :type/:id path params of GET /notifications/:type/:id. */
+export const notificationParamsSchema = z.object({
+  type: z.enum(NOTIFICATION_RECIPIENT_TYPES, {
+    error: `type must be one of: ${NOTIFICATION_RECIPIENT_TYPES.join(", ")}`,
+  }),
+  id: z.string().uuid({ message: "id must be a valid UUID" }),
 });
 
 /** Validates the notification id path param. */
@@ -11,7 +17,7 @@ export const idParamSchema = z.object({
 });
 
 /**
- * Validates GET /notifications/employees/:employeeId query params.
+ * Validates GET /notifications/:type/:id query params.
  * The frontend also sends `employeeId` as a query param (redundant with the
  * path param) — harmless, ignored here since it isn't declared.
  */

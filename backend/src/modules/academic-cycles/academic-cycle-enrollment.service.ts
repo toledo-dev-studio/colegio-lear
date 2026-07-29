@@ -209,6 +209,14 @@ export class AcademicCycleEnrollmentService {
 
     const code = await this.generateCode();
 
+    // Only snapshot the wallet catalog for enrollments created after the
+    // cycle's first activation — before that (alreadyActivated: false), the
+    // catalog isn't locked in yet, so enrolling early must not copy a
+    // possibly-incomplete configuration. Once activated, new enrollments
+    // (added while the cycle is still "active") get the current catalog
+    // immediately, same as before.
+    const shouldSnapshotWallet = cycle.alreadyActivated && cycle.status === "active";
+
     const created = await this.prisma.$transaction(async (tx) => {
       const enrollment = await tx.academicCycleEnrollment.create({
         data: {
@@ -227,26 +235,28 @@ export class AcademicCycleEnrollmentService {
       // Snapshot the cycle's wallet catalog into the student's own wallet
       // items — the front never creates these directly, only edits
       // (forgiveness/extension) and pays against them.
-      const walletCatalog = await tx.academicCycleWallet.findMany({
-        where: { academicCycleId },
-      });
-
-      if (walletCatalog.length > 0) {
-        await tx.studentWalletItem.createMany({
-          data: walletCatalog.map((w) => ({
-            name: w.name,
-            code: w.code,
-            description: w.description,
-            amount: w.amount,
-            allowForgiveness: w.allowForgiveness,
-            outstandingAmount: w.amount,
-            dueDate: w.dueDate,
-            studentId: dto.studentId,
-            academicCycleId,
-            academicCycleEnrollmentId: enrollment.id,
-            academicCycleWalletId: w.id,
-          })),
+      if (shouldSnapshotWallet) {
+        const walletCatalog = await tx.academicCycleWallet.findMany({
+          where: { academicCycleId },
         });
+
+        if (walletCatalog.length > 0) {
+          await tx.studentWalletItem.createMany({
+            data: walletCatalog.map((w) => ({
+              name: w.name,
+              code: w.code,
+              description: w.description,
+              amount: w.amount,
+              allowForgiveness: w.allowForgiveness,
+              outstandingAmount: w.amount,
+              dueDate: w.dueDate,
+              studentId: dto.studentId,
+              academicCycleId,
+              academicCycleEnrollmentId: enrollment.id,
+              academicCycleWalletId: w.id,
+            })),
+          });
+        }
       }
 
       return enrollment;

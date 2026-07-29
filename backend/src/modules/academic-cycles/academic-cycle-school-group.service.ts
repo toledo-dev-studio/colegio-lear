@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "../../generated/prisma/client";
 import { NotFoundError, ValidationError } from "../../shared/errors/app-error";
+import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
 import { EMPLOYEE_LIST_SELECT } from "../employees/employee.types";
 import { toFrontendJobTitleType } from "../job-titles/job-title.service";
 import type {
@@ -72,6 +73,7 @@ export class AcademicCycleSchoolGroupService {
       teacherId: raw.teacherId,
       teacher: {
         ...raw.teacher,
+        avatar: toPublicFileUrl(raw.teacher.avatar),
         jobTitle: {
           ...raw.teacher.jobTitle,
           jobTitleType: toFrontendJobTitleType(raw.teacher.jobTitle.jobTitleType),

@@ -1348,3 +1348,321 @@ mandan `is-active` como query param — el backend ya no lo lee (ahora
 espera `status`), así que ese filtro específico queda sin efecto hasta
 que el front lo actualice para mandar `status` en su lugar. No se tocó
 nada de frontend en este cambio.
+
+## Condonar un concepto de pago ahora cuenta como "pagado" y deja
+registro en el historial con tipo `forgiven` (2026-07-29)
+
+**Bug reportado por el usuario**: al condonar un concepto de pago en el
+detalle de la inscripción (`isForgiven: true`), el total "pagado" del
+resumen de la cartera (`GET .../wallet`) no aumentaba — con 2 conceptos
+de $2,000 c/u, pagar uno y condonar el otro mostraba `paid: 2000` en vez
+de los `4000` reales. Causa: `findWallet()` excluía explícitamente los
+ítems condonados del cálculo de `paid` (`i.isForgiven ? 0 : ...`), aunque
+su `outstandingAmount` ya se pone en 0 al condonar.
+
+**Corrección de fondo, no solo el cálculo**: se agregó un nuevo valor al
+enum `PaymentMethod` — `forgiven` (junto a `online-payment`/`cash`) — que
+`StudentWalletService.updateItem()` usa para crear un registro real en
+`StudentWalletPayment` cada vez que un ítem transiciona de
+`isForgiven: false` a `true` (nunca en un re-envío del mismo valor, así
+no se duplica), por el monto que quedaba pendiente en ese momento. Con
+esto, el historial de pagos de una inscripción muestra la condonación
+como una entrada más (folio, monto, tipo `forgiven`), no como algo que
+simplemente desaparece. `forgiven` es un valor **de solo lectura**: no es
+seleccionable al crear un pago manual (`POST .../wallet/{id}/payments`
+sigue restringido a `online-payment`/`cash`), solo lo escribe el backend
+internamente.
+
+Con el registro real ya existiendo y `outstandingAmount` en 0, el cálculo
+de `paid` en `findWallet()` se simplificó a `amount - outstandingAmount`
+para todos los ítems por igual (sin el caso especial de `isForgiven`) —
+ya cubre tanto pagos reales como condonaciones sin necesidad de sumar
+directamente de `StudentWalletPayment`.
+
+**Frontend pendiente** (no se tocó, fuera de alcance): agregar `"forgiven"`
+a `PaymentMethodKey` y a la lista/catálogo `STUDENT_WALLET_PAYMENT_METHODS`
+para que el historial de pagos pueda mostrar una etiqueta para este tipo
+(hoy solo tiene `cash`/`online-payment`).
+
+Verificado en vivo: 2 conceptos de $2,000 — uno pagado en efectivo, el
+otro condonado — el resumen queda `paid: 4000, outstanding: 0` y el
+historial de pagos muestra ambas entradas (`cash` $2,000 y `forgiven`
+$2,000); repetir `isForgiven: true` sobre el mismo ítem ya condonado no
+duplica el registro de pago. Ciclo de prueba eliminado al terminar.
+
+## `AcademicCycle.alreadyActivated`: la copia de cartera de pago ya no se
+adelanta al inscribir antes de activar el ciclo (2026-07-29)
+
+**Bug de fondo reportado por el usuario**: al inscribir un alumno
+manualmente ANTES de que el ciclo pasara a "en curso", la inscripción ya
+copiaba lo que hubiera en la cartera de pagos del ciclo en ese momento
+(comportamiento heredado de como se implementó originalmente el snapshot
+en `AcademicCycleEnrollmentService.create()`). El usuario aclaró que esto
+ya no debe pasar: la copia solo debe considerarse "real" a partir de que
+el ciclo se activa por primera vez — inscribir antes no debe adelantar
+nada, aunque la cartera ya tenga conceptos cargados.
+
+**Corrección**: se agregó `AcademicCycle.alreadyActivated` (booleano,
+default `false`), igual en espíritu a `Announcement.alreadyPublished` —
+pasa a `true` la primera vez que el estatus del ciclo llega a `active` y
+ya nunca regresa a `false`. Con esto:
+
+- `AcademicCycleEnrollmentService.create()` **solo** copia la cartera de
+  pagos del ciclo al inscribir si `alreadyActivated: true` **y**
+  `status: "active"` en ese momento — inscribir mientras el ciclo sigue
+  `upcoming` ya no copia nada, sin importar qué haya en la cartera.
+- El job de `AcademicCycleService` que copia la cartera a todos los ya
+  inscritos ahora se dispara basado en `alreadyActivated` (no solo en
+  comparar el estatus anterior), garantizando que ese job masivo corra
+  **exactamente una vez en la vida del ciclo** — y ahí mismo la bandera
+  pasa a `true`.
+- Migración (`20260729010000_academic_cycle_already_activated`)
+  respalda los ciclos existentes: cualquier ciclo que no esté en
+  `upcoming` se marca `alreadyActivated: true` (ya tuvo que haber pasado
+  por su primera activación para llegar a otro estatus).
+
+**Además, se corrigió un bug real de notificaciones** encontrado en el
+mismo repaso: el job de copia de cartera al activar solo mandaba las
+notificaciones de "en proceso"/"completada" con **100+ alumnos
+inscritos** (mismo umbral que anuncios). El usuario probó activando un
+ciclo con muy pocos alumnos y no le llegó nada — ni notificación, ni
+correo (este último nunca existió para este flujo, solo para anuncios).
+Se quitó el umbral por completo: ahora **siempre** se notifica a quien
+activó el ciclo, sin importar si son 5, 100 o 1000 alumnos — nunca a los
+alumnos inscritos ni por correo, eso sigue siendo exclusivo de anuncios.
+
+Verificado en vivo: inscribir un alumno con el ciclo en `upcoming` deja
+su cartera vacía (`total: 0`); activar el ciclo genera las notificaciones
+(con solo 1 alumno inscrito) y copia su cartera retroactivamente
+(`total: 3500`); inscribir un segundo alumno después de la activación
+copia la cartera de inmediato; volver a mandar `status: "active"` sobre
+un ciclo ya activo no duplica ni el job ni las notificaciones. Datos de
+prueba eliminados al terminar.
+
+## Correo para las notificaciones de activación de ciclo + error amigable
+al eliminar un concepto de pago asignado (2026-07-29)
+
+**1. Correo para "copia de cartera en proceso/completada/fallida"**: estas
+notificaciones (ver entrada anterior) solo existían dentro de la
+plataforma — el usuario pidió que también se manden por correo, igual
+que ya pasa con los anuncios. Se agregó una plantilla genérica
+`processNotificationEmail` (`shared/templates/email.templates.ts`,
+estilo consistente con `announcementNotificationEmail` pero sin botón de
+"ver comunicado", con acento rojo cuando es de tipo `error`) y
+`AcademicCycleService` ahora recibe `IMailService` por constructor
+(mismo patrón que `NotificationService`). El correo se manda al mismo
+empleado que ya recibe la notificación en campanita (quien activó el
+ciclo) — nunca a los alumnos inscritos, eso sigue siendo exclusivo de
+anuncios. Es "best-effort": si falla el envío, se registra con
+`logger.error` pero **nunca** tumba ni bloquea la notificación dentro de
+la plataforma, que es la única garantía real de este flujo.
+
+**2. Error amigable al eliminar un concepto de pago ya asignado**: el
+usuario reportó que `DELETE` de un concepto de pago (`AcademicCycleWallet`)
+a veces marcaba error de llave foránea. Se confirmó que, con la
+corrección de `alreadyActivated` de la entrada anterior, el escenario
+original que el usuario reportó (eliminar un concepto **antes** de
+activar el ciclo) ya no puede producir ese error — porque ya no se
+generan `StudentWalletItem` prematuramente. Pero sigue existiendo un
+caso legítimo: eliminar un concepto **después** de que el ciclo ya se
+activó y hay alumnos con ese concepto ya asignado — ahí la eliminación
+debe seguir bloqueada (es lo correcto: no se puede borrar algo que un
+alumno ya tiene cargado), solo que antes tronaba con el mensaje genérico
+`"Foreign key constraint violation"` (ya mapeado a 409 por el manejador
+global de errores, pero sin explicar la causa). Se agregó una validación
+explícita en `AcademicCycleWalletService.remove()` que revisa si existen
+`StudentWalletItem` referenciando ese concepto antes de intentar
+borrarlo, y responde 409 con
+`"This wallet item is already assigned to enrolled students and cannot be deleted"`.
+
+Verificado en vivo: eliminar un concepto de pago **antes** de activar el
+ciclo funciona limpio (204); activar el ciclo (con un alumno ya
+inscrito) genera la notificación de campanita y dispara el envío de
+correo (sin errores registrados en el log de la app); eliminar un
+concepto **ya asignado** a un alumno inscrito responde 409 con el
+mensaje claro nuevo, en vez del genérico de llave foránea. Datos de
+prueba eliminados al terminar.
+
+## `recipientsCount` de anuncios ahora sí cuenta alumnos (2026-07-29)
+
+**Bug reportado por el usuario**: al publicar una campaña (`in-progress`)
+con `student` en la audiencia, esos alumnos no se contaban en
+`recipientsCount` — solo funcionaba bien para `teacher`/
+`administrative-staff`. Causa: `NotificationService.notifyAnnouncementPublished`
+solo consultaba la tabla `Employee` (resolviendo `teacher`/
+`administrative-staff` a `jobTitleType`); si la audiencia era `["student"]`
+sola, `jobTitleTypes` quedaba vacío y `recipientsCount` se guardaba en 0
+sin siquiera consultar la tabla `Student`.
+
+**Corrección**: ahora se consulta también `Student` (`isActive: true,
+isDeleted: false`) cuando la audiencia incluye `"student"`, y
+`recipientsCount` se guarda como la suma real de ambos universos
+(empleados resueltos + alumnos activos). Importante: esto **solo cambia
+el conteo/estadística** — no se crean filas de `Notification` ni se manda
+correo a los alumnos, porque `student-web` sigue siendo un scaffold vacío
+sin UI de notificaciones (documentado desde que se construyó el módulo).
+Cuando exista esa app, ahí sí habrá que generarles su propia notificación.
+
+**Confirmado, sin cambios**: la resolución de audiencia (y por lo tanto
+el cálculo de `recipientsCount`) sigue ocurriendo **una sola vez en la
+vida de la campaña** — exactamente en la transición
+`alreadyPublished: false -> true` (`announcement.controller.ts`,
+`create()` cuando se publica directo, `update()` cuando
+`!before.alreadyPublished && updated.alreadyPublished`). Repetir el
+mismo PATCH, o pasar después a `completed`/`cancelled`, nunca vuelve a
+recalcular ni a re-disparar el envío.
+
+Verificado en vivo: audiencia `["student"]` sola → `recipientsCount: 72`
+(coincide con el total de alumnos activos sembrados); audiencia
+`["student", "teacher"]` → `recipientsCount: 82` (72 alumnos + 10
+profesores); la profesora de prueba sigue recibiendo su notificación en
+campanita normalmente. Datos de prueba eliminados al terminar.
+
+## Bloquear la eliminación de un empleado (docente) asignado a un
+calendario de grupo escolar (2026-07-29)
+
+**Bug reportado por el usuario**: eliminar (soft-delete, `isDeleted:
+true`) a un docente no validaba si ya tenía asignaciones en algún
+calendario de grupo escolar (`AcademicCycleGroupCalendar.teacherId`).
+El registro seguía existiendo en la BD, pero `GET /employees/{id}`
+responde 404 para empleados con `isDeleted: true`
+(`employee.service.ts findById`), así que cualquier pantalla que
+resuelva el nombre del profesor por separado (fuera del `include`
+propio del calendario, que sí sigue funcionando) deja de poder hacerlo
+y termina mostrando el id crudo en vez del nombre — exactamente lo que
+reportó el usuario. Inactivar (`isActive: false`) ya funcionaba bien y
+sigue siendo la acción correcta para esto.
+
+**Corrección**: `EmployeeService.softDelete()` ahora cuenta las
+entradas de `AcademicCycleGroupCalendar` que referencian a ese empleado
+como `teacherId` antes de eliminar; si hay alguna, responde 409 con un
+mensaje claro indicando que se debe inactivar en vez de eliminar. Se
+revisaron las demás relaciones inversas de `Employee` en el schema
+(`notifications`, con `onDelete: Cascade`) y ninguna otra representa un
+bloqueo real — el calendario es la única referencia que de verdad
+"ancla" al empleado a historial vivo.
+
+Verificado en vivo: un docente de prueba asignado a una entrada de
+calendario no se pudo eliminar (409 con el mensaje esperado);
+inactivarlo (`isActive: false`) siguió funcionando sin problema;
+quitar su asignación del calendario y reintentar la eliminación
+funcionó (204). Entrada de calendario y empleado de prueba eliminados
+al terminar (con `prisma db seed` para restaurar dos entradas del
+calendario sembrado que se habían omitido por accidente durante la
+prueba).
+
+## Archivos locales (`uploads`) expuestos públicamente para pruebas,
+mientras se consigue block storage real (2026-07-29)
+
+**Contexto**: `LocalStorageService` (`shared/services/storage.service.ts`)
+ya guardaba avatares/adjuntos en disco (`./uploads/{subfolder}/{uuid}.ext`)
+y la BD/API solo guardaban y regresaban esa **ruta relativa**
+("employees/uuid.jpg") — nunca hubo una ruta de Express sirviendo esos
+archivos, así que ningún `<img src>` podía cargarlos. El usuario pidió
+exponer esto mínimo para poder probar en lo que se configura block
+storage real (Azure).
+
+**Decisión de alcance (confirmada con el usuario)**: no solo exponer la
+carpeta, sino que el backend regrese la **URL completa** lista para
+usarse — sin tocar la BD (sigue guardando solo la ruta relativa) y sin
+afectar el comportamiento cuando se use un proveedor real de storage.
+
+- **`GET /uploads/*`** (`src/index.ts`): nueva ruta pública (antes del
+  middleware de autenticación, sin necesidad de sesión) que sirve
+  `STORAGE_LOCAL_PATH` vía `express.static`. Solo se monta cuando
+  `STORAGE_PROVIDER === "local"` — con Azure no existe una carpeta local
+  que servir.
+- **`toPublicFileUrl()`** (nuevo helper,
+  `shared/helpers/file-url.helper.ts`): antepone
+  `${BACKEND_URL}/uploads/` a una ruta relativa. Si el valor ya es una
+  URL absoluta (`http(s)://...` — lo que devolvería un proveedor de blob
+  storage real) o si `STORAGE_PROVIDER` no es `"local"`, lo regresa sin
+  tocar. Nunca se persiste — solo se aplica al armar la respuesta.
+- Nueva variable `BACKEND_URL` en `env.config.ts` (default
+  `http://localhost:{PORT}`).
+- Aplicado en cada punto donde se serializa un avatar o adjunto:
+  `employee.service.ts` (detalle, lista, mi-cuenta), `auth.service.ts`
+  (login y `/me`), `dashboard.service.ts` (últimos profesores),
+  `student.service.ts`, `academic-cycle-school-group.service.ts` (el
+  profesor embebido en cada entrada de calendario), `attachment.service.ts`
+  (respuesta del upload) y `announcement.service.ts` (adjuntos dentro de
+  un comunicado).
+
+Verificado en vivo: subir un avatar regresa
+`"http://localhost:3000/uploads/employees/{uuid}.png"`; esa URL se pudo
+descargar directamente **sin sesión/cookies** y el archivo coincide
+byte a byte con el subido; subir un adjunto a un anuncio regresa la URL
+completa tanto en la respuesta del upload como en un `GET` posterior del
+anuncio. Datos y archivos de prueba eliminados al terminar.
+
+## Notificaciones: `/notifications/employees/{id}` → `/notifications/{type}/{id}`
+(2026-07-29)
+
+**Pedido del usuario**: pensando en cuando construya la plataforma de
+alumnos y quiera reusar este mismo endpoint "casi copy-paste", cambiar
+la ruta para que reciba un `type` (`admin` — cubre administradores y
+docentes, que hoy son la única audiencia real — o `student`, reservado
+para esa futura plataforma) en vez de asumir siempre que el destinatario
+es un empleado.
+
+**Cambios**:
+
+- Nueva columna `Notification.recipientType` (enum `admin`/`student`,
+  default `admin`) — migración
+  `20260729020000_notification_recipient_type` respalda todas las filas
+  existentes como `admin` (es lo único que ha existido hasta ahora). El
+  query de `findAllPaged` ahora filtra explícitamente
+  `WHERE employeeId = ? AND recipientType = 'admin'`, no solo por
+  `employeeId`.
+- Ruta: `GET /notifications/employees/{employeeId}` →
+  `GET /notifications/{type}/{id}`. Con `type: "admin"` el
+  comportamiento es idéntico a antes (el `id` debe coincidir con la
+  sesión autenticada, 403 si no). Con `type: "student"` responde 400
+  ("Student notifications are not implemented yet") — la ruta y la
+  columna ya están listas, pero no hay sesión de alumno ni tabla de
+  destinatario alumno todavía; eso se conecta cuando se construya esa
+  plataforma.
+- `POST /notifications/{id}/read` no cambió — su verificación de
+  dueño ya solo funciona para filas `admin` reales.
+
+Verificado en vivo: `GET /notifications/admin/{employeeId}` funciona
+igual que antes; la ruta vieja `/notifications/employees/{id}` ya no
+existe (el segmento se interpreta como `type` y falla la validación de
+enum); `GET /notifications/student/{id}` responde 400 con el mensaje
+claro; pedir las notificaciones de otro empleado sigue dando 403;
+`POST /notifications/{id}/read` sigue funcionando sin cambios.
+
+## Rediseño de las plantillas de correo (2026-07-29)
+
+**Pedido del usuario**: los correos (`shared/templates/email.templates.ts`)
+se veían "muy básicos" — pidió un diseño más profesional basado en el
+diseño del front, con logotipo si es posible.
+
+**Diseño**: tomado directo de `frontend/admin-web/src/index.css` y
+`ColegioLearLogo.tsx` (no hay archivo de logo — es un ícono de birrete
+`lucide-react` dentro de una insignia circular con el color primario, así
+que se reprodujo igual como SVG inline):
+
+- Encabezado con el mismo lockup del front (insignia circular + "COLEGIO
+  LEAR"), ahora con degradado sutil en vez de un bloque de color plano.
+- Tipografías: `Outfit` para títulos (como los `h1`-`h6` del front) y
+  `Figtree` para texto (como el `body` del front), con las mismas
+  variantes de sistema como respaldo para cuando el cliente de correo no
+  cargue las fuentes web.
+- Botones completamente redondeados ("pill", `border-radius:9999px`),
+  igual que `.pill-btn-primary` del front, en vez de las esquinas apenas
+  redondeadas de antes.
+- Tarjeta con más radio (20px) y sombra en dos capas, paneles de
+  información con borde de acento a la izquierda.
+- Se extrajeron helpers compartidos (`heading`, `paragraph`, `infoBox`,
+  `ctaButton`) para las 6 plantillas, reduciendo la duplicación que ya
+  existía entre ellas — mismas firmas de función, cero cambios donde se
+  invocan.
+
+Verificado: se generó una vista previa visual de 4 plantillas
+representativas (invitación, recuperación de contraseña, notificación de
+comunicado, y la variante de error de "proceso fallido") con contenido
+real de ejemplo, publicada como artifact para revisión; además se mandó
+un correo real de prueba con las credenciales SMTP configuradas para
+confirmar que también se ve bien en un cliente de correo real, no solo
+en el navegador.

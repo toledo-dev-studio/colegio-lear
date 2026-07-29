@@ -3,20 +3,32 @@ import { NotificationService } from "./notification.service";
 import { prisma } from "../../shared/lib/prisma";
 import { mailService } from "../../shared/services/mail.service";
 import { sendSuccess, sendPaginatedSuccess } from "../../shared/helpers/response.helper";
-import { ForbiddenError } from "../../shared/errors/app-error";
+import { ForbiddenError, ValidationError } from "../../shared/errors/app-error";
+import type { NotificationRecipientTypeKey } from "./notification.types";
 
 const service = new NotificationService(prisma, mailService);
 
 /**
- * GET /notifications/employees/:employeeId (paged)
- * Only the authenticated employee's own notifications — the employeeId
- * path param must match the session, regardless of what the client sends.
+ * GET /notifications/:type/:id (paged)
+ * :type is "admin" (this app — admins and teachers alike, all just
+ * Employee rows) or "student" (reserved for the not-yet-built
+ * student-facing app; same route shape so that app can reuse this
+ * endpoint later with minimal changes).
+ * Only the authenticated employee's own notifications — the :id path
+ * param must match the session, regardless of what the client sends.
  */
 export async function findAllPaged(req: Request, res: Response): Promise<void> {
-  const { employeeId } = req.params as { employeeId: string };
+  const { type, id } = req.params as { type: NotificationRecipientTypeKey; id: string };
+
+  if (type === "student") {
+    throw new ValidationError(
+      "Student notifications are not implemented yet",
+    );
+  }
+
   const { employeeId: authenticatedEmployeeId } = req.user!;
 
-  if (employeeId !== authenticatedEmployeeId) {
+  if (id !== authenticatedEmployeeId) {
     throw new ForbiddenError("You can only view your own notifications");
   }
 
@@ -24,7 +36,7 @@ export async function findAllPaged(req: Request, res: Response): Promise<void> {
   const page = query.page as number;
   const pageSize = query.pageSize as number;
 
-  const result = await service.findAllPaged(employeeId, {
+  const result = await service.findAllPaged(id, {
     page,
     limit: pageSize,
   });

@@ -4,5 +4,8 @@ node_modules
 
 /src/generated/prisma
 
+# Locally-stored uploads (avatars, attachments) — not meant for version control
+/uploads
+
 # Personal notes
 git-cheatsheet.md
