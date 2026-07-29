@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.middleware";
 import {
-  employeeIdParamSchema,
+  notificationParamsSchema,
   idParamSchema,
   notificationPagedQuerySchema,
 } from "./notification.schema";
@@ -11,15 +11,21 @@ const router = Router();
 
 /**
  * @openapi
- * /notifications/employees/{employeeId}:
+ * /notifications/{type}/{id}:
  *   get:
  *     tags:
  *       - Notifications
- *     summary: List an employee's notifications (paginated)
- *     description: Returns the authenticated employee's own notifications, most recent first. The employeeId path param must match the authenticated session — requesting another employee's notifications returns 403.
+ *     summary: List a recipient's notifications (paginated)
+ *     description: Returns the authenticated employee's own notifications, most recent first. `type` is "admin" (admins and teachers alike — this app) or "student" (reserved for the not-yet-built student-facing app, currently rejected with a 400). The `id` path param must match the authenticated session — requesting another employee's notifications returns 403.
  *     parameters:
  *       - in: path
- *         name: employeeId
+ *         name: type
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [admin, student]
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
@@ -55,12 +61,14 @@ const router = Router();
  *                   type: integer
  *                 itemsCount:
  *                   type: integer
+ *       400:
+ *         description: type "student" is not implemented yet
  *       403:
  *         description: Requesting another employee's notifications
  */
 router.get(
-  "/employees/:employeeId",
-  validate(employeeIdParamSchema, "params"),
+  "/:type/:id",
+  validate(notificationParamsSchema, "params"),
   validate(notificationPagedQuerySchema, "query"),
   findAllPaged,
 );

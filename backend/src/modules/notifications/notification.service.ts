@@ -63,15 +63,16 @@ export class NotificationService {
     pagination: PaginationParams,
   ): Promise<PagedResult<NotificationRecord>> {
     const skip = calculateSkip(pagination);
+    const where = { employeeId, recipientType: "admin" as const };
 
     const [data, itemsCount] = await Promise.all([
       this.prisma.notification.findMany({
-        where: { employeeId },
+        where,
         orderBy: { createdAt: "desc" },
         skip,
         take: pagination.limit,
       }),
-      this.prisma.notification.count({ where: { employeeId } }),
+      this.prisma.notification.count({ where }),
     ]);
 
     const meta = buildPaginationMeta(itemsCount, pagination);

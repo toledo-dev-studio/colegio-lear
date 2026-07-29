@@ -276,17 +276,30 @@ enum NotificationType {
   @@schema("core")
 }
 
+enum NotificationRecipientType {
+  admin   @map("admin")
+  student @map("student")
+
+  @@schema("core")
+}
+
 model Notification {
-  id              String           @id @default(uuid()) @db.Uuid
-  employeeId      String           @map("employee_id") @db.Uuid
-  title           String           @db.VarChar(200)
-  message         String           @db.VarChar(1000)
+  id              String                    @id @default(uuid()) @db.Uuid
+  // Which audience/app this row belongs to — "admin" covers both admin and
+  // teacher employees (this app); "student" is reserved for the
+  // not-yet-built student-facing app. Lets GET /notifications/{type}/{id}
+  // filter correctly once there are two kinds of recipients sharing this
+  // same table, instead of just assuming every row is an employee's.
+  recipientType   NotificationRecipientType @default(admin) @map("recipient_type")
+  employeeId      String                    @map("employee_id") @db.Uuid
+  title           String                    @db.VarChar(200)
+  message         String                    @db.VarChar(1000)
   type            NotificationType
-  relatedRecordId String           @map("related_record_id") @db.Uuid
-  read            Boolean          @default(false)
-  readAt          DateTime?        @map("read_at")
-  createdAt       DateTime         @default(now()) @map("created_at")
-  employee        Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  relatedRecordId String                    @map("related_record_id") @db.Uuid
+  read            Boolean                   @default(false)
+  readAt          DateTime?                 @map("read_at")
+  createdAt       DateTime                  @default(now()) @map("created_at")
+  employee        Employee                  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@index([employeeId, createdAt])
   @@map("notifications")

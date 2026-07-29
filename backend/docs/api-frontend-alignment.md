@@ -1594,3 +1594,75 @@ descargar directamente **sin sesión/cookies** y el archivo coincide
 byte a byte con el subido; subir un adjunto a un anuncio regresa la URL
 completa tanto en la respuesta del upload como en un `GET` posterior del
 anuncio. Datos y archivos de prueba eliminados al terminar.
+
+## Notificaciones: `/notifications/employees/{id}` → `/notifications/{type}/{id}`
+(2026-07-29)
+
+**Pedido del usuario**: pensando en cuando construya la plataforma de
+alumnos y quiera reusar este mismo endpoint "casi copy-paste", cambiar
+la ruta para que reciba un `type` (`admin` — cubre administradores y
+docentes, que hoy son la única audiencia real — o `student`, reservado
+para esa futura plataforma) en vez de asumir siempre que el destinatario
+es un empleado.
+
+**Cambios**:
+
+- Nueva columna `Notification.recipientType` (enum `admin`/`student`,
+  default `admin`) — migración
+  `20260729020000_notification_recipient_type` respalda todas las filas
+  existentes como `admin` (es lo único que ha existido hasta ahora). El
+  query de `findAllPaged` ahora filtra explícitamente
+  `WHERE employeeId = ? AND recipientType = 'admin'`, no solo por
+  `employeeId`.
+- Ruta: `GET /notifications/employees/{employeeId}` →
+  `GET /notifications/{type}/{id}`. Con `type: "admin"` el
+  comportamiento es idéntico a antes (el `id` debe coincidir con la
+  sesión autenticada, 403 si no). Con `type: "student"` responde 400
+  ("Student notifications are not implemented yet") — la ruta y la
+  columna ya están listas, pero no hay sesión de alumno ni tabla de
+  destinatario alumno todavía; eso se conecta cuando se construya esa
+  plataforma.
+- `POST /notifications/{id}/read` no cambió — su verificación de
+  dueño ya solo funciona para filas `admin` reales.
+
+Verificado en vivo: `GET /notifications/admin/{employeeId}` funciona
+igual que antes; la ruta vieja `/notifications/employees/{id}` ya no
+existe (el segmento se interpreta como `type` y falla la validación de
+enum); `GET /notifications/student/{id}` responde 400 con el mensaje
+claro; pedir las notificaciones de otro empleado sigue dando 403;
+`POST /notifications/{id}/read` sigue funcionando sin cambios.
+
+## Rediseño de las plantillas de correo (2026-07-29)
+
+**Pedido del usuario**: los correos (`shared/templates/email.templates.ts`)
+se veían "muy básicos" — pidió un diseño más profesional basado en el
+diseño del front, con logotipo si es posible.
+
+**Diseño**: tomado directo de `frontend/admin-web/src/index.css` y
+`ColegioLearLogo.tsx` (no hay archivo de logo — es un ícono de birrete
+`lucide-react` dentro de una insignia circular con el color primario, así
+que se reprodujo igual como SVG inline):
+
+- Encabezado con el mismo lockup del front (insignia circular + "COLEGIO
+  LEAR"), ahora con degradado sutil en vez de un bloque de color plano.
+- Tipografías: `Outfit` para títulos (como los `h1`-`h6` del front) y
+  `Figtree` para texto (como el `body` del front), con las mismas
+  variantes de sistema como respaldo para cuando el cliente de correo no
+  cargue las fuentes web.
+- Botones completamente redondeados ("pill", `border-radius:9999px`),
+  igual que `.pill-btn-primary` del front, en vez de las esquinas apenas
+  redondeadas de antes.
+- Tarjeta con más radio (20px) y sombra en dos capas, paneles de
+  información con borde de acento a la izquierda.
+- Se extrajeron helpers compartidos (`heading`, `paragraph`, `infoBox`,
+  `ctaButton`) para las 6 plantillas, reduciendo la duplicación que ya
+  existía entre ellas — mismas firmas de función, cero cambios donde se
+  invocan.
+
+Verificado: se generó una vista previa visual de 4 plantillas
+representativas (invitación, recuperación de contraseña, notificación de
+comunicado, y la variante de error de "proceso fallido") con contenido
+real de ejemplo, publicada como artifact para revisión; además se mandó
+un correo real de prueba con las credenciales SMTP configuradas para
+confirmar que también se ve bien en un cliente de correo real, no solo
+en el navegador.
