@@ -465,6 +465,15 @@ export class EmployeeService {
    * Soft delete: sets isDeleted = true without removing the record.
    * Throws NotFoundError if the employee does not exist.
    * Throws ConflictError if the employee is already deleted.
+   * Throws ConflictError if the employee (typically a teacher) is still
+   * assigned to any school group calendar — deleting them would leave
+   * those calendar entries (and their grade history) pointing at a
+   * "deleted" employee: GET /employees/{id} 404s for isDeleted employees,
+   * so any screen that separately looks up that teacher by id (outside the
+   * calendar's own embedded include) breaks and falls back to showing the
+   * raw id instead of a name. Deactivating (isActive: false) is the right
+   * move when the teacher just needs to stop being assignable going
+   * forward while keeping their history intact.
    */
   async softDelete(id: string): Promise<void> {
     const existing = await this.prisma.employee.findUnique({ where: { id } });
@@ -475,6 +484,15 @@ export class EmployeeService {
 
     if (existing.isDeleted) {
       throw new ConflictError("El empleado ya fue eliminado");
+    }
+
+    const calendarAssignmentsCount = await this.prisma.academicCycleGroupCalendar.count({
+      where: { teacherId: id },
+    });
+    if (calendarAssignmentsCount > 0) {
+      throw new ConflictError(
+        "This employee is assigned to a school group calendar and cannot be deleted. Deactivate them instead to preserve their history",
+      );
     }
 
     await this.prisma.employee.update({

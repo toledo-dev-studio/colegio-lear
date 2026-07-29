@@ -1517,3 +1517,36 @@ Verificado en vivo: audiencia `["student"]` sola → `recipientsCount: 72`
 `["student", "teacher"]` → `recipientsCount: 82` (72 alumnos + 10
 profesores); la profesora de prueba sigue recibiendo su notificación en
 campanita normalmente. Datos de prueba eliminados al terminar.
+
+## Bloquear la eliminación de un empleado (docente) asignado a un
+calendario de grupo escolar (2026-07-29)
+
+**Bug reportado por el usuario**: eliminar (soft-delete, `isDeleted:
+true`) a un docente no validaba si ya tenía asignaciones en algún
+calendario de grupo escolar (`AcademicCycleGroupCalendar.teacherId`).
+El registro seguía existiendo en la BD, pero `GET /employees/{id}`
+responde 404 para empleados con `isDeleted: true`
+(`employee.service.ts findById`), así que cualquier pantalla que
+resuelva el nombre del profesor por separado (fuera del `include`
+propio del calendario, que sí sigue funcionando) deja de poder hacerlo
+y termina mostrando el id crudo en vez del nombre — exactamente lo que
+reportó el usuario. Inactivar (`isActive: false`) ya funcionaba bien y
+sigue siendo la acción correcta para esto.
+
+**Corrección**: `EmployeeService.softDelete()` ahora cuenta las
+entradas de `AcademicCycleGroupCalendar` que referencian a ese empleado
+como `teacherId` antes de eliminar; si hay alguna, responde 409 con un
+mensaje claro indicando que se debe inactivar en vez de eliminar. Se
+revisaron las demás relaciones inversas de `Employee` en el schema
+(`notifications`, con `onDelete: Cascade`) y ninguna otra representa un
+bloqueo real — el calendario es la única referencia que de verdad
+"ancla" al empleado a historial vivo.
+
+Verificado en vivo: un docente de prueba asignado a una entrada de
+calendario no se pudo eliminar (409 con el mensaje esperado);
+inactivarlo (`isActive: false`) siguió funcionando sin problema;
+quitar su asignación del calendario y reintentar la eliminación
+funcionó (204). Entrada de calendario y empleado de prueba eliminados
+al terminar (con `prisma db seed` para restaurar dos entradas del
+calendario sembrado que se habían omitido por accidente durante la
+prueba).
