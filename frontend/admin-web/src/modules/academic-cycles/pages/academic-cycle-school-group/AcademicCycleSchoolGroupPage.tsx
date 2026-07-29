@@ -1,12 +1,12 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
-import { Loader } from "@/shared/components/loader/Loader";
-import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
-import { useAcademicCycleSchoolGroupPage } from "./hooks/useAcademicCycleSchoolGroupPage";
-import type { AcademicCycleSchoolGroupRequest } from "@/interfaces/requests/academic-cycle-school-group.request";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { AcademicCycleSchoolGroupForm } from "./components/AcademicCycleSchoolGroupForm";
+import { useAcademicCycleSchoolGroupPage } from "./hooks/useAcademicCycleSchoolGroupPage";
+import { AcademicCycleSchoolGroupFormSkeleton } from "./components/AcademicCycleSchoolGroupFormSkeleton";
+import type { AcademicCycleSchoolGroupRequest } from "@/interfaces/requests/academic-cycle-school-group.request";
 
 export const AcademicCycleSchoolGroupPage = () => {
     // Component hooks & stores
@@ -45,27 +45,17 @@ export const AcademicCycleSchoolGroupPage = () => {
         return <Navigate to={`/academic-cycles/${context.academicCycleId}/school-groups`} />;
     }
 
-    if (isLoadingPage) {
-        return (
-            <>
-                <div className="w-full relative mx-auto h-full mt-30">
-                    <Loader title="Cargando información" subtitle="Por favor espere..." fullScreen={true} size="default" />
-                </div>
-            </>
-        )
-    }
-
     return (
         <>
             <section className="w-full py-12 px-10 lg:px-15">
 
                 <section className="mb-10">
-                        <Breadcrumb items={[
-                            { label: "Seguimiento escolar" },
-                            { label: "Ciclos escolares", to: "/academic-cycles" },
-                            { label: context.academicCycle?.code || "Edición de ciclo escolar", to: `/academic-cycles/${context.academicCycleId}/school-groups` },
-                            { label: title }
-                        ]} />
+                    <Breadcrumb items={[
+                        { label: "Seguimiento escolar" },
+                        { label: "Ciclos escolares", to: "/academic-cycles" },
+                        { label: context.academicCycle?.code || "Edición de ciclo escolar", to: `/academic-cycles/${context.academicCycleId}/school-groups` },
+                        { label: title }
+                    ]} />
                 </section>
 
                 <PageTitle
@@ -74,13 +64,16 @@ export const AcademicCycleSchoolGroupPage = () => {
 
                 <section className="flex-1 flex flex-col min-h-full gap-8 mt-5">
 
-                        <AcademicCycleSchoolGroupForm
-                            isSubmitting={mutations.academicCycleSchoolGroup.createUpdate.isPending}
-                            teachersResponse={queries.teachers.get.data}
-                            schoolSubjectsResponse={queries.schoolSubjects.get.data}
-                            academicCycleSchoolGroupResponse={queries.schoolGroups.getById.data}
-                            onSubmit={onSubmit}
-                        />
+                    {
+                        isLoadingPage ? <AcademicCycleSchoolGroupFormSkeleton /> :
+                            <AcademicCycleSchoolGroupForm
+                                isSubmitting={mutations.academicCycleSchoolGroup.createUpdate.isPending}
+                                teachersResponse={queries.teachers.get.data}
+                                schoolSubjectsResponse={queries.schoolSubjects.get.data}
+                                academicCycleSchoolGroupResponse={queries.schoolGroups.getById.data}
+                                onSubmit={onSubmit}
+                            />
+                    }
 
                 </section>
             </section>

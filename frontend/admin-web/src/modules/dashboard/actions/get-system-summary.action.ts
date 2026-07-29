@@ -11,9 +11,6 @@ export const getSystemSummaryActionAsync = async (): Promise<SystemSummaryRespon
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/dashboard/system-summary.json";
 
-    // REMOVE MOCKABLE
-    endpoint = "http://localhost/api/dashboard/system-summary.json"
-
     const { data } = await api.get<SystemSummaryResponse>(endpoint);
 
     return data;

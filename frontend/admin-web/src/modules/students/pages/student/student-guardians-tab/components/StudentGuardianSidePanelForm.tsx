@@ -1,28 +1,31 @@
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { Mail, Phone } from "lucide-react";
 
 import { Input } from "@/shared/ui/input";
 import { Switch } from "@/shared/ui/switch";
 import { Textarea } from "@/shared/ui/textarea";
+import { Modal } from "@/shared/components/modal/Modal";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
+import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
 import type { AllergyRequest } from "@/interfaces/requests/allergy.request";
 import type { StudentGuardianRequest } from "@/interfaces/requests/student-guardian.request";
 import type { StudentGuardianResponse } from "@/interfaces/responses/student-guardian.response";
 import { STUDENT_GUARDIANS_RELATIONSHIPS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
-import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
-import { Mail, Phone } from "lucide-react";
 
 interface Props {
     studentGuardianResponse: Partial<StudentGuardianResponse>;
     handleClickClose: () => void;
-    onSubmit: (allergyRequestLike: Partial<AllergyRequest>) => void;
+    onSubmit: (allergyRequestLike: Partial<AllergyRequest>) => Promise<void>;
 }
 
 export const StudentGuardianSidePanelForm = ({ studentGuardianResponse, handleClickClose, onSubmit }: Props) => {
     // Use react hook form configuration
-    const { control, formState: { errors }, watch, handleSubmit } = useForm<Partial<StudentGuardianRequest>>({
+    const [confirmationRequired, setConfirmationRequired] = useState<boolean>(false);
+    const { control, formState: { errors }, watch, handleSubmit, getValues } = useForm<Partial<StudentGuardianRequest>>({
         defaultValues: {
             fullName: isValidValueWithDefault(studentGuardianResponse?.fullName, ""),
             relationship: isValidValueWithDefault(studentGuardianResponse?.relationship, undefined),
@@ -36,13 +39,22 @@ export const StudentGuardianSidePanelForm = ({ studentGuardianResponse, handleCl
     });
     const isPrincipal = watch("isPrincipal");
 
+    const validateForm = async (studentGuardianRequestLike: Partial<StudentGuardianRequest>) => {
+        // If guardian is "principal" the systems requires a confirmation
+        if (studentGuardianRequestLike.isPrincipal && !studentGuardianResponse.isPrincipal) {
+            setConfirmationRequired(true);
+            return;
+        }
+        await onSubmit(studentGuardianRequestLike);
+    }
+
     return (
         <>
             <SidePanel
                 title="REGISTRO DE TUTOR"
                 handleClickClose={handleClickClose}
                 cancelButton={{ show: true, disabled: false, type: "button", label: "Cancelar", handleClick: handleClickClose }}
-                submitButton={{ show: true, disabled: false, type: "submit", label: "Guardar", handleClick: handleSubmit(onSubmit) }}>
+                submitButton={{ show: true, disabled: false, type: "submit", label: "Guardar", handleClick: handleSubmit(validateForm) }}>
                 <form className="flex flex-col gap-8">
 
                     <div className="control-container">
@@ -234,6 +246,26 @@ export const StudentGuardianSidePanelForm = ({ studentGuardianResponse, handleCl
                 </form>
 
             </SidePanel>
+
+            {/* Save confirmation modal */}
+            <Modal
+                open={confirmationRequired}
+                type="info"
+                title="¡Antes de continuar!"
+                message="El registro que estas por guardar se marcó como 'Tutor principal', por ello a este tutor se le enviará información del alumno así como sus accesos para el portal del alumno. ¿Estás seguro de continuar?"
+                isLoading={false}
+                cancelButton={{
+                    label: "Cancelar",
+                    onClick: () => setConfirmationRequired(false)
+                }}
+                confirmButton={{
+                    label: "Aceptar",
+                    onClick: async () => {
+                        setConfirmationRequired(false);
+                        await onSubmit(getValues())
+                    },
+                }}
+            />
         </>
     )
 }

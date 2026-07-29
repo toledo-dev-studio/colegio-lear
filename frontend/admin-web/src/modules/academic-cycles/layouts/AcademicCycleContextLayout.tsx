@@ -1,5 +1,5 @@
 
-import { Navigate, Outlet, useLocation, useParams } from "react-router";
+import { matchPath, Navigate, Outlet, useLocation, useParams } from "react-router";
 import { CalendarDays, GraduationCap, School, Users, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
@@ -7,6 +7,7 @@ import type { Tab } from "@/interfaces/components/tab";
 import { useGetAcademicCycleById } from "../hooks/academic-cycles/useGetAcademicCycleById";
 import type { AcademicCycleLayoutContext } from "../interfaces/academic-cycle-layout-context";
 import { AcademicCycleTabSkeleton } from "../pages/academic-cycle/academic-cycle-tab/AcademicCycleTabSkeleton";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 export const TABS: Tab[] = [
     {
@@ -59,6 +60,7 @@ export const AcademicCycleContextLayout = () => {
         isActive: (academicCycleQuery.data?.status === "active"),
         isLocked: (academicCycleQuery.data?.status !== "upcoming" && academicCycleQuery.data?.status !== undefined),
         enrollmentOpen: academicCycleQuery.data?.enrollmentOpen || false,
+        loggedInUserCanWrite: usePermission("academic-cycles", "can-write")
     }
 
     if (isNew && isProtectedRoute) {
@@ -76,6 +78,13 @@ export const AcademicCycleContextLayout = () => {
                 <AcademicCycleTabSkeleton isNew={isNew} />
             </>
         )
+    }
+
+    // Check if try to access to enrollment page when academic cycle has "upcoming" status
+    // REMOVE TESTING
+    if(academicCycleQuery.data?.status === "upcoming" && matchPath("/academic-cycles/:id/enrollments/:enrollmentId", pathname) !== null) {
+        toast.error("No es posible obtener la información de la inscrpción hasta que el ciclo escolar cambie de estatus a \"En curso\"", { position: "top-right" });
+        return <Navigate to={`/academic-cycles/${academicCycleQuery.data.id}`} />;
     }
 
     return (

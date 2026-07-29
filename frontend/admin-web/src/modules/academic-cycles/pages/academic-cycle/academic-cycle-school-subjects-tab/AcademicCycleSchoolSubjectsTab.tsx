@@ -107,7 +107,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
                     filterButton={{ show: false }}
                     exportButton={{ show: false }}
                     addButton={{
-                        show: !context.isLocked,
+                        show: !context.isLocked && context.loggedInUserCanWrite,
                         label: "Asociar nueva materia",
                         disabled: queries.schoolSubject.get.isLoading || queries.schoolSubject.get.isError,
                         handleClick: () => {

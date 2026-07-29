@@ -13,7 +13,7 @@ import { useGetAcademicCycleEnrollmentById } from "../../hooks/academic-cycle-en
 export const AcademicCycleEnrollmentPage = () => {
   // Get context from layout
   const { enrollmentId } = useParams();
-  const { academicCycleId, academicCycle } = useOutletContext<AcademicCycleLayoutContext>();
+  const { academicCycleId, academicCycle, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
   // Component hooks & stores
   const { data: academicCycleEnrollment, isLoading, isError } = useGetAcademicCycleEnrollmentById({ id: enrollmentId!, academicCycleId: academicCycleId! });
@@ -57,7 +57,9 @@ export const AcademicCycleEnrollmentPage = () => {
         <StudentWalletGrid
           enrollmentId={enrollmentId!}
           enrollmentStatus={academicCycleEnrollment?.status}
-          academicCycleId={academicCycleId!} />
+          academicCycleId={academicCycleId!}
+          academicCycleStatus={academicCycle?.status}
+          loggedInUserCanWrite={loggedInUserCanWrite} />
 
       </section>
     </>

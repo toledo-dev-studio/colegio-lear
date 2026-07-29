@@ -1,5 +1,5 @@
 import React from "react";
-import { Users } from "lucide-react";
+import { UserIcon, Users } from "lucide-react";
 
 import { Skeleton } from "@/shared/ui/skeleton";
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
@@ -35,7 +35,21 @@ export const LatestTeachersTable: React.FC<Props> = ({ data, loading }) => (
                 {(data ?? []).map((t) => (
                     <li key={t.id}>
                         <Link to={`/employees/${t.id}`} className="py-3 flex items-center gap-4">
-                            <img src={t.avatar} alt={t.fullName} className="w-10 h-10 rounded-full object-cover" />
+                            {
+                                t.avatar ?
+                                    (
+                                        <>
+                                            <img className="ml-2 w-10 h-10 rounded-full object-cover ring-2 ring-primary/30"
+                                                alt={t.fullName}
+                                                src={t.avatar} />
+                                        </>
+                                    ) :
+                                    (
+                                        <div className="ml-2 w-10 h-10 rounded-full bg-muted ring-2 ring-primary/15 flex items-center justify-center overflow-hidden">
+                                            <UserIcon className="w-5 h-5 text-muted-foreground/60" />
+                                        </div>
+                                    )
+                            }
                             <div className="flex-1 min-w-0">
                                 <p className="font-medium text-foreground truncate">{t.fullName}</p>
                                 <p className="text-xs text-muted-foreground truncate">{t.email}</p>

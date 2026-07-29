@@ -14,7 +14,7 @@ interface Options {
 
 export const useAcademicCycleSchoolSubjectsTable = ({ handleClickEdit, handleClickDelete }: Options) => {
     // Get context from layout
-    const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { isLocked, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Table columns configuration structure
     const columns: string[] = [
@@ -23,7 +23,7 @@ export const useAcademicCycleSchoolSubjectsTable = ({ handleClickEdit, handleCli
         "Observaciones adicionales",
         "Acciones"
     ];
-    isLocked && columns.pop();
+    (isLocked || !loggedInUserCanWrite) && columns.pop();
 
     // Table properties value configuration structure
     const properties: TableProperty<AcademicCycleSchoolSubjectResponse>[] = [
@@ -41,7 +41,7 @@ export const useAcademicCycleSchoolSubjectsTable = ({ handleClickEdit, handleCli
         { key: "observations" }
     ];
 
-    const actions: TableAction<AcademicCycleSchoolSubjectResponse>[] = isLocked ? [] : [
+    const actions: TableAction<AcademicCycleSchoolSubjectResponse>[] = (isLocked || !loggedInUserCanWrite) ? [] : [
         {
             key: "edit",
             render: (item: AcademicCycleSchoolSubjectResponse) => (

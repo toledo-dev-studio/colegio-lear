@@ -9,7 +9,7 @@ import { useDeleteAcademicCycleSchoolGroupById } from "@/modules/academic-cycles
 
 export const useAcademicCycleSchoolGroupsTab = () => {
     // Get context from layout
-    const { academicCycleId, academicCycle, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { academicCycleId, academicCycle, isLocked, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Shared hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
@@ -28,6 +28,7 @@ export const useAcademicCycleSchoolGroupsTab = () => {
             isLocked,
             academicCycle,
             academicCycleId,
+            loggedInUserCanWrite
         },
         queries: {
             schoolGroups: {

@@ -11,9 +11,6 @@ export const getTeacherEmployeesSummaryActionAsync = async (): Promise<TeacherEm
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/dashboard/teacher-employees-summary.json";
 
-    // REMOVE MOCKABLE
-    endpoint = "http://localhost/api/dashboard/teacher-employees-summary.json"
-
     const { data } = await api.get<TeacherEmployeeSummaryResponse>(endpoint);
 
     return data;

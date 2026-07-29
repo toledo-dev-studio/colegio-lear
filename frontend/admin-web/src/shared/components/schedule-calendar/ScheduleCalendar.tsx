@@ -292,13 +292,12 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
                                                         </div>
                                                         {/* Actions */}
                                                         <div className="z-50 relative flex gap-x-4">
-                                                            <button
-                                                                type="button"
+                                                            <span
                                                                 className="cursor-pointer rounded-full"
                                                                 onPointerDown={(e) => e.stopPropagation()}
                                                                 onClick={() => setCalendar(item)}>
                                                                 <Info className="w-3 h-3" />
-                                                            </button>
+                                                            </span>
                                                             {
                                                                 !disabled && (
                                                                     <button

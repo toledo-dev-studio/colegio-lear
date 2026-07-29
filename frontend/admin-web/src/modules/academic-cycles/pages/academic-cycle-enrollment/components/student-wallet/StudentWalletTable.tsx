@@ -140,8 +140,8 @@ export const StudentWalletTable = ({ enableActions, data, summary, handleClickEd
                                             <td className="column"></td>
                                             <td className="column"></td>
                                             <td className="column">{formatMoney(summary.total)}</td>
+                                            <td className="column">{formatMoney(summary.paid)}</td>
                                             <td className="column">{formatMoney(summary.outstanding)}</td>
-                                            <td className="column">{formatMoney(summary.overdue)}</td>
                                             <td className="column"></td>
                                             <td className="column"></td>
                                             {

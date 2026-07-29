@@ -11,9 +11,6 @@ export const getAcademicCyclesSummaryActionAsync = async(): Promise<AcademicCycl
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/dashboard/academic-cycles-summary.json";
 
-    // REMOVE MOCKABLE
-    endpoint = "http://localhost/api/dashboard/academic-cycles-summary.json"
-
     const { data } = await api.get<AcademicCycleSummaryResponse>(endpoint);
 
     return data;

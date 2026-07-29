@@ -27,22 +27,22 @@ export const EmployeesPage = () => {
 
     if (!data || !Array.isArray(data)) {
       loader.hide();
-      toast.info('No se cuenta con información para descargar', { position: "top-right" });
+      toast.info("No se cuenta con información para descargar", { position: "top-right" });
       return;
     }
 
     const headers = [
-      { label: 'Id', key: 'id' },
-      { label: 'Nombre', key: 'name' },
-      { label: 'Apelldo paterno', key: 'firstLastName' },
-      { label: 'Apellido materno', key: 'secondLastName' },
-      { label: 'Correo electrónico', key: 'email' },
-      { label: 'Usuario del sistema', key: 'username' },
-      { label: 'Estado', key: 'status' },
-      { label: 'Rol asignado', key: 'role.name' }
+      { label: "Id", key: "id" },
+      { label: "Nombre", key: "name" },
+      { label: "Apelldo paterno", key: "firstLastName" },
+      { label: "Apellido materno", key: "secondLastName" },
+      { label: "Correo electrónico", key: "email" },
+      { label: "Usuario del sistema", key: "username" },
+      { label: "Estado", key: "status" },
+      { label: "Rol asignado", key: "role.name" }
     ];
 
-    downloadDataToCsvFile('Empleados', headers, data);
+    downloadDataToCsvFile("Empleados", headers, data);
 
     setTimeout(() => loader.hide(), 500);
   }
@@ -53,12 +53,12 @@ export const EmployeesPage = () => {
     await mutations.employees.delete.mutateAsync({ id: deleteModal.record?.id! },
       {
         onSuccess: () => {
-          toast.success('Empleado eliminada correctamente', { position: "top-right" });
+          toast.success("Empleado eliminada correctamente", { position: "top-right" });
           deleteModal.close();
         },
         onError: (error: any) => {
           console.warn(error);
-          toast.error('Ocurrio un error al tratar de eliminar el empleado', { position: "top-right" });
+          toast.error("Ocurrio un error al tratar de eliminar el empleado", { position: "top-right" });
         }
       }
     );

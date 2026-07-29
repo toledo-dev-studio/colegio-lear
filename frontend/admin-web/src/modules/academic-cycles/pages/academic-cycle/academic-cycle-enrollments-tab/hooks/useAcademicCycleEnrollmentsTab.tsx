@@ -12,7 +12,7 @@ import { useCreateUpdateAcademicCycleEnrollment } from "@/modules/academic-cycle
 
 export const useAcademicCycleEnrollmentsTab = () => {
     // Get context from layout
-    const { academicCycleId, academicCycle, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { academicCycleId, academicCycle, isLocked, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Shared hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
@@ -35,7 +35,8 @@ export const useAcademicCycleEnrollmentsTab = () => {
         context: {
             academicCycleId,
             academicCycle,
-            isLocked
+            isLocked,
+            loggedInUserCanWrite
         },
         queries: {
             enrollments: {
