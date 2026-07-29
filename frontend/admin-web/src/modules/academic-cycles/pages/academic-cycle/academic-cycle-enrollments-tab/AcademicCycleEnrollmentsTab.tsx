@@ -1,4 +1,3 @@
-import { useSearchParams } from "react-router";
 import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
@@ -12,9 +11,6 @@ import { AcademicCycleEnrollmentsPanelFilters } from "./components/AcademicCycle
 import type { AcademicCycleEnrollmentRequest } from "@/interfaces/requests/academic-cycle-enrollment.request";
 
 export const AcademicCycleEnrollmentsTab = () => {
-  // Componen hooks & stores
-  const [searchParams, setSearchParams] = useSearchParams();
-
   // Context hooks and stores configuration
   const { context, loader, queries, mutations, advancedFiltersPanel, enrollmentPanel, deleteModal } = useAcademicCycleEnrollmentsTab();
   const { columns, properties, actions } = useAcademicCycleEnrollmentsTable({
@@ -75,7 +71,7 @@ export const AcademicCycleEnrollmentsTab = () => {
         <TableRibbon
           exportButton={{ disabled: true, show: false }}
           addButton={{
-            show: context.academicCycle?.enrollmentOpen && (context.academicCycle.status === "active" || context.academicCycle.status === "upcoming"),
+            show: context.academicCycle?.enrollmentOpen && (context.academicCycle.status === "active" || context.academicCycle.status === "upcoming") && context.loggedInUserCanWrite,
             label: "Nueva incripción",
             disabled: queries.enrollments.paged.isLoading || queries.enrollments.paged.isError,
             handleClick: () => enrollmentPanel.open({})
@@ -87,17 +83,7 @@ export const AcademicCycleEnrollmentsTab = () => {
           searchInput={{
             disabled: queries.enrollments.paged.isLoading || queries.enrollments.paged.isError,
             tooltip: "Búsqueda por código de inscripción & alumno",
-            placeholder: "Búsqueda por código de inscripción & alumno",
-            onKeyDown: (event, query) => {
-              if (event.key !== "Enter")
-                return;
-              if (!query.length) {
-                searchParams.delete("query");
-              } else {
-                searchParams.set("query", query);
-              }
-              setSearchParams(searchParams);
-            }
+            placeholder: "Búsqueda por código de inscripción & alumno"
           }}
         />
 

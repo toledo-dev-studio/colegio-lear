@@ -6,6 +6,7 @@ import { cn } from "@/lib/extensions/utils";
 interface Option { key: string, label: string };
 
 interface Props {
+    disabled: boolean;
     placeholder: string;
     availableOptions: Option[];
     value: Option[];
@@ -15,7 +16,7 @@ interface Props {
 export const MultiSelect = (props: Props) => {
 
     const { placeholder = "Selecciona un registro...", availableOptions, value, onChange } = props;
-    
+
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
 
@@ -29,11 +30,19 @@ export const MultiSelect = (props: Props) => {
     }, [open]);
 
     const toggle = (opt: Option) => {
+        if (props.disabled)
+            return;
+
         const exists = value.some((v) => v.key === opt.key);
         onChange(exists ? value.filter((v) => v.key !== opt.key) : [...value, opt]);
     };
 
-    const remove = (key: string) => onChange(value.filter((v) => v.key !== key));
+    const remove = (key: string) => {
+        if (props.disabled)
+            return;
+
+        onChange(value.filter((v) => v.key !== key));
+    }
 
     return (
         <div className="relative" ref={ref} data-testid="multi-select">
@@ -44,11 +53,12 @@ export const MultiSelect = (props: Props) => {
                 className={
                     cn(
                         "pill-input w-full pl-8 h-12 py-1 rounded-full text-left flex items-center justify-between",
-                        "bg-transparent disabled:bg-input/50 dark:bg-input/30 dark:disabled:bg-input/80"
+                        "bg-transparent disabled:bg-input/50 disabled:opacity-50 dark:bg-input/30 dark:disabled:bg-input/80 dark:disabled:opacity-50"
                     )
                 }
                 aria-haspopup="listbox"
                 aria-expanded={open}
+                disabled={props.disabled}
             >
                 <span className="flex items-center gap-2 text-sm truncate">
                     <Users className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -70,6 +80,7 @@ export const MultiSelect = (props: Props) => {
                                     onClick={() => toggle(a)}
                                     role="option"
                                     aria-selected={checked}
+                                    disabled={props.disabled}
                                     className="w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-muted transition-colors"
                                 >
                                     <span className="text-foreground">{a.label}</span>
@@ -88,7 +99,7 @@ export const MultiSelect = (props: Props) => {
                     {value.map((a) => (
                         <span key={a.key} className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-medium px-3 py-1.5 rounded-full">
                             {a.label}
-                            <button type="button" onClick={() => remove(a.key)} data-testid={`multi-select-chip-remove-${a.key}`} className="hover:text-primary/70 cursor-pointer" aria-label={`Quitar ${a.label}`}>
+                            <button type="button" disabled={props.disabled} onClick={() => remove(a.key)} data-testid={`multi-select-chip-remove-${a.key}`} className="hover:text-primary/70 cursor-pointer" aria-label={`Quitar ${a.label}`}>
                                 <X className="w-3 h-3" />
                             </button>
                         </span>

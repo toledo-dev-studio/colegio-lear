@@ -16,29 +16,31 @@ interface Options {
 
 export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete }: Options) => {
     // Get context from layout
-    const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { isLocked, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Table columns configuration structure
     const columns: string[] = [
         "Concepto de pago",
+        "Código de concepto",
         "Monto de pago (MXN)",
         "¿Condonación de pago permitida?",
         "Fecha de vencimiento",
         "Descripción",
         "Acciones"
     ];
-    isLocked && columns.pop();
+    (isLocked || !loggedInUserCanWrite) && columns.pop();
 
     // Table properties value configuration structure
     const properties: TableProperty<AcademicCycleWalletItemResponse>[] = [
         {
             key: "name",
             render: (item: AcademicCycleWalletItemResponse) => (
-                <span className="text-primary cursor-pointer" onClick={() => handleClickEdit(item)}>
+                <span className="text-primary cursor-pointer" onClick={() => loggedInUserCanWrite && handleClickEdit(item)}>
                     {item.name ?? "-"}
                 </span>
             )
         },
+        { key: "code" },
         {
             key: "amount",
             render: ({ amount }: AcademicCycleWalletItemResponse) => (formatMoney(amount))
@@ -61,7 +63,7 @@ export const useAcademicCycleWalletTable = ({ handleClickEdit, handleClickDelete
     ];
 
     // Table actions list
-    const actions: TableAction<AcademicCycleWalletItemResponse>[] = isLocked ? [] : [
+    const actions: TableAction<AcademicCycleWalletItemResponse>[] = (isLocked || !loggedInUserCanWrite) ? [] : [
         {
             key: "edit",
             render: (item: AcademicCycleWalletItemResponse) => (

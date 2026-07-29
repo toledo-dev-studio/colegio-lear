@@ -11,7 +11,7 @@ import { useCreateUpdateAcademicCycleWalletItem } from "@/modules/academic-cycle
 
 export const useAcademicCycleWalletTab = () => {
     // Get context from layout
-    const { academicCycleId, academicCycle, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { academicCycleId, academicCycle, isLocked, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Shared hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
@@ -30,7 +30,8 @@ export const useAcademicCycleWalletTab = () => {
         context: {
             academicCycleId,
             academicCycle,
-            isLocked
+            isLocked,
+            loggedInUserCanWrite
         },
         queries: {
             wallet: {

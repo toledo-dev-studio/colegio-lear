@@ -35,9 +35,9 @@ export const SidePanel = (props: Props) => {
                         <h3 className="font-heading text-xl font-bold uppercase">
                             {title}
                         </h3>
-                        <Button onClick={handleClickClose} className="min-w-10 min-h-10 bg-card text-foreground px-0!">
+                        <span onClick={handleClickClose} className="flex items-center justify-center cursor-pointer min-w-10 min-h-10 bg-card text-foreground px-0!">
                             <X className="w-5! h-5! text-muted-foreground" />
-                        </Button>
+                        </span>
                     </header>
 
                     {/* Component content */}

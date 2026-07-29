@@ -46,9 +46,9 @@ export const useAnnouncementsPageTable = ({ handleClickDelete }: Options) => {
             key: "status",
             render: ({ status }: AnnouncementResponse) => (
                 <Badge variant={
-                    status === "upcoming" ? "default" : 
-                    status === "active" ? "success" : 
-                    status === "cancelled" ? "destructive": "ghost"} className="py-4 px-6">
+                    status === "draft" ? "default" : 
+                    status === "in-progress" ? "success" : 
+                    status === "cancelled" ? "destructive": "secondary"} className="py-4 px-6">
                     { labelOf(ANNOUNCEMENTS_STATUSES, status) || "-" }
                 </Badge>
             )

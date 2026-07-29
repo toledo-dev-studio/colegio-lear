@@ -51,12 +51,12 @@ export const AnnouncementsPage = () => {
     await mutations.announcements.delete.mutateAsync({ id: deleteModal.record.id },
       {
         onSuccess: () => {
-          toast.success("Concepto de pago eliminado correctamente", { position: "top-right" });
+          toast.success("Campaña eliminada correctamente", { position: "top-right" });
           deleteModal.close();
         },
         onError: (error) => {
           console.warn(error);
-          toast.error("Ocurrio un error al tratar de eliminar el concepto de pago", { position: "top-right" });
+          toast.error("Ocurrio un error al tratar de eliminar la campaña", { position: "top-right" });
         }
       }
     );

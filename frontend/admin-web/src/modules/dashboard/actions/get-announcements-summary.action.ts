@@ -11,9 +11,6 @@ export const getAnnouncementsSummaryActionAsync = async (): Promise<Announcement
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/dashboard/announcement-summary.json";
 
-    // REMOVE MOCKABLE
-    endpoint = "http://localhost/api/dashboard/announcement-summary.json"
-
     const { data } = await api.get<AnnouncementSummaryResponse>(endpoint);
 
     return data;

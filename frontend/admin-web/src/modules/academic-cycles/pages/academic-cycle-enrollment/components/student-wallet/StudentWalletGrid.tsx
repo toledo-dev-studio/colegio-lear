@@ -8,19 +8,21 @@ import { StudentWalletItemPanelForm } from "./side-panels/StudentWalletItemPanel
 import { OverviewStatsRibbonSkeleton } from "./skeletons/OverviewStatsRibbonSkeleton";
 import { StudentWalletPaymentPanelForm } from "./side-panels/StudentWalletPaymentPanelForm";
 import type { StudentWalletItemRequest } from "@/interfaces/requests/student-wallet-item.request";
-import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { StudentWalletPaymentsTableSkeleton } from "./skeletons/StudentWalletPaymentsTableSkeleton";
 import type { StudentWalletPaymentRequest } from "@/interfaces/requests/student-wallet-payment.request";
 import { useGetStudentWallet } from "@/modules/academic-cycles/hooks/student-wallet/useGetStudentWallet";
 import { useGetStudentWalletPayments } from "@/modules/academic-cycles/hooks/student-wallet/useGetStudentWalletPayments";
+import type { AcademicCycleEnrollmentStatusKey, AcademicCycleStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 interface Props {
     enrollmentId: string;
     academicCycleId: string;
+    academicCycleStatus?: AcademicCycleStatusKey;
     enrollmentStatus?: AcademicCycleEnrollmentStatusKey;
+    loggedInUserCanWrite: boolean;
 }
 
-export const StudentWalletGrid = ({ enrollmentId, academicCycleId, enrollmentStatus }: Props) => {
+export const StudentWalletGrid = ({ enrollmentId, academicCycleId, academicCycleStatus, enrollmentStatus, loggedInUserCanWrite }: Props) => {
     // Component hooks & stores
     const { context, mutations, loader, sidePanels } = useStudentWalletGrid();
     const { data: wallet, isLoading: isLoadingWallet } = useGetStudentWallet({ academicCycleId: academicCycleId, academicCycleEnrollmentId: enrollmentId });
@@ -84,11 +86,11 @@ export const StudentWalletGrid = ({ enrollmentId, academicCycleId, enrollmentSta
                 isLoadingWallet ?
                     <StudentWalletTableSkeleton /> :
                     <StudentWalletTable
-                        enableActions={enrollmentStatus === "enrolled"}
+                        enableActions={enrollmentStatus === "enrolled" && academicCycleStatus === "active" && loggedInUserCanWrite}
                         data={wallet?.items ?? []}
                         summary={wallet?.summary!}
-                        handleClickEdit={() => { }}
-                        handleClickPay={() => { }} />
+                        handleClickEdit={sidePanels.studentWalletItemPanelForm.open}
+                        handleClickPay={sidePanels.studentWalletPaymentPanelForm.open} />
             }
 
             {/* Student wallet payment time line */}

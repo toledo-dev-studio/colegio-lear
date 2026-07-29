@@ -17,7 +17,7 @@ interface Options {
 
 export const useAcademicCycleEnrollmentsTable = ({ handleClickEdit, handleClickDelete }: Options) => {
     // Get context from layout
-    const { isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { isLocked, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Table columns configuration structure
     const columns: string[] = [
@@ -103,6 +103,7 @@ export const useAcademicCycleEnrollmentsTable = ({ handleClickEdit, handleClickD
         {
             key: "edit",
             render: (item: AcademicCycleEnrollmentResponse) => (
+                loggedInUserCanWrite &&
                 <Tooltip>
                     <TooltipTrigger>
                         <span className="bg-primary text-white icon-btn icon-btn-sm" onClick={() => handleClickEdit(item)}>
@@ -116,7 +117,7 @@ export const useAcademicCycleEnrollmentsTable = ({ handleClickEdit, handleClickD
             )
         }
     ];
-    if (!isLocked) {
+    if (!isLocked && loggedInUserCanWrite) {
         actions.push(
             {
                 key: "delete",

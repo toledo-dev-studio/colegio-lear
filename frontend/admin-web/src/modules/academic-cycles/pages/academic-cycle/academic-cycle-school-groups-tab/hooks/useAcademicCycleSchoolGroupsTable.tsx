@@ -17,7 +17,7 @@ interface Options {
 
 export const useAcademicCycleSchoolGroupsTable = ({ handleClickEdit, handleClickDelete }: Options) => {
     // Get context from layout
-    const { academicCycleId, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { academicCycleId, isLocked, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Table columns configuration structure
     const columns: string[] = [
@@ -54,25 +54,25 @@ export const useAcademicCycleSchoolGroupsTable = ({ handleClickEdit, handleClick
     ];
 
     // Table actions column with on click handler
-    const actions: TableAction<AcademicCycleSchoolGroupResponse>[] = isLocked ?
-        [{
-            key: "calendar",
-            render: (item: AcademicCycleSchoolGroupResponse) => (
-                <Tooltip>
-                    <TooltipTrigger>
-                        <span className="bg-primary text-white icon-btn icon-btn-sm"
-                            onClick={() => handleClickEdit(item)}>
-                            <Calendar className="w-4 h-4" />
-                        </span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Consultar horario escolar</p>
-                    </TooltipContent>
-                </Tooltip>
-            )
-        }]
-        :
-        [
+    let actions: TableAction<AcademicCycleSchoolGroupResponse>[] = [{
+        key: "calendar",
+        render: (item: AcademicCycleSchoolGroupResponse) => (
+            <Tooltip>
+                <TooltipTrigger>
+                    <span className="bg-primary text-white icon-btn icon-btn-sm"
+                        onClick={() => handleClickEdit(item)}>
+                        <Calendar className="w-4 h-4" />
+                    </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Consultar horario escolar</p>
+                </TooltipContent>
+            </Tooltip>
+        )
+    }]
+
+    if (!isLocked && loggedInUserCanWrite)
+        actions = [
             {
                 key: "edit",
                 render: (item: AcademicCycleSchoolGroupResponse) => (

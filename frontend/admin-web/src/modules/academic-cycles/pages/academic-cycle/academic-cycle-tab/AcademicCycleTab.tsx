@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
+import { BookOpenCheck, ClipboardCheck } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Input } from "@/shared/ui/input";
 import { Switch } from "@/shared/ui/switch";
-import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
+import { Form } from "@/shared/components/form/Form";
 import { Modal } from "@/shared/components/modal/Modal";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
-import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
@@ -25,7 +25,6 @@ import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-
 import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
-import { BookOpenCheck, ClipboardCheck } from "lucide-react";
 
 export const AcademicCycleTab = () => {
     // Context from layout
@@ -96,7 +95,8 @@ export const AcademicCycleTab = () => {
 
     return (
         <>
-            <form onSubmit={handleSubmit(validateForm)}>
+            {/* Academic cycle form */}
+            <Form moduleKey="academic-cycles" isSubmitting={createUpdateAcademicCycleMutation.isPending} onSubmit={handleSubmit(validateForm)} onCancel={() => navigate("/academic-cycles")}>
 
                 <section className="flex flex-col gap-y-6">
 
@@ -500,41 +500,27 @@ export const AcademicCycleTab = () => {
 
                 </section>
 
-                {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                    <Link to="/academic-cycles">
-                        <Button type="button" disabled={createUpdateAcademicCycleMutation.isPending} aria-label="cancel" variant={"ghost"}>
-                            Cancelar
-                        </Button>
-                    </Link>
-                    <Button type="submit" disabled={createUpdateAcademicCycleMutation.isPending} aria-label="save-record">
-                        Guardar
-                        {
-                            createUpdateAcademicCycleMutation.isPending && (<Spinner variant="primary" className="ml-4" />)
-                        }
-                    </Button>
-                </section>
+            </Form>
 
-                {/* Save confirmation modal */}
-                <Modal
-                    open={confirmationRequired}
-                    type="info"
-                    title="¡Antes de continuar!"
-                    message={`Al continuar, el ciclo escolar comenzará a estar en estado de "En Curso". Después de este cambio ya no podrás agregar nuevas materias ni modificar la cartera de pagos, ya que el sistema generará automáticamente la configuración correspondiente para los alumnos inscritos. ¿Deseas continuar?`}
-                    isLoading={false}
-                    cancelButton={{
-                        label: "Cancelar",
-                        onClick: () => setConfirmationRequired(false)
-                    }}
-                    confirmButton={{
-                        label: "Aceptar",
-                        onClick: async () => {
-                            setConfirmationRequired(false);
-                            await onSubmit(getValues())
-                        },
-                    }}
-                />
-            </form>
+            {/* Save confirmation modal */}
+            <Modal
+                open={confirmationRequired}
+                type="info"
+                title="¡Antes de continuar!"
+                message={`Al continuar, el ciclo escolar comenzará a estar en estado de "En Curso". Después de este cambio ya no podrás agregar nuevas materias ni modificar la cartera de pagos, ya que el sistema generará automáticamente la configuración correspondiente para los alumnos inscritos. ¿Deseas continuar?`}
+                isLoading={false}
+                cancelButton={{
+                    label: "Cancelar",
+                    onClick: () => setConfirmationRequired(false)
+                }}
+                confirmButton={{
+                    label: "Aceptar",
+                    onClick: async () => {
+                        setConfirmationRequired(false);
+                        await onSubmit(getValues())
+                    },
+                }}
+            />
         </>
     )
 }

@@ -64,8 +64,8 @@ export const AcademicCycleWalletTab = () => {
 
     const onSubmit = async (academicCycleWalletItemRequestLike: Partial<AcademicCycleWalletItemRequest>) => {
         try {
-            if (queries.wallet.get.data.some(item => item.name.trim().toLocaleLowerCase() === academicCycleWalletItemRequestLike.name?.trim().toLocaleLowerCase() && item.id !== academicCycleWalletToEdit?.id)) {
-                toast.warning("Ya cuenta con un concepto de pago con el mismo nombre", { position: "top-right" });
+            if (queries.wallet.get.data.some(item => item.code.trim().toLocaleLowerCase() === academicCycleWalletItemRequestLike.code?.trim().toLocaleLowerCase() && item.id !== academicCycleWalletToEdit?.id)) {
+                toast.warning("Ya cuenta con un concepto de pago con el mismo código", { position: "top-right" });
                 return;
             }
 
@@ -104,7 +104,7 @@ export const AcademicCycleWalletTab = () => {
                     filterButton={{ show: false }}
                     exportButton={{ show: false }}
                     addButton={{
-                        show: !context.isLocked,
+                        show: !context.isLocked && context.loggedInUserCanWrite,
                         label: "Asociar nuevo concepto",
                         disabled: queries.wallet.get.isLoading || queries.wallet.get.isError,
                         handleClick: () => {

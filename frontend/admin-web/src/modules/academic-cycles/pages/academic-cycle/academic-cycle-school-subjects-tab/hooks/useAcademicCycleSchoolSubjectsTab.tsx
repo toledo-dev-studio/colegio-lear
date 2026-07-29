@@ -10,7 +10,7 @@ import type { AcademicCycleSchoolSubjectResponse } from "@/interfaces/responses/
 
 export const useAcademicCycleSchoolSubjectsTab = () => {
     // Get context from layout
-    const { academicCycleId, academicCycle, isLocked } = useOutletContext<AcademicCycleLayoutContext>();
+    const { academicCycleId, academicCycle, isLocked, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
     // Shared hooks & stores
     const { showLoading, hideLoading } = useLoaderStore();
@@ -29,7 +29,8 @@ export const useAcademicCycleSchoolSubjectsTab = () => {
         context: {
             academicCycleId,
             academicCycle,
-            isLocked
+            isLocked,
+            loggedInUserCanWrite
         },
         queries: {
             schoolSubject: {

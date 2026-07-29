@@ -33,9 +33,7 @@ export const StudentGuardiansTab = () => {
 
         const query = searchQuery.toLowerCase();
 
-        return data.filter(item =>
-            item.fullName?.toLowerCase().includes(query)
-        );
+        return data.filter(item => item.fullName?.toLowerCase().includes(query));
     }, [queries.guardians.get.data, searchQuery]);
 
     // Component functions

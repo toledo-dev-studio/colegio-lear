@@ -30,7 +30,7 @@ interface Props {
 
 export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, onSubmit }: Props) => {
     // Constant configuration variables
-    const announcementInProgress = announcementResponse?.status === "in-progress";
+    const isDraft = announcementResponse?.status === "draft" || isNew;
     const announcementAlreadyPublished = announcementResponse?.alreadyPublished;
     const ANNOUNCEMENTS_STATUSES_LIST = !announcementAlreadyPublished ? ANNOUNCEMENTS_STATUSES.filter(item => item.key === "draft" || item.key === "in-progress") : ANNOUNCEMENTS_STATUSES.filter(item => item.key !== "draft");
 
@@ -67,7 +67,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
 
                     {/* Stats information */}
                     {
-                        (!isNew && announcementInProgress) && (
+                        (!isNew && !isDraft) && (
                             <AnnouncementStatsSection recipientsCount={announcementResponse?.recipientsCount ?? 0} viewedCount={announcementResponse?.viewedCount ?? 0} />
                         )
                     }
@@ -85,11 +85,13 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                             <Controller
                                 name="name"
                                 control={control}
+                                disabled={!isDraft}
                                 rules={{ required: true }}
                                 render={({ field }) => (
                                     <Input
                                         {...field}
                                         type="text"
+                                        disabled={!isDraft}
                                         placeholder="Nombre de la campaña..."
                                     />
                                 )} />
@@ -109,9 +111,10 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                             <Controller
                                 name="audience"
                                 control={control}
+                                disabled={!isDraft}
                                 rules={{ validate: (v) => (v && v.length > 0) || "Selecciona al menos una audiencia" }}
                                 render={({ field }) => (
-                                    <MultiSelect placeholder="Selecciona la audiencia..." availableOptions={AUDIENCE_TYPES} value={getKeyValuePairsByKeys(AUDIENCE_TYPES, field.value as any) || []} onChange={(value) => field.onChange(getKeys(value))} />
+                                    <MultiSelect placeholder="Selecciona la audiencia..." disabled={!isDraft} availableOptions={AUDIENCE_TYPES} value={getKeyValuePairsByKeys(AUDIENCE_TYPES, field.value as any) || []} onChange={(value) => field.onChange(getKeys(value))} />
                                 )}
                             />
                             {
@@ -132,10 +135,12 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                                 <Controller
                                     name="publishedAt"
                                     control={control}
+                                    disabled={!isDraft}
                                     rules={{ required: true }}
                                     render={({ field }) => (
                                         <DatePicker
                                             {...field}
+                                            disabled={!isDraft}
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
@@ -158,10 +163,12 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                                 <Controller
                                     name="expiresAt"
                                     control={control}
+                                    disabled={!isDraft}
                                     rules={{ required: true }}
                                     render={({ field }) => (
                                         <DatePicker
                                             {...field}
+                                            disabled={!isDraft}
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
@@ -222,9 +229,11 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                             <Controller
                                 name="description"
                                 control={control}
+                                disabled={!isDraft}
                                 render={({ field }) => (
                                     <Textarea
                                         {...field}
+                                        disabled={!isDraft}
                                         placeholder="-"
                                     />
                                 )}
@@ -245,9 +254,28 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                         )
                     }
 
+                    {/* Announcement content when is in progress */}
+                    {
+                        (!isNew && !isDraft) && (
+                            <section className="flex flex-col gap-y-6">
+                                <SectionTitle
+                                    title="CONTENIDO DE LA CAMPAÑA"
+                                    description="Consulta el contenido de la campaña" />
+                                <section className="w-full px-6 sm:px-10 mx-auto">
+                                    <article
+                                        data-testid="announcement-viewer-content"
+                                        className="tiptap-content prose prose-neutral dark:prose-invert max-w-none ProseMirror"
+                                        /* Only the TipTap HTML content — no title, no metadata, per requirement */
+                                        dangerouslySetInnerHTML={{ __html: announcementResponse?.content || "" }}
+                                    />
+                                </section>
+                            </section>
+                        )
+                    }
+
                     {/* Content and Attachments for existing announcements */}
                     {
-                        !isNew && (
+                        (!isNew && isDraft) && (
                             <>
                                 {/* Attachments */}
                                 <section className="flex flex-col gap-y-4">

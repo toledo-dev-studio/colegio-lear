@@ -1,8 +1,7 @@
-import { Link, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
@@ -15,6 +14,7 @@ import type { AcademicCycleSchoolGroupRequest } from "@/interfaces/requests/acad
 import type { AcademicCycleSchoolGroupResponse } from "@/interfaces/responses/academic-cycle-school-group.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Form } from "@/shared/components/form/Form";
 
 interface Props {
     isSubmitting: boolean;
@@ -26,7 +26,8 @@ interface Props {
 
 export const AcademicCycleSchoolGroupForm = ({ isSubmitting, teachersResponse, schoolSubjectsResponse, academicCycleSchoolGroupResponse, onSubmit }: Props) => {
     // Get context from layout
-    const { academicCycleId } = useOutletContext<AcademicCycleLayoutContext>();
+    const { academicCycleId, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
+    const navigate = useNavigate();
 
     // Use react hook form configuration
     const { control, handleSubmit, formState: { errors }, watch } = useForm<Partial<AcademicCycleSchoolGroupRequest>>({
@@ -43,7 +44,8 @@ export const AcademicCycleSchoolGroupForm = ({ isSubmitting, teachersResponse, s
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-8">
+            <Form moduleKey="academic-cycles" isSubmitting={isSubmitting} onSubmit={handleSubmit(onSubmit)} onCancel={() => navigate(`/academic-cycles/${academicCycleId}/school-groups`)}>
+
                 <section className="flex flex-col gap-y-6">
                     <SectionTitle
                         title="INFORMACIÓN GENERAL DEL GRUPO ESCOLAR"
@@ -169,7 +171,7 @@ export const AcademicCycleSchoolGroupForm = ({ isSubmitting, teachersResponse, s
                             control={control}
                             render={({ field }) => (
                                 <ScheduleCalendar
-                                    disabled={false}
+                                    disabled={!loggedInUserCanWrite}
                                     teachers={teachersResponse}
                                     calendars={field.value || []}
                                     schoolSubjects={schoolSubjectsResponse}
@@ -178,20 +180,8 @@ export const AcademicCycleSchoolGroupForm = ({ isSubmitting, teachersResponse, s
                         />
                     </section>
                 </section>
-
-                {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                    <Link to={`/academic-cycles/${academicCycleId}/school-groups`}>
-                        <Button type="button" disabled={isSubmitting} aria-label="cancel" variant={"ghost"}>
-                            Cancelar
-                        </Button>
-                    </Link>
-                    <Button type="submit" disabled={isSubmitting} aria-label="save-record">
-                        Guardar
-                    </Button>
-                </section>
-
-            </form>
+                
+            </Form>
         </>
     )
 }

@@ -38,7 +38,7 @@ export const Modal = ({ open, type, title, message, isLoading, confirmButton, ca
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     {
-                        cancelButton && (<AlertDialogCancel className={"px-10"} variant="outline" onClick={cancelButton.onClick} disabled={isLoading}>{cancelButton.label}</AlertDialogCancel>)
+                        cancelButton && (<AlertDialogCancel className={"px-10 text-foreground hover:text-foreground"} variant="outline" onClick={cancelButton.onClick} disabled={isLoading}>{cancelButton.label}</AlertDialogCancel>)
                     }
                     {
                         confirmButton && (

@@ -28,4 +28,8 @@ export interface AcademicCycleLayoutContext {
      * Academic cycle unique identifier or undefined if is a new record
      */
     academicCycleId?: string;
+    /**
+     * The logged in user has permission to write in an academic cycle record according a security role
+     */
+    loggedInUserCanWrite: boolean;
 }
