@@ -4,6 +4,7 @@ import jwt, { type SignOptions } from "jsonwebtoken";
 import { UnauthorizedError } from "../../shared/errors/app-error";
 import { env } from "../../shared/config/env.config";
 import { logger } from "../../shared/lib/logger";
+import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
 import type { IMailService } from "../../shared/services/mail.service";
 import { forgotPasswordEmail } from "../../shared/templates/email.templates";
 import type { LoginResult, LoginResponse, JwtPayloadData } from "./auth.types";
@@ -82,7 +83,7 @@ export class AuthService {
       phoneNumber: employee.phoneNumber,
       email: employee.email,
       username: employee.username,
-      avatar: employee.avatar,
+      avatar: toPublicFileUrl(employee.avatar),
       mustChangePassword: employee.mustChangePassword,
       securityRole: {
         id: employee.securityRole.id,
@@ -247,7 +248,7 @@ export class AuthService {
       phoneNumber: employee.phoneNumber,
       email: employee.email,
       username: employee.username,
-      avatar: employee.avatar,
+      avatar: toPublicFileUrl(employee.avatar),
       mustChangePassword: employee.mustChangePassword,
       securityRole: {
         id: employee.securityRole.id,

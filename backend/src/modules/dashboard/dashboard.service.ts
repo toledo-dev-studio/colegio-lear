@@ -1,4 +1,5 @@
 import { PrismaClient } from "../../generated/prisma/client";
+import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
 import type {
   AcademicCycleSummaryRecord,
   TopSchoolGroupRecord,
@@ -249,7 +250,7 @@ export class DashboardService {
         .join(" "),
       email: e.email,
       createdAt: e.createdAt.toISOString(),
-      avatar: e.avatar,
+      avatar: toPublicFileUrl(e.avatar),
     }));
   }
 }

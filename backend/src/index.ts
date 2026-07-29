@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -39,6 +40,16 @@ app.use(requestLogger);
 /* --- Public Routes (no authentication required) --- */
 app.use(healthRoutes);
 app.use("/auth", authRoutes);
+
+/*
+ * Serve locally-stored files (avatars, attachments) publicly so <img src>
+ * tags can load them directly — local-testing stopgap until real blob
+ * storage (Azure) is configured. See shared/helpers/file-url.helper.ts,
+ * which builds the matching absolute URL for API responses.
+ */
+if (env.STORAGE_PROVIDER === "local") {
+  app.use("/uploads", express.static(path.resolve(env.STORAGE_LOCAL_PATH)));
+}
 
 /* --- Swagger API Docs --- */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

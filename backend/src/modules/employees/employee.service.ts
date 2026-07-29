@@ -4,6 +4,7 @@ import {
   ConflictError,
   ValidationError,
 } from "../../shared/errors/app-error";
+import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
 import type {
   EmployeeFilters,
   EmployeeRecord,
@@ -162,7 +163,7 @@ export class EmployeeService {
       phoneNumber: record.phoneNumber,
       email: record.email,
       username: record.username,
-      avatar: record.avatar,
+      avatar: toPublicFileUrl(record.avatar),
       isActive: record.isActive,
       securityRoleId: record.securityRoleId,
       jobTitleId: record.jobTitleId,
@@ -192,6 +193,7 @@ export class EmployeeService {
   private toEmployeeRecord(record: any): EmployeeRecord {
     return {
       ...record,
+      avatar: toPublicFileUrl(record.avatar),
       jobTitle: {
         ...record.jobTitle,
         jobTitleType: toFrontendJobTitleType(record.jobTitle.jobTitleType),
@@ -669,7 +671,7 @@ export class EmployeeService {
       phoneNumber: updated!.phoneNumber,
       email: updated!.email,
       username: updated!.username,
-      avatar: updated!.avatar,
+      avatar: toPublicFileUrl(updated!.avatar),
       mustChangePassword: updated!.mustChangePassword,
       securityRole: {
         id: updated!.securityRole.id,

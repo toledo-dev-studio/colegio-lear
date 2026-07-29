@@ -1550,3 +1550,47 @@ funcionó (204). Entrada de calendario y empleado de prueba eliminados
 al terminar (con `prisma db seed` para restaurar dos entradas del
 calendario sembrado que se habían omitido por accidente durante la
 prueba).
+
+## Archivos locales (`uploads`) expuestos públicamente para pruebas,
+mientras se consigue block storage real (2026-07-29)
+
+**Contexto**: `LocalStorageService` (`shared/services/storage.service.ts`)
+ya guardaba avatares/adjuntos en disco (`./uploads/{subfolder}/{uuid}.ext`)
+y la BD/API solo guardaban y regresaban esa **ruta relativa**
+("employees/uuid.jpg") — nunca hubo una ruta de Express sirviendo esos
+archivos, así que ningún `<img src>` podía cargarlos. El usuario pidió
+exponer esto mínimo para poder probar en lo que se configura block
+storage real (Azure).
+
+**Decisión de alcance (confirmada con el usuario)**: no solo exponer la
+carpeta, sino que el backend regrese la **URL completa** lista para
+usarse — sin tocar la BD (sigue guardando solo la ruta relativa) y sin
+afectar el comportamiento cuando se use un proveedor real de storage.
+
+- **`GET /uploads/*`** (`src/index.ts`): nueva ruta pública (antes del
+  middleware de autenticación, sin necesidad de sesión) que sirve
+  `STORAGE_LOCAL_PATH` vía `express.static`. Solo se monta cuando
+  `STORAGE_PROVIDER === "local"` — con Azure no existe una carpeta local
+  que servir.
+- **`toPublicFileUrl()`** (nuevo helper,
+  `shared/helpers/file-url.helper.ts`): antepone
+  `${BACKEND_URL}/uploads/` a una ruta relativa. Si el valor ya es una
+  URL absoluta (`http(s)://...` — lo que devolvería un proveedor de blob
+  storage real) o si `STORAGE_PROVIDER` no es `"local"`, lo regresa sin
+  tocar. Nunca se persiste — solo se aplica al armar la respuesta.
+- Nueva variable `BACKEND_URL` en `env.config.ts` (default
+  `http://localhost:{PORT}`).
+- Aplicado en cada punto donde se serializa un avatar o adjunto:
+  `employee.service.ts` (detalle, lista, mi-cuenta), `auth.service.ts`
+  (login y `/me`), `dashboard.service.ts` (últimos profesores),
+  `student.service.ts`, `academic-cycle-school-group.service.ts` (el
+  profesor embebido en cada entrada de calendario), `attachment.service.ts`
+  (respuesta del upload) y `announcement.service.ts` (adjuntos dentro de
+  un comunicado).
+
+Verificado en vivo: subir un avatar regresa
+`"http://localhost:3000/uploads/employees/{uuid}.png"`; esa URL se pudo
+descargar directamente **sin sesión/cookies** y el archivo coincide
+byte a byte con el subido; subir un adjunto a un anuncio regresa la URL
+completa tanto en la respuesta del upload como en un `GET` posterior del
+anuncio. Datos y archivos de prueba eliminados al terminar.

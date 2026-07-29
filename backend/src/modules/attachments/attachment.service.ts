@@ -2,6 +2,7 @@ import * as path from "path";
 
 import { PrismaClient } from "../../generated/prisma/client";
 import { NotFoundError } from "../../shared/errors/app-error";
+import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
 import type { IStorageService } from "../../shared/services/storage.service";
 import type { AttachmentRecord, FileUpload } from "./attachment.types";
 
@@ -64,7 +65,7 @@ export class AttachmentService {
 
     return {
       id: attachment.id,
-      url: attachment.url,
+      url: toPublicFileUrl(attachment.url),
       name: attachment.name,
       extension: attachment.extension,
       relatedRecordId: attachment.relatedRecordId,

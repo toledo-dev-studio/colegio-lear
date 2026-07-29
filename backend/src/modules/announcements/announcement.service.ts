@@ -1,5 +1,6 @@
 import { PrismaClient } from "../../generated/prisma/client";
 import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
+import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
 import type {
   AnnouncementFilters,
   AnnouncementRecord,
@@ -153,7 +154,16 @@ export class AnnouncementService {
   private mapRecord<T extends { status: string }>(
     raw: T,
   ): Omit<T, "status"> & { status: AnnouncementStatus } {
-    return { ...raw, status: statusFromPrisma(raw.status) };
+    const mapped = { ...raw, status: statusFromPrisma(raw.status) };
+
+    // Detail records include attachments; list records don't.
+    if ("attachments" in mapped && Array.isArray(mapped.attachments)) {
+      mapped.attachments = mapped.attachments.map(
+        (a: { url: string }) => ({ ...a, url: toPublicFileUrl(a.url) }),
+      );
+    }
+
+    return mapped;
   }
 
   /**
