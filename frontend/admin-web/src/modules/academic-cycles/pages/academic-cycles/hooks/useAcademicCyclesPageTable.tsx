@@ -23,7 +23,7 @@ export const useAcademicCyclesPageTable = ({ handleClickDelete }: Options) => {
     const columns: string[] = [
         "Nombre & código",
         "Fecha de inicio",
-        "Fecha de termino",
+        "Fecha de término",
         "¿Inscripciones abiertas?",
         "Estatus del ciclo escolar",
         "Tipo de ciclo escolar",

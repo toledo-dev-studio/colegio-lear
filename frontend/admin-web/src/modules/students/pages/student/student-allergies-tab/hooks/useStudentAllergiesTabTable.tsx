@@ -1,3 +1,4 @@
+import { useOutletContext } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
@@ -6,6 +7,7 @@ import type { AllergyResponse } from "@/interfaces/responses/allergy.response";
 import { ALLERGY_SEVERITIES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
+import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 
 interface Options {
     handleClickEdit: (item: AllergyResponse) => void;
@@ -13,20 +15,24 @@ interface Options {
 }
 
 export const useStudentAllergiesTabTable = ({ handleClickEdit, handleClickDelete }: Options) => {
+    // Get context from layout
+    const { loggedInUserCanWrite } = useOutletContext<StudentLayoutContext>();
+
     // Table columns configuration structure
     const columns: string[] = [
         "Alérgico a",
         "Severidad",
         "Observaciones",
-        "Acciones"
     ];
+    if (loggedInUserCanWrite)
+        columns.push("Acciones");
 
     // Table properties value configuration structure
     const properties: TableProperty<AllergyResponse>[] = [
         {
             key: "name",
             render: (item: AllergyResponse) => (
-                <span className="text-primary cursor-pointer" onClick={() => handleClickEdit(item)}>
+                <span className="text-primary cursor-pointer" onClick={() => loggedInUserCanWrite && handleClickEdit(item)}>
                     {item.name ?? "-"}
                 </span>
             )
@@ -39,7 +45,7 @@ export const useStudentAllergiesTabTable = ({ handleClickEdit, handleClickDelete
     ];
 
     // Table actions list
-    const actions: TableAction<AllergyResponse>[] = [
+    const actions: TableAction<AllergyResponse>[] = !loggedInUserCanWrite ? [] : [
         {
             key: "edit",
             render: (item: AllergyResponse) => (

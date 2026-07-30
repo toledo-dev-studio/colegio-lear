@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { LogOut, User } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface Props {
     toggleDropdown: (open: boolean) => void;
@@ -8,11 +9,29 @@ interface Props {
 
 export const AccountInfoDropdown = ({ toggleDropdown, logout }: Props) => {
     const navigate = useNavigate();
+    const panelRef = useRef<HTMLDivElement>(null);
+
+    // Esc closes; also lock body scroll while overlay is open
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") toggleDropdown(false);
+        };
+        window.addEventListener("keydown", onKey);
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            window.removeEventListener("keydown", onKey);
+            document.body.style.overflow = prevOverflow;
+        };
+    }, [toggleDropdown]);
+
     return (
         <>
-            <div data-testid="user-menu-dropdown"
-                className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-2xl shadow-lg py-2 animate-fade-in"
-                onMouseLeave={() => toggleDropdown(false)}>
+            <section className="fixed inset-0 z-50 flex justify-end">
+                <section className="absolute inset-0" onClick={() => toggleDropdown(false)} />
+            </section>
+
+            <section ref={panelRef} data-testid="user-menu-dropdown" className="absolute right-0 mt-2 w-56 bg-card border border-border rounded-2xl shadow-lg py-2 animate-fade-in z-50">
                 <button
                     onClick={() => {
                         toggleDropdown(false);
@@ -33,7 +52,7 @@ export const AccountInfoDropdown = ({ toggleDropdown, logout }: Props) => {
                     <LogOut className="w-4 h-4" />
                     Cerrar sesión
                 </button>
-            </div>
+            </section>
         </>
     )
 }

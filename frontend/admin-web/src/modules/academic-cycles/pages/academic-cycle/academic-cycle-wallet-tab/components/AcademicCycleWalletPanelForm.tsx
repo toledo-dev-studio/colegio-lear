@@ -169,6 +169,7 @@ export const AcademicCycleWalletPanelForm = ({ academicCycleWalletItemResponse, 
                             render={({ field }) => (
                                 <DatePicker
                                     {...field}
+                                    placeholder="Fecha límite de pago"
                                     value={field.value}
                                     disabled={!code}
                                     onChange={field.onChange}

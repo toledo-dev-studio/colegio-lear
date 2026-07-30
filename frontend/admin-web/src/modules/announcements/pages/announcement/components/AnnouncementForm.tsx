@@ -141,6 +141,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                                         <DatePicker
                                             {...field}
                                             disabled={!isDraft}
+                                            placeholder="Fecha de publicación"
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
@@ -169,6 +170,7 @@ export const AnnouncementForm = ({ isNew, isSubmitting, announcementResponse, on
                                         <DatePicker
                                             {...field}
                                             disabled={!isDraft}
+                                            placeholder="Fecha de vencimiento"
                                             value={field.value}
                                             onChange={field.onChange}
                                         />

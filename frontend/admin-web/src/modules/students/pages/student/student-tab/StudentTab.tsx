@@ -1,25 +1,24 @@
-import { Link, useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
 
 import { Input } from "@/shared/ui/input";
 import { Switch } from "@/shared/ui/switch";
-import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
+import { Form } from "@/shared/components/form/Form";
 import { useLoaderStore } from "@/shared/stores/LoaderStore";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { MEXICAN_STATES } from "@/lib/constants/mexican-states";
-import { Spinner } from "@/shared/components/spinner/Spinner";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
 import type { StudentRequest } from "@/interfaces/requests/student.request";
+import { BLOOD_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 import { useCreateUpdateStudent } from "@/modules/students/hooks/students/useCreateUpdateStudent";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
-import { BLOOD_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 
 export const StudentTab = () => {
     // Get context from layout
@@ -70,7 +69,7 @@ export const StudentTab = () => {
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <Form moduleKey="students" isSubmitting={createUpdateStudentMutation.isPending} onSubmit={handleSubmit(onSubmit)} onCancel={() => navigate("/students")}>
 
                 <section className="flex flex-col gap-y-6">
 
@@ -177,6 +176,7 @@ export const StudentTab = () => {
                                 render={({ field }) => (
                                     <DatePicker
                                         {...field}
+                                        placeholder="Fecha de nacimiento"
                                         value={field.value}
                                         onChange={field.onChange}
                                     />
@@ -241,7 +241,7 @@ export const StudentTab = () => {
                         description="En esta sección de la pantalla podrás configurar la información médica de un estudiante, asegúrate de que toda la información sea la correcta, será de ayuda para casos de emergencia." />
 
                     <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                        
+
                         <div className="control-container">
                             <label className="label">
                                 Tipo de sangre <span className="required">*</span>:
@@ -280,7 +280,7 @@ export const StudentTab = () => {
                                 )
                             }
                         </div>
-                        
+
                         <div className="control-container col-span-1 md:col-span-2 xl:col-span-3">
                             <label className="label">Información médica complementaria:</label>
                             <Controller
@@ -493,26 +493,9 @@ export const StudentTab = () => {
 
                     </section>
 
-
                 </section>
 
-
-                {/* Actions Buttons */}
-                <section className="flex items-center justify-end mt-8 gap-x-4 border-t border-border pt-8">
-                    <Link to="/students">
-                        <Button type="button" disabled={createUpdateStudentMutation.isPending} aria-label="cancel" variant={"ghost"}>
-                            Cancelar
-                        </Button>
-                    </Link>
-                    <Button type="submit" disabled={createUpdateStudentMutation.isPending} aria-label="save-record">
-                        Guardar
-                        {
-                            createUpdateStudentMutation.isPending && (<Spinner variant="primary" className="ml-4" />)
-                        }
-                    </Button>
-                </section>
-
-            </form >
+            </Form>
         </>
     )
 }

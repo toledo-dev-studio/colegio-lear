@@ -12,15 +12,14 @@ interface Options {
 export const getPagedNotificationsActionAsync = async ({ page, employeeId }: Options): Promise<PagedResponse<NotificationResponse>> => {
     await sleep();
 
-    let endpoint = `/notifications/employees/${employeeId}`;
+    let endpoint = `/notifications/admin/${employeeId}`;
 
     if (VITE_ENVIRONMENT === "mockable")
         endpoint = "/notifications/paged-notifications.json";
 
     const { data } = await api.get<PagedResponse<NotificationResponse>>(endpoint, {
         params: {
-            page,
-            employeeId,
+            page
         }
     });
 

@@ -77,8 +77,8 @@ export const useStudentEnrollmentsTabTable = ({ student }: Options) => {
         },
         { 
             key: "academicCycleSchoolGroup",
-            render: ({ academicCycleId, academicCycleSchoolGroup }: AcademicCycleEnrollmentResponse) => (
-                <Link to={`/academic-cycles/${academicCycleId}/school-groups`}>
+            render: ({ academicCycleId, academicCycleSchoolGroup, academicCycleSchoolGroupId }: AcademicCycleEnrollmentResponse) => (
+                <Link to={`/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}`}>
                     <span className="text-primary">
                         {academicCycleSchoolGroup?.name}
                     </span>

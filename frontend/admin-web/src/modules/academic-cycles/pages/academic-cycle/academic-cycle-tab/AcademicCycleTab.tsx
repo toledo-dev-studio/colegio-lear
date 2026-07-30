@@ -339,6 +339,7 @@ export const AcademicCycleTab = () => {
                                 render={({ field }) => (
                                     <DatePicker
                                         {...field}
+                                        placeholder="Fecha de inicio"
                                         disabled={isLocked}
                                         value={field.value}
                                         onChange={field.onChange}
@@ -355,7 +356,7 @@ export const AcademicCycleTab = () => {
                         </div>
 
                         <div className="control-container">
-                            <label className="label">Hasta fecha de termino <span className="required">*</span>:</label>
+                            <label className="label">Hasta fecha de término <span className="required">*</span>:</label>
                             <Controller
                                 name="endDate"
                                 control={control}
@@ -364,6 +365,7 @@ export const AcademicCycleTab = () => {
                                 render={({ field }) => (
                                     <DatePicker
                                         {...field}
+                                        placeholder="Fecha de término"
                                         disabled={isLocked}
                                         value={field.value}
                                         onChange={field.onChange}
@@ -373,7 +375,7 @@ export const AcademicCycleTab = () => {
                             {
                                 errors.endDate && (
                                     <p className="error">
-                                        La fecha de termino del ciclo escolar es obligatoria
+                                        La fecha de término del ciclo escolar es obligatoria
                                     </p>
                                 )
                             }

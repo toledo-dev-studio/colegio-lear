@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
-import { Bell, MailOpen, Megaphone, MessageSquare } from "lucide-react";
+import { Bell, Info, MailOpen, Megaphone, MessageSquare } from "lucide-react";
 
-import type { NotificationResponse } from "@/interfaces/responses/notification.response";
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
+import type { NotificationResponse } from "@/interfaces/responses/notification.response";
 
 interface Props {
     open: boolean;
@@ -104,6 +104,7 @@ export const NotificationResultsDropdown = ({ open, currentPage, totalPages, tot
                                             <span className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${n.read ? "bg-muted text-muted-foreground" : "bg-primary/15 text-primary"}`}>
                                                 {n.type === "announcement" && <Megaphone className="w-4 h-4" />}
                                                 {n.type === "message" && <MessageSquare className="w-4 h-4" />}
+                                                {n.type === "info" && <Info className="w-4 h-4" />}
                                             </span>
 
                                             <div className="min-w-0 flex-1">
@@ -122,6 +123,7 @@ export const NotificationResultsDropdown = ({ open, currentPage, totalPages, tot
                                                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${n.read ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary"}`}>
                                                         {n.type === "announcement" && "Campaña pendiente por ver"}
                                                         {n.type === "message" && "Mensajes pendientes"}
+                                                        {n.type === "info" && "Información del sistema"}
                                                     </span>
                                                 </div>
                                             </div>

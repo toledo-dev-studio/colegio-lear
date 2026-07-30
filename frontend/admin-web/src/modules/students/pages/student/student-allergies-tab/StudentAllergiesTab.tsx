@@ -94,7 +94,7 @@ export const StudentAllergiesTab = () => {
                     filterButton={{ show: false }}
                     exportButton={{ show: false }}
                     addButton={{
-                        show: true,
+                        show: context.loggedInUserCanWrite,
                         label: "Registrar alergía",
                         disabled: queries.allergies.get.isLoading || queries.allergies.get.isError,
                         handleClick: () => allergySidePanel.open({})
