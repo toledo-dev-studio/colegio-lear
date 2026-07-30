@@ -41,6 +41,7 @@ export const StudentWalletItemPanelForm = ({ studentWalletItemResponse, handleCl
                             render={({ field }) => (
                                 <DatePicker
                                     {...field}
+                                    placeholder="Fecha de prorroga"
                                     value={field.value}
                                     onChange={field.onChange}
                                 />

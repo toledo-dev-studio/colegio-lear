@@ -10,6 +10,7 @@ import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { useGetStudentById } from "../hooks/students/useGetStudentById";
 import type { StudentLayoutContext } from "../interfaces/student-layout-context";
 import { StudentTabSkeleton } from "../pages/student/student-tab/StudentTabSkeleton";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 
 const TABS: Tab[] = [
     {
@@ -51,6 +52,7 @@ export const StudentLayout = () => {
         isNew: isNew,
         studentId: id!,
         student: studentQuery.data!,
+        loggedInUserCanWrite: usePermission("students", "can-write")
     };
 
     // Constant configuration variables

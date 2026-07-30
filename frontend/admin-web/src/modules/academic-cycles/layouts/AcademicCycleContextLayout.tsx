@@ -81,7 +81,6 @@ export const AcademicCycleContextLayout = () => {
     }
 
     // Check if try to access to enrollment page when academic cycle has "upcoming" status
-    // REMOVE TESTING
     if(academicCycleQuery.data?.status === "upcoming" && matchPath("/academic-cycles/:id/enrollments/:enrollmentId", pathname) !== null) {
         toast.error("No es posible obtener la información de la inscrpción hasta que el ciclo escolar cambie de estatus a \"En curso\"", { position: "top-right" });
         return <Navigate to={`/academic-cycles/${academicCycleQuery.data.id}`} />;

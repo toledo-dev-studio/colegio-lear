@@ -141,6 +141,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                             render={({ field }) => (
                                 <DatePicker
                                     {...field}
+                                    placeholder="Fecha de inicio"
                                     value={field.value}
                                     onChange={field.onChange}
                                 />
@@ -150,18 +151,20 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                     </div>
 
                     <div className="control-container">
-                        <label className="label">Hasta fecha de termino:</label>
+                        <label className="label">Hasta fecha de término:</label>
                         <Controller
                             name="endDate"
                             control={control}
                             render={({ field }) => (
                                 <DatePicker
+                                    {...field}
+                                    placeholder="Fecha de término"
                                     value={field.value}
                                     onChange={field.onChange}
                                 />
                             )}
                         />
-                        <p className="control-info">Filtrado hasta fecha de termino seleccionada</p>
+                        <p className="control-info">Filtrado hasta fecha de término seleccionada</p>
                     </div>
 
                     <div className="control-container">

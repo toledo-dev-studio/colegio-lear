@@ -92,7 +92,7 @@ export const StudentGuardiansTab = () => {
                     filterButton={{ show: false }}
                     exportButton={{ show: false }}
                     addButton={{
-                        show: true,
+                        show: context.loggedInUserCanWrite,
                         label: "Registrar tutor",
                         disabled: queries.guardians.get.isLoading || queries.guardians.get.isError,
                         handleClick: () => studentGuardianSidePanel.open({})

@@ -84,7 +84,7 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
                                     isSearching={searchStudentsMutation.isPending}
                                     onClearSelection={() => {
                                         setValue("studentId", undefined);
-                                        setStudent({});
+                                        setStudent(undefined);
                                     }}
                                     onOptionChange={async (option: StudentResponse) => {
                                         setValue("studentId", option.id);

@@ -143,7 +143,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                     </div>
 
                     <div className="control-container">
-                        <label className="label">Hora de termino de clase <span className="required">*</span>:</label>
+                        <label className="label">Hora de término de clase <span className="required">*</span>:</label>
                         <Controller
                             control={control}
                             name="endTime"
@@ -153,7 +153,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                                 <Input
                                     type="time"
                                     disabled={disabled}
-                                    placeholder="Termino de clase"
+                                    placeholder="Término de clase"
                                     step={60 * SLOT_MIN}
                                     value={field.value ?? ""}
                                     onChange={field.onChange}
@@ -163,7 +163,7 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
                         {
                             errors.endTime && (
                                 <p className="error">
-                                    {errors.endTime.message || "La hora de termino de clase es requerido"}
+                                    {errors.endTime.message || "La hora de término de clase es requerido"}
                                 </p>
                             )
                         }

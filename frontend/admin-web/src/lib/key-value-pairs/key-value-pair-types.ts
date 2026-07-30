@@ -68,8 +68,9 @@ export type DayOfWeekKey =
   | "sunday";
 
 export type PaymentMethodKey =
-  | "online-payment"
-  | "cash";
+  | "forgiven" // Condonado
+  | "online-payment" // Pago en línea
+  | "cash"; // Efectivo (caja)
 
 export type BloodTypeKey =
   | "A+"

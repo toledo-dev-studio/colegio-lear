@@ -36,7 +36,7 @@ export const AcademicCyclesPage = () => {
             { label: "Nombre", key: "name" },
             { label: "Código", key: "code" },
             { label: "Fecha de inicio", key: "startDate" },
-            { label: "Fecha de termino", key: "endDate" }
+            { label: "Fecha de término", key: "endDate" }
         ];
 
         downloadDataToCsvFile("Ciclos escolares", headers, data);

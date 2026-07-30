@@ -94,6 +94,7 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
                             render={({ field }) => (
                                 <DatePicker
                                     {...field}
+                                    placeholder="Fecha de publicación"
                                     value={field.value}
                                     onChange={field.onChange}
                                 />
@@ -110,6 +111,7 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
                             render={({ field }) => (
                                 <DatePicker
                                     {...field}
+                                    placeholder="Fecha de vencimiento"
                                     value={field.value}
                                     onChange={field.onChange}
                                 />

@@ -1,3 +1,4 @@
+import { useOutletContext } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
@@ -7,6 +8,7 @@ import type { TableAction } from "@/shared/components/table/interfaces/table-act
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import { STUDENT_GUARDIANS_RELATIONSHIPS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { StudentGuardianResponse } from "@/interfaces/responses/student-guardian.response";
+import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 
 interface Options {
     handleClickEdit: (item: StudentGuardianResponse) => void;
@@ -14,6 +16,9 @@ interface Options {
 }
 
 export const useStudentGuardiansTabTable = ({ handleClickEdit, handleClickDelete }: Options) => {
+    // Get context from layout
+    const { loggedInUserCanWrite } = useOutletContext<StudentLayoutContext>();
+
     // Table columns configuration structure
     const columns: string[] = [
         "Nombre completo",
@@ -24,15 +29,16 @@ export const useStudentGuardiansTabTable = ({ handleClickEdit, handleClickDelete
         "¿Contacto de emergencia?",
         "¿Autorizado para recoger?",
         "Observaciones",
-        "Acciones",
     ];
+    if (loggedInUserCanWrite)
+        columns.push("Acciones");
 
     // Table properties value configuration structure
     const properties: TableProperty<StudentGuardianResponse>[] = [
         {
             key: "fullName",
             render: (item: StudentGuardianResponse) => (
-                <span className="text-primary cursor-pointer" onClick={() => handleClickEdit(item)}>
+                <span className="text-primary cursor-pointer" onClick={() => loggedInUserCanWrite && handleClickEdit(item)}>
                     {item.fullName ?? "-"}
                 </span>
             )
@@ -45,21 +51,21 @@ export const useStudentGuardiansTabTable = ({ handleClickEdit, handleClickDelete
         { key: "email" },
         {
             key: "isPrincipal",
-            render: ({ isPrincipal }: StudentGuardianResponse) => <Badge variant={isPrincipal ? "success" : "destructive"} className="py-4 px-6">{ isPrincipal ? "Sí" : "No" }</Badge>
+            render: ({ isPrincipal }: StudentGuardianResponse) => <Badge variant={isPrincipal ? "success" : "destructive"} className="py-4 px-6">{isPrincipal ? "Sí" : "No"}</Badge>
         },
         {
             key: "authorizedToPickUp",
-            render: ({ authorizedToPickUp }: StudentGuardianResponse) => <Badge variant={authorizedToPickUp ? "success" : "destructive"} className="py-4 px-6">{ authorizedToPickUp ? "Sí" : "No" }</Badge>
+            render: ({ authorizedToPickUp }: StudentGuardianResponse) => <Badge variant={authorizedToPickUp ? "success" : "destructive"} className="py-4 px-6">{authorizedToPickUp ? "Sí" : "No"}</Badge>
         },
         {
             key: "emergencyContact",
-            render: ({ emergencyContact }: StudentGuardianResponse) => <Badge variant={emergencyContact ? "success" : "destructive"} className="py-4 px-6">{ emergencyContact ? "Sí" : "No" }</Badge>
+            render: ({ emergencyContact }: StudentGuardianResponse) => <Badge variant={emergencyContact ? "success" : "destructive"} className="py-4 px-6">{emergencyContact ? "Sí" : "No"}</Badge>
         },
         { key: "observations" }
     ];
 
     // Table actions list
-    const actions: TableAction<StudentGuardianResponse>[] = [
+    const actions: TableAction<StudentGuardianResponse>[] = !loggedInUserCanWrite ? [] : [
         {
             key: "edit",
             render: (item: StudentGuardianResponse) => (
