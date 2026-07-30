@@ -121,6 +121,7 @@ export const STUDENT_WALLET_STATUSES: KeyValuePair<StudentWalletStatusKey>[] = [
 export const STUDENT_WALLET_PAYMENT_METHODS: KeyValuePair<PaymentMethodKey>[] = [
     { key: "cash", label: "Efectivo" },
     { key: "online-payment", label: "Pago en línea" },
+    { key: "forgiven", label: "Condonado" },
 ];
 
 /**
