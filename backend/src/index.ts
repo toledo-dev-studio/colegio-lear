@@ -8,6 +8,7 @@ import { env } from "./shared/config/env.config";
 import { requestLogger } from "./shared/middleware/request-logger.middleware";
 import { errorHandler } from "./shared/middleware/error-handler.middleware";
 import { authenticate } from "./shared/middleware/auth.middleware";
+import { startNotificationDeliveryJob } from "./shared/jobs/notification-delivery.job";
 
 /* --- Module Routes --- */
 import healthRoutes from "./modules/health/health.routes";
@@ -79,5 +80,8 @@ app.listen(env.PORT, () => {
   console.log(`🚀 Server running on http://localhost:${env.PORT}`);
   console.log(`📄 API Docs available at http://localhost:${env.PORT}/api-docs`);
 });
+
+/* --- Background Jobs --- */
+startNotificationDeliveryJob();
 
 export default app;
