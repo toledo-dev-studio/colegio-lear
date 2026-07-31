@@ -1666,3 +1666,44 @@ real de ejemplo, publicada como artifact para revisión; además se mandó
 un correo real de prueba con las credenciales SMTP configuradas para
 confirmar que también se ve bien en un cliente de correo real, no solo
 en el navegador.
+
+## Bug real: un empleado nuevo no podía completar su primer login
+(faltaba el código de seguridad) (2026-07-29)
+
+**Bug reportado por el usuario**: al registrar un empleado, el correo de
+bienvenida solo incluía la contraseña temporal. Como el empleado se crea
+con `mustChangePassword: true`, el front lo manda a `/auth/reset-password`
+en su primer login — pero esa pantalla es la **misma** que usa
+"olvidé mi contraseña", y siempre pide un "Código de seguridad"
+(`ResetPasswordPage.tsx`). `AuthService.resetPassword()` exige
+`employee.passwordResetCode` (poblado hoy solo por el flujo de
+recuperación de contraseña); `EmployeeService.create()` nunca lo generaba.
+Resultado real: **todo empleado nuevo quedaba atorado** en esa pantalla
+pidiendo un código que jamás se le mandó — sin manera de completar su
+primer inicio de sesión.
+
+**Corrección, sin tocar ningún otro flujo** (como pidió el usuario): tanto
+`EmployeeService.create()` como `resendInvitation()` ahora generan un
+código de 6 dígitos (mismo formato que
+`AuthService.generateResetCode()`, duplicado localmente para no acoplar
+ambos módulos), lo guardan hasheado en `passwordResetCode` +
+`passwordResetCodeExpiresAt`, y lo incluyen en el correo de
+bienvenida/reenvío — reutilizando el mecanismo de verificación que
+`AuthService.resetPassword()` ya tenía, sin cambiarlo. Vigencia de 7 días
+(vs. los 15 minutos de "olvidé mi contraseña"), porque no hay forma de
+saber cuándo un empleado nuevo abre su correo de invitación por primera
+vez.
+
+`invitationEmail`/`resendInvitationEmail` ganan un parámetro `code` y
+ahora muestran el mismo bloque grande de "código de seguridad" que ya
+usaba `forgotPasswordEmail` (extraído a un helper compartido `codeBlock`
+en `email.templates.ts`, reduciendo la duplicación entre las tres
+plantillas).
+
+Verificado en vivo, de punta a punta (creando el empleado, extrayendo la
+contraseña/código reales del HTML capturado, e iniciando sesión de
+verdad): crear un empleado nuevo → login con la contraseña temporal →
+`mustChangePassword: true` → `resetPassword` con el código del correo →
+**funciona**, `mustChangePassword` pasa a `false`. Se repitió la misma
+prueba con `resendInvitation` (código y contraseña nuevos) con el mismo
+resultado. Empleados de prueba eliminados al terminar.
