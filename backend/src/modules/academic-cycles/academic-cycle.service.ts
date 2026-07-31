@@ -38,6 +38,16 @@ function typeFromPrisma(value: string): AcademicPeriodType {
   return (TYPE_FROM_PRISMA[value] ?? value) as AcademicPeriodType;
 }
 
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+/** Applies a scholarship's discount percentage (e.g. 30 = 30% off) to an amount. */
+function applyDiscount(amount: number, discountPercentage: number): number {
+  if (!discountPercentage) return round2(amount);
+  return round2(amount * (1 - discountPercentage / 100));
+}
+
 // ─── Include clause for related entities ────────────────────────────────────
 
 const INCLUDE_RELATIONS = {
@@ -412,6 +422,8 @@ export class AcademicCycleService {
    * StudentWalletItem for every enrolled student that doesn't already have
    * one for a given catalog item — covers both students enrolled before the
    * catalog was finished, and catalog items added after some enrollments.
+   * Students with a scholarship get every item's amount discounted right
+   * away — a scholarship isn't a payment, it lowers what's actually owed.
    */
   private async generateWalletItemsForActivatedCycle(
     tx: Prisma.TransactionClient,
@@ -421,7 +433,11 @@ export class AcademicCycleService {
       tx.academicCycleWallet.findMany({ where: { academicCycleId } }),
       tx.academicCycleEnrollment.findMany({
         where: { academicCycleId, status: "enrolled" },
-        select: { id: true, studentId: true },
+        select: {
+          id: true,
+          studentId: true,
+          scholarship: { select: { discountPercentage: true } },
+        },
       }),
       tx.studentWalletItem.findMany({
         where: { academicCycleId },
@@ -437,23 +453,29 @@ export class AcademicCycleService {
       ),
     );
 
-    const toCreate = enrollments.flatMap((enrollment) =>
-      walletCatalog
+    const toCreate = enrollments.flatMap((enrollment) => {
+      const discountPercentage = Number(
+        enrollment.scholarship?.discountPercentage ?? 0,
+      );
+      return walletCatalog
         .filter((w) => !existingKeys.has(`${enrollment.id}:${w.id}`))
-        .map((w) => ({
-          name: w.name,
-          code: w.code,
-          description: w.description,
-          amount: w.amount,
-          allowForgiveness: w.allowForgiveness,
-          outstandingAmount: w.amount,
-          dueDate: w.dueDate,
-          studentId: enrollment.studentId,
-          academicCycleId,
-          academicCycleEnrollmentId: enrollment.id,
-          academicCycleWalletId: w.id,
-        })),
-    );
+        .map((w) => {
+          const amount = applyDiscount(Number(w.amount), discountPercentage);
+          return {
+            name: w.name,
+            code: w.code,
+            description: w.description,
+            amount,
+            allowForgiveness: w.allowForgiveness,
+            outstandingAmount: amount,
+            dueDate: w.dueDate,
+            studentId: enrollment.studentId,
+            academicCycleId,
+            academicCycleEnrollmentId: enrollment.id,
+            academicCycleWalletId: w.id,
+          };
+        });
+    });
 
     if (toCreate.length > 0) {
       await tx.studentWalletItem.createMany({ data: toCreate });

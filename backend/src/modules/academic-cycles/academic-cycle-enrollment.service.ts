@@ -13,6 +13,16 @@ interface PaginationParams {
   pageSize: number;
 }
 
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+/** Applies a scholarship's discount percentage (e.g. 30 = 30% off) to an amount. */
+function applyDiscount(amount: number, discountPercentage: number): number {
+  if (!discountPercentage) return round2(amount);
+  return round2(amount * (1 - discountPercentage / 100));
+}
+
 const STUDENT_SELECT = {
   id: true,
   name: true,
@@ -234,27 +244,40 @@ export class AcademicCycleEnrollmentService {
 
       // Snapshot the cycle's wallet catalog into the student's own wallet
       // items — the front never creates these directly, only edits
-      // (forgiveness/extension) and pays against them.
+      // (forgiveness/extension) and pays against them. If the enrollment
+      // has a scholarship, its discount applies to every item's amount
+      // right away — a scholarship isn't a payment, it lowers what's
+      // actually owed.
       if (shouldSnapshotWallet) {
-        const walletCatalog = await tx.academicCycleWallet.findMany({
-          where: { academicCycleId },
-        });
+        const [walletCatalog, scholarship] = await Promise.all([
+          tx.academicCycleWallet.findMany({ where: { academicCycleId } }),
+          dto.scholarshipId
+            ? tx.scholarship.findUnique({
+                where: { id: dto.scholarshipId },
+                select: { discountPercentage: true },
+              })
+            : Promise.resolve(null),
+        ]);
+        const discountPercentage = Number(scholarship?.discountPercentage ?? 0);
 
         if (walletCatalog.length > 0) {
           await tx.studentWalletItem.createMany({
-            data: walletCatalog.map((w) => ({
-              name: w.name,
-              code: w.code,
-              description: w.description,
-              amount: w.amount,
-              allowForgiveness: w.allowForgiveness,
-              outstandingAmount: w.amount,
-              dueDate: w.dueDate,
-              studentId: dto.studentId,
-              academicCycleId,
-              academicCycleEnrollmentId: enrollment.id,
-              academicCycleWalletId: w.id,
-            })),
+            data: walletCatalog.map((w) => {
+              const amount = applyDiscount(Number(w.amount), discountPercentage);
+              return {
+                name: w.name,
+                code: w.code,
+                description: w.description,
+                amount,
+                allowForgiveness: w.allowForgiveness,
+                outstandingAmount: amount,
+                dueDate: w.dueDate,
+                studentId: dto.studentId,
+                academicCycleId,
+                academicCycleEnrollmentId: enrollment.id,
+                academicCycleWalletId: w.id,
+              };
+            }),
           });
         }
       }
