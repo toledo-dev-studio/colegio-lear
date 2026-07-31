@@ -38,6 +38,16 @@ function typeFromPrisma(value: string): AcademicPeriodType {
   return (TYPE_FROM_PRISMA[value] ?? value) as AcademicPeriodType;
 }
 
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+/** Applies a scholarship's discount percentage (e.g. 30 = 30% off) to an amount. */
+function applyDiscount(amount: number, discountPercentage: number): number {
+  if (!discountPercentage) return round2(amount);
+  return round2(amount * (1 - discountPercentage / 100));
+}
+
 // ─── Include clause for related entities ────────────────────────────────────
 
 const INCLUDE_RELATIONS = {
@@ -320,7 +330,7 @@ export class AcademicCycleService {
 
     await this.createProcessNotification(actorEmployeeId, academicCycleId, {
       title: "Copia de cartera de pago en proceso",
-      message: `Se inició la copia de la cartera de pagos para los ${enrollmentCount} alumnos inscritos en "${cycleName}".`,
+      message: `Se está generando la cartera de pago de los alumnos inscritos en el ciclo escolar "${cycleName}". `,
       type: "info",
     });
 
@@ -331,7 +341,7 @@ export class AcademicCycleService {
 
       await this.createProcessNotification(actorEmployeeId, academicCycleId, {
         title: "Copia de cartera de pago completada",
-        message: `Se completó la copia de la cartera de pagos para los ${enrollmentCount} alumnos inscritos en "${cycleName}".`,
+        message: "Se terminó exitosamente el registro de la cartera de pagos.",
         type: "info",
       });
     } catch (error) {
@@ -339,9 +349,17 @@ export class AcademicCycleService {
         academicCycleId,
         error,
       });
+
+      // Compensating action, not a user request — revert the activation so
+      // the coordinator can fix whatever failed and try again.
+      await this.prisma.academicCycle.update({
+        where: { id: academicCycleId },
+        data: { status: "upcoming" as never, alreadyActivated: false },
+      });
+
       await this.createProcessNotification(actorEmployeeId, academicCycleId, {
         title: "Copia de cartera de pago fallida",
-        message: `Ocurrió un error al copiar la cartera de pagos para "${cycleName}". Contacta a soporte.`,
+        message: `Ocurrió un error al copiar la cartera de pagos para "${cycleName}". El ciclo regresó a "próximo" para que puedas corregir y volver a intentarlo.`,
         type: "error",
       });
     }
@@ -349,8 +367,10 @@ export class AcademicCycleService {
 
   /**
    * Creates the in-app notification (the one guarantee this flow makes —
-   * it must always land in the bell) and best-effort sends the matching
-   * email. A failed email is logged but never blocks or rolls back the
+   * it must always land in the bell). Only "error" notifications also
+   * send an email, best-effort — "info" ones (started/completed) are
+   * in-app only, they're too frequent/low-stakes to warrant an inbox
+   * hit. A failed email is logged but never blocks or rolls back the
    * in-app notification.
    */
   private async createProcessNotification(
@@ -368,6 +388,8 @@ export class AcademicCycleService {
       },
     });
 
+    if (params.type !== "error") return;
+
     try {
       const employee = await this.prisma.employee.findUnique({
         where: { id: employeeId },
@@ -382,7 +404,7 @@ export class AcademicCycleService {
             title: params.title,
             message: params.message,
             frontendUrl: env.FRONTEND_URL,
-            isError: params.type === "error",
+            isError: true,
           }),
         });
       }
@@ -400,6 +422,8 @@ export class AcademicCycleService {
    * StudentWalletItem for every enrolled student that doesn't already have
    * one for a given catalog item — covers both students enrolled before the
    * catalog was finished, and catalog items added after some enrollments.
+   * Students with a scholarship get every item's amount discounted right
+   * away — a scholarship isn't a payment, it lowers what's actually owed.
    */
   private async generateWalletItemsForActivatedCycle(
     tx: Prisma.TransactionClient,
@@ -409,7 +433,11 @@ export class AcademicCycleService {
       tx.academicCycleWallet.findMany({ where: { academicCycleId } }),
       tx.academicCycleEnrollment.findMany({
         where: { academicCycleId, status: "enrolled" },
-        select: { id: true, studentId: true },
+        select: {
+          id: true,
+          studentId: true,
+          scholarship: { select: { discountPercentage: true } },
+        },
       }),
       tx.studentWalletItem.findMany({
         where: { academicCycleId },
@@ -425,23 +453,29 @@ export class AcademicCycleService {
       ),
     );
 
-    const toCreate = enrollments.flatMap((enrollment) =>
-      walletCatalog
+    const toCreate = enrollments.flatMap((enrollment) => {
+      const discountPercentage = Number(
+        enrollment.scholarship?.discountPercentage ?? 0,
+      );
+      return walletCatalog
         .filter((w) => !existingKeys.has(`${enrollment.id}:${w.id}`))
-        .map((w) => ({
-          name: w.name,
-          code: w.code,
-          description: w.description,
-          amount: w.amount,
-          allowForgiveness: w.allowForgiveness,
-          outstandingAmount: w.amount,
-          dueDate: w.dueDate,
-          studentId: enrollment.studentId,
-          academicCycleId,
-          academicCycleEnrollmentId: enrollment.id,
-          academicCycleWalletId: w.id,
-        })),
-    );
+        .map((w) => {
+          const amount = applyDiscount(Number(w.amount), discountPercentage);
+          return {
+            name: w.name,
+            code: w.code,
+            description: w.description,
+            amount,
+            allowForgiveness: w.allowForgiveness,
+            outstandingAmount: amount,
+            dueDate: w.dueDate,
+            studentId: enrollment.studentId,
+            academicCycleId,
+            academicCycleEnrollmentId: enrollment.id,
+            academicCycleWalletId: w.id,
+          };
+        });
+    });
 
     if (toCreate.length > 0) {
       await tx.studentWalletItem.createMany({ data: toCreate });

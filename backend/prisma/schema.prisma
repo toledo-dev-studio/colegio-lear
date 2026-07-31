@@ -298,10 +298,28 @@ model Notification {
   relatedRecordId String                    @map("related_record_id") @db.Uuid
   read            Boolean                   @default(false)
   readAt          DateTime?                 @map("read_at")
+  // When this notification should actually become visible/delivered.
+  // Defaults to "now" so every existing notification path (process
+  // info/error, announcements already due) is unaffected — only the
+  // announcement dispatch sets this to a future date (the campaign's
+  // publishedAt) when it hasn't arrived yet.
+  scheduledFor    DateTime                  @default(now()) @map("scheduled_for")
+  // Whether this notification has been released (shown in the bell, email
+  // sent). Defaults true for the same reason scheduledFor defaults to
+  // "now" — only future-scheduled announcement notifications are created
+  // with this explicitly false, and the dispatch job flips it once
+  // scheduledFor is reached.
+  sent            Boolean                   @default(true)
+  // How many times the delivery job has tried (and failed) to email this
+  // notification. Only relevant while sent:false — after
+  // MAX_DELIVERY_ATTEMPTS (3, one per daily job run) it gives up and marks
+  // sent:true regardless, so the recipient at least sees it in the bell.
+  deliveryAttempts Int                      @default(0) @map("delivery_attempts")
   createdAt       DateTime                  @default(now()) @map("created_at")
   employee        Employee                  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@index([employeeId, createdAt])
+  @@index([sent, scheduledFor])
   @@map("notifications")
   @@schema("core")
 }

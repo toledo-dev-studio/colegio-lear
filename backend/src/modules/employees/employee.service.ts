@@ -139,6 +139,16 @@ export class EmployeeService {
   }
 
   /**
+   * Generate a 6-digit numeric security code, for the invitation email
+   * (see create()/resendInvitation()) — same format as
+   * AuthService.generateResetCode(), duplicated here rather than adding a
+   * cross-module dependency for one line.
+   */
+  private generateResetCode(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  /**
    * Map a Prisma employee result (with EMPLOYEE_DETAIL_INCLUDE) to EmployeeDetail.
    * Transforms securityRole.permissions to exclude `id` and `securityRoleId` fields.
    */
@@ -357,6 +367,17 @@ export class EmployeeService {
       env.BCRYPT_SALT_ROUNDS,
     );
 
+    // mustChangePassword:true routes the employee's first login through the
+    // same /auth/reset-password flow forgot-password uses, and that flow
+    // always requires a security code (AuthService.resetPassword) — so one
+    // has to be generated and mailed here too, or the employee gets stuck
+    // on that screen with no code to enter. Long-lived (7 days) since,
+    // unlike a forgot-password request, there's no telling how soon a new
+    // hire actually opens the invite email.
+    const code = this.generateResetCode();
+    const hashedCode = await bcrypt.default.hash(code, env.BCRYPT_SALT_ROUNDS);
+    const codeExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
     // Create the employee record
     const created = await this.prisma.employee.create({
       data: {
@@ -368,6 +389,8 @@ export class EmployeeService {
         username,
         password: hashedPassword,
         mustChangePassword: true,
+        passwordResetCode: hashedCode,
+        passwordResetCodeExpiresAt: codeExpiresAt,
         isActive: dto.isActive ?? true,
         securityRoleId: dto.securityRoleId,
         jobTitleId: dto.jobTitleId,
@@ -389,6 +412,7 @@ export class EmployeeService {
           name: dto.name,
           username,
           tempPassword,
+          code,
           frontendUrl: env.FRONTEND_URL,
         }),
       })
@@ -523,10 +547,21 @@ export class EmployeeService {
       env.BCRYPT_SALT_ROUNDS,
     );
 
+    // Same security code as create() — mustChangePassword:true routes
+    // through /auth/reset-password, which always requires one.
+    const code = this.generateResetCode();
+    const hashedCode = await bcrypt.default.hash(code, env.BCRYPT_SALT_ROUNDS);
+    const codeExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
     // Update password and set mustChangePassword
     await this.prisma.employee.update({
       where: { id },
-      data: { password: hashedPassword, mustChangePassword: true },
+      data: {
+        password: hashedPassword,
+        mustChangePassword: true,
+        passwordResetCode: hashedCode,
+        passwordResetCodeExpiresAt: codeExpiresAt,
+      },
     });
 
     // Send invitation email
@@ -537,6 +572,7 @@ export class EmployeeService {
         name: employee.name,
         username: employee.username,
         tempPassword,
+        code,
         frontendUrl: env.FRONTEND_URL,
       }),
     });

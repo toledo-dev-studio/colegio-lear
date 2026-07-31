@@ -119,6 +119,18 @@ function infoBox(
     </table>`;
 }
 
+/** Shared large centered "verification code" display block. */
+function codeBlock(code: string): string {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#EFF6FF;border-radius:12px;margin-bottom:28px;">
+      <tr>
+        <td style="padding:28px;text-align:center;">
+          <p style="margin:0 0 10px;color:${COLOR_MUTED};font-size:11.5px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;font-family:${HEADING_FONT};">Código de seguridad</p>
+          <p style="margin:0;color:${COLOR_PRIMARY};font-size:34px;font-weight:700;letter-spacing:8px;font-family:${HEADING_FONT};">${code}</p>
+        </td>
+      </tr>
+    </table>`;
+}
+
 /** Shared fully-rounded ("pill") call-to-action button, matching .pill-btn-primary. */
 function ctaButton(label: string, href: string, color: string = COLOR_PRIMARY): string {
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
@@ -130,11 +142,18 @@ function ctaButton(label: string, href: string, color: string = COLOR_PRIMARY): 
     </table>`;
 }
 
-/** Invitation email — sent when a new employee is created */
+/**
+ * Invitation email — sent when a new employee is created.
+ * mustChangePassword:true routes the first login through
+ * /auth/reset-password, the same screen forgot-password uses — which
+ * always asks for a security code — so this includes one too, not just
+ * the temporary password.
+ */
 export function invitationEmail(params: {
   name: string;
   username: string;
   tempPassword: string;
+  code: string;
   frontendUrl: string;
 }): string {
   const content = `
@@ -144,17 +163,19 @@ export function invitationEmail(params: {
       <p style="margin:0 0 12px;color:${COLOR_FOREGROUND};font-size:14px;font-family:${BODY_FONT};"><strong>Usuario:</strong> <span style="color:${COLOR_PRIMARY};font-weight:600;">${params.username}</span></p>
       <p style="margin:0;color:${COLOR_FOREGROUND};font-size:14px;font-family:${BODY_FONT};"><strong>Contraseña temporal:</strong> <code style="background:#FFFFFF;padding:4px 10px;border-radius:6px;font-size:14px;color:${COLOR_PRIMARY};border:1px solid ${COLOR_BORDER};">${params.tempPassword}</code></p>
     `)}
-    ${paragraph("⚠️ Al iniciar sesión por primera vez se te pedirá cambiar tu contraseña.", 28)}
+    ${paragraph("Al iniciar sesión por primera vez, el sistema te pedirá cambiar tu contraseña — ahí mismo ingresa este código de seguridad:")}
+    ${codeBlock(params.code)}
     ${ctaButton("Acceder a la plataforma", params.frontendUrl)}`;
 
   return baseLayout(content);
 }
 
-/** Resend invitation email */
+/** Resend invitation email — same shape as invitationEmail, new credentials. */
 export function resendInvitationEmail(params: {
   name: string;
   username: string;
   tempPassword: string;
+  code: string;
   frontendUrl: string;
 }): string {
   const content = `
@@ -164,7 +185,8 @@ export function resendInvitationEmail(params: {
       <p style="margin:0 0 12px;color:${COLOR_FOREGROUND};font-size:14px;font-family:${BODY_FONT};"><strong>Usuario:</strong> <span style="color:${COLOR_PRIMARY};font-weight:600;">${params.username}</span></p>
       <p style="margin:0;color:${COLOR_FOREGROUND};font-size:14px;font-family:${BODY_FONT};"><strong>Contraseña temporal:</strong> <code style="background:#FFFFFF;padding:4px 10px;border-radius:6px;font-size:14px;color:${COLOR_PRIMARY};border:1px solid ${COLOR_BORDER};">${params.tempPassword}</code></p>
     `)}
-    ${paragraph("⚠️ Al iniciar sesión se te pedirá cambiar tu contraseña.", 28)}
+    ${paragraph("Al iniciar sesión, el sistema te pedirá cambiar tu contraseña — ahí mismo ingresa este código de seguridad:")}
+    ${codeBlock(params.code)}
     ${ctaButton("Acceder a la plataforma", params.frontendUrl)}`;
 
   return baseLayout(content);
@@ -184,15 +206,8 @@ export function forgotPasswordEmail(params: {
     ${heading("Recuperación de contraseña")}
     ${paragraph(`Hola ${params.name}, recibimos una solicitud para restablecer tu contraseña. Generamos una contraseña temporal para que puedas ingresar:`)}
     ${infoBox(`<p style="margin:0;color:${COLOR_FOREGROUND};font-size:14px;font-family:${BODY_FONT};"><strong>Contraseña temporal:</strong> <code style="background:#FFFFFF;padding:4px 10px;border-radius:6px;font-size:14px;color:${COLOR_PRIMARY};border:1px solid ${COLOR_BORDER};">${params.tempPassword}</code></p>`)}
-    ${paragraph("Inicia sesión con esta contraseña temporal y, cuando el sistema te lo pida, ingresa el siguiente código de verificación junto con tu nueva contraseña definitiva:")}
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#EFF6FF;border-radius:12px;margin-bottom:28px;">
-      <tr>
-        <td style="padding:28px;text-align:center;">
-          <p style="margin:0 0 10px;color:${COLOR_MUTED};font-size:11.5px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;font-family:${HEADING_FONT};">Código de verificación</p>
-          <p style="margin:0;color:${COLOR_PRIMARY};font-size:34px;font-weight:700;letter-spacing:8px;font-family:${HEADING_FONT};">${params.code}</p>
-        </td>
-      </tr>
-    </table>
+    ${paragraph("Inicia sesión con esta contraseña temporal y, cuando el sistema te lo pida, ingresa el siguiente código de seguridad junto con tu nueva contraseña definitiva:")}
+    ${codeBlock(params.code)}
     ${paragraph("La contraseña temporal y el código expiran en 15 minutos. Si no solicitaste este cambio, ignora este correo.", 0)}`;
 
   return baseLayout(content);

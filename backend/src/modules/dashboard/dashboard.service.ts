@@ -123,6 +123,13 @@ export class DashboardService {
    * Financial (student wallet) summary, scoped to active academic cycles
    * only. All zero when there are no active cycles — skips the aggregate
    * queries entirely in that case.
+   *
+   * totalPaidAmount/totalForgivenAmount come from StudentWalletPayment
+   * (the real payment-history rows, one per actual charge or
+   * forgiveness) — not from StudentWalletItem, which only reflects the
+   * item's current state. pendingAmount/forgivenPaymentsCount instead
+   * come from StudentWalletItem (outstandingAmount and isForgiven are
+   * item-level state, not events).
    */
   async getFinancialSummary(): Promise<FinancialSummaryRecord> {
     const activeAcademicCyclesCount = await this.prisma.academicCycle.count({
@@ -140,28 +147,30 @@ export class DashboardService {
 
     const cycleFilter = { academicCycle: { status: "active" as const } };
 
-    const [notForgiven, forgiven] = await Promise.all([
-      this.prisma.studentWalletItem.aggregate({
-        where: { ...cycleFilter, isForgiven: false },
-        _sum: { amount: true, outstandingAmount: true },
-      }),
-      this.prisma.studentWalletItem.aggregate({
-        where: { ...cycleFilter, isForgiven: true },
-        _sum: { amount: true },
-        _count: true,
-      }),
-    ]);
-
-    const totalAmountNotForgiven = Number(notForgiven._sum.amount ?? 0);
-    const totalOutstandingNotForgiven = Number(
-      notForgiven._sum.outstandingAmount ?? 0,
-    );
+    const [paidPayments, forgivenPayments, pendingItems, forgivenItemsCount] =
+      await Promise.all([
+        this.prisma.studentWalletPayment.aggregate({
+          where: { ...cycleFilter, paymentMethod: { not: "forgiven" } },
+          _sum: { amount: true },
+        }),
+        this.prisma.studentWalletPayment.aggregate({
+          where: { ...cycleFilter, paymentMethod: "forgiven" },
+          _sum: { amount: true },
+        }),
+        this.prisma.studentWalletItem.aggregate({
+          where: { ...cycleFilter, isForgiven: false },
+          _sum: { outstandingAmount: true },
+        }),
+        this.prisma.studentWalletItem.count({
+          where: { ...cycleFilter, isForgiven: true },
+        }),
+      ]);
 
     return {
-      totalPaidAmount: round2(totalAmountNotForgiven - totalOutstandingNotForgiven),
-      pendingAmount: round2(totalOutstandingNotForgiven),
-      forgivenPaymentsCount: forgiven._count,
-      totalForgivenAmount: round2(Number(forgiven._sum.amount ?? 0)),
+      totalPaidAmount: round2(Number(paidPayments._sum.amount ?? 0)),
+      pendingAmount: round2(Number(pendingItems._sum.outstandingAmount ?? 0)),
+      forgivenPaymentsCount: forgivenItemsCount,
+      totalForgivenAmount: round2(Number(forgivenPayments._sum.amount ?? 0)),
     };
   }
 

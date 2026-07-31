@@ -1666,3 +1666,147 @@ real de ejemplo, publicada como artifact para revisión; además se mandó
 un correo real de prueba con las credenciales SMTP configuradas para
 confirmar que también se ve bien en un cliente de correo real, no solo
 en el navegador.
+
+## Bug real: un empleado nuevo no podía completar su primer login
+(faltaba el código de seguridad) (2026-07-29)
+
+**Bug reportado por el usuario**: al registrar un empleado, el correo de
+bienvenida solo incluía la contraseña temporal. Como el empleado se crea
+con `mustChangePassword: true`, el front lo manda a `/auth/reset-password`
+en su primer login — pero esa pantalla es la **misma** que usa
+"olvidé mi contraseña", y siempre pide un "Código de seguridad"
+(`ResetPasswordPage.tsx`). `AuthService.resetPassword()` exige
+`employee.passwordResetCode` (poblado hoy solo por el flujo de
+recuperación de contraseña); `EmployeeService.create()` nunca lo generaba.
+Resultado real: **todo empleado nuevo quedaba atorado** en esa pantalla
+pidiendo un código que jamás se le mandó — sin manera de completar su
+primer inicio de sesión.
+
+**Corrección, sin tocar ningún otro flujo** (como pidió el usuario): tanto
+`EmployeeService.create()` como `resendInvitation()` ahora generan un
+código de 6 dígitos (mismo formato que
+`AuthService.generateResetCode()`, duplicado localmente para no acoplar
+ambos módulos), lo guardan hasheado en `passwordResetCode` +
+`passwordResetCodeExpiresAt`, y lo incluyen en el correo de
+bienvenida/reenvío — reutilizando el mecanismo de verificación que
+`AuthService.resetPassword()` ya tenía, sin cambiarlo. Vigencia de 7 días
+(vs. los 15 minutos de "olvidé mi contraseña"), porque no hay forma de
+saber cuándo un empleado nuevo abre su correo de invitación por primera
+vez.
+
+`invitationEmail`/`resendInvitationEmail` ganan un parámetro `code` y
+ahora muestran el mismo bloque grande de "código de seguridad" que ya
+usaba `forgotPasswordEmail` (extraído a un helper compartido `codeBlock`
+en `email.templates.ts`, reduciendo la duplicación entre las tres
+plantillas).
+
+Verificado en vivo, de punta a punta (creando el empleado, extrayendo la
+contraseña/código reales del HTML capturado, e iniciando sesión de
+verdad): crear un empleado nuevo → login con la contraseña temporal →
+`mustChangePassword: true` → `resetPassword` con el código del correo →
+**funciona**, `mustChangePassword` pasa a `false`. Se repitió la misma
+prueba con `resendInvitation` (código y contraseña nuevos) con el mismo
+resultado. Empleados de prueba eliminados al terminar.
+
+## Envío de anuncios: sin umbral de 100, entrega diferida a `publishedAt`
+vía cron, filtro real de audiencia de alumnos, y rollback ante fallas
+(2026-07-31)
+
+**Cuatro pedidos del usuario en uno:**
+
+**1. Quitar el umbral de 100 registros para las notificaciones de
+"registro en proceso/completado"**: antes solo se mandaban con 100+
+destinatarios (mismo criterio que el envío de correos). Ahora **siempre**
+se mandan, sin importar el tamaño — son casi instantáneas (un puñado de
+inserts) y confirman que el registro de destinatarios se hizo bien, no
+que el envío de correos masivos terminó (eso es cosa aparte).
+
+**2. Entrega diferida hasta `publishedAt`, con cron job**: el registro
+de destinatarios (resolver audiencia, crear las filas de `Notification`,
+actualizar `recipientsCount`) sigue pasando de inmediato al publicar la
+campaña — pero esas notificaciones ya no se "sueltan" en la campanita ni
+mandan correo hasta que llega la fecha de `Announcement.publishedAt`.
+
+- Nuevos campos en `Notification` (no en `Announcement`, corregido a
+  medio camino tras aclaración del usuario): `scheduledFor` (default
+  `now()`) y `sent` (default `true`) — el default deja intacto cualquier
+  otro tipo de notificación existente (info/error de proceso, etc.); solo
+  el registro de anuncios los usa explícitamente: `scheduledFor =
+  announcement.publishedAt`, `sent = false` si esa fecha aún no llega.
+- `GET /notifications/{type}/{id}` ahora filtra `sent: true` — una
+  notificación programada a futuro simplemente no aparece hasta que se
+  libera.
+- Si `publishedAt` ya pasó al momento de publicar, se libera de
+  inmediato (correo incluido) sin esperar al cron.
+- Nuevo job (`node-cron`, dependencia nueva — no había ninguna en el
+  proyecto): `notification-delivery.job.ts`, corre cada 5 minutos (y una
+  vez al arrancar el servidor) llamando a
+  `NotificationService.releaseDueNotifications()`, que busca
+  `sent: false, scheduledFor <= now()`, manda los correos agrupando por
+  anuncio, y marca `sent: true`.
+
+**3. Filtro real de audiencia de alumnos**: antes el conteo de "student"
+en la audiencia era un conteo plano de alumnos activos
+(`isActive/isDeleted`). Ahora exige además que el alumno esté inscrito
+(`AcademicCycleEnrollment.status: "enrolled"`) en un ciclo que esté
+`"en curso"` (`AcademicCycle.status: "active"`) — un alumno activo pero
+sin inscripción, o inscrito solo en un ciclo que no ha arrancado o ya
+terminó, no cuenta ni se le manda nada.
+
+**4. Transacción + rollback + notificación de error**: el registro de
+destinatarios (crear las `Notification` + actualizar `recipientsCount`)
+ahora corre dentro de `$transaction` — si algo falla a nivel BD, se
+revierte solo. Además, al capturar el error: la campaña regresa a
+`status: "draft"` / `alreadyPublished: false` (para poder corregir y
+reintentar) y se manda una notificación tipo `error` a quien la publicó
+explicando qué pasó.
+
+Verificado en vivo con 4 pruebas: (a) anuncio con `publishedAt` ya
+vencido → se registra y se libera de inmediato, aparece en campanita al
+instante; (b) anuncio con `publishedAt` a futuro → se registra
+(`recipientsCount` correcto) pero no aparece en campanita hasta correr
+el job de liberación manualmente (simulando que llegó la fecha), momento
+en el que sí aparece; (c) alumno activo sin inscripción no incrementa el
+conteo de audiencia `student` (se mantuvo en 72, no 73); (d) falla
+simulada durante el registro → la campaña regresó a `draft`/
+`alreadyPublished: false` y llegó la notificación de error con el
+mensaje esperado. Datos de prueba eliminados al terminar.
+
+## Cron de notificaciones: una vez al día + reintento de correo con límite de 3 intentos (2026-07-31)
+
+Dos ajustes sobre el punto anterior, pedidos por el usuario tras revisar
+el comportamiento en vivo:
+
+**1. Cron una vez al día, no cada 5 minutos**: `notification-delivery.job.ts`
+ahora corre a las 6am (`"0 6 * * *"`) en vez de cada 5 minutos. Una sola
+pasada diaria alcanza a liberar tanto lo que ya estaba vencido de días
+anteriores (p. ej. algo de ayer que falló al enviar) como lo recién
+vencido de hoy — no hace falta ejecutarlo más seguido. Sigue corriendo
+una vez de inmediato al arrancar el servidor, para no dejar esperando
+hasta las 6am algo que ya estaba vencido.
+
+**2. Reintento de correo con tope de 3 intentos**: antes, si el envío de
+correo fallaba para uno o más destinatarios de un anuncio, esas filas de
+`Notification` se marcaban `sent: true` de todas formas al terminar el
+lote (el error solo quedaba en el log). Ahora cada notificación se
+procesa individualmente:
+
+- Nuevo campo `Notification.deliveryAttempts` (`Int @default(0)`,
+  migración `20260731000000_notification_delivery_attempts`).
+- Si el correo se envía bien: `sent: true`, `deliveryAttempts` sin tocar.
+- Si el correo falla: se incrementa `deliveryAttempts`; mientras sea
+  menor a 3, la notificación se queda `sent: false` para que la corrida
+  del día siguiente la reintente. Al llegar a 3 intentos fallidos, se da
+  por vencido el envío de correo pero se marca `sent: true` de todas
+  formas — el destinatario ya no recibirá el correo, pero sí la verá en
+  la campanita.
+
+Verificado en vivo con un script desechable: se creó una notificación de
+prueba con un `mail.sendMail` que siempre lanza error, y se llamó
+`releaseDueNotifications()` cuatro veces seguidas simulando cuatro
+corridas diarias — intento 1: `deliveryAttempts: 1, sent: false`;
+intento 2: `deliveryAttempts: 2, sent: false`; intento 3:
+`deliveryAttempts: 3, sent: true` (se rinde); intento 4: sin cambios (ya
+no vuelve a seleccionarse por estar `sent: true`). Un segundo caso con
+envío exitoso confirmó que no se toca `deliveryAttempts` cuando el
+correo sale bien a la primera. Datos de prueba eliminados al terminar.
