@@ -15,20 +15,37 @@ export const updateMyAccountActionAsync = async ({ employeeRequestLike }: Option
         return employeeRequestLike as EmployeeResponse;
     }
 
-    let fileFormData = new FormData();
-    if (employeeRequestLike.file)
-        fileFormData.append('file', employeeRequestLike.file);
+    const fileImage = employeeRequestLike.file;
+    delete employeeRequestLike.file;
 
-    // employees/me/avatar
     const { data } = await api.patch<EmployeeResponse>("/employees/me", {
         name: employeeRequestLike.name,
         firstLastName: employeeRequestLike.firstLastName,
         secondLastName: employeeRequestLike.secondLastName,
         phoneNumber: employeeRequestLike.phoneNumber,
-        file: employeeRequestLike.file ? fileFormData : undefined
     });
+
+    if (fileImage) {
+        const avatar = await updateMyAccountAvatarActionAsync({ id: data.id, file: fileImage });
+        return {
+            ...avatar
+        }
+    }
 
     return {
         ...data,
     };
+}
+
+const updateMyAccountAvatarActionAsync = async ({ file }: { id: string, file: File }) => {
+    let formData = new FormData();
+    formData.append("file", file);
+    
+    const { data } = await api<EmployeeResponse>({
+        url: `/employees/me/avatar`,
+        method: "POST",
+        data: formData
+    });    
+
+    return data;
 }

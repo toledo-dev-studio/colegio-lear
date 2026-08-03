@@ -28,7 +28,7 @@ interface Props {
 export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentResponse, academicCycleSchoolGroups, onSubmit, handleClickClose }: Props) => {
     // Get context from layout
     const { academicCycleId, isLocked, enrollmentOpen } = useOutletContext<AcademicCycleLayoutContext>();
-    const [student, setStudent] = useState<Partial<StudentResponse>>();
+    const [student, setStudent] = useState<Partial<StudentResponse> | undefined>(academicCycleEnrollmentResponse?.student || undefined);
     const studentFullName = `${student?.name || ""} ${student?.firstLastName || ""} ${student?.secondLastName || ""}`;
 
     // Component hooks & stores
@@ -83,6 +83,7 @@ export const AcademicCycleEnrollmentPanelForm = ({ academicCycleEnrollmentRespon
                                     options={searchStudentsMutation.students}
                                     isSearching={searchStudentsMutation.isPending}
                                     onClearSelection={() => {
+                                        if(isLocked) return;
                                         setValue("studentId", undefined);
                                         setStudent(undefined);
                                     }}

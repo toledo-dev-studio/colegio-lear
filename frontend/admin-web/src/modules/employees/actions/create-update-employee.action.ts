@@ -33,7 +33,7 @@ export const createUpdateEmployeeActionAsync = async ({ id, employeeRequestLike 
     });
 
     if (fileImage) {
-        const avatar = await updateEmployeeImageActionAsync({ id: data.id, file: fileImage });
+        const avatar = await updateEmployeeAvatarActionAsync({ id: data.id, file: fileImage });
         return {
             ...data,
             avatar: avatar.url
@@ -45,7 +45,7 @@ export const createUpdateEmployeeActionAsync = async ({ id, employeeRequestLike 
     };
 }
 
-const updateEmployeeImageActionAsync = async ({ id, file }: { id: string, file: File }) => {
+const updateEmployeeAvatarActionAsync = async ({ id, file }: { id: string, file: File }) => {
     let formData = new FormData();
     formData.append("file", file);
     
