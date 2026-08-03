@@ -86,7 +86,7 @@ export const StudentWalletTable = ({ enableActions, data, summary, handleClickEd
                                                         <Badge variant={
                                                             item.status === "paid" ? "success" :
                                                                 item.status === "pending" ? "default" :
-                                                                    item.status === "overdue" ? "destructive" : "ghost"} className="py-4 px-6">
+                                                                    item.status === "overdue" ? "destructive" : "secondary"} className="py-4 px-6">
                                                             {labelOf(STUDENT_WALLET_STATUSES, item.status)}
                                                         </Badge>
                                                     </td>

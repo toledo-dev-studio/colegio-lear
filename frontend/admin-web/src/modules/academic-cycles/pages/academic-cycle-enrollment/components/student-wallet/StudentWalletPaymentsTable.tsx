@@ -76,7 +76,7 @@ export const StudentWalletPaymentsTable = ({ studentWallet, studentWalletPayment
                                                     </td>
                                                     <td className="row">{formatMoney(item.amount)}</td>
                                                     <td className="row">
-                                                        <Badge variant={item.paymentMethod === "cash" ? "success" : "default"} className="py-4 px-6">
+                                                        <Badge variant={item.paymentMethod === "cash" ? "success" : item.paymentMethod === "online-payment" ? "default" : "secondary"} className="py-4 px-6">
                                                             {labelOf(STUDENT_WALLET_PAYMENT_METHODS, item.paymentMethod)}
                                                         </Badge>
                                                     </td>

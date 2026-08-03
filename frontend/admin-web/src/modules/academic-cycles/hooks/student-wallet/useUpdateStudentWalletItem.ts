@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { GET_STUDENT_WALLET_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
+import { GET_STUDENT_WALLET_PAYMENTS_QUERY_KEY, GET_STUDENT_WALLET_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
 import type { StudentWalletResponse } from "@/interfaces/responses/student-wallet.response";
 import type { StudentWalletItemResponse } from "@/interfaces/responses/student-wallet-item.response";
 import { updateStudentWalletItemActionAsync } from "../../actions/student-wallet/update-student-wallet-item.action";
@@ -31,6 +31,9 @@ export const useUpdateStudentWalletItem = () => {
                         if (previousItem.status === "overdue") {
                             summary.overdue -= previousItem.outstandingAmount;
                         }
+
+                        // Reset query data for payments when a payment is forgiven 
+                        queryClient.refetchQueries({ queryKey: [GET_STUDENT_WALLET_PAYMENTS_QUERY_KEY, { academicCycleId: response.academicCycleId, academicCycleEnrollmentId: response.academicCycleEnrollmentId }]});
                     }
 
                     const items = [...prev.items];

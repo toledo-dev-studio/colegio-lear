@@ -23,7 +23,7 @@ export const MyAccountPage = () => {
       showLoading("Actualizando información de la cuenta");
       await updateMyAccountMutation.mutateAsync({ employeeRequestLike }, {
         onSuccess: (response) => {
-          setEmployee(response);
+          setEmployee({...response});
           toast.success("Información de la cuenta actualizada correctamente", { position: "top-right" });
           hideLoading();
         }

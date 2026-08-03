@@ -48,7 +48,7 @@ export const useCreateStudentWalletPayment = () => {
             // Set query data for academic cycle wallet list to avoid refetch api
             queryClient.setQueryData(
                 [GET_STUDENT_WALLET_PAYMENTS_QUERY_KEY, { academicCycleId: response.academicCycleId, academicCycleEnrollmentId: response.academicCycleEnrollmentId }],
-                (prev: StudentWalletPaymentResponse[] = []) => [...prev, response]
+                (prev: StudentWalletPaymentResponse[] = []) => [response, ...prev]
             );
         }
     });
