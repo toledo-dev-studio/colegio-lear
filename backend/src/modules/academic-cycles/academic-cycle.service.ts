@@ -295,10 +295,29 @@ export class AcademicCycleService {
       updateData.alreadyActivated = true;
     }
 
-    const updated = await this.prisma.academicCycle.update({
-      where: { id },
-      data: updateData,
-      include: INCLUDE_RELATIONS,
+    // Finishing the cycle (status -> completed) closes out every still-open
+    // enrollment: an "enrolled" student in a cycle that's now finalizado has
+    // no active enrollment to speak of anymore. Runs every time the update
+    // sets status to completed (not just the first time — the cycle could
+    // reactivate and finish again later), and is idempotent (a no-op once
+    // no "enrolled" rows are left).
+    const isCompleting = dto.status === "completed";
+
+    const updated = await this.prisma.$transaction(async (tx) => {
+      const result = await tx.academicCycle.update({
+        where: { id },
+        data: updateData,
+        include: INCLUDE_RELATIONS,
+      });
+
+      if (isCompleting) {
+        await tx.academicCycleEnrollment.updateMany({
+          where: { academicCycleId: id, status: "enrolled" },
+          data: { status: "completed" },
+        });
+      }
+
+      return result;
     });
 
     // Fire-and-forget: never blocks the response.
@@ -341,7 +360,7 @@ export class AcademicCycleService {
 
       await this.createProcessNotification(actorEmployeeId, academicCycleId, {
         title: "Copia de cartera de pago completada",
-        message: "Se terminó exitosamente el registro de la cartera de pagos.",
+        message: `Se terminó exitosamente el registro de la cartera de pagos "${cycleName}".`,
         type: "info",
       });
     } catch (error) {

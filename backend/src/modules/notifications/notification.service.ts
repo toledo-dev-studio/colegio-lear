@@ -324,15 +324,21 @@ export class NotificationService {
           continue;
         }
 
+        // Every notification reaching this point is recipientType:"admin"
+        // (student rows were released earlier, without an email attempt),
+        // so employeeId is always set here.
+        const employeeIds = notifications
+          .map((n) => n.employeeId)
+          .filter((id): id is string => id !== null);
         const employees = await this.prisma.employee.findMany({
-          where: { id: { in: notifications.map((n) => n.employeeId) } },
+          where: { id: { in: employeeIds } },
           select: { id: true, email: true, name: true },
         });
         const employeeById = new Map(employees.map((e) => [e.id, e]));
 
         await Promise.all(
           notifications.map(async (n) => {
-            const employee = employeeById.get(n.employeeId);
+            const employee = n.employeeId ? employeeById.get(n.employeeId) : undefined;
             if (!employee) {
               // Employee gone — nothing left to email, just release it.
               await this.prisma.notification.update({
