@@ -3,7 +3,7 @@ import { toast } from "sonner"
 
 import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { useAnnouncementsPage } from "./hooks/useAnnouncementsPage";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
@@ -11,6 +11,9 @@ import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useAnnouncementsPageTable } from "./hooks/useAnnouncementsPageTable";
 import { AnnouncementsAdvancedFilters } from "./components/AnnouncementsAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { ANNOUNCEMENTS_STATUSES, AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 
 export const AnnouncementsPage = () => {
   // Component hooks & stores
@@ -31,13 +34,14 @@ export const AnnouncementsPage = () => {
       return;
     }
 
-    const headers = [
-      { label: "Id", key: "id" },
+    const headers: CsvHeader<AnnouncementResponse>[] = [
+      { label: "Identificador", key: "id" },
       { label: "Nombre", key: "name" },
       { label: "Descripción", key: "description" },
       { label: "Fecha de publicación", key: "publishedAt" },
       { label: "Fecha de expiración", key: "expiresAt" },
-      { label: "Estado", key: "status" }
+      { label: "Audiencia(s)", key: "audience", render: (item) => item.audience.map(a => labelOf(AUDIENCE_TYPES, a)).join(", ") },
+      { label: "Estado", key: "status", render: (item) => labelOf(ANNOUNCEMENTS_STATUSES, item.status) },
     ];
 
     downloadDataToCsvFile("Campañas & comunicados", headers, data);

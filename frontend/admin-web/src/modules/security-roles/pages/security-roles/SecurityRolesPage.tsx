@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { useSecurityRolesPage } from "./hooks/useSecurityRolesPage";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
@@ -11,6 +11,7 @@ import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useSecurityRolesPageTable } from "./hooks/useSecurityRolesPageTable";
 import { SecurityRolesAdvancedFilters } from "./components/SecurityRolesAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 
 export const SecurityRolesPage = () => {
     // Component hooks & stores
@@ -31,11 +32,11 @@ export const SecurityRolesPage = () => {
             return;
         }
 
-        const headers = [
-            { label: "Id", key: "id" },
+        const headers: CsvHeader<SecurityRoleResponse>[] = [
+            { label: "Identificador", key: "id" },
             { label: "Nombre", key: "name" },
             { label: "Descripción", key: "description" },
-            { label: "Estado", key: "status" }
+            { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
         ];
 
         downloadDataToCsvFile("Roles de seguridad", headers, data);

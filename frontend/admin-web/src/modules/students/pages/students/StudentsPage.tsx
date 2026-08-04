@@ -4,13 +4,14 @@ import { toast } from "sonner";
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
 import { useStudentsPage } from "./hooks/useStudentsPage";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { useStudentsPageTable } from "./hooks/useStudentsPageTable";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { StudentsAdvancedFilters } from "./components/StudentsAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { StudentResponse } from "@/interfaces/responses/student.response";
 
 export const StudentsPage = () => {
     // Component hooks & stores
@@ -31,15 +32,18 @@ export const StudentsPage = () => {
             return;
         }
 
-        const headers = [
-            { label: "Id", key: "id" },
+        const headers: CsvHeader<StudentResponse>[] = [
+            { label: "Identificador", key: "id" },
             { label: "Nombre", key: "name" },
             { label: "Apellido Paterno", key: "firstLastName" },
             { label: "Apellido Materno", key: "secondLastName" },
             { label: "Matricula", key: "enrollment" },
+            { label: "Fecha de nacimiento", key: "dateOfBirth" },
+            { label: "Tipo de sangre", key: "bloodType" },
+            { label: "Curp", key: "curp" },
             { label: "Email", key: "email" },
             { label: "Teléfono", key: "phoneNumber" },
-            { label: "Estado", key: "status" }
+            { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
         ];
 
         downloadDataToCsvFile("Estudiantes", headers, data);
@@ -68,7 +72,7 @@ export const StudentsPage = () => {
     return (
         <>
             <section className="page-main-section">
-                
+
                 <Breadcrumb items={[
                     { label: "Seguimiento escolar" },
                     { label: "Estudiantes", to: "/students" }

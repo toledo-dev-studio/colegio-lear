@@ -1,3 +1,9 @@
+export interface CsvHeader<T extends Record<string, any>> {
+    label: string;
+    key: string;
+    render?: (item: T) => any;
+}
+
 /**
  * Read a nested property from an object using dot notation.
  * Example: getValueByPath(obj, 'user.address.city')
@@ -21,14 +27,19 @@ const getValueByPath = (object: any, path: string) => {
  * @param headers Array of header definitions with label and key.
  * @param data Data rows to convert into CSV.
  */
-export const downloadDataToCsvFile = (fieldName: string, headers: { label: string, key: string }[], data: any[]) => {
+export const downloadDataToCsvFile = <T extends Record<string, any>>(fieldName: string, headers: CsvHeader<T>[], data: T[]) => {
     const csvHeaders = headers.map(h => h.label).join(',');
     const csvRows = data.map(item =>
         headers.map(h => {
-            const value = getValueByPath(item, h.key);
-            if (typeof value === 'string') {
+            let value = undefined;
+            if (h.render !== undefined)
+                value = h.render(item);
+            else
+                value = getValueByPath(item, h.key);
+
+            if (typeof value === 'string')
                 return `"${value.replace(/"/g, '""')}"`;
-            }
+            
             return value?.toString() || '';
         }).join(',')
     );

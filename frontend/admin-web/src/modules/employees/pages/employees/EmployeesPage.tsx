@@ -4,13 +4,14 @@ import { toast } from "sonner";
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
 import { useEmployeesPage } from "./hooks/useEmployeesPage";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { useEmployeesPageTable } from "./hooks/useEmployeesPageTable";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { EmployeesAdvancedFilters } from "./components/EmployeesAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 
 export const EmployeesPage = () => {
   // Component hooks & stores
@@ -31,15 +32,17 @@ export const EmployeesPage = () => {
       return;
     }
 
-    const headers = [
-      { label: "Id", key: "id" },
+    const headers: CsvHeader<EmployeeResponse>[] = [
+      { label: "Identificador", key: "id" },
       { label: "Nombre", key: "name" },
       { label: "Apelldo paterno", key: "firstLastName" },
       { label: "Apellido materno", key: "secondLastName" },
       { label: "Correo electrónico", key: "email" },
+      { label: "Número de teléfono", key: "phoneNumber" },
       { label: "Usuario del sistema", key: "username" },
-      { label: "Estado", key: "status" },
-      { label: "Rol asignado", key: "role.name" }
+      { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
+      { label: "Rol asignado", key: "securityRole", render: (item) => item.securityRole?.name ?? "Sin rol asignado" },
+      { label: "Puesto de trabajo asignado", key: "jobTitle", render: (item) => item.jobTitle?.name ?? "Sin puesto de trabajo asignado" },
     ];
 
     downloadDataToCsvFile("Empleados", headers, data);
