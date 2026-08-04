@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { usePaymentConceptsPage } from "./hooks/usePaymentConceptsPage";
@@ -11,6 +11,7 @@ import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { usePaymentConceptsPageTable } from "./hooks/usePaymentConceptsPageTable";
 import { PaymentConceptsAdvancedFilters } from "./components/PaymentConceptsAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { PaymentConceptResponse } from "@/interfaces/responses/payment-concept.response";
 
 export const PaymentConceptsPage = () => {
   // Component hooks & stores
@@ -31,13 +32,14 @@ export const PaymentConceptsPage = () => {
       return;
     }
 
-    const headers = [
-      { label: "Id", key: "id" },
+    const headers: CsvHeader<PaymentConceptResponse>[] = [
+      { label: "Identificador", key: "id" },
       { label: "Nombre", key: "name" },
-      { label: "Descripción", key: "description" },
+      { label: "Código", key: "code" },
       { label: "Monto de pago", key: "amount" },
-      { label: "¿Condonación?", key: "allowForgiveness" },
-      { label: "Estado", key: "status" }
+      { label: "Descripción", key: "description" },
+      { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
+      { label: "¿Permitir condonación?", key: "allowForgiveness", render: (item) => item.allowForgiveness ? "Permitido" : "No permitido" },
     ];
 
     downloadDataToCsvFile("Conceptos de pago", headers, data);

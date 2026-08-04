@@ -4,13 +4,16 @@ import { toast } from "sonner";
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
 import { useJobTitlesPage } from "./hooks/useJobTitlesPage";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { useJobTitlesPageTable } from "./hooks/useJobTitlesPageTable";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { JobTitlesAdvancedFilters } from "./components/JobTitlesAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { JOB_TITLE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 
 export const JobTitlesPage = () => {
   // Component hooks & stores
@@ -31,11 +34,12 @@ export const JobTitlesPage = () => {
       return;
     }
 
-    const headers = [
-      { label: "Id", key: "id" },
+    const headers: CsvHeader<JobTitleResponse>[] = [
+      { label: "Identificador", key: "id" },
       { label: "Nombre", key: "name" },
+      { label: "Tipo de puesto de trabajo", key: "jobTitleType", render: (item) => labelOf(JOB_TITLE_TYPES, item.jobTitleType) },
       { label: "Descripción", key: "description" },
-      { label: "Estado", key: "status" }
+      { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
     ];
 
     downloadDataToCsvFile("Puestos de trabajo", headers, data);

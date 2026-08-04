@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { useAcademicLevelsPage } from "./hooks/useAcademicLevelsPage";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
@@ -11,6 +11,7 @@ import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useAcademicLevelsPageTable } from "./hooks/useAcademicLevelsPageTable";
 import { AcademicLevelsAdvancedFilters } from "./components/AcademicLevelsAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
 
 export const AcademicLevelsPage = () => {
   // Component hooks & stores
@@ -31,11 +32,11 @@ export const AcademicLevelsPage = () => {
       return;
     }
 
-    const headers = [
-      { label: "Id", key: "id" },
+    const headers: CsvHeader<AcademicLevelResponse>[] = [
+      { label: "Identificador", key: "id" },
       { label: "Nombre", key: "name" },
       { label: "Descripción", key: "description" },
-      { label: "Estado", key: "status" }
+      { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
     ];
 
     downloadDataToCsvFile("Niveles académicos", headers, data);

@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { useAcademicCyclesPage } from "./hooks/useAcademicCyclesPage";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
@@ -11,6 +11,9 @@ import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useAcademicCyclesPageTable } from "./hooks/useAcademicCyclesPageTable";
 import { AcademicCyclesAdvancedFilters } from "./components/AcademicCyclesAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 
 export const AcademicCyclesPage = () => {
     // Component hooks & stores
@@ -31,12 +34,20 @@ export const AcademicCyclesPage = () => {
             return;
         }
 
-        const headers = [
-            { label: "Id", key: "id" },
+        const headers: CsvHeader<AcademicCycleResponse>[] = [
+            { label: "Identificador", key: "id" },
             { label: "Nombre", key: "name" },
             { label: "Código", key: "code" },
+            { label: "Observaciones", key: "observations" },
+            { label: "Minima calf. aprobatoria", key: "minimumPassingGrade" },
+            { label: "Número de evaluaciones en el ciclo", key: "evaluationCount" },
+            { label: "¿Inscripciones abiertas?", key: "enrollmentOpen" },
             { label: "Fecha de inicio", key: "startDate" },
-            { label: "Fecha de término", key: "endDate" }
+            { label: "Fecha de término", key: "endDate" },
+            { label: "Nivel académico", key: "academicLevel", render: (item) => item.academicLevel?.name || "" },
+            { label: "Nivel educativo", key: "educationLevel", render: (item) => item.educationLevel?.name || "" },
+            { label: "Tipo de periodo", key: "periodType", render: (item) => labelOf(ACADEMIC_CYCLE_PERIOD_TYPES, item.periodType) },
+            { label: "Estado", key: "status", render: (item) => labelOf(ACADEMIC_CYCLE_STATUSES, item.status) },
         ];
 
         downloadDataToCsvFile("Ciclos escolares", headers, data);

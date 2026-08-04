@@ -3,14 +3,15 @@ import { toast } from "sonner";
 
 import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { usePermission } from "@/modules/auth/hooks/usePermission";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { useSchoolSubjectsPage } from "./hooks/useSchoolSubjectsPage";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { useSchoolSubjectsPageTable } from "./hooks/useSchoolSubjectsPageTable";
 import { SchoolSubjectsAdvancedFilters } from "./components/SchoolSubjectsAdvancedFilters";
-import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 
 export const SchoolSubjectsPage = () => {
   // Component hooks & stores
@@ -31,13 +32,13 @@ export const SchoolSubjectsPage = () => {
       return;
     }
 
-    const headers = [
-      { label: "Id", key: "id" },
+    const headers: CsvHeader<SchoolSubjectResponse>[] = [
+      { label: "Identificador", key: "id" },
       { label: "Nombre", key: "name" },
       { label: "Descripción", key: "description" },
-      { label: "Estado", key: "status" },
-      { label: "Nivel Académico", key: "academicLevel.name" },
-      { label: "Grado Educativo", key: "educationLevel.name" }
+      { label: "Nivel académico", key: "academicLevel", render: (item) => item.academicLevel?.name || "" },
+      { label: "Nivel educativo", key: "educationLevel", render: (item) => item.educationLevel?.name || "" },
+      { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
     ];
 
     downloadDataToCsvFile("Materias escolares", headers, data);

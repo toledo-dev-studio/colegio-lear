@@ -1,5 +1,5 @@
 import type { KeyValuePair } from "./key-value-pair";
-import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, AnnouncementsStatusKey, AudienceTypeKey, BloodTypeKey, DayOfWeekKey, NotificationTypeKey, PaymentMethodKey, StudentGuardianRelationshipKey, StudentWalletStatusKey } from "./key-value-pair-types";
+import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, AnnouncementsStatusKey, AudienceTypeKey, BloodTypeKey, DayOfWeekKey, JobTitleTypeKey, NotificationTypeKey, PaymentMethodKey, StudentGuardianRelationshipKey, StudentWalletStatusKey } from "./key-value-pair-types";
 
 /**
  * DAY_OF_WEEKS represents a list of all possible days of the week with their corresponding keys and labels.
@@ -135,6 +135,15 @@ export const AUDIENCE_TYPES: KeyValuePair<AudienceTypeKey>[] = [
 ];
 
 /**
+ * JOB_TITLE_TYPES defines the possible types for a job title.
+ * Each status has a key and a label for display purposes.
+ */
+export const JOB_TITLE_TYPES: KeyValuePair<JobTitleTypeKey>[] = [
+    { key: "administrative-staff", label: "Administrativo" },
+    { key: "teacher", label: "Docente" }
+];
+
+/**
  * NOTIFICATION_TYPES defines the possible types for a notification.
  * Each status has a key and a label for display purposes.
  */
@@ -142,7 +151,6 @@ export const NOTIFICATION_TYPES: KeyValuePair<NotificationTypeKey>[] = [
     { key: "announcement", label: "Comunicado" },
     { key: "message", label: "Chat" },
 ];
-
 
 /**
  * ANNOUNCEMENTS_STATUSES defines the possible status types for an announcement.

@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
-import { downloadDataToCsvFile } from "@/lib/extensions/csv";
+import { downloadDataToCsvFile, type CsvHeader } from "@/lib/extensions/csv";
 import { useScholarshipsPage } from "./hooks/useScholarshipsPage";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
@@ -11,6 +11,7 @@ import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useScholarshipsPageTable } from "./hooks/useScholarshipsPageTable";
 import { ScholarshipsAdvancedFilters } from "./components/ScholarshipsAdvancedFilters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
+import type { ScholarshipResponse } from "@/interfaces/responses/scholarship.response";
 
 export const ScholarshipsPage = () => {
     // Component hooks & stores
@@ -31,12 +32,12 @@ export const ScholarshipsPage = () => {
             return;
         }
 
-        const headers = [
-            { label: "Id", key: "id" },
+        const headers: CsvHeader<ScholarshipResponse>[] = [
+            { label: "Identificador", key: "id" },
             { label: "Nombre", key: "name" },
-            { label: "Descripción", key: "description" },
             { label: "Porcentaje de descuento", key: "discountPercentage" },
-            { label: "Estado", key: "status" }
+            { label: "Descripción", key: "description" },
+            { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
         ];
 
         downloadDataToCsvFile("Becas escolares", headers, data);
