@@ -118,7 +118,7 @@ export const SchoolSubjectForm = ({ schoolSubjectResponse, isSubmitting, onSubmi
                         </div>
 
                         <div className="control-container">
-                            <label className="label">Nivel educativo <span className="required">*</span>:</label>
+                            <label className="label">Grado educativo <span className="required">*</span>:</label>
                             <Controller
                                 name="educationLevelId"
                                 control={control}
@@ -130,7 +130,7 @@ export const SchoolSubjectForm = ({ schoolSubjectResponse, isSubmitting, onSubmi
                                         defaultValue={educationLevel?.name}
                                         selected={!!educationLevelId}
                                         disabled={!academicLevelId}
-                                        placeholder="Busqueda de nivel educativo"
+                                        placeholder="Busqueda de grado educativo"
                                         options={searchEducationLevelsMutation.educationLevels}
                                         isSearching={searchEducationLevelsMutation.isPending}
                                         onClearSelection={() => {
@@ -150,7 +150,7 @@ export const SchoolSubjectForm = ({ schoolSubjectResponse, isSubmitting, onSubmi
                             {
                                 (errors.educationLevelId && !educationLevel) && (
                                     <p className="error">
-                                        El nivel educativo es obligatorio
+                                        El grado educativo es obligatorio
                                     </p>
                                 )
                             }

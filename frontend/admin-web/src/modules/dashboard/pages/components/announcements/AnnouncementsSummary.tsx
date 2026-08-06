@@ -17,7 +17,7 @@ export const AnnouncementsSummary = () => {
                 <SectionHeader label="Resumen de campañas" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <KpiCard
-                        label="Comunicados & campañas activas"
+                        label="Campañas & comunicados activas"
                         value={data?.activeAnnouncementsCount ?? 0}
                         icon={Megaphone}
                         tone="sky"

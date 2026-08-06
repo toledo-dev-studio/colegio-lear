@@ -8,7 +8,7 @@ interface Options extends AnnouncementFilter {
     query?: string;
 }
 
-export const getAnnouncementsActionAsync = async ({ query, name, publishedAt, expiresAt, isActive }: Options): Promise<AnnouncementResponse[]> => {
+export const getAnnouncementsActionAsync = async ({ query, name, publishedAt, expiresAt, status }: Options): Promise<AnnouncementResponse[]> => {
     await sleep();
 
     let endpoint = "/announcements";
@@ -22,7 +22,7 @@ export const getAnnouncementsActionAsync = async ({ query, name, publishedAt, ex
             name,
             publishedAt,
             expiresAt,
-            isActive
+            status
         }
     });
 

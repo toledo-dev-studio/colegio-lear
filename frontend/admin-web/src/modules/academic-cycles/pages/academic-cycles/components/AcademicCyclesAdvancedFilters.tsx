@@ -199,7 +199,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                     </div>
 
                     <div className="control-container">
-                        <label className="label">Nivel educativo:</label>
+                        <label className="label">Grado educativo:</label>
                         <Controller
                             name="educationLevelId"
                             control={control}
@@ -209,7 +209,7 @@ export const AcademicCyclesAdvancedFilters = ({ open, title = "Filtros avanzados
                                     defaultValue={educationLevel?.name}
                                     selected={!!educationLevelId}
                                     disabled={!academicLevelId}
-                                    placeholder="Busqueda de nivel educativo"
+                                    placeholder="Busqueda de grado educativo"
                                     options={searchEducationLevels.educationLevels}
                                     isSearching={searchEducationLevels.isPending}
                                     onClearSelection={() => {

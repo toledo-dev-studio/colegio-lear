@@ -128,7 +128,7 @@ export const AcademicCycleTabSkeleton = ({ isNew }: Props) => {
                                     <Skeleton className="h-11 w-full rounded-xl" />
                                 </div>
 
-                                {/* Nivel educativo */}
+                                {/* grado educativo */}
                                 <div className="control-container">
                                     <Skeleton className="h-4 w-40 mb-3" />
                                     <Skeleton className="h-11 w-full rounded-xl" />

@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_ANNOUNCEMENTS_QUERY_KEY } from "@/lib/queries-key/announcements-queries-key";
 import { getPagedAnnouncementsActionAsync } from "../../actions/announcements/get-paged-announcements.action";
-import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
+import { isValidValueWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
+import type { AnnouncementsStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 export const useGetPagedAnnouncements = () => {
     const [searchParams] = useSearchParams();
@@ -18,10 +19,10 @@ export const useGetPagedAnnouncements = () => {
     const name = isValidValueWithDefault(searchParams.get("name")?.trim(), undefined);
     const publishedAt = isValidValueWithDefault(searchParams.get("published-at")?.trim(), undefined);
     const expiresAt = isValidValueWithDefault(searchParams.get("expires-at")?.trim(), undefined);
-    const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
+    const status = isValidValueWithDefault(searchParams.get("status") as AnnouncementsStatusKey, undefined);
 
     const queryResult = useQuery({
-        queryKey: [GET_PAGED_ANNOUNCEMENTS_QUERY_KEY, { query, page, pageSize, name, publishedAt, expiresAt, isActive, }],
+        queryKey: [GET_PAGED_ANNOUNCEMENTS_QUERY_KEY, { query, page, pageSize, name, publishedAt, expiresAt, status, }],
         queryFn: () => getPagedAnnouncementsActionAsync({
             query,
             page,
@@ -29,7 +30,7 @@ export const useGetPagedAnnouncements = () => {
             name,
             publishedAt,
             expiresAt,
-            isActive,
+            status,
         }),
         staleTime: FIVE_MINUTES_STALE_TIME
     });

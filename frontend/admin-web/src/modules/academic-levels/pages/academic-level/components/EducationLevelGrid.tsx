@@ -30,7 +30,7 @@ export const EducationLevelGrid = ({ educationLevels = [], handleAddEducationLev
                     <Button
                         type="button"
                         variant="outline"
-                        className="h-10 px-4 text-foreground"
+                        className="h-10 px-4 text-foreground hover:text-foreground"
                         onClick={handleAddEducationLevel}>
                         Agregar nuevo
                         <Plus className="ml-4 w-3 h-3 text-foreground" />
@@ -41,7 +41,7 @@ export const EducationLevelGrid = ({ educationLevels = [], handleAddEducationLev
                     {/* Ningún nivel académico registrado */}
                     {
                         (!educationLevels || !educationLevels.length) && (
-                            <p className="text-sm text-center text-muted-foreground">No cuenta con ningún nivel educativo registrado.</p>
+                            <p className="text-sm text-center text-muted-foreground">No cuenta con ningún grado educativo registrado.</p>
                         )
                     }
 

@@ -422,7 +422,7 @@ export const AcademicCycleTab = () => {
                         </div>
 
                         <div className="control-container">
-                            <label className="label">Nivel educativo <span className="required">*</span>:</label>
+                            <label className="label">Grado educativo <span className="required">*</span>:</label>
                             <Controller
                                 name="educationLevelId"
                                 control={control}
@@ -433,7 +433,7 @@ export const AcademicCycleTab = () => {
                                         disabled={!academicLevelId || isLocked || !isNew}
                                         defaultValue={educationLevel?.name}
                                         selected={!!educationLevelId}
-                                        placeholder="Busqueda de nivel educativo"
+                                        placeholder="Busqueda de grado educativo"
                                         options={searchEducationLevels.educationLevels}
                                         isSearching={searchEducationLevels.isPending}
                                         onClearSelection={() => {
@@ -452,7 +452,7 @@ export const AcademicCycleTab = () => {
                             {
                                 (errors.educationLevelId && !educationLevel) && (
                                     <p className="error">
-                                        El nivel educativo es obligatorio
+                                        El grado educativo es obligatorio
                                     </p>
                                 )
                             }

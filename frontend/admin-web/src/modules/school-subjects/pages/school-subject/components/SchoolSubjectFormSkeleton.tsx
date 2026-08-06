@@ -24,7 +24,7 @@ export const SchoolSubjectFormSkeleton = () => {
                     <Skeleton className="h-10 w-full rounded-md" />
                 </div>
 
-                {/* Nivel educativo */}
+                {/* grado educativo */}
                 <div className="control-container">
                     <Skeleton className="h-4 w-40 mb-2" />
                     <Skeleton className="h-10 w-full rounded-md" />

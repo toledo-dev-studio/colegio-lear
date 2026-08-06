@@ -2,11 +2,14 @@ import { useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
 import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import type { AnnouncementFilter } from "@/interfaces/filters/announcement.filter";
-import { isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
+import { ANNOUNCEMENTS_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
+import type { AnnouncementsStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 interface Props {
     open: boolean;
@@ -20,7 +23,7 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
 
     const employeeFilterLike: Partial<AnnouncementFilter> = {
         name: isValidValueWithDefault(searchParams.get("name"), ""),
-        isActive: stringToBooleanWithDefault(searchParams.get("is-active")),
+        status: isValidValueWithDefault(searchParams.get("status") as AnnouncementsStatusKey, undefined),
         expiresAt: isValidValueWithDefault(searchParams.get("expires-at"), ""),
         publishedAt: isValidValueWithDefault(searchParams.get("published-at"), ""),
     };
@@ -37,14 +40,14 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
     const handleClickClearFilters = () => {
         searchParams.delete("query");
         searchParams.delete("name");
-        searchParams.delete("is-active");
+        searchParams.delete("status");
         searchParams.delete("published-at");
         searchParams.delete("expires-at");
         reset({
             name: "",
             publishedAt: "",
             expiresAt: "",
-            isActive: true,
+            status: undefined,
         });
         setSearchParams(searchParams);
         handleClickClose();
@@ -52,7 +55,7 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
 
     const onSubmit = (filter: Partial<AnnouncementFilter>) => {
         searchParams.delete("query");
-        searchParams.set("is-active", `${filter.isActive}`);
+        filter.status ? searchParams.set("status", filter.status) : searchParams.delete("status");
         filter.name ? searchParams.set("name", filter.name) : searchParams.delete("name");
         filter.publishedAt ? searchParams.set("published-at", filter.publishedAt) : searchParams.delete("published-at");
         filter.expiresAt ? searchParams.set("expires-at", filter.expiresAt) : searchParams.delete("expires-at");
@@ -121,22 +124,34 @@ export const AnnouncementsAdvancedFilters = ({ open, title = "Filtros avanzados"
                     </div>
 
                     <div className="control-container">
-                        <label className="label">¿Registro activo?:</label>
-                        <div className="flex items-center justify-center">
-                            <Controller
-                                name="isActive"
-                                control={control}
-                                render={({ field }) => (
-                                    <label className="switch-control-container">
-                                        <div>
-                                            <p className="label">{field.value ? "Activo" : "Inactivo"}</p>
-                                            <p className="description">El registro de la camáña se encuentra activo o inactivo.</p>
-                                        </div>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                                    </label>
-                                )}
-                            />
-                        </div>
+                        <label className="label">
+                            Estado de la campaña:
+                        </label>
+                        <Controller
+                            control={control}
+                            name={"status"}
+                            render={({ field }) => (
+                                <Select
+                                    value={field.value ?? ""}
+                                    onValueChange={field.onChange}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Selecciona una opción">
+                                            {labelOf(ANNOUNCEMENTS_STATUSES, field.value) || "Selecciona una opción"}
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Estado de la campaña</SelectLabel>
+                                            {ANNOUNCEMENTS_STATUSES.map((item) => (
+                                                <SelectItem key={item.key} value={item.key} label={item.label}>
+                                                    {item.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
                     </div>
 
                 </form>

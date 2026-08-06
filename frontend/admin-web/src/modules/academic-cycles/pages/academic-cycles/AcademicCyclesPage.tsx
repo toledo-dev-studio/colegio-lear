@@ -45,7 +45,7 @@ export const AcademicCyclesPage = () => {
             { label: "Fecha de inicio", key: "startDate" },
             { label: "Fecha de término", key: "endDate" },
             { label: "Nivel académico", key: "academicLevel", render: (item) => item.academicLevel?.name || "" },
-            { label: "Nivel educativo", key: "educationLevel", render: (item) => item.educationLevel?.name || "" },
+            { label: "Grado educativo", key: "educationLevel", render: (item) => item.educationLevel?.name || "" },
             { label: "Tipo de periodo", key: "periodType", render: (item) => labelOf(ACADEMIC_CYCLE_PERIOD_TYPES, item.periodType) },
             { label: "Estado", key: "status", render: (item) => labelOf(ACADEMIC_CYCLE_STATUSES, item.status) },
         ];
