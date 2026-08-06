@@ -1,3 +1,5 @@
+import type { AnnouncementsStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
+
 /**
  * Type: Filter
  * Description: Represents an announcement with basic information.
@@ -18,7 +20,7 @@ export interface AnnouncementFilter {
      */
     expiresAt?: string;
     /**
-     * Announcement's is active flag
+     * Announcement status key
      */
-    isActive?: boolean;
+    status?: AnnouncementsStatusKey;
 }

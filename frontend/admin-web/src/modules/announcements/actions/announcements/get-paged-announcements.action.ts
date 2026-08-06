@@ -14,7 +14,7 @@ interface Options extends AnnouncementFilter {
 export const getPagedAnnouncementsActionAsync = async (props: Options): Promise<PagedResponse<AnnouncementResponse>> => {
     await sleep();
 
-    const { query, page = 1, pageSize = 1, name, publishedAt, expiresAt, isActive } = props;
+    const { query, page = 1, pageSize = 1, name, publishedAt, expiresAt, status } = props;
 
     let endpoint = "/announcements/paged";
 
@@ -29,7 +29,7 @@ export const getPagedAnnouncementsActionAsync = async (props: Options): Promise<
             name,
             publishedAt,
             expiresAt,
-            isActive,
+            status,
         }
     });
 

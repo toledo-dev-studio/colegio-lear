@@ -37,7 +37,7 @@ export const SchoolSubjectsPage = () => {
       { label: "Nombre", key: "name" },
       { label: "Descripción", key: "description" },
       { label: "Nivel académico", key: "academicLevel", render: (item) => item.academicLevel?.name || "" },
-      { label: "Nivel educativo", key: "educationLevel", render: (item) => item.educationLevel?.name || "" },
+      { label: "Grado educativo", key: "educationLevel", render: (item) => item.educationLevel?.name || "" },
       { label: "¿Registro activo?", key: "isActive", render: (item) => item.isActive ? "Activo" : "Inactivo" },
     ];
 

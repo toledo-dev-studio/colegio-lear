@@ -41,7 +41,7 @@ export const AnnouncementsPage = () => {
       { label: "Fecha de publicación", key: "publishedAt" },
       { label: "Fecha de expiración", key: "expiresAt" },
       { label: "Audiencia(s)", key: "audience", render: (item) => item.audience.map(a => labelOf(AUDIENCE_TYPES, a)).join(", ") },
-      { label: "Estado", key: "status", render: (item) => labelOf(ANNOUNCEMENTS_STATUSES, item.status) },
+      { label: "Estatus", key: "status", render: (item) => labelOf(ANNOUNCEMENTS_STATUSES, item.status) },
     ];
 
     downloadDataToCsvFile("Campañas & comunicados", headers, data);
@@ -72,10 +72,10 @@ export const AnnouncementsPage = () => {
 
         <Breadcrumb items={[
           { label: "Seguimiento escolar" },
-          { label: "Comunicados & campañas", to: "/announcements" },
+          { label: "Campañas & comunicados", to: "/announcements" },
         ]} />
 
-        <PageTitle title="Comunicados & campañas" subtitle="Gestiona las comunicados & campañas disponibles en el colegio y la organización" />
+        <PageTitle title="Campañas & comunicados" subtitle="Gestiona las campañas & comunicados disponibles en el colegio y la organización" />
 
         {/* Table ribbon options */}
         <TableRibbon
