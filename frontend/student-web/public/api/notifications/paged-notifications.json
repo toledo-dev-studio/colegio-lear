@@ -1,0 +1,33 @@
+{
+  "currentPage": 1,
+  "totalPages": 2,
+  "data": [
+    {
+      "id": "ntf-0001-2f2a3e1d-4b3d-4a5f-8e7b-1c2d3e4f5f60",
+      "type": "announcement",
+      "title": "Inscripción de calificaciones del ciclo escolar 2026-2027",
+      "message": "Consulta el reporte de calificaciones del parcial en la sección de Calificaciones. Aviso generado por la institución.",
+      "createdAt": "2026-08-05T14:30:00.000Z",
+      "read": false,
+      "relatedRecordId": "anc-2026-0008"
+    },
+    {
+      "id": "ntf-0002-3f2a4e1d-4b3d-4a5f-9f8b-2c3d4e5f6071",
+      "type": "message",
+      "title": "Mensaje de tu asesor académico",
+      "message": "Te comparto las lecturas recomendadas para la próxima semana y los recordatorios de entrega de tareas.",
+      "createdAt": "2026-08-05T09:15:00.000Z",
+      "read": false,
+      "relatedRecordId": "msg-2026-0289"
+    },
+    {
+      "id": "ntf-0003-2f2a-3e2d-4b3a-4a6f-9e8c-2d3e4fng",
+      "type": "info",
+      "title": "Actualización de tu perfil",
+      "message": "Tu perfil de estudiante se ha actualizado correctamente. Verifica que tus datos de contacto estén al día.",
+      "createdAt": "2026-08-03T18:45:00.000Z",
+      "read": true,
+      "relatedRecordId": null
+    }
+  ]
+}
