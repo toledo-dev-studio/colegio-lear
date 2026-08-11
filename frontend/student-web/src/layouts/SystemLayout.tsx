@@ -2,8 +2,8 @@ import { useState, type PropsWithChildren } from "react";
 
 import { Navbar } from "@/shared/components/navbar/Navbar";
 import { Sidebar } from "@/shared/components/sidebar/Sidebar";
-import { useAuthStore } from "@/lib/zustand/stores/auth-store/auth.store";
-import { useLoaderStore } from "../lib/zustand/stores/loader-store/LoaderStore";
+import { useAuthStore } from "@/stores/auth-store/auth.store";
+import { useLoaderStore } from "../stores/loader-store/LoaderStore";
 
 export const SystemLayout = ({ children }: PropsWithChildren) => {
 

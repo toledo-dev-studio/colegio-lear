@@ -1,6 +1,6 @@
 import axios from "axios"
 
-import { useAuthStore } from "@/lib/zustand/stores/auth-store/auth.store";
+import { useAuthStore } from "@/stores/auth-store/auth.store";
 
 import { VITE_COLEGIO_LEAR_API_URL } from "@/lib/constants/environment.constants";
 

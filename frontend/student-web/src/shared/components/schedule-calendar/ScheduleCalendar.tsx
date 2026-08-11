@@ -390,7 +390,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
 
             {/* Delete single record modal */}
             {
-                recordToDelete && (
+                !disabled && recordToDelete && (
                     <Modal
                         open={isOpenSingleDeleteModal}
                         type="delete"

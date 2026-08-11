@@ -1,0 +1,146 @@
+[
+  {
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "teacherId": "emp-ramirez-juan",
+    "teacher": {
+      "id": "emp-ramirez-juan",
+      "name": "Juan Carlos",
+      "firstLastName": "Ramírez",
+      "secondLastName": "Mendoza",
+      "phoneNumber": "+52 55 1234 5678",
+      "email": "juan.ramirez@colegio-lear.edu.mx",
+      "username": "jramirez",
+      "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
+      "isActive": true,
+      "mustChangePassword": false,
+      "securityRoleId": "sr-teacher",
+      "jobTitleId": "jt-profesor"
+    }
+  },
+  {
+    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "teacherId": "emp-herrera-laura",
+    "teacher": {
+      "id": "emp-herrera-laura",
+      "name": "Laura Patricia",
+      "firstLastName": "Herrera",
+      "secondLastName": "Vega",
+      "phoneNumber": "+52 55 2345 6789",
+      "email": "laura.herrera@colegio-lear.edu.mx",
+      "username": "lherrera",
+      "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
+      "isActive": true,
+      "mustChangePassword": false,
+      "securityRoleId": "sr-teacher",
+      "jobTitleId": "jt-profesor"
+    }
+  },
+  {
+    "schoolSubjectId": "ss-ciencias-sec1",
+    "schoolSubject": {
+      "id": "ss-ciencias-sec1",
+      "name": "Ciencias Naturales",
+      "description": "Biología y ecología de nivel básico.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "teacherId": "emp-sanchez-roberto",
+    "teacher": {
+      "id": "emp-sanchez-roberto",
+      "name": "Roberto",
+      "firstLastName": "Sánchez",
+      "secondLastName": "Torres",
+      "phoneNumber": "+52 55 3456 7890",
+      "email": "roberto.sanchez@colegio-lear.edu.mx",
+      "username": "rsanchez",
+      "avatar": "https://randomuser.me/api/portraits/men/58.jpg",
+      "isActive": true,
+      "mustChangePassword": false,
+      "securityRoleId": "sr-teacher",
+      "jobTitleId": "jt-profesor"
+    }
+  },
+  {
+    "schoolSubjectId": "ss-ingles-sec1",
+    "schoolSubject": {
+      "id": "ss-ingles-sec1",
+      "name": "Inglés",
+      "description": "Idioma inglés nivel A1.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "teacherId": "emp-nunez-ana",
+    "teacher": {
+      "id": "emp-nunez-ana",
+      "name": "Ana Gabriela",
+      "firstLastName": "Núñez",
+      "secondLastName": "Flores",
+      "phoneNumber": "+52 55 4567 8901",
+      "email": "ana.nunez@colegio-lear.edu.mx",
+      "username": "anunez",
+      "avatar": "https://randomuser.me/api/portraits/women/65.jpg",
+      "isActive": true,
+      "mustChangePassword": false,
+      "securityRoleId": "sr-teacher",
+      "jobTitleId": "jt-profesor"
+    }
+  }
+]

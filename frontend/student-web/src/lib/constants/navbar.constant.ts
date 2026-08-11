@@ -20,7 +20,7 @@ export const NAVBAR: Navbar[] = [
             },
             {
                 moduleKey: "profile",
-                label: "Mi perfil",
+                label: "Mi cuenta",
                 icon: UserRound,
                 description: "Datos personales, tutores y alergias.",
                 tone: "violet",
@@ -32,6 +32,14 @@ export const NAVBAR: Navbar[] = [
         title: "Mi ciclo escolar",
         items: [
             {
+                moduleKey: "wallet",
+                label: "Cartera de pagos",
+                icon: Wallet,
+                description: "Pagos e inscripción del ciclo.",
+                tone: "emerald",
+                testId: "student-nav-wallet"
+            },
+            {
                 moduleKey: "grades",
                 label: "Boleta de calificaciones",
                 icon: GraduationCap,
@@ -40,7 +48,7 @@ export const NAVBAR: Navbar[] = [
                 testId: "student-nav-grades"
             },
             {
-                moduleKey: "schedule",
+                moduleKey: "school-calendar",
                 label: "Horario escolar",
                 icon: CalendarRange,
                 description: "Horario semanal de clases.",
@@ -62,14 +70,6 @@ export const NAVBAR: Navbar[] = [
                 description: "Asistencia por materia y día.",
                 tone: "primary",
                 testId: "student-nav-attendance"
-            },
-            {
-                moduleKey: "wallet",
-                label: "Cartera de pagos",
-                icon: Wallet,
-                description: "Pagos e inscripción del ciclo.",
-                tone: "emerald",
-                testId: "student-nav-wallet"
             },
             {
                 moduleKey: "messages",

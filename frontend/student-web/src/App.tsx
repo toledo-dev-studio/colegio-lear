@@ -6,9 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import { appRouter } from "./routes/app.router";
 import { TooltipProvider } from "./shared/shadcn/ui/tooltip";
+import { useAuthStore } from "./stores/auth-store/auth.store";
 import { ThemeContextProvider } from "./contexts/ThemeContext";
 import { LoaderContextProvider } from "./contexts/LoaderContext";
-import { useAuthStore } from "./lib/zustand/stores/auth-store/auth.store";
 
 const queryClient = new QueryClient();
 

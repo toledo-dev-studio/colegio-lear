@@ -4,7 +4,7 @@
 export type ModuleKey =
     | "dashboard"
     | "grades"
-    | "schedule"
+    | "school-calendar"
     | "subjects"
     | "attendance"
     | "wallet"

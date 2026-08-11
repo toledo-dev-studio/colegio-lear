@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 
 import { Loader } from "../shared/components/loader/Loader";
-import { useLoaderStore } from "../lib/zustand/stores/loader-store/LoaderStore";
+import { useLoaderStore } from "@/stores/loader-store/LoaderStore";
 
 export const LoaderContextProvider = ({ children }: PropsWithChildren) => {
 

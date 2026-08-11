@@ -71,8 +71,8 @@ export const CalendarFormPanel = ({ disabled = false, teachers = [], schoolSubje
             <SidePanel
                 title="ASOCIACIÓN DE HORARIO"
                 handleClickClose={onCancel}
-                cancelButton={{ show: true, disabled: false, type: "button", label: "Cancelar", handleClick: onCancel }}
-                submitButton={{ show: true, disabled: false, type: "submit", label: "Guardar", handleClick: handleSubmit(validateForm) }}>
+                cancelButton={{ show: true, disabled: false, type: "button", label: disabled ? "Aceptar" : "Cancelar", handleClick: onCancel }}
+                submitButton={{ show: !disabled, disabled: false, type: "submit", label: "Guardar", handleClick: handleSubmit(validateForm) }}>
 
                 <section className="flex flex-col gap-8">
 

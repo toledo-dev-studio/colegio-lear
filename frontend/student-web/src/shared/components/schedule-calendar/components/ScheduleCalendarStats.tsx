@@ -6,6 +6,7 @@ interface Props {
 }
 
 export const ScheduleCalendarStats = ({ calendars }: Props) => {
+  const validCalendars = calendars.filter((c) => c?.startTime && c?.endTime);
   return (
     <>
       <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -17,7 +18,7 @@ export const ScheduleCalendarStats = ({ calendars }: Props) => {
           <span className="font-semibold text-foreground">
             {
               Math.round(
-                calendars.reduce((acc: any, c: any) => acc + (hhmmToMinutes(c.endTime) - hhmmToMinutes(c.startTime)), 0) / 60 * 10,
+                validCalendars.reduce((acc: any, c: any) => acc + (hhmmToMinutes(c.endTime) - hhmmToMinutes(c.startTime)), 0) / 60 * 10,
               ) / 10
             }{" "}h
           </span>
