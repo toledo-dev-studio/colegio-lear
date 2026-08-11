@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { CalendarRange } from "lucide-react";
 
 import { useCalendarPage } from "../hooks/useCalendarPage";
+import { CardHeader } from "@/shared/components/card-header/CardHeader";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import { CalendarSkeleton } from "../components/calendar-skeleton/CalendarSkeleton";
 import ScheduleCalendar from "@/shared/components/schedule-calendar/ScheduleCalendar";
@@ -43,7 +44,14 @@ export const CalendarPage = () => {
         />
 
         {/* Schedule calendar */}
-        <section>
+        <section className="card">
+          <CardHeader
+            icon={CalendarRange}
+            title="Horario escolar"
+            description="Consulta el horario semanal de tu grupo escolar, con la materia, el horario y el docente a cargo de cada clase."
+            tone="primary"
+          />
+
           {queries.calendarsQuery.isLoading ? (
             <CalendarSkeleton />
           ) : (
@@ -53,6 +61,7 @@ export const CalendarPage = () => {
               schoolSubjects={schoolSubjects}
               calendars={calendars} />
           )}
+
         </section>
 
       </section>

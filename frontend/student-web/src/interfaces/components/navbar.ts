@@ -9,8 +9,7 @@ export type ModuleKey =
     | "attendance"
     | "wallet"
     | "messages"
-    | "announcements"
-    | "profile";
+    | "my-account";
 
 export type Tone = "primary" | "emerald" | "amber" | "violet" | "sky" | "rose";
 

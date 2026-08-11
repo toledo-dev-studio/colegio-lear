@@ -8,6 +8,7 @@ import { StudentWalletTableSkeleton } from "../components/wallet-table/StudentWa
 import { WalletStatsSkeleton } from "@/modules/dashboard/components/wallet-stats/WalletStatsSkeleton";
 import { StudentWalletPaymentsTable } from "../components/wallet-payments-table/StudentWalletPaymentsTable";
 import { StudentWalletPaymentsTableSkeleton } from "../components/wallet-payments-table/StudentWalletPaymentsTableSkeleton";
+import { CardHeader } from "@/shared/components/card-header/CardHeader";
 
 export const StudentWalletPage = () => {
   const { context, queries } = useStudentWalletPage();
@@ -26,12 +27,24 @@ export const StudentWalletPage = () => {
         />
 
         {/* Wallet stats */}
-        <section className="min-w-0">
+        <section className="card">
+          <CardHeader
+            icon={Wallet}
+            title="Resumen de cartera de pagos"
+            description="Consulta el resumen general de tu cartera de pagos de este ciclo escolar."
+            tone="primary"
+          />
           {queries.walletQuery.isLoading ? (<WalletStatsSkeleton />) : <WalletStats studentWalletSummary={queries.walletQuery.data?.summary!} />}
         </section>
 
         {/* Student wallet table */}
-        <section>
+        <section className="card">
+          <CardHeader
+            icon={Wallet}
+            title="Cartera del estudiante"
+            description="Conceptos de pago configurados para este ciclo escolar"
+            tone="sky"
+          />
           {
             queries.walletQuery.isLoading ?
               <StudentWalletTableSkeleton /> :

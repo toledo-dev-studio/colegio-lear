@@ -2,16 +2,7 @@ import { Skeleton } from "@/shared/shadcn/ui/skeleton"
 
 export const StudentGradesGridSkeleton = () => {
     return (
-        <section className="flex flex-col gap-y-6 bg-card rounded-xl border border-border shadow-sm p-4 sm:p-6 animate-pulse">
-
-            {/* Header */}
-            <header className="flex items-center gap-3 pb-3 border-b border-border">
-                <Skeleton className="w-10 h-10 rounded-full shrink-0" />
-                <div className="space-y-2 flex-1">
-                    <Skeleton className="h-5 w-56" />
-                    <Skeleton className="h-3 w-full max-w-lg" />
-                </div>
-            </header>
+        <section className="flex flex-col gap-y-6">
 
             {/* Main content */}
             <section className="grid grid-cols-1 2xl:grid-cols-3 gap-5">

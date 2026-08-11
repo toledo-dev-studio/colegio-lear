@@ -1,4 +1,4 @@
-import { LayoutDashboard } from "lucide-react";
+import { CalendarDays, GraduationCap, LayoutDashboard, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
 import { useDashboardPage } from "../hooks/useDashboardPage";
@@ -9,6 +9,7 @@ import { AcademicCycleOverviewSkeleton } from "../components/academic-cycle-over
 import { WalletStats } from "../components/wallet-stats/WalletStats";
 import { StudentGradesGridSkeleton } from "../components/student-grades/StudentGradesGridSkeleton";
 import { StudentGradesGrid } from "../components/student-grades/StudentGradesGrid";
+import { CardHeader } from "@/shared/components/card-header/CardHeader";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -49,17 +50,35 @@ export const DashboardPage = () => {
         />
 
         {/* Ribbon overview */}
-        <section>
+        <section className="card">
+          <CardHeader
+            icon={CalendarDays}
+            title="Ciclo escolar"
+            description="Datos generales del ciclo escolar en el que te encuentras inscrito."
+            tone="sky"
+          />
           {queries.enrollmentQuery.isLoading ? (<AcademicCycleOverviewSkeleton />) : (<AcademicCycleOverview academicCycle={context.academicCycle!} academicCycleEnrollment={queries.enrollmentQuery.data!} />)}
         </section>
 
         {/* Wallet stats */}
-        <section>
+        <section className="card">
+          <CardHeader
+            icon={Wallet}
+            title="Resumen de cartera de pagos"
+            description="Consulta el resumen general de tu cartera de pagos de este ciclo escolar."
+            tone="primary"
+          />
           {queries.walletQuery.isLoading ? (<WalletStatsSkeleton />) : <WalletStats studentWalletSummary={queries.walletQuery.data?.summary!} />}
         </section>
 
         {/* Student grades */}
-        <section>
+        <section className="card">
+          <CardHeader
+            icon={GraduationCap}
+            title="Seguimiento académico"
+            description="Calificación general del ciclo y desglose por materia. Escala 0–10."
+            tone="emerald"
+          />
           {queries.studentGradesQuery.isLoading ? (<StudentGradesGridSkeleton />) : <StudentGradesGrid studentGrades={queries.studentGradesQuery.data ?? []} academicCycleId={context.academicCycle?.id!} enrollmentId={queries.enrollmentQuery.data?.id!} evaluationCount={context.academicCycle?.evaluationCount ?? 0} minimumPassingGrade={context.academicCycle?.minimumPassingGrade ?? 0} academicCycleSchoolGroupId={queries.enrollmentQuery.data?.academicCycleSchoolGroupId!} />}
         </section>
       </section>
