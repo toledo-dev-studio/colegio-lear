@@ -48,7 +48,7 @@ export const NAVBAR: Navbar[] = [
                 testId: "student-nav-grades"
             },
             {
-                moduleKey: "schedule",
+                moduleKey: "school-calendar",
                 label: "Horario escolar",
                 icon: CalendarRange,
                 description: "Horario semanal de clases.",

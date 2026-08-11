@@ -1,0 +1,422 @@
+[
+  {
+    "id": "cal-2025-0001",
+    "day": "monday",
+    "startTime": "08:00:00",
+    "endTime": "09:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "teacherId": "emp-ramirez-juan",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas"
+    },
+    "teacher": {
+      "id": "emp-ramirez-juan",
+      "name": "Juan Carlos",
+      "firstLastName": "Ramírez",
+      "secondLastName": "Mendoza",
+      "email": "juan.ramirez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0002",
+    "day": "monday",
+    "startTime": "09:00:00",
+    "endTime": "10:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-espanol-sec1",
+    "teacherId": "emp-herrera-laura",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español"
+    },
+    "teacher": {
+      "id": "emp-herrera-laura",
+      "name": "Laura Patricia",
+      "firstLastName": "Herrera",
+      "secondLastName": "Vega",
+      "email": "laura.herrera@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0003",
+    "day": "monday",
+    "startTime": "10:00:00",
+    "endTime": "11:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ciencias-sec1",
+    "teacherId": "emp-sanchez-roberto",
+    "schoolSubject": {
+      "id": "ss-ciencias-sec1",
+      "name": "Ciencias Naturales"
+    },
+    "teacher": {
+      "id": "emp-sanchez-roberto",
+      "name": "Roberto",
+      "firstLastName": "Sánchez",
+      "secondLastName": "Torres",
+      "email": "roberto.sanchez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0004",
+    "day": "monday",
+    "startTime": "11:00:00",
+    "endTime": "12:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ingles-sec1",
+    "teacherId": "emp-nunez-ana",
+    "schoolSubject": {
+      "id": "ss-ingles-sec1",
+      "name": "Inglés"
+    },
+    "teacher": {
+      "id": "emp-nunez-ana",
+      "name": "Ana Gabriela",
+      "firstLastName": "Núñez",
+      "secondLastName": "Flores",
+      "email": "ana.nunez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0005",
+    "day": "tuesday",
+    "startTime": "08:00:00",
+    "endTime": "09:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-espanol-sec1",
+    "teacherId": "emp-herrera-laura",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español"
+    },
+    "teacher": {
+      "id": "emp-herrera-laura",
+      "name": "Laura Patricia",
+      "firstLastName": "Herrera",
+      "secondLastName": "Vega",
+      "email": "laura.herrera@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0006",
+    "day": "tuesday",
+    "startTime": "09:00:00",
+    "endTime": "10:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "teacherId": "emp-ramirez-juan",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas"
+    },
+    "teacher": {
+      "id": "emp-ramirez-juan",
+      "name": "Juan Carlos",
+      "firstLastName": "Ramírez",
+      "secondLastName": "Mendoza",
+      "email": "juan.ramirez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0007",
+    "day": "tuesday",
+    "startTime": "10:00:00",
+    "endTime": "11:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ingles-sec1",
+    "teacherId": "emp-nunez-ana",
+    "schoolSubject": {
+      "id": "ss-ingles-sec1",
+      "name": "Inglés"
+    },
+    "teacher": {
+      "id": "emp-nunez-ana",
+      "name": "Ana Gabriela",
+      "firstLastName": "Núñez",
+      "secondLastName": "Flores",
+      "email": "ana.nunez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0008",
+    "day": "tuesday",
+    "startTime": "11:00:00",
+    "endTime": "12:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ciencias-sec1",
+    "teacherId": "emp-sanchez-roberto",
+    "schoolSubject": {
+      "id": "ss-ciencias-sec1",
+      "name": "Ciencias Naturales"
+    },
+    "teacher": {
+      "id": "emp-sanchez-roberto",
+      "name": "Roberto",
+      "firstLastName": "Sánchez",
+      "secondLastName": "Torres",
+      "email": "roberto.sanchez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0009",
+    "day": "wednesday",
+    "startTime": "08:00:00",
+    "endTime": "09:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ciencias-sec1",
+    "teacherId": "emp-sanchez-roberto",
+    "schoolSubject": {
+      "id": "ss-ciencias-sec1",
+      "name": "Ciencias Naturales"
+    },
+    "teacher": {
+      "id": "emp-sanchez-roberto",
+      "name": "Roberto",
+      "firstLastName": "Sánchez",
+      "secondLastName": "Torres",
+      "email": "roberto.sanchez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0010",
+    "day": "wednesday",
+    "startTime": "09:00:00",
+    "endTime": "10:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "teacherId": "emp-ramirez-juan",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas"
+    },
+    "teacher": {
+      "id": "emp-ramirez-juan",
+      "name": "Juan Carlos",
+      "firstLastName": "Ramírez",
+      "secondLastName": "Mendoza",
+      "email": "juan.ramirez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0011",
+    "day": "wednesday",
+    "startTime": "10:00:00",
+    "endTime": "11:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-espanol-sec1",
+    "teacherId": "emp-herrera-laura",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español"
+    },
+    "teacher": {
+      "id": "emp-herrera-laura",
+      "name": "Laura Patricia",
+      "firstLastName": "Herrera",
+      "secondLastName": "Vega",
+      "email": "laura.herrera@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0012",
+    "day": "wednesday",
+    "startTime": "11:00:00",
+    "endTime": "12:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ingles-sec1",
+    "teacherId": "emp-nunez-ana",
+    "schoolSubject": {
+      "id": "ss-ingles-sec1",
+      "name": "Inglés"
+    },
+    "teacher": {
+      "id": "emp-nunez-ana",
+      "name": "Ana Gabriela",
+      "firstLastName": "Núñez",
+      "secondLastName": "Flores",
+      "email": "ana.nunez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0013",
+    "day": "thursday",
+    "startTime": "08:00:00",
+    "endTime": "09:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ingles-sec1",
+    "teacherId": "emp-nunez-ana",
+    "schoolSubject": {
+      "id": "ss-ingles-sec1",
+      "name": "Inglés"
+    },
+    "teacher": {
+      "id": "emp-nunez-ana",
+      "name": "Ana Gabriela",
+      "firstLastName": "Núñez",
+      "secondLastName": "Flores",
+      "email": "ana.nunez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0014",
+    "day": "thursday",
+    "startTime": "09:00:00",
+    "endTime": "10:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ciencias-sec1",
+    "teacherId": "emp-sanchez-roberto",
+    "schoolSubject": {
+      "id": "ss-ciencias-sec1",
+      "name": "Ciencias Naturales"
+    },
+    "teacher": {
+      "id": "emp-sanchez-roberto",
+      "name": "Roberto",
+      "firstLastName": "Sánchez",
+      "secondLastName": "Torres",
+      "email": "roberto.sanchez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0015",
+    "day": "thursday",
+    "startTime": "10:00:00",
+    "endTime": "11:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "teacherId": "emp-ramirez-juan",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas"
+    },
+    "teacher": {
+      "id": "emp-ramirez-juan",
+      "name": "Juan Carlos",
+      "firstLastName": "Ramírez",
+      "secondLastName": "Mendoza",
+      "email": "juan.ramirez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0016",
+    "day": "thursday",
+    "startTime": "11:00:00",
+    "endTime": "12:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-espanol-sec1",
+    "teacherId": "emp-herrera-laura",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español"
+    },
+    "teacher": {
+      "id": "emp-herrera-laura",
+      "name": "Laura Patricia",
+      "firstLastName": "Herrera",
+      "secondLastName": "Vega",
+      "email": "laura.herrera@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0017",
+    "day": "friday",
+    "startTime": "08:00:00",
+    "endTime": "09:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "teacherId": "emp-ramirez-juan",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas"
+    },
+    "teacher": {
+      "id": "emp-ramirez-juan",
+      "name": "Juan Carlos",
+      "firstLastName": "Ramírez",
+      "secondLastName": "Mendoza",
+      "email": "juan.ramirez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0018",
+    "day": "friday",
+    "startTime": "09:00:00",
+    "endTime": "10:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-espanol-sec1",
+    "teacherId": "emp-herrera-laura",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español"
+    },
+    "teacher": {
+      "id": "emp-herrera-laura",
+      "name": "Laura Patricia",
+      "firstLastName": "Herrera",
+      "secondLastName": "Vega",
+      "email": "laura.herrera@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0019",
+    "day": "friday",
+    "startTime": "10:00:00",
+    "endTime": "11:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ciencias-sec1",
+    "teacherId": "emp-sanchez-roberto",
+    "schoolSubject": {
+      "id": "ss-ciencias-sec1",
+      "name": "Ciencias Naturales"
+    },
+    "teacher": {
+      "id": "emp-sanchez-roberto",
+      "name": "Roberto",
+      "firstLastName": "Sánchez",
+      "secondLastName": "Torres",
+      "email": "roberto.sanchez@colegio-lear.edu.mx"
+    }
+  },
+  {
+    "id": "cal-2025-0020",
+    "day": "friday",
+    "startTime": "11:00:00",
+    "endTime": "12:00:00",
+    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+    "schoolSubjectId": "ss-ingles-sec1",
+    "teacherId": "emp-nunez-ana",
+    "schoolSubject": {
+      "id": "ss-ingles-sec1",
+      "name": "Inglés"
+    },
+    "teacher": {
+      "id": "emp-nunez-ana",
+      "name": "Ana Gabriela",
+      "firstLastName": "Núñez",
+      "secondLastName": "Flores",
+      "email": "ana.nunez@colegio-lear.edu.mx"
+    }
+  }
+]
