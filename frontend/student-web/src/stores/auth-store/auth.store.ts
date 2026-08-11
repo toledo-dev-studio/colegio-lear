@@ -1,14 +1,14 @@
 import { create } from "zustand";
 
-import { meAsync } from "../../../../modules/auth/api/me.api";
-import { loginAsync } from "../../../../modules/auth/api/login.api";
-import { logoutAsync } from "../../../../modules/auth/api/logout.api";
+import { meAsync } from "@/modules/auth/api/me.api";
+import { loginAsync } from "@/modules/auth/api/login.api";
+import { logoutAsync } from "@/modules/auth/api/logout.api";
 import type { AuthRequest } from "@/interfaces/requests/auth.request";
 import type { AuthResponse } from "@/interfaces/responses/auth.response";
-import { useLoaderStore } from "@/lib/zustand/stores/loader-store/LoaderStore";
-import { resetPasswordAsync } from "../../../../modules/auth/api/reset-password.api";
+import { useLoaderStore } from "@/stores/loader-store/LoaderStore";
+import { resetPasswordAsync } from "@/modules/auth/api/reset-password.api";
 import type { AuthResetPasswordRequest } from "@/interfaces/requests/auth-reset-password.request";
-import { requestResetPasswordAsync } from "../../../../modules/auth/api/request-reset-password.api";
+import { requestResetPasswordAsync } from "@/modules/auth/api/request-reset-password.api";
 
 // Store types
 type AuthStatus = "authenticated" | "not-authenticated" | "checking";

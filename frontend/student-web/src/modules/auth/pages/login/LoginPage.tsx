@@ -8,8 +8,8 @@ import { Input } from "@/shared/shadcn/ui/input";
 import { Button } from "@/shared/shadcn/ui/button";
 import { AuthPagesHeader } from "../../components/AuthPagesHeader";
 import type { AuthRequest } from "@/interfaces/requests/auth.request";
-import { useLoaderStore } from "@/lib/zustand/stores/loader-store/LoaderStore";
-import { useAuthStore } from "../../../../lib/zustand/stores/auth-store/auth.store";
+import { useAuthStore } from "@/stores/auth-store/auth.store";
+import { useLoaderStore } from "@/stores/loader-store/LoaderStore";
 
 export const LoginPage = () => {
     // Component hooks & stores

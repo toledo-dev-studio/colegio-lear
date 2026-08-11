@@ -1,0 +1,302 @@
+[
+  {
+    "id": "sgd-2025-0001",
+    "grade": 8.8,
+    "evaluationNumber": 1,
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0002",
+    "grade": 7.3,
+    "evaluationNumber": 2,
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0003",
+    "grade": 6.2,
+    "evaluationNumber": 3,
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0004",
+    "grade": 4.9,
+    "evaluationNumber": 4,
+    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubject": {
+      "id": "ss-matematicas-sec1",
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0005",
+    "grade": 9.8,
+    "evaluationNumber": 1,
+    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0006",
+    "grade": 8.9,
+    "evaluationNumber": 2,
+    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0007",
+    "grade": 8.2,
+    "evaluationNumber": 3,
+    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0008",
+    "grade": 7.5,
+    "evaluationNumber": 4,
+    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubject": {
+      "id": "ss-espanol-sec1",
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0009",
+    "grade": 8.7,
+    "evaluationNumber": 1,
+    "schoolSubjectId": "ss-ciencias-sec1",
+    "schoolSubject": {
+      "id": "ss-ciencias-sec1",
+      "name": "Ciencias Naturales",
+      "description": "Biología y ecología de nivel básico.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0010",
+    "grade": 9.5,
+    "evaluationNumber": 2,
+    "schoolSubjectId": "ss-ciencias-sec1",
+    "schoolSubject": {
+      "id": "ss-ciencias-sec1",
+      "name": "Ciencias Naturales",
+      "description": "Biología y ecología de nivel básico.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0011",
+    "grade": 8.0,
+    "evaluationNumber": 1,
+    "schoolSubjectId": "ss-ingles-sec1",
+    "schoolSubject": {
+      "id": "ss-ingles-sec1",
+      "name": "Inglés",
+      "description": "Idioma inglés nivel A1.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  },
+  {
+    "id": "sgd-2025-0012",
+    "grade": 7.2,
+    "evaluationNumber": 2,
+    "schoolSubjectId": "ss-ingles-sec1",
+    "schoolSubject": {
+      "id": "ss-ingles-sec1",
+      "name": "Inglés",
+      "description": "Idioma inglés nivel A1.",
+      "isActive": true,
+      "academicLevelId": "al-secundaria",
+      "academicLevel": {
+        "id": "al-secundaria",
+        "name": "Secundaria",
+        "isActive": true
+      },
+      "educationLevelId": "el-secundaria-1",
+      "educationLevel": {
+        "id": "el-secundaria-1",
+        "name": "1° de Secundaria",
+        "academicLevelId": "al-secundaria"
+      }
+    },
+    "academicCycleEnrollmentId": "enc-2025-0001"
+  }
+]

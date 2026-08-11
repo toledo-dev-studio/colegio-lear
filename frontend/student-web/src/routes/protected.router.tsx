@@ -1,7 +1,6 @@
+import { useAuthStore } from "@/stores/auth-store/auth.store";
 import { type PropsWithChildren } from "react";
 import { Navigate } from "react-router";
-
-import { useAuthStore } from "@/lib/zustand/stores/auth-store/auth.store";
 
 /**
  * Validate if a user is authenticated, if not return to login page.
@@ -9,20 +8,25 @@ import { useAuthStore } from "@/lib/zustand/stores/auth-store/auth.store";
  * @returns Children, null or redirect view depending auth status.
  */
 export const AuthenticatedRoute = ({ children }: PropsWithChildren) => {
-    const { authStatus, user } = useAuthStore();
+  const { authStatus, user } = useAuthStore();
 
-    if (authStatus === "checking")
-        return null;
+  if (authStatus === "checking") return null;
 
-    if (authStatus === "not-authenticated")
-        return <Navigate to="/auth/login" />
+  if (authStatus === "not-authenticated") return <Navigate to="/auth/login" />;
 
-    // If user is authenticated but the password were reset before login
-    if (authStatus === "authenticated" && user?.mustChangePassword === true)
-        return <Navigate to="/auth/reset-password" />;
+  // If user is authenticated but the password were reset before login
+  if (authStatus === "authenticated" && user?.mustChangePassword === true)
+    return <Navigate to="/auth/reset-password" />;
 
-    return children;
-}
+  // If user is authenticated but is not active or does not have any enrollment to an academic cycle, show the forbidden page
+  if (
+    (authStatus === "authenticated" && user?.isActive === false) ||
+    !user?.academicCycles.length
+  )
+    return <Navigate to="/forbidden" />;
+
+  return children;
+};
 
 /**
  * Validate if a user is already authenticated and tries to access to any to auth page.
@@ -30,14 +34,14 @@ export const AuthenticatedRoute = ({ children }: PropsWithChildren) => {
  * @returns Children, null or redirect view depending auth status.
  */
 export const NotAuthenticatedRoute = ({ children }: PropsWithChildren) => {
-    const { authStatus } = useAuthStore();
+  const { authStatus } = useAuthStore();
 
-    if (authStatus === "checking") return null;
+  if (authStatus === "checking") return null;
 
-    if (authStatus === "authenticated") return <Navigate to="/" />
+  if (authStatus === "authenticated") return <Navigate to="/" />;
 
-    return children;
-}
+  return children;
+};
 
 /**
  * Show the ForbiddenPage when the student is not active.
@@ -45,14 +49,17 @@ export const NotAuthenticatedRoute = ({ children }: PropsWithChildren) => {
  * @returns Children or redirect view depending the student is active.
  */
 export const ForbiddenRoute = ({ children }: PropsWithChildren) => {
-    const { user, authStatus } = useAuthStore();
+  const { user, authStatus } = useAuthStore();
 
-    // If user is authenticated but is not active, show the forbidden page
-    if (authStatus === "authenticated" && user?.isActive === false)
-        return children;
+  // If user is authenticated but is not active or does not have any enrollment to an academic cycle, show the forbidden page
+  if (
+    (authStatus === "authenticated" && user?.isActive === false) ||
+    !user?.academicCycles.length
+  )
+    return children;
 
-    return <Navigate to="/dashboard" />;
-}
+  return <Navigate to="/dashboard" />;
+};
 
 /**
  * Validate if a user has pending reset password.
@@ -60,11 +67,11 @@ export const ForbiddenRoute = ({ children }: PropsWithChildren) => {
  * @returns Children, null or redirect view depending user permissions.
  */
 export const PendingResetPasswordRoute = ({ children }: PropsWithChildren) => {
-    const { authStatus, user } = useAuthStore();
+  const { authStatus, user } = useAuthStore();
 
-    // If user is authenticated but the password were reset before login
-    if (authStatus === "authenticated" && user?.mustChangePassword === true)
-        return children;
+  // If user is authenticated but the password were reset before login
+  if (authStatus === "authenticated" && user?.mustChangePassword === true)
+    return children;
 
-    return <Navigate to="/dashboard" />;
-}
+  return <Navigate to="/dashboard" />;
+};

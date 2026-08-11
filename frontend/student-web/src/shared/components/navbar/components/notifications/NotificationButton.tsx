@@ -5,7 +5,7 @@ import { Bell } from "lucide-react";
 import { Spinner } from "@/shared/components/spinner/Spinner";
 import { useNotifications } from "../../hooks/useNotifications";
 import { AnnouncementViewerOverlay } from "./AnnouncementViewerOverlay";
-import { useAuthStore } from "@/lib/zustand/stores/auth-store/auth.store";
+import { useAuthStore } from "@/stores/auth-store/auth.store";
 import { NotificationResultsDropdown } from "./NotificationResultsDropdown";
 import type { NotificationResponse } from "@/interfaces/responses/notification.response";
 

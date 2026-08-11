@@ -7,9 +7,9 @@ import { toast } from "sonner";
 import { Input } from "@/shared/shadcn/ui/input";
 import { Button } from "@/shared/shadcn/ui/button";
 import { AuthPagesHeader } from "../../components/AuthPagesHeader";
-import { useLoaderStore } from "@/lib/zustand/stores/loader-store/LoaderStore";
-import { useAuthStore } from "../../../../lib/zustand/stores/auth-store/auth.store";
 import type { AuthResetPasswordRequest } from "@/interfaces/requests/auth-reset-password.request";
+import { useLoaderStore } from "@/stores/loader-store/LoaderStore";
+import { useAuthStore } from "@/stores/auth-store/auth.store";
 
 export const ResetPasswordPage = () => {
   // Component hooks & stores

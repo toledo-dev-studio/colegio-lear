@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, UserIcon } from "lucide-react";
 
 import { AccountInfoDropdown } from "./AccountInfoDropdown";
-import { useAuthStore } from "@/lib/zustand/stores/auth-store/auth.store";
+import { useAuthStore } from "@/stores/auth-store/auth.store";
 
 interface Props {
     logout: () => void;

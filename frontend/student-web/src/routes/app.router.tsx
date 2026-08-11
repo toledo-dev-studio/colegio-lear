@@ -5,15 +5,24 @@ import authRouter from "@/modules/auth/routes/auth.router";
 import { NotFoundPage } from "@/shared/pages/NotFoundPage";
 import { ForbiddenPage } from "@/shared/pages/ForbiddenPage";
 import dashboardRouter from "@/modules/dashboard/routes/dashboard.router";
+import studentWalletRouter from "@/modules/student-wallet/routes/student-wallet.router";
+import studentGradesRouter from "@/modules/student-grades/routes/student-grades.router";
 
 export const appRouter = createBrowserRouter([
-    /** auth */
+    /** Auth routes */
     ...authRouter,
+
+    /** Site Modules */
     dashboardRouter,
+    studentWalletRouter,
+    studentGradesRouter,
+    
+    /** Root page */
     {
         path: "/",
         element: <Navigate to="/dashboard" />
     },
+    
     /** Forbidden page */
     {
         path: "forbidden",
@@ -22,6 +31,7 @@ export const appRouter = createBrowserRouter([
                 <ForbiddenPage />
             </ForbiddenRoute>
     },
+    
     /** 404 not found page */
     {
         path: '*',

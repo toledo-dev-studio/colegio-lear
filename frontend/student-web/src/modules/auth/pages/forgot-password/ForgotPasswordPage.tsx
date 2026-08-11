@@ -7,8 +7,8 @@ import { Input } from "@/shared/shadcn/ui/input";
 import { Button } from "@/shared/shadcn/ui/button";
 import { isValidEmail } from "@/lib/extensions/validators";
 import { AuthPagesHeader } from "../../components/AuthPagesHeader";
-import { useLoaderStore } from "@/lib/zustand/stores/loader-store/LoaderStore";
-import { useAuthStore } from "../../../../lib/zustand/stores/auth-store/auth.store";
+import { useAuthStore } from "@/stores/auth-store/auth.store";
+import { useLoaderStore } from "@/stores/loader-store/LoaderStore";
 
 export const ForgotPasswordPage = () => {
     const navigate = useNavigate();

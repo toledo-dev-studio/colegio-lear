@@ -1,3 +1,5 @@
+import type { AcademicCycleResponse } from "./academic-cycle.response";
+
 /**
  * Interface to use it as auth response in the app
  */
@@ -30,4 +32,8 @@ export interface AuthResponse {
    * Flag to indicate if user must change password for a reset password request
    */
   mustChangePassword: boolean;
+  /**
+   * List of academic cycles where student is enrolled
+   */
+  academicCycles: AcademicCycleResponse[];
 }

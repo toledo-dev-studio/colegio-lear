@@ -137,7 +137,7 @@ h6 {
   @import "shared/components/text-editor/css/index.css";
 
   .page-main-section {
-    @apply flex flex-col w-full py-12 px-10 lg:px-15 gap-y-10;
+    @apply flex flex-col w-full py-2 px-2 lg:px-2 gap-y-10;
   }
 
   .page-title-bar {

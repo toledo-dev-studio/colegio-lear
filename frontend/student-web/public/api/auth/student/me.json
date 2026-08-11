@@ -5,5 +5,52 @@
   "email": "maria.lopez@colegio-lear.edu.mx",
   "avatar": "https://randomuser.me/api/portraits/women/68.jpg",
   "isActive": true,
-  "mustChangePassword": false
+  "mustChangePassword": false,
+  "academicCycles": [
+    {
+      "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
+      "name": "2024 - 2025",
+      "code": "2024-A",
+      "periodType": "annual",
+      "status": "completed",
+      "minimumPassingGrade": 6,
+      "evaluationCount": 3,
+      "startDate": "2024-08-12T00:00:00.000Z",
+      "endDate": "2025-07-11T23:59:59.999Z",
+      "enrollmentOpen": false,
+      "observations": "Todos los periodos completados.",
+      "academicLevelId": "al-primaria",
+      "educationLevelId": "el-primaria-6"
+    },
+    {
+      "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+      "name": "2025 - 2026",
+      "code": "2025-A",
+      "periodType": "annual",
+      "status": "active",
+      "minimumPassingGrade": 7,
+      "evaluationCount": 4,
+      "startDate": "2025-08-11T00:00:00.000Z",
+      "endDate": "2026-07-10T23:59:59.999Z",
+      "enrollmentOpen": true,
+      "observations": "Actualmente en curso.",
+      "academicLevelId": "al-secundaria",
+      "educationLevelId": "el-secundaria-1"
+    },
+    {
+      "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1004",
+      "name": "2026 - 2027",
+      "code": "2026-A",
+      "periodType": "annual",
+      "status": "upcoming",
+      "minimumPassingGrade": 7,
+      "evaluationCount": 4,
+      "startDate": "2026-08-10T00:00:00.000Z",
+      "endDate": "2027-07-09T23:59:59.999Z",
+      "enrollmentOpen": true,
+      "observations": "Inscripciones abiertas.",
+      "academicLevelId": "al-secundaria",
+      "educationLevelId": "el-secundaria-3"
+    }
+  ]
 }
