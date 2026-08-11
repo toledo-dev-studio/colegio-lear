@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Send } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ArrowLeft, History, Send } from "lucide-react";
 
 import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import { Button } from "@/shared/shadcn/ui/button";
@@ -23,16 +23,31 @@ const getTeacherFullName = (chat: ChatResponse): string => {
 };
 
 export const ChatWindow = ({ chat, studentId, enrollmentId, onBack }: Props) => {
-    const { data: messages, isLoading } = useGetChatMessages({ studentId, enrollmentId, teacherId: chat.teacherId });
+    const { data: messages, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useGetChatMessages({ studentId, enrollmentId, teacherId: chat.teacherId });
     const sendMessageMutation = useSendChatMessage({ studentId, enrollmentId });
 
+    const messagesSectionRef = useRef<HTMLElement | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const anchorMessageIdRef = useRef<string | undefined>(undefined);
 
     const [draft, setDraft] = useState("");
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages.length]);
+        if (!isLoading && !anchorMessageIdRef.current) {
+            messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+        }
+    }, [messages.length, isLoading]);
+
+    useLayoutEffect(() => {
+        const anchorId = anchorMessageIdRef.current;
+
+        if (!anchorId) return;
+
+        const anchor = messagesSectionRef.current?.querySelector<HTMLElement>(`[data-message-id="${anchorId}"]`);
+
+        anchorMessageIdRef.current = undefined;
+        anchor?.scrollIntoView({ block: "start" });
+    }, [messages]);
 
     const handleSend = () => {
         const content = draft.trim();
@@ -41,6 +56,13 @@ export const ChatWindow = ({ chat, studentId, enrollmentId, onBack }: Props) => 
 
         sendMessageMutation.mutate({ teacherId: chat.teacherId, content });
         setDraft("");
+    };
+
+    const handleLoadPrevious = () => {
+        if (isFetchingNextPage || messages.length === 0) return;
+
+        anchorMessageIdRef.current = messages[0].id;
+        fetchNextPage();
     };
 
     const lastMessage = messages[messages.length - 1];
@@ -74,7 +96,7 @@ export const ChatWindow = ({ chat, studentId, enrollmentId, onBack }: Props) => 
             </header>
 
             {/* Messages */}
-            <section className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3 min-h-64">
+            <section ref={messagesSectionRef} className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3 min-h-64">
                 {isLoading ? (
                     <>
                         <Skeleton className="h-10 w-56 self-start rounded-2xl" />
@@ -87,13 +109,32 @@ export const ChatWindow = ({ chat, studentId, enrollmentId, onBack }: Props) => 
                         <p className="text-xs text-muted-foreground">Envía el primer mensaje para saludar a tu docente.</p>
                     </section>
                 ) : (
-                    messages.map((message) => (
-                        <ChatMessageBubble
-                            key={message.id}
-                            message={message}
-                            isPending={isSending && message.id === lastMessage.id}
-                        />
-                    ))
+                    <>
+                        {
+                            hasNextPage && (
+                                <section className="flex justify-center -mt-1 mb-1">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleLoadPrevious}
+                                        disabled={isFetchingNextPage}
+                                        className="h-8 rounded-full px-4 text-xs"
+                                    >
+                                        <History className="w-3.5 h-3.5" />
+                                        {isFetchingNextPage ? "Cargando mensajes anteriores…" : "Ver mensajes anteriores"}
+                                    </Button>
+                                </section>
+                            )
+                        }
+                        {messages.map((message) => (
+                            <ChatMessageBubble
+                                key={message.id}
+                                message={message}
+                                messageId={message.id}
+                                isPending={isSending && message.id === lastMessage.id}
+                            />
+                        ))}
+                    </>
                 )}
                 <div ref={messagesEndRef} />
             </section>
@@ -111,7 +152,7 @@ export const ChatWindow = ({ chat, studentId, enrollmentId, onBack }: Props) => 
                     }}
                     placeholder="Escribe un mensaje…"
                     rows={1}
-                    className="min-h-12 max-h-32 resize-none"
+                    className="min-h-10 max-h-32 resize-none"
                 />
                 <Button
                     onClick={handleSend}

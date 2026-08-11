@@ -4,13 +4,17 @@ import type { ChatMessageResponse } from "@/interfaces/responses/chat-message.re
 interface Props {
     message: ChatMessageResponse;
     isPending?: boolean;
+    messageId?: string;
 }
 
-export const ChatMessageBubble = ({ message, isPending = false }: Props) => {
+export const ChatMessageBubble = ({ message, isPending = false, messageId }: Props) => {
     const isStudent = message.sentBy === "student";
 
     return (
-        <div className={cn("flex flex-col max-w-[80%] sm:max-w-[65%]", isStudent ? "self-end items-end" : "self-start items-start")}>
+        <div
+            data-message-id={messageId}
+            className={cn("flex flex-col max-w-[80%] sm:max-w-[65%]", isStudent ? "self-end items-end" : "self-start items-start")}
+        >
             <div className={cn(
                 "px-4 py-2.5 rounded-2xl text-sm leading-relaxed text-foreground break-words",
                 isStudent ? "bg-primary/10 rounded-br-sm" : "bg-muted/70 rounded-bl-sm",

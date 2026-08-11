@@ -1,9 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 
+import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import type { ChatResponse } from "@/interfaces/responses/chat.response";
 import type { ChatMessageResponse } from "@/interfaces/responses/chat-message.response";
-import { GET_CHATS_QUERY_KEY, GET_CHAT_MESSAGES_QUERY_KEY } from "@/lib/queries-key/chats-queries-key";
+import { GET_CHATS_QUERY_KEY } from "@/lib/queries-key/chats-queries-key";
 import { sendChatMessageAsync } from "../api/send-chat-message.api";
+import { getChatMessagesQueryKey } from "./useGetChatMessages";
 
 interface Options {
     studentId: string;
@@ -17,7 +19,7 @@ interface MutationOptions {
 
 interface MutationContext {
     queryKey: unknown[];
-    previousMessages: ChatMessageResponse[];
+    previousPages: InfiniteData<PagedResponse<ChatMessageResponse>> | undefined;
     temporaryMessageId: string;
 }
 
@@ -27,7 +29,7 @@ export const useSendChatMessage = ({ studentId, enrollmentId }: Options) => {
     return useMutation<ChatMessageResponse, Error, MutationOptions, MutationContext | undefined>({
         mutationFn: ({ teacherId, content }) => sendChatMessageAsync({ studentId, enrollmentId, teacherId, content }),
         onMutate: async ({ teacherId, content }) => {
-            const queryKey = [GET_CHAT_MESSAGES_QUERY_KEY, { studentId, enrollmentId, teacherId }];
+            const queryKey = getChatMessagesQueryKey({ studentId, enrollmentId, teacherId });
             const temporaryMessage: ChatMessageResponse = {
                 id: `temp-${crypto.randomUUID()}`,
                 chatId: teacherId,
@@ -38,24 +40,39 @@ export const useSendChatMessage = ({ studentId, enrollmentId }: Options) => {
 
             await queryClient.cancelQueries({ queryKey });
 
-            const previousMessages = queryClient.getQueryData<ChatMessageResponse[]>(queryKey) ?? [];
-            queryClient.setQueryData<ChatMessageResponse[]>(queryKey, [...previousMessages, temporaryMessage]);
+            const previousPages = queryClient.getQueryData<InfiniteData<PagedResponse<ChatMessageResponse>>>(queryKey);
 
-            return { queryKey, previousMessages, temporaryMessageId: temporaryMessage.id };
+            if (previousPages) {
+                const pages = previousPages.pages.map((page, index) =>
+                    index === 0
+                        ? { ...page, data: [...page.data, temporaryMessage], itemsCount: page.itemsCount + 1 }
+                        : page
+                );
+
+                queryClient.setQueryData(queryKey, { ...previousPages, pages });
+            }
+
+            return { queryKey, previousPages, temporaryMessageId: temporaryMessage.id };
         },
         onError: (_error, _variables, context) => {
-            if (context) {
-                queryClient.setQueryData(context.queryKey, context.previousMessages);
+            if (context?.previousPages) {
+                queryClient.setQueryData(context.queryKey, context.previousPages);
             }
         },
         onSuccess: (message, { teacherId }, context) => {
-            if (!context) return;
+            if (context) {
+                const current = queryClient.getQueryData<InfiniteData<PagedResponse<ChatMessageResponse>>>(context.queryKey);
 
-            const current = queryClient.getQueryData<ChatMessageResponse[]>(context.queryKey) ?? [];
-            queryClient.setQueryData<ChatMessageResponse[]>(context.queryKey, [
-                ...current.filter((item) => item.id !== context.temporaryMessageId),
-                message
-            ]);
+                if (current) {
+                    const pages = current.pages.map((page, index) =>
+                        index === 0
+                            ? { ...page, data: page.data.map((item) => item.id === context.temporaryMessageId ? message : item) }
+                            : page
+                    );
+
+                    queryClient.setQueryData(context.queryKey, { ...current, pages });
+                }
+            }
 
             const chatsQueryKey = [GET_CHATS_QUERY_KEY, { studentId, enrollmentId }];
             const chats = queryClient.getQueryData<ChatResponse[]>(chatsQueryKey) ?? [];
