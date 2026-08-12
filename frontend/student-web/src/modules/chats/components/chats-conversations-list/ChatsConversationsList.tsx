@@ -1,6 +1,6 @@
 import { cn } from "@/lib/extensions/utils";
 import type { ChatResponse } from "@/interfaces/responses/chat.response";
-import { TeacherAvatar } from "../teacher-avatar/TeacherAvatar";
+import { TeacherAvatar } from "@/shared/components/teacher-avatar/TeacherAvatar";
 
 interface Props {
     chats: ChatResponse[];

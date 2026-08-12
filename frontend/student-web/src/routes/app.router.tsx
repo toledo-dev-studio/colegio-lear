@@ -9,6 +9,7 @@ import studentWalletRouter from "@/modules/student-wallet/routes/student-wallet.
 import studentGradesRouter from "@/modules/student-grades/routes/student-grades.router";
 import calendarRouter from "@/modules/calendar/routes/calendar.router";
 import chatsRouter from "@/modules/chats/routes/chats.router";
+import subjectsRouter from "@/modules/subjects/routes/subjects.router";
 
 export const appRouter = createBrowserRouter([
     /** Auth routes */
@@ -20,6 +21,7 @@ export const appRouter = createBrowserRouter([
     studentGradesRouter,
     calendarRouter,
     chatsRouter,
+    subjectsRouter,
     
     /** Root page */
     {

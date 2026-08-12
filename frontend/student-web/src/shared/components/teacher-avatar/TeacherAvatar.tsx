@@ -1,3 +1,5 @@
+// Componente reutilizable para mostrar la foto (o iniciales) de un docente
+
 import { cn } from "@/lib/extensions/utils";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 

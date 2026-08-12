@@ -7,7 +7,7 @@ import { Textarea } from "@/shared/shadcn/ui/textarea";
 import type { ChatResponse } from "@/interfaces/responses/chat.response";
 import { useGetChatMessages } from "../../hooks/useGetChatMessages";
 import { useSendChatMessage } from "../../hooks/useSendChatMessage";
-import { TeacherAvatar } from "../teacher-avatar/TeacherAvatar";
+import { TeacherAvatar } from "@/shared/components/teacher-avatar/TeacherAvatar";
 import { ChatMessageBubble } from "../chat-message-bubble/ChatMessageBubble";
 
 interface Props {

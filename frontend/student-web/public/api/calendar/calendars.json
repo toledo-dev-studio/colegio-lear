@@ -10,7 +10,8 @@
     "teacherId": "emp-ramirez-juan",
     "schoolSubject": {
       "id": "ss-matematicas-sec1",
-      "name": "Matemáticas"
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
       "id": "emp-ramirez-juan",
@@ -31,7 +32,8 @@
     "teacherId": "emp-herrera-laura",
     "schoolSubject": {
       "id": "ss-espanol-sec1",
-      "name": "Español"
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
       "id": "emp-herrera-laura",
@@ -52,7 +54,8 @@
     "teacherId": "emp-sanchez-roberto",
     "schoolSubject": {
       "id": "ss-ciencias-sec1",
-      "name": "Ciencias Naturales"
+      "name": "Ciencias Naturales",
+      "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
       "id": "emp-sanchez-roberto",
@@ -73,7 +76,8 @@
     "teacherId": "emp-nunez-ana",
     "schoolSubject": {
       "id": "ss-ingles-sec1",
-      "name": "Inglés"
+      "name": "Inglés",
+      "description": "Idioma inglés nivel A1."
     },
     "teacher": {
       "id": "emp-nunez-ana",
@@ -94,7 +98,8 @@
     "teacherId": "emp-herrera-laura",
     "schoolSubject": {
       "id": "ss-espanol-sec1",
-      "name": "Español"
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
       "id": "emp-herrera-laura",
@@ -115,7 +120,8 @@
     "teacherId": "emp-ramirez-juan",
     "schoolSubject": {
       "id": "ss-matematicas-sec1",
-      "name": "Matemáticas"
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
       "id": "emp-ramirez-juan",
@@ -136,7 +142,8 @@
     "teacherId": "emp-nunez-ana",
     "schoolSubject": {
       "id": "ss-ingles-sec1",
-      "name": "Inglés"
+      "name": "Inglés",
+      "description": "Idioma inglés nivel A1."
     },
     "teacher": {
       "id": "emp-nunez-ana",
@@ -157,7 +164,8 @@
     "teacherId": "emp-sanchez-roberto",
     "schoolSubject": {
       "id": "ss-ciencias-sec1",
-      "name": "Ciencias Naturales"
+      "name": "Ciencias Naturales",
+      "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
       "id": "emp-sanchez-roberto",
@@ -178,7 +186,8 @@
     "teacherId": "emp-sanchez-roberto",
     "schoolSubject": {
       "id": "ss-ciencias-sec1",
-      "name": "Ciencias Naturales"
+      "name": "Ciencias Naturales",
+      "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
       "id": "emp-sanchez-roberto",
@@ -199,7 +208,8 @@
     "teacherId": "emp-ramirez-juan",
     "schoolSubject": {
       "id": "ss-matematicas-sec1",
-      "name": "Matemáticas"
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
       "id": "emp-ramirez-juan",
@@ -220,7 +230,8 @@
     "teacherId": "emp-herrera-laura",
     "schoolSubject": {
       "id": "ss-espanol-sec1",
-      "name": "Español"
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
       "id": "emp-herrera-laura",
@@ -241,7 +252,8 @@
     "teacherId": "emp-nunez-ana",
     "schoolSubject": {
       "id": "ss-ingles-sec1",
-      "name": "Inglés"
+      "name": "Inglés",
+      "description": "Idioma inglés nivel A1."
     },
     "teacher": {
       "id": "emp-nunez-ana",
@@ -262,7 +274,8 @@
     "teacherId": "emp-nunez-ana",
     "schoolSubject": {
       "id": "ss-ingles-sec1",
-      "name": "Inglés"
+      "name": "Inglés",
+      "description": "Idioma inglés nivel A1."
     },
     "teacher": {
       "id": "emp-nunez-ana",
@@ -283,7 +296,8 @@
     "teacherId": "emp-sanchez-roberto",
     "schoolSubject": {
       "id": "ss-ciencias-sec1",
-      "name": "Ciencias Naturales"
+      "name": "Ciencias Naturales",
+      "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
       "id": "emp-sanchez-roberto",
@@ -304,7 +318,8 @@
     "teacherId": "emp-ramirez-juan",
     "schoolSubject": {
       "id": "ss-matematicas-sec1",
-      "name": "Matemáticas"
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
       "id": "emp-ramirez-juan",
@@ -325,7 +340,8 @@
     "teacherId": "emp-herrera-laura",
     "schoolSubject": {
       "id": "ss-espanol-sec1",
-      "name": "Español"
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
       "id": "emp-herrera-laura",
@@ -346,7 +362,8 @@
     "teacherId": "emp-ramirez-juan",
     "schoolSubject": {
       "id": "ss-matematicas-sec1",
-      "name": "Matemáticas"
+      "name": "Matemáticas",
+      "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
       "id": "emp-ramirez-juan",
@@ -367,7 +384,8 @@
     "teacherId": "emp-herrera-laura",
     "schoolSubject": {
       "id": "ss-espanol-sec1",
-      "name": "Español"
+      "name": "Español",
+      "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
       "id": "emp-herrera-laura",
@@ -388,7 +406,8 @@
     "teacherId": "emp-sanchez-roberto",
     "schoolSubject": {
       "id": "ss-ciencias-sec1",
-      "name": "Ciencias Naturales"
+      "name": "Ciencias Naturales",
+      "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
       "id": "emp-sanchez-roberto",
@@ -409,7 +428,8 @@
     "teacherId": "emp-nunez-ana",
     "schoolSubject": {
       "id": "ss-ingles-sec1",
-      "name": "Inglés"
+      "name": "Inglés",
+      "description": "Idioma inglés nivel A1."
     },
     "teacher": {
       "id": "emp-nunez-ana",
