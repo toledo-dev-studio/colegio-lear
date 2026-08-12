@@ -1,0 +1,380 @@
+[
+  {
+    "id": "msg-1001",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Hola, buenas tardes. Solo para recordarles que el examen de la unidad 4 es el próximo lunes.",
+    "sentAt": "2026-08-11T14:28:00.000Z"
+  },
+  {
+    "id": "msg-1002",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Maestro, ¿el examen incluye el tema de ecuaciones cuadráticas?",
+    "sentAt": "2026-08-11T14:29:30.000Z"
+  },
+  {
+    "id": "msg-1003",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Sí, y también los sistemas de ecuaciones lineales que vimos la semana pasada.",
+    "sentAt": "2026-08-11T14:31:00.000Z"
+  },
+  {
+    "id": "msg-1004",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Te comparto un ejercicio extra de repaso para la próxima clase.",
+    "sentAt": "2026-08-11T14:32:00.000Z"
+  },
+  {
+    "id": "msg-1005",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "¡Gracias maestro! ¿Cuál ejercicio me recomienda empezar?",
+    "sentAt": "2026-08-11T14:33:00.000Z"
+  },
+  {
+    "id": "msg-1006",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "El ejercicio 5 de la página 210, son ecuaciones del tipo ax² + bx = 0.",
+    "sentAt": "2026-08-11T14:34:00.000Z"
+  },
+  {
+    "id": "msg-1007",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Ah, ese no lo había intentado. ¿Me puede dar una pista?",
+    "sentAt": "2026-08-11T14:35:00.000Z"
+  },
+  {
+    "id": "msg-1008",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Factoriza la x de ambos términos y después iguala cada factor a cero.",
+    "sentAt": "2026-08-11T14:36:00.000Z"
+  },
+  {
+    "id": "msg-1009",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Ya lo hice, me dio x = 0 y x = -3, ¿está bien?",
+    "sentAt": "2026-08-11T14:38:00.000Z"
+  },
+  {
+    "id": "msg-1010",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Perfecto, así es. Ahora intenta el 6, ese trae raíces negativas.",
+    "sentAt": "2026-08-11T14:39:00.000Z"
+  },
+  {
+    "id": "msg-1011",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "¿El 6 es el de 2x² - 8x = 0?",
+    "sentAt": "2026-08-11T14:41:00.000Z"
+  },
+  {
+    "id": "msg-1012",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Sí, ese mismo. Recuerda que al factorizar te queda 2x(x - 4).",
+    "sentAt": "2026-08-11T14:42:00.000Z"
+  },
+  {
+    "id": "msg-1013",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Entonces x = 0 y x = 4. Gracias maestro.",
+    "sentAt": "2026-08-11T14:43:00.000Z"
+  },
+  {
+    "id": "msg-1014",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Muy bien. No olvides repasar también el método de completar el cuadrado.",
+    "sentAt": "2026-08-11T14:45:00.000Z"
+  },
+  {
+    "id": "msg-1015",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Ese tema se me dificulta un poco, ¿tiene algún ejercicio extra de práctica?",
+    "sentAt": "2026-08-11T14:46:00.000Z"
+  },
+  {
+    "id": "msg-1016",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Claro, resuelve la serie B de la guía que entregué la clase pasada.",
+    "sentAt": "2026-08-11T14:47:00.000Z"
+  },
+  {
+    "id": "msg-1017",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "La busco en la guía. ¿Se la llevo resuelta a la próxima clase?",
+    "sentAt": "2026-08-11T14:48:00.000Z"
+  },
+  {
+    "id": "msg-1018",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Sí, la revisamos juntos el martes antes del examen.",
+    "sentAt": "2026-08-11T14:50:00.000Z"
+  },
+  {
+    "id": "msg-1019",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Perfecto, ¿llevo mis dudas anotadas?",
+    "sentAt": "2026-08-11T14:51:00.000Z"
+  },
+  {
+    "id": "msg-1020",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Sí, anótalas por tema, así aprovechamos mejor el tiempo.",
+    "sentAt": "2026-08-11T14:52:00.000Z"
+  },
+  {
+    "id": "msg-1021",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Y no olvides llevar calculadora. Nos vemos el martes.",
+    "sentAt": "2026-08-11T14:53:00.000Z"
+  },
+  {
+    "id": "msg-1022",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Maestro, buenos días. ¿Empezamos hoy con el tema de funciones lineales?",
+    "sentAt": "2026-08-13T09:05:00.000Z"
+  },
+  {
+    "id": "msg-1023",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Buenos días, sí. Veremos la forma y = mx + b.",
+    "sentAt": "2026-08-13T09:07:00.000Z"
+  },
+  {
+    "id": "msg-1024",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Entendido, ¿llevo mi cuaderno de gráficas?",
+    "sentAt": "2026-08-13T09:09:00.000Z"
+  },
+  {
+    "id": "msg-1025",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Sí, y la guía de la serie B que les dejé la semana pasada.",
+    "sentAt": "2026-08-13T09:10:00.000Z"
+  },
+  {
+    "id": "msg-1026",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "La terminé el fin de semana. ¿Puedo mostrársela en clase?",
+    "sentAt": "2026-08-13T09:12:00.000Z"
+  },
+  {
+    "id": "msg-1027",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Claro, la reviso al inicio de la sesión.",
+    "sentAt": "2026-08-13T09:14:00.000Z"
+  },
+  {
+    "id": "msg-1028",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Gracias, ¿hay tarea para hoy?",
+    "sentAt": "2026-08-13T09:15:00.000Z"
+  },
+  {
+    "id": "msg-1029",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Solo repasar el concepto de pendiente.",
+    "sentAt": "2026-08-13T09:16:00.000Z"
+  },
+  {
+    "id": "msg-1030",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "¿La pendiente es la 'm' en la fórmula?",
+    "sentAt": "2026-08-13T09:18:00.000Z"
+  },
+  {
+    "id": "msg-1031",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Exacto, 'm' es la pendiente y 'b' la intersección con el eje y.",
+    "sentAt": "2026-08-13T09:19:00.000Z"
+  },
+  {
+    "id": "msg-1032",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Y si la pendiente es negativa, ¿la recta va hacia abajo?",
+    "sentAt": "2026-08-13T09:21:00.000Z"
+  },
+  {
+    "id": "msg-1033",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Correcto, la recta decrece de izquierda a derecha.",
+    "sentAt": "2026-08-13T09:22:00.000Z"
+  },
+  {
+    "id": "msg-1034",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Me parece sencillo entonces. ¿Practicamos con ejemplos?",
+    "sentAt": "2026-08-13T09:24:00.000Z"
+  },
+  {
+    "id": "msg-1035",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Sí, mañana resolvemos un ejercicio donde calculamos 'm' con dos puntos.",
+    "sentAt": "2026-08-13T09:25:00.000Z"
+  },
+  {
+    "id": "msg-1036",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "La fórmula sería (y2 - y1) / (x2 - x1), ¿verdad?",
+    "sentAt": "2026-08-13T09:27:00.000Z"
+  },
+  {
+    "id": "msg-1037",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Muy bien, ya vas adelantado. Lleva una regla para la clase de mañana.",
+    "sentAt": "2026-08-13T09:28:00.000Z"
+  },
+  {
+    "id": "msg-1038",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Listo, ¿algo más para mañana?",
+    "sentAt": "2026-08-13T09:30:00.000Z"
+  },
+  {
+    "id": "msg-1039",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Solo llega puntual, la clase de mañana es práctica.",
+    "sentAt": "2026-08-13T09:31:00.000Z"
+  },
+  {
+    "id": "msg-1040",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Perfecto, estaré puntual. ¿Se vale usar calculadora gráfica?",
+    "sentAt": "2026-08-13T09:33:00.000Z"
+  },
+  {
+    "id": "msg-1041",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Por ahora trabajo manual, la calculadora la usaremos hasta después.",
+    "sentAt": "2026-08-13T09:34:00.000Z"
+  },
+  {
+    "id": "msg-1042",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Entendido, práctica con lápiz y regla.",
+    "sentAt": "2026-08-13T09:35:00.000Z"
+  },
+  {
+    "id": "msg-1043",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Exacto. Les dejé algunos ejercicios trazados, los repartimos mañana.",
+    "sentAt": "2026-08-13T09:36:00.000Z"
+  },
+  {
+    "id": "msg-1044",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "student",
+    "content": "Gracias maestro, se ve muy interesante la unidad 5.",
+    "sentAt": "2026-08-13T09:38:00.000Z"
+  },
+  {
+    "id": "msg-1045",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Lo es, además está ligada con lo que vimos de ecuaciones.",
+    "sentAt": "2026-08-13T09:39:00.000Z"
+  },
+  {
+    "id": "msg-1046",
+    "chatId": "emp-ramirez-juan",
+    "sentBy": "teacher",
+    "content": "Repasen el despeje, lo usaremos bastante. Nos vemos mañana.",
+    "sentAt": "2026-08-13T09:40:00.000Z"
+  },
+  {
+    "id": "msg-2001",
+    "chatId": "emp-herrera-laura",
+    "sentBy": "teacher",
+    "content": "Buen día grupo, les recuerdo que el ensayo sobre el realismo literario se entrega el viernes.",
+    "sentAt": "2026-08-10T18:05:00.000Z"
+  },
+  {
+    "id": "msg-2002",
+    "chatId": "emp-herrera-laura",
+    "sentBy": "teacher",
+    "content": "Recuerden seguir el formato APA que vimos en clase.",
+    "sentAt": "2026-08-10T18:05:00.000Z"
+  },
+  {
+    "id": "msg-3001",
+    "chatId": "emp-sanchez-roberto",
+    "sentBy": "teacher",
+    "content": "No olviden traer sus bata de laboratorio el jueves.",
+    "sentAt": "2026-08-07T13:20:00.000Z"
+  },
+  {
+    "id": "msg-3002",
+    "chatId": "emp-sanchez-roberto",
+    "sentBy": "student",
+    "content": "Gracias profesor, ¿la práctica es individual o en equipo?",
+    "sentAt": "2026-08-07T13:22:00.000Z"
+  },
+  {
+    "id": "msg-3003",
+    "chatId": "emp-sanchez-roberto",
+    "sentBy": "teacher",
+    "content": "En binas, los formo yo al inicio de la clase.",
+    "sentAt": "2026-08-07T13:25:00.000Z"
+  },
+  {
+    "id": "msg-4001",
+    "chatId": "emp-nunez-ana",
+    "sentBy": "teacher",
+    "content": "Good morning! This week we practice the present perfect.",
+    "sentAt": "2026-08-06T16:45:00.000Z"
+  },
+  {
+    "id": "msg-4002",
+    "chatId": "emp-nunez-ana",
+    "sentBy": "student",
+    "content": "Miss, do we need to bring the workbook tomorrow?",
+    "sentAt": "2026-08-06T16:47:00.000Z"
+  },
+  {
+    "id": "msg-4003",
+    "chatId": "emp-nunez-ana",
+    "sentBy": "teacher",
+    "content": "Yes, please. We will do the listening exercises from unit 5.",
+    "sentAt": "2026-08-06T16:48:00.000Z"
+  }
+]

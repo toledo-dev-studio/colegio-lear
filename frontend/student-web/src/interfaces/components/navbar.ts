@@ -8,9 +8,8 @@ export type ModuleKey =
     | "subjects"
     | "attendance"
     | "wallet"
-    | "messages"
-    | "announcements"
-    | "profile";
+    | "chats"
+    | "my-account";
 
 export type Tone = "primary" | "emerald" | "amber" | "violet" | "sky" | "rose";
 

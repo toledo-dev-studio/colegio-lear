@@ -1,14 +1,14 @@
-import { LayoutDashboard } from "lucide-react";
+import { CalendarDays, GraduationCap, LayoutDashboard, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
 import { useDashboardPage } from "../hooks/useDashboardPage";
 import { WalletStatsSkeleton } from "../components/wallet-stats/WalletStatsSkeleton";
 import { ModulePageTitle } from "@/shared/components/module-page-title/ModulePageTitle";
 import { AcademicCycleOverview } from "../components/academic-cycle-overview/AcademicCycleOverview";
-import { AcademicCycleOverviewSkeleton } from "../components/academic-cycle-overview/AcademicCycleOverviewSkeleton";
 import { WalletStats } from "../components/wallet-stats/WalletStats";
 import { StudentGradesGridSkeleton } from "../components/student-grades/StudentGradesGridSkeleton";
 import { StudentGradesGrid } from "../components/student-grades/StudentGradesGrid";
+import { CardHeader } from "@/shared/components/card-header/CardHeader";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -19,13 +19,6 @@ function getGreeting() {
 
 export const DashboardPage = () => {
   const { context, queries } = useDashboardPage();
-
-  if (queries.enrollmentQuery.isError) {
-    toast.error(
-      "No fue posible obtener la información de la inscripción relacionada al ciclo escolar seleccionado",
-      { position: "top-right" },
-    );
-  }
 
   if (queries.walletQuery.isError) {
     toast.error(
@@ -49,18 +42,36 @@ export const DashboardPage = () => {
         />
 
         {/* Ribbon overview */}
-        <section>
-          {queries.enrollmentQuery.isLoading ? (<AcademicCycleOverviewSkeleton />) : (<AcademicCycleOverview academicCycle={context.academicCycle!} academicCycleEnrollment={queries.enrollmentQuery.data!} />)}
+        <section className="card">
+          <CardHeader
+            icon={CalendarDays}
+            title="Ciclo escolar"
+            description="Datos generales del ciclo escolar en el que te encuentras inscrito."
+            tone="sky"
+          />
+          <AcademicCycleOverview academicCycle={context.academicCycle!} academicCycleEnrollment={context.enrollment!} />
         </section>
 
         {/* Wallet stats */}
-        <section>
+        <section className="card">
+          <CardHeader
+            icon={Wallet}
+            title="Resumen de cartera de pagos"
+            description="Consulta el resumen general de tu cartera de pagos de este ciclo escolar."
+            tone="primary"
+          />
           {queries.walletQuery.isLoading ? (<WalletStatsSkeleton />) : <WalletStats studentWalletSummary={queries.walletQuery.data?.summary!} />}
         </section>
 
         {/* Student grades */}
-        <section>
-          {queries.studentGradesQuery.isLoading ? (<StudentGradesGridSkeleton />) : <StudentGradesGrid studentGrades={queries.studentGradesQuery.data ?? []} academicCycleId={context.academicCycle?.id!} enrollmentId={queries.enrollmentQuery.data?.id!} evaluationCount={context.academicCycle?.evaluationCount ?? 0} minimumPassingGrade={context.academicCycle?.minimumPassingGrade ?? 0} academicCycleSchoolGroupId={queries.enrollmentQuery.data?.academicCycleSchoolGroupId!} />}
+        <section className="card">
+          <CardHeader
+            icon={GraduationCap}
+            title="Seguimiento académico"
+            description="Calificación general del ciclo y desglose por materia. Escala 0–10."
+            tone="emerald"
+          />
+          {queries.studentGradesQuery.isLoading ? (<StudentGradesGridSkeleton />) : <StudentGradesGrid studentGrades={queries.studentGradesQuery.data ?? []} academicCycleId={context.academicCycle?.id!} enrollmentId={context.enrollment?.id!} evaluationCount={context.academicCycle?.evaluationCount ?? 0} minimumPassingGrade={context.academicCycle?.minimumPassingGrade ?? 0} academicCycleSchoolGroupId={context.enrollment?.academicCycleSchoolGroupId!} />}
         </section>
       </section>
     </>

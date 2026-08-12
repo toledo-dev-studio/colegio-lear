@@ -19,7 +19,7 @@ export const NAVBAR: Navbar[] = [
                 testId: "student-nav-dashboard"
             },
             {
-                moduleKey: "profile",
+                moduleKey: "my-account",
                 label: "Mi cuenta",
                 icon: UserRound,
                 description: "Datos personales, tutores y alergias.",
@@ -32,12 +32,12 @@ export const NAVBAR: Navbar[] = [
         title: "Mi ciclo escolar",
         items: [
             {
-                moduleKey: "wallet",
-                label: "Cartera de pagos",
-                icon: Wallet,
-                description: "Pagos e inscripción del ciclo.",
-                tone: "emerald",
-                testId: "student-nav-wallet"
+                moduleKey: "school-calendar",
+                label: "Horario escolar",
+                icon: CalendarRange,
+                description: "Horario semanal de clases.",
+                tone: "violet",
+                testId: "student-nav-schedule"
             },
             {
                 moduleKey: "grades",
@@ -46,14 +46,6 @@ export const NAVBAR: Navbar[] = [
                 description: "Boleta de calificaciones del ciclo.",
                 tone: "emerald",
                 testId: "student-nav-grades"
-            },
-            {
-                moduleKey: "school-calendar",
-                label: "Horario escolar",
-                icon: CalendarRange,
-                description: "Horario semanal de clases.",
-                tone: "violet",
-                testId: "student-nav-schedule"
             },
             {
                 moduleKey: "subjects",
@@ -72,7 +64,15 @@ export const NAVBAR: Navbar[] = [
                 testId: "student-nav-attendance"
             },
             {
-                moduleKey: "messages",
+                moduleKey: "wallet",
+                label: "Cartera de pagos",
+                icon: Wallet,
+                description: "Pagos e inscripción del ciclo.",
+                tone: "emerald",
+                testId: "student-nav-wallet"
+            },
+            {
+                moduleKey: "chats",
                 label: "Chats",
                 icon: MessageSquare,
                 description: "Chat directo con tus maestros.",

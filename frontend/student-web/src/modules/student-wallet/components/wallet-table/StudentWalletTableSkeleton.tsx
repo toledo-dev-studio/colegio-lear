@@ -2,17 +2,7 @@ import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 
 export const StudentWalletTableSkeleton = ({ enableActions = true }: { enableActions?: boolean }) => {
     return (
-        <section className="flex flex-col gap-y-1.5 bg-card rounded-xl border border-border shadow-sm p-4 sm:p-6 w-full min-w-0">
-
-            {/* Header */}
-            <header className="flex items-center gap-3 pb-3 border-b border-border">
-                <Skeleton className="w-10 h-10 rounded-full" />
-
-                <div className="flex flex-col gap-2">
-                    <Skeleton className="h-5 w-56" />
-                    <Skeleton className="h-3 w-72" />
-                </div>
-            </header>
+        <section className="flex flex-col gap-y-1.5">
 
             {/* Table */}
             <section className="table-container">

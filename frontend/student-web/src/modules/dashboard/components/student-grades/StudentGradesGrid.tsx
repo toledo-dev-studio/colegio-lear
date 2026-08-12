@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { GraduationCap, Info, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
+import { Info, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 
 import { OverallGradeCard } from "./OverallGradeCard";
 import { StudentGradesTable } from "./StudentGradesTable";
@@ -27,17 +27,7 @@ export const StudentGradesGrid = ({ studentGrades, academicCycleSchoolGroupId, a
 
     return (
         <>
-            <section className="flex flex-col gap-y-6 bg-card rounded-xl border border-border shadow-sm p-4 sm:p-6">
-
-                <header className="flex items-center gap-3 pb-3 border-b border-border">
-                    <div className="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-                        <GraduationCap className="w-4 h-4" />
-                    </div>
-                    <div>
-                        <p className="text-sm font-heading font-bold text-foreground mb-1">Seguimiento académico</p>
-                        <p className="text-[11px] text-muted-foreground">Calificación general del ciclo y desglose por materia. Escala 0–10.</p>
-                    </div>
-                </header>
+            <section className="flex flex-col gap-y-6">
 
                 {
                     studentGrades.length === 0 && (

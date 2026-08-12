@@ -1,5 +1,6 @@
 import type { ScholarshipResponse } from "./scholarship.response";
 import type { AcademicCycleSchoolGroupResponse } from "./academic-cycle-school-group.response";
+import type { AcademicCycleResponse } from "./academic-cycle.response";
 import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 /**
@@ -35,6 +36,11 @@ export interface AcademicCycleEnrollmentResponse {
      * Identifier of the associated academic cycle
      */
     academicCycleId: string;
+    /**
+     * Reference to the associated academic cycle (includes only scalar fields: it does not
+     * nest academic/education levels to keep the student-facing payload light)
+     */
+    academicCycle?: AcademicCycleResponse;
     /**
      * Identifier of the associated academic cycle group
      */

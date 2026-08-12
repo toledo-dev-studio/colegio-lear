@@ -18,17 +18,7 @@ interface Props {
 export const StudentWalletTable = ({ enableActions = false, data, summary, handleClickPay = () => {} }: Props) => {
     return (
         <>
-            <section className="flex flex-col gap-y-1.5 bg-card rounded-xl border border-border shadow-sm p-4 sm:p-6 w-full min-w-0">
-
-                <header className="flex items-center gap-3 pb-3 border-b border-border">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                        <Wallet className="w-4 h-4" />
-                    </div>
-                    <div>
-                        <p className="text-sm font-heading font-bold text-foreground mb-1">Cartera del estudiante</p>
-                        <p className="text-[11px] text-muted-foreground">Conceptos de pago configurados para este ciclo escolar</p>
-                    </div>
-                </header>
+            <section className="flex flex-col">
 
                 {/* Student wallet table */}
                 <section className="table-container">
