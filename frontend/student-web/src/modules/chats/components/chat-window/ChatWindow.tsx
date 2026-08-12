@@ -140,7 +140,7 @@ export const ChatWindow = ({ chat, studentId, enrollmentId, onBack }: Props) => 
             </section>
 
             {/* Input */}
-            <footer className="flex items-end gap-2 px-4 py-3 border-t border-border bg-muted/20">
+            <footer className="flex items-center gap-2 px-4 py-3 border-t border-border bg-muted/20">
                 <Textarea
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
@@ -152,7 +152,7 @@ export const ChatWindow = ({ chat, studentId, enrollmentId, onBack }: Props) => 
                     }}
                     placeholder="Escribe un mensaje…"
                     rows={1}
-                    className="min-h-10 max-h-32 resize-none"
+                    className="min-h-12 max-h-32 resize-none"
                 />
                 <Button
                     onClick={handleSend}

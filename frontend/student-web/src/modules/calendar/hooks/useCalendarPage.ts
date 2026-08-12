@@ -1,24 +1,23 @@
 import { useAuthStore } from "@/stores/auth-store/auth.store";
-import { selectedAcademicCycleSelector, useActiveCycleStore } from "@/stores/academic-cycle-store/academic-cycle.store";
-import { useGetAcademicCycleEnrollmentForStudent } from "@/modules/dashboard/hooks/useGetAcademicCycleEnrollmentForStudent";
+import { selectedEnrollmentSelector, useActiveEnrollmentStore } from "@/stores/enrollment-store/enrollment.store";
 import { useGetCalendarsForAcademicCycleSchoolGroup } from "./useGetCalendarsForAcademicCycleSchoolGroup";
 
 export const useCalendarPage = () => {
     // Main hooks and stores
     const { user } = useAuthStore();
-    const selectedAcademicCycle = useActiveCycleStore(selectedAcademicCycleSelector);
+    const enrollment = useActiveEnrollmentStore(selectedEnrollmentSelector);
+    const academicCycle = enrollment?.academicCycle ?? null;
 
     // Queries
-    const enrollmentQuery = useGetAcademicCycleEnrollmentForStudent({ studentId: user?.id!, academicCycleId: selectedAcademicCycle?.id! });
-    const calendarsQuery = useGetCalendarsForAcademicCycleSchoolGroup({ academicCycleId: selectedAcademicCycle?.id!, academicCycleSchoolGroupId: enrollmentQuery.data?.academicCycleSchoolGroupId! });
+    const calendarsQuery = useGetCalendarsForAcademicCycleSchoolGroup({ academicCycleId: academicCycle?.id!, academicCycleSchoolGroupId: enrollment?.academicCycleSchoolGroupId! });
 
     return {
         context: {
             student: user,
-            academicCycle: selectedAcademicCycle
+            enrollment,
+            academicCycle
         },
         queries: {
-            enrollmentQuery,
             calendarsQuery
         }
     }

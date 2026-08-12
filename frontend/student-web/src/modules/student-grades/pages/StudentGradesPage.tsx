@@ -34,10 +34,10 @@ export const StudentGradesPage = () => {
             <StudentGradesGrid
               studentGrades={queries.studentGradesQuery.data ?? []}
               academicCycleId={context.academicCycle?.id!}
-              enrollmentId={queries.enrollmentQuery.data?.id!}
+              enrollmentId={context.enrollment?.id!}
               evaluationCount={context.academicCycle?.evaluationCount ?? 0}
               minimumPassingGrade={context.academicCycle?.minimumPassingGrade ?? 0}
-              academicCycleSchoolGroupId={queries.enrollmentQuery.data?.academicCycleSchoolGroupId!} />}
+              academicCycleSchoolGroupId={context.enrollment?.academicCycleSchoolGroupId!} />}
         </section>
 
       </section>

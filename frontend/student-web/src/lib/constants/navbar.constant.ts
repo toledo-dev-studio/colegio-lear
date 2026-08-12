@@ -72,7 +72,7 @@ export const NAVBAR: Navbar[] = [
                 testId: "student-nav-wallet"
             },
             {
-                moduleKey: "messages",
+                moduleKey: "chats",
                 label: "Chats",
                 icon: MessageSquare,
                 description: "Chat directo con tus maestros.",

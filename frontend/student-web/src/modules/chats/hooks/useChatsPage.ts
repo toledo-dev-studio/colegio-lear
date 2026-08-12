@@ -1,24 +1,23 @@
 import { useAuthStore } from "@/stores/auth-store/auth.store";
 import { useGetChats } from "./useGetChats";
-import { selectedAcademicCycleSelector, useActiveCycleStore } from "@/stores/academic-cycle-store/academic-cycle.store";
-import { useGetAcademicCycleEnrollmentForStudent } from "@/modules/dashboard/hooks/useGetAcademicCycleEnrollmentForStudent";
+import { selectedEnrollmentSelector, useActiveEnrollmentStore } from "@/stores/enrollment-store/enrollment.store";
 
 export const useChatsPage = () => {
     // Main hooks and stores
     const { user } = useAuthStore();
-    const selectedAcademicCycle = useActiveCycleStore(selectedAcademicCycleSelector);
+    const enrollment = useActiveEnrollmentStore(selectedEnrollmentSelector);
+    const academicCycle = enrollment?.academicCycle ?? null;
 
     // Queries
-    const enrollmentQuery = useGetAcademicCycleEnrollmentForStudent({ studentId: user?.id!, academicCycleId: selectedAcademicCycle?.id! });
-    const chatsQuery = useGetChats({ studentId: user?.id!, enrollmentId: enrollmentQuery.data?.id! });
+    const chatsQuery = useGetChats({ studentId: user?.id!, enrollmentId: enrollment?.id! });
 
     return {
         context: {
             student: user,
-            academicCycle: selectedAcademicCycle
+            enrollment,
+            academicCycle
         },
         queries: {
-            enrollmentQuery,
             chatsQuery
         }
     }

@@ -1,4 +1,4 @@
-import type { AcademicCycleResponse } from "./academic-cycle.response";
+import type { AcademicCycleEnrollmentResponse } from "./academic-cycle-enrollment.response";
 
 /**
  * Interface to use it as auth response in the app
@@ -33,7 +33,7 @@ export interface AuthResponse {
    */
   mustChangePassword: boolean;
   /**
-   * List of academic cycles where student is enrolled
+   * List of enrollments (inscriptions) of the student, each one associated to a single academic cycle
    */
-  academicCycles: AcademicCycleResponse[];
+  enrollments: AcademicCycleEnrollmentResponse[];
 }

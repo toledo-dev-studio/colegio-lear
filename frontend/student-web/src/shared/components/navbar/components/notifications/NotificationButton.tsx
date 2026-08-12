@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { Bell } from "lucide-react";
 
@@ -11,6 +12,7 @@ import type { NotificationResponse } from "@/interfaces/responses/notification.r
 
 export const NotificationButton = () => {
     // Component hooks & stores
+    const navigate = useNavigate();
     const { user } = useAuthStore();
     const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
     const [selectedNotification, setSelectedNotification] = useState<NotificationResponse | undefined>(undefined);
@@ -49,10 +51,12 @@ export const NotificationButton = () => {
                                     setSelectedNotification(notification);
                                 else
                                     setSelectedNotification(undefined);
+                                if(notification.type === "message") {
+                                    navigate("/chats");
+                                }
                                 if (!notification.read) {
                                     await markNotificationAsReadAsync.mutateAsync({ studentId: user?.id!, id: notification.id });
                                 }
-                                // TODO: Logica para redirigir a un chat en un grupo escolar para docentes
                             }}
                         />
                     )

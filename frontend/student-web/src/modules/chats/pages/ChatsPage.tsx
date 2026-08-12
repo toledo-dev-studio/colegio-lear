@@ -65,7 +65,7 @@ export const ChatsPage = () => {
                                         <ChatWindow
                                             chat={selectedChat}
                                             studentId={context.student?.id!}
-                                            enrollmentId={queries.enrollmentQuery.data?.id!}
+                                            enrollmentId={context.enrollment?.id!}
                                             onBack={() => setSelectedTeacherId(undefined)}
                                         />
                                     ) : (

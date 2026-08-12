@@ -8,7 +8,7 @@ const SystemLayout = lazy(() => import('@/layouts/SystemLayout'));
 const ChatsLayout = lazy(() => import('@/modules/chats/layouts/ChatsLayout'));
 
 export const chatsRouter: RouteObject = {
-    path: '/messages',
+    path: '/chats',
     element:
         <AuthenticatedRoute>
             <SystemLayout>

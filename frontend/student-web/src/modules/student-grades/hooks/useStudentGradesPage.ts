@@ -1,24 +1,23 @@
 import { useAuthStore } from "@/stores/auth-store/auth.store";
-import { selectedAcademicCycleSelector, useActiveCycleStore } from "@/stores/academic-cycle-store/academic-cycle.store";
-import { useGetAcademicCycleEnrollmentForStudent } from "@/modules/dashboard/hooks/useGetAcademicCycleEnrollmentForStudent";
+import { selectedEnrollmentSelector, useActiveEnrollmentStore } from "@/stores/enrollment-store/enrollment.store";
 import { useGetStudentGrades } from "@/modules/dashboard/hooks/useGetStudentGrades";
 
 export const useStudentGradesPage = () => {
     // Main hooks and stores
     const { user } = useAuthStore();
-    const selectedAcademicCycle = useActiveCycleStore(selectedAcademicCycleSelector);
+    const enrollment = useActiveEnrollmentStore(selectedEnrollmentSelector);
+    const academicCycle = enrollment?.academicCycle ?? null;
 
     // Queries
-    const enrollmentQuery = useGetAcademicCycleEnrollmentForStudent({ studentId: user?.id!, academicCycleId: selectedAcademicCycle?.id! });
-    const studentGradesQuery = useGetStudentGrades({ academicCycleId: selectedAcademicCycle?.id!, academicCycleEnrollmentId: enrollmentQuery.data?.id! });
+    const studentGradesQuery = useGetStudentGrades({ academicCycleId: academicCycle?.id!, academicCycleEnrollmentId: enrollment?.id! });
 
     return {
         context: {
             student: user,
-            academicCycle: selectedAcademicCycle
+            enrollment,
+            academicCycle
         },
         queries: {
-            enrollmentQuery,
             studentGradesQuery
         }
     }

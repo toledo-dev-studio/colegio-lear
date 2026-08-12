@@ -3,7 +3,7 @@ import { Menu } from "lucide-react";
 import { AccountInfoButton } from "./components/account-info/AccountInfoButton";
 import { ThemeToggleButton } from "./components/theme-toggle/ThemeToggleButton";
 import { NotificationButton } from "./components/notifications/NotificationButton";
-import { AcademicCycleSelector } from "./components/academic-cycle-selector/AcademicCycleSelector";
+import { EnrollmentSelector } from "./components/enrollment-selector/EnrollmentSelector";
 
 interface Props {
     logout: () => void;
@@ -19,7 +19,7 @@ export const Navbar = ({ toggleSidebar, logout }: Props) => {
                 <button data-testid="header-menu-button" className="icon-btn lg:hidden" onClick={toggleSidebar}>
                     <Menu className="w-4.5 h-4.5" />
                 </button>
-                <AcademicCycleSelector />
+                <EnrollmentSelector />
             </section>
             
             {/* User actions */}

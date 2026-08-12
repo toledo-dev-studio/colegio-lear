@@ -21,7 +21,7 @@ export const AuthenticatedRoute = ({ children }: PropsWithChildren) => {
   // If user is authenticated but is not active or does not have any enrollment to an academic cycle, show the forbidden page
   if (
     (authStatus === "authenticated" && user?.isActive === false) ||
-    !user?.academicCycles.length
+    !user?.enrollments.length
   )
     return <Navigate to="/forbidden" />;
 
@@ -54,7 +54,7 @@ export const ForbiddenRoute = ({ children }: PropsWithChildren) => {
   // If user is authenticated but is not active or does not have any enrollment to an academic cycle, show the forbidden page
   if (
     (authStatus === "authenticated" && user?.isActive === false) ||
-    !user?.academicCycles.length
+    !user?.enrollments.length
   )
     return children;
 
