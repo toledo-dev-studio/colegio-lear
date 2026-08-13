@@ -47,6 +47,7 @@ export const NotificationButton = () => {
                             }}
                             onClose={() => setToggleDropdown(false)}
                             onNotificationClick={async (notification: NotificationResponse) => {
+                                setToggleDropdown(false);
                                 if(notification.type === "announcement") 
                                     setSelectedNotification(notification);
                                 else
