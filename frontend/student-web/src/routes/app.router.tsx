@@ -10,6 +10,8 @@ import studentGradesRouter from "@/modules/student-grades/routes/student-grades.
 import calendarRouter from "@/modules/calendar/routes/calendar.router";
 import chatsRouter from "@/modules/chats/routes/chats.router";
 import subjectsRouter from "@/modules/subjects/routes/subjects.router";
+import myAccountRouter from "@/modules/my-account/routes/my-account.router";
+import attendanceRouter from "@/modules/attendance/routes/attendance.router";
 
 export const appRouter = createBrowserRouter([
     /** Auth routes */
@@ -22,6 +24,8 @@ export const appRouter = createBrowserRouter([
     calendarRouter,
     chatsRouter,
     subjectsRouter,
+    myAccountRouter,
+    attendanceRouter,
     
     /** Root page */
     {

@@ -1,4 +1,4 @@
-import { LayoutDashboard, CalendarRange, BookOpen, GraduationCap, Wallet, MessageSquare, UserRound, ClipboardList } from "lucide-react";
+import { CalendarRange, BookOpen, GraduationCap, Wallet, MessageSquare, UserRound, ClipboardList, Library } from "lucide-react";
 
 import type { Navbar } from "@/interfaces/components/navbar";
 
@@ -12,8 +12,8 @@ export const NAVBAR: Navbar[] = [
         items: [
             {
                 moduleKey: "dashboard",
-                label: "Dashboard",
-                icon: LayoutDashboard,
+                label: "Resumen académico",
+                icon: Library,
                 description: "Vista general de tu rendimiento escolar.",
                 tone: "primary",
                 testId: "student-nav-dashboard"

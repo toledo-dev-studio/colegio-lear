@@ -12,6 +12,13 @@ import { CardHeader } from "@/shared/components/card-header/CardHeader";
 export const ChatsPage = () => {
     const { context, queries } = useChatsPage();
     const [selectedTeacherId, setSelectedTeacherId] = useState<string | undefined>();
+    const [prevEnrollmentId, setPrevEnrollmentId] = useState<string | undefined>(context.enrollment?.id);
+
+    // Al cambiar el ciclo escolar (inscripción), se limpia la conversación seleccionada
+    if (prevEnrollmentId !== context.enrollment?.id) {
+        setPrevEnrollmentId(context.enrollment?.id);
+        setSelectedTeacherId(undefined);
+    }
 
     const selectedChat = queries.chatsQuery.data.find((chat) => chat.teacherId === selectedTeacherId);
 

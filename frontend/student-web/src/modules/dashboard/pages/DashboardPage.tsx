@@ -1,4 +1,4 @@
-import { CalendarDays, GraduationCap, LayoutDashboard, Wallet } from "lucide-react";
+import { CalendarDays, GraduationCap, Library, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
 import { useDashboardPage } from "../hooks/useDashboardPage";
@@ -33,8 +33,8 @@ export const DashboardPage = () => {
 
         {/* Hero overview */}
         <ModulePageTitle
-          icon={LayoutDashboard}
-          badge="Dashboard"
+          icon={Library}
+          badge="Resumen académico"
           studentName={context.student?.fullName || "Bienvenido(a)"}
           description="Resumen general de tu ciclo escolar: consulta tu inscripción y grupo asignado, revisa el estado de cuenta de tu cartera de pagos y da seguimiento a tu rendimiento académico por materia."
           title={`${getGreeting()},`}
