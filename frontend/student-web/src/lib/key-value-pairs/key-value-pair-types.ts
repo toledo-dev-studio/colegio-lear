@@ -92,4 +92,8 @@ export type AnnouncementsStatusKey =
   | "draft"
   | "in-progress"
   | "completed"
-  | "cancelled"
+  | "cancelled";
+
+export type AssistStatusKey =
+  | "present" // Asistió a clases
+  | "absent"; // No asistió a clases

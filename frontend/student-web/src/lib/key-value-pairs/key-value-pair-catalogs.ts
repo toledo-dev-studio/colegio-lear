@@ -1,5 +1,5 @@
 import type { KeyValuePair } from "./key-value-pair";
-import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, AnnouncementsStatusKey, AudienceTypeKey, BloodTypeKey, DayOfWeekKey, JobTitleTypeKey, NotificationTypeKey, PaymentMethodKey, StudentGuardianRelationshipKey, StudentWalletStatusKey } from "./key-value-pair-types";
+import type { AcademicCycleEnrollmentStatusKey, AcademicCycleSchoolGroupStatusKey, AcademicCycleStatusKey, AcademicPeriodTypeKey, AllergySeverityKey, AnnouncementsStatusKey, AssistStatusKey, AudienceTypeKey, BloodTypeKey, DayOfWeekKey, JobTitleTypeKey, NotificationTypeKey, PaymentMethodKey, StudentGuardianRelationshipKey, StudentWalletStatusKey } from "./key-value-pair-types";
 
 /**
  * DAY_OF_WEEKS represents a list of all possible days of the week with their corresponding keys and labels.
@@ -161,4 +161,14 @@ export const ANNOUNCEMENTS_STATUSES: KeyValuePair<AnnouncementsStatusKey>[] = [
     { key: "in-progress", label: "En curso" },
     { key: "completed", label: "Completado" },
     { key: "cancelled", label: "Cancelado" },
+];
+
+/**
+ * ASSIST_STATUSES defines the possible statuses for a student attendance record,
+ * used to display whether the student attended classes that day.
+ * Each status has a key and a label for display purposes.
+ */
+export const ASSIST_STATUSES: KeyValuePair<AssistStatusKey>[] = [
+    { key: "present", label: "Asistió" },
+    { key: "absent", label: "No asistió" },
 ];

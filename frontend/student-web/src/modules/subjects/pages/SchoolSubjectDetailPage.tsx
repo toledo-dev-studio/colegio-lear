@@ -4,20 +4,19 @@
 import { Link, useParams } from "react-router";
 import { ArrowLeft, BookOpen, ClipboardList, FolderOpen, Info } from "lucide-react";
 
-import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
-import { ModulePageTitle } from "@/shared/components/module-page-title/ModulePageTitle";
-import { CardHeader } from "@/shared/components/card-header/CardHeader";
-import { TeacherAvatar } from "@/shared/components/teacher-avatar/TeacherAvatar";
 import { Button } from "@/shared/shadcn/ui/button";
-import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
-import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { useSubjectsPage } from "../hooks/useSubjectsPage";
+import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
+import { CardHeader } from "@/shared/components/card-header/CardHeader";
+import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { useGetSchoolSubjectTasks } from "../hooks/useGetSchoolSubjectTasks";
+import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
+import { TeacherAvatar } from "@/shared/components/teacher-avatar/TeacherAvatar";
 import { useGetSchoolSubjectMaterials } from "../hooks/useGetSchoolSubjectMaterials";
+import { ModulePageTitle } from "@/shared/components/module-page-title/ModulePageTitle";
 import { TasksSection } from "../components/school-subject-detail/tasks-section/TasksSection";
 import { MaterialsSection } from "../components/school-subject-detail/materials-section/MaterialsSection";
 import { SchoolSubjectDetailSkeleton } from "../components/school-subject-detail/school-subject-detail-skeleton/SchoolSubjectDetailSkeleton";
-import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 
 const getTeacherFullName = (teacher: EmployeeResponse): string =>
     `${teacher.name} ${teacher.firstLastName}${teacher.secondLastName ? ` ${teacher.secondLastName}` : ""}`;
@@ -50,14 +49,6 @@ export const SchoolSubjectDetailPage = () => {
     return (
         <>
             <section className="page-main-section">
-
-                {/* Breadcrumb */}
-                <Breadcrumb
-                    items={[
-                        { label: "Materias escolares", to: "/subjects" },
-                        { label: subject?.schoolSubject.name ?? "Materia" },
-                    ]}
-                />
 
                 {
                     isLoading ? (
