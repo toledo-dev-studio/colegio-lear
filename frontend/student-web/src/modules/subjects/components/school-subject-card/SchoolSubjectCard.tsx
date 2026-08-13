@@ -1,6 +1,8 @@
-// Card de una materia escolar: nombre, descripción, docente y horario semanal
+// Card de una materia escolar: nombre, descripción, docente y horario semanal.
+// Al hacer clic navega al detalle de la materia (academicCycleSchoolSubjectId)
 
-import { BookOpen, Clock } from "lucide-react";
+import { Link } from "react-router";
+import { BookOpen, ChevronRight, Clock } from "lucide-react";
 
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
@@ -16,18 +18,22 @@ interface Props {
 }
 
 export const SchoolSubjectCard = ({ subject }: Props) => {
-    const { schoolSubject, teacher, schedule } = subject;
+    const { academicCycleSchoolSubjectId, schoolSubject, teacher, schedule } = subject;
 
     return (
-        <article className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 sm:p-6 shadow-sm transition-colors hover:bg-muted/40">
+        <Link
+            to={`/subjects/${academicCycleSchoolSubjectId}`}
+            className="group flex flex-col gap-4 rounded-xl border border-border bg-card p-5 sm:p-6 shadow-sm transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
             <header className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-full bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
                     <BookOpen className="w-5 h-5" />
                 </div>
-                <h3 className="font-heading font-bold text-foreground text-sm min-w-0 truncate">{schoolSubject.name}</h3>
+                <h3 className="font-heading font-bold text-foreground text-sm min-w-0 truncate flex-1">{schoolSubject.name}</h3>
+                <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0 transition-transform group-hover:translate-x-0.5" />
             </header>
 
-            <p className="text-sm text-muted-foreground flex-1">
+            <p className="text-sm text-muted-foreground flex-1 line-clamp-2">
                 {schoolSubject.description || "Sin descripción disponible."}
             </p>
 
@@ -57,6 +63,6 @@ export const SchoolSubjectCard = ({ subject }: Props) => {
                     )
                 }
             </footer>
-        </article>
+        </Link>
     );
 }

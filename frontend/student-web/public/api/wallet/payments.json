@@ -1,42 +1,42 @@
 [
   {
-    "id": "swp-2025-0001",
+    "id": "e07dd7cb-f769-437d-ae53-1ff0fecee60a",
     "folio": "FOL-2025-0001",
     "amount": 3500,
     "createAt": "2025-08-10T14:32:00.000Z",
     "paymentMethod": "online-payment",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleEnrollmentId": "enc-2025-0001",
-    "studentWalletItemId": "swi-2025-0001"
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+    "studentWalletItemId": "a5d8a469-c794-4e78-8da4-e70d057fc2d0"
   },
   {
-    "id": "swp-2025-0002",
+    "id": "2dc699f8-8a26-481e-bbae-affb44e764c4",
     "folio": "FOL-2025-0002",
     "amount": 800,
     "createAt": "2025-08-12T10:15:00.000Z",
     "paymentMethod": "forgiven",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleEnrollmentId": "enc-2025-0001",
-    "studentWalletItemId": "swi-2025-0002"
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+    "studentWalletItemId": "7879b1a5-b6b0-4ef5-8564-84c3b69f590d"
   },
   {
-    "id": "swp-2025-0003",
+    "id": "16987b4c-bc36-41ff-a70f-be07acc151e8",
     "folio": "FOL-2025-0003",
     "amount": 2200,
     "createAt": "2025-09-28T16:45:00.000Z",
     "paymentMethod": "online-payment",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleEnrollmentId": "enc-2025-0001",
-    "studentWalletItemId": "swi-2025-0003"
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+    "studentWalletItemId": "f1f21b02-ddd5-4623-8b1b-94c353fe5780"
   },
   {
-    "id": "swp-2025-0004",
+    "id": "c2eb7fb1-1273-4370-be32-df19d6718480",
     "folio": "FOL-2025-0004",
     "amount": 2000,
     "createAt": "2025-09-29T09:20:00.000Z",
     "paymentMethod": "cash",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleEnrollmentId": "enc-2025-0001",
-    "studentWalletItemId": "swi-2025-0003"
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+    "studentWalletItemId": "f1f21b02-ddd5-4623-8b1b-94c353fe5780"
   }
 ]

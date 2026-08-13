@@ -1,20 +1,21 @@
 [
   {
-    "id": "cal-2025-0001",
+    "id": "d06d9806-cd96-4735-af9a-1056218d2e09",
     "day": "monday",
     "startTime": "08:00:00",
     "endTime": "09:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-matematicas-sec1",
-    "teacherId": "emp-ramirez-juan",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
+    "teacherId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
-      "id": "emp-ramirez-juan",
+      "id": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
       "name": "Juan Carlos",
       "firstLastName": "Ramírez",
       "secondLastName": "Mendoza",
@@ -22,21 +23,22 @@
     }
   },
   {
-    "id": "cal-2025-0002",
+    "id": "3b828770-de09-4b04-b637-a2594e3a2030",
     "day": "monday",
     "startTime": "09:00:00",
     "endTime": "10:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-espanol-sec1",
-    "teacherId": "emp-herrera-laura",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
+    "teacherId": "7d649354-fa77-4f94-86f7-cb0300d638d5",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
-      "id": "emp-herrera-laura",
+      "id": "7d649354-fa77-4f94-86f7-cb0300d638d5",
       "name": "Laura Patricia",
       "firstLastName": "Herrera",
       "secondLastName": "Vega",
@@ -44,21 +46,22 @@
     }
   },
   {
-    "id": "cal-2025-0003",
+    "id": "5afd4f46-a1b9-4538-a202-0754fcda7376",
     "day": "monday",
     "startTime": "10:00:00",
     "endTime": "11:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ciencias-sec1",
-    "teacherId": "emp-sanchez-roberto",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "schoolSubjectId": "0093441d-af6b-40e0-b655-9d96245fc6d7",
+    "teacherId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
     "schoolSubject": {
-      "id": "ss-ciencias-sec1",
+      "id": "0093441d-af6b-40e0-b655-9d96245fc6d7",
       "name": "Ciencias Naturales",
       "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
-      "id": "emp-sanchez-roberto",
+      "id": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
       "name": "Roberto",
       "firstLastName": "Sánchez",
       "secondLastName": "Torres",
@@ -66,21 +69,22 @@
     }
   },
   {
-    "id": "cal-2025-0004",
+    "id": "c4646667-af19-4ecc-8f71-cc251c80bc14",
     "day": "monday",
     "startTime": "11:00:00",
     "endTime": "12:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ingles-sec1",
-    "teacherId": "emp-nunez-ana",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "schoolSubjectId": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
+    "teacherId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
     "schoolSubject": {
-      "id": "ss-ingles-sec1",
+      "id": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
       "name": "Inglés",
       "description": "Idioma inglés nivel A1."
     },
     "teacher": {
-      "id": "emp-nunez-ana",
+      "id": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
       "name": "Ana Gabriela",
       "firstLastName": "Núñez",
       "secondLastName": "Flores",
@@ -88,21 +92,22 @@
     }
   },
   {
-    "id": "cal-2025-0005",
+    "id": "6b27cb7d-9074-4f5e-ad52-4b89b24af80f",
     "day": "tuesday",
     "startTime": "08:00:00",
     "endTime": "09:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-espanol-sec1",
-    "teacherId": "emp-herrera-laura",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
+    "teacherId": "7d649354-fa77-4f94-86f7-cb0300d638d5",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
-      "id": "emp-herrera-laura",
+      "id": "7d649354-fa77-4f94-86f7-cb0300d638d5",
       "name": "Laura Patricia",
       "firstLastName": "Herrera",
       "secondLastName": "Vega",
@@ -110,21 +115,22 @@
     }
   },
   {
-    "id": "cal-2025-0006",
+    "id": "1bfeb737-af6b-4bbe-be5f-73e4799b03fa",
     "day": "tuesday",
     "startTime": "09:00:00",
     "endTime": "10:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-matematicas-sec1",
-    "teacherId": "emp-ramirez-juan",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
+    "teacherId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
-      "id": "emp-ramirez-juan",
+      "id": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
       "name": "Juan Carlos",
       "firstLastName": "Ramírez",
       "secondLastName": "Mendoza",
@@ -132,21 +138,22 @@
     }
   },
   {
-    "id": "cal-2025-0007",
+    "id": "47fcb8f9-fb77-45dd-97dc-d772c8ba5a1a",
     "day": "tuesday",
     "startTime": "10:00:00",
     "endTime": "11:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ingles-sec1",
-    "teacherId": "emp-nunez-ana",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "schoolSubjectId": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
+    "teacherId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
     "schoolSubject": {
-      "id": "ss-ingles-sec1",
+      "id": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
       "name": "Inglés",
       "description": "Idioma inglés nivel A1."
     },
     "teacher": {
-      "id": "emp-nunez-ana",
+      "id": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
       "name": "Ana Gabriela",
       "firstLastName": "Núñez",
       "secondLastName": "Flores",
@@ -154,21 +161,22 @@
     }
   },
   {
-    "id": "cal-2025-0008",
+    "id": "6a647ffe-07b1-4684-857b-b45d20288dee",
     "day": "tuesday",
     "startTime": "11:00:00",
     "endTime": "12:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ciencias-sec1",
-    "teacherId": "emp-sanchez-roberto",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "schoolSubjectId": "0093441d-af6b-40e0-b655-9d96245fc6d7",
+    "teacherId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
     "schoolSubject": {
-      "id": "ss-ciencias-sec1",
+      "id": "0093441d-af6b-40e0-b655-9d96245fc6d7",
       "name": "Ciencias Naturales",
       "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
-      "id": "emp-sanchez-roberto",
+      "id": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
       "name": "Roberto",
       "firstLastName": "Sánchez",
       "secondLastName": "Torres",
@@ -176,21 +184,22 @@
     }
   },
   {
-    "id": "cal-2025-0009",
+    "id": "a6fd8187-e3db-4807-a479-ccdb8377ab14",
     "day": "wednesday",
     "startTime": "08:00:00",
     "endTime": "09:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ciencias-sec1",
-    "teacherId": "emp-sanchez-roberto",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "schoolSubjectId": "0093441d-af6b-40e0-b655-9d96245fc6d7",
+    "teacherId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
     "schoolSubject": {
-      "id": "ss-ciencias-sec1",
+      "id": "0093441d-af6b-40e0-b655-9d96245fc6d7",
       "name": "Ciencias Naturales",
       "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
-      "id": "emp-sanchez-roberto",
+      "id": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
       "name": "Roberto",
       "firstLastName": "Sánchez",
       "secondLastName": "Torres",
@@ -198,21 +207,22 @@
     }
   },
   {
-    "id": "cal-2025-0010",
+    "id": "996aaaaf-4644-4877-a518-36eee23487df",
     "day": "wednesday",
     "startTime": "09:00:00",
     "endTime": "10:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-matematicas-sec1",
-    "teacherId": "emp-ramirez-juan",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
+    "teacherId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
-      "id": "emp-ramirez-juan",
+      "id": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
       "name": "Juan Carlos",
       "firstLastName": "Ramírez",
       "secondLastName": "Mendoza",
@@ -220,21 +230,22 @@
     }
   },
   {
-    "id": "cal-2025-0011",
+    "id": "d5788570-3375-42ac-ad73-fff9bafa3ddf",
     "day": "wednesday",
     "startTime": "10:00:00",
     "endTime": "11:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-espanol-sec1",
-    "teacherId": "emp-herrera-laura",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
+    "teacherId": "7d649354-fa77-4f94-86f7-cb0300d638d5",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
-      "id": "emp-herrera-laura",
+      "id": "7d649354-fa77-4f94-86f7-cb0300d638d5",
       "name": "Laura Patricia",
       "firstLastName": "Herrera",
       "secondLastName": "Vega",
@@ -242,21 +253,22 @@
     }
   },
   {
-    "id": "cal-2025-0012",
+    "id": "36c78ee2-f30d-4a79-83ed-f9ec112f8d09",
     "day": "wednesday",
     "startTime": "11:00:00",
     "endTime": "12:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ingles-sec1",
-    "teacherId": "emp-nunez-ana",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "schoolSubjectId": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
+    "teacherId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
     "schoolSubject": {
-      "id": "ss-ingles-sec1",
+      "id": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
       "name": "Inglés",
       "description": "Idioma inglés nivel A1."
     },
     "teacher": {
-      "id": "emp-nunez-ana",
+      "id": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
       "name": "Ana Gabriela",
       "firstLastName": "Núñez",
       "secondLastName": "Flores",
@@ -264,21 +276,22 @@
     }
   },
   {
-    "id": "cal-2025-0013",
+    "id": "04501cc4-8313-44e1-b7bb-c4c4f177f2dc",
     "day": "thursday",
     "startTime": "08:00:00",
     "endTime": "09:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ingles-sec1",
-    "teacherId": "emp-nunez-ana",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "schoolSubjectId": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
+    "teacherId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
     "schoolSubject": {
-      "id": "ss-ingles-sec1",
+      "id": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
       "name": "Inglés",
       "description": "Idioma inglés nivel A1."
     },
     "teacher": {
-      "id": "emp-nunez-ana",
+      "id": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
       "name": "Ana Gabriela",
       "firstLastName": "Núñez",
       "secondLastName": "Flores",
@@ -286,21 +299,22 @@
     }
   },
   {
-    "id": "cal-2025-0014",
+    "id": "b91717e7-6a82-4023-a055-c6750f8074d9",
     "day": "thursday",
     "startTime": "09:00:00",
     "endTime": "10:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ciencias-sec1",
-    "teacherId": "emp-sanchez-roberto",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "schoolSubjectId": "0093441d-af6b-40e0-b655-9d96245fc6d7",
+    "teacherId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
     "schoolSubject": {
-      "id": "ss-ciencias-sec1",
+      "id": "0093441d-af6b-40e0-b655-9d96245fc6d7",
       "name": "Ciencias Naturales",
       "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
-      "id": "emp-sanchez-roberto",
+      "id": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
       "name": "Roberto",
       "firstLastName": "Sánchez",
       "secondLastName": "Torres",
@@ -308,21 +322,22 @@
     }
   },
   {
-    "id": "cal-2025-0015",
+    "id": "383e8d5a-13bc-4f0f-b2ae-ba115da54177",
     "day": "thursday",
     "startTime": "10:00:00",
     "endTime": "11:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-matematicas-sec1",
-    "teacherId": "emp-ramirez-juan",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
+    "teacherId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
-      "id": "emp-ramirez-juan",
+      "id": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
       "name": "Juan Carlos",
       "firstLastName": "Ramírez",
       "secondLastName": "Mendoza",
@@ -330,21 +345,22 @@
     }
   },
   {
-    "id": "cal-2025-0016",
+    "id": "b3b76ee7-b507-41df-97c6-c39451e3e75e",
     "day": "thursday",
     "startTime": "11:00:00",
     "endTime": "12:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-espanol-sec1",
-    "teacherId": "emp-herrera-laura",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
+    "teacherId": "7d649354-fa77-4f94-86f7-cb0300d638d5",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
-      "id": "emp-herrera-laura",
+      "id": "7d649354-fa77-4f94-86f7-cb0300d638d5",
       "name": "Laura Patricia",
       "firstLastName": "Herrera",
       "secondLastName": "Vega",
@@ -352,21 +368,22 @@
     }
   },
   {
-    "id": "cal-2025-0017",
+    "id": "886e3cbd-db5c-4aa5-b1db-8c85b7b88981",
     "day": "friday",
     "startTime": "08:00:00",
     "endTime": "09:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-matematicas-sec1",
-    "teacherId": "emp-ramirez-juan",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
+    "teacherId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático."
     },
     "teacher": {
-      "id": "emp-ramirez-juan",
+      "id": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
       "name": "Juan Carlos",
       "firstLastName": "Ramírez",
       "secondLastName": "Mendoza",
@@ -374,21 +391,22 @@
     }
   },
   {
-    "id": "cal-2025-0018",
+    "id": "513359e5-bba6-438b-a37b-9e2aa08b0e27",
     "day": "friday",
     "startTime": "09:00:00",
     "endTime": "10:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-espanol-sec1",
-    "teacherId": "emp-herrera-laura",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
+    "teacherId": "7d649354-fa77-4f94-86f7-cb0300d638d5",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción."
     },
     "teacher": {
-      "id": "emp-herrera-laura",
+      "id": "7d649354-fa77-4f94-86f7-cb0300d638d5",
       "name": "Laura Patricia",
       "firstLastName": "Herrera",
       "secondLastName": "Vega",
@@ -396,21 +414,22 @@
     }
   },
   {
-    "id": "cal-2025-0019",
+    "id": "ab8e3d60-4018-4b55-a054-6fab488ff6a8",
     "day": "friday",
     "startTime": "10:00:00",
     "endTime": "11:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ciencias-sec1",
-    "teacherId": "emp-sanchez-roberto",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "schoolSubjectId": "0093441d-af6b-40e0-b655-9d96245fc6d7",
+    "teacherId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
     "schoolSubject": {
-      "id": "ss-ciencias-sec1",
+      "id": "0093441d-af6b-40e0-b655-9d96245fc6d7",
       "name": "Ciencias Naturales",
       "description": "Biología y ecología de nivel básico."
     },
     "teacher": {
-      "id": "emp-sanchez-roberto",
+      "id": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
       "name": "Roberto",
       "firstLastName": "Sánchez",
       "secondLastName": "Torres",
@@ -418,21 +437,22 @@
     }
   },
   {
-    "id": "cal-2025-0020",
+    "id": "4d2d176b-8d84-4349-8e7e-3fd8efc6b532",
     "day": "friday",
     "startTime": "11:00:00",
     "endTime": "12:00:00",
-    "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-    "academicCycleSchoolGroupId": "grp-2025-sec-1a",
-    "schoolSubjectId": "ss-ingles-sec1",
-    "teacherId": "emp-nunez-ana",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "schoolSubjectId": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
+    "teacherId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
     "schoolSubject": {
-      "id": "ss-ingles-sec1",
+      "id": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
       "name": "Inglés",
       "description": "Idioma inglés nivel A1."
     },
     "teacher": {
-      "id": "emp-nunez-ana",
+      "id": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
       "name": "Ana Gabriela",
       "firstLastName": "Núñez",
       "secondLastName": "Flores",
