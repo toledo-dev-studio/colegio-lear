@@ -7,7 +7,7 @@
   },
   "items": [
     {
-      "id": "swi-2025-0001",
+      "id": "a5d8a469-c794-4e78-8da4-e70d057fc2d0",
       "name": "Inscripción",
       "code": "INS-2025-01",
       "dueDate": "2025-08-11T00:00:00.000Z",
@@ -17,13 +17,13 @@
       "outstandingAmount": 0,
       "isForgiven": false,
       "status": "paid",
-      "academicCycleEnrollmentId": "enc-2025-0001",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleWalletId": "acw-2025-01"
+      "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+      "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleWalletId": "aaf754e4-b01f-4595-b37b-ac777121f3ad"
     },
     {
-      "id": "swi-2025-0002",
+      "id": "7879b1a5-b6b0-4ef5-8564-84c3b69f590d",
       "name": "Seguro escolar",
       "code": "SEG-2025-01",
       "dueDate": "2025-08-15T00:00:00.000Z",
@@ -33,13 +33,13 @@
       "outstandingAmount": 0,
       "isForgiven": true,
       "status": "forgiven",
-      "academicCycleEnrollmentId": "enc-2025-0001",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleWalletId": "acw-2025-02"
+      "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+      "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleWalletId": "f740fd87-23b9-4ba0-ab2d-499f79fb7ebe"
     },
     {
-      "id": "swi-2025-0003",
+      "id": "f1f21b02-ddd5-4623-8b1b-94c353fe5780",
       "name": "Colegiatura Parcial 1",
       "code": "COL-2025-01",
       "dueDate": "2025-09-30T00:00:00.000Z",
@@ -49,13 +49,13 @@
       "outstandingAmount": 0,
       "isForgiven": false,
       "status": "paid",
-      "academicCycleEnrollmentId": "enc-2025-0001",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleWalletId": "acw-2025-03"
+      "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+      "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleWalletId": "e853271c-b538-4ed2-8359-37b1f556f064"
     },
     {
-      "id": "swi-2025-0004",
+      "id": "ba9be5a6-09b3-4325-aed5-219021d91431",
       "name": "Colegiatura Parcial 2",
       "code": "COL-2025-02",
       "dueDate": "2025-11-30T00:00:00.000Z",
@@ -65,13 +65,13 @@
       "outstandingAmount": 4200,
       "isForgiven": false,
       "status": "pending",
-      "academicCycleEnrollmentId": "enc-2025-0001",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleWalletId": "acw-2025-04"
+      "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+      "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleWalletId": "270550c7-d82f-4358-a991-3245c5f7e63e"
     },
     {
-      "id": "swi-2025-0005",
+      "id": "1963bba3-efb5-4c10-8cc5-18a5beb71ab8",
       "name": "Colegiatura Parcial 3",
       "code": "COL-2025-03",
       "dueDate": "2026-01-31T00:00:00.000Z",
@@ -81,13 +81,13 @@
       "outstandingAmount": 4200,
       "isForgiven": false,
       "status": "pending",
-      "academicCycleEnrollmentId": "enc-2025-0001",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleWalletId": "acw-2025-05"
+      "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+      "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleWalletId": "c56f2380-4719-440e-b3c6-37dbb91b7e15"
     },
     {
-      "id": "swi-2025-0006",
+      "id": "c73727f3-1f85-48a2-aa0d-dd000de8a67e",
       "name": "Colegiatura Parcial 4",
       "code": "COL-2025-04",
       "dueDate": "2026-03-31T00:00:00.000Z",
@@ -98,10 +98,10 @@
       "isForgiven": false,
       "extensionDate": "2026-04-30T00:00:00.000Z",
       "status": "overdue",
-      "academicCycleEnrollmentId": "enc-2025-0001",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleWalletId": "acw-2025-06"
+      "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
+      "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleWalletId": "6a3ac689-988b-4e4a-8889-f88a1447f8b2"
     }
   ]
 }

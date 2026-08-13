@@ -19,6 +19,7 @@ export interface SchoolSubjectScheduleItem {
  * la imparte y el resumen de horario semanal derivado del Calendar del grupo.
  */
 export interface SchoolSubjectCard {
+    academicCycleSchoolSubjectId: string;
     schoolSubjectId: string;
     schoolSubject: SchoolSubjectResponse;
     teacherId: string;

@@ -1,5 +1,5 @@
 {
-  "id": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
+  "id": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
   "fullName": "María Fernanda López García",
   "enrollment": "STU-2026-00412",
   "email": "maria.lopez@colegio-lear.edu.mx",
@@ -8,14 +8,14 @@
   "mustChangePassword": false,
   "enrollments": [
     {
-      "id": "enc-2026-0001",
+      "id": "5e7f45af-adb6-4d72-baa7-679ed8099da6",
       "code": "ENC-2026-0001",
       "status": "enrolled",
       "observations": "Inscripción confirmada para el ciclo escolar 2026 - 2027.",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1004",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleId": "a613c440-e1d6-4cc0-9d6a-e1a4ffa2bad1",
       "academicCycle": {
-        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1004",
+        "id": "a613c440-e1d6-4cc0-9d6a-e1a4ffa2bad1",
         "name": "2026 - 2027",
         "code": "2026-A",
         "periodType": "annual",
@@ -26,20 +26,20 @@
         "endDate": "2027-07-09T23:59:59.999Z",
         "enrollmentOpen": true,
         "observations": "Inscripciones abiertas.",
-        "academicLevelId": "al-secundaria",
-        "educationLevelId": "el-secundaria-2"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
+        "educationLevelId": "21b357ab-a68f-439f-a008-d4847c484d62"
       },
-      "academicCycleSchoolGroupId": "grp-2026-sec-2a",
+      "academicCycleSchoolGroupId": "4fb410de-fa7f-4b66-956c-d7e9f5da96a6",
       "academicCycleSchoolGroup": {
-        "id": "grp-2026-sec-2a",
+        "id": "4fb410de-fa7f-4b66-956c-d7e9f5da96a6",
         "name": "2° A (2026 - 2027)",
         "description": "Grupo de estudiantes del segundo año de secundaria.",
         "status": "active",
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1004"
+        "academicCycleId": "a613c440-e1d6-4cc0-9d6a-e1a4ffa2bad1"
       },
-      "scholarshipId": "sch-bec-excelencia",
+      "scholarshipId": "ae878c65-bd44-4bdb-aefa-3b0d95d84d3d",
       "scholarship": {
-        "id": "sch-bec-excelencia",
+        "id": "ae878c65-bd44-4bdb-aefa-3b0d95d84d3d",
         "name": "Beca de excelencia académica",
         "description": "Beca otorgada a estudiantes con un rendimiento académico sobresaliente, que cubre el 50% de la colegiatura.",
         "status": "active",
@@ -47,14 +47,14 @@
       }
     },
     {
-      "id": "enc-2025-0001",
+      "id": "774c1a6c-05fa-45b8-930d-1e245fff98dc",
       "code": "ENC-2025-0001",
       "status": "enrolled",
       "observations": "Actualmente en curso.",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
       "academicCycle": {
-        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "id": "47400911-2410-4150-b777-9ac4789249e9",
         "name": "2025 - 2026",
         "code": "2025-A",
         "periodType": "annual",
@@ -65,20 +65,20 @@
         "endDate": "2026-07-10T23:59:59.999Z",
         "enrollmentOpen": true,
         "observations": "Actualmente en curso.",
-        "academicLevelId": "al-secundaria",
-        "educationLevelId": "el-secundaria-1"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
+        "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859"
       },
-      "academicCycleSchoolGroupId": "grp-2025-sec-1a",
+      "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
       "academicCycleSchoolGroup": {
-        "id": "grp-2025-sec-1a",
+        "id": "d5063231-6c2c-4994-ae58-634bde863d81",
         "name": "1° A (2025 - 2026)",
         "description": "Grupo de estudiantes del primer año de secundaria.",
         "status": "active",
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003"
+        "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9"
       },
-      "scholarshipId": "sch-bec-excelencia",
+      "scholarshipId": "ae878c65-bd44-4bdb-aefa-3b0d95d84d3d",
       "scholarship": {
-        "id": "sch-bec-excelencia",
+        "id": "ae878c65-bd44-4bdb-aefa-3b0d95d84d3d",
         "name": "Beca de excelencia académica",
         "description": "Beca otorgada a estudiantes con un rendimiento académico sobresaliente, que cubre el 50% de la colegiatura.",
         "status": "active",
@@ -86,14 +86,14 @@
       }
     },
     {
-      "id": "enc-2024-0002",
+      "id": "a28ce827-6828-47e6-8988-7e2c39b53d45",
       "code": "ENC-2024-0002",
       "status": "completed",
       "observations": "Ciclo finalizado con todos los periodos completados.",
-      "studentId": "001-8f2a9e1e-4b3d-4c5f-9f7b-2b1c3d4e5f60",
-      "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
+      "studentId": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+      "academicCycleId": "91c0988d-c859-45fa-bb7a-76fc8e1ea0f0",
       "academicCycle": {
-        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
+        "id": "91c0988d-c859-45fa-bb7a-76fc8e1ea0f0",
         "name": "2024 - 2025",
         "code": "2024-A",
         "periodType": "annual",
@@ -104,20 +104,20 @@
         "endDate": "2025-07-11T23:59:59.999Z",
         "enrollmentOpen": false,
         "observations": "Todos los periodos completados.",
-        "academicLevelId": "al-primaria",
-        "educationLevelId": "el-primaria-6"
+        "academicLevelId": "ea08ed41-76b8-4836-ad08-7aa62c03c425",
+        "educationLevelId": "0b5c25ca-44d5-418e-86df-6be158b4db5e"
       },
-      "academicCycleSchoolGroupId": "grp-2024-prim-6b",
+      "academicCycleSchoolGroupId": "6a23de1f-cbb4-4c37-9c3e-78651fe382ee",
       "academicCycleSchoolGroup": {
-        "id": "grp-2024-prim-6b",
+        "id": "6a23de1f-cbb4-4c37-9c3e-78651fe382ee",
         "name": "6° B (2024 - 2025)",
         "description": "Grupo de estudiantes del sexto año de primaria.",
         "status": "active",
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002"
+        "academicCycleId": "91c0988d-c859-45fa-bb7a-76fc8e1ea0f0"
       },
-      "scholarshipId": "sch-bec-excelencia",
+      "scholarshipId": "ae878c65-bd44-4bdb-aefa-3b0d95d84d3d",
       "scholarship": {
-        "id": "sch-bec-excelencia",
+        "id": "ae878c65-bd44-4bdb-aefa-3b0d95d84d3d",
         "name": "Beca de excelencia académica",
         "description": "Beca otorgada a estudiantes con un rendimiento académico sobresaliente, que cubre el 50% de la colegiatura.",
         "status": "active",

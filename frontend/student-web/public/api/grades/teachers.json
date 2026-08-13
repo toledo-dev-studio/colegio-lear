@@ -1,27 +1,28 @@
 [
   {
-    "schoolSubjectId": "ss-matematicas-sec1",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "teacherId": "emp-ramirez-juan",
+    "teacherId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
     "teacher": {
-      "id": "emp-ramirez-juan",
+      "id": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
       "name": "Juan Carlos",
       "firstLastName": "Ramírez",
       "secondLastName": "Mendoza",
@@ -31,33 +32,34 @@
       "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
       "isActive": true,
       "mustChangePassword": false,
-      "securityRoleId": "sr-teacher",
-      "jobTitleId": "jt-profesor"
+      "securityRoleId": "90b64901-608e-4035-9038-742aef5983cb",
+      "jobTitleId": "6a44c5df-a1f9-4900-85c6-5d9a69d9e1a7"
     }
   },
   {
-    "schoolSubjectId": "ss-espanol-sec1",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "teacherId": "emp-herrera-laura",
+    "teacherId": "7d649354-fa77-4f94-86f7-cb0300d638d5",
     "teacher": {
-      "id": "emp-herrera-laura",
+      "id": "7d649354-fa77-4f94-86f7-cb0300d638d5",
       "name": "Laura Patricia",
       "firstLastName": "Herrera",
       "secondLastName": "Vega",
@@ -67,33 +69,34 @@
       "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
       "isActive": true,
       "mustChangePassword": false,
-      "securityRoleId": "sr-teacher",
-      "jobTitleId": "jt-profesor"
+      "securityRoleId": "90b64901-608e-4035-9038-742aef5983cb",
+      "jobTitleId": "6a44c5df-a1f9-4900-85c6-5d9a69d9e1a7"
     }
   },
   {
-    "schoolSubjectId": "ss-ciencias-sec1",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "schoolSubjectId": "0093441d-af6b-40e0-b655-9d96245fc6d7",
     "schoolSubject": {
-      "id": "ss-ciencias-sec1",
+      "id": "0093441d-af6b-40e0-b655-9d96245fc6d7",
       "name": "Ciencias Naturales",
       "description": "Biología y ecología de nivel básico.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "teacherId": "emp-sanchez-roberto",
+    "teacherId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
     "teacher": {
-      "id": "emp-sanchez-roberto",
+      "id": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
       "name": "Roberto",
       "firstLastName": "Sánchez",
       "secondLastName": "Torres",
@@ -103,33 +106,34 @@
       "avatar": "https://randomuser.me/api/portraits/men/58.jpg",
       "isActive": true,
       "mustChangePassword": false,
-      "securityRoleId": "sr-teacher",
-      "jobTitleId": "jt-profesor"
+      "securityRoleId": "90b64901-608e-4035-9038-742aef5983cb",
+      "jobTitleId": "6a44c5df-a1f9-4900-85c6-5d9a69d9e1a7"
     }
   },
   {
-    "schoolSubjectId": "ss-ingles-sec1",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "schoolSubjectId": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
     "schoolSubject": {
-      "id": "ss-ingles-sec1",
+      "id": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
       "name": "Inglés",
       "description": "Idioma inglés nivel A1.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "teacherId": "emp-nunez-ana",
+    "teacherId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
     "teacher": {
-      "id": "emp-nunez-ana",
+      "id": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
       "name": "Ana Gabriela",
       "firstLastName": "Núñez",
       "secondLastName": "Flores",
@@ -139,8 +143,8 @@
       "avatar": "https://randomuser.me/api/portraits/women/65.jpg",
       "isActive": true,
       "mustChangePassword": false,
-      "securityRoleId": "sr-teacher",
-      "jobTitleId": "jt-profesor"
+      "securityRoleId": "90b64901-608e-4035-9038-742aef5983cb",
+      "jobTitleId": "6a44c5df-a1f9-4900-85c6-5d9a69d9e1a7"
     }
   }
 ]

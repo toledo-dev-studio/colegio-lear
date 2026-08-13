@@ -37,6 +37,10 @@ export interface AcademicCycleSchoolGroupCalendarResponse {
      */
     academicCycleSchoolGroupId: string;
     /**
+     * Identifier of the associated academic cycle school subject (subject added to the cycle)
+     */
+    academicCycleSchoolSubjectId: string;
+    /**
      * Identifier of the associated school subject
      */
     schoolSubjectId: string;

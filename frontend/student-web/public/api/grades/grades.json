@@ -1,302 +1,302 @@
 [
   {
-    "id": "sgd-2025-0001",
+    "id": "9b8865ed-72d7-49f5-9da0-5990e9b7ed61",
     "grade": 8.8,
     "evaluationNumber": 1,
-    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0002",
+    "id": "574c8c21-576f-4df4-a306-fd960e02ef70",
     "grade": 7.3,
     "evaluationNumber": 2,
-    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0003",
+    "id": "3ab9b0a3-e490-4844-8901-381a600ddd43",
     "grade": 6.2,
     "evaluationNumber": 3,
-    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0004",
+    "id": "c63f9318-092a-4c1f-978f-1bf9a099a291",
     "grade": 4.9,
     "evaluationNumber": 4,
-    "schoolSubjectId": "ss-matematicas-sec1",
+    "schoolSubjectId": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
     "schoolSubject": {
-      "id": "ss-matematicas-sec1",
+      "id": "9e0bfdc5-53e3-42df-8ba8-f7ac5657c802",
       "name": "Matemáticas",
       "description": "Álgebra básica y razonamiento matemático.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0005",
+    "id": "ea7ac62c-aa4f-4b1b-b707-7b54df8879d7",
     "grade": 9.8,
     "evaluationNumber": 1,
-    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0006",
+    "id": "065ff230-6623-4aab-bdf7-b24ef88d1b15",
     "grade": 8.9,
     "evaluationNumber": 2,
-    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0007",
+    "id": "71d55395-5129-4313-b936-99435e645f36",
     "grade": 8.2,
     "evaluationNumber": 3,
-    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0008",
+    "id": "0e8e4ded-c3b7-4070-b51f-9bb0beb769a4",
     "grade": 7.5,
     "evaluationNumber": 4,
-    "schoolSubjectId": "ss-espanol-sec1",
+    "schoolSubjectId": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
     "schoolSubject": {
-      "id": "ss-espanol-sec1",
+      "id": "bb3e18ae-249d-44b0-9890-f8bd8021535e",
       "name": "Español",
       "description": "Comprensión lectora, gramática y redacción.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0009",
+    "id": "c0143c0d-d6ee-47ce-94a1-0bf74dfc1cdc",
     "grade": 8.7,
     "evaluationNumber": 1,
-    "schoolSubjectId": "ss-ciencias-sec1",
+    "schoolSubjectId": "0093441d-af6b-40e0-b655-9d96245fc6d7",
     "schoolSubject": {
-      "id": "ss-ciencias-sec1",
+      "id": "0093441d-af6b-40e0-b655-9d96245fc6d7",
       "name": "Ciencias Naturales",
       "description": "Biología y ecología de nivel básico.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0010",
+    "id": "48464922-04e7-436d-9202-054dc908f35e",
     "grade": 9.5,
     "evaluationNumber": 2,
-    "schoolSubjectId": "ss-ciencias-sec1",
+    "schoolSubjectId": "0093441d-af6b-40e0-b655-9d96245fc6d7",
     "schoolSubject": {
-      "id": "ss-ciencias-sec1",
+      "id": "0093441d-af6b-40e0-b655-9d96245fc6d7",
       "name": "Ciencias Naturales",
       "description": "Biología y ecología de nivel básico.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0011",
+    "id": "c7aedda1-0f35-4725-bf3f-b5aa42f487b3",
     "grade": 8.0,
     "evaluationNumber": 1,
-    "schoolSubjectId": "ss-ingles-sec1",
+    "schoolSubjectId": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
     "schoolSubject": {
-      "id": "ss-ingles-sec1",
+      "id": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
       "name": "Inglés",
       "description": "Idioma inglés nivel A1.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   },
   {
-    "id": "sgd-2025-0012",
+    "id": "01819f70-a733-4b23-84b0-f3cd2786f8b0",
     "grade": 7.2,
     "evaluationNumber": 2,
-    "schoolSubjectId": "ss-ingles-sec1",
+    "schoolSubjectId": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
     "schoolSubject": {
-      "id": "ss-ingles-sec1",
+      "id": "b09ef8a2-ef4b-42af-bd90-62fc3da3715a",
       "name": "Inglés",
       "description": "Idioma inglés nivel A1.",
       "isActive": true,
-      "academicLevelId": "al-secundaria",
+      "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
       "academicLevel": {
-        "id": "al-secundaria",
+        "id": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee",
         "name": "Secundaria",
         "isActive": true
       },
-      "educationLevelId": "el-secundaria-1",
+      "educationLevelId": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
       "educationLevel": {
-        "id": "el-secundaria-1",
+        "id": "5a83a1db-cfe4-4daf-808d-f50a9c4c5859",
         "name": "1° de Secundaria",
-        "academicLevelId": "al-secundaria"
+        "academicLevelId": "fdc404ef-f1dc-4f26-aba1-fb8559eddfee"
       }
     },
-    "academicCycleEnrollmentId": "enc-2025-0001"
+    "academicCycleEnrollmentId": "774c1a6c-05fa-45b8-930d-1e245fff98dc"
   }
 ]
