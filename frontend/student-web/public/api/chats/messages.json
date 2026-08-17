@@ -1,0 +1,380 @@
+[
+  {
+    "id": "d2190605-44d3-46b8-a15a-b55774f5cbbf",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Hola, buenas tardes. Solo para recordarles que el examen de la unidad 4 es el próximo lunes.",
+    "sentAt": "2026-08-11T14:28:00.000Z"
+  },
+  {
+    "id": "4f3afcbb-9b79-4224-bfdc-6eb25e37d0bd",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Maestro, ¿el examen incluye el tema de ecuaciones cuadráticas?",
+    "sentAt": "2026-08-11T14:29:30.000Z"
+  },
+  {
+    "id": "7588d5bf-694f-4339-8596-b0795a7a9e38",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Sí, y también los sistemas de ecuaciones lineales que vimos la semana pasada.",
+    "sentAt": "2026-08-11T14:31:00.000Z"
+  },
+  {
+    "id": "ecc3080b-46aa-4a86-b334-7f35f45c865a",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Te comparto un ejercicio extra de repaso para la próxima clase.",
+    "sentAt": "2026-08-11T14:32:00.000Z"
+  },
+  {
+    "id": "e7463a3d-5ddf-4bda-a4ce-9907ce5b4d28",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "¡Gracias maestro! ¿Cuál ejercicio me recomienda empezar?",
+    "sentAt": "2026-08-11T14:33:00.000Z"
+  },
+  {
+    "id": "72b79772-b562-41c5-b8cf-1ff8213be8d7",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "El ejercicio 5 de la página 210, son ecuaciones del tipo ax² + bx = 0.",
+    "sentAt": "2026-08-11T14:34:00.000Z"
+  },
+  {
+    "id": "82f74c5b-64db-4ca4-9bfb-aed5be947f4b",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Ah, ese no lo había intentado. ¿Me puede dar una pista?",
+    "sentAt": "2026-08-11T14:35:00.000Z"
+  },
+  {
+    "id": "52418425-1663-434d-8640-d7fde33bef65",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Factoriza la x de ambos términos y después iguala cada factor a cero.",
+    "sentAt": "2026-08-11T14:36:00.000Z"
+  },
+  {
+    "id": "8a866a71-fec5-476f-8669-32f99d9a3c49",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Ya lo hice, me dio x = 0 y x = -3, ¿está bien?",
+    "sentAt": "2026-08-11T14:38:00.000Z"
+  },
+  {
+    "id": "bac53473-7520-4733-8149-036ce6a23269",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Perfecto, así es. Ahora intenta el 6, ese trae raíces negativas.",
+    "sentAt": "2026-08-11T14:39:00.000Z"
+  },
+  {
+    "id": "46d857bb-d611-4c32-a984-3229528f6324",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "¿El 6 es el de 2x² - 8x = 0?",
+    "sentAt": "2026-08-11T14:41:00.000Z"
+  },
+  {
+    "id": "bb82620a-1c6c-4b48-8221-c704ac11ded2",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Sí, ese mismo. Recuerda que al factorizar te queda 2x(x - 4).",
+    "sentAt": "2026-08-11T14:42:00.000Z"
+  },
+  {
+    "id": "f00c33d1-db2c-44a1-af4d-601dccdb6226",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Entonces x = 0 y x = 4. Gracias maestro.",
+    "sentAt": "2026-08-11T14:43:00.000Z"
+  },
+  {
+    "id": "efe7f43c-119d-4038-ba93-67955eeab368",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Muy bien. No olvides repasar también el método de completar el cuadrado.",
+    "sentAt": "2026-08-11T14:45:00.000Z"
+  },
+  {
+    "id": "2eeacf97-22d7-4121-a6a3-fb5fb49446ec",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Ese tema se me dificulta un poco, ¿tiene algún ejercicio extra de práctica?",
+    "sentAt": "2026-08-11T14:46:00.000Z"
+  },
+  {
+    "id": "c84267db-8a68-4646-8247-77d0795a57ff",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Claro, resuelve la serie B de la guía que entregué la clase pasada.",
+    "sentAt": "2026-08-11T14:47:00.000Z"
+  },
+  {
+    "id": "b15741a9-c141-4e6f-9cac-8589ed71de62",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "La busco en la guía. ¿Se la llevo resuelta a la próxima clase?",
+    "sentAt": "2026-08-11T14:48:00.000Z"
+  },
+  {
+    "id": "5cb3706a-9852-46de-a9ad-fde70e78d237",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Sí, la revisamos juntos el martes antes del examen.",
+    "sentAt": "2026-08-11T14:50:00.000Z"
+  },
+  {
+    "id": "f6abb7ae-7252-47a0-bb4f-6c11ea64d600",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Perfecto, ¿llevo mis dudas anotadas?",
+    "sentAt": "2026-08-11T14:51:00.000Z"
+  },
+  {
+    "id": "ec35cc65-09b3-4ba4-bf17-3da128cd239d",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Sí, anótalas por tema, así aprovechamos mejor el tiempo.",
+    "sentAt": "2026-08-11T14:52:00.000Z"
+  },
+  {
+    "id": "b3f88689-c9ce-4f10-b1af-13898f45cffa",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Y no olvides llevar calculadora. Nos vemos el martes.",
+    "sentAt": "2026-08-11T14:53:00.000Z"
+  },
+  {
+    "id": "d0fe91ac-2619-4d43-9c1d-bd7e6061fdca",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Maestro, buenos días. ¿Empezamos hoy con el tema de funciones lineales?",
+    "sentAt": "2026-08-13T09:05:00.000Z"
+  },
+  {
+    "id": "c4a70284-2b56-4f15-9baa-7421162618f6",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Buenos días, sí. Veremos la forma y = mx + b.",
+    "sentAt": "2026-08-13T09:07:00.000Z"
+  },
+  {
+    "id": "b4f117f2-03c1-4d38-9667-acca8acdd23e",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Entendido, ¿llevo mi cuaderno de gráficas?",
+    "sentAt": "2026-08-13T09:09:00.000Z"
+  },
+  {
+    "id": "e3fbc8ba-664d-4542-884d-ae7f3ae77cb3",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Sí, y la guía de la serie B que les dejé la semana pasada.",
+    "sentAt": "2026-08-13T09:10:00.000Z"
+  },
+  {
+    "id": "da54e770-dfd2-4ae2-abab-2f8b7bdd9e32",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "La terminé el fin de semana. ¿Puedo mostrársela en clase?",
+    "sentAt": "2026-08-13T09:12:00.000Z"
+  },
+  {
+    "id": "79a0fe81-c507-48f9-9349-d64df58d550b",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Claro, la reviso al inicio de la sesión.",
+    "sentAt": "2026-08-13T09:14:00.000Z"
+  },
+  {
+    "id": "9e7ded51-a419-426e-8251-270fb4dd8c81",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Gracias, ¿hay tarea para hoy?",
+    "sentAt": "2026-08-13T09:15:00.000Z"
+  },
+  {
+    "id": "1c9f4c40-c46b-4079-b4d8-2583d12cd46c",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Solo repasar el concepto de pendiente.",
+    "sentAt": "2026-08-13T09:16:00.000Z"
+  },
+  {
+    "id": "6cea16aa-9981-4feb-8194-bb3b2aa45b05",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "¿La pendiente es la 'm' en la fórmula?",
+    "sentAt": "2026-08-13T09:18:00.000Z"
+  },
+  {
+    "id": "9ccd9cc4-8407-4cc9-8386-9d49d77735c0",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Exacto, 'm' es la pendiente y 'b' la intersección con el eje y.",
+    "sentAt": "2026-08-13T09:19:00.000Z"
+  },
+  {
+    "id": "3d9eda29-4813-463c-b0f8-451dc20b1df4",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Y si la pendiente es negativa, ¿la recta va hacia abajo?",
+    "sentAt": "2026-08-13T09:21:00.000Z"
+  },
+  {
+    "id": "2b559638-9cad-4c05-91f0-c636c73ee3b8",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Correcto, la recta decrece de izquierda a derecha.",
+    "sentAt": "2026-08-13T09:22:00.000Z"
+  },
+  {
+    "id": "b315a8f7-ab80-446a-82de-98ab89c0c7b7",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Me parece sencillo entonces. ¿Practicamos con ejemplos?",
+    "sentAt": "2026-08-13T09:24:00.000Z"
+  },
+  {
+    "id": "b22c5a32-4cb7-48c9-ad3e-fd6b7a03b7e8",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Sí, mañana resolvemos un ejercicio donde calculamos 'm' con dos puntos.",
+    "sentAt": "2026-08-13T09:25:00.000Z"
+  },
+  {
+    "id": "680a192b-0f31-45d0-9398-1793f2add421",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "La fórmula sería (y2 - y1) / (x2 - x1), ¿verdad?",
+    "sentAt": "2026-08-13T09:27:00.000Z"
+  },
+  {
+    "id": "dab35996-31e1-42d6-8236-8b40b507bcc1",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Muy bien, ya vas adelantado. Lleva una regla para la clase de mañana.",
+    "sentAt": "2026-08-13T09:28:00.000Z"
+  },
+  {
+    "id": "a1848f59-abd4-44c2-b1fc-13a6a8e531b7",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Listo, ¿algo más para mañana?",
+    "sentAt": "2026-08-13T09:30:00.000Z"
+  },
+  {
+    "id": "cf5c4548-c777-4f92-8f4b-7c683e142500",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Solo llega puntual, la clase de mañana es práctica.",
+    "sentAt": "2026-08-13T09:31:00.000Z"
+  },
+  {
+    "id": "470db65a-387a-4553-b985-61b13f05cec7",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Perfecto, estaré puntual. ¿Se vale usar calculadora gráfica?",
+    "sentAt": "2026-08-13T09:33:00.000Z"
+  },
+  {
+    "id": "e85fe09e-7f41-4a15-8e76-9a72fc59ed49",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Por ahora trabajo manual, la calculadora la usaremos hasta después.",
+    "sentAt": "2026-08-13T09:34:00.000Z"
+  },
+  {
+    "id": "5a604f8a-c1ba-4f69-850e-af10aed95b1a",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Entendido, práctica con lápiz y regla.",
+    "sentAt": "2026-08-13T09:35:00.000Z"
+  },
+  {
+    "id": "901d8e76-0f21-4f14-8370-8f7d96e99b8e",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Exacto. Les dejé algunos ejercicios trazados, los repartimos mañana.",
+    "sentAt": "2026-08-13T09:36:00.000Z"
+  },
+  {
+    "id": "ca26b770-fdf0-4612-875b-7778df331baa",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "student",
+    "content": "Gracias maestro, se ve muy interesante la unidad 5.",
+    "sentAt": "2026-08-13T09:38:00.000Z"
+  },
+  {
+    "id": "1729abdb-d6c8-4a2e-a05f-fcd7c1cde646",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Lo es, además está ligada con lo que vimos de ecuaciones.",
+    "sentAt": "2026-08-13T09:39:00.000Z"
+  },
+  {
+    "id": "e86c7639-c072-4279-b18d-cc42d4145009",
+    "chatId": "8d2e55df-99df-4b21-8e5c-dfcf61c7be1e",
+    "sentBy": "teacher",
+    "content": "Repasen el despeje, lo usaremos bastante. Nos vemos mañana.",
+    "sentAt": "2026-08-13T09:40:00.000Z"
+  },
+  {
+    "id": "1c8e3838-e8da-41f1-a9f2-fb1a069943b9",
+    "chatId": "7d649354-fa77-4f94-86f7-cb0300d638d5",
+    "sentBy": "teacher",
+    "content": "Buen día grupo, les recuerdo que el ensayo sobre el realismo literario se entrega el viernes.",
+    "sentAt": "2026-08-10T18:05:00.000Z"
+  },
+  {
+    "id": "8cff6e3e-8d21-4169-a977-7ecd0b8e9984",
+    "chatId": "7d649354-fa77-4f94-86f7-cb0300d638d5",
+    "sentBy": "teacher",
+    "content": "Recuerden seguir el formato APA que vimos en clase.",
+    "sentAt": "2026-08-10T18:05:00.000Z"
+  },
+  {
+    "id": "d5b44a7e-a11b-4dc7-9cee-c3ca20ae3978",
+    "chatId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
+    "sentBy": "teacher",
+    "content": "No olviden traer sus bata de laboratorio el jueves.",
+    "sentAt": "2026-08-07T13:20:00.000Z"
+  },
+  {
+    "id": "3ad008f1-4ba5-4a34-a1f7-0c88f751d354",
+    "chatId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
+    "sentBy": "student",
+    "content": "Gracias profesor, ¿la práctica es individual o en equipo?",
+    "sentAt": "2026-08-07T13:22:00.000Z"
+  },
+  {
+    "id": "7de36b1a-0c9b-45c0-a9f2-4e73257a6cab",
+    "chatId": "dee55f8f-5e8d-49f9-90b8-c8c7be7edb68",
+    "sentBy": "teacher",
+    "content": "En binas, los formo yo al inicio de la clase.",
+    "sentAt": "2026-08-07T13:25:00.000Z"
+  },
+  {
+    "id": "3c4f987a-969f-4966-97fc-0deb8a8dd7a3",
+    "chatId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
+    "sentBy": "teacher",
+    "content": "Good morning! This week we practice the present perfect.",
+    "sentAt": "2026-08-06T16:45:00.000Z"
+  },
+  {
+    "id": "3c879083-dd07-4e86-ad3a-9acbbe14c840",
+    "chatId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
+    "sentBy": "student",
+    "content": "Miss, do we need to bring the workbook tomorrow?",
+    "sentAt": "2026-08-06T16:47:00.000Z"
+  },
+  {
+    "id": "4c00a06e-bb02-46a2-83a0-070d77d751f9",
+    "chatId": "aa62ba62-04b7-44f8-8205-6a33c28faf80",
+    "sentBy": "teacher",
+    "content": "Yes, please. We will do the listening exercises from unit 5.",
+    "sentAt": "2026-08-06T16:48:00.000Z"
+  }
+]

@@ -1,0 +1,303 @@
+[
+  {
+    "id": "e0fcece9-2221-49a0-a446-aa8d57aefac4",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 9: Problemas de razonamiento con fracciones",
+    "description": "Resuelve los 12 problemas de la página 45 del libro de texto y justifica cada procedimiento.",
+    "dueDate": "2026-08-04T23:59:59.000Z",
+    "createdAt": "2026-06-15T10:00:00.000Z",
+    "attachments": []
+  },
+  {
+    "id": "7cc8fe52-e28f-498d-ab63-5f3dc70619b8",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 8: Proyecto de medición de áreas",
+    "description": "Mide el área de 5 espacios de tu casa y registra los resultados en la tabla proporcionada. Incluye una breve reflexión de los resultados.",
+    "dueDate": "2026-08-18T23:59:59.000Z",
+    "createdAt": "2026-06-24T09:30:00.000Z",
+    "attachments": [
+      {
+        "id": "f7c1ea3d-6fb8-4208-9eb2-8006cce58677",
+        "name": "Guía de estudio - Matemáticas",
+        "extension": "pdf",
+        "url": "/api/subjects/files/matematicas-guia-de-estudio.pdf",
+        "relatedRecordId": "7cc8fe52-e28f-498d-ab63-5f3dc70619b8"
+      }
+    ]
+  },
+  {
+    "id": "40ccdfc8-36f3-425a-9759-5cf0c4378a36",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 7: Ejercicios de ecuaciones lineales",
+    "description": "Resuelve las 20 ecuaciones del formulario anexo y entrega el procedimiento completo.",
+    "dueDate": "2026-07-28T23:59:59.000Z",
+    "createdAt": "2026-07-02T11:15:00.000Z",
+    "attachments": [
+      {
+        "id": "9c27b037-056e-4cfd-8179-3f913a3e8572",
+        "name": "Formulario de álgebra",
+        "extension": "xlsx",
+        "url": "/api/subjects/files/matematicas-formulario-algebra.xlsx",
+        "relatedRecordId": "40ccdfc8-36f3-425a-9759-5cf0c4378a36"
+      }
+    ]
+  },
+  {
+    "id": "ecb4ead0-310e-4b70-ab06-f599e34ef2eb",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 6: Investigación de números negativos",
+    "description": "Investiga 3 situaciones de la vida cotidiana donde se usen números negativos y descríbelas con ejemplos.",
+    "dueDate": "2026-08-28T23:59:59.000Z",
+    "createdAt": "2026-07-10T08:45:00.000Z",
+    "attachments": []
+  },
+  {
+    "id": "ba944772-2d1e-4c7a-beba-1e0bebb869dc",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 5: Gráficas de barras",
+    "description": "Con los datos de la encuesta de la clase, elabora una gráfica de barras en tu cuaderno y responde las 5 preguntas de análisis.",
+    "dueDate": "2026-08-15T23:59:59.000Z",
+    "createdAt": "2026-07-18T12:00:00.000Z",
+    "attachments": [
+      {
+        "id": "1f9089a0-646f-42aa-ad1d-74df9e5528c1",
+        "name": "Guía de estudio - Matemáticas",
+        "extension": "pdf",
+        "url": "/api/subjects/files/matematicas-guia-de-estudio.pdf",
+        "relatedRecordId": "ba944772-2d1e-4c7a-beba-1e0bebb869dc"
+      }
+    ]
+  },
+  {
+    "id": "81d953f3-2b91-458e-b44e-1966aa619654",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 4: Operaciones con decimales",
+    "description": "Completa la serie de ejercicios de suma, resta, multiplicación y división con decimales que se encuentran en la guía.",
+    "dueDate": "2026-08-20T23:59:59.000Z",
+    "createdAt": "2026-07-24T10:30:00.000Z",
+    "attachments": [
+      {
+        "id": "be51353e-bae3-4808-85e8-f7142b2491be",
+        "name": "Ejercicios extra - Matemáticas",
+        "extension": "docx",
+        "url": "/api/subjects/files/matematicas-ejercicios-extra.docx",
+        "relatedRecordId": "81d953f3-2b91-458e-b44e-1966aa619654"
+      }
+    ]
+  },
+  {
+    "id": "163af6a4-87ee-4066-a733-356fcb053f0c",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 3: Fracciones equivalentes",
+    "description": "Escribe 5 fracciones equivalentes para cada una de las fracciones indicadas y representa una de ellas con un dibujo.",
+    "dueDate": "2026-08-08T23:59:59.000Z",
+    "createdAt": "2026-07-30T09:00:00.000Z",
+    "attachments": []
+  },
+  {
+    "id": "2defd14c-7d2b-403e-888d-9d4f7460ded7",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 2: Resolución de problemas con porcentajes",
+    "description": "Resuelve los problemas de porcentaje de la actividad 3 y explica con tus palabras qué porcentaje representa cada resultado.",
+    "dueDate": "2026-08-14T23:59:59.000Z",
+    "createdAt": "2026-08-06T14:20:00.000Z",
+    "attachments": [
+      {
+        "id": "d0833d83-5d0b-4112-ad56-e727e33a9514",
+        "name": "Formulario de álgebra",
+        "extension": "xlsx",
+        "url": "/api/subjects/files/matematicas-formulario-algebra.xlsx",
+        "relatedRecordId": "2defd14c-7d2b-403e-888d-9d4f7460ded7"
+      }
+    ]
+  },
+  {
+    "id": "c8d59a1c-dec1-4105-82af-d313f099505f",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "title": "Tarea 1: Repaso de operaciones básicas",
+    "description": "Realiza los ejercicios de repaso de las 4 operaciones básicas que se incluyen en la guía de estudio y entrégalos el día indicado.",
+    "dueDate": "2026-08-25T23:59:59.000Z",
+    "createdAt": "2026-08-10T08:00:00.000Z",
+    "attachments": [
+      {
+        "id": "8a6888bf-601c-4d10-b592-fad21fb57a57",
+        "name": "Guía de estudio - Matemáticas",
+        "extension": "pdf",
+        "url": "/api/subjects/files/matematicas-guia-de-estudio.pdf",
+        "relatedRecordId": "c8d59a1c-dec1-4105-82af-d313f099505f"
+      },
+      {
+        "id": "12a8a363-e180-49ca-a208-7a5d8dba109f",
+        "name": "Ejercicios extra - Matemáticas",
+        "extension": "docx",
+        "url": "/api/subjects/files/matematicas-ejercicios-extra.docx",
+        "relatedRecordId": "c8d59a1c-dec1-4105-82af-d313f099505f"
+      }
+    ]
+  },
+  {
+    "id": "0f41f931-bea1-44fe-8351-2e9181176fdc",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "title": "Tarea 3: Reseña de un cuento",
+    "description": "Escribe una reseña de 150 palabras sobre el cuento leído en clase, indicando tu opinión y una recomendación.",
+    "dueDate": "2026-08-16T23:59:59.000Z",
+    "createdAt": "2026-07-15T09:15:00.000Z",
+    "attachments": []
+  },
+  {
+    "id": "347a13ad-df1e-4106-9ac2-da0c89576b9c",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "title": "Tarea 2: Redacción de un texto argumentativo",
+    "description": "Redacta un texto argumentativo de al menos 2 párrafos sobre la importancia de la lectura, apoyándote en la rúbrica anexa.",
+    "dueDate": "2026-08-11T23:59:59.000Z",
+    "createdAt": "2026-07-28T11:40:00.000Z",
+    "attachments": [
+      {
+        "id": "5f381655-4dd6-4f6b-96a1-7d5af83ff17f",
+        "name": "Rúbrica de redacción",
+        "extension": "docx",
+        "url": "/api/subjects/files/espanol-rubrica-de-redaccion.docx",
+        "relatedRecordId": "347a13ad-df1e-4106-9ac2-da0c89576b9c"
+      }
+    ]
+  },
+  {
+    "id": "d0d66841-34fe-4dfb-95bc-5c702d9a29e7",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "title": "Tarea 1: Lectura y preguntas de comprensión",
+    "description": "Lee el capítulo 2 de la guía de lectura y responde las 8 preguntas de comprensión lectora en tu cuaderno.",
+    "dueDate": "2026-08-21T23:59:59.000Z",
+    "createdAt": "2026-08-09T10:10:00.000Z",
+    "attachments": [
+      {
+        "id": "317fb762-b592-480d-8e6e-22937d83d6cd",
+        "name": "Guía de lectura - Español",
+        "extension": "pdf",
+        "url": "/api/subjects/files/espanol-guia-de-lectura.pdf",
+        "relatedRecordId": "d0d66841-34fe-4dfb-95bc-5c702d9a29e7"
+      }
+    ]
+  },
+  {
+    "id": "a53fd4a5-86c1-4e2f-826e-ba362353af8f",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "title": "Tarea 2: Informe de la práctica de laboratorio",
+    "description": "Redacta el informe de la práctica de observación de células, incluyendo hipótesis, procedimiento y conclusiones.",
+    "dueDate": "2026-08-06T23:59:59.000Z",
+    "createdAt": "2026-07-20T13:00:00.000Z",
+    "attachments": []
+  },
+  {
+    "id": "fd08762a-3576-4a81-b9e4-071099807d8d",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "title": "Tarea 1: Mapa conceptual del ecosistema",
+    "description": "Elabora un mapa conceptual sobre los componentes de un ecosistema y la relación entre sus seres vivos.",
+    "dueDate": "2026-08-19T23:59:59.000Z",
+    "createdAt": "2026-08-05T08:30:00.000Z",
+    "attachments": [
+      {
+        "id": "c4c71fb4-cda7-4433-8759-6e546b922fa8",
+        "name": "Guía de laboratorio - Ciencias",
+        "extension": "pdf",
+        "url": "/api/subjects/files/ciencias-guia-de-laboratorio.pdf",
+        "relatedRecordId": "fd08762a-3576-4a81-b9e4-071099807d8d"
+      }
+    ]
+  },
+  {
+    "id": "f9751c6c-e709-4264-a15d-58bd0cb241ee",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "title": "Tarea 4: Vocabulario de la unidad 1",
+    "description": "Estudia el vocabulario de la unidad 1 y escribe una oración con cada una de las 15 palabras de la lista.",
+    "dueDate": "2026-08-10T23:59:59.000Z",
+    "createdAt": "2026-07-01T09:50:00.000Z",
+    "attachments": []
+  },
+  {
+    "id": "a266e9ed-9efb-456e-bc92-1b83a186ffab",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "title": "Tarea 3: Verbos en presente simple",
+    "description": "Completa los ejercicios de verbos en presente simple que se encuentran en el archivo de vocabulario.",
+    "dueDate": "2026-07-31T23:59:59.000Z",
+    "createdAt": "2026-07-12T15:25:00.000Z",
+    "attachments": [
+      {
+        "id": "84591e62-4058-4cfb-8855-1a339b74cea7",
+        "name": "Vocabulario Unidad 1 - Inglés",
+        "extension": "docx",
+        "url": "/api/subjects/files/ingles-vocabulario-u1.docx",
+        "relatedRecordId": "a266e9ed-9efb-456e-bc92-1b83a186ffab"
+      }
+    ]
+  },
+  {
+    "id": "f4806f9d-6db3-4eaa-afb0-519015a63d2d",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "title": "Tarea 2: Lectura y comprensión en inglés",
+    "description": "Lee el texto de práctica y responde las preguntas de comprensión en inglés (máximo 3 oraciones por respuesta).",
+    "dueDate": "2026-08-12T23:59:59.000Z",
+    "createdAt": "2026-07-25T10:05:00.000Z",
+    "attachments": [
+      {
+        "id": "dd22f8c8-e712-4b72-b46b-d585bfa4b543",
+        "name": "Práctica de lectura - Inglés",
+        "extension": "pdf",
+        "url": "/api/subjects/files/ingles-practica-de-lectura.pdf",
+        "relatedRecordId": "f4806f9d-6db3-4eaa-afb0-519015a63d2d"
+      }
+    ]
+  },
+  {
+    "id": "db243fe8-b278-4841-a121-cce1b3b7ed44",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "aba85934-8b4d-48b6-aa9c-280de0ef685a",
+    "title": "Tarea 1: Saludos y presentaciones",
+    "description": "Escribe un diálogo de presentación con un compañero y practícalo en voz alta. Apóyate en el vocabulario de la unidad 1.",
+    "dueDate": "2026-08-24T23:59:59.000Z",
+    "createdAt": "2026-08-08T09:20:00.000Z",
+    "attachments": [
+      {
+        "id": "29af90a2-af51-4961-b6cc-a3d3c184cfa2",
+        "name": "Vocabulario Unidad 1 - Inglés",
+        "extension": "docx",
+        "url": "/api/subjects/files/ingles-vocabulario-u1.docx",
+        "relatedRecordId": "db243fe8-b278-4841-a121-cce1b3b7ed44"
+      }
+    ]
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "b9f13a70-1f2f-488c-be40-a1180c8b1d7a",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "attachment": {
+      "id": "60c4bb6d-06d2-40d8-b36d-b8bb793f998b",
+      "name": "Presentación de clase - Matemáticas",
+      "extension": "pptx",
+      "url": "/api/subjects/files/matematicas-presentacion-clase.pptx",
+      "relatedRecordId": "b9f13a70-1f2f-488c-be40-a1180c8b1d7a"
+    }
+  },
+  {
+    "id": "60478dd0-342d-41ba-b003-919ebfbd6b4c",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "attachment": {
+      "id": "bc4c57dd-4511-4a4c-94b9-1ea33602b9b0",
+      "name": "Guía de estudio - Matemáticas",
+      "extension": "pdf",
+      "url": "/api/subjects/files/matematicas-guia-de-estudio.pdf",
+      "relatedRecordId": "60478dd0-342d-41ba-b003-919ebfbd6b4c"
+    }
+  },
+  {
+    "id": "8558d20b-d98e-4d86-a23d-69be79630d47",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "1da1b8d0-4993-4b27-94ca-1c6c4038a27c",
+    "attachment": {
+      "id": "bb616f5a-dab5-478c-9b2a-30502d66f06c",
+      "name": "Ejercicios extra - Matemáticas",
+      "extension": "docx",
+      "url": "/api/subjects/files/matematicas-ejercicios-extra.docx",
+      "relatedRecordId": "8558d20b-d98e-4d86-a23d-69be79630d47"
+    }
+  },
+  {
+    "id": "f28e9ac8-52e9-4121-9778-a5c972ee986e",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "attachment": {
+      "id": "23032c46-db56-45e4-ad91-1cd2837d292f",
+      "name": "Lecturas complementarias - Español",
+      "extension": "pdf",
+      "url": "/api/subjects/files/espanol-lecturas-complementarias.pdf",
+      "relatedRecordId": "f28e9ac8-52e9-4121-9778-a5c972ee986e"
+    }
+  },
+  {
+    "id": "ebe9e2c9-3111-4ebe-b42c-6a6b1614c57a",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "attachment": {
+      "id": "38834da3-28da-4056-895c-62a30368de6c",
+      "name": "Guía de lectura - Español",
+      "extension": "pdf",
+      "url": "/api/subjects/files/espanol-guia-de-lectura.pdf",
+      "relatedRecordId": "ebe9e2c9-3111-4ebe-b42c-6a6b1614c57a"
+    }
+  },
+  {
+    "id": "28b4ab86-7d17-4775-9b50-934cc4a30c2c",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "038ecd19-76fe-4165-bb36-2e086b4fb075",
+    "attachment": {
+      "id": "3cdacd10-af99-44b6-8da7-6abf187ef6b7",
+      "name": "Rúbrica de redacción",
+      "extension": "docx",
+      "url": "/api/subjects/files/espanol-rubrica-de-redaccion.docx",
+      "relatedRecordId": "28b4ab86-7d17-4775-9b50-934cc4a30c2c"
+    }
+  },
+  {
+    "id": "5812172a-a095-4143-a8ec-e0cab4ef82f6",
+    "academicCycleId": "47400911-2410-4150-b777-9ac4789249e9",
+    "academicCycleSchoolGroupId": "d5063231-6c2c-4994-ae58-634bde863d81",
+    "academicCycleSchoolSubjectId": "09e3ea74-a5d1-4bb0-ac95-ca1b68379423",
+    "attachment": {
+      "id": "f7eff4de-3c14-4e22-a01a-f2b7dd4e5860",
+      "name": "Guía de laboratorio - Ciencias",
+      "extension": "pdf",
+      "url": "/api/subjects/files/ciencias-guia-de-laboratorio.pdf",
+      "relatedRecordId": "5812172a-a095-4143-a8ec-e0cab4ef82f6"
+    }
+  }
+]
