@@ -24,6 +24,7 @@ import authStudentRoutes from "./modules/auth/auth-student.routes";
 import announcementRoutes from "./modules/announcements/announcement.routes";
 import attachmentRoutes from "./modules/attachments/attachment.routes";
 import studentRoutes from "./modules/students/student.routes";
+import studentMeRoutes from "./modules/students/student-me.routes";
 import academicCycleRoutes from "./modules/academic-cycles/academic-cycle.routes";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import globalSearchRoutes from "./modules/global-search/global-search.routes";
@@ -56,6 +57,14 @@ if (env.STORAGE_PROVIDER === "local") {
 
 /* --- Swagger API Docs --- */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+/*
+ * Student portal routes — protected by authenticateStudent (own JWT payload),
+ * never by the employee `authenticate`/`authorize()` below. Mounted here,
+ * before the global employee `authenticate`, so a request to /students/me
+ * is fully handled by this router and never falls through to it.
+ */
+app.use("/students/me", studentMeRoutes);
 
 /* --- Protected Routes (authentication required) --- */
 app.use(authenticate);

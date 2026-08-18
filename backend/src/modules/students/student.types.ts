@@ -42,6 +42,13 @@ export interface StudentRecord {
   postalCode: string;
 }
 
+/** File upload data passed from controller to service */
+export interface FileUpload {
+  buffer: Buffer;
+  originalname: string;
+  mimetype: string;
+}
+
 /** Result of a paginated query */
 export interface PagedResult<T> {
   data: T[];

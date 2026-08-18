@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { StudentService } from "./student.service";
 import { prisma } from "../../shared/lib/prisma";
+import { storageService } from "../../shared/services/storage.service";
 import { mailService } from "../../shared/services/mail.service";
 import {
   sendSuccess,
@@ -9,7 +10,7 @@ import {
 } from "../../shared/helpers/response.helper";
 import type { StudentFilters } from "./student.types";
 
-const service = new StudentService(prisma, mailService);
+const service = new StudentService(prisma, storageService, mailService);
 
 function buildFilters(query: Record<string, unknown>): StudentFilters {
   const filters: StudentFilters = {};
