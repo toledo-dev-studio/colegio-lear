@@ -27,6 +27,7 @@ import studentRoutes from "./modules/students/student.routes";
 import studentMeRoutes from "./modules/students/student-me.routes";
 import academicCycleRoutes from "./modules/academic-cycles/academic-cycle.routes";
 import academicCycleSchoolGroupStudentRoutes from "./modules/academic-cycles/academic-cycle-school-group-student.routes";
+import studentGradeStudentRoutes from "./modules/academic-cycles/student-grade-student.routes";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import globalSearchRoutes from "./modules/global-search/global-search.routes";
 import notificationRoutes from "./modules/notifications/notification.routes";
@@ -76,6 +77,7 @@ app.use("/students/me", studentMeRoutes);
  * mounted here, before `authenticate`, same reasoning as /students/me above.
  */
 app.use("/academic-cycles", academicCycleSchoolGroupStudentRoutes);
+app.use("/academic-cycles", studentGradeStudentRoutes);
 
 /* --- Protected Routes (authentication required) --- */
 app.use(authenticate);
