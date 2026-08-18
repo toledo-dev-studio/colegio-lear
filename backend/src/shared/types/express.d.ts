@@ -18,5 +18,13 @@ declare namespace Express {
         canDelete: boolean;
       }>;
     };
+    /**
+     * Authenticated student's JWT payload, attached by the authenticateStudent
+     * middleware (student-portal routes only — never set alongside req.user).
+     */
+    student?: {
+      studentId: string;
+      email: string;
+    };
   }
 }

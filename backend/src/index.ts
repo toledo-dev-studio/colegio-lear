@@ -20,6 +20,7 @@ import jobTitleRoutes from "./modules/job-titles/job-title.routes";
 import securityRoleRoutes from "./modules/security-roles/security-role.routes";
 import employeeRoutes from "./modules/employees/employee.routes";
 import authRoutes from "./modules/auth/auth.routes";
+import authStudentRoutes from "./modules/auth/auth-student.routes";
 import announcementRoutes from "./modules/announcements/announcement.routes";
 import attachmentRoutes from "./modules/attachments/attachment.routes";
 import studentRoutes from "./modules/students/student.routes";
@@ -41,6 +42,7 @@ app.use(requestLogger);
 /* --- Public Routes (no authentication required) --- */
 app.use(healthRoutes);
 app.use("/auth", authRoutes);
+app.use("/auth/student", authStudentRoutes);
 
 /*
  * Serve locally-stored files (avatars, attachments) publicly so <img src>
