@@ -1,0 +1,115 @@
+{
+    "data": [
+        {
+            "id": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+            "name": "Primero A (2025-2026)",
+            "status": "active",
+            "academicCycle": {
+                "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+                "name": "2025 - 2026",
+                "code": "2025-A",
+                "periodType": "annual",
+                "status": "active",
+                "minimumPassingGrade": 6,
+                "evaluationCount": 3,
+                "startDate": "2025-08-18T00:00:00.000Z",
+                "endDate": "2026-07-03T00:00:00.000Z",
+                "academicLevelId": "2",
+                "educationLevelId": "2-1"
+            }
+        },
+        {
+            "id": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+            "name": "Primero B (2025-2026)",
+            "status": "active",
+            "academicCycle": {
+                "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+                "name": "2025 - 2026",
+                "code": "2025-A",
+                "periodType": "annual",
+                "status": "active",
+                "minimumPassingGrade": 6,
+                "evaluationCount": 3,
+                "startDate": "2025-08-18T00:00:00.000Z",
+                "endDate": "2026-07-03T00:00:00.000Z",
+                "academicLevelId": "2",
+                "educationLevelId": "2-1"
+            }
+        },
+        {
+            "id": "e3f6a1b8-9c0d-4a1b-fb4e-4a9c0f1b2d05",
+            "name": "Segundo A (2024-2025)",
+            "status": "discharged",
+            "academicCycle": {
+                "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
+                "name": "2024 - 2025",
+                "code": "2024-A",
+                "periodType": "annual",
+                "status": "completed",
+                "minimumPassingGrade": 6,
+                "evaluationCount": 3,
+                "startDate": "2024-08-19T00:00:00.000Z",
+                "endDate": "2025-07-04T00:00:00.000Z",
+                "academicLevelId": "1",
+                "educationLevelId": "1-6"
+            }
+        },
+        {
+            "id": "f4a7b2c9-0d1e-4b2c-ac5f-5bad0c2c3e06",
+            "name": "Segundo B (2024-2025)",
+            "status": "active",
+            "academicCycle": {
+                "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
+                "name": "2024 - 2025",
+                "code": "2024-A",
+                "periodType": "annual",
+                "status": "completed",
+                "minimumPassingGrade": 6,
+                "evaluationCount": 3,
+                "startDate": "2024-08-19T00:00:00.000Z",
+                "endDate": "2025-07-04T00:00:00.000Z",
+                "academicLevelId": "1",
+                "educationLevelId": "1-6"
+            }
+        },
+        {
+            "id": "a5b8c3d0-1e2f-4c3d-bd60-6cbe1d3d4f07",
+            "name": "Tercero A (2026-2027)",
+            "status": "active",
+            "academicCycle": {
+                "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1004",
+                "name": "2026 - 2027",
+                "code": "2026-A",
+                "periodType": "annual",
+                "status": "upcoming",
+                "minimumPassingGrade": 6,
+                "evaluationCount": 3,
+                "startDate": "2026-08-17T00:00:00.000Z",
+                "endDate": "2027-07-02T00:00:00.000Z",
+                "academicLevelId": "2",
+                "educationLevelId": "2-3"
+            }
+        },
+        {
+            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+            "name": "Primero A (2023-2024)",
+            "status": "active",
+            "academicCycle": {
+                "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+                "name": "2023 - 2024",
+                "code": "2023-A",
+                "periodType": "annual",
+                "status": "upcoming",
+                "minimumPassingGrade": 6,
+                "evaluationCount": 3,
+                "startDate": "2023-08-14T00:00:00.000Z",
+                "endDate": "2024-07-12T23:59:59.999Z",
+                "academicLevelId": "1",
+                "educationLevelId": "1-1"
+            }
+        }
+    ],
+    "totalPages": 1,
+    "currentPage": 1,
+    "itemsCount": 6
+}

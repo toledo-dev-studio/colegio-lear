@@ -3,3 +3,4 @@
  */
 export const VITE_COLEGIO_LEAR_API_URL: string = import.meta.env.VITE_COLEGIO_LEAR_API_URL;
 export const VITE_ENVIRONMENT: "mockable" | "development" | "production" = import.meta.env.VITE_ENVIRONMENT;
+export const IS_MOCKABLE = VITE_ENVIRONMENT === "mockable";

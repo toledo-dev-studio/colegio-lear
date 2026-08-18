@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import { useGetScholarships } from "@/modules/scholarships/hooks/useGetScholarships";
 import type { ScholarshipResponse } from "@/interfaces/responses/scholarship.response";
 import { useDeleteScholarshipById } from "@/modules/scholarships/hooks/useDeleteScholarshipById";

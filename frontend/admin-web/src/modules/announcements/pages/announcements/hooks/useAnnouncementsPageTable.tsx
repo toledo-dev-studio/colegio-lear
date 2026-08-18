@@ -1,11 +1,11 @@
 import { Link } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
-import { Badge } from "@/shared/ui/badge";
+import { Badge } from "@/shared/shadcn/ui/badge";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/shadcn/ui/tooltip";
 import { ANNOUNCEMENTS_STATUSES, AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
@@ -63,14 +63,14 @@ export const useAnnouncementsPageTable = ({ handleClickDelete }: Options) => {
         },
         {
             key: "audience",
-            render: ({ audience }: AnnouncementResponse) => (
+            render: ({ id, audience }: AnnouncementResponse) => (
                 !audience?.length ?
                     (<span>-</span>) :
                     (
                         <div className="flex items-center gap-x-4">
                             {
-                                audience?.length && audience.map((item) => (
-                                    <span key={item} className="text-nowrap min-w-fit rounded-full bg-gray-400/20 px-4 py-2 text-xs font-medium text-gray-500 inset-ring inset-ring-gray-400/40 dark:text-gray-300">
+                                audience?.length && audience.map((item, index) => (
+                                    <span key={`${id}-${index}`} className="text-nowrap min-w-fit rounded-full bg-gray-400/20 px-4 py-2 text-xs font-medium text-gray-500 inset-ring inset-ring-gray-400/40 dark:text-gray-300">
                                         {labelOf(AUDIENCE_TYPES, item)}
                                     </span>
                                 ))

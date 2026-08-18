@@ -1,5 +1,5 @@
 import { cn } from "@/lib/extensions/utils";
-import { Switch } from "@/shared/ui/switch";
+import { Switch } from "@/shared/shadcn/ui/switch";
 import { AVAILABLE_MODULES, type ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 import type { SecurityRolePermissionRequest } from "@/interfaces/requests/security-role-permission.request";
 

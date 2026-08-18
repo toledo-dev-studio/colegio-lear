@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router";
 
-import { Button } from "../../ui/button";
+import { Button } from "../../shadcn/ui/button";
 import { stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 

@@ -5,7 +5,7 @@ import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { isValidValueWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 import type { AcademicCycleEnrollmentStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { GET_PAGED_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
-import { getPagedAcademicCycleEnrollmentsActionAsync } from "../../actions/academic-cycle-enrollments/get-paged-academic-cycle-enrollments.action";
+import { getPagedAcademicCycleEnrollmentsAsync } from "../../api/academic-cycle-enrollments/get-paged-academic-cycle-enrollments.api";
 
 interface Options {
     academicCycleId: string;
@@ -34,7 +34,7 @@ export const useGetPagedAcademicCycleEnrollments = ({ academicCycleId }: Options
             academicCycleSchoolGroupId,
             status
         }],
-        queryFn: () => getPagedAcademicCycleEnrollmentsActionAsync({
+        queryFn: () => getPagedAcademicCycleEnrollmentsAsync({
             query,
             page,
             pageSize,

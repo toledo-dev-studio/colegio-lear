@@ -1,7 +1,7 @@
 import { useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
-import { Textarea } from "@/shared/ui/textarea";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
@@ -14,7 +14,7 @@ import type { AcademicCycleEnrollmentRequest } from "@/interfaces/requests/acade
 import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
 import type { AcademicCycleSchoolGroupResponse } from "@/interfaces/responses/academic-cycle-school-group.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { useState } from "react";
 

@@ -1,6 +1,6 @@
 import { useOutletContext } from "react-router";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
 import { useGetTeachersEmployees } from "@/modules/employees/hooks/employees/useGetTeachersEmployees";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";

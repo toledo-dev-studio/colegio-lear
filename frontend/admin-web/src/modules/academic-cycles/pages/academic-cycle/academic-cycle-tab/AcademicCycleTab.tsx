@@ -4,12 +4,12 @@ import { BookOpenCheck, ClipboardCheck } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { Form } from "@/shared/components/form/Form";
 import { Modal } from "@/shared/components/modal/Modal";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
@@ -24,7 +24,7 @@ import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/inter
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 import { useCreateUpdateAcademicCycle } from "@/modules/academic-cycles/hooks/academic-cycles/useCreateUpdateAcademicCycle";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 export const AcademicCycleTab = () => {
     // Context from layout

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
-import { Input } from "@/shared/ui/input";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { AttachmentsGrid } from "./AttachmentsGrid";
 import { Form } from "@/shared/components/form/Form";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -19,7 +19,7 @@ import type { AnnouncementRequest } from "@/interfaces/requests/announcement.req
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { getKeys, getKeyValuePairsByKeys, labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { ANNOUNCEMENTS_STATUSES, AUDIENCE_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface Props {
     isNew: boolean;

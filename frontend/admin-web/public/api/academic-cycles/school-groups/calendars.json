@@ -7,15 +7,15 @@
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
         "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
-        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "teacherId": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
         "schoolSubject": {
             "name": "Matemáticas"
         },
         "teacher": {
             "name": "Juan",
             "firstLastName": "Pérez",
-            "secondLastName": "López",
-            "email": "juan.perez@escuela.edu.mx"
+            "secondLastName": "García",
+            "email": "juan.perez@example.com"
         }
     },
     {
@@ -25,16 +25,16 @@
         "endTime": "10:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
-        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
         "schoolSubject": {
             "name": "Historia"
         },
         "teacher": {
             "name": "María",
-            "firstLastName": "García",
+            "firstLastName": "López",
             "secondLastName": "Hernández",
-            "email": "maria.garcia@escuela.edu.mx"
+            "email": "maria.lopez@example.com"
         }
     },
     {
@@ -44,16 +44,16 @@
         "endTime": "11:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
-        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
         "schoolSubject": {
             "name": "Ciencias Naturales"
         },
         "teacher": {
             "name": "Carlos",
             "firstLastName": "Ramírez",
-            "secondLastName": "Soto",
-            "email": "carlos.ramirez@escuela.edu.mx"
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
         }
     },
     {
@@ -63,16 +63,16 @@
         "endTime": "12:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
-        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
         "schoolSubject": {
             "name": "Español"
         },
         "teacher": {
             "name": "Ana",
-            "firstLastName": "Torres",
-            "secondLastName": "Vega",
-            "email": "ana.torres@escuela.edu.mx"
+            "firstLastName": "Martínez",
+            "secondLastName": "Sánchez",
+            "email": "ana.martinez@example.com"
         }
     },
     {
@@ -82,16 +82,16 @@
         "endTime": "09:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
-        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
         "schoolSubject": {
             "name": "Historia"
         },
         "teacher": {
             "name": "María",
-            "firstLastName": "García",
+            "firstLastName": "López",
             "secondLastName": "Hernández",
-            "email": "maria.garcia@escuela.edu.mx"
+            "email": "maria.lopez@example.com"
         }
     },
     {
@@ -102,15 +102,15 @@
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
         "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
-        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "teacherId": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
         "schoolSubject": {
             "name": "Matemáticas"
         },
         "teacher": {
             "name": "Juan",
             "firstLastName": "Pérez",
-            "secondLastName": "López",
-            "email": "juan.perez@escuela.edu.mx"
+            "secondLastName": "García",
+            "email": "juan.perez@example.com"
         }
     },
     {
@@ -120,16 +120,16 @@
         "endTime": "11:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
-        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
         "schoolSubject": {
             "name": "Español"
         },
         "teacher": {
             "name": "Ana",
-            "firstLastName": "Torres",
-            "secondLastName": "Vega",
-            "email": "ana.torres@escuela.edu.mx"
+            "firstLastName": "Martínez",
+            "secondLastName": "Sánchez",
+            "email": "ana.martinez@example.com"
         }
     },
     {
@@ -139,16 +139,16 @@
         "endTime": "12:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
-        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
         "schoolSubject": {
             "name": "Ciencias Naturales"
         },
         "teacher": {
             "name": "Carlos",
             "firstLastName": "Ramírez",
-            "secondLastName": "Soto",
-            "email": "carlos.ramirez@escuela.edu.mx"
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
         }
     },
     {
@@ -158,16 +158,16 @@
         "endTime": "09:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
-        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
         "schoolSubject": {
             "name": "Ciencias Naturales"
         },
         "teacher": {
             "name": "Carlos",
             "firstLastName": "Ramírez",
-            "secondLastName": "Soto",
-            "email": "carlos.ramirez@escuela.edu.mx"
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
         }
     },
     {
@@ -178,15 +178,15 @@
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
         "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
-        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "teacherId": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
         "schoolSubject": {
             "name": "Matemáticas"
         },
         "teacher": {
             "name": "Juan",
             "firstLastName": "Pérez",
-            "secondLastName": "López",
-            "email": "juan.perez@escuela.edu.mx"
+            "secondLastName": "García",
+            "email": "juan.perez@example.com"
         }
     },
     {
@@ -196,16 +196,16 @@
         "endTime": "11:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
-        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
         "schoolSubject": {
             "name": "Historia"
         },
         "teacher": {
             "name": "María",
-            "firstLastName": "García",
+            "firstLastName": "López",
             "secondLastName": "Hernández",
-            "email": "maria.garcia@escuela.edu.mx"
+            "email": "maria.lopez@example.com"
         }
     },
     {
@@ -215,16 +215,16 @@
         "endTime": "12:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
-        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
         "schoolSubject": {
             "name": "Español"
         },
         "teacher": {
             "name": "Ana",
-            "firstLastName": "Torres",
-            "secondLastName": "Vega",
-            "email": "ana.torres@escuela.edu.mx"
+            "firstLastName": "Martínez",
+            "secondLastName": "Sánchez",
+            "email": "ana.martinez@example.com"
         }
     },
     {
@@ -234,16 +234,16 @@
         "endTime": "09:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
-        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
         "schoolSubject": {
             "name": "Español"
         },
         "teacher": {
             "name": "Ana",
-            "firstLastName": "Torres",
-            "secondLastName": "Vega",
-            "email": "ana.torres@escuela.edu.mx"
+            "firstLastName": "Martínez",
+            "secondLastName": "Sánchez",
+            "email": "ana.martinez@example.com"
         }
     },
     {
@@ -253,16 +253,16 @@
         "endTime": "10:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
-        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
         "schoolSubject": {
             "name": "Ciencias Naturales"
         },
         "teacher": {
             "name": "Carlos",
             "firstLastName": "Ramírez",
-            "secondLastName": "Soto",
-            "email": "carlos.ramirez@escuela.edu.mx"
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
         }
     },
     {
@@ -273,15 +273,15 @@
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
         "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
-        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "teacherId": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
         "schoolSubject": {
             "name": "Matemáticas"
         },
         "teacher": {
             "name": "Juan",
             "firstLastName": "Pérez",
-            "secondLastName": "López",
-            "email": "juan.perez@escuela.edu.mx"
+            "secondLastName": "García",
+            "email": "juan.perez@example.com"
         }
     },
     {
@@ -291,16 +291,16 @@
         "endTime": "12:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
-        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
         "schoolSubject": {
             "name": "Historia"
         },
         "teacher": {
             "name": "María",
-            "firstLastName": "García",
+            "firstLastName": "López",
             "secondLastName": "Hernández",
-            "email": "maria.garcia@escuela.edu.mx"
+            "email": "maria.lopez@example.com"
         }
     },
     {
@@ -311,15 +311,15 @@
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
         "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
-        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "teacherId": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
         "schoolSubject": {
             "name": "Matemáticas"
         },
         "teacher": {
             "name": "Juan",
             "firstLastName": "Pérez",
-            "secondLastName": "López",
-            "email": "juan.perez@escuela.edu.mx"
+            "secondLastName": "García",
+            "email": "juan.perez@example.com"
         }
     },
     {
@@ -329,16 +329,16 @@
         "endTime": "10:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "c3d4e5f6-a7b8-4c9d-0e1f-123456789003",
-        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
         "schoolSubject": {
             "name": "Historia"
         },
         "teacher": {
             "name": "María",
-            "firstLastName": "García",
+            "firstLastName": "López",
             "secondLastName": "Hernández",
-            "email": "maria.garcia@escuela.edu.mx"
+            "email": "maria.lopez@example.com"
         }
     },
     {
@@ -348,16 +348,16 @@
         "endTime": "11:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "b2c3d4e5-f6a7-4b8c-9d0e-123456789002",
-        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
         "schoolSubject": {
             "name": "Ciencias Naturales"
         },
         "teacher": {
             "name": "Carlos",
             "firstLastName": "Ramírez",
-            "secondLastName": "Soto",
-            "email": "carlos.ramirez@escuela.edu.mx"
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
         }
     },
     {
@@ -367,16 +367,16 @@
         "endTime": "12:00:00",
         "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
         "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-        "schoolSubjectId": "d4e5f6a7-b8c9-4d0e-1f2a-123456789004",
-        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
         "schoolSubject": {
             "name": "Español"
         },
         "teacher": {
             "name": "Ana",
-            "firstLastName": "Torres",
-            "secondLastName": "Vega",
-            "email": "ana.torres@escuela.edu.mx"
+            "firstLastName": "Martínez",
+            "secondLastName": "Sánchez",
+            "email": "ana.martinez@example.com"
         }
     }
 ]

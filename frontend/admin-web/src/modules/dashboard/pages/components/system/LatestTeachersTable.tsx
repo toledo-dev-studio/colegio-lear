@@ -1,7 +1,7 @@
 import React from "react";
 import { UserIcon, Users } from "lucide-react";
 
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
 import type { TeacherEmployeeSummaryResponse } from "@/interfaces/responses/dashboard.response";
 import { Link } from "react-router";

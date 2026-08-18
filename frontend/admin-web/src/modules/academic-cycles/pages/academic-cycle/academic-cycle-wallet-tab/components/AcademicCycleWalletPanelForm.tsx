@@ -3,9 +3,9 @@ import { useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Banknote } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";

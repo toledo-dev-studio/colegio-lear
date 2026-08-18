@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
-import { getPagedSecurityRolesActionAsync } from "../actions/get-paged-security-roles.action";
+import { getPagedSecurityRolesAsync } from "../api/get-paged-security-roles.api";
 import { GET_PAGED_SECURITY_ROLES_QUERY_KEY } from "@/lib/queries-key/security-roles-queries-key";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
@@ -20,7 +20,7 @@ export const useGetPagedSecurityRoles = () => {
 
     const queryResult = useQuery({
         queryKey: [GET_PAGED_SECURITY_ROLES_QUERY_KEY, { query, page, pageSize, name, isActive }],
-        queryFn: () => getPagedSecurityRolesActionAsync({
+        queryFn: () => getPagedSecurityRolesAsync({
             query,
             page,
             pageSize,

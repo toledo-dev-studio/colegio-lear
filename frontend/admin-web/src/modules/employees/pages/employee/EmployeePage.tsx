@@ -2,7 +2,7 @@ import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { EmployeeForm } from "./components/EmployeeForm";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import type { EmployeeRequest } from "@/interfaces/requests/employee.request";

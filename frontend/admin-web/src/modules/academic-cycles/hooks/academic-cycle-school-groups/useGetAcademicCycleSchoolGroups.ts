@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_ACADEMIC_CYCLE_SCHOOL_GROUPS_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
-import { getAcademicCycleSchoolGroupsActionAsync } from "../../actions/academic-cycle-school-groups/get-academic-cycle-school-groups.action";
+import { getAcademicCycleSchoolGroupsAsync } from "../../api/academic-cycle-school-groups/get-academic-cycle-school-groups.api";
 
 interface Options {
     academicCycleId: string;
@@ -18,7 +18,7 @@ export const useGetAcademicCycleSchoolGroups = ({ academicCycleId }: Options) =>
 
     const queryResult = useQuery({
         queryKey: [GET_ACADEMIC_CYCLE_SCHOOL_GROUPS_QUERY_KEY, { academicCycleId, query }],
-        queryFn: () => getAcademicCycleSchoolGroupsActionAsync({ academicCycleId, query }),
+        queryFn: () => getAcademicCycleSchoolGroupsAsync({ academicCycleId, query }),
         staleTime: FIVE_MINUTES_STALE_TIME
     });
 

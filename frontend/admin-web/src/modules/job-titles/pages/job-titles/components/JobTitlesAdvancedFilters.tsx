@@ -1,13 +1,13 @@
 import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import type { JobTitleFilter } from "@/interfaces/filters/job-title.filter";
 import type { JobTitleTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface Props {
     open: boolean;

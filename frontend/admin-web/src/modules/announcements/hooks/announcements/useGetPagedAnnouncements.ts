@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_ANNOUNCEMENTS_QUERY_KEY } from "@/lib/queries-key/announcements-queries-key";
-import { getPagedAnnouncementsActionAsync } from "../../actions/announcements/get-paged-announcements.action";
+import { getPagedAnnouncementsAsync } from "../../api/announcements/get-paged-announcements.api";
 import { isValidValueWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 import type { AnnouncementsStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
@@ -23,7 +23,7 @@ export const useGetPagedAnnouncements = () => {
 
     const queryResult = useQuery({
         queryKey: [GET_PAGED_ANNOUNCEMENTS_QUERY_KEY, { query, page, pageSize, name, publishedAt, expiresAt, status, }],
-        queryFn: () => getPagedAnnouncementsActionAsync({
+        queryFn: () => getPagedAnnouncementsAsync({
             query,
             page,
             pageSize,

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_STUDENT_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
 import type { StudentResponse } from "@/interfaces/responses/student.response";
-import { getStudentByIdActionAsync } from "../../actions/students/get-student-by-id.action";
+import { getStudentByIdAsync } from "../../api/students/get-student-by-id.api";
 
 interface Options {
     id: string;
@@ -16,7 +16,7 @@ export const useGetStudentById = ({ id }: Options) => {
             if (id === "new") {
                 return {} as unknown as StudentResponse
             }
-            return getStudentByIdActionAsync({ id });
+            return getStudentByIdAsync({ id });
         },
         retry: false,
         staleTime: FIVE_MINUTES_STALE_TIME,

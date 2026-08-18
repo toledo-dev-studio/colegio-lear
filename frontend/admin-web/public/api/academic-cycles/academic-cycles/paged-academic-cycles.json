@@ -16,13 +16,15 @@
             "evaluationCount": 3,
             "description": "Ciclo escolar anual 2023-2024.",
             "observations": "Ciclo concluido sin incidencias.",
-            "academicLevelId": "a1000000-0001-4000-8000-000000000002",
+            "academicLevelId": "1",
             "academicLevel": {
+                "id": "1",
                 "name": "Primaria"
             },
-            "educationLevelId": "b2000000-0002-4000-8000-000000000003",
+            "educationLevelId": "1-1",
             "educationLevel": {
-                "name": "1ro de Primaria"
+                "id": "1-1",
+                "name": "1er Grado"
             }
         },
         {
@@ -38,13 +40,15 @@
             "evaluationCount": 3,
             "description": "Ciclo escolar anual 2024-2025.",
             "observations": "Todos los periodos completados.",
-            "academicLevelId": "al-primaria",
+            "academicLevelId": "1",
             "academicLevel": {
+                "id": "1",
                 "name": "Primaria"
             },
-            "educationLevelId": "el-primaria-6",
+            "educationLevelId": "1-6",
             "educationLevel": {
-                "name": "6to de Primaria"
+                "id": "1-6",
+                "name": "6to Grado"
             }
         },
         {
@@ -60,13 +64,15 @@
             "evaluationCount": 4,
             "description": "Ciclo escolar vigente.",
             "observations": "Actualmente en curso.",
-            "academicLevelId": "al-secundaria",
+            "academicLevelId": "2",
             "academicLevel": {
+                "id": "2",
                 "name": "Secundaria"
             },
-            "educationLevelId": "el-secundaria-1",
+            "educationLevelId": "2-1",
             "educationLevel": {
-                "name": "1ro de Secundaria"
+                "id": "2-1",
+                "name": "1er Año"
             }
         },
         {
@@ -82,13 +88,15 @@
             "evaluationCount": 4,
             "description": "Próximo ciclo escolar.",
             "observations": "Inscripciones abiertas.",
-            "academicLevelId": "al-secundaria",
+            "academicLevelId": "2",
             "academicLevel": {
+                "id": "2",
                 "name": "Secundaria"
             },
-            "educationLevelId": "el-secundaria-3",
+            "educationLevelId": "2-3",
             "educationLevel": {
-                "name": "3ro de Secundaria"
+                "id": "2-3",
+                "name": "3er Año"
             }
         },
         {
@@ -104,13 +112,15 @@
             "evaluationCount": 2,
             "description": "Primer semestre del año.",
             "observations": "Periodo académico regular.",
-            "academicLevelId": "al-preparatoria",
+            "academicLevelId": "3",
             "academicLevel": {
-                "name": "Preparatoria"
+                "id": "3",
+                "name": "Bachillerato"
             },
-            "educationLevelId": "el-prepa-1",
+            "educationLevelId": "3-1",
             "educationLevel": {
-                "name": "1er Semestre"
+                "id": "3-1",
+                "name": "4to Año"
             }
         },
         {
@@ -126,13 +136,15 @@
             "evaluationCount": 2,
             "description": "Segundo semestre del año.",
             "observations": "Pendiente de iniciar.",
-            "academicLevelId": "al-preparatoria",
+            "academicLevelId": "3",
             "academicLevel": {
-                "name": "Preparatoria"
+                "id": "3",
+                "name": "Bachillerato"
             },
-            "educationLevelId": "el-prepa-6",
+            "educationLevelId": "3-3",
             "educationLevel": {
-                "name": "6to Semestre"
+                "id": "3-3",
+                "name": "6to Año"
             }
         },
         {
@@ -148,13 +160,15 @@
             "evaluationCount": 2,
             "description": "Programa cancelado.",
             "observations": "Cancelado por ajustes institucionales.",
-            "academicLevelId": "al-preparatoria",
+            "academicLevelId": "3",
             "academicLevel": {
-                "name": "Preparatoria"
+                "id": "3",
+                "name": "Bachillerato"
             },
-            "educationLevelId": "el-prepa-1",
+            "educationLevelId": "3-1",
             "educationLevel": {
-                "name": "1er Semestre"
+                "id": "3-1",
+                "name": "4to Año"
             }
         },
         {
@@ -170,13 +184,15 @@
             "evaluationCount": 1,
             "description": "Programa trimestral de verano.",
             "observations": "Alta demanda de estudiantes.",
-            "academicLevelId": "al-secundaria",
+            "academicLevelId": "2",
             "academicLevel": {
+                "id": "2",
                 "name": "Secundaria"
             },
-            "educationLevelId": "el-secundaria-3",
+            "educationLevelId": "2-3",
             "educationLevel": {
-                "name": "3ro de Secundaria"
+                "id": "2-3",
+                "name": "3er Año"
             }
         },
         {
@@ -192,13 +208,15 @@
             "evaluationCount": 1,
             "description": "Curso intensivo de invierno.",
             "observations": "Archivado para consulta histórica.",
-            "academicLevelId": "al-preparatoria",
+            "academicLevelId": "3",
             "academicLevel": {
-                "name": "Preparatoria"
+                "id": "3",
+                "name": "Bachillerato"
             },
-            "educationLevelId": "el-prepa-6",
+            "educationLevelId": "3-3",
             "educationLevel": {
-                "name": "6to Semestre"
+                "id": "3-3",
+                "name": "6to Año"
             }
         },
         {
@@ -214,13 +232,15 @@
             "evaluationCount": 2,
             "description": "Programa especial enfocado en STEM.",
             "observations": "Programa finalizado y archivado.",
-            "academicLevelId": "al-secundaria",
+            "academicLevelId": "2",
             "academicLevel": {
+                "id": "2",
                 "name": "Secundaria"
             },
-            "educationLevelId": "el-secundaria-1",
+            "educationLevelId": "2-1",
             "educationLevel": {
-                "name": "1ro de Secundaria"
+                "id": "2-1",
+                "name": "1er Año"
             }
         }
     ]

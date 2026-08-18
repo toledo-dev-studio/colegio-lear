@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Mail, Phone } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { Modal } from "@/shared/components/modal/Modal";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
@@ -14,7 +14,7 @@ import type { AllergyRequest } from "@/interfaces/requests/allergy.request";
 import type { StudentGuardianRequest } from "@/interfaces/requests/student-guardian.request";
 import type { StudentGuardianResponse } from "@/interfaces/responses/student-guardian.response";
 import { STUDENT_GUARDIANS_RELATIONSHIPS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface Props {
     studentGuardianResponse: Partial<StudentGuardianResponse>;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 import { useGetAcademicCycles } from "@/modules/academic-cycles/hooks/academic-cycles/useGetAcademicCycles";
 import { useGetPagedAcademicCycles } from "@/modules/academic-cycles/hooks/academic-cycles/useGetPagedAcademicCycles";

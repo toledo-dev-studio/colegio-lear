@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import type { AllergyResponse } from "@/interfaces/responses/allergy.response";
 import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 import { useGetAllergiesForStudent } from "@/modules/students/hooks/student-allergies/useGetAllergiesForStudent";

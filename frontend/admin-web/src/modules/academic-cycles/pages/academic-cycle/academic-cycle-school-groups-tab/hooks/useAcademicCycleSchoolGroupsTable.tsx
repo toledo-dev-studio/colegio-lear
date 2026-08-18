@@ -1,9 +1,9 @@
 import { Link, useOutletContext } from "react-router";
 import { Calendar, Pencil, Trash } from "lucide-react";
 
-import { Badge } from "@/shared/ui/badge";
+import { Badge } from "@/shared/shadcn/ui/badge";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/shadcn/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import { ACADEMIC_CYCLE_SCHOOL_GROUP_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";

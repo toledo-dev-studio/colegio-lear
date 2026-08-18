@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
-import { Slider } from "@/shared/ui/slider";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
+import { Slider } from "@/shared/shadcn/ui/slider";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { Form } from "@/shared/components/form/Form";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";

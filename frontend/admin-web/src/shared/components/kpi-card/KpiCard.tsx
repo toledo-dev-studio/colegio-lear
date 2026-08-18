@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
 
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import { cn } from "@/lib/extensions/utils";
 
 export type KpiTone = "primary" | "emerald" | "amber" | "rose" | "violet" | "sky";

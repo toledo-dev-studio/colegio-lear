@@ -4,21 +4,33 @@ import { CalendarClock } from "lucide-react";
 
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/extensions/utils";
-import { Calendar } from "@/shared/ui/calendar";
+import { Calendar } from "@/shared/shadcn/ui/calendar";
 import { useFormPermission } from "../form/FormPermissionContext";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/shadcn/ui/popover";
 
 interface Props {
     value?: string; // ISO string
     onChange: (value?: string) => void;
     placeholder?: string;
     disabled?: boolean;
+    minDate?: string; // ISO string
+    maxDate?: string; // ISO string
 }
 
 export const DatePicker = (props: Props) => {
     const [open, setOpen] = React.useState(false)
     const dateValue = props.value ? new Date(props.value) : undefined;
     const { disabled } = useFormPermission();
+
+    const toLocalDay = (value: string): Date => {
+        const [year, month, day] = value.slice(0, 10).split("-").map(Number);
+        return new Date(year, month - 1, day);
+    };
+
+    const disabledDates = [
+        ...(props.minDate ? [{ before: toLocalDay(props.minDate) }] : []),
+        ...(props.maxDate ? [{ after: toLocalDay(props.maxDate) }] : []),
+    ];
     
     return (
         <>
@@ -45,7 +57,7 @@ export const DatePicker = (props: Props) => {
                             mode="single"
                             className="rounded-lg border"
                             locale={es}
-                            disabled={props.disabled || disabled}
+                            disabled={props.disabled || disabled || disabledDates}
                             captionLayout="dropdown"
                             selected={dateValue}
                             onSelect={(date) => {

@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { getScholarshipsActionAsync } from "../actions/get-scholarships.action";
+import { getScholarshipsAsync } from "../api/get-scholarships.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetScholarships = () => {
@@ -16,7 +16,7 @@ export const useGetScholarships = () => {
     const discountPercentage = stringToNumberWithDefault(searchParams.get("discount-percentage"), undefined);
 
     return useMutation({
-        mutationFn: () => getScholarshipsActionAsync({
+        mutationFn: () => getScholarshipsAsync({
             query,
             name,
             isActive,

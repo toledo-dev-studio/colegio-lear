@@ -1,14 +1,14 @@
 import { Controller, useForm } from "react-hook-form";
 
-import { Input } from "@/shared/ui/input";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import type { AllergyRequest } from "@/interfaces/requests/allergy.request";
 import type { AllergyResponse } from "@/interfaces/responses/allergy.response";
 import { ALLERGY_SEVERITIES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface Props {
     allergyResponse: Partial<AllergyResponse>;

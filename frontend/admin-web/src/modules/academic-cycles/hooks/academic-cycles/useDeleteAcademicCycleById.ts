@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { deleteAcademicCycleByIdActionAsync } from "../../actions/academic-cycles/delete-academic-cycle-by-id.action";
+import { deleteAcademicCycleByIdAsync } from "../../api/academic-cycles/delete-academic-cycle-by-id.api";
 import { GET_ACADEMIC_CYCLE_QUERY_KEY, GET_PAGED_ACADEMIC_CYCLES_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
 
 export const useDeleteAcademicCycleById = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: deleteAcademicCycleByIdActionAsync,
+        mutationFn: deleteAcademicCycleByIdAsync,
         onSuccess: (id: string) => {
             // Remove query for single query
             queryClient.removeQueries({ queryKey: [GET_ACADEMIC_CYCLE_QUERY_KEY, { id: id }] });

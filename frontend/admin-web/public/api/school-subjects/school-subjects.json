@@ -1,97 +1,97 @@
 [
-  {
-    "id": "1",
-    "name": "Matemáticas",
-    "description": "Materia de matemáticas básicas",
-    "isActive": true,
-    "academicLevelId": "1",
-    "educationLevelId": "1-1",
-    "academicLevel": {
-      "id": "1",
-      "name": "Primaria",
-      "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
-      "isActive": true,
-      "educationLevels": []
+    {
+        "id": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "name": "Matemáticas",
+        "description": "Materia de matemáticas básicas",
+        "isActive": true,
+        "academicLevelId": "1",
+        "educationLevelId": "1-1",
+        "academicLevel": {
+            "id": "1",
+            "name": "Primaria",
+            "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
+            "isActive": true,
+            "educationLevels": []
+        },
+        "educationLevel": {
+            "id": "1-1",
+            "name": "1er Grado"
+        }
     },
-    "educationLevel": {
-      "id": "1-1",
-      "name": "1er Grado"
+    {
+        "id": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "name": "Ciencias Naturales",
+        "description": "Materia de lenguaje y comunicación",
+        "isActive": true,
+        "academicLevel": {
+            "id": "1",
+            "name": "Primaria",
+            "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
+            "isActive": true,
+            "educationLevels": []
+        },
+        "educationLevel": {
+            "id": "1-2",
+            "name": "2do Grado"
+        },
+        "academicLevelId": "1",
+        "educationLevelId": "1-2"
+    },
+    {
+        "id": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "name": "Historia",
+        "description": "Materia de ciencias naturales",
+        "isActive": true,
+        "academicLevel": {
+            "id": "2",
+            "name": "Secundaria",
+            "description": "Nivel de educación secundaria, preparación para la educación media",
+            "isActive": true,
+            "educationLevels": []
+        },
+        "educationLevel": {
+            "id": "2-1",
+            "name": "1er Año"
+        },
+        "academicLevelId": "2",
+        "educationLevelId": "2-1"
+    },
+    {
+        "id": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "name": "Español",
+        "description": "Materia de historia universal",
+        "isActive": true,
+        "academicLevel": {
+            "id": "3",
+            "name": "Bachillerato",
+            "description": "Nivel de educación bachillerato, formación avanzada",
+            "isActive": true,
+            "educationLevels": []
+        },
+        "educationLevel": {
+            "id": "3-1",
+            "name": "4to Año"
+        },
+        "academicLevelId": "3",
+        "educationLevelId": "3-1"
+    },
+    {
+        "id": "a1b2c3d4-e5f6-4a7b-8c9d-123456789005",
+        "name": "Ingeniería de Software",
+        "description": "Materia de desarrollo de software",
+        "isActive": true,
+        "academicLevel": {
+            "id": "4",
+            "name": "Profesional",
+            "description": "Nivel de educación profesional y técnica",
+            "isActive": true,
+            "educationLevels": []
+        },
+        "educationLevel": {
+            "id": "4-3",
+            "name": "Profesional"
+        },
+        "academicLevelId": "4",
+        "educationLevelId": "4-3"
     }
-  },
-  {
-    "id": "2",
-    "name": "Lenguaje",
-    "description": "Materia de lenguaje y comunicación",
-    "isActive": true,
-    "academicLevel": {
-      "id": "1",
-      "name": "Primaria",
-      "description": "Nivel de educación primaria, dirigido a estudiantes de 6 a 12 años",
-      "isActive": true,
-      "educationLevels": []
-    },
-    "educationLevel": {
-      "id": "1-2",
-      "name": "2do Grado"
-    },
-    "academicLevelId": "1",
-    "educationLevelId": "1-2"
-  },
-  {
-    "id": "3",
-    "name": "Ciencias",
-    "description": "Materia de ciencias naturales",
-    "isActive": true,
-    "academicLevel": {
-      "id": "2",
-      "name": "Secundaria",
-      "description": "Nivel de educación secundaria, preparación para la educación media",
-      "isActive": true,
-      "educationLevels": []
-    },
-    "educationLevel": {
-      "id": "2-1",
-      "name": "1er Año"
-    },
-    "academicLevelId": "2",
-    "educationLevelId": "2-1"
-  },
-  {
-    "id": "4",
-    "name": "Historia",
-    "description": "Materia de historia universal",
-    "isActive": true,
-    "academicLevel": {
-      "id": "3",
-      "name": "Bachillerato",
-      "description": "Nivel de educación bachillerato, formación avanzada",
-      "isActive": true,
-      "educationLevels": []
-    },
-    "educationLevel": {
-      "id": "3-1",
-      "name": "4to Año"
-    },
-    "academicLevelId": "3",
-    "educationLevelId": "3-1"
-  },
-  {
-    "id": "5",
-    "name": "Ingeniería de Software",
-    "description": "Materia de desarrollo de software",
-    "isActive": true,
-    "academicLevel": {
-      "id": "4",
-      "name": "Profesional",
-      "description": "Nivel de educación profesional y técnica",
-      "isActive": true,
-      "educationLevels": []
-    },
-    "educationLevel": {
-      "id": "4-3",
-      "name": "Profesional"
-    },
-    "academicLevelId": "4",
-    "educationLevelId": "4-3"
-  }
 ]

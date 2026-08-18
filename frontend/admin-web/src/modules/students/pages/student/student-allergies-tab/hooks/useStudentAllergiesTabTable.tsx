@@ -2,7 +2,7 @@ import { useOutletContext } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/shadcn/ui/tooltip";
 import type { AllergyResponse } from "@/interfaces/responses/allergy.response";
 import { ALLERGY_SEVERITIES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";

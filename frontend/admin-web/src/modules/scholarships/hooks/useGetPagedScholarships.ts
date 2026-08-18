@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
-import { getPagedScholarshipsActionAsync } from "../actions/get-paged-scholarships.action";
+import { getPagedScholarshipsAsync } from "../api/get-paged-scholarships.api";
 import { GET_PAGED_SCHOLARSHIPS_QUERY_KEY } from "@/lib/queries-key/scholarships-queries-key";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
@@ -21,7 +21,7 @@ export const useGetPagedScholarships = () => {
 
     const queryResult = useQuery({
         queryKey: [GET_PAGED_SCHOLARSHIPS_QUERY_KEY, { query, page, pageSize, name, isActive, discountPercentage }],
-        queryFn: () => getPagedScholarshipsActionAsync({
+        queryFn: () => getPagedScholarshipsAsync({
             query,
             page,
             pageSize,

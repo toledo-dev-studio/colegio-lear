@@ -1,132 +1,204 @@
 [
     {
         "id": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
-        "code": "INS-2026-0001",
+        "code": "INS-2025-0001",
         "status": "enrolled",
         "observations": "Inscripción regular sin observaciones.",
-        "studentId": "c2e6f9d1-2f4b-4d0c-b6a5-7c1d9a3f0e21",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
         "student": {
-            "id": "c2e6f9d1-2f4b-4d0c-b6a5-7c1d9a3f0e21",
-            "enrollment": "ALU-2026-0001",
+            "id": "550e8400-e29b-41d4-a716-446655440001",
             "name": "Juan",
             "firstLastName": "Pérez",
-            "secondLastName": "Ramírez"
+            "secondLastName": "García",
+            "dateOfBirth": "2012-03-14T00:00:00.000Z",
+            "curp": "PEGJ120314HGTLRNA1",
+            "age": 14,
+            "enrollment": "ENR-2026-001",
+            "image": "https://example.com/students/std-001.jpg",
+            "observations": "Excelente desempeño académico.",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "juan.perez@example.com",
+            "phoneNumber": "4771234567",
+            "address": "Calle Primavera 123",
+            "state": "Guanajuato",
+            "municipality": "León",
+            "postalCode": "37200"
         },
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
         "academicCycle": {
-            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-            "name": "Ciclo Escolar 2026-2027"
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+            "name": "2025 - 2026"
         },
-        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
         "academicCycleSchoolGroup": {
-            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-            "name": "Primero A"
+            "id": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+            "name": "Primero A (2025-2026)"
         },
-        "scholarshipId": "0d8e1f23-c456-4f9a-a1b2-3c4d5e6f7890",
+        "scholarshipId": "3f9a8c2e-1b4d-4f6a-9c2a-8e7d5b1f0a11",
         "scholarship": {
-            "id": "0d8e1f23-c456-4f9a-a1b2-3c4d5e6f7890",
+            "id": "3f9a8c2e-1b4d-4f6a-9c2a-8e7d5b1f0a11",
             "name": "Beca Excelencia Académica",
-            "discountPercentage": 40
+            "percentage": 50
         },
-        "createdAt": "2023-08-14T00:00:00.000Z"
+        "createdAt": "2025-08-01T12:00:00.000Z"
     },
     {
         "id": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345",
-        "code": "INS-2026-0002",
+        "code": "INS-2025-0002",
         "status": "enrolled",
-        "observations": "Alumno con excelente desempeño académico.",
-        "studentId": "7f3e2b18-52d0-4f8e-baf0-92bfa7c51234",
+        "observations": "Inscripción regular sin observaciones.",
+        "studentId": "550e8400-e29b-41d4-a716-446655440002",
         "student": {
-            "id": "7f3e2b18-52d0-4f8e-baf0-92bfa7c51234",
-            "enrollment": "ALU-2026-0002",
+            "id": "550e8400-e29b-41d4-a716-446655440002",
             "name": "María",
-            "firstLastName": "González",
-            "secondLastName": "López"
+            "firstLastName": "López",
+            "secondLastName": "Hernández",
+            "dateOfBirth": "2011-08-21T00:00:00.000Z",
+            "curp": "LOHM110821MGTLRRA2",
+            "age": 15,
+            "enrollment": "ENR-2026-002",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "maria.lopez@example.com",
+            "phoneNumber": "4771112233",
+            "address": "Av. Las Torres 456",
+            "state": "Jalisco",
+            "municipality": "Guadalajara",
+            "postalCode": "44100"
         },
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
         "academicCycle": {
-            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-            "name": "Ciclo Escolar 2026-2027"
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+            "name": "2025 - 2026"
         },
-        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
         "academicCycleSchoolGroup": {
-            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-            "name": "Primero B"
+            "id": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+            "name": "Primero B (2025-2026)"
         },
-        "createdAt": "2023-08-14T00:00:00.000Z"
+        "scholarshipId": null,
+        "scholarship": null,
+        "createdAt": "2025-08-02T12:00:00.000Z"
     },
     {
         "id": "e8c7a3f2-4d91-4e2f-a9d8-6b1c2f3a4567",
-        "code": "INS-2026-0003",
-        "status": "completed",
-        "observations": "Finalizó satisfactoriamente el ciclo escolar.",
-        "studentId": "8c7f2a15-31b8-4d7e-bc21-9f5e7a123456",
+        "code": "INS-2024-0001",
+        "status": "enrolled",
+        "observations": "Inscripción regular sin observaciones.",
+        "studentId": "550e8400-e29b-41d4-a716-446655440003",
         "student": {
-            "id": "8c7f2a15-31b8-4d7e-bc21-9f5e7a123456",
-            "enrollment": "ALU-2026-0003",
-            "name": "Carlos",
+            "id": "550e8400-e29b-41d4-a716-446655440003",
+            "name": "Luis",
             "firstLastName": "Martínez",
-            "secondLastName": "Hernández"
+            "secondLastName": "Ruiz",
+            "dateOfBirth": "2013-01-09T00:00:00.000Z",
+            "curp": "MARL130109HGTTRSA3",
+            "age": 13,
+            "enrollment": "ENR-2026-003",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "luis.martinez@example.com",
+            "phoneNumber": "4429988776",
+            "address": "Calle Hidalgo 87",
+            "state": "Querétaro",
+            "municipality": "Querétaro",
+            "postalCode": "76000"
         },
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
         "academicCycle": {
-            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-            "name": "Ciclo Escolar 2026-2027"
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
+            "name": "2024 - 2025"
         },
-        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroupId": "e3f6a1b8-9c0d-4a1b-fb4e-4a9c0f1b2d05",
         "academicCycleSchoolGroup": {
-            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-            "name": "Segundo A"
+            "id": "e3f6a1b8-9c0d-4a1b-fb4e-4a9c0f1b2d05",
+            "name": "Segundo A (2024-2025)"
         },
-        "createdAt": "2023-08-14T00:00:00.000Z"
+        "scholarshipId": null,
+        "scholarship": null,
+        "createdAt": "2024-08-01T12:00:00.000Z"
     },
     {
         "id": "a3f9d1c7-7b6a-42e1-8d4c-1e2f3a4b5678",
-        "code": "INS-2026-0004",
-        "status": "dropped",
-        "observations": "Baja voluntaria por cambio de institución.",
-        "studentId": "3b8c5d7e-9f10-4a2b-bcde-123456789abc",
+        "code": "INS-2024-0002",
+        "status": "enrolled",
+        "observations": "Inscripción regular sin observaciones.",
+        "studentId": "550e8400-e29b-41d4-a716-446655440004",
         "student": {
-            "id": "3b8c5d7e-9f10-4a2b-bcde-123456789abc",
-            "enrollment": "ALU-2026-0004",
-            "name": "Ana",
-            "firstLastName": "Torres",
-            "secondLastName": "Sánchez"
+            "id": "550e8400-e29b-41d4-a716-446655440004",
+            "name": "Fernanda",
+            "firstLastName": "Castillo",
+            "secondLastName": "Mendoza",
+            "dateOfBirth": "2010-11-03T00:00:00.000Z",
+            "curp": "CAMF101103MGTSDRA4",
+            "age": 16,
+            "enrollment": "ENR-2026-004",
+            "image": "https://example.com/students/std-004.jpg",
+            "isActive": true,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "fernanda.castillo@example.com",
+            "phoneNumber": "5512345678",
+            "address": "Blvd. Central 999",
+            "state": "CDMX",
+            "municipality": "Coyoacán",
+            "postalCode": "04000"
         },
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
         "academicCycle": {
-            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-            "name": "Ciclo Escolar 2026-2027"
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
+            "name": "2024 - 2025"
         },
-        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroupId": "f4a7b2c9-0d1e-4b2c-ac5f-5bad0c2c3e06",
         "academicCycleSchoolGroup": {
-            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-            "name": "Segundo B"
+            "id": "f4a7b2c9-0d1e-4b2c-ac5f-5bad0c2c3e06",
+            "name": "Segundo B (2024-2025)"
         },
-        "createdAt": "2023-08-14T00:00:00.000Z"
+        "scholarshipId": null,
+        "scholarship": null,
+        "createdAt": "2024-08-02T12:00:00.000Z"
     },
     {
         "id": "f1e2d3c4-b5a6-47d8-91e2-3f4a5b6c7d8e",
-        "code": "INS-2026-0005",
+        "code": "INS-2026-0001",
         "status": "enrolled",
-        "studentId": "5e6f7a8b-9c0d-4e1f-abcd-234567890abc",
+        "observations": "Inscripción regular sin observaciones.",
+        "studentId": "550e8400-e29b-41d4-a716-446655440005",
         "student": {
-            "id": "5e6f7a8b-9c0d-4e1f-abcd-234567890abc",
-            "enrollment": "ALU-2026-0005",
-            "name": "Luis",
-            "firstLastName": "Castillo",
-            "secondLastName": "Morales"
+            "id": "550e8400-e29b-41d4-a716-446655440005",
+            "name": "Diego",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Soto",
+            "dateOfBirth": "2014-06-18T00:00:00.000Z",
+            "curp": "RASD140618HGTMTGA5",
+            "age": 12,
+            "enrollment": "ENR-2026-005",
+            "isActive": false,
+            "bloodType": "O+",
+            "medicalNotes": "",
+            "email": "diego.ramirez@example.com",
+            "phoneNumber": "8182233445",
+            "address": "Calle Robles 321",
+            "state": "Nuevo León",
+            "municipality": "Monterrey",
+            "postalCode": "64000"
         },
-        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1004",
         "academicCycle": {
-            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
-            "name": "Ciclo Escolar 2026-2027"
+            "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1004",
+            "name": "2026 - 2027"
         },
-        "academicCycleSchoolGroupId": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
+        "academicCycleSchoolGroupId": "a5b8c3d0-1e2f-4c3d-bd60-6cbe1d3d4f07",
         "academicCycleSchoolGroup": {
-            "id": "a7c2f8d4-5f6a-4d2e-b8a1-0d5f6c7e8a91",
-            "name": "Tercero A"
+            "id": "a5b8c3d0-1e2f-4c3d-bd60-6cbe1d3d4f07",
+            "name": "Tercero A (2026-2027)"
         },
-        "createdAt": "2023-08-14T00:00:00.000Z"
+        "scholarshipId": null,
+        "scholarship": null,
+        "createdAt": "2026-08-01T12:00:00.000Z"
     }
 ]

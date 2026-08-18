@@ -2,13 +2,13 @@ import { useEffect, type PropsWithChildren } from "react";
 import { RouterProvider } from "react-router"
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "./shared/ui/sonner";
+import { Toaster } from "./shared/shadcn/ui/sonner";
 
 import { appRouter } from "./routes/app.router";
-import { TooltipProvider } from "@/shared/ui/tooltip";
+import { TooltipProvider } from "@/shared/shadcn/ui/tooltip";
 import { useAuthStore } from "./modules/auth/stores/auth.store";
-import { ThemeContextProvider } from "./shared/context/ThemeContext";
-import { LoaderContextProvider } from "./shared/context/LoaderContext";
+import { ThemeContextProvider } from "./context/ThemeContext";
+import { LoaderContextProvider } from "./context/LoaderContext";
 
 const queryClient = new QueryClient();
 

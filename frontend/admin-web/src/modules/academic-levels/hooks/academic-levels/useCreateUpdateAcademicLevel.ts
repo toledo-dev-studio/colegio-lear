@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
-import { createUpdateAcademicLevelActionAsync } from "../../actions/academic-levels/create-update-academic-level.action";
+import { createUpdateAcademicLevelAsync } from "../../api/academic-levels/create-update-academic-level.api";
 import { GET_ACADEMIC_LEVEL_QUERY_KEY, GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "@/lib/queries-key/academic-levels-queries-key";
 
 export const useCreateUpdateAcademicLevel = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: createUpdateAcademicLevelActionAsync,
+        mutationFn: createUpdateAcademicLevelAsync,
         onSuccess: (response: AcademicLevelResponse) => {
             // Invalid cache for useQueries
             queryClient.invalidateQueries({ queryKey: [GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY] });

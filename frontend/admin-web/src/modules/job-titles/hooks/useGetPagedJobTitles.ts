@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import type { JobTitleTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
-import { getPagedJobTitlesActionAsync } from "../actions/get-paged-job-titles.action";
+import { getPagedJobTitlesAsync } from "../api/get-paged-job-titles.api";
 import { GET_PAGED_JOB_TITLES_QUERY_KEY } from "@/lib/queries-key/job-titles-queries-key";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
@@ -22,7 +22,7 @@ export const useGetPagedJobTitles = () => {
 
     const queryResult = useQuery({
         queryKey: [GET_PAGED_JOB_TITLES_QUERY_KEY, { query, page, pageSize, name, jobTitleType, isActive, }],
-        queryFn: () => getPagedJobTitlesActionAsync({
+        queryFn: () => getPagedJobTitlesAsync({
             query,
             page,
             pageSize,

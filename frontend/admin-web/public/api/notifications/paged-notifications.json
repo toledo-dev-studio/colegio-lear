@@ -1,5 +1,5 @@
 {
-    "totalPages": 2,
+    "totalPages": 1,
     "currentPage": 1,
     "itemsCount": 10,
     "data": [
@@ -8,7 +8,7 @@
             "title": "Nuevo anuncio publicado",
             "message": "Se ha publicado el calendario de actividades correspondiente al ciclo escolar 2026-2027.",
             "type": "announcement",
-            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
             "createdAt": "2026-07-15T08:15:00Z",
             "read": false
         },
@@ -26,7 +26,7 @@
             "title": "Recordatorio de colegiatura",
             "message": "La fecha límite para el pago de la colegiatura de julio es el 20 de julio.",
             "type": "announcement",
-            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
             "createdAt": "2026-07-14T14:20:00Z",
             "read": true
         },
@@ -44,7 +44,7 @@
             "title": "Cambio de horario",
             "message": "Se actualizó el horario del grupo Primaria 3° A para la próxima semana.",
             "type": "announcement",
-            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
             "createdAt": "2026-07-13T11:10:00Z",
             "read": true
         },
@@ -62,7 +62,7 @@
             "title": "Suspensión de clases",
             "message": "Las actividades académicas se suspenderán el próximo viernes por Consejo Técnico Escolar.",
             "type": "announcement",
-            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
             "createdAt": "2026-07-12T10:00:00Z",
             "read": false
         },
@@ -80,7 +80,7 @@
             "title": "Nueva convocatoria",
             "message": "Ya se encuentra disponible la convocatoria para solicitar becas del siguiente ciclo escolar.",
             "type": "announcement",
-            "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+            "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
             "createdAt": "2026-07-11T09:15:00Z",
             "read": false
         },

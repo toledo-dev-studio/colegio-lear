@@ -4,7 +4,7 @@ import { Info, Trash } from "lucide-react";
 import { Modal } from "../modal/Modal";
 import type { Calendar } from "./types/calendar";
 import { generateTemporalId } from "@/lib/extensions/utils";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import { CalendarTimeGuide } from "./components/CalendarTimeGuide";
 import { CalendarFormPanel } from "./components/CalendarFormPanel";
 import { colorOf } from "./lib/schedule-calendar-palette-subject-colors";

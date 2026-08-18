@@ -4,7 +4,7 @@
         "title": "Nuevo anuncio publicado",
         "message": "Se ha publicado el calendario de actividades correspondiente al ciclo escolar 2026-2027.",
         "type": "announcement",
-        "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+        "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
         "createdAt": "2026-07-15T08:15:00Z",
         "read": false,
         "content": "<h1 style=\"font-family:Georgia,serif;font-size:36px;color:#2563EB;\">🎉 ¡Bienvenidos al Ciclo Escolar 2026 - 2027!</h1><p style=\"font-family:Arial,sans-serif;font-size:18px;\">Nos llena de entusiasmo darles la bienvenida a un nuevo ciclo escolar. Este año estará lleno de <strong>aprendizaje</strong>, <em>nuevos retos</em> y grandes experiencias para toda nuestra comunidad educativa.</p><p style=\"font-family:'Courier New',monospace;font-size:16px;color:#16A34A;\">📅 <strong>Fecha de inicio:</strong> 18 de agosto de 2026</p><img src=\"https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80\" alt=\"Alumnos en el aula\" /><h2 style=\"font-family:Verdana,sans-serif;font-size:28px;color:#1D4ED8;\">Actividades importantes</h2><ul><li>Entrega de útiles escolares.</li><li>Reunión con madres y padres de familia.</li><li>Entrega de credenciales.</li><li>Asignación de grupos.</li></ul><p style=\"font-size:17px;\">Consulta toda la información oficial en la página de la <a href=\"https://www.gob.mx/sep\" target=\"_blank\">Secretaría de Educación Pública</a>.</p><blockquote><p><em>\"La educación es el pasaporte hacia el futuro, porque el mañana pertenece a quienes se preparan para él hoy.\"</em></p></blockquote><hr><h2 style=\"font-family:Tahoma,sans-serif;\">Galería del ciclo escolar</h2><p>A continuación podrás encontrar algunas imágenes representativas del inicio de clases.</p><img src=\"https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80\" alt=\"Escuela\" /><img src=\"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80\" alt=\"Estudiantes\" /><h2 style=\"font-size:24px;\">Calendario de eventos</h2><table><tbody><tr><th>Evento</th><th>Fecha</th></tr><tr><td>Inicio de clases</td><td>18/08/2026</td></tr><tr><td>Reunión con padres</td><td>20/08/2026</td></tr><tr><td>Primera evaluación</td><td>15/09/2026</td></tr><tr><td>Entrega de boletas</td><td>25/09/2026</td></tr></tbody></table><h2 style=\"color:#DC2626;\">Recomendaciones</h2><ol><li>Presentarse con uniforme completo.</li><li>Llegar al menos 15 minutos antes del inicio de clases.</li><li>Mantener actualizada la información de contacto del estudiante y sus tutores.</li><li>Consultar periódicamente el portal del alumno para conocer nuevas campañas y avisos importantes.</li></ol><p style=\"font-family:Georgia,serif;font-size:15px;color:#6B7280;\">Si tienes alguna duda puedes comunicarte con el área de <strong>Control Escolar</strong> o enviar un correo a <a href=\"mailto:control.escolar@escuela.edu.mx\">control.escolar@escuela.edu.mx</a>.</p>"
@@ -23,7 +23,7 @@
         "title": "Recordatorio de colegiatura",
         "message": "La fecha límite para el pago de la colegiatura de julio es el 20 de julio.",
         "type": "announcement",
-        "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+        "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
         "createdAt": "2026-07-14T14:20:00Z",
         "read": true
     },
@@ -41,7 +41,7 @@
         "title": "Cambio de horario",
         "message": "Se actualizó el horario del grupo Primaria 3° A para la próxima semana.",
         "type": "announcement",
-        "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+        "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
         "createdAt": "2026-07-13T11:10:00Z",
         "read": true
     },
@@ -59,7 +59,7 @@
         "title": "Suspensión de clases",
         "message": "Las actividades académicas se suspenderán el próximo viernes por Consejo Técnico Escolar.",
         "type": "announcement",
-        "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+        "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
         "createdAt": "2026-07-12T10:00:00Z",
         "read": false
     },
@@ -77,7 +77,7 @@
         "title": "Nueva convocatoria",
         "message": "Ya se encuentra disponible la convocatoria para solicitar becas del siguiente ciclo escolar.",
         "type": "announcement",
-        "relatedRecordId": "7d1f5600-3dd2-4b36-a20a-57ec9604984d",
+        "relatedRecordId": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
         "createdAt": "2026-07-11T09:15:00Z",
         "read": false
     },

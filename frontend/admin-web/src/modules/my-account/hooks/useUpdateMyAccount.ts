@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { updateMyAccountActionAsync } from "../actions/update-my-account.action";
+import { updateMyAccountAsync } from "../api/update-my-account.api";
 
 export const useUpdateMyAccount = () => {
     return useMutation({
-        mutationFn: updateMyAccountActionAsync
+        mutationFn: updateMyAccountAsync
     });
 }

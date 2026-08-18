@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { ArrowUpRight, Eye } from "lucide-react";
 
 import { cn } from "@/lib/extensions/utils";
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import { formatPercentage } from "@/lib/extensions/formatters";
 
 interface Props {

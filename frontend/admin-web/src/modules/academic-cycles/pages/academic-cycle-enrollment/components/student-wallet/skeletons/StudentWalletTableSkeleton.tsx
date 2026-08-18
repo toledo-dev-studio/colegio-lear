@@ -1,4 +1,4 @@
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 
 export const StudentWalletTableSkeleton = ({ enableActions = true }: { enableActions?: boolean }) => {
     return (

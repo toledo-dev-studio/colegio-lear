@@ -1,16 +1,16 @@
 import { useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { Form } from "@/shared/components/form/Form";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { JobTitleRequest } from "@/interfaces/requests/job-title.request";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 import type { JobTitleTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface Props {
     isSubmitting: boolean,

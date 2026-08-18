@@ -1,7 +1,24 @@
-import { Button } from "../ui/button";
 import { LogOut, ShieldAlert } from "lucide-react";
 
+import { Button } from "../shadcn/ui/button";
+import { useLoaderStore } from "../../stores/LoaderStore";
+import { useAuthStore } from "@/modules/auth/stores/auth.store";
+import { useNavigate } from "react-router";
+
 export const ForbiddenPage = () => {
+    const navigate = useNavigate();
+    const { logout } = useAuthStore();
+    const { showLoading, hideLoading } = useLoaderStore();
+
+    const handleLogout = async () => {
+        showLoading("Cerrando sesión", "Por favor espere...");
+        await logout();
+        navigate("/auth/login");
+        setTimeout(() => {
+            hideLoading();
+        }, 500);
+    }
+
     return (
         <>
             <main className="flex-1 grid place-items-center px-4 py-12">
@@ -27,14 +44,7 @@ export const ForbiddenPage = () => {
                     </p>
 
                     <div className="mt-8">
-                        <Button
-                            size="lg"
-                            variant="destructive"
-                            onClick={() => {
-
-                            }}
-                            className="w-full sm:w-auto px-8 rounded-full"
-                        >
+                        <Button size="lg" variant="destructive-light" className="w-full sm:w-auto px-8 rounded-full" onClick={handleLogout}>
                             <LogOut className="h-4 w-4 mr-2" />
                             Cerrar sesión
                         </Button>

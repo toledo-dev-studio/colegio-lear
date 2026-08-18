@@ -1,4 +1,4 @@
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 

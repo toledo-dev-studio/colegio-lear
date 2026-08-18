@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
-import { getPagedSchoolSubjectsActionAsync } from "../actions/get-paged-school-subjects.action";
+import { getPagedSchoolSubjectsAsync } from "../api/get-paged-school-subjects.api";
 import { GET_PAGED_SCHOOL_SUBJECTS_QUERY_KEY } from "@/lib/queries-key/school-subjects-queries-key";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
@@ -22,7 +22,7 @@ export const useGetPagedSchoolSubjects = () => {
 
     const queryResult = useQuery({
         queryKey: [GET_PAGED_SCHOOL_SUBJECTS_QUERY_KEY, { query, page, pageSize, name, isActive, academicLevelId, educationLevelId }],
-        queryFn: () => getPagedSchoolSubjectsActionAsync({
+        queryFn: () => getPagedSchoolSubjectsAsync({
             query,
             page,
             pageSize,

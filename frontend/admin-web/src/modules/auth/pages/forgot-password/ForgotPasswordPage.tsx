@@ -3,11 +3,11 @@ import { Controller, useForm } from "react-hook-form";
 import { Key, Mail } from "lucide-react";
 import { toast } from "sonner";
 
-import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Button } from "@/shared/shadcn/ui/button";
 import { useAuthStore } from "../../stores/auth.store";
 import { isValidEmail } from "@/lib/extensions/validators";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import { AuthPagesHeader } from "../../components/AuthPagesHeader";
 
 export const ForgotPasswordPage = () => {

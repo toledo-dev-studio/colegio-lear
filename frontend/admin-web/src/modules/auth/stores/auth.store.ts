@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
-import { meActionAsync } from "../actions/me.action";
-import { loginActionAsync } from "../actions/login.action";
-import { logoutActionAsync } from "../actions/logout.action";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { meAsync } from "../api/me.api";
+import { loginAsync } from "../api/login.api";
+import { logoutAsync } from "../api/logout.api";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import type { AuthCredentials } from "../interfaces/auth-credentials";
-import { resetPasswordActionAsync } from "../actions/reset-password.action";
+import { resetPasswordAsync } from "../api/reset-password.api";
 import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import type { ResetPasswordRequest } from "@/interfaces/requests/reset-password.request";
-import { requestResetPasswordActionAsync } from "../actions/request-reset-password.action";
+import { requestResetPasswordAsync } from "../api/request-reset-password.api";
 import type { SecurityRolePermissionResponse } from "@/interfaces/responses/security-role-permission.response";
 
 // Store types
@@ -62,7 +62,7 @@ const checkAuthStatus = async (set: any, get: any) => {
     const { showLoading, hideLoading } = useLoaderStore.getState();
     try {
         showLoading("Validando credenciales");
-        const user = await meActionAsync();
+        const user = await meAsync();
         set({ user: { ...user }, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
         return true;
     } catch (error) {
@@ -76,7 +76,7 @@ const checkAuthStatus = async (set: any, get: any) => {
 
 const login = async (set: any, get: any, credentials: AuthCredentials) => {
     try {
-        const user = await loginActionAsync(credentials);
+        const user = await loginAsync(credentials);
         set({ user: { ...user }, authStatus: "authenticated", permissions: user.securityRole?.permissions ?? [] });
         return true;
     } catch (error) {
@@ -88,7 +88,7 @@ const login = async (set: any, get: any, credentials: AuthCredentials) => {
 
 const logout = async (get: any) => {
     try {
-        await logoutActionAsync();
+        await logoutAsync();
     } catch (error) {
         console.warn(error);
     } finally {
@@ -98,7 +98,7 @@ const logout = async (get: any) => {
 
 const requestResetPassword = async ({ email }: { email: string }) => {
     try {
-        await requestResetPasswordActionAsync({ email });
+        await requestResetPasswordAsync({ email });
         return true;
     } catch (error) {
         console.warn(error);
@@ -108,7 +108,7 @@ const requestResetPassword = async ({ email }: { email: string }) => {
 
 const resetPassword = async (credentials: ResetPasswordRequest) => {
     try {
-        await resetPasswordActionAsync({ credentials });
+        await resetPasswordAsync({ credentials });
         return true;
     } catch (error) {
         console.warn(error);

@@ -1,8 +1,8 @@
 import { Link } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
-import { Badge } from "@/shared/ui/badge";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { Badge } from "@/shared/shadcn/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/shadcn/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";

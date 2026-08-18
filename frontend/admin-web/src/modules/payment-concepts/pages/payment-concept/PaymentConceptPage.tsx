@@ -1,7 +1,7 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import { PaymentConceptForm } from "./components/PaymentConceptForm";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";

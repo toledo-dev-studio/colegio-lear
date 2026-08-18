@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Camera, User as UserIcon, X } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../shadcn/ui/tooltip";
 
 interface Props {
     value?: string;

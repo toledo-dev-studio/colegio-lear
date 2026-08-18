@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY } from "@/lib/queries-key/academic-levels-queries-key";
-import { getPagedAcademicLevelsActionAsync } from "../../actions/academic-levels/get-paged-academic-levels.action";
+import { getPagedAcademicLevelsAsync } from "../../api/academic-levels/get-paged-academic-levels.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetPagedAcademicLevels = () => {
@@ -20,7 +20,7 @@ export const useGetPagedAcademicLevels = () => {
 
     const queryResult = useQuery({
         queryKey: [GET_PAGED_ACADEMIC_LEVELS_QUERY_KEY, { query, page, pageSize, name, isActive }],
-        queryFn: () => getPagedAcademicLevelsActionAsync({
+        queryFn: () => getPagedAcademicLevelsAsync({
             query,
             page,
             pageSize,

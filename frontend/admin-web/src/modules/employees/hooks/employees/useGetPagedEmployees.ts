@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_EMPLOYEES_QUERY_KEY } from "@/lib/queries-key/employees-queries-key";
-import { getPagedEmployeesActionAsync } from "../../actions/get-paged-employees.action";
+import { getPagedEmployeesAsync } from "../../api/get-paged-employees.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetPagedEmployees = () => {
@@ -22,7 +22,7 @@ export const useGetPagedEmployees = () => {
 
     const queryResult = useQuery({
         queryKey: [GET_PAGED_EMPLOYEES_QUERY_KEY, { query, page, pageSize, fullName, isActive, securityRoleId, jobTitleId, }],
-        queryFn: () => getPagedEmployeesActionAsync({
+        queryFn: () => getPagedEmployeesAsync({
             query,
             page,
             pageSize,

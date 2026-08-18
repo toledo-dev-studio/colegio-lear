@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import type { NotificationResponse } from "@/interfaces/responses/notification.response";
-import { getPagedNotificationsActionAsync } from "../actions/get-paged-notifications.action";
-import { markNotificationAsReadActionAsync } from "../actions/mark-notification-as-read.action";
+import { getPagedNotificationsAsync } from "../api/get-paged-notifications.api";
+import { markNotificationAsReadAsync } from "../api/mark-notification-as-read.api";
 
 interface Options {
     page: number;
@@ -16,7 +16,7 @@ export const useNotifications = () => {
     const [notifications, setNotifications] = useState<NotificationResponse[]>([]);
     
     const getPagedNotificationMutation = useMutation({
-        mutationFn: (options: Options) => getPagedNotificationsActionAsync(options),
+        mutationFn: (options: Options) => getPagedNotificationsAsync(options),
         onSuccess: (response, variables) => {
             setTotalPages(response.totalPages);
             setCurrentPage(response.currentPage);
@@ -29,7 +29,7 @@ export const useNotifications = () => {
     });
 
     const markNotificationAsReadMutation = useMutation({
-        mutationFn: (options: { id: string; employeeId: string }) => markNotificationAsReadActionAsync(options),
+        mutationFn: (options: { id: string; employeeId: string }) => markNotificationAsReadAsync(options),
         onSuccess: (response) => {
             setNotifications(prev => prev.map(notification => {
                 if (notification.id === response.id)

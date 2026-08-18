@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
-import { Input } from "@/shared/ui/input";
+import { Input } from "@/shared/shadcn/ui/input";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
@@ -9,7 +9,7 @@ import { DatePicker } from "@/shared/components/date-picker/DatePicker";
 import type { AnnouncementFilter } from "@/interfaces/filters/announcement.filter";
 import { ANNOUNCEMENTS_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import type { AnnouncementsStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface Props {
     open: boolean;

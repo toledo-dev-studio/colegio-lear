@@ -2,13 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { GET_STUDENT_GUARDIANS_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
 import type { StudentGuardianResponse } from "@/interfaces/responses/student-guardian.response";
-import { createUpdateStudentGuardianForStudentActionAsync } from "../../actions/student-guardians/create-update-student-guardian-for-student";
+import { createUpdateStudentGuardianForStudentAsync } from "../../api/student-guardians/create-update-student-guardian-for-student.api";
 
 export const useCreateUpdateStudentGuardianForStudent = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: createUpdateStudentGuardianForStudentActionAsync,
+        mutationFn: createUpdateStudentGuardianForStudentAsync,
         onSuccess: (response: StudentGuardianResponse) => {
             // Set query data to avoid refetch api
             queryClient.setQueryData(

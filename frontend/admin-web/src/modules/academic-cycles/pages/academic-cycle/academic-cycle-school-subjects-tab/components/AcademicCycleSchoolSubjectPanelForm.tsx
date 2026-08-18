@@ -1,7 +1,7 @@
 import { useOutletContext } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
-import { Textarea } from "@/shared/ui/textarea";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { SearchInput } from "@/shared/components/search-input/SearchInput";
