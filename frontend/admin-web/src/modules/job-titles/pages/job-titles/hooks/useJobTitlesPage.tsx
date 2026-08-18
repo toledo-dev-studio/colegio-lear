@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import { useGetJobTitles } from "@/modules/job-titles/hooks/useGetJobTitles";
 import type { JobTitleResponse } from "@/interfaces/responses/job-title.response";
 import { useGetPagedJobTitles } from "@/modules/job-titles/hooks/useGetPagedJobTitles";

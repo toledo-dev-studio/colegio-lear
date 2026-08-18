@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import { useGetEmployees } from "@/modules/employees/hooks/employees/useGetEmployees";
 import { useGetPagedEmployees } from "@/modules/employees/hooks/employees/useGetPagedEmployees";

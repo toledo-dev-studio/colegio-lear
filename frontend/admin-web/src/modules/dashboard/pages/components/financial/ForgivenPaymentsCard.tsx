@@ -2,7 +2,7 @@ import React from "react";
 import { ArrowUpRight, HandHeart } from "lucide-react";
 
 import { cn } from "@/lib/extensions/utils";
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import { formatMoney } from "@/lib/extensions/formatters";
 
 interface Props {

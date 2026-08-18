@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { Banknote } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
+import { Input } from "@/shared/shadcn/ui/input";
 import { formatMoney } from "@/lib/extensions/formatters";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";

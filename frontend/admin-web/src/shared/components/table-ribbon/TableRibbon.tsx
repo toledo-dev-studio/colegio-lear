@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { Download, FunnelPlus, Plus, Search, X } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Button } from "@/shared/shadcn/ui/button";
 import { cn } from "@/lib/extensions/utils";
 
 interface ButtonProps {

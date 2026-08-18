@@ -2,8 +2,8 @@ import { useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Mail, Phone } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { isValidEmail, isValidPhone } from "@/lib/extensions/validators";
 import type { StudentFilter } from "@/interfaces/filters/student.filter";

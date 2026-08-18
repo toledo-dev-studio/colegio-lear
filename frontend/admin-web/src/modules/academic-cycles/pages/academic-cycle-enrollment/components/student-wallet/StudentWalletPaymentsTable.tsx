@@ -1,6 +1,6 @@
 import { Banknote } from "lucide-react";
 
-import { Badge } from "@/shared/ui/badge";
+import { Badge } from "@/shared/shadcn/ui/badge";
 import { formatMoney } from "@/lib/extensions/formatters";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { STUDENT_WALLET_PAYMENT_METHODS } from "@/lib/key-value-pairs/key-value-pair-catalogs";

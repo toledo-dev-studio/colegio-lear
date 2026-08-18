@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/shadcn/ui/button";
 import type { PropsWithChildren } from "react";
 
 interface ButtonProps {

@@ -1,54 +1,54 @@
 [
     {
-        "schoolSubjectId": "8d3a9b75-8dc9-470f-a7f1-0dba8cf57b58",
-        "teacherId": "b92c95ab-09d8-4f89-99b8-f3c3db7d0001",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
         "schoolSubject": {
             "name": "Matemáticas"
         },
         "teacher": {
             "name": "Juan",
             "firstLastName": "Pérez",
-            "secondLastName": "López",
-            "email": "juan.perez@escuela.edu.mx"
+            "secondLastName": "García",
+            "email": "juan.perez@example.com"
         }
     },
     {
-        "schoolSubjectId": "c7afc47d-f27d-4260-a728-4e2d2b3fc7d4",
-        "teacherId": "a8f8c4ef-7d69-46f7-96f3-11a5b65c0002",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
         "schoolSubject": {
             "name": "Historia"
         },
         "teacher": {
             "name": "María",
-            "firstLastName": "García",
+            "firstLastName": "López",
             "secondLastName": "Hernández",
-            "email": "maria.garcia@escuela.edu.mx"
+            "email": "maria.lopez@example.com"
         }
     },
     {
-        "schoolSubjectId": "cb7c6cc8-78f7-4903-8b4f-f2d9f6f72dd7",
-        "teacherId": "53b99cb8-cc17-4b5c-8d56-65e8f0b10003",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
         "schoolSubject": {
             "name": "Ciencias Naturales"
         },
         "teacher": {
             "name": "Carlos",
             "firstLastName": "Ramírez",
-            "secondLastName": "Soto",
-            "email": "carlos.ramirez@escuela.edu.mx"
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
         }
     },
     {
-        "schoolSubjectId": "5d589fa6-1c5d-4ecb-a01b-767c29e514dc",
-        "teacherId": "ef9d6f2d-1b77-41f5-86d8-16bd6dc70004",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
         "schoolSubject": {
             "name": "Español"
         },
         "teacher": {
             "name": "Ana",
-            "firstLastName": "Torres",
-            "secondLastName": "Vega",
-            "email": "ana.torres@escuela.edu.mx"
+            "firstLastName": "Martínez",
+            "secondLastName": "Sánchez",
+            "email": "ana.martinez@example.com"
         }
     }
 ]

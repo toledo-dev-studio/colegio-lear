@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 
-import { Input } from '@/shared/ui/input';
+import { Input } from '@/shared/shadcn/ui/input';
 import { cn } from '@/lib/extensions/utils';
 import { isValidUrl } from '@/lib/extensions/validators';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/shared/ui/alert-dialog'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/shared/shadcn/ui/alert-dialog'
 
 interface Props {
     open: boolean;

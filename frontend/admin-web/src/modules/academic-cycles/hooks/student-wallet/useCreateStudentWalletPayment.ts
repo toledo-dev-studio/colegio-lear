@@ -2,14 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { StudentWalletResponse } from "@/interfaces/responses/student-wallet.response";
 import type { StudentWalletPaymentResponse } from "@/interfaces/responses/student-wallet-payment.response";
-import { createStudentWalletPaymentActionAsync } from "../../actions/student-wallet/create-student-wallet-payment.action";
+import { createStudentWalletPaymentAsync } from "../../api/student-wallet/create-student-wallet-payment.api";
 import { GET_STUDENT_WALLET_PAYMENTS_QUERY_KEY, GET_STUDENT_WALLET_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
 
 export const useCreateStudentWalletPayment = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: createStudentWalletPaymentActionAsync,
+        mutationFn: createStudentWalletPaymentAsync,
         onSuccess: (response: StudentWalletPaymentResponse) => {
             // Invalidate query data for academic cycle wallet list to refetch api
             queryClient.setQueryData(

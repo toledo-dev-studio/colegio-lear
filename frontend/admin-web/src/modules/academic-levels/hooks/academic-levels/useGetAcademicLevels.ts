@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { getAcademicLevelsActionAsync } from "../../actions/academic-levels/get-academic-levels.action";
+import { getAcademicLevelsAsync } from "../../api/academic-levels/get-academic-levels.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetAcademicLevels = () => {
@@ -15,7 +15,7 @@ export const useGetAcademicLevels = () => {
     const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
 
     return useMutation({
-        mutationFn: () => getAcademicLevelsActionAsync({
+        mutationFn: () => getAcademicLevelsAsync({
             query,
             name,
             isActive

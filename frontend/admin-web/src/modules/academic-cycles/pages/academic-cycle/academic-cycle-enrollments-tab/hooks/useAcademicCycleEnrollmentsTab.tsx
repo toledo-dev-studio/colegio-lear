@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";
 import { useGetAcademicCycleSchoolGroups } from "@/modules/academic-cycles/hooks/academic-cycle-school-groups/useGetAcademicCycleSchoolGroups";

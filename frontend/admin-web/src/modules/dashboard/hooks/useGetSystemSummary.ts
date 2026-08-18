@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query"
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { DASHBOARD_SYSTEM_SUMMARY } from "@/lib/queries-key/dashboard-queries-key";
-import { getSystemSummaryActionAsync } from "../actions/get-system-summary.action";
+import { getSystemSummaryAsync } from "../api/get-system-summary.api";
 
 export const useGetSystemSummary = () => {
   return useQuery({
     queryKey: [DASHBOARD_SYSTEM_SUMMARY],
-    queryFn: getSystemSummaryActionAsync,
+    queryFn: getSystemSummaryAsync,
     staleTime: FIVE_MINUTES_STALE_TIME
   });
 }

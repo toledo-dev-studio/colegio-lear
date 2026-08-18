@@ -1,6 +1,6 @@
 import { Info, Trash } from "lucide-react";
 
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle } from "@/shared/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle } from "@/shared/shadcn/ui/alert-dialog";
 import { Spinner } from "../spinner/Spinner";
 import { cn } from "@/lib/extensions/utils";
 

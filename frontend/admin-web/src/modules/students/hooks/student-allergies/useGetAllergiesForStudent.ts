@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { GET_STUDENT_ALLERGIES_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
-import { getAllergiesForStudentActionAsync } from "../../actions/student-allergies/get-allergies-for-student.action.action";
+import { getAllergiesForStudentAsync } from "../../api/student-allergies/get-allergies-for-student.api";
 
 interface Options {
     studentId: string;
@@ -10,7 +10,7 @@ interface Options {
 export const useGetAllergiesForStudent = ({ studentId }: Options) => {
     const queryResult = useQuery({
         queryKey: [GET_STUDENT_ALLERGIES_QUERY_KEY, { studentId }],
-        queryFn: () => getAllergiesForStudentActionAsync({ studentId })
+        queryFn: () => getAllergiesForStudentAsync({ studentId })
     });
 
     return {

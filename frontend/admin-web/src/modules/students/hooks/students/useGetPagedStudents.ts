@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_PAGED_STUDENTS_QUERY_KEY } from "@/lib/queries-key/students-queries-key";
-import { getPagedStudentsActionAsync } from "../../actions/students/get-paged-students.action";
+import { getPagedStudentsAsync } from "../../api/students/get-paged-students.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetPagedStudents = () => {
@@ -34,7 +34,7 @@ export const useGetPagedStudents = () => {
             isActive,
             phoneNumber
         }],
-        queryFn: () => getPagedStudentsActionAsync({
+        queryFn: () => getPagedStudentsAsync({
             query,
             page,
             pageSize,

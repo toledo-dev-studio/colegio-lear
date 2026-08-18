@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import { useGetSecurityRoles } from "@/modules/security-roles/hooks/useGetSecurityRoles";
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
 import { useDeleteSecurityRoleById } from "@/modules/security-roles/hooks/useDeleteSecurityRoleById";

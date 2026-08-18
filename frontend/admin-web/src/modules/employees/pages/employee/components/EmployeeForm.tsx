@@ -3,8 +3,8 @@ import { useNavigate } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Mail, Phone, User } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
 import { Form } from "@/shared/components/form/Form";
 import { Loader } from "@/shared/components/loader/Loader";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";

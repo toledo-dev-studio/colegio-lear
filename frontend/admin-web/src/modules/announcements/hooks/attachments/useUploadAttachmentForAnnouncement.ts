@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { uploadAttachmentForAnnouncementActionAsync } from "../../actions/attachments/upload-attachment-for-announcement.action";
+import { uploadAttachmentForAnnouncementAsync } from "../../api/attachments/upload-attachment-for-announcement.api";
 
 export const useUploadAttachmentForAnnouncement = () => {
     return useMutation({
-        mutationFn: uploadAttachmentForAnnouncementActionAsync
+        mutationFn: uploadAttachmentForAnnouncementAsync
     });
 }

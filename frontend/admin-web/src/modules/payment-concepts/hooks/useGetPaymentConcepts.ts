@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { getPaymentConceptsActionAsync } from "../actions/get-payment-concepts.action";
+import { getPaymentConceptsAsync } from "../api/get-payment-concepts.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetPaymentConcepts = () => {
@@ -17,7 +17,7 @@ export const useGetPaymentConcepts = () => {
     const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
 
     return useMutation({
-        mutationFn: () => getPaymentConceptsActionAsync({
+        mutationFn: () => getPaymentConceptsAsync({
             query,
             name,
             amount,

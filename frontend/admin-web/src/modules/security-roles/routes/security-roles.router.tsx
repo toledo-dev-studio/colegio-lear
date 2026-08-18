@@ -5,7 +5,7 @@ import { AuthenticatedRoute } from "@/routes/protected.router";
 import { SecurityRolePage } from "../pages/security-role/SecurityRolePage";
 import { SecurityRolesPage } from "../pages/security-roles/SecurityRolesPage";
 
-const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
+const SystemLayout = lazy(() => import("@/layouts/SystemLayout"));
 const SecurityRolesLayout = lazy(() => import("@/modules/security-roles/layouts/SecurityRolesLayout"));
 
 export const securityRolesRouter: RouteObject = {

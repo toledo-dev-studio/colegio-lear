@@ -4,10 +4,10 @@ import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff, Lock, LogIn, Mail } from "lucide-react";
 import { toast } from "sonner";
 
-import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Button } from "@/shared/shadcn/ui/button";
 import { useAuthStore } from "../../stores/auth.store";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import { AuthPagesHeader } from "../../components/AuthPagesHeader";
 import type { AuthCredentials } from "../../interfaces/auth-credentials";
 

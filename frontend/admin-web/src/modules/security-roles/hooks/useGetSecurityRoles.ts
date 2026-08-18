@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { getSecurityRolesActionAsync } from "../actions/get-security-roles.action";
+import { getSecurityRolesAsync } from "../api/get-security-roles.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetSecurityRoles = () => {
@@ -15,7 +15,7 @@ export const useGetSecurityRoles = () => {
     const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
 
     return useMutation({
-        mutationFn: () => getSecurityRolesActionAsync({
+        mutationFn: () => getSecurityRolesAsync({
             query,
             name,
             isActive

@@ -1,7 +1,7 @@
 import { Link, useOutletContext } from "react-router";
 import { Pencil, Trash } from "lucide-react";
 
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/shadcn/ui/tooltip";
 import type { TableAction } from "@/shared/components/table/interfaces/table-action";
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import type { AcademicCycleLayoutContext } from "@/modules/academic-cycles/interfaces/academic-cycle-layout-context";

@@ -10,6 +10,7 @@ import scholarshipsRouter from "@/modules/scholarships/routes/scholarships.route
 import securityRolesRouter from "@/modules/security-roles/routes/security-roles.router";
 import paymentConceptsRouter from "@/modules/payment-concepts/routes/payment-concepts.router";
 import myAccountRouter from "@/modules/my-account/routes/my-account.router";
+import myClassesRouter from "@/modules/my-classes/routes/my-classes.router";
 import announcementsRouter from "@/modules/announcements/routes/announcements.router";
 import { NotFoundPage } from "@/shared/pages/NotFoundPage";
 import { ForbiddenRoute } from "./protected.router";
@@ -27,6 +28,8 @@ export const appRouter = createBrowserRouter([
     dashboardRouter,
     /** my-account */
     myAccountRouter,
+    /** my-classes */
+    myClassesRouter,
 
     /** students */
     studentsRouter,

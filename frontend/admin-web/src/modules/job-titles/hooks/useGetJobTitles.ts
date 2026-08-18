@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { getJobTitlesActionAsync } from "../actions/get-job-titles.action";
+import { getJobTitlesAsync } from "../api/get-job-titles.api";
 import type { JobTitleTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 
@@ -17,7 +17,7 @@ export const useGetJobTitles = () => {
     const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
 
     return useMutation({
-        mutationFn: () => getJobTitlesActionAsync({
+        mutationFn: () => getJobTitlesAsync({
             query,
             name,
             jobTitleType,

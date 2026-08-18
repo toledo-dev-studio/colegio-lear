@@ -1,7 +1,7 @@
 import { useState } from "react"
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import type { AcademicLevelResponse } from "@/interfaces/responses/academic-level.response";
 import { useGetAcademicLevels } from "@/modules/academic-levels/hooks/academic-levels/useGetAcademicLevels";
 import { useDeleteAcademicLevelById } from "@/modules/academic-levels/hooks/academic-levels/useDeleteAcademicLevel";

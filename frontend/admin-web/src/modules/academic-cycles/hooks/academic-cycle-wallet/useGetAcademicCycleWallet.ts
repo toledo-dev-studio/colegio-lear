@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { GET_ACADEMIC_CYCLE_WALLET_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
-import { getAcademicCycleWalletActionAsync } from "../../actions/academic-cycle-wallet/get-academic-cycle-wallet.action";
+import { getAcademicCycleWalletAsync } from "../../api/academic-cycle-wallet/get-academic-cycle-wallet.api";
 
 interface Options {
     academicCycleId: string;
@@ -18,7 +18,7 @@ export const useGetAcademicCycleWallet = ({ academicCycleId }: Options) => {
 
     const queryResult = useQuery({
         queryKey: [GET_ACADEMIC_CYCLE_WALLET_QUERY_KEY, { academicCycleId, query }],
-        queryFn: () => getAcademicCycleWalletActionAsync({ academicCycleId, query }),
+        queryFn: () => getAcademicCycleWalletAsync({ academicCycleId, query }),
         staleTime: FIVE_MINUTES_STALE_TIME
     });
 

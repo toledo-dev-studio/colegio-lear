@@ -1,6 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 
-import { Input } from "@/shared/ui/input";
+import { Input } from "@/shared/shadcn/ui/input";
 import type { Calendar } from "../types/calendar";
 import { SidePanel } from "../../side-panel/SidePanel";
 import { SLOT_MIN } from "../lib/schedule-calendar-consts";
@@ -11,7 +11,7 @@ import { DAY_OF_WEEKS } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { type DayOfWeekKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
 import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface Props {
     disabled: boolean;

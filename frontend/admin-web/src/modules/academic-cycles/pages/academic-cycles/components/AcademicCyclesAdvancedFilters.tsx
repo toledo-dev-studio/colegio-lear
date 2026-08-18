@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";
@@ -15,7 +15,7 @@ import { useSearchAcademicLevels } from "@/modules/academic-levels/hooks/academi
 import { type AcademicCycleStatusKey, type AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { useSearchEducationLevels } from "@/modules/academic-levels/hooks/education-levels/useSearchEducationLevels";
 import { ACADEMIC_CYCLE_PERIOD_TYPES, ACADEMIC_CYCLE_STATUSES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface Props {
     open: boolean;

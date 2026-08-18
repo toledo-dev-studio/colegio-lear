@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/shared/shadcn/ui/button";
 import { Spinner } from "../spinner/Spinner";
 import { FormPermissionProvider } from "./FormPermissionContext";
 import { usePermission } from "@/modules/auth/hooks/usePermission";

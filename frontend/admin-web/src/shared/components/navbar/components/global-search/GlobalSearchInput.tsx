@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Search, X } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
-import { useDebounce } from "@/shared/hooks/useDebounce";
+import { Input } from "@/shared/shadcn/ui/input";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useGetGlobalSearch } from "../../hooks/useGetGlobalSearch";
 import { GlobalSearchResultsDropdown } from "./GlobalSearchResultsDropdown";
 

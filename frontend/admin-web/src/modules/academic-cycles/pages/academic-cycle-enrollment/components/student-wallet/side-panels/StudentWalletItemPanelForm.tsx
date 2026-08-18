@@ -1,6 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 
-import { Switch } from "@/shared/ui/switch";
+import { Switch } from "@/shared/shadcn/ui/switch";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import { DatePicker } from "@/shared/components/date-picker/DatePicker";

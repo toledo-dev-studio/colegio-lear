@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import type { StudentGuardianResponse } from "@/interfaces/responses/student-guardian.response";
 import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 import { useGetStudentGuardiansForStudent } from "@/modules/students/hooks/student-guardians/useGetStudentGuardiansForStudent";

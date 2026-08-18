@@ -1,4 +1,4 @@
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import { getNestedValue } from "@/lib/extensions/objects";
 import { generateTemporalId } from "@/lib/extensions/utils";
 import type { TableAction } from "./interfaces/table-action";

@@ -5,7 +5,7 @@ import { EmployeePage } from "../pages/employee/EmployeePage";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 import { EmployeesPage } from "../pages/employees/EmployeesPage";
 
-const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
+const SystemLayout = lazy(() => import("@/layouts/SystemLayout"));
 const EmployeesLayout = lazy(() => import("@/modules/employees/layouts/EmployeesLayout"));
 
 export const employeesRouter: RouteObject = {

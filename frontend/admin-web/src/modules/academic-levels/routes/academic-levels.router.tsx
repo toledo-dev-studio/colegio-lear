@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
-import SystemLayout from "@/shared/layouts/SystemLayout";
+import SystemLayout from "@/layouts/SystemLayout";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 import { AcademicLevelPage } from "../pages/academic-level/AcademicLevelPage";
 import { AcademicLevelsPage } from "../pages/academic-levels/AcademicLevelsPage";

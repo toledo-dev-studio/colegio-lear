@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
-import { getSecurityRoleByIdActionAsync } from "@/modules/security-roles/actions/get-security-role-by-id.action";
+import { getSecurityRoleByIdAsync } from "@/modules/security-roles/api/get-security-role-by-id.api";
 
 export const useGetSecurityRoleByIdForEmployee = () => {
     const [securityRole, setSecurityRole] = useState<SecurityRoleResponse>();
 
     const mutation = useMutation({
-        mutationFn: (id: string) => getSecurityRoleByIdActionAsync({ id })
+        mutationFn: (id: string) => getSecurityRoleByIdAsync({ id })
     });
 
     const searchAsync = async (id: string) => {

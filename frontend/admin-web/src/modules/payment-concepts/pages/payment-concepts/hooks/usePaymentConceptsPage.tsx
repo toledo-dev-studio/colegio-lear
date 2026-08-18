@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import type { PaymentConceptResponse } from "@/interfaces/responses/payment-concept.response";
 import { useGetPaymentConcepts } from "@/modules/payment-concepts/hooks/useGetPaymentConcepts";
 import { useGetPagedPaymentConcepts } from "@/modules/payment-concepts/hooks/useGetPagedPaymentConcepts";

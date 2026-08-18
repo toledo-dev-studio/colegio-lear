@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { getStudentsActionAsync } from "../../actions/students/get-students.action";
+import { getStudentsAsync } from "../../api/students/get-students.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetStudents = () => {
@@ -19,7 +19,7 @@ export const useGetStudents = () => {
     const isActive = isValidBooleanString(searchParams.get("is-active")) ? stringToBooleanWithDefault(searchParams.get("is-active")) : undefined;
 
     return useMutation({
-        mutationFn: () => getStudentsActionAsync({
+        mutationFn: () => getStudentsAsync({
             query,
             fullName,
             curp,

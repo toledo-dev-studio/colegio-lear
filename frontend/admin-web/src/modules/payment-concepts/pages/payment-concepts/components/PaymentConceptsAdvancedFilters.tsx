@@ -2,8 +2,8 @@ import { useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Banknote } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import type { PaymentConceptFilter } from "@/interfaces/filters/payment-concept.filter";
 import { isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";

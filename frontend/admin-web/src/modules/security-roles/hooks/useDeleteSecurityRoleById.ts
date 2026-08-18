@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { deleteSecurityRoleByIdActionAsync } from "../actions/delete-security-role-by-id.action";
+import { deleteSecurityRoleByIdAsync } from "../api/delete-security-role-by-id.api";
 import { GET_PAGED_SECURITY_ROLES_QUERY_KEY, GET_SECURITY_ROLE_QUERY_KEY } from "@/lib/queries-key/security-roles-queries-key";
 
 export const useDeleteSecurityRoleById = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: deleteSecurityRoleByIdActionAsync,
+        mutationFn: deleteSecurityRoleByIdAsync,
         onSuccess: (id: string) => {
             // Remove query for single query
             queryClient.removeQueries({ queryKey: [GET_SECURITY_ROLE_QUERY_KEY, { id: id }] });

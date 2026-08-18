@@ -15,7 +15,7 @@ import {
 import { LinkModal } from "./components/LinkModal";
 import { FontSize } from "./extensions/FontSizeExtension";
 import { ResizableImage } from "./extensions/ResizableImageExtension";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 interface TipTapEditorProps {
   value: string;

@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 import { MyAccountForm } from "./components/MyAccountForm";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
 import { useUpdateMyAccount } from "../hooks/useUpdateMyAccount";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";

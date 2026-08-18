@@ -5,7 +5,7 @@ import { JobTitlePage } from "../pages/job-title/JobTitlePage";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 import { JobTitlesPage } from "../pages/job-titles/JobTitlesPage";
 
-const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
+const SystemLayout = lazy(() => import("@/layouts/SystemLayout"));
 const JobTitlesLayout = lazy(() => import("@/modules/job-titles/layouts/JobTitlesLayout"));
 
 export const jobTitlesRouter: RouteObject = {

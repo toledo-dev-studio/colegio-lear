@@ -1,4 +1,4 @@
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import type { StudentGradeResponse } from "@/interfaces/responses/student-grade.response";
 import { gradeTone, type StudentSchoolSubjectGradeSummary } from "../../lib/student-grades";
 import { useGetTeachersForAcademicCycleSchoolGroup } from "@/modules/academic-cycles/hooks/academic-cycle-school-groups/useGetTeachersForAcademicCycleSchoolGroup";

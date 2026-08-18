@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import * as DOMPurify from "isomorphic-dompurify";
 import { AlertCircle, Code2, Eye } from "lucide-react";
-import { Switch } from "@/shared/ui/switch";
+import { Switch } from "@/shared/shadcn/ui/switch";
 import { TipTapEditor } from "./TipTapEditor";
 
 /**

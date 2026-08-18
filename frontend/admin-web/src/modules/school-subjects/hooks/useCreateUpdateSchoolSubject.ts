@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { SchoolSubjectResponse } from "@/interfaces/responses/school-subject.response";
-import { createUpdateSchoolSubjectActionAsync } from "../actions/create-update-school-subject.action";
+import { createUpdateSchoolSubjectAsync } from "../api/create-update-school-subject.api";
 import { GET_PAGED_SCHOOL_SUBJECTS_QUERY_KEY, GET_SCHOOL_SUBJECT_QUERY_KEY } from "@/lib/queries-key/school-subjects-queries-key";
 
 export const useCreateUpdateSchoolSubject = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: createUpdateSchoolSubjectActionAsync,
+        mutationFn: createUpdateSchoolSubjectAsync,
         onSuccess: (response: SchoolSubjectResponse) => {
             // Invalid cache for useQueries
             queryClient.invalidateQueries({ queryKey: [GET_PAGED_SCHOOL_SUBJECTS_QUERY_KEY] });

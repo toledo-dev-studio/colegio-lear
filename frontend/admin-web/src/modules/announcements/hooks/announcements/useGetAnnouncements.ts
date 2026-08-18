@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
-import { getAnnouncementsActionAsync } from "../../actions/announcements/get-announcements.action";
+import { getAnnouncementsAsync } from "../../api/announcements/get-announcements.api";
 import type { AnnouncementsStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 
 export const useGetAnnouncements = () => {
@@ -18,7 +18,7 @@ export const useGetAnnouncements = () => {
     const status = isValidValueWithDefault(searchParams.get("status") as AnnouncementsStatusKey, undefined);
 
     return useMutation({
-        mutationFn: () => getAnnouncementsActionAsync({
+        mutationFn: () => getAnnouncementsAsync({
             query,
             name,
             publishedAt,

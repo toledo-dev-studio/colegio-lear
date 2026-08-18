@@ -1,9 +1,9 @@
 import { useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
-import { Slider } from "@/shared/ui/slider";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
+import { Slider } from "@/shared/shadcn/ui/slider";
 import { SidePanel } from "@/shared/components/side-panel/SidePanel";
 import type { ScholarshipFilter } from "@/interfaces/filters/scholarship.filter";
 import { isValidValueWithDefault, stringToBooleanWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";

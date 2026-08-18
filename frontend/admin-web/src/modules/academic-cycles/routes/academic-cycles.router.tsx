@@ -13,7 +13,7 @@ import { AcademicCycleEnrollmentsTab } from "../pages/academic-cycle/academic-cy
 import { AcademicCycleSchoolGroupsTab } from "../pages/academic-cycle/academic-cycle-school-groups-tab/AcademicCycleSchoolGroupsTab";
 import { AcademicCycleSchoolSubjectsTab } from "../pages/academic-cycle/academic-cycle-school-subjects-tab/AcademicCycleSchoolSubjectsTab";
 
-const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
+const SystemLayout = lazy(() => import("@/layouts/SystemLayout"));
 const AcademicCyclesLayout = lazy(() => import("@/modules/academic-cycles/layouts/AcademicCyclesLayout"));
 
 export const academicCyclesRouter: RouteObject = {

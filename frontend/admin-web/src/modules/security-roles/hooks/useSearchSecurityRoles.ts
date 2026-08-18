@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import type { SecurityRoleFilter } from "@/interfaces/filters/security-role.filter";
 import type { SecurityRoleResponse } from "@/interfaces/responses/security-role.response";
-import { getPagedSecurityRolesActionAsync } from "@/modules/security-roles/actions/get-paged-security-roles.action";
+import { getPagedSecurityRolesAsync } from "@/modules/security-roles/api/get-paged-security-roles.api";
 
 interface Options extends SecurityRoleFilter {
     query?: string;
@@ -14,7 +14,7 @@ export const useSearchSecurityRoles = () => {
     const [securityRoles, setSecurityRoles] = useState<SecurityRoleResponse[]>([]);
 
     const mutation = useMutation({
-        mutationFn: (options: Options) => getPagedSecurityRolesActionAsync({ ...options, page: 1, pageSize: 5 }),
+        mutationFn: (options: Options) => getPagedSecurityRolesAsync({ ...options, page: 1, pageSize: 5 }),
     });
 
     const searchAsync = async (options: Options) => {

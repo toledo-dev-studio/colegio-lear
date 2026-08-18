@@ -1,8 +1,8 @@
 {
     "summary": {
-        "outstanding": 5200,
-        "paid": 7000,
-        "total": 12200,
+        "outstanding": 5800,
+        "paid": 6500,
+        "total": 13800,
         "overdue": 2500
     },
     "items": [
@@ -13,9 +13,9 @@
             "amount": 2500,
             "allowForgiveness": false,
             "outstandingAmount": 0,
-            "dueDate": "2026-08-05T00:00:00.000Z",
+            "dueDate": "2025-08-15T00:00:00.000Z",
             "status": "paid",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -33,9 +33,9 @@
             "amount": 1800,
             "allowForgiveness": true,
             "outstandingAmount": 1800,
-            "dueDate": "2026-08-15T00:00:00.000Z",
+            "dueDate": "2025-08-31T00:00:00.000Z",
             "status": "pending",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -53,9 +53,9 @@
             "amount": 1800,
             "allowForgiveness": true,
             "outstandingAmount": 1800,
-            "dueDate": "2026-09-15T00:00:00.000Z",
+            "dueDate": "2025-09-15T00:00:00.000Z",
             "status": "overdue",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -64,7 +64,7 @@
                 "firstLastName": "Pérez",
                 "secondLastName": "García"
             },
-            "academicCycleWalletId": "11111111-1111-4444-8888-111111111111"
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
         },
         {
             "id": "d1c2b3a4-4444-4e22-8b33-444444444444",
@@ -73,9 +73,9 @@
             "amount": 1800,
             "allowForgiveness": true,
             "outstandingAmount": 0,
-            "dueDate": "2026-10-15T00:00:00.000Z",
+            "dueDate": "2025-10-15T00:00:00.000Z",
             "status": "paid",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -84,7 +84,7 @@
                 "firstLastName": "Pérez",
                 "secondLastName": "García"
             },
-            "academicCycleWalletId": "22222222-2222-4444-8888-222222222222"
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
         },
         {
             "id": "d1c2b3a4-5555-4e22-8b33-555555555555",
@@ -93,9 +93,9 @@
             "amount": 1200,
             "allowForgiveness": false,
             "outstandingAmount": 0,
-            "dueDate": "2026-08-20T00:00:00.000Z",
+            "dueDate": "2025-12-20T00:00:00.000Z",
             "status": "paid",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -113,10 +113,10 @@
             "amount": 1500,
             "allowForgiveness": false,
             "outstandingAmount": 0,
-            "dueDate": "2026-08-25T00:00:00.000Z",
+            "dueDate": "2025-08-25T00:00:00.000Z",
             "isForgiven": true,
             "status": "forgiven",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -125,7 +125,7 @@
                 "firstLastName": "Pérez",
                 "secondLastName": "García"
             },
-            "academicCycleWalletId": "33333333-3333-4444-8888-333333333333"
+            "academicCycleWalletId": "d9b3e7a1-6c84-4f5d-b2a8-7e1c9d4f3b33"
         },
         {
             "id": "d1c2b3a4-7777-4e22-8b33-777777777777",
@@ -134,9 +134,9 @@
             "amount": 900,
             "allowForgiveness": false,
             "outstandingAmount": 900,
-            "dueDate": "2026-11-05T00:00:00.000Z",
+            "dueDate": "2025-11-05T00:00:00.000Z",
             "status": "pending",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -145,7 +145,7 @@
                 "firstLastName": "Pérez",
                 "secondLastName": "García"
             },
-            "academicCycleWalletId": "44444444-4444-4444-8888-444444444444"
+            "academicCycleWalletId": "d9b3e7a1-6c84-4f5d-b2a8-7e1c9d4f3b33"
         },
         {
             "id": "d1c2b3a4-8888-4e22-8b33-888888888888",
@@ -154,9 +154,9 @@
             "amount": 600,
             "allowForgiveness": true,
             "outstandingAmount": 600,
-            "dueDate": "2026-10-30T00:00:00.000Z",
+            "dueDate": "2025-10-30T00:00:00.000Z",
             "status": "pending",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -165,7 +165,7 @@
                 "firstLastName": "Pérez",
                 "secondLastName": "García"
             },
-            "academicCycleWalletId": "55555555-5555-4444-8888-555555555555"
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
         },
         {
             "id": "d1c2b3a4-9999-4e22-8b33-999999999999",
@@ -174,9 +174,9 @@
             "amount": 1000,
             "allowForgiveness": false,
             "outstandingAmount": 0,
-            "dueDate": "2027-02-10T00:00:00.000Z",
+            "dueDate": "2026-02-10T00:00:00.000Z",
             "status": "paid",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -185,7 +185,7 @@
                 "firstLastName": "Pérez",
                 "secondLastName": "García"
             },
-            "academicCycleWalletId": "66666666-6666-4444-8888-666666666666"
+            "academicCycleWalletId": "d9b3e7a1-6c84-4f5d-b2a8-7e1c9d4f3b33"
         },
         {
             "id": "d1c2b3a4-aaaa-4e22-8b33-aaaaaaaaaaaa",
@@ -194,9 +194,9 @@
             "amount": 700,
             "allowForgiveness": false,
             "outstandingAmount": 700,
-            "dueDate": "2026-09-01T00:00:00.000Z",
+            "dueDate": "2025-09-01T00:00:00.000Z",
             "status": "overdue",
-            "academicCycleEnrollmentId": "c1000001-aaaa-4444-bbbb-111111111111",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
             "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
             "studentId": "550e8400-e29b-41d4-a716-446655440001",
             "student": {
@@ -205,7 +205,7 @@
                 "firstLastName": "Pérez",
                 "secondLastName": "García"
             },
-            "academicCycleWalletId": "77777777-7777-4444-8888-777777777777"
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
         }
     ]
 }

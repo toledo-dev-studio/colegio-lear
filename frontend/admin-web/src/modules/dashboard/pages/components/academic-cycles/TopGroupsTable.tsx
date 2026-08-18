@@ -1,6 +1,6 @@
 import React from "react";
 import { Trophy } from "lucide-react";
-import { Skeleton } from "@/shared/ui/skeleton";
+import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import type { TopSchoolGroupResponse } from "@/interfaces/responses/dashboard.response";
 
 

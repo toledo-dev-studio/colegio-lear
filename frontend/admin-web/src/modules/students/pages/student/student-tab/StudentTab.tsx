@@ -3,11 +3,11 @@ import { Controller, useForm } from "react-hook-form";
 import { Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
 
-import { Input } from "@/shared/ui/input";
-import { Switch } from "@/shared/ui/switch";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Switch } from "@/shared/shadcn/ui/switch";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { Form } from "@/shared/components/form/Form";
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
+import { useLoaderStore } from "@/stores/LoaderStore";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { MEXICAN_STATES } from "@/lib/constants/mexican-states";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
@@ -18,7 +18,7 @@ import { BLOOD_TYPES } from "@/lib/key-value-pairs/key-value-pair-catalogs";
 import { SectionTitle } from "@/shared/components/section-title/SectionTitle";
 import type { StudentLayoutContext } from "@/modules/students/interfaces/student-layout-context";
 import { useCreateUpdateStudent } from "@/modules/students/hooks/students/useCreateUpdateStudent";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/shadcn/ui/select";
 
 export const StudentTab = () => {
     // Get context from layout

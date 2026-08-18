@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import type { PagedResponse } from "@/interfaces/responses/paged.response";
 import type { StudentResponse } from "@/interfaces/responses/student.response";
-import { getPagedStudentsActionAsync } from "../../actions/students/get-paged-students.action";
+import { getPagedStudentsAsync } from "../../api/students/get-paged-students.api";
 import type { StudentFilter } from "@/interfaces/filters/student.filter";
 
 interface Options extends StudentFilter {
@@ -15,7 +15,7 @@ export const useSearchStudents = () => {
 
     const mutation = useMutation({
         mutationFn: (options: Options) =>
-            getPagedStudentsActionAsync({ ...options, page: 1, pageSize: 5 }),
+            getPagedStudentsAsync({ ...options, page: 1, pageSize: 5 }),
     });
 
     const searchAsync = async (options: Options) => {

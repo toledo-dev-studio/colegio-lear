@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query"
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
 import { DASHBOARD_TEACHERS_EMPLOYEES_SUMMARY } from "@/lib/queries-key/dashboard-queries-key";
-import { getTeacherEmployeesSummaryActionAsync } from "../actions/get-teacher-employees-summary.action";
+import { getTeacherEmployeesSummaryAsync } from "../api/get-teacher-employees-summary.api";
 
 export const useGetTeachersEmployeesSummary = () => {
     const queryResult = useQuery({
         queryKey: [DASHBOARD_TEACHERS_EMPLOYEES_SUMMARY],
-        queryFn: getTeacherEmployeesSummaryActionAsync,
+        queryFn: getTeacherEmployeesSummaryAsync,
         staleTime: FIVE_MINUTES_STALE_TIME
     });
     

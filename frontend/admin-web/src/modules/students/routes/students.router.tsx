@@ -9,7 +9,7 @@ import { StudentGuardiansTab } from "../pages/student/student-guardians-tab/Stud
 import { StudentAllergiesTab } from "../pages/student/student-allergies-tab/StudentAllergiesTab";
 import { StudentEnrollmentsTab } from "../pages/student/student-enrollments-tab/StudentEnrollmentsTab";
 
-const SystemLayout = lazy(() => import("@/shared/layouts/SystemLayout"));
+const SystemLayout = lazy(() => import("@/layouts/SystemLayout"));
 const StudentsLayout = lazy(() => import("@/modules/students/layouts/StudentsLayout"));
 
 export const studentsRouter: RouteObject = {

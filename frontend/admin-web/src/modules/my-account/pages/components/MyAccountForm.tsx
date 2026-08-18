@@ -1,6 +1,6 @@
 import { Briefcase, Key, Mail, Phone, User } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
+import { Input } from "@/shared/shadcn/ui/input";
 import { Form } from "@/shared/components/form/Form";
 import { Controller, useForm } from "react-hook-form";
 import { isValidPhone } from "@/lib/extensions/validators";

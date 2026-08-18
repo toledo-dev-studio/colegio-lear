@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import type { AcademicCycleStatusKey, AcademicPeriodTypeKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
-import { getAcademicCyclesActionAsync } from "../../actions/academic-cycles/get-academic-cycles.action";
+import { getAcademicCyclesAsync } from "../../api/academic-cycles/get-academic-cycles.api";
 
 export const useGetAcademicCycles = () => {
     const [searchParams] = useSearchParams();
@@ -23,7 +23,7 @@ export const useGetAcademicCycles = () => {
     const educationLevelId = isValidValueWithDefault(searchParams.get("education-level-id")?.trim(), undefined);
 
     return useMutation({
-        mutationFn: () => getAcademicCyclesActionAsync({
+        mutationFn: () => getAcademicCyclesAsync({
             query,
             name,
             code,

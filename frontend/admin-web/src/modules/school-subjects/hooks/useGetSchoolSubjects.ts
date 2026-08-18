@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { getSchoolSubjectsActionAsync } from "../actions/get-school-subjects.action";
+import { getSchoolSubjectsAsync } from "../api/get-school-subjects.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetSchoolSubjects = () => {
@@ -17,7 +17,7 @@ export const useGetSchoolSubjects = () => {
     const educationLevelId = isValidValueWithDefault(searchParams.get("education-level-id"), undefined);
 
     return useMutation({
-        mutationFn: () => getSchoolSubjectsActionAsync({
+        mutationFn: () => getSchoolSubjectsAsync({
             query,
             name,
             isActive,

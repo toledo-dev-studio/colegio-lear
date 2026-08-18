@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 
-import { getEmployeesActionAsync } from "../../actions/get-employees.action";
+import { getEmployeesAsync } from "../../api/get-employees.api";
 import { isValidBooleanString, isValidValueWithDefault, stringToBooleanWithDefault } from "@/lib/extensions/datatypes";
 
 export const useGetEmployees = () => {
@@ -17,7 +17,7 @@ export const useGetEmployees = () => {
     const jobTitleId = isValidValueWithDefault(searchParams.get("job-title-id"), undefined);
 
     return useMutation({
-        mutationFn: () => getEmployeesActionAsync({
+        mutationFn: () => getEmployeesAsync({
             query,
             fullName,
             isActive,

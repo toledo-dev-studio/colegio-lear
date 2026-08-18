@@ -1,8 +1,8 @@
 import { Pencil, Plus } from "lucide-react";
 
-import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
-import { Textarea } from "@/shared/ui/textarea";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Button } from "@/shared/shadcn/ui/button";
+import { Textarea } from "@/shared/shadcn/ui/textarea";
 import { isValidValueWithDefault } from "@/lib/extensions/datatypes";
 import type { EducationLevelResponse } from "@/interfaces/responses/education-level.response";
 

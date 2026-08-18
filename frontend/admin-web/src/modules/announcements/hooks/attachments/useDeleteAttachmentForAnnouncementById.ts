@@ -2,13 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { GET_ANNOUNCEMENT_QUERY_KEY } from "@/lib/queries-key/announcements-queries-key";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
-import { deleteAttachmentForAnnouncementByIdActionAsync } from "../../actions/attachments/delete-attachment-for-announcement-by-id.action";
+import { deleteAttachmentForAnnouncementByIdAsync } from "../../api/attachments/delete-attachment-for-announcement-by-id.api";
 
 export const useDeleteAttachmentForAnnouncementById = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: deleteAttachmentForAnnouncementByIdActionAsync,
+        mutationFn: deleteAttachmentForAnnouncementByIdAsync,
         onSuccess: ({ announcementId }) => {
             // Update query data to prevent refetch
             queryClient.setQueryData(

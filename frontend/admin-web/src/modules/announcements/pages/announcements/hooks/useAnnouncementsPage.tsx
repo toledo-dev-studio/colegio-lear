@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { useLoaderStore } from "@/shared/stores/LoaderStore";
-import { useDeleteRecord } from "@/shared/hooks/useDeleteRecord";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import type { AnnouncementResponse } from "@/interfaces/responses/announcement.response";
 import { useGetAnnouncements } from "@/modules/announcements/hooks/announcements/useGetAnnouncements";
 import { useGetPagedAnnouncements } from "@/modules/announcements/hooks/announcements/useGetPagedAnnouncements";
