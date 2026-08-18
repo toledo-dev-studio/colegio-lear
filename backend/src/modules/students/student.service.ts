@@ -5,6 +5,7 @@ import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 import { env } from "../../shared/config/env.config";
 import { logger } from "../../shared/lib/logger";
 import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
+import type { IStorageService } from "../../shared/services/storage.service";
 import type { IMailService } from "../../shared/services/mail.service";
 import { studentCredentialsEmail } from "../../shared/templates/email.templates";
 import type {
@@ -14,6 +15,7 @@ import type {
   CreateStudentDto,
   UpdateStudentDto,
   BloodTypeKey,
+  FileUpload,
 } from "./student.types";
 
 interface PaginationParams {
@@ -44,6 +46,7 @@ const BLOOD_TYPE_REVERSE: Record<string, BloodTypeKey> = Object.fromEntries(
 export class StudentService {
   constructor(
     private readonly prisma: PrismaClient,
+    private readonly storage: IStorageService,
     private readonly mail: IMailService,
   ) {}
 
@@ -321,6 +324,38 @@ export class StudentService {
     const updated = await this.prisma.student.update({
       where: { id },
       data: updateData,
+    });
+
+    return this.toRecord(updated as unknown as Record<string, unknown>);
+  }
+
+  /**
+   * Uploads (or replaces) a student's avatar via the injected IStorageService
+   * — same abstraction EmployeeService uses, so this is provider-agnostic
+   * (swapping STORAGE_PROVIDER to "azure" later needs no change here).
+   * Same guard as the employee self-service equivalent (uploadMyAvatar):
+   * requires the student to be active and not deleted.
+   */
+  async uploadAvatar(id: string, file: FileUpload): Promise<StudentRecord> {
+    const existing = await this.prisma.student.findUnique({ where: { id } });
+    if (!existing || existing.isDeleted || !existing.isActive) {
+      throw new NotFoundError("Student not found");
+    }
+
+    const avatar = await this.storage.upload({
+      buffer: file.buffer,
+      fileName: file.originalname,
+      mimeType: file.mimetype,
+      subfolder: "students",
+    });
+
+    if (existing.avatar) {
+      await this.storage.delete(existing.avatar);
+    }
+
+    const updated = await this.prisma.student.update({
+      where: { id },
+      data: { avatar },
     });
 
     return this.toRecord(updated as unknown as Record<string, unknown>);
