@@ -1558,6 +1558,43 @@ const swaggerOptions: swaggerJsdoc.Options = {
             academicCycleEnrollmentId: { type: "string", format: "uuid" },
           },
         },
+        // ─── Student Assists ─────────────────────────────────────────────────────
+        StudentAssistRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            academicCycleEnrollmentId: { type: "string", format: "uuid" },
+            assistDate: { type: "string", format: "date-time" },
+            status: {
+              type: "string",
+              enum: ["present", "absent"],
+              example: "absent",
+            },
+            absenceReason: {
+              type: "string",
+              nullable: true,
+              example: "Cita médica",
+              description: "Free text; null when status is present",
+            },
+          },
+        },
+        CreateStudentAssistBody: {
+          type: "object",
+          required: ["assistDate", "status"],
+          properties: {
+            assistDate: { type: "string", format: "date-time" },
+            status: { type: "string", enum: ["present", "absent"] },
+            absenceReason: { type: "string", maxLength: 1000 },
+          },
+        },
+        UpdateStudentAssistBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            status: { type: "string", enum: ["present", "absent"] },
+            absenceReason: { type: "string", maxLength: 1000, nullable: true },
+          },
+        },
         // ─── School Subject Tasks ────────────────────────────────────────────────
         SchoolSubjectTaskAttachmentRecord: {
           type: "object",

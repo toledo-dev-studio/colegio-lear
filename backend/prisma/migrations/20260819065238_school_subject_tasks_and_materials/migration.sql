@@ -232,6 +232,9 @@ ALTER TABLE "core"."student_wallet_items" ADD CONSTRAINT "student_wallet_items_a
 ALTER TABLE "core"."student_wallet_items" ADD CONSTRAINT "student_wallet_items_academic_cycle_wallet_id_fkey" FOREIGN KEY ("academic_cycle_wallet_id") REFERENCES "core"."academic_cycle_wallet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "core"."student_wallet_items" ADD CONSTRAINT "student_wallet_items_academic_cycle_enrollment_id_fkey" FOREIGN KEY ("academic_cycle_enrollment_id") REFERENCES "core"."academic_cycle_enrollments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "core"."student_wallet_payments" ADD CONSTRAINT "student_wallet_payments_academic_cycle_id_fkey" FOREIGN KEY ("academic_cycle_id") REFERENCES "core"."academic_cycles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey

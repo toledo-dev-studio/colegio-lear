@@ -29,6 +29,7 @@ import academicCycleRoutes from "./modules/academic-cycles/academic-cycle.routes
 import academicCycleSchoolGroupStudentRoutes from "./modules/academic-cycles/academic-cycle-school-group-student.routes";
 import studentGradeStudentRoutes from "./modules/academic-cycles/student-grade-student.routes";
 import studentWalletStudentRoutes from "./modules/academic-cycles/student-wallet-student.routes";
+import studentAssistStudentRoutes from "./modules/academic-cycles/student-assist-student.routes";
 import schoolSubjectTaskStudentRoutes from "./modules/academic-cycles/school-subject-task-student.routes";
 import schoolSubjectMaterialStudentRoutes from "./modules/academic-cycles/school-subject-material-student.routes";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
@@ -89,6 +90,7 @@ app.use("/academic-cycles", schoolSubjectMaterialStudentRoutes);
 app.use("/academic-cycles", academicCycleSchoolGroupStudentRoutes);
 app.use("/academic-cycles", studentGradeStudentRoutes);
 app.use("/academic-cycles", studentWalletStudentRoutes);
+app.use("/academic-cycles", studentAssistStudentRoutes);
 
 /* --- Protected Routes (authentication required) --- */
 app.use(authenticate);

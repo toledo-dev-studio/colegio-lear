@@ -632,6 +632,7 @@ model AcademicCycleEnrollment {
   grades      StudentGrade[]
   walletItems StudentWalletItem[]
   payments    StudentWalletPayment[]
+  assists     StudentAssist[]
 
   @@map("academic_cycle_enrollments")
   @@schema("core")
@@ -768,5 +769,30 @@ model SchoolSubjectMaterial {
   createdAt                    DateTime                   @default(now()) @map("created_at")
 
   @@map("school_subject_materials")
+  @@schema("core")
+}
+
+// ─── Student Assist ────────────────────────────────────────────────────────────
+// Attendance is recorded per day (not per subject) — one row per enrollment
+// per day, enforced by the unique constraint below.
+
+enum AssistStatus {
+  present @map("present")
+  absent  @map("absent")
+
+  @@schema("core")
+}
+
+model StudentAssist {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  assistDate                DateTime                @map("assist_date")
+  status                    AssistStatus            @default(present)
+  absenceReason             String?                 @map("absence_reason") @db.VarChar(1000)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  createdAt                 DateTime                @default(now()) @map("created_at")
+
+  @@unique([academicCycleEnrollmentId, assistDate])
+  @@map("student_assists")
   @@schema("core")
 }

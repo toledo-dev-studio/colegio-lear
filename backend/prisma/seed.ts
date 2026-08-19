@@ -1511,6 +1511,31 @@ async function main() {
     return GRADE_VARIANTS[seed % GRADE_VARIANTS.length]!;
   }
 
+  // --- Attendance (last 10 weekdays ending today, computed at seed-run
+  // time) — dynamic on purpose, so the student portal's default "current
+  // week" filter always has real data no matter when the seed is run.
+  const ABSENCE_REASONS = [
+    "Cita médica",
+    "Enfermedad",
+    "Trámite familiar",
+    "Viaje familiar",
+  ] as const;
+
+  function getRecentWeekdaysUTC(count: number): Date[] {
+    const days: Date[] = [];
+    const cursor = new Date();
+    cursor.setUTCHours(0, 0, 0, 0);
+    while (days.length < count) {
+      const dow = cursor.getUTCDay(); // 0 = Sunday, 6 = Saturday
+      if (dow !== 0 && dow !== 6) {
+        days.push(new Date(cursor));
+      }
+      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    }
+    return days.reverse(); // oldest first
+  }
+  const RECENT_WEEKDAYS = getRecentWeekdaysUTC(10);
+
   const studentPassword = await bcrypt.hash("Estudiante123!", BCRYPT_ROUNDS);
 
   interface GroupSeedConfig {
@@ -1539,6 +1564,7 @@ async function main() {
   let totalPendingCount = 0;
   let totalAllergiesCreated = 0;
   let totalGradesCreated = 0;
+  let totalAssistsCreated = 0;
 
   for (const config of GROUP_CONFIGS) {
     const group = GROUPS_BY_KEY[config.key];
@@ -1764,6 +1790,27 @@ async function main() {
         }
       }
 
+      // Attendance — only create if this enrollment doesn't have any yet.
+      // ~12% absent, rotating through a few realistic reasons.
+      const existingAssists = await prisma.studentAssist.count({
+        where: { academicCycleEnrollmentId: enrollment.id },
+      });
+      if (existingAssists === 0) {
+        for (let d = 0; d < RECENT_WEEKDAYS.length; d++) {
+          const assistSeed = globalStudentSeq * 17 + d * 5;
+          const isAbsent = assistSeed % 8 === 0;
+          await prisma.studentAssist.create({
+            data: {
+              academicCycleEnrollmentId: enrollment.id,
+              assistDate: RECENT_WEEKDAYS[d]!,
+              status: isAbsent ? "absent" : "present",
+              absenceReason: isAbsent ? pick(ABSENCE_REASONS, assistSeed) : null,
+            },
+          });
+          totalAssistsCreated++;
+        }
+      }
+
       if (category === 3) totalScholarshipCount++;
       else if (category === 4) totalForgivenCount++;
       else if (category === 5) totalPendingCount++;
@@ -1778,6 +1825,9 @@ async function main() {
   );
   console.log(`  ✓ Student allergies: ${totalAllergiesCreated} records`);
   console.log(`  ✓ Student grades: ${totalGradesCreated} records`);
+  console.log(
+    `  ✓ Student assists: ${totalAssistsCreated} records (last ${RECENT_WEEKDAYS.length} weekdays per enrollment)`,
+  );
 
   // --- Announcements (with realistic HTML content) ─────────────────────────
 

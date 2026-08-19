@@ -37,6 +37,12 @@ import {
   createStudentWalletPaymentSchema,
 } from "./student-wallet.schema";
 import {
+  studentAssistIdParamSchema,
+  studentAssistPagedQuerySchema,
+  createStudentAssistSchema,
+  updateStudentAssistSchema,
+} from "./student-assist.schema";
+import {
   schoolSubjectTaskParentParamsSchema,
   schoolSubjectTaskIdParamsSchema,
   schoolSubjectTaskAttachmentIdParamsSchema,
@@ -91,6 +97,12 @@ import {
   updateItem as updateStudentWalletItem,
   createPayment as createStudentWalletPayment,
 } from "./student-wallet.controller";
+import {
+  findAllPaged as findAllAssistsPaged,
+  create as createAssist,
+  update as updateAssist,
+  remove as removeAssist,
+} from "./student-assist.controller";
 import {
   findAllPaged as findAllTasksPaged,
   create as createTask,
@@ -1297,6 +1309,176 @@ router.get(
   authorize("academic-cycles"),
   validate(academicCycleEnrollmentIdParamSchema, "params"),
   findAllGrades,
+);
+
+// ─── Student Assists (attendance) ────────────────────────────────────────────
+// authorize("my-classes") — taking attendance is a day-to-day teacher action,
+// same reasoning as tasks/materials, not an "academic-cycles" configuration
+// change. The GET below shares its exact URL with
+// student-assist-student.routes.ts (mounted separately, before this router,
+// under gateStudentSession) — see that file for how the two audiences coexist.
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/assists:
+ *   get:
+ *     tags:
+ *       - Student Assists
+ *     summary: List attendance records for an enrollment (paginated, optional date range)
+ *     description: No implicit default date range is applied when fromDate/toDate are omitted.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - in: query
+ *         name: pageSize
+ *         schema: { type: integer, minimum: 1, maximum: 100, default: 10 }
+ *       - in: query
+ *         name: fromDate
+ *         schema: { type: string, format: date }
+ *         description: Inclusive lower bound (ISO or YYYY-MM-DD)
+ *       - in: query
+ *         name: toDate
+ *         schema: { type: string, format: date }
+ *         description: Inclusive upper bound (ISO or YYYY-MM-DD)
+ *     responses:
+ *       200:
+ *         description: Paginated list of attendance records
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/StudentAssistRecord' }
+ *                 totalPages: { type: integer }
+ *                 currentPage: { type: integer }
+ *                 itemsCount: { type: integer }
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ *   post:
+ *     tags:
+ *       - Student Assists
+ *     summary: Create an attendance record for a single day
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/CreateStudentAssistBody' }
+ *     responses:
+ *       201:
+ *         description: Attendance record created
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/StudentAssistRecord' }
+ *       404:
+ *         description: Academic cycle or enrollment not found
+ *       409:
+ *         description: A record already exists for this enrollment on this day
+ */
+router.get(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/assists",
+  authorize("my-classes"),
+  validate(academicCycleEnrollmentIdParamSchema, "params"),
+  validate(studentAssistPagedQuerySchema, "query"),
+  findAllAssistsPaged,
+);
+
+router.post(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/assists",
+  authorize("my-classes"),
+  validate(academicCycleEnrollmentIdParamSchema, "params"),
+  validate(createStudentAssistSchema, "body"),
+  createAssist,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/enrollments/{academicCycleEnrollmentId}/assists/{id}:
+ *   patch:
+ *     tags:
+ *       - Student Assists
+ *     summary: Update an attendance record
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/UpdateStudentAssistBody' }
+ *     responses:
+ *       200:
+ *         description: Attendance record updated
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/StudentAssistRecord' }
+ *       404:
+ *         description: Attendance record not found
+ *   delete:
+ *     tags:
+ *       - Student Assists
+ *     summary: Delete an attendance record
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleEnrollmentId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Attendance record not found
+ */
+router.patch(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/assists/:id",
+  authorize("my-classes"),
+  validate(studentAssistIdParamSchema, "params"),
+  validate(updateStudentAssistSchema, "body"),
+  updateAssist,
+);
+
+router.delete(
+  "/:academicCycleId/enrollments/:academicCycleEnrollmentId/assists/:id",
+  authorize("my-classes"),
+  validate(studentAssistIdParamSchema, "params"),
+  removeAssist,
 );
 
 // ─── Student Wallet ───────────────────────────────────────────────────────────
