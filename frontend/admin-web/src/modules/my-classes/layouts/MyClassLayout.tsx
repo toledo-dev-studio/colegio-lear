@@ -1,5 +1,5 @@
 import { matchPath, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router";
-import { ClipboardCheck } from "lucide-react";
+import { BookOpen, ClipboardCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/extensions/utils";
@@ -19,6 +19,12 @@ const TABS: Tab[] = [
         to: "",
         label: "Asistencias",
         icon: ClipboardCheck,
+        protected: false
+    },
+    {
+        to: "school-subjects",
+        label: "Materias escolares",
+        icon: BookOpen,
         protected: false
     }
 ];

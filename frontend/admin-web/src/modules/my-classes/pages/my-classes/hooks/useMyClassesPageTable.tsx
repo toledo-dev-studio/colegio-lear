@@ -27,7 +27,14 @@ export const useMyClassesPageTable = () => {
         {
             key: "academicCycle",
             render: ({ academicCycle }: MyClassResponse) => (
-                academicCycle ? `${academicCycle.name} (${academicCycle.code})` : "-"
+                <Link to={`/academic-cycles/${academicCycle?.id}`}>
+                    <span className="text-primary">
+                        {academicCycle ? `${academicCycle.name}` : "-"}
+                    </span>
+                    <div className="text-xs text-muted-foreground truncate max-w-xs">
+                        {academicCycle ? `${academicCycle.code}` : "-"}
+                    </div>
+                </Link>
             )
         },
         {

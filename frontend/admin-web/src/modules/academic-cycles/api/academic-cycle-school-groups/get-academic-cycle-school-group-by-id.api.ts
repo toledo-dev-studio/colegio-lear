@@ -18,7 +18,7 @@ export const getAcademicCycleSchoolGroupByIdAsync = async ({ id, academicCycleId
         if (!record)
             throw new Error("No se encontró el registro solicitado");
         const { data: calendars } = await api.get<AcademicCycleSchoolGroupCalendarResponse[]>("/academic-cycles/school-groups/calendars.json");
-        record.calendars = calendars;
+        record.calendars = calendars.filter(calendar => calendar.academicCycleSchoolGroupId === id);
         return record;
     }
 

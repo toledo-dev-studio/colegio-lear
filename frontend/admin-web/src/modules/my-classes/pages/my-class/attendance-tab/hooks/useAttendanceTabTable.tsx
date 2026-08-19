@@ -1,4 +1,3 @@
-import { cn } from "@/lib/extensions/utils";
 import { Input } from "@/shared/shadcn/ui/input";
 import { Badge } from "@/shared/shadcn/ui/badge";
 import { Switch } from "@/shared/shadcn/ui/switch";
@@ -6,6 +5,7 @@ import type { AssistStatusKey } from "@/lib/key-value-pairs/key-value-pair-types
 import type { TableProperty } from "@/shared/components/table/interfaces/table-property";
 import type { AcademicCycleEnrollmentResponse } from "@/interfaces/responses/academic-cycle-enrollment.response";
 import type { AttendanceRecord } from "./useAttendanceTab";
+import { Link } from "react-router";
 
 interface Options {
     records: Record<string, AttendanceRecord>;
@@ -31,12 +31,14 @@ export const useAttendanceTabTable = ({ records, savedSnapshot, loggedInUserCanW
             render: ({ student }: AcademicCycleEnrollmentResponse) => {
                 const fullName = student ? [student.name, student.firstLastName, student.secondLastName].filter(Boolean).join(" ") : "-";
                 return (
-                    <div className="flex flex-col">
-                        <span className="font-medium">{fullName}</span>
-                        {student && (
-                            <span className="text-xs text-muted-foreground">{student.enrollment}</span>
-                        )}
-                    </div>
+                    <Link to={`/students/${student?.id}`}>
+                        <div className="flex flex-col text-primary">
+                            <span className="font-medium">{fullName}</span>
+                            {student && (
+                                <span className="text-xs text-muted-foreground">{student.enrollment}</span>
+                            )}
+                        </div>
+                    </Link>
                 )
             }
         },
@@ -46,14 +48,11 @@ export const useAttendanceTabTable = ({ records, savedSnapshot, loggedInUserCanW
                 const record = records[id] ?? { status: "present" as AssistStatusKey, absenceReason: "" };
                 const isPresent = record.status === "present";
                 return (
-                    <div className="flex items-center gap-x-3">
+                    <div className="flex flex-col gap-x-3">
                         <Switch
                             disabled={!loggedInUserCanWrite}
                             checked={isPresent}
                             onCheckedChange={(checked: boolean) => onStatusChange(id, checked ? "present" : "absent")} />
-                        <span className={cn("text-sm", isPresent ? "text-success" : "text-destructive")}>
-                            {isPresent ? "Asistió" : "No asistió"}
-                        </span>
                     </div>
                 )
             }

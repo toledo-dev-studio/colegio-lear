@@ -11,10 +11,12 @@ interface Options {
 export const getCalendarsForAcademicCycleSchoolGroupAsync = async ({ academicCycleId, academicCycleSchoolGroupId }: Options): Promise<AcademicCycleSchoolGroupCalendarResponse[]> => {
     await sleep();
 
-    let endpoint = `/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/calendars`;
+    const endpoint = `/academic-cycles/${academicCycleId}/school-groups/${academicCycleSchoolGroupId}/calendars`;
 
-    if (IS_MOCKABLE)
-        endpoint = "/academic-cycles/school-groups/calendars.json";
+    if (IS_MOCKABLE) {
+        const { data } = await api.get<AcademicCycleSchoolGroupCalendarResponse[]>("/academic-cycles/school-groups/calendars.json");
+        return data.filter(calendar => calendar.academicCycleSchoolGroupId === academicCycleSchoolGroupId);
+    }
 
     const { data } = await api.get<AcademicCycleSchoolGroupCalendarResponse[]>(endpoint);
 
