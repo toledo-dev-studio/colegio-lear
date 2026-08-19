@@ -1558,6 +1558,41 @@ const swaggerOptions: swaggerJsdoc.Options = {
             academicCycleEnrollmentId: { type: "string", format: "uuid" },
           },
         },
+        // ─── Chats ───────────────────────────────────────────────────────────────
+        ChatRecord: {
+          type: "object",
+          description: "One entry per teacher currently teaching the enrollment's group — derived from the class schedule, not a stored entity.",
+          properties: {
+            enrollmentId: { type: "string", format: "uuid" },
+            teacherId: { type: "string", format: "uuid" },
+            teacher: { $ref: "#/components/schemas/Employee" },
+            schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            lastMessage: { type: "string", nullable: true },
+            lastMessageAt: { type: "string", format: "date-time", nullable: true },
+            unreadCount: { type: "integer", example: 0 },
+          },
+        },
+        ChatMessageRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            chatId: {
+              type: "string",
+              format: "uuid",
+              description: "Equal to the teacher's id — identifies the conversation",
+            },
+            sentBy: { type: "string", enum: ["student", "teacher"] },
+            content: { type: "string", example: "Hola profe, tengo una duda" },
+            sentAt: { type: "string", format: "date-time" },
+          },
+        },
+        SendChatMessageBody: {
+          type: "object",
+          required: ["content"],
+          properties: {
+            content: { type: "string", minLength: 1, maxLength: 2000 },
+          },
+        },
         // ─── Student Assists ─────────────────────────────────────────────────────
         StudentAssistRecord: {
           type: "object",

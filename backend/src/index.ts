@@ -25,6 +25,7 @@ import announcementRoutes from "./modules/announcements/announcement.routes";
 import attachmentRoutes from "./modules/attachments/attachment.routes";
 import studentRoutes from "./modules/students/student.routes";
 import studentMeRoutes from "./modules/students/student-me.routes";
+import chatRoutes from "./modules/chats/chat.routes";
 import academicCycleRoutes from "./modules/academic-cycles/academic-cycle.routes";
 import academicCycleSchoolGroupStudentRoutes from "./modules/academic-cycles/academic-cycle-school-group-student.routes";
 import studentGradeStudentRoutes from "./modules/academic-cycles/student-grade-student.routes";
@@ -71,6 +72,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
  * is fully handled by this router and never falls through to it.
  */
 app.use("/students/me", studentMeRoutes);
+app.use("/students", chatRoutes);
 
 /*
  * Student portal routes with their own URLs (no employee-side counterpart

@@ -1222,6 +1222,16 @@ async function main() {
 
   console.log(`  ✓ Class schedule: ${calendarEntries.length} calendar entries`);
 
+  // Distinct teachers per group, derived from the same calendar entries —
+  // matches exactly what AcademicCycleSchoolGroupService.findAllTeachers
+  // (and therefore ChatService) computes at request time.
+  const groupToTeacherIds = new Map<string, string[]>();
+  for (const entry of calendarEntries) {
+    const list = groupToTeacherIds.get(entry.academicCycleSchoolGroupId) ?? [];
+    if (!list.includes(entry.teacherId)) list.push(entry.teacherId);
+    groupToTeacherIds.set(entry.academicCycleSchoolGroupId, list);
+  }
+
   // --- School subject tasks & materials (test content for GET .../tasks and .../materials) ---
   // Real files, uploaded through the same storageService the app uses (not a
   // seed-only shortcut) — so /uploads URLs actually resolve once the server
@@ -1565,6 +1575,7 @@ async function main() {
   let totalAllergiesCreated = 0;
   let totalGradesCreated = 0;
   let totalAssistsCreated = 0;
+  let totalChatMessagesCreated = 0;
 
   for (const config of GROUP_CONFIGS) {
     const group = GROUPS_BY_KEY[config.key];
@@ -1811,6 +1822,28 @@ async function main() {
         }
       }
 
+      // Chat messages — one opening message per teacher currently teaching
+      // this enrollment's group (only sentBy: "student" — nothing creates
+      // sentBy: "teacher" messages yet, pending the teacher module).
+      const existingChatMessages = await prisma.studentChatMessage.count({
+        where: { academicCycleEnrollmentId: enrollment.id },
+      });
+      if (existingChatMessages === 0) {
+        const teacherIds = groupToTeacherIds.get(enrollment.academicCycleSchoolGroupId) ?? [];
+        for (let t = 0; t < teacherIds.length; t++) {
+          await prisma.studentChatMessage.create({
+            data: {
+              academicCycleEnrollmentId: enrollment.id,
+              teacherId: teacherIds[t]!,
+              sentBy: "student",
+              content: "Hola profe, tengo una duda sobre la última tarea. ¿Podría ayudarme?",
+              sentAt: RECENT_WEEKDAYS[RECENT_WEEKDAYS.length - 1 - (t % RECENT_WEEKDAYS.length)]!,
+            },
+          });
+          totalChatMessagesCreated++;
+        }
+      }
+
       if (category === 3) totalScholarshipCount++;
       else if (category === 4) totalForgivenCount++;
       else if (category === 5) totalPendingCount++;
@@ -1827,6 +1860,9 @@ async function main() {
   console.log(`  ✓ Student grades: ${totalGradesCreated} records`);
   console.log(
     `  ✓ Student assists: ${totalAssistsCreated} records (last ${RECENT_WEEKDAYS.length} weekdays per enrollment)`,
+  );
+  console.log(
+    `  ✓ Student chat messages: ${totalChatMessagesCreated} records (1 per teacher teaching each group)`,
   );
 
   // --- Announcements (with realistic HTML content) ─────────────────────────

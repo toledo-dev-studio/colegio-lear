@@ -199,6 +199,7 @@ model Employee {
   jobTitle                    JobTitle                     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
   academicCycleGroupCalendars AcademicCycleGroupCalendar[]
   notifications               Notification[]
+  studentChatMessages         StudentChatMessage[]
   createdAt                   DateTime                     @default(now()) @map("created_at")
 
   @@map("employees")
@@ -629,10 +630,11 @@ model AcademicCycleEnrollment {
   createdAt                  DateTime                      @default(now()) @map("created_at")
   updatedAt                  DateTime                      @updatedAt @map("updated_at")
 
-  grades      StudentGrade[]
-  walletItems StudentWalletItem[]
-  payments    StudentWalletPayment[]
-  assists     StudentAssist[]
+  grades       StudentGrade[]
+  walletItems  StudentWalletItem[]
+  payments     StudentWalletPayment[]
+  assists      StudentAssist[]
+  chatMessages StudentChatMessage[]
 
   @@map("academic_cycle_enrollments")
   @@schema("core")
@@ -794,5 +796,36 @@ model StudentAssist {
 
   @@unique([academicCycleEnrollmentId, assistDate])
   @@map("student_assists")
+  @@schema("core")
+}
+
+// ─── Student Chat Message ──────────────────────────────────────────────────────
+// No separate "chat"/"conversation" model — a conversation is just the pair
+// (enrollment, teacher); the list of conversations is derived from the
+// group's calendar (see AcademicCycleSchoolGroupService.findAllTeachers,
+// reused by ChatService), same as the existing "teachers" endpoint.
+
+enum ChatMessageSender {
+  student @map("student")
+  teacher @map("teacher")
+
+  @@schema("core")
+}
+
+model StudentChatMessage {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  teacherId                 String                  @map("teacher_id") @db.Uuid
+  sentBy                    ChatMessageSender       @map("sent_by")
+  content                   String                  @db.VarChar(2000)
+  sentAt                    DateTime                @default(now()) @map("sent_at")
+  // Only meaningful for sentBy: teacher — marks whether the student has
+  // opened this conversation since. Always false in practice today: nothing
+  // creates sentBy: teacher messages yet (pending the teacher module).
+  read                      Boolean                 @default(false)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  teacher                   Employee                @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@map("student_chat_messages")
   @@schema("core")
 }
