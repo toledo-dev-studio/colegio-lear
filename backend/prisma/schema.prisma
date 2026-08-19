@@ -199,6 +199,7 @@ model Employee {
   jobTitle                    JobTitle                     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
   academicCycleGroupCalendars AcademicCycleGroupCalendar[]
   notifications               Notification[]
+  studentChatMessages         StudentChatMessage[]
   createdAt                   DateTime                     @default(now()) @map("created_at")
 
   @@map("employees")
@@ -488,13 +489,15 @@ model AcademicCycle {
   createdAt           DateTime            @default(now()) @map("created_at")
   updatedAt           DateTime            @updatedAt @map("updated_at")
 
-  schoolSubjects        AcademicCycleSchoolSubject[]
-  walletItems           AcademicCycleWallet[]
-  groups                AcademicCycleGroup[]
-  groupCalendars        AcademicCycleGroupCalendar[]
-  enrollments           AcademicCycleEnrollment[]
-  studentWalletItems    StudentWalletItem[]
-  studentWalletPayments StudentWalletPayment[]
+  schoolSubjects         AcademicCycleSchoolSubject[]
+  walletItems            AcademicCycleWallet[]
+  groups                 AcademicCycleGroup[]
+  groupCalendars         AcademicCycleGroupCalendar[]
+  enrollments            AcademicCycleEnrollment[]
+  studentWalletItems     StudentWalletItem[]
+  studentWalletPayments  StudentWalletPayment[]
+  schoolSubjectTasks     SchoolSubjectTask[]
+  schoolSubjectMaterials SchoolSubjectMaterial[]
 
   @@map("academic_cycles")
   @@schema("core")
@@ -510,6 +513,8 @@ model AcademicCycleSchoolSubject {
   academicCycle   AcademicCycle                @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
   schoolSubject   SchoolSubject                @relation(fields: [schoolSubjectId], references: [id], onDelete: Restrict)
   calendars       AcademicCycleGroupCalendar[]
+  tasks           SchoolSubjectTask[]
+  materials       SchoolSubjectMaterial[]
 
   @@unique([academicCycleId, schoolSubjectId])
   @@map("academic_cycle_school_subjects")
@@ -566,6 +571,8 @@ model AcademicCycleGroup {
   academicCycle         AcademicCycle                  @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
   calendars             AcademicCycleGroupCalendar[]
   enrollments           AcademicCycleEnrollment[]
+  tasks                 SchoolSubjectTask[]
+  materials             SchoolSubjectMaterial[]
   createdAt             DateTime                       @default(now()) @map("created_at")
   updatedAt             DateTime                       @updatedAt @map("updated_at")
 
@@ -623,9 +630,11 @@ model AcademicCycleEnrollment {
   createdAt                  DateTime                      @default(now()) @map("created_at")
   updatedAt                  DateTime                      @updatedAt @map("updated_at")
 
-  grades      StudentGrade[]
-  walletItems StudentWalletItem[]
-  payments    StudentWalletPayment[]
+  grades       StudentGrade[]
+  walletItems  StudentWalletItem[]
+  payments     StudentWalletPayment[]
+  assists      StudentAssist[]
+  chatMessages StudentChatMessage[]
 
   @@map("academic_cycle_enrollments")
   @@schema("core")
@@ -700,5 +709,123 @@ model StudentWalletPayment {
   createdAt                 DateTime                @default(now()) @map("created_at")
 
   @@map("student_wallet_payments")
+  @@schema("core")
+}
+
+// ─── School Subject Task ──────────────────────────────────────────────────────
+// Assigned by a teacher to a specific group for a subject they teach in a
+// given cycle. No create/update endpoint exists for teachers yet (pending
+// the not-yet-designed "my-classes" teacher module) — today only employees
+// with authorize("my-classes") writes (SuperAdmin/Admin in the seeded roles)
+// can manage these; the student portal only ever reads them.
+
+model SchoolSubjectTask {
+  id                           String                        @id @default(uuid()) @db.Uuid
+  title                        String                        @db.VarChar(200)
+  description                  String?                       @db.VarChar(2000)
+  dueDate                      DateTime                      @map("due_date")
+  academicCycleId              String                        @map("academic_cycle_id") @db.Uuid
+  academicCycleSchoolGroupId   String                        @map("academic_cycle_school_group_id") @db.Uuid
+  academicCycleSchoolSubjectId String                        @map("academic_cycle_school_subject_id") @db.Uuid
+  academicCycle                AcademicCycle                 @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleSchoolGroup     AcademicCycleGroup            @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Cascade)
+  academicCycleSchoolSubject   AcademicCycleSchoolSubject    @relation(fields: [academicCycleSchoolSubjectId], references: [id], onDelete: Cascade)
+  createdAt                    DateTime                      @default(now()) @map("created_at")
+  attachments                  SchoolSubjectTaskAttachment[]
+
+  @@map("school_subject_tasks")
+  @@schema("core")
+}
+
+// A task can have several attachments (unlike materials, which have exactly
+// one) — kept as its own table rather than reusing the generic Attachment
+// model, which has a hard FK to Announcement only (attachments.related_record_id
+// -> announcements.id), not a polymorphic relation.
+model SchoolSubjectTaskAttachment {
+  id                  String            @id @default(uuid()) @db.Uuid
+  url                 String            @db.VarChar(500)
+  name                String            @db.VarChar(300)
+  extension           String            @db.VarChar(20)
+  schoolSubjectTaskId String            @map("school_subject_task_id") @db.Uuid
+  schoolSubjectTask   SchoolSubjectTask @relation(fields: [schoolSubjectTaskId], references: [id], onDelete: Cascade)
+
+  @@map("school_subject_task_attachments")
+  @@schema("core")
+}
+
+// ─── School Subject Material ──────────────────────────────────────────────────
+// Exactly one attachment per material (unlike tasks) — embedded directly
+// here instead of a separate table, since the relationship is 1:1 and
+// required (a material with no file makes no sense).
+model SchoolSubjectMaterial {
+  id                           String                     @id @default(uuid()) @db.Uuid
+  academicCycleId              String                     @map("academic_cycle_id") @db.Uuid
+  academicCycleSchoolGroupId   String                     @map("academic_cycle_school_group_id") @db.Uuid
+  academicCycleSchoolSubjectId String                     @map("academic_cycle_school_subject_id") @db.Uuid
+  attachmentUrl                String                     @map("attachment_url") @db.VarChar(500)
+  attachmentName               String                     @map("attachment_name") @db.VarChar(300)
+  attachmentExtension          String                     @map("attachment_extension") @db.VarChar(20)
+  academicCycle                AcademicCycle              @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleSchoolGroup     AcademicCycleGroup         @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Cascade)
+  academicCycleSchoolSubject   AcademicCycleSchoolSubject @relation(fields: [academicCycleSchoolSubjectId], references: [id], onDelete: Cascade)
+  createdAt                    DateTime                   @default(now()) @map("created_at")
+
+  @@map("school_subject_materials")
+  @@schema("core")
+}
+
+// ─── Student Assist ────────────────────────────────────────────────────────────
+// Attendance is recorded per day (not per subject) — one row per enrollment
+// per day, enforced by the unique constraint below.
+
+enum AssistStatus {
+  present @map("present")
+  absent  @map("absent")
+
+  @@schema("core")
+}
+
+model StudentAssist {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  assistDate                DateTime                @map("assist_date")
+  status                    AssistStatus            @default(present)
+  absenceReason             String?                 @map("absence_reason") @db.VarChar(1000)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  createdAt                 DateTime                @default(now()) @map("created_at")
+
+  @@unique([academicCycleEnrollmentId, assistDate])
+  @@map("student_assists")
+  @@schema("core")
+}
+
+// ─── Student Chat Message ──────────────────────────────────────────────────────
+// No separate "chat"/"conversation" model — a conversation is just the pair
+// (enrollment, teacher); the list of conversations is derived from the
+// group's calendar (see AcademicCycleSchoolGroupService.findAllTeachers,
+// reused by ChatService), same as the existing "teachers" endpoint.
+
+enum ChatMessageSender {
+  student @map("student")
+  teacher @map("teacher")
+
+  @@schema("core")
+}
+
+model StudentChatMessage {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  teacherId                 String                  @map("teacher_id") @db.Uuid
+  sentBy                    ChatMessageSender       @map("sent_by")
+  content                   String                  @db.VarChar(2000)
+  sentAt                    DateTime                @default(now()) @map("sent_at")
+  // Only meaningful for sentBy: teacher — marks whether the student has
+  // opened this conversation since. Always false in practice today: nothing
+  // creates sentBy: teacher messages yet (pending the teacher module).
+  read                      Boolean                 @default(false)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  teacher                   Employee                @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@map("student_chat_messages")
   @@schema("core")
 }
