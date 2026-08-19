@@ -1,29 +1,27 @@
 import { useCallback, useState } from "react";
 import {
-    FileText,
-    FileSpreadsheet,
-    Presentation,
-    File as FileIcon,
     Trash2,
     Copy,
     Loader2,
     Check,
-    FileImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { DEFAULT_IMAGE_EXTENSIONS } from "@/lib/constants/attachment.constants";
+import { downloadFileFromUrl, getAttachmentFileIcon } from "@/lib/extensions/attachments";
 import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 
 interface Props {
     /** Attachment information */
     attachment: AttachmentResponse;
     /** True when the card represents a still-uploading file */
-    isUploading?: boolean
-    /** True when this card is currently being deleted */;
-    isDeleting?: boolean
-    /** Optional client preview URL (object URL) for images while uploading */;
+    isUploading?: boolean;
+    /** True when this card is currently being deleted */
+    isDeleting?: boolean;
+    /** Optional client preview URL (object URL) for images while uploading */
     previewUrl?: string;
+    /** True when the attachment actions (copy/delete) must be hidden (read-only mode) */
+    readOnly?: boolean;
 
     /** Handle event when click on delete option */
     onDelete: (attachment: AttachmentResponse) => void;
@@ -31,20 +29,10 @@ interface Props {
 
 const isImage = (ext: string) => DEFAULT_IMAGE_EXTENSIONS.includes(`.${ext}`.toLowerCase());
 
-const getIconForFileExtension = (ext: string) => {
-    const e = ext.toLowerCase();
-    if (e === "pdf") return { Icon: FileText, color: "text-red-500", bg: "bg-red-500/10" };
-    if (e === "docx" || e === "doc") return { Icon: FileText, color: "text-blue-500", bg: "bg-blue-500/10" };
-    if (e === "xlsx" || e === "xls" || e === "csv") return { Icon: FileSpreadsheet, color: "text-emerald-500", bg: "bg-emerald-500/10" };
-    if (e === "ppt" || e === "pptx") return { Icon: Presentation, color: "text-orange-500", bg: "bg-orange-500/10" };
-    if (DEFAULT_IMAGE_EXTENSIONS.includes(`.${e}`)) return { Icon: FileImageIcon, color: "text-violet-500", bg: "bg-violet-500/10" };
-    return { Icon: FileIcon, color: "text-muted-foreground", bg: "bg-muted" };
-};
-
-export const AttachmentCard = ({ attachment, isUploading, isDeleting, previewUrl, onDelete }: Props) => {
+export const AttachmentCard = ({ attachment, isUploading, isDeleting, previewUrl, readOnly = false, onDelete }: Props) => {
 
     const [copied, setCopied] = useState(false);
-    const { Icon, color, bg } = getIconForFileExtension(attachment.extension);
+    const { Icon, color, bg } = getAttachmentFileIcon(attachment.extension);
 
     const showImage = isImage(attachment.extension);
     const imgSrc = previewUrl || (showImage ? attachment.url : undefined);
@@ -60,10 +48,22 @@ export const AttachmentCard = ({ attachment, isUploading, isDeleting, previewUrl
         }
     }, []);
 
+    const handleDownload = useCallback(async () => {
+        if (!attachment.url || isUploading || isDeleting)
+            return;
+        try {
+            await downloadFileFromUrl(attachment.url, attachment.name);
+        } catch (error) {
+            console.warn(error);
+            toast.error("No fue posible descargar el archivo seleccionado.", { position: "top-right" });
+        }
+    }, [attachment.url, attachment.name, isUploading, isDeleting]);
+
     return (
         <div
+            onDoubleClick={handleDownload}
             className={[
-                "group relative bg-card rounded-2xl border border-border overflow-hidden transition-all",
+                "group relative bg-card rounded-2xl border border-border overflow-hidden transition-all cursor-pointer select-none",
                 "hover:shadow-md hover:-translate-y-0.5 hover:border-primary/40",
                 isUploading || isDeleting ? "pointer-events-none" : "",
             ].join(" ")}
@@ -109,7 +109,7 @@ export const AttachmentCard = ({ attachment, isUploading, isDeleting, previewUrl
                 )}
 
                 {/* Hover actions */}
-                {!isUploading && !isDeleting && (
+                {!isUploading && !isDeleting && !readOnly && (
                     <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                             type="button"

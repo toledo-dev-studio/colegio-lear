@@ -1,0 +1,93 @@
+[
+    {
+        "id": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f01",
+        "title": "Resolución de problemas con ecuaciones",
+        "description": "Resolver los ejercicios 1 al 10 de la página 45 del libro de texto y entregarlos en hoja blanca.",
+        "dueDate": "2025-12-10",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "attachments": [
+            {
+                "id": "e1f2a3b4-5c6d-4e7f-8a9b-0c1d2e3f4a01",
+                "url": "https://fake-storage.com/files/ejercicios-ecuaciones.pdf",
+                "name": "ejercicios-ecuaciones.pdf",
+                "extension": "pdf",
+                "relatedRecordId": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f01"
+            },
+            {
+                "id": "e1f2a3b4-5c6d-4e7f-8a9b-0c1d2e3f4a02",
+                "url": "https://fake-storage.com/files/pasos-resolucion.png",
+                "name": "pasos-resolucion.png",
+                "extension": "png",
+                "relatedRecordId": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f01"
+            }
+        ]
+    },
+    {
+        "id": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f02",
+        "title": "Investigación sobre fracciones",
+        "description": "Investigar los tipos de fracciones y traer 3 ejemplos de cada uno para discutir en clase.",
+        "dueDate": "2025-12-17",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "attachments": [
+            {
+                "id": "e1f2a3b4-5c6d-4e7f-8a9b-0c1d2e3f4a03",
+                "url": "https://fake-storage.com/files/guia-tipos-fracciones.pdf",
+                "name": "guia-tipos-fracciones.pdf",
+                "extension": "pdf",
+                "relatedRecordId": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f02"
+            }
+        ]
+    },
+    {
+        "id": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f03",
+        "title": "Ensayo: verbos en pasado",
+        "description": "Redactar un ensayo de una cuartilla utilizando al menos 10 verbos en pasado simple.",
+        "dueDate": "2025-12-05",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "attachments": [
+            {
+                "id": "e1f2a3b4-5c6d-4e7f-8a9b-0c1d2e3f4a04",
+                "url": "https://fake-storage.com/files/rubrica-ensayo.docx",
+                "name": "rubrica-ensayo.docx",
+                "extension": "docx",
+                "relatedRecordId": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f03"
+            }
+        ]
+    },
+    {
+        "id": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f04",
+        "title": "Línea del tiempo de la Revolución Mexicana",
+        "description": "Elaborar una línea del tiempo con los acontecimientos más importantes de la Revolución Mexicana.",
+        "dueDate": "2025-12-08",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003"
+    },
+    {
+        "id": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f05",
+        "title": "Maqueta del ciclo del agua",
+        "description": "Realizar una maqueta del ciclo del agua con materiales reciclados para presentar en clase.",
+        "dueDate": "2025-12-12",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "attachments": [
+            {
+                "id": "e1f2a3b4-5c6d-4e7f-8a9b-0c1d2e3f4a05",
+                "url": "https://fake-storage.com/files/modelo-ciclo-agua.png",
+                "name": "modelo-ciclo-agua.png",
+                "extension": "png",
+                "relatedRecordId": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f05"
+            }
+        ]
+    },
+    {
+        "id": "d1e2f3a4-5b6c-4d7e-8f9a-0b1c2d3e4f06",
+        "title": "Cuestionario: fotosíntesis",
+        "description": "Contestar el cuestionario de fotosíntesis que se encuentra al final del tema 3 del libro.",
+        "dueDate": "2025-12-15",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002"
+    }
+]

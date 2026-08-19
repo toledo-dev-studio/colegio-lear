@@ -378,5 +378,404 @@
             "secondLastName": "Sánchez",
             "email": "ana.martinez@example.com"
         }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000001",
+        "day": "monday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000002",
+        "day": "monday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "López",
+            "secondLastName": "Hernández",
+            "email": "maria.lopez@example.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000003",
+        "day": "monday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000004",
+        "day": "tuesday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000005",
+        "day": "tuesday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000006",
+        "day": "wednesday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000007",
+        "day": "wednesday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "López",
+            "secondLastName": "Hernández",
+            "email": "maria.lopez@example.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000008",
+        "day": "wednesday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000009",
+        "day": "thursday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000010",
+        "day": "thursday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "López",
+            "secondLastName": "Hernández",
+            "email": "maria.lopez@example.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000011",
+        "day": "friday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000012",
+        "day": "friday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000013",
+        "day": "monday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000014",
+        "day": "monday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000015",
+        "day": "tuesday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000016",
+        "day": "tuesday",
+        "startTime": "10:00:00",
+        "endTime": "11:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000017",
+        "day": "wednesday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000018",
+        "day": "thursday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000019",
+        "day": "friday",
+        "startTime": "08:00:00",
+        "endTime": "09:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "3bd0af8f-4431-4d0c-b671-1d940e65f768",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Admin",
+            "firstLastName": "One",
+            "secondLastName": "Admin",
+            "email": "admin1@colegiolear.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000020",
+        "day": "friday",
+        "startTime": "09:00:00",
+        "endTime": "10:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "García",
+            "email": "juan.perez@example.com"
+        }
+    },
+    {
+        "id": "e2d1c0b9-a8b7-4c6d-9e8f-000000000021",
+        "day": "friday",
+        "startTime": "11:00:00",
+        "endTime": "12:00:00",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Ana",
+            "firstLastName": "Martínez",
+            "secondLastName": "Sánchez",
+            "email": "ana.martinez@example.com"
+        }
     }
 ]

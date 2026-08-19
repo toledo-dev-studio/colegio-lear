@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import { AttachmentCard } from "./AttachmentCard";
+import { AttachmentCard } from "@/shared/components/attachment-card/AttachmentCard";
 import { promisePool } from "@/lib/extensions/promises";
 import { generateTemporalId } from "@/lib/extensions/utils";
 import { extractFileExtension } from "@/lib/extensions/attachments";
