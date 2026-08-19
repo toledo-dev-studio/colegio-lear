@@ -1,9 +1,8 @@
 import { Router } from "express";
-import multer from "multer";
 import { validate } from "../../shared/middleware/validate.middleware";
 import { authorize } from "../../shared/middleware/rbac.middleware";
 import { requireMultipart } from "../../shared/middleware/require-multipart.middleware";
-import { ValidationError } from "../../shared/errors/app-error";
+import { uploadAvatarSingle as uploadSingle } from "../../shared/middleware/avatar-upload.middleware";
 import {
   idParamSchema,
   employeeFiltersSchema,
@@ -25,32 +24,6 @@ import {
   uploadAvatarById,
   findAllTeachers,
 } from "./employee.controller";
-
-// ─── Multer Configuration ───────────────────────────────────────────────────────
-
-/**
- * In-memory storage — file is available as req.file.buffer.
- * Limits file size to 5MB and only allows image MIME types.
- */
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    const allowedMimes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-    if (allowedMimes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(
-        new ValidationError(
-          "Only image files are allowed (jpeg, png, webp, gif)",
-          [{ field: "file", message: "Only image files are allowed" }],
-        ),
-      );
-    }
-  },
-});
-
-const uploadSingle = upload.single("file");
 
 // ─── Router ─────────────────────────────────────────────────────────────────────
 

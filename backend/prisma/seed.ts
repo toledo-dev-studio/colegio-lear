@@ -4,6 +4,9 @@ import { BloodType, DayOfWeek } from "../src/generated/prisma/enums";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import bcrypt from "bcrypt";
+// Imported after "dotenv/config" above so STORAGE_LOCAL_PATH is already
+// populated by the time this module's storageService singleton is created.
+import { storageService } from "../src/shared/services/storage.service";
 
 const pool = new pg.Pool({ connectionString: process.env["DATABASE_URL"] });
 const adapter = new PrismaPg(pool, { schema: "core" });
@@ -1219,6 +1222,139 @@ async function main() {
 
   console.log(`  ✓ Class schedule: ${calendarEntries.length} calendar entries`);
 
+  // Distinct teachers per group, derived from the same calendar entries —
+  // matches exactly what AcademicCycleSchoolGroupService.findAllTeachers
+  // (and therefore ChatService) computes at request time.
+  const groupToTeacherIds = new Map<string, string[]>();
+  for (const entry of calendarEntries) {
+    const list = groupToTeacherIds.get(entry.academicCycleSchoolGroupId) ?? [];
+    if (!list.includes(entry.teacherId)) list.push(entry.teacherId);
+    groupToTeacherIds.set(entry.academicCycleSchoolGroupId, list);
+  }
+
+  // --- School subject tasks & materials (test content for GET .../tasks and .../materials) ---
+  // Real files, uploaded through the same storageService the app uses (not a
+  // seed-only shortcut) — so /uploads URLs actually resolve once the server
+  // is running, exactly like a real teacher upload would. One pair (task +
+  // material) per group/subject combination that's actually taught, derived
+  // from the calendar entries just created above.
+  const TASK_MATERIAL_PLACEHOLDER_FILE = Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+    "base64",
+  );
+
+  const SUBJECT_DISPLAY_NAME_BY_KEY: Record<string, string> = {
+    primaria_espanol_1p: "Español",
+    primaria_matematicas_1p: "Matemáticas",
+    primaria_ciencias_1p: "Ciencias Naturales",
+    primaria_ingles_1p: "Inglés",
+    primaria_historia_1p: "Historia",
+    preescolar_espanol_1pe: "Español",
+    preescolar_matematicas_1pe: "Matemáticas",
+    preescolar_ingles_1pe: "Inglés",
+    preescolar_expresion_1pe: "Expresión y Creatividad",
+  };
+
+  const subjectIdToKey = new Map(
+    Object.entries(academicCycleSchoolSubjectsBySubjectKey).map(([key, v]) => [
+      v.id,
+      key,
+    ]),
+  );
+
+  const groupSubjectPairs = new Map<
+    string,
+    {
+      academicCycleId: string;
+      academicCycleSchoolGroupId: string;
+      academicCycleSchoolSubjectId: string;
+    }
+  >();
+  for (const entry of calendarEntries) {
+    const pairKey = `${entry.academicCycleSchoolGroupId}:${entry.academicCycleSchoolSubjectId}`;
+    if (!groupSubjectPairs.has(pairKey)) {
+      groupSubjectPairs.set(pairKey, {
+        academicCycleId: entry.academicCycleId,
+        academicCycleSchoolGroupId: entry.academicCycleSchoolGroupId,
+        academicCycleSchoolSubjectId: entry.academicCycleSchoolSubjectId,
+      });
+    }
+  }
+
+  const dueDateBase = Date.UTC(2026, 8, 15); // Sep 15, 2026 — inside both cycles' date range
+  let tasksCreated = 0;
+  let materialsCreated = 0;
+
+  for (const {
+    academicCycleId,
+    academicCycleSchoolGroupId,
+    academicCycleSchoolSubjectId,
+  } of groupSubjectPairs.values()) {
+    const subjectKey = subjectIdToKey.get(academicCycleSchoolSubjectId) ?? "";
+    const subjectName = SUBJECT_DISPLAY_NAME_BY_KEY[subjectKey] ?? "la materia";
+
+    const existingTasksCount = await prisma.schoolSubjectTask.count({
+      where: { academicCycleSchoolGroupId, academicCycleSchoolSubjectId },
+    });
+    if (existingTasksCount === 0) {
+      for (let i = 1; i <= 2; i++) {
+        const task = await prisma.schoolSubjectTask.create({
+          data: {
+            title: `Tarea ${i} — ${subjectName}`,
+            description: `Actividad ${i} de ${subjectName} para reforzar lo visto en clase.`,
+            dueDate: new Date(dueDateBase + i * 5 * 24 * 60 * 60 * 1000),
+            academicCycleId,
+            academicCycleSchoolGroupId,
+            academicCycleSchoolSubjectId,
+          },
+        });
+        const url = await storageService.upload({
+          buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
+          fileName: `tarea-${subjectKey}-${i}.png`,
+          mimeType: "image/png",
+          subfolder: "school-subject-tasks",
+        });
+        await prisma.schoolSubjectTaskAttachment.create({
+          data: {
+            url,
+            name: `tarea-${subjectKey}-${i}`,
+            extension: "png",
+            schoolSubjectTaskId: task.id,
+          },
+        });
+        tasksCreated++;
+      }
+    }
+
+    const existingMaterialsCount = await prisma.schoolSubjectMaterial.count({
+      where: { academicCycleSchoolGroupId, academicCycleSchoolSubjectId },
+    });
+    if (existingMaterialsCount === 0) {
+      const url = await storageService.upload({
+        buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
+        fileName: `material-${subjectKey}.png`,
+        mimeType: "image/png",
+        subfolder: "school-subject-materials",
+      });
+      await prisma.schoolSubjectMaterial.create({
+        data: {
+          academicCycleId,
+          academicCycleSchoolGroupId,
+          academicCycleSchoolSubjectId,
+          attachmentUrl: url,
+          attachmentName: `material-${subjectKey}`,
+          attachmentExtension: "png",
+        },
+      });
+      materialsCreated++;
+    }
+  }
+
+  console.log(
+    `  ✓ School subject tasks: ${tasksCreated} records (2 per group/subject taught, each with 1 attachment)`,
+  );
+  console.log(`  ✓ School subject materials: ${materialsCreated} records`);
+
   // --- Wallet catalog (2026 cycles): inscripción, mantenimiento, material ---
   const walletPrimaria = {
     inscripcion: await prisma.academicCycleWallet.upsert({
@@ -1385,6 +1521,31 @@ async function main() {
     return GRADE_VARIANTS[seed % GRADE_VARIANTS.length]!;
   }
 
+  // --- Attendance (last 10 weekdays ending today, computed at seed-run
+  // time) — dynamic on purpose, so the student portal's default "current
+  // week" filter always has real data no matter when the seed is run.
+  const ABSENCE_REASONS = [
+    "Cita médica",
+    "Enfermedad",
+    "Trámite familiar",
+    "Viaje familiar",
+  ] as const;
+
+  function getRecentWeekdaysUTC(count: number): Date[] {
+    const days: Date[] = [];
+    const cursor = new Date();
+    cursor.setUTCHours(0, 0, 0, 0);
+    while (days.length < count) {
+      const dow = cursor.getUTCDay(); // 0 = Sunday, 6 = Saturday
+      if (dow !== 0 && dow !== 6) {
+        days.push(new Date(cursor));
+      }
+      cursor.setUTCDate(cursor.getUTCDate() - 1);
+    }
+    return days.reverse(); // oldest first
+  }
+  const RECENT_WEEKDAYS = getRecentWeekdaysUTC(10);
+
   const studentPassword = await bcrypt.hash("Estudiante123!", BCRYPT_ROUNDS);
 
   interface GroupSeedConfig {
@@ -1413,6 +1574,8 @@ async function main() {
   let totalPendingCount = 0;
   let totalAllergiesCreated = 0;
   let totalGradesCreated = 0;
+  let totalAssistsCreated = 0;
+  let totalChatMessagesCreated = 0;
 
   for (const config of GROUP_CONFIGS) {
     const group = GROUPS_BY_KEY[config.key];
@@ -1638,6 +1801,49 @@ async function main() {
         }
       }
 
+      // Attendance — only create if this enrollment doesn't have any yet.
+      // ~12% absent, rotating through a few realistic reasons.
+      const existingAssists = await prisma.studentAssist.count({
+        where: { academicCycleEnrollmentId: enrollment.id },
+      });
+      if (existingAssists === 0) {
+        for (let d = 0; d < RECENT_WEEKDAYS.length; d++) {
+          const assistSeed = globalStudentSeq * 17 + d * 5;
+          const isAbsent = assistSeed % 8 === 0;
+          await prisma.studentAssist.create({
+            data: {
+              academicCycleEnrollmentId: enrollment.id,
+              assistDate: RECENT_WEEKDAYS[d]!,
+              status: isAbsent ? "absent" : "present",
+              absenceReason: isAbsent ? pick(ABSENCE_REASONS, assistSeed) : null,
+            },
+          });
+          totalAssistsCreated++;
+        }
+      }
+
+      // Chat messages — one opening message per teacher currently teaching
+      // this enrollment's group (only sentBy: "student" — nothing creates
+      // sentBy: "teacher" messages yet, pending the teacher module).
+      const existingChatMessages = await prisma.studentChatMessage.count({
+        where: { academicCycleEnrollmentId: enrollment.id },
+      });
+      if (existingChatMessages === 0) {
+        const teacherIds = groupToTeacherIds.get(enrollment.academicCycleSchoolGroupId) ?? [];
+        for (let t = 0; t < teacherIds.length; t++) {
+          await prisma.studentChatMessage.create({
+            data: {
+              academicCycleEnrollmentId: enrollment.id,
+              teacherId: teacherIds[t]!,
+              sentBy: "student",
+              content: "Hola profe, tengo una duda sobre la última tarea. ¿Podría ayudarme?",
+              sentAt: RECENT_WEEKDAYS[RECENT_WEEKDAYS.length - 1 - (t % RECENT_WEEKDAYS.length)]!,
+            },
+          });
+          totalChatMessagesCreated++;
+        }
+      }
+
       if (category === 3) totalScholarshipCount++;
       else if (category === 4) totalForgivenCount++;
       else if (category === 5) totalPendingCount++;
@@ -1652,6 +1858,12 @@ async function main() {
   );
   console.log(`  ✓ Student allergies: ${totalAllergiesCreated} records`);
   console.log(`  ✓ Student grades: ${totalGradesCreated} records`);
+  console.log(
+    `  ✓ Student assists: ${totalAssistsCreated} records (last ${RECENT_WEEKDAYS.length} weekdays per enrollment)`,
+  );
+  console.log(
+    `  ✓ Student chat messages: ${totalChatMessagesCreated} records (1 per teacher teaching each group)`,
+  );
 
   // --- Announcements (with realistic HTML content) ─────────────────────────
 

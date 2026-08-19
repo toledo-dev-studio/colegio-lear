@@ -20,10 +20,19 @@ import jobTitleRoutes from "./modules/job-titles/job-title.routes";
 import securityRoleRoutes from "./modules/security-roles/security-role.routes";
 import employeeRoutes from "./modules/employees/employee.routes";
 import authRoutes from "./modules/auth/auth.routes";
+import authStudentRoutes from "./modules/auth/auth-student.routes";
 import announcementRoutes from "./modules/announcements/announcement.routes";
 import attachmentRoutes from "./modules/attachments/attachment.routes";
 import studentRoutes from "./modules/students/student.routes";
+import studentMeRoutes from "./modules/students/student-me.routes";
+import chatRoutes from "./modules/chats/chat.routes";
 import academicCycleRoutes from "./modules/academic-cycles/academic-cycle.routes";
+import academicCycleSchoolGroupStudentRoutes from "./modules/academic-cycles/academic-cycle-school-group-student.routes";
+import studentGradeStudentRoutes from "./modules/academic-cycles/student-grade-student.routes";
+import studentWalletStudentRoutes from "./modules/academic-cycles/student-wallet-student.routes";
+import studentAssistStudentRoutes from "./modules/academic-cycles/student-assist-student.routes";
+import schoolSubjectTaskStudentRoutes from "./modules/academic-cycles/school-subject-task-student.routes";
+import schoolSubjectMaterialStudentRoutes from "./modules/academic-cycles/school-subject-material-student.routes";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import globalSearchRoutes from "./modules/global-search/global-search.routes";
 import notificationRoutes from "./modules/notifications/notification.routes";
@@ -41,6 +50,7 @@ app.use(requestLogger);
 /* --- Public Routes (no authentication required) --- */
 app.use(healthRoutes);
 app.use("/auth", authRoutes);
+app.use("/auth/student", authStudentRoutes);
 
 /*
  * Serve locally-stored files (avatars, attachments) publicly so <img src>
@@ -54,6 +64,35 @@ if (env.STORAGE_PROVIDER === "local") {
 
 /* --- Swagger API Docs --- */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+/*
+ * Student portal routes — protected by authenticateStudent (own JWT payload),
+ * never by the employee `authenticate`/`authorize()` below. Mounted here,
+ * before the global employee `authenticate`, so a request to /students/me
+ * is fully handled by this router and never falls through to it.
+ */
+app.use("/students/me", studentMeRoutes);
+app.use("/students", chatRoutes);
+
+/*
+ * Student portal routes with their own URLs (no employee-side counterpart
+ * exists yet) — same reasoning as /students/me above, just no gate needed.
+ */
+app.use("/academic-cycles", schoolSubjectTaskStudentRoutes);
+app.use("/academic-cycles", schoolSubjectMaterialStudentRoutes);
+
+/*
+ * Student portal routes that share their exact URL with an employee-facing
+ * route mounted below (e.g. GET /academic-cycles/:id/school-groups/:id/calendars).
+ * Each route gates on the session type itself (see
+ * gate-student-session.middleware.ts) and falls through to the employee
+ * router below when the request isn't a student session — so it must be
+ * mounted here, before `authenticate`, same reasoning as /students/me above.
+ */
+app.use("/academic-cycles", academicCycleSchoolGroupStudentRoutes);
+app.use("/academic-cycles", studentGradeStudentRoutes);
+app.use("/academic-cycles", studentWalletStudentRoutes);
+app.use("/academic-cycles", studentAssistStudentRoutes);
 
 /* --- Protected Routes (authentication required) --- */
 app.use(authenticate);

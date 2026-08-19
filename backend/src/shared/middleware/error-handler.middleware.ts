@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { MulterError } from "multer";
 import { AppError, ConflictError, NotFoundError } from "../errors/app-error";
 import { sendError } from "../helpers/response.helper";
 import { logger } from "../lib/logger";
@@ -22,6 +23,15 @@ export function errorHandler(
   // Handle known AppError instances
   if (err instanceof AppError) {
     sendError(res, err.message, err.statusCode, err.details);
+    return;
+  }
+
+  // Handle multer upload errors (wrong field name, file too large, etc.) as
+  // 400s instead of falling through to a generic 500 — these are always
+  // client mistakes on a multipart/form-data request, never server bugs.
+  if (err instanceof MulterError) {
+    const field = err.field ?? "file";
+    sendError(res, err.message, 400, [{ field, message: err.message }]);
     return;
   }
 

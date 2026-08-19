@@ -199,6 +199,7 @@ model Employee {
   jobTitle                    JobTitle                     @relation(fields: [jobTitleId], references: [id], onDelete: Restrict)
   academicCycleGroupCalendars AcademicCycleGroupCalendar[]
   notifications               Notification[]
+  studentChatMessages         StudentChatMessage[]
   createdAt                   DateTime                     @default(now()) @map("created_at")
 
   @@map("employees")
@@ -217,22 +218,22 @@ enum AnnouncementStatus {
 }
 
 model Announcement {
-  id          String       @id @default(uuid()) @db.Uuid
-  name        String       @db.VarChar(200)
-  description String?      @db.VarChar(500)
-  audience    Json
-  content     String       @db.Text
-  publishedAt DateTime     @map("published_at")
-  expiresAt   DateTime     @map("expires_at")
-  status      AnnouncementStatus @default(draft)
+  id               String             @id @default(uuid()) @db.Uuid
+  name             String             @db.VarChar(200)
+  description      String?            @db.VarChar(500)
+  audience         Json
+  content          String             @db.Text
+  publishedAt      DateTime           @map("published_at")
+  expiresAt        DateTime           @map("expires_at")
+  status           AnnouncementStatus @default(draft)
   // True once this campaign has been set to "in-progress" for the first
   // time — the point where recipients are resolved and locked in. Never
   // reset back to false afterward, even if status later moves to
   // completed/cancelled; it exists solely to make that recipient-resolution
   // step idempotent (run exactly once) and to stop the frontend from
   // offering "draft" again once a campaign has gone out.
-  alreadyPublished Boolean @default(false) @map("already_published")
-  isDeleted   Boolean      @default(false) @map("is_deleted")
+  alreadyPublished Boolean            @default(false) @map("already_published")
+  isDeleted        Boolean            @default(false) @map("is_deleted")
 
   // Calculated (cron-maintained) view-tracking history. Stored on the
   // announcement itself — not on a per-recipient notification row — so this
@@ -284,39 +285,39 @@ enum NotificationRecipientType {
 }
 
 model Notification {
-  id              String                    @id @default(uuid()) @db.Uuid
+  id               String                    @id @default(uuid()) @db.Uuid
   // Which audience/app this row belongs to — "admin" covers both admin and
   // teacher employees (this app); "student" is reserved for the
   // not-yet-built student-facing app. Lets GET /notifications/{type}/{id}
   // filter correctly once there are two kinds of recipients sharing this
   // same table, instead of just assuming every row is an employee's.
-  recipientType   NotificationRecipientType @default(admin) @map("recipient_type")
-  employeeId      String                    @map("employee_id") @db.Uuid
-  title           String                    @db.VarChar(200)
-  message         String                    @db.VarChar(1000)
-  type            NotificationType
-  relatedRecordId String                    @map("related_record_id") @db.Uuid
-  read            Boolean                   @default(false)
-  readAt          DateTime?                 @map("read_at")
+  recipientType    NotificationRecipientType @default(admin) @map("recipient_type")
+  employeeId       String                    @map("employee_id") @db.Uuid
+  title            String                    @db.VarChar(200)
+  message          String                    @db.VarChar(1000)
+  type             NotificationType
+  relatedRecordId  String                    @map("related_record_id") @db.Uuid
+  read             Boolean                   @default(false)
+  readAt           DateTime?                 @map("read_at")
   // When this notification should actually become visible/delivered.
   // Defaults to "now" so every existing notification path (process
   // info/error, announcements already due) is unaffected — only the
   // announcement dispatch sets this to a future date (the campaign's
   // publishedAt) when it hasn't arrived yet.
-  scheduledFor    DateTime                  @default(now()) @map("scheduled_for")
+  scheduledFor     DateTime                  @default(now()) @map("scheduled_for")
   // Whether this notification has been released (shown in the bell, email
   // sent). Defaults true for the same reason scheduledFor defaults to
   // "now" — only future-scheduled announcement notifications are created
   // with this explicitly false, and the dispatch job flips it once
   // scheduledFor is reached.
-  sent            Boolean                   @default(true)
+  sent             Boolean                   @default(true)
   // How many times the delivery job has tried (and failed) to email this
   // notification. Only relevant while sent:false — after
   // MAX_DELIVERY_ATTEMPTS (3, one per daily job run) it gives up and marks
   // sent:true regardless, so the recipient at least sees it in the bell.
-  deliveryAttempts Int                      @default(0) @map("delivery_attempts")
-  createdAt       DateTime                  @default(now()) @map("created_at")
-  employee        Employee                  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  deliveryAttempts Int                       @default(0) @map("delivery_attempts")
+  createdAt        DateTime                  @default(now()) @map("created_at")
+  employee         Employee                  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   @@index([employeeId, createdAt])
   @@index([sent, scheduledFor])
@@ -327,29 +328,31 @@ model Notification {
 // ─── Student ─────────────────────────────────────────────────────────────────
 
 model Student {
-  id                 String    @id @default(uuid()) @db.Uuid
-  name               String    @db.VarChar(100)
-  firstLastName      String    @map("first_last_name") @db.VarChar(100)
-  secondLastName     String    @map("second_last_name") @db.VarChar(100)
-  dateOfBirth        DateTime  @map("date_of_birth")
-  curp               String    @unique @db.VarChar(18)
-  enrollment         String    @unique @db.VarChar(20)
-  avatar             String?   @db.VarChar(500)
-  observations       String?   @db.VarChar(1000)
-  isActive           Boolean   @default(true) @map("is_active")
-  bloodType          BloodType @map("blood_type")
-  medicalNotes       String?   @map("medical_notes") @db.VarChar(1000)
-  email              String    @unique @db.VarChar(150)
-  phoneNumber        String    @map("phone_number") @db.VarChar(20)
-  address            String    @db.VarChar(300)
-  state              String    @db.VarChar(100)
-  municipality       String    @db.VarChar(100)
-  postalCode         String    @map("postal_code") @db.VarChar(10)
-  password           String    @db.VarChar(255)
-  mustChangePassword Boolean   @default(true) @map("must_change_password")
-  isDeleted          Boolean   @default(false) @map("is_deleted")
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @updatedAt @map("updated_at")
+  id                         String    @id @default(uuid()) @db.Uuid
+  name                       String    @db.VarChar(100)
+  firstLastName              String    @map("first_last_name") @db.VarChar(100)
+  secondLastName             String    @map("second_last_name") @db.VarChar(100)
+  dateOfBirth                DateTime  @map("date_of_birth")
+  curp                       String    @unique @db.VarChar(18)
+  enrollment                 String    @unique @db.VarChar(20)
+  avatar                     String?   @db.VarChar(500)
+  observations               String?   @db.VarChar(1000)
+  isActive                   Boolean   @default(true) @map("is_active")
+  bloodType                  BloodType @map("blood_type")
+  medicalNotes               String?   @map("medical_notes") @db.VarChar(1000)
+  email                      String    @unique @db.VarChar(150)
+  phoneNumber                String    @map("phone_number") @db.VarChar(20)
+  address                    String    @db.VarChar(300)
+  state                      String    @db.VarChar(100)
+  municipality               String    @db.VarChar(100)
+  postalCode                 String    @map("postal_code") @db.VarChar(10)
+  password                   String    @db.VarChar(255)
+  mustChangePassword         Boolean   @default(true) @map("must_change_password")
+  passwordResetCode          String?   @map("password_reset_code") @db.VarChar(255)
+  passwordResetCodeExpiresAt DateTime? @map("password_reset_code_expires_at")
+  isDeleted                  Boolean   @default(false) @map("is_deleted")
+  createdAt                  DateTime  @default(now()) @map("created_at")
+  updatedAt                  DateTime  @updatedAt @map("updated_at")
 
   guardians                StudentGuardian[]
   allergies                StudentAllergy[]
@@ -486,13 +489,15 @@ model AcademicCycle {
   createdAt           DateTime            @default(now()) @map("created_at")
   updatedAt           DateTime            @updatedAt @map("updated_at")
 
-  schoolSubjects        AcademicCycleSchoolSubject[]
-  walletItems           AcademicCycleWallet[]
-  groups                AcademicCycleGroup[]
-  groupCalendars        AcademicCycleGroupCalendar[]
-  enrollments           AcademicCycleEnrollment[]
-  studentWalletItems    StudentWalletItem[]
-  studentWalletPayments StudentWalletPayment[]
+  schoolSubjects         AcademicCycleSchoolSubject[]
+  walletItems            AcademicCycleWallet[]
+  groups                 AcademicCycleGroup[]
+  groupCalendars         AcademicCycleGroupCalendar[]
+  enrollments            AcademicCycleEnrollment[]
+  studentWalletItems     StudentWalletItem[]
+  studentWalletPayments  StudentWalletPayment[]
+  schoolSubjectTasks     SchoolSubjectTask[]
+  schoolSubjectMaterials SchoolSubjectMaterial[]
 
   @@map("academic_cycles")
   @@schema("core")
@@ -501,13 +506,15 @@ model AcademicCycle {
 // ─── Academic Cycle School Subject ───────────────────────────────────────────
 
 model AcademicCycleSchoolSubject {
-  id              String        @id @default(uuid()) @db.Uuid
-  academicCycleId String        @map("academic_cycle_id") @db.Uuid
-  schoolSubjectId String        @map("school_subject_id") @db.Uuid
-  observations    String?       @db.VarChar(500)
-  academicCycle   AcademicCycle @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
-  schoolSubject   SchoolSubject @relation(fields: [schoolSubjectId], references: [id], onDelete: Restrict)
+  id              String                       @id @default(uuid()) @db.Uuid
+  academicCycleId String                       @map("academic_cycle_id") @db.Uuid
+  schoolSubjectId String                       @map("school_subject_id") @db.Uuid
+  observations    String?                      @db.VarChar(500)
+  academicCycle   AcademicCycle                @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  schoolSubject   SchoolSubject                @relation(fields: [schoolSubjectId], references: [id], onDelete: Restrict)
   calendars       AcademicCycleGroupCalendar[]
+  tasks           SchoolSubjectTask[]
+  materials       SchoolSubjectMaterial[]
 
   @@unique([academicCycleId, schoolSubjectId])
   @@map("academic_cycle_school_subjects")
@@ -564,6 +571,8 @@ model AcademicCycleGroup {
   academicCycle         AcademicCycle                  @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
   calendars             AcademicCycleGroupCalendar[]
   enrollments           AcademicCycleEnrollment[]
+  tasks                 SchoolSubjectTask[]
+  materials             SchoolSubjectMaterial[]
   createdAt             DateTime                       @default(now()) @map("created_at")
   updatedAt             DateTime                       @updatedAt @map("updated_at")
 
@@ -621,9 +630,11 @@ model AcademicCycleEnrollment {
   createdAt                  DateTime                      @default(now()) @map("created_at")
   updatedAt                  DateTime                      @updatedAt @map("updated_at")
 
-  grades      StudentGrade[]
-  walletItems StudentWalletItem[]
-  payments    StudentWalletPayment[]
+  grades       StudentGrade[]
+  walletItems  StudentWalletItem[]
+  payments     StudentWalletPayment[]
+  assists      StudentAssist[]
+  chatMessages StudentChatMessage[]
 
   @@map("academic_cycle_enrollments")
   @@schema("core")
@@ -698,5 +709,123 @@ model StudentWalletPayment {
   createdAt                 DateTime                @default(now()) @map("created_at")
 
   @@map("student_wallet_payments")
+  @@schema("core")
+}
+
+// ─── School Subject Task ──────────────────────────────────────────────────────
+// Assigned by a teacher to a specific group for a subject they teach in a
+// given cycle. No create/update endpoint exists for teachers yet (pending
+// the not-yet-designed "my-classes" teacher module) — today only employees
+// with authorize("my-classes") writes (SuperAdmin/Admin in the seeded roles)
+// can manage these; the student portal only ever reads them.
+
+model SchoolSubjectTask {
+  id                           String                        @id @default(uuid()) @db.Uuid
+  title                        String                        @db.VarChar(200)
+  description                  String?                       @db.VarChar(2000)
+  dueDate                      DateTime                      @map("due_date")
+  academicCycleId              String                        @map("academic_cycle_id") @db.Uuid
+  academicCycleSchoolGroupId   String                        @map("academic_cycle_school_group_id") @db.Uuid
+  academicCycleSchoolSubjectId String                        @map("academic_cycle_school_subject_id") @db.Uuid
+  academicCycle                AcademicCycle                 @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleSchoolGroup     AcademicCycleGroup            @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Cascade)
+  academicCycleSchoolSubject   AcademicCycleSchoolSubject    @relation(fields: [academicCycleSchoolSubjectId], references: [id], onDelete: Cascade)
+  createdAt                    DateTime                      @default(now()) @map("created_at")
+  attachments                  SchoolSubjectTaskAttachment[]
+
+  @@map("school_subject_tasks")
+  @@schema("core")
+}
+
+// A task can have several attachments (unlike materials, which have exactly
+// one) — kept as its own table rather than reusing the generic Attachment
+// model, which has a hard FK to Announcement only (attachments.related_record_id
+// -> announcements.id), not a polymorphic relation.
+model SchoolSubjectTaskAttachment {
+  id                  String            @id @default(uuid()) @db.Uuid
+  url                 String            @db.VarChar(500)
+  name                String            @db.VarChar(300)
+  extension           String            @db.VarChar(20)
+  schoolSubjectTaskId String            @map("school_subject_task_id") @db.Uuid
+  schoolSubjectTask   SchoolSubjectTask @relation(fields: [schoolSubjectTaskId], references: [id], onDelete: Cascade)
+
+  @@map("school_subject_task_attachments")
+  @@schema("core")
+}
+
+// ─── School Subject Material ──────────────────────────────────────────────────
+// Exactly one attachment per material (unlike tasks) — embedded directly
+// here instead of a separate table, since the relationship is 1:1 and
+// required (a material with no file makes no sense).
+model SchoolSubjectMaterial {
+  id                           String                     @id @default(uuid()) @db.Uuid
+  academicCycleId              String                     @map("academic_cycle_id") @db.Uuid
+  academicCycleSchoolGroupId   String                     @map("academic_cycle_school_group_id") @db.Uuid
+  academicCycleSchoolSubjectId String                     @map("academic_cycle_school_subject_id") @db.Uuid
+  attachmentUrl                String                     @map("attachment_url") @db.VarChar(500)
+  attachmentName               String                     @map("attachment_name") @db.VarChar(300)
+  attachmentExtension          String                     @map("attachment_extension") @db.VarChar(20)
+  academicCycle                AcademicCycle              @relation(fields: [academicCycleId], references: [id], onDelete: Cascade)
+  academicCycleSchoolGroup     AcademicCycleGroup         @relation(fields: [academicCycleSchoolGroupId], references: [id], onDelete: Cascade)
+  academicCycleSchoolSubject   AcademicCycleSchoolSubject @relation(fields: [academicCycleSchoolSubjectId], references: [id], onDelete: Cascade)
+  createdAt                    DateTime                   @default(now()) @map("created_at")
+
+  @@map("school_subject_materials")
+  @@schema("core")
+}
+
+// ─── Student Assist ────────────────────────────────────────────────────────────
+// Attendance is recorded per day (not per subject) — one row per enrollment
+// per day, enforced by the unique constraint below.
+
+enum AssistStatus {
+  present @map("present")
+  absent  @map("absent")
+
+  @@schema("core")
+}
+
+model StudentAssist {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  assistDate                DateTime                @map("assist_date")
+  status                    AssistStatus            @default(present)
+  absenceReason             String?                 @map("absence_reason") @db.VarChar(1000)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  createdAt                 DateTime                @default(now()) @map("created_at")
+
+  @@unique([academicCycleEnrollmentId, assistDate])
+  @@map("student_assists")
+  @@schema("core")
+}
+
+// ─── Student Chat Message ──────────────────────────────────────────────────────
+// No separate "chat"/"conversation" model — a conversation is just the pair
+// (enrollment, teacher); the list of conversations is derived from the
+// group's calendar (see AcademicCycleSchoolGroupService.findAllTeachers,
+// reused by ChatService), same as the existing "teachers" endpoint.
+
+enum ChatMessageSender {
+  student @map("student")
+  teacher @map("teacher")
+
+  @@schema("core")
+}
+
+model StudentChatMessage {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  academicCycleEnrollmentId String                  @map("academic_cycle_enrollment_id") @db.Uuid
+  teacherId                 String                  @map("teacher_id") @db.Uuid
+  sentBy                    ChatMessageSender       @map("sent_by")
+  content                   String                  @db.VarChar(2000)
+  sentAt                    DateTime                @default(now()) @map("sent_at")
+  // Only meaningful for sentBy: teacher — marks whether the student has
+  // opened this conversation since. Always false in practice today: nothing
+  // creates sentBy: teacher messages yet (pending the teacher module).
+  read                      Boolean                 @default(false)
+  academicCycleEnrollment   AcademicCycleEnrollment @relation(fields: [academicCycleEnrollmentId], references: [id], onDelete: Cascade)
+  teacher                   Employee                @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@map("student_chat_messages")
   @@schema("core")
 }

@@ -1558,6 +1558,157 @@ const swaggerOptions: swaggerJsdoc.Options = {
             academicCycleEnrollmentId: { type: "string", format: "uuid" },
           },
         },
+        // ─── Chats ───────────────────────────────────────────────────────────────
+        ChatRecord: {
+          type: "object",
+          description: "One entry per teacher currently teaching the enrollment's group — derived from the class schedule, not a stored entity.",
+          properties: {
+            enrollmentId: { type: "string", format: "uuid" },
+            teacherId: { type: "string", format: "uuid" },
+            teacher: { $ref: "#/components/schemas/Employee" },
+            schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            lastMessage: { type: "string", nullable: true },
+            lastMessageAt: { type: "string", format: "date-time", nullable: true },
+            unreadCount: { type: "integer", example: 0 },
+          },
+        },
+        ChatMessageRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            chatId: {
+              type: "string",
+              format: "uuid",
+              description: "Equal to the teacher's id — identifies the conversation",
+            },
+            sentBy: { type: "string", enum: ["student", "teacher"] },
+            content: { type: "string", example: "Hola profe, tengo una duda" },
+            sentAt: { type: "string", format: "date-time" },
+          },
+        },
+        SendChatMessageBody: {
+          type: "object",
+          required: ["content"],
+          properties: {
+            content: { type: "string", minLength: 1, maxLength: 2000 },
+          },
+        },
+        // ─── Student Assists ─────────────────────────────────────────────────────
+        StudentAssistRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            academicCycleEnrollmentId: { type: "string", format: "uuid" },
+            assistDate: { type: "string", format: "date-time" },
+            status: {
+              type: "string",
+              enum: ["present", "absent"],
+              example: "absent",
+            },
+            absenceReason: {
+              type: "string",
+              nullable: true,
+              example: "Cita médica",
+              description: "Free text; null when status is present",
+            },
+          },
+        },
+        CreateStudentAssistBody: {
+          type: "object",
+          required: ["assistDate", "status"],
+          properties: {
+            assistDate: { type: "string", format: "date-time" },
+            status: { type: "string", enum: ["present", "absent"] },
+            absenceReason: { type: "string", maxLength: 1000 },
+          },
+        },
+        UpdateStudentAssistBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            status: { type: "string", enum: ["present", "absent"] },
+            absenceReason: { type: "string", maxLength: 1000, nullable: true },
+          },
+        },
+        // ─── School Subject Tasks ────────────────────────────────────────────────
+        SchoolSubjectTaskAttachmentRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            url: { type: "string", example: "school-subject-tasks/abc123-ejercicios.pdf" },
+            name: { type: "string", example: "ejercicios" },
+            extension: { type: "string", example: "pdf" },
+            relatedRecordId: {
+              type: "string",
+              format: "uuid",
+              description: "Id of the parent task",
+            },
+          },
+        },
+        SchoolSubjectTaskRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            academicCycleSchoolSubjectId: { type: "string", format: "uuid" },
+            title: { type: "string", example: "Resolución de problemas" },
+            description: {
+              type: "string",
+              nullable: true,
+              example: "Resolver ejercicios 1-10",
+            },
+            dueDate: { type: "string", format: "date-time" },
+            createdAt: { type: "string", format: "date-time" },
+            attachments: {
+              type: "array",
+              items: { $ref: "#/components/schemas/SchoolSubjectTaskAttachmentRecord" },
+            },
+          },
+        },
+        CreateSchoolSubjectTaskBody: {
+          type: "object",
+          required: ["title", "dueDate"],
+          properties: {
+            title: { type: "string", minLength: 1, maxLength: 200 },
+            description: { type: "string", maxLength: 2000 },
+            dueDate: { type: "string", format: "date-time" },
+          },
+        },
+        UpdateSchoolSubjectTaskBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            title: { type: "string", minLength: 1, maxLength: 200 },
+            description: { type: "string", maxLength: 2000, nullable: true },
+            dueDate: { type: "string", format: "date-time" },
+          },
+        },
+        // ─── School Subject Materials ────────────────────────────────────────────
+        SchoolSubjectMaterialAttachmentRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            url: { type: "string", example: "school-subject-materials/abc123-material.pdf" },
+            name: { type: "string", example: "material" },
+            extension: { type: "string", example: "pdf" },
+            relatedRecordId: {
+              type: "string",
+              format: "uuid",
+              description: "Same id as the parent material — exactly one attachment per material",
+            },
+          },
+        },
+        SchoolSubjectMaterialRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            academicCycleSchoolSubjectId: { type: "string", format: "uuid" },
+            attachment: { $ref: "#/components/schemas/SchoolSubjectMaterialAttachmentRecord" },
+          },
+        },
         // ─── Student Wallet ─────────────────────────────────────────────────────
         StudentWalletItemRecord: {
           type: "object",
