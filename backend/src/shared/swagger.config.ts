@@ -1558,6 +1558,85 @@ const swaggerOptions: swaggerJsdoc.Options = {
             academicCycleEnrollmentId: { type: "string", format: "uuid" },
           },
         },
+        // ─── School Subject Tasks ────────────────────────────────────────────────
+        SchoolSubjectTaskAttachmentRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            url: { type: "string", example: "school-subject-tasks/abc123-ejercicios.pdf" },
+            name: { type: "string", example: "ejercicios" },
+            extension: { type: "string", example: "pdf" },
+            relatedRecordId: {
+              type: "string",
+              format: "uuid",
+              description: "Id of the parent task",
+            },
+          },
+        },
+        SchoolSubjectTaskRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            academicCycleSchoolSubjectId: { type: "string", format: "uuid" },
+            title: { type: "string", example: "Resolución de problemas" },
+            description: {
+              type: "string",
+              nullable: true,
+              example: "Resolver ejercicios 1-10",
+            },
+            dueDate: { type: "string", format: "date-time" },
+            createdAt: { type: "string", format: "date-time" },
+            attachments: {
+              type: "array",
+              items: { $ref: "#/components/schemas/SchoolSubjectTaskAttachmentRecord" },
+            },
+          },
+        },
+        CreateSchoolSubjectTaskBody: {
+          type: "object",
+          required: ["title", "dueDate"],
+          properties: {
+            title: { type: "string", minLength: 1, maxLength: 200 },
+            description: { type: "string", maxLength: 2000 },
+            dueDate: { type: "string", format: "date-time" },
+          },
+        },
+        UpdateSchoolSubjectTaskBody: {
+          type: "object",
+          description: "At least one field required.",
+          properties: {
+            title: { type: "string", minLength: 1, maxLength: 200 },
+            description: { type: "string", maxLength: 2000, nullable: true },
+            dueDate: { type: "string", format: "date-time" },
+          },
+        },
+        // ─── School Subject Materials ────────────────────────────────────────────
+        SchoolSubjectMaterialAttachmentRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            url: { type: "string", example: "school-subject-materials/abc123-material.pdf" },
+            name: { type: "string", example: "material" },
+            extension: { type: "string", example: "pdf" },
+            relatedRecordId: {
+              type: "string",
+              format: "uuid",
+              description: "Same id as the parent material — exactly one attachment per material",
+            },
+          },
+        },
+        SchoolSubjectMaterialRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            academicCycleId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            academicCycleSchoolSubjectId: { type: "string", format: "uuid" },
+            attachment: { $ref: "#/components/schemas/SchoolSubjectMaterialAttachmentRecord" },
+          },
+        },
         // ─── Student Wallet ─────────────────────────────────────────────────────
         StudentWalletItemRecord: {
           type: "object",

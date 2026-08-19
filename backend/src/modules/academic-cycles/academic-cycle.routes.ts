@@ -1,4 +1,5 @@
 import { Router } from "express";
+import multer from "multer";
 import { validate } from "../../shared/middleware/validate.middleware";
 import { authorize } from "../../shared/middleware/rbac.middleware";
 import {
@@ -35,6 +36,18 @@ import {
   updateStudentWalletItemSchema,
   createStudentWalletPaymentSchema,
 } from "./student-wallet.schema";
+import {
+  schoolSubjectTaskParentParamsSchema,
+  schoolSubjectTaskIdParamsSchema,
+  schoolSubjectTaskAttachmentIdParamsSchema,
+  schoolSubjectTaskPagedQuerySchema,
+  createSchoolSubjectTaskSchema,
+  updateSchoolSubjectTaskSchema,
+} from "./school-subject-task.schema";
+import {
+  schoolSubjectMaterialParentParamsSchema,
+  schoolSubjectMaterialIdParamsSchema,
+} from "./school-subject-material.schema";
 import {
   findAll,
   findAllPaged,
@@ -78,6 +91,29 @@ import {
   updateItem as updateStudentWalletItem,
   createPayment as createStudentWalletPayment,
 } from "./student-wallet.controller";
+import {
+  findAllPaged as findAllTasksPaged,
+  create as createTask,
+  update as updateTask,
+  remove as removeTask,
+  addAttachment as addTaskAttachment,
+  removeAttachment as removeTaskAttachment,
+} from "./school-subject-task.controller";
+import {
+  findAll as findAllMaterials,
+  create as createMaterial,
+  remove as removeMaterial,
+} from "./school-subject-material.controller";
+
+/**
+ * In-memory storage for task/material attachments — any file type, up to
+ * 10MB, same config as attachments/announcement (attachment.routes.ts).
+ */
+const uploadAttachment = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+});
+const uploadAttachmentSingle = uploadAttachment.single("file");
 
 const router = Router();
 
@@ -1447,6 +1483,396 @@ router.post(
   validate(academicCycleEnrollmentWalletItemParamSchema, "params"),
   validate(createStudentWalletPaymentSchema, "body"),
   createStudentWalletPayment,
+);
+
+// ─── School Subject Tasks ─────────────────────────────────────────────────────
+// Employee CRUD (authorize("my-classes")) — the student portal only ever
+// reads these via school-subject-task-student.routes.ts, mounted separately.
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/school-subjects/{academicCycleSchoolSubjectId}/tasks:
+ *   get:
+ *     tags:
+ *       - School Subject Tasks
+ *     summary: List tasks for a school subject in a group (paginated)
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - in: query
+ *         name: pageSize
+ *         schema: { type: integer, minimum: 1, maximum: 100, default: 5 }
+ *     responses:
+ *       200:
+ *         description: Paginated list of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items: { $ref: '#/components/schemas/SchoolSubjectTaskRecord' }
+ *                 totalPages: { type: integer }
+ *                 currentPage: { type: integer }
+ *                 itemsCount: { type: integer }
+ *       404:
+ *         description: Academic cycle, school group, or school subject not found
+ *   post:
+ *     tags:
+ *       - School Subject Tasks
+ *     summary: Create a task
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/CreateSchoolSubjectTaskBody' }
+ *     responses:
+ *       201:
+ *         description: Task created
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/SchoolSubjectTaskRecord' }
+ *       404:
+ *         description: Academic cycle, school group, or school subject not found
+ */
+router.get(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/tasks",
+  authorize("my-classes"),
+  validate(schoolSubjectTaskParentParamsSchema, "params"),
+  validate(schoolSubjectTaskPagedQuerySchema, "query"),
+  findAllTasksPaged,
+);
+
+router.post(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/tasks",
+  authorize("my-classes"),
+  validate(schoolSubjectTaskParentParamsSchema, "params"),
+  validate(createSchoolSubjectTaskSchema, "body"),
+  createTask,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/school-subjects/{academicCycleSchoolSubjectId}/tasks/{taskId}:
+ *   patch:
+ *     tags:
+ *       - School Subject Tasks
+ *     summary: Update a task
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/UpdateSchoolSubjectTaskBody' }
+ *     responses:
+ *       200:
+ *         description: Task updated
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/SchoolSubjectTaskRecord' }
+ *       404:
+ *         description: Task not found
+ *   delete:
+ *     tags:
+ *       - School Subject Tasks
+ *     summary: Delete a task (and its attachments, in storage and the DB)
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Task not found
+ */
+router.patch(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/tasks/:taskId",
+  authorize("my-classes"),
+  validate(schoolSubjectTaskIdParamsSchema, "params"),
+  validate(updateSchoolSubjectTaskSchema, "body"),
+  updateTask,
+);
+
+router.delete(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/tasks/:taskId",
+  authorize("my-classes"),
+  validate(schoolSubjectTaskIdParamsSchema, "params"),
+  removeTask,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/school-subjects/{academicCycleSchoolSubjectId}/tasks/{taskId}/attachments:
+ *   post:
+ *     tags:
+ *       - School Subject Tasks
+ *     summary: Upload an attachment for a task
+ *     description: Accepts any file type up to 10MB.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required: [file]
+ *             properties:
+ *               file: { type: string, format: binary }
+ *     responses:
+ *       201:
+ *         description: Attachment added — returns the full task with its attachments
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/SchoolSubjectTaskRecord' }
+ *       400:
+ *         description: File is required
+ *       404:
+ *         description: Task not found
+ */
+router.post(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/tasks/:taskId/attachments",
+  authorize("my-classes"),
+  validate(schoolSubjectTaskIdParamsSchema, "params"),
+  uploadAttachmentSingle,
+  addTaskAttachment,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/school-subjects/{academicCycleSchoolSubjectId}/tasks/{taskId}/attachments/{attachmentId}:
+ *   delete:
+ *     tags:
+ *       - School Subject Tasks
+ *     summary: Delete a task attachment
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: attachmentId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Task or attachment not found
+ */
+router.delete(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/tasks/:taskId/attachments/:attachmentId",
+  authorize("my-classes"),
+  validate(schoolSubjectTaskAttachmentIdParamsSchema, "params"),
+  removeTaskAttachment,
+);
+
+// ─── School Subject Materials ─────────────────────────────────────────────────
+// Employee CRUD (authorize("my-classes")) — the student portal only ever
+// reads these via school-subject-material-student.routes.ts, mounted separately.
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/school-subjects/{academicCycleSchoolSubjectId}/materials:
+ *   get:
+ *     tags:
+ *       - School Subject Materials
+ *     summary: List materials for a school subject in a group
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       200:
+ *         description: List of materials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: { $ref: '#/components/schemas/SchoolSubjectMaterialRecord' }
+ *       404:
+ *         description: Academic cycle, school group, or school subject not found
+ *   post:
+ *     tags:
+ *       - School Subject Materials
+ *     summary: Create a material (uploads its single attachment in the same call)
+ *     description: Accepts any file type up to 10MB.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required: [file]
+ *             properties:
+ *               file: { type: string, format: binary }
+ *     responses:
+ *       201:
+ *         description: Material created
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/SchoolSubjectMaterialRecord' }
+ *       400:
+ *         description: File is required
+ *       404:
+ *         description: Academic cycle, school group, or school subject not found
+ */
+router.get(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/materials",
+  authorize("my-classes"),
+  validate(schoolSubjectMaterialParentParamsSchema, "params"),
+  findAllMaterials,
+);
+
+router.post(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/materials",
+  authorize("my-classes"),
+  validate(schoolSubjectMaterialParentParamsSchema, "params"),
+  uploadAttachmentSingle,
+  createMaterial,
+);
+
+/**
+ * @openapi
+ * /academic-cycles/{academicCycleId}/school-groups/{academicCycleSchoolGroupId}/school-subjects/{academicCycleSchoolSubjectId}/materials/{materialId}:
+ *   delete:
+ *     tags:
+ *       - School Subject Materials
+ *     summary: Delete a material (and its attachment, in storage and the DB)
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: academicCycleSchoolSubjectId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: path
+ *         name: materialId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       204:
+ *         description: Deleted successfully
+ *       404:
+ *         description: Material not found
+ */
+router.delete(
+  "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/materials/:materialId",
+  authorize("my-classes"),
+  validate(schoolSubjectMaterialIdParamsSchema, "params"),
+  removeMaterial,
 );
 
 export default router;

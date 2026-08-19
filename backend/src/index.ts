@@ -29,6 +29,8 @@ import academicCycleRoutes from "./modules/academic-cycles/academic-cycle.routes
 import academicCycleSchoolGroupStudentRoutes from "./modules/academic-cycles/academic-cycle-school-group-student.routes";
 import studentGradeStudentRoutes from "./modules/academic-cycles/student-grade-student.routes";
 import studentWalletStudentRoutes from "./modules/academic-cycles/student-wallet-student.routes";
+import schoolSubjectTaskStudentRoutes from "./modules/academic-cycles/school-subject-task-student.routes";
+import schoolSubjectMaterialStudentRoutes from "./modules/academic-cycles/school-subject-material-student.routes";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import globalSearchRoutes from "./modules/global-search/global-search.routes";
 import notificationRoutes from "./modules/notifications/notification.routes";
@@ -68,6 +70,13 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
  * is fully handled by this router and never falls through to it.
  */
 app.use("/students/me", studentMeRoutes);
+
+/*
+ * Student portal routes with their own URLs (no employee-side counterpart
+ * exists yet) — same reasoning as /students/me above, just no gate needed.
+ */
+app.use("/academic-cycles", schoolSubjectTaskStudentRoutes);
+app.use("/academic-cycles", schoolSubjectMaterialStudentRoutes);
 
 /*
  * Student portal routes that share their exact URL with an employee-facing
