@@ -4,6 +4,9 @@ import { BloodType, DayOfWeek } from "../src/generated/prisma/enums";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import bcrypt from "bcrypt";
+// Imported after "dotenv/config" above so STORAGE_LOCAL_PATH is already
+// populated by the time this module's storageService singleton is created.
+import { storageService } from "../src/shared/services/storage.service";
 
 const pool = new pg.Pool({ connectionString: process.env["DATABASE_URL"] });
 const adapter = new PrismaPg(pool, { schema: "core" });
@@ -1218,6 +1221,129 @@ async function main() {
   }
 
   console.log(`  ✓ Class schedule: ${calendarEntries.length} calendar entries`);
+
+  // --- School subject tasks & materials (test content for GET .../tasks and .../materials) ---
+  // Real files, uploaded through the same storageService the app uses (not a
+  // seed-only shortcut) — so /uploads URLs actually resolve once the server
+  // is running, exactly like a real teacher upload would. One pair (task +
+  // material) per group/subject combination that's actually taught, derived
+  // from the calendar entries just created above.
+  const TASK_MATERIAL_PLACEHOLDER_FILE = Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+    "base64",
+  );
+
+  const SUBJECT_DISPLAY_NAME_BY_KEY: Record<string, string> = {
+    primaria_espanol_1p: "Español",
+    primaria_matematicas_1p: "Matemáticas",
+    primaria_ciencias_1p: "Ciencias Naturales",
+    primaria_ingles_1p: "Inglés",
+    primaria_historia_1p: "Historia",
+    preescolar_espanol_1pe: "Español",
+    preescolar_matematicas_1pe: "Matemáticas",
+    preescolar_ingles_1pe: "Inglés",
+    preescolar_expresion_1pe: "Expresión y Creatividad",
+  };
+
+  const subjectIdToKey = new Map(
+    Object.entries(academicCycleSchoolSubjectsBySubjectKey).map(([key, v]) => [
+      v.id,
+      key,
+    ]),
+  );
+
+  const groupSubjectPairs = new Map<
+    string,
+    {
+      academicCycleId: string;
+      academicCycleSchoolGroupId: string;
+      academicCycleSchoolSubjectId: string;
+    }
+  >();
+  for (const entry of calendarEntries) {
+    const pairKey = `${entry.academicCycleSchoolGroupId}:${entry.academicCycleSchoolSubjectId}`;
+    if (!groupSubjectPairs.has(pairKey)) {
+      groupSubjectPairs.set(pairKey, {
+        academicCycleId: entry.academicCycleId,
+        academicCycleSchoolGroupId: entry.academicCycleSchoolGroupId,
+        academicCycleSchoolSubjectId: entry.academicCycleSchoolSubjectId,
+      });
+    }
+  }
+
+  const dueDateBase = Date.UTC(2026, 8, 15); // Sep 15, 2026 — inside both cycles' date range
+  let tasksCreated = 0;
+  let materialsCreated = 0;
+
+  for (const {
+    academicCycleId,
+    academicCycleSchoolGroupId,
+    academicCycleSchoolSubjectId,
+  } of groupSubjectPairs.values()) {
+    const subjectKey = subjectIdToKey.get(academicCycleSchoolSubjectId) ?? "";
+    const subjectName = SUBJECT_DISPLAY_NAME_BY_KEY[subjectKey] ?? "la materia";
+
+    const existingTasksCount = await prisma.schoolSubjectTask.count({
+      where: { academicCycleSchoolGroupId, academicCycleSchoolSubjectId },
+    });
+    if (existingTasksCount === 0) {
+      for (let i = 1; i <= 2; i++) {
+        const task = await prisma.schoolSubjectTask.create({
+          data: {
+            title: `Tarea ${i} — ${subjectName}`,
+            description: `Actividad ${i} de ${subjectName} para reforzar lo visto en clase.`,
+            dueDate: new Date(dueDateBase + i * 5 * 24 * 60 * 60 * 1000),
+            academicCycleId,
+            academicCycleSchoolGroupId,
+            academicCycleSchoolSubjectId,
+          },
+        });
+        const url = await storageService.upload({
+          buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
+          fileName: `tarea-${subjectKey}-${i}.png`,
+          mimeType: "image/png",
+          subfolder: "school-subject-tasks",
+        });
+        await prisma.schoolSubjectTaskAttachment.create({
+          data: {
+            url,
+            name: `tarea-${subjectKey}-${i}`,
+            extension: "png",
+            schoolSubjectTaskId: task.id,
+          },
+        });
+        tasksCreated++;
+      }
+    }
+
+    const existingMaterialsCount = await prisma.schoolSubjectMaterial.count({
+      where: { academicCycleSchoolGroupId, academicCycleSchoolSubjectId },
+    });
+    if (existingMaterialsCount === 0) {
+      const url = await storageService.upload({
+        buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
+        fileName: `material-${subjectKey}.png`,
+        mimeType: "image/png",
+        subfolder: "school-subject-materials",
+      });
+      await prisma.schoolSubjectMaterial.create({
+        data: {
+          academicCycleId,
+          academicCycleSchoolGroupId,
+          academicCycleSchoolSubjectId,
+          attachmentUrl: url,
+          attachmentName: `material-${subjectKey}`,
+          attachmentExtension: "png",
+        },
+      });
+      materialsCreated++;
+    }
+  }
+
+  console.log(
+    `  ✓ School subject tasks: ${tasksCreated} records (2 per group/subject taught, each with 1 attachment)`,
+  );
+  console.log(`  ✓ School subject materials: ${materialsCreated} records`);
 
   // --- Wallet catalog (2026 cycles): inscripción, mantenimiento, material ---
   const walletPrimaria = {
