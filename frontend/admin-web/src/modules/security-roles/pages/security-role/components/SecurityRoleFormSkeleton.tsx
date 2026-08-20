@@ -6,8 +6,8 @@ export const SecurityRoleFormSkeleton = () => {
 
             {/* General section */}
             <div className="space-y-2">
-                <Skeleton className="h-6 w-96" />
-                <Skeleton className="h-4 w-lg" />
+                <Skeleton className="h-6 max-w-96" />
+                <Skeleton className="h-4 max-w-lg" />
             </div>
 
             <div className="flex flex-col gap-y-8">
@@ -25,7 +25,7 @@ export const SecurityRoleFormSkeleton = () => {
                     <div className="switch-control-container">
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-20" />
-                            <Skeleton className="h-3 w-72" />
+                            <Skeleton className="h-3 max-w-72" />
                         </div>
 
                         <Skeleton className="h-6 w-11 rounded-full" />
@@ -42,8 +42,8 @@ export const SecurityRoleFormSkeleton = () => {
 
             {/* Permissions */}
             <div className="space-y-2 mt-4">
-                <Skeleton className="h-6 w-120" />
-                <Skeleton className="h-4 w-2xl" />
+                <Skeleton className="h-6 max-w-120" />
+                <Skeleton className="h-4 max-w-2xl" />
             </div>
 
             <div className="overflow-x-auto">

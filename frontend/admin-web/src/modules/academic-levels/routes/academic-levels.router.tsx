@@ -1,11 +1,11 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router";
 
-import SystemLayout from "@/layouts/SystemLayout";
 import { AuthenticatedRoute } from "@/routes/protected.router";
 import { AcademicLevelPage } from "../pages/academic-level/AcademicLevelPage";
 import { AcademicLevelsPage } from "../pages/academic-levels/AcademicLevelsPage";
 
+const SystemLayout = lazy(() => import("@/layouts/SystemLayout"));
 const AcademicLevelsLayout = lazy(() => import("@/modules/academic-levels/layouts/AcademicLevelsLayout"));
 
 export const academicLevelsRouter: RouteObject = {
