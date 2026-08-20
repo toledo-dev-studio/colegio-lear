@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useGetPagedMyClasses } from "@/modules/my-classes/hooks/useGetPagedMyClasses";
+import { useGetPagedMyClasses } from "@/modules/my-classes/hooks/my-classes/useGetPagedMyClasses";
 
 export const useMyClassesPage = () => {
     // Hooks & stores

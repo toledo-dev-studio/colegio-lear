@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { MyClassLayoutSkeleton } from "../../../layouts/MyClassLayoutSkeleton";
-import { useGetMyClassById } from "../../../hooks/useGetMyClassById";
+import { useGetMyClassById } from "../../../hooks/my-class/useGetMyClassById";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
 import { useGetAcademicCycleById } from "@/modules/academic-cycles/hooks/academic-cycles/useGetAcademicCycleById";
 import { useSchoolSubjectsTab } from "../school-subjects-tab/hooks/useSchoolSubjectsTab";

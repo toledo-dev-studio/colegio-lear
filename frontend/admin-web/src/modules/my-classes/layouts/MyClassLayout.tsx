@@ -1,12 +1,12 @@
 import { matchPath, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router";
-import { BookOpen, ClipboardCheck } from "lucide-react";
+import { BookOpen, ClipboardCheck, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/extensions/utils";
 import type { Tab } from "@/interfaces/components/tab";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
-import { useGetMyClassById } from "../hooks/useGetMyClassById";
+import { useGetMyClassById } from "../hooks/my-class/useGetMyClassById";
 import { usePermission } from "@/modules/auth/hooks/usePermission";
 import { MyClassLayoutSkeleton } from "./MyClassLayoutSkeleton";
 import { useGetAcademicCycleById } from "@/modules/academic-cycles/hooks/academic-cycles/useGetAcademicCycleById";
@@ -25,6 +25,12 @@ const TABS: Tab[] = [
         to: "school-subjects",
         label: "Materias escolares",
         icon: BookOpen,
+        protected: false
+    },
+    {
+        to: "chats",
+        label: "Chats con alumnos",
+        icon: MessageSquare,
         protected: false
     }
 ];

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { createUpdateSchoolGroupAssistsAsync } from "../api/create-update-school-group-assists.api";
+import { createUpdateSchoolGroupAssistsAsync } from "../../api/attendance-tab/create-update-school-group-assists.api";
 import { GET_PAGED_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
 import { GET_SCHOOL_GROUP_ASSISTS_QUERY_KEY } from "@/lib/queries-key/my-classes-queries-key";
 

@@ -8,8 +8,8 @@ import { extractFileExtension } from "@/lib/extensions/attachments";
 import { DragAndDrop } from "@/shared/components/drag-and-drop/DragAndDrop";
 import { AttachmentCard } from "@/shared/components/attachment-card/AttachmentCard";
 import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/constants/attachment.constants";
-import { useUploadSchoolSubjectMaterial } from "../../../../hooks/useUploadSchoolSubjectMaterial";
-import { useDeleteSchoolSubjectMaterialById } from "../../../../hooks/useDeleteSchoolSubjectMaterialById";
+import { useUploadSchoolSubjectMaterial } from "../../../../hooks/school-subjects-tab/useUploadSchoolSubjectMaterial";
+import { useDeleteSchoolSubjectMaterialById } from "../../../../hooks/school-subjects-tab/useDeleteSchoolSubjectMaterialById";
 import type { SchoolSubjectMaterialResponse } from "@/interfaces/responses/school-subject-material.response";
 
 /**

@@ -9,6 +9,7 @@ const MyClassesLayout = lazy(() => import("@/modules/my-classes/layouts/MyClasse
 const MyClassLayout = lazy(() => import("@/modules/my-classes/layouts/MyClassLayout"));
 const AttendanceTab = lazy(() => import("@/modules/my-classes/pages/my-class/attendance-tab/AttendanceTab"));
 const SchoolSubjectsTab = lazy(() => import("@/modules/my-classes/pages/my-class/school-subjects-tab/SchoolSubjectsTab"));
+const ChatsTab = lazy(() => import("@/modules/my-classes/pages/my-class/chats-tab/ChatsTab"));
 const SchoolSubjectGradesPage = lazy(() => import("@/modules/my-classes/pages/my-class/school-subject-grades/SchoolSubjectGradesPage"));
 
 export const myClassesRouter: RouteObject = {
@@ -37,6 +38,10 @@ export const myClassesRouter: RouteObject = {
                         {
                             path: "school-subjects",
                             element: <SchoolSubjectsTab />
+                        },
+                        {
+                            path: "chats",
+                            element: <ChatsTab />
                         }
                     ]
                 },
