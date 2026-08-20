@@ -12,7 +12,7 @@ export const DashboardPage = () => {
   
   return (
     <>
-      <section className="page-main-section py-8">
+      <section className="page-main-section px-4 py-8">
         
         <PageTitle title={`Hola de nuevo, ${loggedInUserFullName}`} subtitle="Panel de control administrativo · Visión general del sistema" />
         

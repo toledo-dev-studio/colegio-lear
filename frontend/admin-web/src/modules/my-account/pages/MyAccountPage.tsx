@@ -17,13 +17,13 @@ export const MyAccountPage = () => {
 
   const { user: employee, setUser: setEmployee } = useAuthStore();
   const loggedInUserFullName = useAuthStore(userStoreFullName);
-  
+
   const handleSubmit = async (employeeRequestLike: Partial<EmployeeRequest>) => {
     try {
       showLoading("Actualizando información de la cuenta");
       await updateMyAccountMutation.mutateAsync({ employeeRequestLike }, {
         onSuccess: (response) => {
-          setEmployee({...response});
+          setEmployee({ ...response });
           toast.success("Información de la cuenta actualizada correctamente", { position: "top-right" });
           hideLoading();
         }
@@ -37,14 +37,12 @@ export const MyAccountPage = () => {
 
   return (
     <>
-      <div className="w-full py-12 px-10 lg:px-15">
+      <section className="page-main-section">
 
-        <div className="mb-10">
-          <Breadcrumb items={[
-            { label: "Accesos rápidos" },
-            { label: "Mi cuenta", to: "/my-account" },
-          ]} />
-        </div>
+        <Breadcrumb items={[
+          { label: "Accesos rápidos" },
+          { label: "Mi cuenta", to: "/my-account" },
+        ]} />
 
         <PageTitle
           title={loggedInUserFullName || "Mi cuenta"}
@@ -56,7 +54,7 @@ export const MyAccountPage = () => {
             onSubmit={handleSubmit}
             isSubmitting={false} />
         </div>
-      </div>
+      </section>
     </>
   )
 }

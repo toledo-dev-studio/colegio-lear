@@ -11,7 +11,7 @@ interface Props {
 export const Loader = ({ title, subtitle, fullScreen = true, size = "default", className }: Props) => {
     return (
         <div className={cn(
-            "h-full w-full flex items-center justify-center z-100 bg-card",
+            "h-full w-full flex items-center justify-center text-center z-100 bg-card",
             fullScreen && "absolute",
             className
         )}>

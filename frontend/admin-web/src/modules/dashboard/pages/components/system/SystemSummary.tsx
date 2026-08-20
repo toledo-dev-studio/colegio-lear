@@ -56,11 +56,11 @@ export const SystemSummary = () => {
                         loading={isFetching}
                         onArrowUpClick={() => navigate("/job-titles")} />
                 </div>
-                <div className="grid grid-cols-10 gap-6">
-                    <div className="col-span-6">
+                <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
+                    <div className="col-span-1 lg:col-span-6">
                         <LatestTeachersTable data={teachers} loading={isFetchingTeachers} />
                     </div>
-                    <div className="col-span-4">
+                    <div className="col-span-1 lg:col-span-4">
                         <QuickAccess />
                     </div>
                 </div>
