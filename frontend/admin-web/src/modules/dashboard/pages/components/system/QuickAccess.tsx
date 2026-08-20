@@ -26,13 +26,13 @@ export const QuickAccess = () => {
                                             to={`/${item.module.key}`}
                                             data-testid={item.testId}
                                             className="flex items-center justify-between p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${ICON_TONE[item.tone]}`}>
+                                            <div className="flex items-center gap-3 min-w-0">
+                                                <div className={`min-w-12 min-h-12 rounded-full! flex items-center justify-center ${ICON_TONE[item.tone]}`}>
                                                     <Icon className="w-5 h-5" />
                                                 </div>
-                                                <span className="font-medium text-sm capitalize">{item.module.label}</span>
+                                                <span className="font-medium text-sm capitalize truncate">{item.module.label}</span>
                                             </div>
-                                            <ArrowUpRight className="w-4 h-4 text-muted-foreground" />
+                                            <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground" />
                                         </Link>
                                     )
                                 })

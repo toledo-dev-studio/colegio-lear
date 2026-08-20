@@ -1,4 +1,3 @@
-import React from "react";
 import { UserIcon, Users } from "lucide-react";
 
 import { Skeleton } from "@/shared/shadcn/ui/skeleton";
@@ -11,7 +10,7 @@ interface Props {
     loading?: boolean;
 }
 
-export const LatestTeachersTable: React.FC<Props> = ({ data, loading }) => (
+export const LatestTeachersTable = ({ data, loading }: Props) => (
     <div className="bg-card rounded-3xl p-6 sm:p-8 border border-border shadow-sm" data-testid="dash-employees-latest-teachers">
         <div className="flex items-center gap-2 mb-5">
             <Users className="w-4 h-4 text-primary" />
@@ -21,12 +20,12 @@ export const LatestTeachersTable: React.FC<Props> = ({ data, loading }) => (
             <ul className="divide-y divide-border">
                 {Array.from({ length: 6 }).map((_, i) => (
                     <li key={i} className="py-3 flex items-center gap-4">
-                        <Skeleton className="w-10 h-10 rounded-full" />
-                        <div className="flex-1 space-y-2">
-                            <Skeleton className="h-4 w-48" />
-                            <Skeleton className="h-3 w-32" />
+                        <Skeleton className="w-10 h-10 rounded-full shrink-0" />
+                        <div className="flex-1 min-w-0 space-y-2">
+                            <Skeleton className="h-4 w-3/4 max-w-48" />
+                            <Skeleton className="h-3 w-1/2 max-w-32" />
                         </div>
-                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-4 w-20 hidden sm:block" />
                     </li>
                 ))}
             </ul>
@@ -54,7 +53,7 @@ export const LatestTeachersTable: React.FC<Props> = ({ data, loading }) => (
                                 <p className="font-medium text-foreground truncate">{t.fullName}</p>
                                 <p className="text-xs text-muted-foreground truncate">{t.email}</p>
                             </div>
-                            <span className="text-xs text-muted-foreground shrink-0">Ingreso: {formatFriendlyDate(t.createdAt)}</span>
+                            <span className="text-xs text-muted-foreground shrink-0 hidden sm:block">Ingreso: {formatFriendlyDate(t.createdAt)}</span>
                         </Link>
                     </li>
                 ))}

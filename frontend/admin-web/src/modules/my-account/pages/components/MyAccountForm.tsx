@@ -34,7 +34,7 @@ export const MyAccountForm = ({ employeeResponse, isSubmitting, onSubmit }: Prop
         <>
             <Form moduleKey="payment-concepts" isSubmitting={isSubmitting} onSubmit={handleSubmit(onSubmit)} showCancelButton={false}>
 
-                <section className="flex flex-col min-h-full gap-8 mt-14">
+                <section className="flex flex-col min-h-full gap-8">
 
                     {/* Photo uploader */}
                     <section className="flex items-center justify-center flex-col">

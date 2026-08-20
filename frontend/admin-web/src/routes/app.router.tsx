@@ -1,61 +1,35 @@
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter, Navigate, type RouteObject } from "react-router";
 
 import authRouter from "@/modules/auth/routes/auth.router";
-import academicLevelsRouter from "@/modules/academic-levels/routes/academic-levels.router";
-import dashboardRouter from "@/modules/dashboard/routes/dashboard.router";
-import jobTitlesRouter from "@/modules/job-titles/routes/job-titles.router";
-import schoolSubjectRouter from "@/modules/school-subjects/routes/school-subjects.router";
-import employeesRouter from "@/modules/employees/routes/employees.router";
-import scholarshipsRouter from "@/modules/scholarships/routes/scholarships.router";
-import securityRolesRouter from "@/modules/security-roles/routes/security-roles.router";
-import paymentConceptsRouter from "@/modules/payment-concepts/routes/payment-concepts.router";
-import myAccountRouter from "@/modules/my-account/routes/my-account.router";
-import myClassesRouter from "@/modules/my-classes/routes/my-classes.router";
-import announcementsRouter from "@/modules/announcements/routes/announcements.router";
 import { NotFoundPage } from "@/shared/pages/NotFoundPage";
 import { ForbiddenRoute } from "./protected.router";
 import { ForbiddenPage } from "@/shared/pages/ForbiddenPage";
-import { studentsRouter } from "@/modules/students/routes/students.router";
-import academicCyclesRouter from "@/modules/academic-cycles/routes/academic-cycles.router";
-import homeRouter from "@/modules/home/routes/home.router";
+
+const lazyModuleRouters: Record<string, () => Promise<{ default: RouteObject }>> = {
+    "/home": () => import("@/modules/home/routes/home.router"),
+    "/dashboard": () => import("@/modules/dashboard/routes/dashboard.router"),
+    "/my-account": () => import("@/modules/my-account/routes/my-account.router"),
+    "/my-classes": () => import("@/modules/my-classes/routes/my-classes.router"),
+    "/students": () => import("@/modules/students/routes/students.router"),
+    "/academic-cycles": () => import("@/modules/academic-cycles/routes/academic-cycles.router"),
+    "/announcements": () => import("@/modules/announcements/routes/announcements.router"),
+    "/academic-levels": () => import("@/modules/academic-levels/routes/academic-levels.router"),
+    "/school-subjects": () => import("@/modules/school-subjects/routes/school-subjects.router"),
+    "/scholarships": () => import("@/modules/scholarships/routes/scholarships.router"),
+    "/payment-concepts": () => import("@/modules/payment-concepts/routes/payment-concepts.router"),
+    "/employees": () => import("@/modules/employees/routes/employees.router"),
+    "/job-titles": () => import("@/modules/job-titles/routes/job-titles.router"),
+    "/security-roles": () => import("@/modules/security-roles/routes/security-roles.router")
+};
+
+const loadedModuleRouters = new Set<string>();
 
 export const appRouter = createBrowserRouter([
     /** auth */
     ...authRouter,
-    /** home */
-    homeRouter,
-    /** dashboard */
-    dashboardRouter,
-    /** my-account */
-    myAccountRouter,
-    /** my-classes */
-    myClassesRouter,
-
-    /** students */
-    studentsRouter,
-    /** academic-cycles */
-    academicCyclesRouter,
-    /** announcements */
-    announcementsRouter,
-
-    /** academic-levels */
-    academicLevelsRouter,
-    /** school-subjects */
-    schoolSubjectRouter,
-    /** scholarships */
-    scholarshipsRouter,
-    /** payment-concepts */
-    paymentConceptsRouter,
-
-    /** employees */
-    employeesRouter,
-    /** job-titles */
-    jobTitlesRouter,
-    /** security-roles */
-    securityRolesRouter,
     {
         path: "/",
-        element: <Navigate to="/dashboard" />
+        element: <Navigate to="/home" />
     },
     /** Forbidden page */
     {
@@ -70,4 +44,14 @@ export const appRouter = createBrowserRouter([
         path: '*',
         element: <NotFoundPage />
     }
-]);
+], {
+    async patchRoutesOnNavigation({ patch, path }) {
+        const firstSegment = "/" + path.split("/")[1];
+        const loadModuleRouter = lazyModuleRouters[firstSegment];
+        if (!loadModuleRouter || loadedModuleRouters.has(firstSegment))
+            return;
+        const { default: moduleRouter } = await loadModuleRouter();
+        loadedModuleRouters.add(firstSegment);
+        patch(null, [moduleRouter]);
+    }
+});
