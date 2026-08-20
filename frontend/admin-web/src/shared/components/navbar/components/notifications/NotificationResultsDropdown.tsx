@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Bell, Info, MailOpen, Megaphone, MessageSquare } from "lucide-react";
+import { Bell, Info, MailOpen, Megaphone, MessageSquare, X } from "lucide-react";
 
 import { formatFriendlyDate } from "@/lib/extensions/formatters";
 import type { NotificationResponse } from "@/interfaces/responses/notification.response";
@@ -42,10 +42,10 @@ export const NotificationResultsDropdown = ({ open, currentPage, totalPages, tot
                 <section className="absolute inset-0" onClick={onClose} />
             </section>
 
-            <section ref={panelRef} className="absolute right-0 mt-2 w-88 sm:w-104 bg-card border border-border rounded-2xl shadow-xl overflow-hidden z-50 animate-fade-in" data-testid="notifications-panel">
+            <section ref={panelRef} className="fixed inset-x-0 top-20 bottom-0 z-50 flex flex-col border-t border-border bg-card rounded-t-2xl animate-fade-in sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:bottom-auto sm:w-96 sm:rounded-2xl sm:border sm:shadow-xl lg:w-104" data-testid="notifications-panel">
 
                 {/* Header */}
-                <section className="px-4 py-3 border-b border-border flex items-center justify-between bg-muted/30">
+                <section className="px-4 py-3 border-b border-border flex items-center justify-between bg-muted/30 shrink-0">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                             <Bell className="w-4 h-4" />
@@ -61,10 +61,13 @@ export const NotificationResultsDropdown = ({ open, currentPage, totalPages, tot
                             </p>
                         </div>
                     </div>
+                    <button type="button" aria-label="Cerrar notificaciones" onClick={onClose} className="sm:hidden cursor-pointer w-8 h-8 rounded-full hover:bg-card text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors">
+                        <X className="w-4 h-4" />
+                    </button>
                 </section>
 
                 {/* Body */}
-                <section className="max-h-[70vh] overflow-y-auto">
+                <section className="flex-1 overflow-y-auto pb-safe sm:max-h-[70vh] sm:pb-0">
 
                     {/* Loading */}
                     {(isLoadingNotifications && !notifications.length) && (<div className="px-4 py-6 text-sm text-muted-foreground text-center">Cargando…</div>)}

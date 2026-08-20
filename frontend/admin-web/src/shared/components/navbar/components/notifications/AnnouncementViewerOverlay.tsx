@@ -28,7 +28,7 @@ export const AnnouncementViewerOverlay = ({ announcementId, onClose }: Props) =>
     return (
         <>
             <section className="fixed inset-0 z-50 flex justify-end">
-                {/* <section className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={cancelButton.handleClick} /> */}
+
                 <section className="absolute inset-0 bg-background/95 backdrop-blur-sm flex items-start justify-center overflow-y-auto animate-fade-in" data-testid="announcement-viewer-overlay">
                     <button
                         onClick={onClose}
