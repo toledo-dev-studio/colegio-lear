@@ -9,8 +9,8 @@ import type { StudentAssistResponse } from "@/interfaces/responses/student-assis
 import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 import { GET_PAGED_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
 import { getPagedAcademicCycleEnrollmentsAsync } from "@/modules/academic-cycles/api/academic-cycle-enrollments/get-paged-academic-cycle-enrollments.api";
-import { useGetSchoolGroupAssists } from "../../../../hooks/useGetSchoolGroupAssists";
-import { useCreateUpdateSchoolGroupAssists } from "../../../../hooks/useCreateUpdateSchoolGroupAssists";
+import { useGetSchoolGroupAssists } from "../../../../hooks/attendance-tab/useGetSchoolGroupAssists";
+import { useCreateUpdateSchoolGroupAssists } from "../../../../hooks/attendance-tab/useCreateUpdateSchoolGroupAssists";
 import { useAttendanceTabTable } from "./useAttendanceTabTable";
 import { useLoaderStore } from "@/stores/LoaderStore";
 

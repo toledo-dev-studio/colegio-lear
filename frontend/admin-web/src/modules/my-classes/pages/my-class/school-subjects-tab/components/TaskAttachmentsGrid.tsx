@@ -7,8 +7,8 @@ import { generateTemporalId } from "@/lib/extensions/utils";
 import { extractFileExtension } from "@/lib/extensions/attachments";
 import { DragAndDrop } from "@/shared/components/drag-and-drop/DragAndDrop";
 import { DEFAULT_ACCEPTED_FILE_EXTENSIONS, DEFAULT_IMAGE_EXTENSIONS, MAX_FILE_SIZE_BYTES } from "@/lib/constants/attachment.constants";
-import { useDeleteSchoolSubjectTaskAttachmentById } from "../../../../hooks/useDeleteSchoolSubjectTaskAttachmentById";
-import { useUploadSchoolSubjectTaskAttachment } from "../../../../hooks/useUploadSchoolSubjectTaskAttachment";
+import { useDeleteSchoolSubjectTaskAttachmentById } from "../../../../hooks/school-subjects-tab/useDeleteSchoolSubjectTaskAttachmentById";
+import { useUploadSchoolSubjectTaskAttachment } from "../../../../hooks/school-subjects-tab/useUploadSchoolSubjectTaskAttachment";
 import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";
 
 /**

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useGetSchoolSubjectMaterials } from "../../../../hooks/useGetSchoolSubjectMaterials";
+import { useGetSchoolSubjectMaterials } from "../../../../hooks/school-subjects-tab/useGetSchoolSubjectMaterials";
 import type { SchoolSubjectMaterialResponse } from "@/interfaces/responses/school-subject-material.response";
 
 interface Options {

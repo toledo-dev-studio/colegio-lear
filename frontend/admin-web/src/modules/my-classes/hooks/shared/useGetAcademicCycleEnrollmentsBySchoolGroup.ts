@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
-import { getAcademicCycleEnrollmentsBySchoolGroupAsync } from "../api/get-academic-cycle-enrollments-by-school-group.api";
+import { getAcademicCycleEnrollmentsBySchoolGroupAsync } from "../../api/shared/get-academic-cycle-enrollments-by-school-group.api";
 import { GET_ACADEMIC_CYCLE_ENROLLMENTS_BY_SCHOOL_GROUP_QUERY_KEY } from "@/lib/queries-key/my-classes-queries-key";
 
 interface Options {

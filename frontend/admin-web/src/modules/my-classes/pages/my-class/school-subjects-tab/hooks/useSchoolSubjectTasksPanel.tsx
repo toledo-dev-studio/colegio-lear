@@ -3,9 +3,9 @@ import { toast } from "sonner";
 
 import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import { useLoaderStore } from "@/stores/LoaderStore";
-import { useGetSchoolSubjectTasks } from "../../../../hooks/useGetSchoolSubjectTasks";
-import { useDeleteSchoolSubjectTaskById } from "../../../../hooks/useDeleteSchoolSubjectTaskById";
-import { useCreateUpdateSchoolSubjectTask } from "../../../../hooks/useCreateUpdateSchoolSubjectTask";
+import { useGetSchoolSubjectTasks } from "../../../../hooks/school-subjects-tab/useGetSchoolSubjectTasks";
+import { useDeleteSchoolSubjectTaskById } from "../../../../hooks/school-subjects-tab/useDeleteSchoolSubjectTaskById";
+import { useCreateUpdateSchoolSubjectTask } from "../../../../hooks/school-subjects-tab/useCreateUpdateSchoolSubjectTask";
 import type { SchoolSubjectTaskRequest } from "@/interfaces/requests/school-subject-task.request";
 import type { SchoolSubjectTaskResponse } from "@/interfaces/responses/school-subject-task.response";
 import type { AttachmentResponse } from "@/interfaces/responses/attachment.response";

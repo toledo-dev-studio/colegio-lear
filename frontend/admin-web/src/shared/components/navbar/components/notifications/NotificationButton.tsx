@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { Bell } from "lucide-react";
 
@@ -12,6 +13,7 @@ import { AnnouncementViewerOverlay } from "./AnnouncementViewerOverlay";
 
 export const NotificationButton = () => {
     // Component hooks & stores
+    const navigate = useNavigate();
     const loggedInUserId = useAuthStore(userStoreId);
     const [toggleDropdown, setToggleDropdown] = useState<boolean>(false);
     const [selectedNotification, setSelectedNotification] = useState<NotificationResponse | undefined>(undefined);
@@ -46,14 +48,17 @@ export const NotificationButton = () => {
                             }}
                             onClose={() => setToggleDropdown(false)}
                             onNotificationClick={async (notification: NotificationResponse) => {
+                                setToggleDropdown(false);
                                 if(notification.type === "announcement") 
                                     setSelectedNotification(notification);
                                 else
                                     setSelectedNotification(undefined);
+                                if(notification.type === "message") {
+                                    navigate("/my-classes");
+                                }
                                 if (!notification.read) {
                                     await markNotificationAsReadAsync.mutateAsync({ employeeId: loggedInUserId!, id: notification.id });
                                 }
-                                // TODO: Logica para redirigir a un chat en un grupo escolar para docentes
                             }}
                         />
                     )

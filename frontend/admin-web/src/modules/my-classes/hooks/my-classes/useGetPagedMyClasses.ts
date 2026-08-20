@@ -2,10 +2,10 @@ import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
-import { getPagedMyClassesAsync } from "../api/get-paged-my-classes.api";
 import { GET_PAGED_MY_CLASSES_QUERY_KEY } from "@/lib/queries-key/my-classes-queries-key";
 import type { AcademicCycleStatusKey, AcademicCycleSchoolGroupStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { isValidValueWithDefault, stringToNumberWithDefault } from "@/lib/extensions/datatypes";
+import { getPagedMyClassesAsync } from "../../api/my-classes/get-paged-my-classes.api";
 
 export const useGetPagedMyClasses = () => {
     const [searchParams] = useSearchParams();

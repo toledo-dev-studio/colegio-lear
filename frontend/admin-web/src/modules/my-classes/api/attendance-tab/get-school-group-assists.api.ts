@@ -2,7 +2,7 @@ import { api } from "@/api/client";
 import { sleep } from "@/lib/extensions/promises";
 import { IS_MOCKABLE } from "@/lib/constants/environment.constants";
 import type { StudentAssistResponse } from "@/interfaces/responses/student-assist.response";
-import { toDayParam } from "../lib/attendance.lib";
+import { toDayParam } from "../../lib/attendance.lib";
 
 interface Options {
     academicCycleId: string;

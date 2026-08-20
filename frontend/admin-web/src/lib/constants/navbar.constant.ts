@@ -32,6 +32,11 @@ export const NAVBAR: Navbar[] = [
                 tone: "sky",
                 testId: "nav-my-account"
             },
+        ],
+    },
+    {
+        title: "Seguimiento escolar",
+        items: [
             {
                 module: MY_CLASSES_MODULE,
                 icon: BookOpen,
@@ -39,11 +44,6 @@ export const NAVBAR: Navbar[] = [
                 tone: "violet",
                 testId: "nav-my-classes"
             },
-        ],
-    },
-    {
-        title: "Seguimiento escolar",
-        items: [
             {
                 module: STUDENTS_MODULE,
                 icon: Users,

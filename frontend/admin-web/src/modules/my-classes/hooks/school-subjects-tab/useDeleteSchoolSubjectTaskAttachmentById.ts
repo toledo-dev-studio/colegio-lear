@@ -1,19 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { createUpdateSchoolSubjectTaskAsync } from "../api/create-update-school-subject-task.api";
+import { deleteSchoolSubjectTaskAttachmentByIdAsync } from "../../api/school-subjects-tab/delete-school-subject-task-attachment-by-id.api";
 import { GET_SCHOOL_SUBJECT_TASKS_QUERY_KEY } from "@/lib/queries-key/my-classes-queries-key";
 
-export const useCreateUpdateSchoolSubjectTask = () => {
+export const useDeleteSchoolSubjectTaskAttachmentById = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: createUpdateSchoolSubjectTaskAsync,
-        onSuccess: (_response, variables) => {
+        mutationFn: deleteSchoolSubjectTaskAttachmentByIdAsync,
+        onSuccess: (response) => {
             // Invalid cache for useGetSchoolSubjectTasks
             queryClient.invalidateQueries({
                 queryKey: [GET_SCHOOL_SUBJECT_TASKS_QUERY_KEY, {
-                    academicCycleSchoolGroupId: variables.academicCycleSchoolGroupId,
-                    schoolSubjectId: variables.schoolSubjectId,
+                    academicCycleSchoolGroupId: response.academicCycleSchoolGroupId,
+                    schoolSubjectId: response.schoolSubjectId,
                 }]
             });
         }
