@@ -22,6 +22,7 @@ import employeeRoutes from "./modules/employees/employee.routes";
 import authRoutes from "./modules/auth/auth.routes";
 import authStudentRoutes from "./modules/auth/auth-student.routes";
 import announcementRoutes from "./modules/announcements/announcement.routes";
+import announcementStudentRoutes from "./modules/announcements/announcement-student.routes";
 import attachmentRoutes from "./modules/attachments/attachment.routes";
 import studentRoutes from "./modules/students/student.routes";
 import studentMeRoutes from "./modules/students/student-me.routes";
@@ -36,6 +37,7 @@ import schoolSubjectMaterialStudentRoutes from "./modules/academic-cycles/school
 import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import globalSearchRoutes from "./modules/global-search/global-search.routes";
 import notificationRoutes from "./modules/notifications/notification.routes";
+import notificationStudentRoutes from "./modules/notifications/notification-student.routes";
 
 /** Create Express application */
 const app = express();
@@ -80,6 +82,7 @@ app.use("/students", chatRoutes);
  */
 app.use("/academic-cycles", schoolSubjectTaskStudentRoutes);
 app.use("/academic-cycles", schoolSubjectMaterialStudentRoutes);
+app.use("/notifications", notificationStudentRoutes);
 
 /*
  * Student portal routes that share their exact URL with an employee-facing
@@ -93,6 +96,7 @@ app.use("/academic-cycles", academicCycleSchoolGroupStudentRoutes);
 app.use("/academic-cycles", studentGradeStudentRoutes);
 app.use("/academic-cycles", studentWalletStudentRoutes);
 app.use("/academic-cycles", studentAssistStudentRoutes);
+app.use("/announcements", announcementStudentRoutes);
 
 /* --- Protected Routes (authentication required) --- */
 app.use(authenticate);

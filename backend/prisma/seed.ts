@@ -7,10 +7,22 @@ import bcrypt from "bcrypt";
 // Imported after "dotenv/config" above so STORAGE_LOCAL_PATH is already
 // populated by the time this module's storageService singleton is created.
 import { storageService } from "../src/shared/services/storage.service";
+import { NotificationService } from "../src/modules/notifications/notification.service";
+import type { IMailService } from "../src/shared/services/mail.service";
 
 const pool = new pg.Pool({ connectionString: process.env["DATABASE_URL"] });
 const adapter = new PrismaPg(pool, { schema: "core" });
 const prisma = new PrismaClient({ adapter });
+
+/**
+ * No-op mail transport used only for seeding: we want
+ * NotificationService.notifyAnnouncementPublished's real recipient
+ * resolution (and the Notification rows it creates) so the frontend has
+ * genuine test data, but not real emails firing to seed guardian/employee
+ * addresses every time this script runs.
+ */
+const seedMailService: IMailService = { sendMail: async () => {} };
+const notificationService = new NotificationService(prisma, seedMailService);
 
 // ─── Fixed UUIDs (valid UUID v4 format) ─────────────────────────────────────────
 
@@ -1867,7 +1879,6 @@ async function main() {
 
   // --- Announcements (with realistic HTML content) ─────────────────────────
 
-  const now = new Date();
   const inicioCursosContent = `
     <h2>¡Bienvenidos al ciclo escolar 2026-2027!</h2>
     <p>Estimadas familias, docentes y personal del Colegio Lear:</p>
@@ -1903,7 +1914,7 @@ async function main() {
     <p><em>Dirección General, Colegio Lear</em></p>
   `.trim();
 
-  await prisma.announcement.upsert({
+  const inicioCursos = await prisma.announcement.upsert({
     where: { id: ANNOUNCEMENTS_2026.inicio_cursos },
     update: {},
     create: {
@@ -1916,13 +1927,10 @@ async function main() {
       expiresAt: new Date("2026-09-10T00:00:00.000Z"),
       status: "in_progress",
       alreadyPublished: true,
-      recipientsCount: 98,
-      viewedCount: 74,
-      viewsCalculatedAt: now,
     },
   });
 
-  await prisma.announcement.upsert({
+  const diaMadres = await prisma.announcement.upsert({
     where: { id: ANNOUNCEMENTS_2026.dia_madres },
     update: {},
     create: {
@@ -1935,13 +1943,10 @@ async function main() {
       expiresAt: new Date("2026-05-09T00:00:00.000Z"),
       status: "in_progress",
       alreadyPublished: true,
-      recipientsCount: 85,
-      viewedCount: 63,
-      viewsCalculatedAt: now,
     },
   });
 
-  await prisma.announcement.upsert({
+  const vacacionesVerano = await prisma.announcement.upsert({
     where: { id: ANNOUNCEMENTS_2026.vacaciones_verano },
     update: {},
     create: {
@@ -1954,13 +1959,35 @@ async function main() {
       expiresAt: new Date("2026-08-20T00:00:00.000Z"),
       status: "in_progress",
       alreadyPublished: true,
-      recipientsCount: 98,
-      viewedCount: 51,
-      viewsCalculatedAt: now,
     },
   });
 
   console.log("  ✓ Announcements: 3 records");
+
+  // --- Announcement notifications (real recipients, no real emails) ────────
+  // Reuses NotificationService.notifyAnnouncementPublished (with a no-op
+  // mail transport, see seedMailService above) so recipientsCount and the
+  // actual Notification rows the student/admin bells read are genuine,
+  // instead of hand-typed fake numbers. Guarded by a count check so
+  // re-running the seed doesn't create duplicate notifications.
+  const seedActor = await prisma.employee.findUniqueOrThrow({
+    where: { email: admin1Email },
+    select: { id: true },
+  });
+
+  for (const announcement of [inicioCursos, diaMadres, vacacionesVerano]) {
+    const existingCount = await prisma.notification.count({
+      where: { relatedRecordId: announcement.id, type: "announcement" },
+    });
+    if (existingCount === 0) {
+      await notificationService.notifyAnnouncementPublished(
+        announcement,
+        seedActor.id,
+      );
+    }
+  }
+
+  console.log("  ✓ Announcement notifications (employees + students)");
 
   console.log("🌱 Seed completed successfully.");
 }

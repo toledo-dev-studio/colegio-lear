@@ -23,13 +23,20 @@ interface AnnouncementForNotification {
   publishedAt: Date;
 }
 
+/** A resolved email recipient, already tied to a specific student when applicable. */
+interface EmailRecipient {
+  email: string;
+  recipientName: string;
+  studentName?: string;
+  /** Set only for guardian recipients — which student's notification this counts toward. */
+  studentId?: string;
+}
+
 /**
- * Business logic layer for the Notifications module.
- * Actual in-app notification rows (and emails) are only ever created for
- * employees — there is no student-facing app yet to display them. A
- * "student" audience entry on an announcement still counts toward
- * recipientsCount (see notifyAnnouncementPublished), it just doesn't
- * generate a row here.
+ * Business logic layer for the Notifications module. Recipients are either
+ * employees (recipientType: "admin", employeeId set) or students
+ * (recipientType: "student", studentId set) — exactly one of the two ids is
+ * ever set on a given row, matching recipientType.
  */
 export class NotificationService {
   constructor(
@@ -82,6 +89,34 @@ export class NotificationService {
     };
   }
 
+  /** Student-portal equivalent of findAllPaged — same shape, filtered by studentId. */
+  async findAllPagedForStudent(
+    studentId: string,
+    pagination: PaginationParams,
+  ): Promise<PagedResult<NotificationRecord>> {
+    const skip = calculateSkip(pagination);
+    const where = { studentId, recipientType: "student" as const, sent: true };
+
+    const [data, itemsCount] = await Promise.all([
+      this.prisma.notification.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: pagination.limit,
+      }),
+      this.prisma.notification.count({ where }),
+    ]);
+
+    const meta = buildPaginationMeta(itemsCount, pagination);
+
+    return {
+      data: data.map((r) => this.toRecord(r as unknown as Record<string, unknown>)),
+      totalPages: meta.totalPages,
+      currentPage: meta.page,
+      itemsCount,
+    };
+  }
+
   /**
    * Marks a notification as read. Throws ForbiddenError if it doesn't
    * belong to the requesting employee. Idempotent: re-marking an
@@ -101,10 +136,36 @@ export class NotificationService {
       throw new ForbiddenError("This notification does not belong to you");
     }
 
+    await this.markReadAndSyncViewedCount(notification);
+  }
+
+  /** Student-portal equivalent of markAsRead — same behavior, scoped to studentId. */
+  async markAsReadForStudent(studentId: string, id: string): Promise<void> {
+    const notification = await this.prisma.notification.findUnique({
+      where: { id },
+    });
+
+    if (!notification) {
+      throw new NotFoundError("Notification not found");
+    }
+
+    if (notification.studentId !== studentId) {
+      throw new ForbiddenError("This notification does not belong to you");
+    }
+
+    await this.markReadAndSyncViewedCount(notification);
+  }
+
+  private async markReadAndSyncViewedCount(notification: {
+    id: string;
+    read: boolean;
+    type: string;
+    relatedRecordId: string;
+  }): Promise<void> {
     if (notification.read) return;
 
     await this.prisma.notification.update({
-      where: { id },
+      where: { id: notification.id },
       data: { read: true, readAt: new Date() },
     });
 
@@ -122,10 +183,11 @@ export class NotificationService {
    * Registers an announcement's notifications: resolves its audience,
    * updates recipientsCount (employees matching teacher/administrative-staff
    * + students actively enrolled in a cycle that's currently "en curso"),
-   * and creates one Notification row per resolved employee. Always
-   * brackets this with "started"/"completed" info notifications to the
-   * employee who published it — this step is normally fast (a handful of
-   * inserts), so unlike email fan-out there's no batch-size threshold.
+   * and creates one Notification row per resolved recipient (employee or
+   * student alike). Always brackets this with "started"/"completed" info
+   * notifications to the employee who published it — this step is normally
+   * fast (a handful of inserts), so unlike email fan-out there's no
+   * batch-size threshold.
    *
    * Called the moment a campaign's status first becomes "in-progress"
    * (alreadyPublished false -> true) — not at creation time, since a
@@ -137,9 +199,8 @@ export class NotificationService {
    * right away too); otherwise they're created with sent:false and
    * releaseDueNotifications() picks them up later.
    *
-   * "student" audience entries count toward recipientsCount but never
-   * generate a notification row or email — there's no student-facing app
-   * yet to show them anything.
+   * Student emails go to their principal guardian(s), not the student's own
+   * address — same posture as StudentService.sendCredentials.
    *
    * On any failure while registering (DB-level), the whole registration
    * transaction rolls back, the announcement is reverted to
@@ -157,6 +218,7 @@ export class NotificationService {
     });
 
     let employeeRecipients: Array<{ id: string; email: string; name: string }> = [];
+    let studentRecipients: Array<{ id: string; name: string; firstLastName: string }> = [];
     let totalRecipients = 0;
     const isDue = announcement.publishedAt <= new Date();
 
@@ -170,8 +232,7 @@ export class NotificationService {
       if (audience.includes("administrative-staff"))
         jobTitleTypes.push("administrative_staff");
 
-      let studentCount = 0;
-      [employeeRecipients, studentCount] = await Promise.all([
+      [employeeRecipients, studentRecipients] = await Promise.all([
         jobTitleTypes.length > 0
           ? this.prisma.employee.findMany({
               where: {
@@ -184,9 +245,9 @@ export class NotificationService {
           : Promise.resolve([]),
         // Only students actively enrolled in a cycle that's currently "en
         // curso" — an inactive student, or one enrolled only in a cycle
-        // that hasn't started/already ended, shouldn't count or be mailed.
+        // that hasn't started/already ended, shouldn't count or be notified.
         audience.includes("student")
-          ? this.prisma.student.count({
+          ? this.prisma.student.findMany({
               where: {
                 isActive: true,
                 isDeleted: false,
@@ -197,16 +258,33 @@ export class NotificationService {
                   },
                 },
               },
+              select: { id: true, name: true, firstLastName: true },
             })
-          : Promise.resolve(0),
+          : Promise.resolve([]),
       ]);
-      totalRecipients = employeeRecipients.length + studentCount;
+      totalRecipients = employeeRecipients.length + studentRecipients.length;
 
       await this.prisma.$transaction(async (tx) => {
         if (employeeRecipients.length > 0) {
           await tx.notification.createMany({
             data: employeeRecipients.map((r) => ({
+              recipientType: "admin" as const,
               employeeId: r.id,
+              title: announcement.name,
+              message: announcement.description ?? "Se publicó un nuevo comunicado.",
+              type: "announcement" as const,
+              relatedRecordId: announcement.id,
+              scheduledFor: announcement.publishedAt,
+              sent: isDue,
+            })),
+          });
+        }
+
+        if (studentRecipients.length > 0) {
+          await tx.notification.createMany({
+            data: studentRecipients.map((s) => ({
+              recipientType: "student" as const,
+              studentId: s.id,
               title: announcement.name,
               message: announcement.description ?? "Se publicó un nuevo comunicado.",
               type: "announcement" as const,
@@ -258,9 +336,48 @@ export class NotificationService {
 
     // publishedAt already reached: release immediately instead of waiting
     // for the next delivery-job tick.
-    if (isDue && employeeRecipients.length > 0) {
-      void this.sendAnnouncementEmails(announcement, employeeRecipients);
+    if (isDue) {
+      const recipients: EmailRecipient[] = [];
+      for (const r of employeeRecipients) {
+        recipients.push({ email: r.email, recipientName: r.name });
+      }
+      if (studentRecipients.length > 0) {
+        recipients.push(
+          ...(await this.resolveGuardianEmailRecipients(studentRecipients)),
+        );
+      }
+      if (recipients.length > 0) {
+        void this.sendAnnouncementEmailBatch(announcement, recipients);
+      }
     }
+  }
+
+  /**
+   * Resolves each student's principal guardian(s) into flat email
+   * recipients. A student without a principal guardian (or without an
+   * email on file) is silently skipped — same as sendCredentials.
+   */
+  private async resolveGuardianEmailRecipients(
+    students: Array<{ id: string; name: string; firstLastName: string }>,
+  ): Promise<EmailRecipient[]> {
+    const guardians = await this.prisma.studentGuardian.findMany({
+      where: { studentId: { in: students.map((s) => s.id) }, isPrincipal: true },
+      select: { studentId: true, fullName: true, email: true },
+    });
+
+    const studentById = new Map(students.map((s) => [s.id, s]));
+    const recipients: EmailRecipient[] = [];
+    for (const guardian of guardians) {
+      if (!guardian.email) continue;
+      const student = studentById.get(guardian.studentId);
+      recipients.push({
+        email: guardian.email,
+        recipientName: guardian.fullName,
+        studentId: guardian.studentId,
+        ...(student ? { studentName: `${student.name} ${student.firstLastName}` } : {}),
+      });
+    }
+    return recipients;
   }
 
   /**
@@ -285,6 +402,7 @@ export class NotificationService {
       select: {
         id: true,
         employeeId: true,
+        studentId: true,
         relatedRecordId: true,
         type: true,
         deliveryAttempts: true,
@@ -324,10 +442,10 @@ export class NotificationService {
           continue;
         }
 
-        // Every notification reaching this point is recipientType:"admin"
-        // (student rows were released earlier, without an email attempt),
-        // so employeeId is always set here.
-        const employeeIds = notifications
+        const employeeNotifications = notifications.filter((n) => n.employeeId);
+        const studentNotifications = notifications.filter((n) => n.studentId);
+
+        const employeeIds = employeeNotifications
           .map((n) => n.employeeId)
           .filter((id): id is string => id !== null);
         const employees = await this.prisma.employee.findMany({
@@ -336,50 +454,41 @@ export class NotificationService {
         });
         const employeeById = new Map(employees.map((e) => [e.id, e]));
 
-        await Promise.all(
-          notifications.map(async (n) => {
+        const studentIds = studentNotifications
+          .map((n) => n.studentId)
+          .filter((id): id is string => id !== null);
+        const students = await this.prisma.student.findMany({
+          where: { id: { in: studentIds } },
+          select: { id: true, name: true, firstLastName: true },
+        });
+        const guardiansByStudentId = new Map<string, EmailRecipient[]>();
+        if (students.length > 0) {
+          for (const recipient of await this.resolveGuardianEmailRecipients(students)) {
+            const list = guardiansByStudentId.get(recipient.studentId!) ?? [];
+            list.push(recipient);
+            guardiansByStudentId.set(recipient.studentId!, list);
+          }
+        }
+
+        await Promise.all([
+          ...employeeNotifications.map(async (n) => {
             const employee = n.employeeId ? employeeById.get(n.employeeId) : undefined;
             if (!employee) {
-              // Employee gone — nothing left to email, just release it.
               await this.prisma.notification.update({
                 where: { id: n.id },
                 data: { sent: true },
               });
               return;
             }
-
-            try {
-              await this.mail.sendMail({
-                to: employee.email,
-                subject: `Nuevo comunicado: ${announcement.name}`,
-                html: announcementNotificationEmail({
-                  employeeName: employee.name,
-                  announcementName: announcement.name,
-                  announcementDescription: announcement.description,
-                  frontendUrl: env.FRONTEND_URL,
-                }),
-              });
-              await this.prisma.notification.update({
-                where: { id: n.id },
-                data: { sent: true },
-              });
-            } catch (error) {
-              const attempts = n.deliveryAttempts + 1;
-              const giveUp = attempts >= NotificationService.MAX_DELIVERY_ATTEMPTS;
-              logger.error("Failed to send a scheduled announcement email", {
-                announcementId,
-                notificationId: n.id,
-                attempts,
-                givingUp: giveUp,
-                error,
-              });
-              await this.prisma.notification.update({
-                where: { id: n.id },
-                data: { deliveryAttempts: attempts, sent: giveUp },
-              });
-            }
+            await this.releaseOne(n, announcement, [
+              { email: employee.email, recipientName: employee.name },
+            ]);
           }),
-        );
+          ...studentNotifications.map(async (n) => {
+            const recipients = n.studentId ? guardiansByStudentId.get(n.studentId) : undefined;
+            await this.releaseOne(n, announcement, recipients ?? []);
+          }),
+        ]);
       } catch (error) {
         logger.error("Failed to release scheduled notifications for announcement", {
           announcementId,
@@ -390,10 +499,67 @@ export class NotificationService {
     }
   }
 
+  /**
+   * Releases a single due notification: emails every resolved recipient
+   * (an employee has exactly one; a student may have 0+ principal
+   * guardians) and marks it sent, retrying on the next daily run on
+   * failure. An empty recipient list (no email on file) just releases the
+   * notification with no email attempt.
+   */
+  private async releaseOne(
+    notification: { id: string; deliveryAttempts: number },
+    announcement: { id: string; name: string; description: string | null },
+    recipients: EmailRecipient[],
+  ): Promise<void> {
+    if (recipients.length === 0) {
+      await this.prisma.notification.update({
+        where: { id: notification.id },
+        data: { sent: true },
+      });
+      return;
+    }
+
+    try {
+      await Promise.all(
+        recipients.map((r) =>
+          this.mail.sendMail({
+            to: r.email,
+            subject: `Nuevo comunicado: ${announcement.name}`,
+            html: announcementNotificationEmail({
+              recipientName: r.recipientName,
+              announcementName: announcement.name,
+              announcementDescription: announcement.description,
+              frontendUrl: env.FRONTEND_URL,
+              ...(r.studentName ? { studentName: r.studentName } : {}),
+            }),
+          }),
+        ),
+      );
+      await this.prisma.notification.update({
+        where: { id: notification.id },
+        data: { sent: true },
+      });
+    } catch (error) {
+      const attempts = notification.deliveryAttempts + 1;
+      const giveUp = attempts >= NotificationService.MAX_DELIVERY_ATTEMPTS;
+      logger.error("Failed to send a scheduled announcement email", {
+        announcementId: announcement.id,
+        notificationId: notification.id,
+        attempts,
+        givingUp: giveUp,
+        error,
+      });
+      await this.prisma.notification.update({
+        where: { id: notification.id },
+        data: { deliveryAttempts: attempts, sent: giveUp },
+      });
+    }
+  }
+
   /** Fire-and-forget: never awaited by the caller. */
-  private async sendAnnouncementEmails(
+  private async sendAnnouncementEmailBatch(
     announcement: AnnouncementForNotification,
-    recipients: Array<{ id: string; email: string; name: string }>,
+    recipients: EmailRecipient[],
   ): Promise<void> {
     const results = await Promise.allSettled(
       recipients.map((r) =>
@@ -401,10 +567,11 @@ export class NotificationService {
           to: r.email,
           subject: `Nuevo comunicado: ${announcement.name}`,
           html: announcementNotificationEmail({
-            employeeName: r.name,
+            recipientName: r.recipientName,
             announcementName: announcement.name,
             announcementDescription: announcement.description,
             frontendUrl: env.FRONTEND_URL,
+            ...(r.studentName ? { studentName: r.studentName } : {}),
           }),
         }),
       ),
