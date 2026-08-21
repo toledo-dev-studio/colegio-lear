@@ -1899,6 +1899,32 @@ const swaggerOptions: swaggerJsdoc.Options = {
             read: { type: "boolean", example: false },
           },
         },
+        // ─── My Classes (teacher portal) ────────────────────────────────────────
+        MyClassRecord: {
+          type: "object",
+          properties: {
+            id: { type: "string", format: "uuid", description: "Academic cycle school group id" },
+            name: { type: "string", example: "Primero A (2026-2027)" },
+            status: { type: "string", enum: ["active", "discharged"] },
+            academicCycle: {
+              type: "object",
+              properties: {
+                id: { type: "string", format: "uuid" },
+                name: { type: "string", example: "2026 - 2027" },
+                code: { type: "string", example: "2026-A" },
+                periodType: { type: "string", example: "annual" },
+                status: {
+                  type: "string",
+                  enum: ["upcoming", "active", "completed", "cancelled", "archived"],
+                },
+                minimumPassingGrade: { type: "number", example: 6 },
+                evaluationCount: { type: "integer", example: 3 },
+                startDate: { type: "string", format: "date-time" },
+                endDate: { type: "string", format: "date-time" },
+              },
+            },
+          },
+        },
       },
     },
   },

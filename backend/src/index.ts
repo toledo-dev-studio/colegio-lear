@@ -38,6 +38,7 @@ import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import globalSearchRoutes from "./modules/global-search/global-search.routes";
 import notificationRoutes from "./modules/notifications/notification.routes";
 import notificationStudentRoutes from "./modules/notifications/notification-student.routes";
+import myClassRoutes from "./modules/my-classes/my-class.routes";
 
 /** Create Express application */
 const app = express();
@@ -114,6 +115,7 @@ app.use("/academic-cycles", academicCycleRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/global-search", globalSearchRoutes);
 app.use("/notifications", notificationRoutes);
+app.use("/me/school-groups", myClassRoutes);
 
 /* --- Global Error Handler (must be last) --- */
 app.use(errorHandler);
