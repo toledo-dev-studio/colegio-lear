@@ -3,16 +3,30 @@ import { NotFoundError } from "../../shared/errors/app-error";
 
 /**
  * Unit tests for the chat controller — covers the studentId-in-URL ownership
- * guard (the one piece of logic that lives in the controller rather than
- * ChatService) and correct delegation for all three handlers.
+ * guard on findAllChats (student-only, unaffected by dual-auth), and the
+ * dual-actor (student vs teacher) branching on findMessages/sendMessage,
+ * mocking resolveChatActor so neither real authenticate/authenticateStudent
+ * ever runs.
  */
 
 vi.mock("../../shared/lib/prisma", () => ({ prisma: {} }));
 
-const { findAllChatsMock, findMessagesMock, sendMessageMock } = vi.hoisted(() => ({
+vi.mock("../../shared/middleware/resolve-chat-actor.middleware", () => ({
+  resolveChatActor: vi.fn(),
+}));
+
+const {
+  findAllChatsMock,
+  findMessagesMock,
+  sendMessageMock,
+  findMessagesForTeacherMock,
+  sendMessageForTeacherMock,
+} = vi.hoisted(() => ({
   findAllChatsMock: vi.fn(),
   findMessagesMock: vi.fn(),
   sendMessageMock: vi.fn(),
+  findMessagesForTeacherMock: vi.fn(),
+  sendMessageForTeacherMock: vi.fn(),
 }));
 vi.mock("./chat.service", () => ({
   ChatService: vi.fn().mockImplementation(function () {
@@ -20,10 +34,13 @@ vi.mock("./chat.service", () => ({
       findAllChats: findAllChatsMock,
       findMessages: findMessagesMock,
       sendMessage: sendMessageMock,
+      findMessagesForTeacher: findMessagesForTeacherMock,
+      sendMessageForTeacher: sendMessageForTeacherMock,
     };
   }),
 }));
 
+import { resolveChatActor } from "../../shared/middleware/resolve-chat-actor.middleware";
 import { findAllChats, findMessages, sendMessage } from "./chat.controller";
 
 const STUDENT_ID = "student-uuid";
@@ -75,7 +92,11 @@ describe("chat controller", () => {
     });
   });
 
-  describe("findMessages", () => {
+  describe("findMessages — student session", () => {
+    beforeEach(() => {
+      (resolveChatActor as any).mockResolvedValue({ type: "student", studentId: STUDENT_ID });
+    });
+
     it("throws NotFoundError when the URL studentId doesn't match the session", async () => {
       const { req, res } = buildReqRes({ params: { studentId: "someone-else" } });
 
@@ -99,7 +120,41 @@ describe("chat controller", () => {
     });
   });
 
-  describe("sendMessage", () => {
+  describe("findMessages — teacher session", () => {
+    beforeEach(() => {
+      (resolveChatActor as any).mockResolvedValue({ type: "teacher", employeeId: TEACHER_ID });
+    });
+
+    it("throws NotFoundError when the URL teacherId doesn't match the session", async () => {
+      const { req, res } = buildReqRes({ params: { teacherId: "someone-else" } });
+
+      await expect(findMessages(req, res)).rejects.toThrow(NotFoundError);
+      expect(findMessagesForTeacherMock).not.toHaveBeenCalled();
+    });
+
+    it("delegates to ChatService.findMessagesForTeacher with page/pageSize from the query", async () => {
+      const paged = { data: [], totalPages: 0, currentPage: 1, itemsCount: 0 };
+      findMessagesForTeacherMock.mockResolvedValue(paged);
+      const { req, res } = buildReqRes({ query: { page: 1, pageSize: 20 } });
+
+      await findMessages(req, res);
+
+      expect(findMessagesForTeacherMock).toHaveBeenCalledWith(
+        TEACHER_ID,
+        STUDENT_ID,
+        ENROLLMENT_ID,
+        { page: 1, pageSize: 20 },
+      );
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(paged);
+    });
+  });
+
+  describe("sendMessage — student session", () => {
+    beforeEach(() => {
+      (resolveChatActor as any).mockResolvedValue({ type: "student", studentId: STUDENT_ID });
+    });
+
     it("throws NotFoundError when the URL studentId doesn't match the session", async () => {
       const { req, res } = buildReqRes({ params: { studentId: "someone-else" } });
 
@@ -115,6 +170,36 @@ describe("chat controller", () => {
       await sendMessage(req, res);
 
       expect(sendMessageMock).toHaveBeenCalledWith(STUDENT_ID, ENROLLMENT_ID, TEACHER_ID, "hola");
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(created);
+    });
+  });
+
+  describe("sendMessage — teacher session", () => {
+    beforeEach(() => {
+      (resolveChatActor as any).mockResolvedValue({ type: "teacher", employeeId: TEACHER_ID });
+    });
+
+    it("throws NotFoundError when the URL teacherId doesn't match the session", async () => {
+      const { req, res } = buildReqRes({ params: { teacherId: "someone-else" } });
+
+      await expect(sendMessage(req, res)).rejects.toThrow(NotFoundError);
+      expect(sendMessageForTeacherMock).not.toHaveBeenCalled();
+    });
+
+    it("delegates to ChatService.sendMessageForTeacher and returns 201", async () => {
+      const created = { id: "msg-2", chatId: TEACHER_ID, sentBy: "teacher", content: "hola alumno", sentAt: "now" };
+      sendMessageForTeacherMock.mockResolvedValue(created);
+      const { req, res } = buildReqRes({ body: { content: "hola alumno" } });
+
+      await sendMessage(req, res);
+
+      expect(sendMessageForTeacherMock).toHaveBeenCalledWith(
+        TEACHER_ID,
+        STUDENT_ID,
+        ENROLLMENT_ID,
+        "hola alumno",
+      );
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith(created);
     });

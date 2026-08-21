@@ -10,11 +10,15 @@ import {
 import { findAllChats, findMessages, sendMessage } from "./chat.controller";
 
 /**
- * Student-portal chat routes. This exact URL prefix
- * (/students/:studentId/enrollments/:enrollmentId/chats...) has no
- * employee-side counterpart, so — same as /students/me — authenticateStudent
- * is applied as regular chained middleware, no gate-student-session
- * fallthrough needed.
+ * Chat routes. The conversation list (GET .../chats) is student-only —
+ * authenticateStudent applied as regular chained middleware, no
+ * gate-student-session fallthrough needed (this exact URL prefix has no
+ * employee-side counterpart at all).
+ *
+ * The two message routes below serve BOTH a student and a teacher session
+ * from the exact same URL and controller function — auth there is resolved
+ * inside findMessages/sendMessage themselves via resolveChatActor (see
+ * resolve-chat-actor.middleware.ts), not as chained middleware here.
  */
 const router = Router();
 
@@ -97,14 +101,14 @@ router.get(
  *                 currentPage: { type: integer }
  *                 itemsCount: { type: integer }
  *       401:
- *         description: No student session
+ *         description: No student/teacher session
  *       404:
- *         description: studentId/enrollment mismatch, or teacherId doesn't teach this group
+ *         description: With a student session, studentId/enrollment mismatch or teacherId doesn't teach this group; with a teacher session, teacherId doesn't match the session or the teacher doesn't teach this group
  *   post:
  *     tags:
  *       - Chats
- *     summary: Send a message to a teacher
- *     description: Notifies the teacher via the existing employee notification bell (GET /notifications/admin/{employeeId}).
+ *     summary: Send a message (student to teacher, or teacher to student)
+ *     description: With a student session, notifies the teacher's bell (GET /notifications/admin/{employeeId}). With a teacher session, notifies the student's bell (GET /notifications/student/{studentId}) and sentBy is "teacher".
  *     parameters:
  *       - in: path
  *         name: studentId
@@ -130,13 +134,12 @@ router.get(
  *           application/json:
  *             schema: { $ref: '#/components/schemas/ChatMessageRecord' }
  *       401:
- *         description: No student session
+ *         description: No student/teacher session
  *       404:
- *         description: studentId/enrollment mismatch, or teacherId doesn't teach this group
+ *         description: With a student session, studentId/enrollment mismatch or teacherId doesn't teach this group; with a teacher session, teacherId doesn't match the session or the teacher doesn't teach this group
  */
 router.get(
   "/:studentId/enrollments/:enrollmentId/chats/:teacherId/messages",
-  authenticateStudent,
   validate(chatMessagesParamsSchema, "params"),
   validate(chatMessagesPagedQuerySchema, "query"),
   findMessages,
@@ -144,7 +147,6 @@ router.get(
 
 router.post(
   "/:studentId/enrollments/:enrollmentId/chats/:teacherId/messages",
-  authenticateStudent,
   validate(chatMessagesParamsSchema, "params"),
   validate(sendChatMessageSchema, "body"),
   sendMessage,

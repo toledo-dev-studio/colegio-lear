@@ -16,6 +16,16 @@ export const idParamSchema = z.object({
   id: z.string().uuid({ message: "id must be a valid UUID" }),
 });
 
+/** Validates the :studentId path param of the student-portal notification routes. */
+export const studentIdParamSchema = z.object({
+  studentId: z.string().uuid({ message: "studentId must be a valid UUID" }),
+});
+
+/** Validates POST /notifications/student/:studentId/read body. */
+export const markAsReadStudentBodySchema = z.object({
+  notificationId: z.string().uuid({ message: "notificationId must be a valid UUID" }),
+});
+
 /**
  * Validates GET /notifications/:type/:id query params.
  * The frontend also sends `employeeId` as a query param (redundant with the

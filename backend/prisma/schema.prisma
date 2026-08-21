@@ -292,7 +292,12 @@ model Notification {
   // filter correctly once there are two kinds of recipients sharing this
   // same table, instead of just assuming every row is an employee's.
   recipientType    NotificationRecipientType @default(admin) @map("recipient_type")
-  employeeId       String                    @map("employee_id") @db.Uuid
+  // Exactly one of employeeId/studentId is set, matching recipientType
+  // (admin -> employeeId, student -> studentId) — enforced in
+  // NotificationService, not a DB constraint (same posture as the rest of
+  // this codebase's cross-field invariants).
+  employeeId       String?                   @map("employee_id") @db.Uuid
+  studentId        String?                   @map("student_id") @db.Uuid
   title            String                    @db.VarChar(200)
   message          String                    @db.VarChar(1000)
   type             NotificationType
@@ -317,9 +322,11 @@ model Notification {
   // sent:true regardless, so the recipient at least sees it in the bell.
   deliveryAttempts Int                       @default(0) @map("delivery_attempts")
   createdAt        DateTime                  @default(now()) @map("created_at")
-  employee         Employee                  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employee         Employee?                 @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  student          Student?                  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@index([employeeId, createdAt])
+  @@index([studentId, createdAt])
   @@index([sent, scheduledFor])
   @@map("notifications")
   @@schema("core")
@@ -358,6 +365,7 @@ model Student {
   allergies                StudentAllergy[]
   academicCycleEnrollments AcademicCycleEnrollment[]
   walletItems              StudentWalletItem[]
+  notifications            Notification[]
 
   @@map("students")
   @@schema("core")

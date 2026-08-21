@@ -87,6 +87,14 @@ export async function remove(req: Request, res: Response): Promise<void> {
   sendNoContent(res);
 }
 
+/** GET /academic-cycles/:academicCycleId/enrollments (non-paged, requires academicCycleSchoolGroupId) */
+export async function findAllByGroup(req: Request, res: Response): Promise<void> {
+  const { academicCycleId } = req.params as { academicCycleId: string };
+  const filters = buildFilters(req.query as Record<string, unknown>);
+  const data = await service.findAllByGroup(academicCycleId, filters);
+  sendSuccess(res, data);
+}
+
 /** GET /students/:studentId/enrollments */
 export async function findAllForStudent(
   req: Request,

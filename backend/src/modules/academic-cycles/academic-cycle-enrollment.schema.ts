@@ -82,6 +82,20 @@ export const academicCycleEnrollmentPagedQuerySchema =
     pageSize: z.coerce.number().int().positive().max(100).default(10),
   });
 
+/**
+ * Validates GET /academic-cycles/:academicCycleId/enrollments (non-paged)
+ * query — unlike the paged listing above, academicCycleSchoolGroupId is
+ * required here: this endpoint returns every matching enrollment with no
+ * limit, so it must always be scoped to a single group (used by "my
+ * classes" to populate its student roster for chats/grades).
+ */
+export const academicCycleEnrollmentByGroupQuerySchema = z.object({
+  academicCycleSchoolGroupId: z
+    .string()
+    .uuid({ message: "academicCycleSchoolGroupId must be a valid UUID" }),
+  status: statusEnum.optional(),
+});
+
 // ─── Body Schemas ───────────────────────────────────────────────────────────
 
 /** Validates POST body for creating an academic cycle enrollment */

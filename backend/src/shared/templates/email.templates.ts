@@ -234,16 +234,27 @@ export function studentCredentialsEmail(params: {
   return baseLayout(content);
 }
 
-/** Announcement notification email — sent to each resolved recipient when an announcement is created */
+/**
+ * Announcement notification email — sent to each resolved recipient when an
+ * announcement is created. Shared by both audiences: employees (recipientName
+ * = the employee's own name) and students (recipientName = the principal
+ * guardian's name, studentName = whose account it's about — a guardian can
+ * have more than one child enrolled, so this disambiguates which one).
+ */
 export function announcementNotificationEmail(params: {
-  employeeName: string;
+  recipientName: string;
   announcementName: string;
   announcementDescription: string | null;
   frontendUrl: string;
+  studentName?: string;
 }): string {
+  const greeting = params.studentName
+    ? `Hola ${params.recipientName}, se publicó un nuevo comunicado en Colegio Lear para ${params.studentName}${params.announcementDescription ? ":" : "."}`
+    : `Hola ${params.recipientName}, se publicó un nuevo comunicado en Colegio Lear${params.announcementDescription ? ":" : "."}`;
+
   const content = `
     ${heading(`Nuevo comunicado: ${params.announcementName}`)}
-    ${paragraph(`Hola ${params.employeeName}, se publicó un nuevo comunicado en Colegio Lear${params.announcementDescription ? ":" : "."}`)}
+    ${paragraph(greeting)}
     ${params.announcementDescription ? infoBox(`<p style="margin:0;color:${COLOR_FOREGROUND};font-size:14px;font-family:${BODY_FONT};">${params.announcementDescription}</p>`) : ""}
     ${ctaButton("Ver comunicado", params.frontendUrl)}`;
 

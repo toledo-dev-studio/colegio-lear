@@ -165,6 +165,27 @@ export class AcademicCycleEnrollmentService {
     };
   }
 
+  /**
+   * GET every enrollment in a group (optionally filtered by status), no
+   * pagination — used by "my classes" to populate its student roster for
+   * chats/grades. Always scoped to a group (see schema: required there).
+   */
+  async findAllByGroup(
+    academicCycleId: string,
+    filters: AcademicCycleEnrollmentFilters,
+  ): Promise<AcademicCycleEnrollmentRecord[]> {
+    await this.ensureCycleExists(academicCycleId);
+    const where = this.buildWhereClause(academicCycleId, filters);
+
+    const results = await this.prisma.academicCycleEnrollment.findMany({
+      where,
+      include: INCLUDE_RELATIONS,
+      orderBy: { createdAt: "desc" },
+    });
+
+    return results.map((r) => this.toRecord(r));
+  }
+
   /** GET a single enrollment by ID */
   async findById(
     academicCycleId: string,
