@@ -3,6 +3,7 @@ import { ChatService } from "./chat.service";
 import { prisma } from "../../shared/lib/prisma";
 import { sendSuccess, sendPaginatedSuccess } from "../../shared/helpers/response.helper";
 import { NotFoundError } from "../../shared/errors/app-error";
+import { resolveChatActor } from "../../shared/middleware/resolve-chat-actor.middleware";
 
 const service = new ChatService(prisma);
 
@@ -30,10 +31,18 @@ export async function findAllChats(req: Request, res: Response): Promise<void> {
   sendSuccess(res, data);
 }
 
-/** GET /students/:studentId/enrollments/:enrollmentId/chats/:teacherId/messages */
+/**
+ * GET /students/:studentId/enrollments/:enrollmentId/chats/:teacherId/messages
+ * Serves both audiences from this one handler (see resolve-chat-actor.middleware.ts
+ * for why there's no fallthrough router here, unlike gate-student-session):
+ * a student session must own :studentId, a teacher session must own
+ * :teacherId — 404 (not 403) either way, never confirming existence to the
+ * wrong party.
+ */
 export async function findMessages(req: Request, res: Response): Promise<void> {
-  const studentId = assertOwnStudentId(req);
-  const { enrollmentId, teacherId } = req.params as {
+  const actor = await resolveChatActor(req, res);
+  const { studentId, enrollmentId, teacherId } = req.params as {
+    studentId: string;
     enrollmentId: string;
     teacherId: string;
   };
@@ -41,10 +50,22 @@ export async function findMessages(req: Request, res: Response): Promise<void> {
   const page = query.page as number;
   const pageSize = query.pageSize as number;
 
-  const result = await service.findMessages(studentId, enrollmentId, teacherId, {
-    page,
-    pageSize,
-  });
+  let result;
+  if (actor.type === "student") {
+    if (studentId !== actor.studentId) {
+      throw new NotFoundError("Student not found");
+    }
+    result = await service.findMessages(studentId, enrollmentId, teacherId, { page, pageSize });
+  } else {
+    if (teacherId !== actor.employeeId) {
+      throw new NotFoundError("Teacher not found");
+    }
+    result = await service.findMessagesForTeacher(teacherId, studentId, enrollmentId, {
+      page,
+      pageSize,
+    });
+  }
+
   sendPaginatedSuccess(
     res,
     result.data,
@@ -54,15 +75,33 @@ export async function findMessages(req: Request, res: Response): Promise<void> {
   );
 }
 
-/** POST /students/:studentId/enrollments/:enrollmentId/chats/:teacherId/messages */
+/**
+ * POST /students/:studentId/enrollments/:enrollmentId/chats/:teacherId/messages
+ * Same dual-actor resolution as findMessages above; `sentBy` on the created
+ * message follows from which side sent it (see ChatService.sendMessage /
+ * sendMessageForTeacher).
+ */
 export async function sendMessage(req: Request, res: Response): Promise<void> {
-  const studentId = assertOwnStudentId(req);
-  const { enrollmentId, teacherId } = req.params as {
+  const actor = await resolveChatActor(req, res);
+  const { studentId, enrollmentId, teacherId } = req.params as {
+    studentId: string;
     enrollmentId: string;
     teacherId: string;
   };
   const { content } = req.body as { content: string };
 
-  const data = await service.sendMessage(studentId, enrollmentId, teacherId, content);
+  let data;
+  if (actor.type === "student") {
+    if (studentId !== actor.studentId) {
+      throw new NotFoundError("Student not found");
+    }
+    data = await service.sendMessage(studentId, enrollmentId, teacherId, content);
+  } else {
+    if (teacherId !== actor.employeeId) {
+      throw new NotFoundError("Teacher not found");
+    }
+    data = await service.sendMessageForTeacher(teacherId, studentId, enrollmentId, content);
+  }
+
   sendSuccess(res, data, 201);
 }

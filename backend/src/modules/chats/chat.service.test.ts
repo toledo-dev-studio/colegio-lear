@@ -8,13 +8,17 @@ import { NotFoundError } from "../../shared/errors/app-error";
  * teacher-ownership guard, and the employee notification created on send.
  */
 
-const { findAllTeachersMock } = vi.hoisted(() => ({
+const { findAllTeachersMock, resolveTeacherGroupScopeMock } = vi.hoisted(() => ({
   findAllTeachersMock: vi.fn(),
+  resolveTeacherGroupScopeMock: vi.fn(),
 }));
 vi.mock("../academic-cycles/academic-cycle-school-group.service", () => ({
   AcademicCycleSchoolGroupService: vi.fn().mockImplementation(function () {
     return { findAllTeachers: findAllTeachersMock };
   }),
+}));
+vi.mock("../academic-cycles/teacher-class-scope.helper", () => ({
+  resolveTeacherGroupScope: resolveTeacherGroupScopeMock,
 }));
 
 import { ChatService } from "./chat.service";
@@ -30,6 +34,7 @@ function createMockPrisma() {
       create: vi.fn(),
     },
     student: { findUnique: vi.fn() },
+    employee: { findUnique: vi.fn() },
     notification: { create: vi.fn() },
   };
 }
@@ -66,6 +71,7 @@ describe("ChatService", () => {
     service = new ChatService(prisma as any);
     prisma.academicCycleEnrollment.findFirst.mockResolvedValue(BASE_ENROLLMENT);
     findAllTeachersMock.mockResolvedValue([TEACHER_PAIR]);
+    resolveTeacherGroupScopeMock.mockResolvedValue(undefined);
   });
 
   describe("findAllChats", () => {
@@ -230,6 +236,115 @@ describe("ChatService", () => {
           type: "message",
           relatedRecordId: ENROLLMENT_ID,
           message: expect.stringContaining("Valentina Hernández"),
+        }),
+      });
+    });
+  });
+
+  describe("findMessagesForTeacher", () => {
+    it("throws NotFoundError when the enrollment isn't this student's own", async () => {
+      prisma.academicCycleEnrollment.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.findMessagesForTeacher(TEACHER_ID, STUDENT_ID, ENROLLMENT_ID, {
+          page: 1,
+          pageSize: 20,
+        }),
+      ).rejects.toThrow(NotFoundError);
+      expect(resolveTeacherGroupScopeMock).not.toHaveBeenCalled();
+    });
+
+    it("throws NotFoundError when the teacher doesn't teach this group", async () => {
+      resolveTeacherGroupScopeMock.mockRejectedValue(new NotFoundError("Class not found"));
+
+      await expect(
+        service.findMessagesForTeacher(TEACHER_ID, STUDENT_ID, ENROLLMENT_ID, {
+          page: 1,
+          pageSize: 20,
+        }),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    it("fetches desc and reverses to ascending, without marking anything as read", async () => {
+      prisma.studentChatMessage.findMany.mockResolvedValue([
+        { id: "m2", teacherId: TEACHER_ID, sentBy: "teacher", content: "segundo", sentAt: new Date("2026-09-10T12:01:00.000Z") },
+        { id: "m1", teacherId: TEACHER_ID, sentBy: "student", content: "primero", sentAt: new Date("2026-09-10T12:00:00.000Z") },
+      ]);
+      prisma.studentChatMessage.count.mockResolvedValue(2);
+
+      const result = await service.findMessagesForTeacher(TEACHER_ID, STUDENT_ID, ENROLLMENT_ID, {
+        page: 1,
+        pageSize: 20,
+      });
+
+      expect(resolveTeacherGroupScopeMock).toHaveBeenCalledWith(
+        prisma,
+        TEACHER_ID,
+        CYCLE_ID,
+        GROUP_ID,
+      );
+      expect(result.data.map((m) => m.id)).toEqual(["m1", "m2"]);
+      expect(prisma.studentChatMessage.updateMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("sendMessageForTeacher", () => {
+    it("throws NotFoundError when the teacher doesn't teach this group", async () => {
+      resolveTeacherGroupScopeMock.mockRejectedValue(new NotFoundError("Class not found"));
+
+      await expect(
+        service.sendMessageForTeacher(TEACHER_ID, STUDENT_ID, ENROLLMENT_ID, "hola alumno"),
+      ).rejects.toThrow(NotFoundError);
+      expect(prisma.studentChatMessage.create).not.toHaveBeenCalled();
+    });
+
+    it("creates the message with sentBy: teacher", async () => {
+      prisma.employee.findUnique.mockResolvedValue({ name: "Laura", firstLastName: "Fernández" });
+      prisma.studentChatMessage.create.mockResolvedValue({
+        id: "msg-uuid",
+        teacherId: TEACHER_ID,
+        sentBy: "teacher",
+        content: "hola alumno",
+        sentAt: new Date("2026-09-10T12:00:00.000Z"),
+      });
+
+      const result = await service.sendMessageForTeacher(
+        TEACHER_ID,
+        STUDENT_ID,
+        ENROLLMENT_ID,
+        "hola alumno",
+      );
+
+      expect(prisma.studentChatMessage.create).toHaveBeenCalledWith({
+        data: {
+          academicCycleEnrollmentId: ENROLLMENT_ID,
+          teacherId: TEACHER_ID,
+          sentBy: "teacher",
+          content: "hola alumno",
+        },
+      });
+      expect(result.sentBy).toBe("teacher");
+    });
+
+    it("notifies the student's own bell, not the teacher's", async () => {
+      prisma.employee.findUnique.mockResolvedValue({ name: "Laura", firstLastName: "Fernández" });
+      prisma.studentChatMessage.create.mockResolvedValue({
+        id: "msg-uuid",
+        teacherId: TEACHER_ID,
+        sentBy: "teacher",
+        content: "hola alumno",
+        sentAt: new Date(),
+      });
+
+      await service.sendMessageForTeacher(TEACHER_ID, STUDENT_ID, ENROLLMENT_ID, "hola alumno");
+
+      expect(prisma.notification.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          recipientType: "student",
+          studentId: STUDENT_ID,
+          type: "message",
+          relatedRecordId: ENROLLMENT_ID,
+          message: expect.stringContaining("Laura Fernández"),
         }),
       });
     });
