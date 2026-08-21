@@ -4,6 +4,8 @@ import authRouter from "@/modules/auth/routes/auth.router";
 import { NotFoundPage } from "@/shared/pages/NotFoundPage";
 import { ForbiddenRoute } from "./protected.router";
 import { ForbiddenPage } from "@/shared/pages/ForbiddenPage";
+import { RootLayout } from "./components/RootLayout";
+import { Loader } from "@/shared/components/loader/Loader";
 
 const lazyModuleRouters: Record<string, () => Promise<{ default: RouteObject }>> = {
     "/home": () => import("@/modules/home/routes/home.router"),
@@ -25,24 +27,31 @@ const lazyModuleRouters: Record<string, () => Promise<{ default: RouteObject }>>
 const loadedModuleRouters = new Set<string>();
 
 export const appRouter = createBrowserRouter([
-    /** auth */
-    ...authRouter,
     {
-        path: "/",
-        element: <Navigate to="/home" />
-    },
-    /** Forbidden page */
-    {
-        path: "forbidden",
-        element:
-            <ForbiddenRoute>
-                <ForbiddenPage />
-            </ForbiddenRoute>
-    },
-    /** 404 not found page */
-    {
-        path: '*',
-        element: <NotFoundPage />
+        id: "root",
+        element: <RootLayout />,
+        hydrateFallbackElement: <Loader title="Cargando" />,
+        children: [
+            /** auth */
+            ...authRouter,
+            {
+                path: "/",
+                element: <Navigate to="/home" />
+            },
+            /** Forbidden page */
+            {
+                path: "forbidden",
+                element:
+                    <ForbiddenRoute>
+                        <ForbiddenPage />
+                    </ForbiddenRoute>
+            },
+            /** 404 not found page */
+            {
+                path: '*',
+                element: <NotFoundPage />
+            }
+        ]
     }
 ], {
     async patchRoutesOnNavigation({ patch, path }) {
@@ -52,6 +61,6 @@ export const appRouter = createBrowserRouter([
             return;
         const { default: moduleRouter } = await loadModuleRouter();
         loadedModuleRouters.add(firstSegment);
-        patch(null, [moduleRouter]);
+        patch("root", [moduleRouter]);
     }
 });
