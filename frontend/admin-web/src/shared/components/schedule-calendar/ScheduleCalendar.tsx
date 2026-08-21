@@ -5,8 +5,10 @@ import { Modal } from "../modal/Modal";
 import type { Calendar } from "./types/calendar";
 import { generateTemporalId } from "@/lib/extensions/utils";
 import { useDeleteRecord } from "@/hooks/useDeleteRecord";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { CalendarTimeGuide } from "./components/CalendarTimeGuide";
 import { CalendarFormPanel } from "./components/CalendarFormPanel";
+import { CalendarDayNavHeader } from "./components/CalendarDayNavHeader";
 import { colorOf } from "./lib/schedule-calendar-palette-subject-colors";
 import { ScheduleCalendarStats } from "./components/ScheduleCalendarStats";
 import type { DragState } from "./interfaces/schedule-calendar-interfaces";
@@ -32,6 +34,8 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
 
     const [drag, setDrag] = useState<DragState | null>(null);
     const [calendar, setCalendar] = useState<Calendar>();
+    const [activeDayIndex, setActiveDayIndex] = useState(0);
+    const isSingleDay = useMediaQuery("(max-width: 1669.98px)");
     const { isOpenSingleDeleteModal, recordToDelete, openDeleteModal, closeDeleteModal } = useDeleteRecord<Calendar>();
 
     const yToMinutes = (clientY: number, columnEl: HTMLElement): number => {
@@ -147,9 +151,10 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
             if (!grid) return;
 
             // Determine current day column from x position
-            const colWidth = (grid.clientWidth - 64) / 7; // 64px for time guide
+            const dayCount = isSingleDay ? 1 : 7;
+            const colWidth = (grid.clientWidth - 64) / dayCount; // 64px for time guide
             const relativeX = e.clientX - grid.getBoundingClientRect().left - 64;
-            const colIdx = Math.max(0, Math.min(6, Math.floor(relativeX / colWidth)));
+            const colIdx = Math.max(0, Math.min(dayCount - 1, Math.floor(relativeX / colWidth)));
             const newDay = DAY_OF_WEEKS[colIdx].key;
 
             const col = grid.querySelectorAll<HTMLElement>("[data-day-col]")[colIdx];
@@ -181,7 +186,7 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
                 return prev;
             });
         },
-        [drag],
+        [drag, isSingleDay],
     );
 
     const handleCreateUpdateConfirm = async (calendarLike: Partial<Calendar>) => {
@@ -224,22 +229,35 @@ export default function ScheduleCalendar({ disabled = false, teachers = [], scho
         };
     }, [drag, onPointerMove, commitDrag]);
 
+    const visibleDays = isSingleDay ? [DAY_OF_WEEKS[activeDayIndex]] : DAY_OF_WEEKS;
+
     return (
-        <div className="space-y-4" data-testid="dyn-schedule">
+        <div className="w-full min-w-0 space-y-4" data-testid="dyn-schedule">
 
             {/* Weekly grid */}
             <div ref={calendarGridRef} className="bg-card border border-border rounded-2xl overflow-x-auto select-none">
 
-                <CalendarWeekDaysHeader />
+                {
+                    isSingleDay ? (
+                        <CalendarDayNavHeader
+                            dayLabel={DAY_OF_WEEKS[activeDayIndex].label}
+                            canGoPrevious={activeDayIndex > 0}
+                            canGoNext={activeDayIndex < DAY_OF_WEEKS.length - 1}
+                            onPrevious={() => setActiveDayIndex((index) => Math.max(0, index - 1))}
+                            onNext={() => setActiveDayIndex((index) => Math.min(DAY_OF_WEEKS.length - 1, index + 1))} />
+                    ) : (
+                        <CalendarWeekDaysHeader />
+                    )
+                }
 
-                {/* Body: time guide + 7 day columns */}
+                {/* Body: time guide + day columns */}
                 <div className="flex" style={{ height: TOTAL_SLOTS * SLOT_PX }}>
                     {/* Time guide */}
                     <CalendarTimeGuide />
 
                     {/* Day columns | Calendar grid */}
                     {
-                        DAY_OF_WEEKS.map((d) => {
+                        visibleDays.map((d) => {
                             const calendarItems = calendars.filter((c) => c.day === d.key);
                             const dragPreview = drag && drag.day === d.key ? drag : null;
                             return (
