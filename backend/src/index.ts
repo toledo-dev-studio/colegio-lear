@@ -41,6 +41,7 @@ import notificationStudentRoutes from "./modules/notifications/notification-stud
 import myClassRoutes from "./modules/my-classes/my-class.routes";
 import schoolSubjectTaskTeacherRoutes from "./modules/academic-cycles/school-subject-task-teacher.routes";
 import schoolSubjectMaterialTeacherRoutes from "./modules/academic-cycles/school-subject-material-teacher.routes";
+import studentGradeTeacherRoutes from "./modules/academic-cycles/student-grade-teacher.routes";
 
 /** Create Express application */
 const app = express();
@@ -120,6 +121,7 @@ app.use("/notifications", notificationRoutes);
 app.use("/me/school-groups", myClassRoutes);
 app.use("/me/school-groups", schoolSubjectTaskTeacherRoutes);
 app.use("/me/school-groups", schoolSubjectMaterialTeacherRoutes);
+app.use("/me/school-groups", studentGradeTeacherRoutes);
 
 /* --- Global Error Handler (must be last) --- */
 app.use(errorHandler);
