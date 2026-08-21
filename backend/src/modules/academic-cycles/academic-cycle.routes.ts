@@ -27,6 +27,7 @@ import {
 } from "./academic-cycle-school-group.schema";
 import {
   academicCycleEnrollmentPagedQuerySchema,
+  academicCycleEnrollmentByGroupQuerySchema,
   academicCycleEnrollmentIdParamSchema,
   academicCycleEnrollmentWalletItemParamSchema,
   createAcademicCycleEnrollmentSchema,
@@ -85,6 +86,7 @@ import {
 } from "./academic-cycle-school-group.controller";
 import {
   findAllPaged as findAllEnrollmentsPaged,
+  findAllByGroup as findAllEnrollmentsByGroup,
   findById as findEnrollmentById,
   create as createEnrollment,
   update as updateEnrollment,
@@ -1152,6 +1154,33 @@ router.get(
 /**
  * @openapi
  * /academic-cycles/{academicCycleId}/enrollments:
+ *   get:
+ *     tags:
+ *       - Academic Cycle Enrollments
+ *     summary: List every enrollment in a group (no pagination)
+ *     description: Used by "my classes" to populate its student roster for chats/grades — academicCycleSchoolGroupId is required (unlike the paged listing) since this returns every match with no limit.
+ *     parameters:
+ *       - in: path
+ *         name: academicCycleId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: query
+ *         name: academicCycleSchoolGroupId
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *       - in: query
+ *         name: status
+ *         schema: { type: string, enum: [enrolled, completed, dropped] }
+ *     responses:
+ *       200:
+ *         description: List of enrollments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: { $ref: '#/components/schemas/AcademicCycleEnrollmentRecord' }
+ *       404:
+ *         description: Academic cycle not found
  *   post:
  *     tags:
  *       - Academic Cycle Enrollments
@@ -1182,6 +1211,14 @@ router.get(
  *       409:
  *         description: Enrollment is closed for this academic cycle, or the student is already enrolled in this academic cycle (any status)
  */
+router.get(
+  "/:academicCycleId/enrollments",
+  authorize("academic-cycles"),
+  validate(academicCycleIdParamSchema, "params"),
+  validate(academicCycleEnrollmentByGroupQuerySchema, "query"),
+  findAllEnrollmentsByGroup,
+);
+
 router.post(
   "/:academicCycleId/enrollments",
   authorize("academic-cycles"),
