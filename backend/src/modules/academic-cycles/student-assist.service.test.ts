@@ -10,7 +10,7 @@ import { NotFoundError, ConflictError } from "../../shared/errors/app-error";
 
 function createMockPrisma() {
   return {
-    academicCycleEnrollment: { findFirst: vi.fn() },
+    academicCycleEnrollment: { findFirst: vi.fn(), findMany: vi.fn() },
     studentAssist: {
       findMany: vi.fn(),
       count: vi.fn(),
@@ -19,6 +19,7 @@ function createMockPrisma() {
       create: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
+      upsert: vi.fn(),
     },
   };
 }
@@ -208,6 +209,62 @@ describe("StudentAssistService", () => {
 
       expect(prisma.studentAssist.delete).toHaveBeenCalledWith({
         where: { id: ASSIST_ID },
+      });
+    });
+  });
+
+  describe("findAllByGroupAndDay", () => {
+    it("filters by day and the enrollment's group", async () => {
+      prisma.studentAssist.findMany.mockResolvedValue([BASE_ASSIST]);
+
+      await service.findAllByGroupAndDay("group-uuid", "2026-09-10");
+
+      expect(prisma.studentAssist.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            assistDate: new Date("2026-09-10"),
+            academicCycleEnrollment: { academicCycleSchoolGroupId: "group-uuid" },
+          },
+        }),
+      );
+    });
+  });
+
+  describe("upsertManyForGroup", () => {
+    it("throws NotFoundError when an enrollment isn't in this group", async () => {
+      prisma.academicCycleEnrollment.findMany.mockResolvedValue([{ id: ENROLLMENT_ID }]);
+
+      await expect(
+        service.upsertManyForGroup("group-uuid", "2026-09-10", [
+          { academicCycleEnrollmentId: ENROLLMENT_ID, status: "present" },
+          { academicCycleEnrollmentId: "not-in-group", status: "absent" },
+        ]),
+      ).rejects.toThrow(NotFoundError);
+      expect(prisma.studentAssist.upsert).not.toHaveBeenCalled();
+    });
+
+    it("upserts each enrollment keyed on (enrollment, day)", async () => {
+      prisma.academicCycleEnrollment.findMany.mockResolvedValue([{ id: ENROLLMENT_ID }]);
+      prisma.studentAssist.upsert.mockResolvedValue(BASE_ASSIST);
+
+      await service.upsertManyForGroup("group-uuid", "2026-09-10", [
+        { academicCycleEnrollmentId: ENROLLMENT_ID, status: "absent", absenceReason: "Gripe" },
+      ]);
+
+      expect(prisma.studentAssist.upsert).toHaveBeenCalledWith({
+        where: {
+          academicCycleEnrollmentId_assistDate: {
+            academicCycleEnrollmentId: ENROLLMENT_ID,
+            assistDate: new Date("2026-09-10"),
+          },
+        },
+        create: {
+          academicCycleEnrollmentId: ENROLLMENT_ID,
+          assistDate: new Date("2026-09-10"),
+          status: "absent",
+          absenceReason: "Gripe",
+        },
+        update: { status: "absent", absenceReason: "Gripe" },
       });
     });
   });

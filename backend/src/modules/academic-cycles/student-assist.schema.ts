@@ -40,3 +40,32 @@ export const updateStudentAssistSchema = z
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
     message: "At least one field is required",
   });
+
+// ─── Teacher-facing ("my classes") group attendance ─────────────────────────
+
+/** Validates path params for the group attendance endpoints */
+export const teacherAssistGroupParamsSchema = z.object({
+  academicCycleId: z.string().uuid({ message: "academicCycleId must be a valid UUID" }),
+  schoolGroupId: z.string().uuid({ message: "schoolGroupId must be a valid UUID" }),
+});
+
+/** Validates GET group attendance query: assistDate (required, ISO or YYYY-MM-DD) */
+export const teacherAssistDayQuerySchema = z.object({
+  assistDate: z.string().min(1, "assistDate is required"),
+});
+
+/** Validates POST body for the bulk group attendance upsert */
+export const upsertGroupAssistsSchema = z.object({
+  assistDate: z.string().min(1, "assistDate is required"),
+  assists: z
+    .array(
+      z.object({
+        academicCycleEnrollmentId: z
+          .string()
+          .uuid({ message: "academicCycleEnrollmentId must be a valid UUID" }),
+        status: z.enum(["present", "absent"]),
+        absenceReason: z.string().max(1000).nullable().optional(),
+      }),
+    )
+    .min(1, "assists must have at least one entry"),
+});

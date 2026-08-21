@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { resolveTeacherSubjectScope } from "./teacher-class-scope.helper";
+import { resolveTeacherSubjectScope, resolveTeacherGroupScope } from "./teacher-class-scope.helper";
 import { NotFoundError } from "../../shared/errors/app-error";
 
 /**
@@ -10,7 +10,7 @@ import { NotFoundError } from "../../shared/errors/app-error";
 
 function createMockPrisma() {
   return {
-    academicCycleGroup: { findUnique: vi.fn() },
+    academicCycleGroup: { findUnique: vi.fn(), findFirst: vi.fn() },
     academicCycleSchoolSubject: { findFirst: vi.fn() },
     academicCycleGroupCalendar: { findFirst: vi.fn() },
   };
@@ -82,6 +82,45 @@ describe("resolveTeacherSubjectScope", () => {
         academicCycleSchoolGroupId: GROUP_ID,
         academicCycleSchoolSubjectId: CYCLE_SUBJECT_ID,
       },
+      select: { id: true },
+    });
+  });
+});
+
+describe("resolveTeacherGroupScope", () => {
+  let prisma: MockPrisma;
+
+  beforeEach(() => {
+    prisma = createMockPrisma();
+  });
+
+  it("throws NotFoundError when the group isn't in this academic cycle", async () => {
+    prisma.academicCycleGroup.findFirst.mockResolvedValue(null);
+
+    await expect(
+      resolveTeacherGroupScope(prisma as any, TEACHER_ID, CYCLE_ID, GROUP_ID),
+    ).rejects.toThrow(NotFoundError);
+    expect(prisma.academicCycleGroupCalendar.findFirst).not.toHaveBeenCalled();
+  });
+
+  it("throws NotFoundError when the teacher teaches nothing in this group", async () => {
+    prisma.academicCycleGroup.findFirst.mockResolvedValue({ id: GROUP_ID });
+    prisma.academicCycleGroupCalendar.findFirst.mockResolvedValue(null);
+
+    await expect(
+      resolveTeacherGroupScope(prisma as any, TEACHER_ID, CYCLE_ID, GROUP_ID),
+    ).rejects.toThrow(NotFoundError);
+  });
+
+  it("resolves without throwing when the teacher teaches any subject in the group", async () => {
+    prisma.academicCycleGroup.findFirst.mockResolvedValue({ id: GROUP_ID });
+    prisma.academicCycleGroupCalendar.findFirst.mockResolvedValue({ id: "calendar-1" });
+
+    await expect(
+      resolveTeacherGroupScope(prisma as any, TEACHER_ID, CYCLE_ID, GROUP_ID),
+    ).resolves.toBeUndefined();
+    expect(prisma.academicCycleGroupCalendar.findFirst).toHaveBeenCalledWith({
+      where: { teacherId: TEACHER_ID, academicCycleSchoolGroupId: GROUP_ID },
       select: { id: true },
     });
   });

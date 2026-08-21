@@ -63,3 +63,37 @@ export async function resolveTeacherSubjectScope(
     academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
   };
 }
+
+/**
+ * Verifies the authenticated teacher teaches at least one subject in
+ * `schoolGroupId` (any subject, not a specific one) — used by endpoints that
+ * operate on the whole class rather than a single subject, like attendance:
+ * whichever teacher has a slot in the group's calendar can take attendance
+ * for the entire group, not just their own subject. Also verifies
+ * `academicCycleId` (a URL param on this endpoint, unlike /me/school-groups/*
+ * which derives it from the group) actually matches the group's own cycle.
+ * Throws NotFoundError (never ForbiddenError) — same posture as
+ * resolveTeacherSubjectScope above.
+ */
+export async function resolveTeacherGroupScope(
+  prisma: PrismaClient,
+  teacherId: string,
+  academicCycleId: string,
+  schoolGroupId: string,
+): Promise<void> {
+  const group = await prisma.academicCycleGroup.findFirst({
+    where: { id: schoolGroupId, academicCycleId },
+    select: { id: true },
+  });
+  if (!group) {
+    throw new NotFoundError("Class not found");
+  }
+
+  const teaches = await prisma.academicCycleGroupCalendar.findFirst({
+    where: { teacherId, academicCycleSchoolGroupId: schoolGroupId },
+    select: { id: true },
+  });
+  if (!teaches) {
+    throw new NotFoundError("Class not found");
+  }
+}

@@ -161,4 +161,77 @@ export class StudentAssistService {
     await this.findOwnedAssist(academicCycleId, academicCycleEnrollmentId, id);
     await this.prisma.studentAssist.delete({ where: { id } });
   }
+
+  /**
+   * GET attendance for a whole group on a single day — the teacher-facing
+   * ("my classes") equivalent of findAllPaged, scoped by group instead of a
+   * single enrollment and always exactly one day (no pagination, matches
+   * what the frontend actually asks for).
+   */
+  async findAllByGroupAndDay(
+    academicCycleSchoolGroupId: string,
+    assistDate: string,
+  ): Promise<StudentAssistRecord[]> {
+    const results = await this.prisma.studentAssist.findMany({
+      where: {
+        assistDate: this.toDayDate(assistDate),
+        academicCycleEnrollment: { academicCycleSchoolGroupId },
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
+    return results.map((r) => this.toRecord(r));
+  }
+
+  /**
+   * Bulk upsert for a whole group on a single day — unlike the single-enrollment
+   * `create` above (which rejects an existing record with ConflictError), this
+   * creates or updates each enrollment's record for that day, keyed on the
+   * same (academicCycleEnrollmentId, assistDate) unique constraint. Every
+   * enrollment id must belong to the group; otherwise the whole call is
+   * rejected (all-or-nothing, no partial save of a request the teacher never sent).
+   */
+  async upsertManyForGroup(
+    academicCycleSchoolGroupId: string,
+    assistDate: string,
+    assists: Array<{
+      academicCycleEnrollmentId: string;
+      status: StudentAssistRecord["status"];
+      absenceReason?: string | null;
+    }>,
+  ): Promise<StudentAssistRecord[]> {
+    const enrollmentIds = assists.map((a) => a.academicCycleEnrollmentId);
+    const ownedEnrollments = await this.prisma.academicCycleEnrollment.findMany({
+      where: { id: { in: enrollmentIds }, academicCycleSchoolGroupId },
+      select: { id: true },
+    });
+    const ownedIds = new Set(ownedEnrollments.map((e) => e.id));
+    const notOwned = enrollmentIds.filter((id) => !ownedIds.has(id));
+    if (notOwned.length > 0) {
+      throw new NotFoundError("One or more enrollments are not in this class");
+    }
+
+    const day = this.toDayDate(assistDate);
+    const results = await Promise.all(
+      assists.map((a) =>
+        this.prisma.studentAssist.upsert({
+          where: {
+            academicCycleEnrollmentId_assistDate: {
+              academicCycleEnrollmentId: a.academicCycleEnrollmentId,
+              assistDate: day,
+            },
+          },
+          create: {
+            academicCycleEnrollmentId: a.academicCycleEnrollmentId,
+            assistDate: day,
+            status: a.status,
+            absenceReason: a.absenceReason ?? null,
+          },
+          update: { status: a.status, absenceReason: a.absenceReason ?? null },
+        }),
+      ),
+    );
+
+    return results.map((r) => this.toRecord(r));
+  }
 }
