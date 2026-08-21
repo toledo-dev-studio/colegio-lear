@@ -81,6 +81,27 @@ export class SchoolSubjectTaskService {
     }
   }
 
+  /** Full (non-paginated) list — used by the teacher-facing "my classes" endpoint. */
+  async findAll(
+    academicCycleId: string,
+    academicCycleSchoolGroupId: string,
+    academicCycleSchoolSubjectId: string,
+  ): Promise<SchoolSubjectTaskRecord[]> {
+    await this.ensureScopeExists(
+      academicCycleId,
+      academicCycleSchoolGroupId,
+      academicCycleSchoolSubjectId,
+    );
+
+    const results = await this.prisma.schoolSubjectTask.findMany({
+      where: { academicCycleId, academicCycleSchoolGroupId, academicCycleSchoolSubjectId },
+      include: TASK_INCLUDE,
+      orderBy: { createdAt: "desc" },
+    });
+
+    return results.map((r) => this.toRecord(r));
+  }
+
   async findAllPaged(
     academicCycleId: string,
     academicCycleSchoolGroupId: string,

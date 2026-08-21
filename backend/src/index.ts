@@ -39,6 +39,8 @@ import globalSearchRoutes from "./modules/global-search/global-search.routes";
 import notificationRoutes from "./modules/notifications/notification.routes";
 import notificationStudentRoutes from "./modules/notifications/notification-student.routes";
 import myClassRoutes from "./modules/my-classes/my-class.routes";
+import schoolSubjectTaskTeacherRoutes from "./modules/academic-cycles/school-subject-task-teacher.routes";
+import schoolSubjectMaterialTeacherRoutes from "./modules/academic-cycles/school-subject-material-teacher.routes";
 
 /** Create Express application */
 const app = express();
@@ -116,6 +118,8 @@ app.use("/dashboard", dashboardRoutes);
 app.use("/global-search", globalSearchRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/me/school-groups", myClassRoutes);
+app.use("/me/school-groups", schoolSubjectTaskTeacherRoutes);
+app.use("/me/school-groups", schoolSubjectMaterialTeacherRoutes);
 
 /* --- Global Error Handler (must be last) --- */
 app.use(errorHandler);
