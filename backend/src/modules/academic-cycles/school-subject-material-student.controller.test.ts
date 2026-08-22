@@ -2,9 +2,16 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { NotFoundError, ValidationError } from "../../shared/errors/app-error";
 
 /**
- * Unit tests for the student-portal materials handler — same shape as the
- * tasks student controller test, no gate-student-session involved.
+ * Unit tests for the student-portal materials handler. This URL collides
+ * with the employee CRUD route (same GET .../materials), so
+ * gateStudentSession, prisma, and SchoolSubjectMaterialService are all
+ * mocked to exercise: the fallthrough branch, the ownership check, and
+ * correct delegation to the shared service.
  */
+
+vi.mock("../../shared/middleware/gate-student-session.middleware", () => ({
+  gateStudentSession: vi.fn(),
+}));
 
 vi.mock("../../shared/lib/prisma", () => ({
   prisma: {
@@ -21,6 +28,7 @@ vi.mock("./school-subject-material.service", () => ({
   }),
 }));
 
+import { gateStudentSession } from "../../shared/middleware/gate-student-session.middleware";
 import { prisma } from "../../shared/lib/prisma";
 import { findAll } from "./school-subject-material-student.controller";
 
@@ -42,7 +50,8 @@ function buildReqRes() {
     status: vi.fn().mockReturnThis(),
     json: vi.fn().mockReturnThis(),
   } as any;
-  return { req, res };
+  const next = vi.fn();
+  return { req, res, next };
 }
 
 describe("findAll (student portal materials)", () => {
@@ -50,23 +59,35 @@ describe("findAll (student portal materials)", () => {
     vi.clearAllMocks();
   });
 
-  it("throws NotFoundError when the group isn't the student's own", async () => {
-    (prisma.academicCycleEnrollment.findFirst as any).mockResolvedValue(null);
-    const { req, res } = buildReqRes();
+  it("returns early (no response) when gateStudentSession falls through", async () => {
+    (gateStudentSession as any).mockResolvedValue(false);
+    const { req, res, next } = buildReqRes();
 
-    await expect(findAll(req, res)).rejects.toThrow(NotFoundError);
+    await findAll(req, res, next);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(prisma.academicCycleEnrollment.findFirst).not.toHaveBeenCalled();
+  });
+
+  it("throws NotFoundError when the group isn't the student's own", async () => {
+    (gateStudentSession as any).mockResolvedValue(true);
+    (prisma.academicCycleEnrollment.findFirst as any).mockResolvedValue(null);
+    const { req, res, next } = buildReqRes();
+
+    await expect(findAll(req, res, next)).rejects.toThrow(NotFoundError);
     expect(findAllMock).not.toHaveBeenCalled();
   });
 
   it("delegates to the shared service and returns its data", async () => {
+    (gateStudentSession as any).mockResolvedValue(true);
     (prisma.academicCycleEnrollment.findFirst as any).mockResolvedValue({
       id: "enrollment-uuid",
     });
     const materials = [{ id: "material-1" }];
     findAllMock.mockResolvedValue(materials);
-    const { req, res } = buildReqRes();
+    const { req, res, next } = buildReqRes();
 
-    await findAll(req, res);
+    await findAll(req, res, next);
 
     expect(findAllMock).toHaveBeenCalledWith(CYCLE_ID, GROUP_ID, SUBJECT_ID);
     expect(res.status).toHaveBeenCalledWith(200);
@@ -74,13 +95,14 @@ describe("findAll (student portal materials)", () => {
   });
 
   it("throws ValidationError when params aren't valid UUIDs", async () => {
-    const { req, res } = buildReqRes();
+    (gateStudentSession as any).mockResolvedValue(true);
+    const { req, res, next } = buildReqRes();
     req.params = {
       academicCycleId: "not-a-uuid",
       academicCycleSchoolGroupId: "also-not",
       academicCycleSchoolSubjectId: "nope",
     };
 
-    await expect(findAll(req, res)).rejects.toThrow(ValidationError);
+    await expect(findAll(req, res, next)).rejects.toThrow(ValidationError);
   });
 });

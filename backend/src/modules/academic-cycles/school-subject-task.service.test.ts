@@ -256,6 +256,48 @@ describe("SchoolSubjectTaskService", () => {
     });
   });
 
+  describe("addAttachmentRecord", () => {
+    it("returns only the newly created attachment, not the full task", async () => {
+      prisma.schoolSubjectTask.findFirst.mockResolvedValue(BASE_TASK);
+      storage.upload.mockResolvedValue("school-subject-tasks/new.pdf");
+      prisma.schoolSubjectTaskAttachment.create.mockResolvedValue({
+        id: "att-new",
+        url: "school-subject-tasks/new.pdf",
+        name: "ejercicios",
+        extension: "pdf",
+        schoolSubjectTaskId: TASK_ID,
+      });
+
+      const result = await service.addAttachmentRecord(CYCLE_ID, GROUP_ID, SUBJECT_ID, TASK_ID, {
+        buffer: Buffer.from("x"),
+        originalname: "ejercicios.pdf",
+        mimetype: "application/pdf",
+      });
+
+      expect(result).toEqual({
+        id: "att-new",
+        url: expect.stringContaining("school-subject-tasks/new.pdf"),
+        name: "ejercicios",
+        extension: "pdf",
+        relatedRecordId: TASK_ID,
+      });
+      expect(prisma.schoolSubjectTask.findUniqueOrThrow).not.toHaveBeenCalled();
+    });
+
+    it("throws NotFoundError when the task isn't in this scope", async () => {
+      prisma.schoolSubjectTask.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.addAttachmentRecord(CYCLE_ID, GROUP_ID, SUBJECT_ID, TASK_ID, {
+          buffer: Buffer.from("x"),
+          originalname: "ejercicios.pdf",
+          mimetype: "application/pdf",
+        }),
+      ).rejects.toThrow(NotFoundError);
+      expect(storage.upload).not.toHaveBeenCalled();
+    });
+  });
+
   describe("removeAttachment", () => {
     it("throws NotFoundError when the attachment isn't on this task", async () => {
       prisma.schoolSubjectTask.findFirst.mockResolvedValue(BASE_TASK);

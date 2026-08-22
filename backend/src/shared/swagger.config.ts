@@ -1460,6 +1460,11 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             schoolSubjectId: { type: "string", format: "uuid" },
             schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            academicCycleSchoolSubjectId: {
+              type: "string",
+              format: "uuid",
+              description: "This academic cycle's own subject catalog entry id (distinct from schoolSubjectId, the global catalog id).",
+            },
             teacherId: { type: "string", format: "uuid" },
             teacher: { $ref: "#/components/schemas/Employee" },
           },
@@ -1707,6 +1712,19 @@ const swaggerOptions: swaggerJsdoc.Options = {
             academicCycleSchoolGroupId: { type: "string", format: "uuid" },
             academicCycleSchoolSubjectId: { type: "string", format: "uuid" },
             attachment: { $ref: "#/components/schemas/SchoolSubjectMaterialAttachmentRecord" },
+          },
+        },
+        SchoolSubjectMaterialFlatRecord: {
+          type: "object",
+          description: "Teacher-facing (my classes) shape — flat, keyed by the plain schoolSubjectId instead of the nested attachment + academicCycleSchoolSubjectId the admin/student contract uses.",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            url: { type: "string", format: "uri" },
+            name: { type: "string" },
+            extension: { type: "string" },
+            relatedRecordId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            schoolSubjectId: { type: "string", format: "uuid" },
           },
         },
         // ─── Student Wallet ─────────────────────────────────────────────────────

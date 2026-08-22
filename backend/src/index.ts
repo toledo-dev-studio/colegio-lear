@@ -85,8 +85,6 @@ app.use("/students", chatRoutes);
  * Student portal routes with their own URLs (no employee-side counterpart
  * exists yet) — same reasoning as /students/me above, just no gate needed.
  */
-app.use("/academic-cycles", schoolSubjectTaskStudentRoutes);
-app.use("/academic-cycles", schoolSubjectMaterialStudentRoutes);
 app.use("/notifications", notificationStudentRoutes);
 
 /*
@@ -101,6 +99,8 @@ app.use("/academic-cycles", academicCycleSchoolGroupStudentRoutes);
 app.use("/academic-cycles", studentGradeStudentRoutes);
 app.use("/academic-cycles", studentWalletStudentRoutes);
 app.use("/academic-cycles", studentAssistStudentRoutes);
+app.use("/academic-cycles", schoolSubjectTaskStudentRoutes);
+app.use("/academic-cycles", schoolSubjectMaterialStudentRoutes);
 app.use("/announcements", announcementStudentRoutes);
 
 /* --- Protected Routes (authentication required) --- */

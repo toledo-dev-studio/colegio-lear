@@ -2,11 +2,16 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { NotFoundError, ValidationError } from "../../shared/errors/app-error";
 
 /**
- * Unit tests for the student-portal tasks handler. No gate-student-session
- * is involved here (no employee-side URL collision) — authenticateStudent
- * runs as regular middleware upstream, so req.student is already set by the
- * time this handler runs. Prisma and SchoolSubjectTaskService are mocked.
+ * Unit tests for the student-portal tasks handler. This URL collides with
+ * the employee CRUD route (same GET .../tasks), so gateStudentSession,
+ * prisma, and SchoolSubjectTaskService are all mocked to exercise: the
+ * fallthrough branch, the ownership check, and correct delegation to the
+ * shared service.
  */
+
+vi.mock("../../shared/middleware/gate-student-session.middleware", () => ({
+  gateStudentSession: vi.fn(),
+}));
 
 vi.mock("../../shared/lib/prisma", () => ({
   prisma: {
@@ -23,6 +28,7 @@ vi.mock("./school-subject-task.service", () => ({
   }),
 }));
 
+import { gateStudentSession } from "../../shared/middleware/gate-student-session.middleware";
 import { prisma } from "../../shared/lib/prisma";
 import { findAllPaged } from "./school-subject-task-student.controller";
 
@@ -45,7 +51,8 @@ function buildReqRes(query: Record<string, unknown> = {}) {
     status: vi.fn().mockReturnThis(),
     json: vi.fn().mockReturnThis(),
   } as any;
-  return { req, res };
+  const next = vi.fn();
+  return { req, res, next };
 }
 
 describe("findAllPaged (student portal tasks)", () => {
@@ -53,15 +60,27 @@ describe("findAllPaged (student portal tasks)", () => {
     vi.clearAllMocks();
   });
 
-  it("throws NotFoundError when the group isn't the student's own", async () => {
-    (prisma.academicCycleEnrollment.findFirst as any).mockResolvedValue(null);
-    const { req, res } = buildReqRes();
+  it("returns early (no response) when gateStudentSession falls through", async () => {
+    (gateStudentSession as any).mockResolvedValue(false);
+    const { req, res, next } = buildReqRes();
 
-    await expect(findAllPaged(req, res)).rejects.toThrow(NotFoundError);
+    await findAllPaged(req, res, next);
+
+    expect(res.status).not.toHaveBeenCalled();
+    expect(prisma.academicCycleEnrollment.findFirst).not.toHaveBeenCalled();
+  });
+
+  it("throws NotFoundError when the group isn't the student's own", async () => {
+    (gateStudentSession as any).mockResolvedValue(true);
+    (prisma.academicCycleEnrollment.findFirst as any).mockResolvedValue(null);
+    const { req, res, next } = buildReqRes();
+
+    await expect(findAllPaged(req, res, next)).rejects.toThrow(NotFoundError);
     expect(findAllPagedMock).not.toHaveBeenCalled();
   });
 
   it("checks ownership scoped to the requesting student", async () => {
+    (gateStudentSession as any).mockResolvedValue(true);
     (prisma.academicCycleEnrollment.findFirst as any).mockResolvedValue({
       id: "enrollment-uuid",
     });
@@ -71,9 +90,9 @@ describe("findAllPaged (student portal tasks)", () => {
       currentPage: 1,
       itemsCount: 0,
     });
-    const { req, res } = buildReqRes();
+    const { req, res, next } = buildReqRes();
 
-    await findAllPaged(req, res);
+    await findAllPaged(req, res, next);
 
     expect(prisma.academicCycleEnrollment.findFirst).toHaveBeenCalledWith({
       where: { studentId: STUDENT_ID, academicCycleId: CYCLE_ID, academicCycleSchoolGroupId: GROUP_ID },
@@ -82,14 +101,15 @@ describe("findAllPaged (student portal tasks)", () => {
   });
 
   it("defaults pageSize to 5 and delegates to the shared service", async () => {
+    (gateStudentSession as any).mockResolvedValue(true);
     (prisma.academicCycleEnrollment.findFirst as any).mockResolvedValue({
       id: "enrollment-uuid",
     });
     const paged = { data: [{ id: "task-1" }], totalPages: 1, currentPage: 1, itemsCount: 1 };
     findAllPagedMock.mockResolvedValue(paged);
-    const { req, res } = buildReqRes();
+    const { req, res, next } = buildReqRes();
 
-    await findAllPaged(req, res);
+    await findAllPaged(req, res, next);
 
     expect(findAllPagedMock).toHaveBeenCalledWith(CYCLE_ID, GROUP_ID, SUBJECT_ID, {
       page: 1,
@@ -100,13 +120,14 @@ describe("findAllPaged (student portal tasks)", () => {
   });
 
   it("honors explicit page/pageSize query params", async () => {
+    (gateStudentSession as any).mockResolvedValue(true);
     (prisma.academicCycleEnrollment.findFirst as any).mockResolvedValue({
       id: "enrollment-uuid",
     });
     findAllPagedMock.mockResolvedValue({ data: [], totalPages: 0, currentPage: 2, itemsCount: 0 });
-    const { req, res } = buildReqRes({ page: "2", pageSize: "10" });
+    const { req, res, next } = buildReqRes({ page: "2", pageSize: "10" });
 
-    await findAllPaged(req, res);
+    await findAllPaged(req, res, next);
 
     expect(findAllPagedMock).toHaveBeenCalledWith(CYCLE_ID, GROUP_ID, SUBJECT_ID, {
       page: 2,
@@ -115,13 +136,14 @@ describe("findAllPaged (student portal tasks)", () => {
   });
 
   it("throws ValidationError when params aren't valid UUIDs", async () => {
-    const { req, res } = buildReqRes();
+    (gateStudentSession as any).mockResolvedValue(true);
+    const { req, res, next } = buildReqRes();
     req.params = {
       academicCycleId: "not-a-uuid",
       academicCycleSchoolGroupId: "also-not",
       academicCycleSchoolSubjectId: "nope",
     };
 
-    await expect(findAllPaged(req, res)).rejects.toThrow(ValidationError);
+    await expect(findAllPaged(req, res, next)).rejects.toThrow(ValidationError);
   });
 });

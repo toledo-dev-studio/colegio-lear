@@ -364,6 +364,7 @@ export class AcademicCycleSchoolGroupService {
       teachers.push({
         schoolSubjectId: calendarRecord.schoolSubjectId,
         schoolSubject: calendarRecord.schoolSubject,
+        academicCycleSchoolSubjectId: r.academicCycleSchoolSubjectId,
         teacherId: calendarRecord.teacherId,
         teacher: calendarRecord.teacher,
       });

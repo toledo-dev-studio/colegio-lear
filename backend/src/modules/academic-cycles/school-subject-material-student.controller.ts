@@ -1,16 +1,22 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { SchoolSubjectMaterialService } from "./school-subject-material.service";
 import { schoolSubjectMaterialParentParamsSchema } from "./school-subject-material.schema";
 import { prisma } from "../../shared/lib/prisma";
 import { storageService } from "../../shared/services/storage.service";
+import { gateStudentSession } from "../../shared/middleware/gate-student-session.middleware";
 import { sendSuccess } from "../../shared/helpers/response.helper";
 import { NotFoundError, ValidationError } from "../../shared/errors/app-error";
 
 /**
  * Student-portal handler for GET .../school-subjects/:id/materials
  * (SERVICIOS_PORTAL_ALUMNO.md §9.2). Reuses SchoolSubjectMaterialService
- * as-is. No employee-side URL collision, so authenticateStudent is applied
- * as regular chained middleware (see school-subject-material-student.routes.ts).
+ * as-is. This URL DOES collide with the employee CRUD route (same GET
+ * .../materials, mounted after this one in index.ts) — a prior version of
+ * this file wrongly assumed no collision and used authenticateStudent
+ * directly, which meant an employee session could never reach its own
+ * route here (authenticateStudent threw "Invalid access token" instead of
+ * falling through). Fixed to use gateStudentSession, single handler, same
+ * pattern as student-grade-student.controller.ts.
  */
 
 const service = new SchoolSubjectMaterialService(prisma, storageService);
@@ -44,7 +50,14 @@ async function assertStudentOwnsSchoolGroup(
 }
 
 /** GET /academic-cycles/:id/school-groups/:id/school-subjects/:id/materials */
-export async function findAll(req: Request, res: Response): Promise<void> {
+export async function findAll(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  const isStudent = await gateStudentSession(req, res, next);
+  if (!isStudent) return;
+
   const { academicCycleId, academicCycleSchoolGroupId, academicCycleSchoolSubjectId } =
     parseParams(req);
 
