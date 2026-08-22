@@ -4,6 +4,7 @@ import { toPublicFileUrl } from "../../shared/helpers/file-url.helper";
 import type { IStorageService } from "../../shared/services/storage.service";
 import type {
   SchoolSubjectTaskRecord,
+  SchoolSubjectTaskAttachmentRecord,
   CreateSchoolSubjectTaskDto,
   UpdateSchoolSubjectTaskDto,
   FileUpload,
@@ -30,6 +31,17 @@ export class SchoolSubjectTaskService {
   ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private toAttachmentRecord(raw: any): SchoolSubjectTaskAttachmentRecord {
+    return {
+      id: raw.id,
+      url: toPublicFileUrl(raw.url),
+      name: raw.name,
+      extension: raw.extension,
+      relatedRecordId: raw.schoolSubjectTaskId,
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private toRecord(raw: any): SchoolSubjectTaskRecord {
     return {
       id: raw.id,
@@ -41,13 +53,7 @@ export class SchoolSubjectTaskService {
       dueDate: raw.dueDate.toISOString(),
       createdAt: raw.createdAt.toISOString(),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      attachments: raw.attachments.map((a: any) => ({
-        id: a.id,
-        url: toPublicFileUrl(a.url),
-        name: a.name,
-        extension: a.extension,
-        relatedRecordId: a.schoolSubjectTaskId,
-      })),
+      attachments: raw.attachments.map((a: any) => this.toAttachmentRecord(a)),
     };
   }
 
@@ -231,6 +237,25 @@ export class SchoolSubjectTaskService {
     await this.prisma.schoolSubjectTask.delete({ where: { id: taskId } });
   }
 
+  /** Uploads the file and creates the attachment row; returns the raw created row. */
+  private async uploadTaskAttachment(taskId: string, file: FileUpload) {
+    const url = await this.storage.upload({
+      buffer: file.buffer,
+      fileName: file.originalname,
+      mimeType: file.mimetype,
+      subfolder: "school-subject-tasks",
+    });
+
+    const nameParts = file.originalname.split(".");
+    const extension = nameParts.length > 1 ? nameParts.pop()! : "";
+    const name = nameParts.join(".");
+
+    return this.prisma.schoolSubjectTaskAttachment.create({
+      data: { url, name, extension, schoolSubjectTaskId: taskId },
+    });
+  }
+
+  /** Employee-facing: returns the full task (with all its attachments). */
   async addAttachment(
     academicCycleId: string,
     academicCycleSchoolGroupId: string,
@@ -245,26 +270,32 @@ export class SchoolSubjectTaskService {
       taskId,
     );
 
-    const url = await this.storage.upload({
-      buffer: file.buffer,
-      fileName: file.originalname,
-      mimeType: file.mimetype,
-      subfolder: "school-subject-tasks",
-    });
-
-    const nameParts = file.originalname.split(".");
-    const extension = nameParts.length > 1 ? nameParts.pop()! : "";
-    const name = nameParts.join(".");
-
-    await this.prisma.schoolSubjectTaskAttachment.create({
-      data: { url, name, extension, schoolSubjectTaskId: taskId },
-    });
+    await this.uploadTaskAttachment(taskId, file);
 
     const updated = await this.prisma.schoolSubjectTask.findUniqueOrThrow({
       where: { id: taskId },
       include: TASK_INCLUDE,
     });
     return this.toRecord(updated);
+  }
+
+  /** Teacher-facing ("my classes"): returns only the newly created attachment. */
+  async addAttachmentRecord(
+    academicCycleId: string,
+    academicCycleSchoolGroupId: string,
+    academicCycleSchoolSubjectId: string,
+    taskId: string,
+    file: FileUpload,
+  ): Promise<SchoolSubjectTaskAttachmentRecord> {
+    await this.findOwnedTask(
+      academicCycleId,
+      academicCycleSchoolGroupId,
+      academicCycleSchoolSubjectId,
+      taskId,
+    );
+
+    const created = await this.uploadTaskAttachment(taskId, file);
+    return this.toAttachmentRecord(created);
   }
 
   async removeAttachment(

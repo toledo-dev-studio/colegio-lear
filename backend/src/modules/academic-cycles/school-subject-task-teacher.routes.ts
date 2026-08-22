@@ -172,10 +172,10 @@ router.delete(
  *               file: { type: string, format: binary }
  *     responses:
  *       201:
- *         description: Attachment added — returns the full task with its attachments
+ *         description: Attachment added — returns only the newly created attachment (not the full task)
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/SchoolSubjectTaskRecord' }
+ *             schema: { $ref: '#/components/schemas/SchoolSubjectTaskAttachmentRecord' }
  *       400:
  *         description: File is required
  *       401:

@@ -137,7 +137,7 @@ export async function addAttachment(req: Request, res: Response): Promise<void> 
     mimetype: multerFile.mimetype,
   };
 
-  const data = await service.addAttachment(
+  const data = await service.addAttachmentRecord(
     scope.academicCycleId,
     schoolGroupId,
     scope.academicCycleSchoolSubjectId,

@@ -11,15 +11,21 @@ vi.mock("./teacher-class-scope.helper", () => ({
   resolveTeacherSubjectScope: vi.fn(),
 }));
 
-const { findAllMock, createMock, updateMock, removeMock, addAttachmentMock, removeAttachmentMock } =
-  vi.hoisted(() => ({
-    findAllMock: vi.fn(),
-    createMock: vi.fn(),
-    updateMock: vi.fn(),
-    removeMock: vi.fn(),
-    addAttachmentMock: vi.fn(),
-    removeAttachmentMock: vi.fn(),
-  }));
+const {
+  findAllMock,
+  createMock,
+  updateMock,
+  removeMock,
+  addAttachmentRecordMock,
+  removeAttachmentMock,
+} = vi.hoisted(() => ({
+  findAllMock: vi.fn(),
+  createMock: vi.fn(),
+  updateMock: vi.fn(),
+  removeMock: vi.fn(),
+  addAttachmentRecordMock: vi.fn(),
+  removeAttachmentMock: vi.fn(),
+}));
 vi.mock("./school-subject-task.service", () => ({
   SchoolSubjectTaskService: vi.fn().mockImplementation(function () {
     return {
@@ -27,14 +33,14 @@ vi.mock("./school-subject-task.service", () => ({
       create: createMock,
       update: updateMock,
       remove: removeMock,
-      addAttachment: addAttachmentMock,
+      addAttachmentRecord: addAttachmentRecordMock,
       removeAttachment: removeAttachmentMock,
     };
   }),
 }));
 
 import { resolveTeacherSubjectScope } from "./teacher-class-scope.helper";
-import { findAll, createOrUpdate, remove } from "./school-subject-task-teacher.controller";
+import { findAll, createOrUpdate, remove, addAttachment } from "./school-subject-task-teacher.controller";
 
 const EMPLOYEE_ID = "11111111-1111-4111-8111-111111111111";
 const GROUP_ID = "22222222-2222-4222-8222-222222222222";
@@ -45,11 +51,12 @@ const TASK_ID = "66666666-6666-4666-8666-666666666666";
 
 const SCOPE = { academicCycleId: CYCLE_ID, academicCycleSchoolSubjectId: CYCLE_SUBJECT_ID };
 
-function buildReqRes(body: unknown = {}) {
+function buildReqRes(body: unknown = {}, options: { file?: unknown } = {}) {
   const req = {
     user: { employeeId: EMPLOYEE_ID },
     params: { schoolGroupId: GROUP_ID, schoolSubjectId: SUBJECT_ID },
     body,
+    file: options.file,
   } as any;
   const res = {
     status: vi.fn().mockReturnThis(),
@@ -115,5 +122,35 @@ describe("school-subject-task-teacher.controller", () => {
 
     expect(removeMock).toHaveBeenCalledWith(CYCLE_ID, GROUP_ID, CYCLE_SUBJECT_ID, TASK_ID);
     expect(res.status).toHaveBeenCalledWith(204);
+  });
+
+  describe("addAttachment", () => {
+    it("returns only the new attachment, not the full task", async () => {
+      const attachment = {
+        id: "attachment-uuid",
+        url: "http://localhost:3000/uploads/school-subject-tasks/file.pdf",
+        name: "file",
+        extension: "pdf",
+        relatedRecordId: TASK_ID,
+      };
+      addAttachmentRecordMock.mockResolvedValue(attachment);
+      const { req, res } = buildReqRes(
+        {},
+        { file: { originalname: "file.pdf", mimetype: "application/pdf", buffer: Buffer.from("x") } },
+      );
+      req.params.taskId = TASK_ID;
+
+      await addAttachment(req, res);
+
+      expect(addAttachmentRecordMock).toHaveBeenCalledWith(
+        CYCLE_ID,
+        GROUP_ID,
+        CYCLE_SUBJECT_ID,
+        TASK_ID,
+        { buffer: expect.any(Buffer), originalname: "file.pdf", mimetype: "application/pdf" },
+      );
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(attachment);
+    });
   });
 });
