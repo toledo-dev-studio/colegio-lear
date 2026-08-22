@@ -42,13 +42,13 @@ export const LoginPage = () => {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" data-testid="login-form">
                 <div className="control-container">
-                    <label className="label">Usuario / correo electrónico:</label>
+                    <label className="label">Matrícula / correo electrónico:</label>
                     <div className="relative">
                         <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
                             {...register("username", { required: true })}
                             type="text"
-                            defaultValue="aone"
+                            defaultValue="LR-2026-0001"
                             placeholder="correo@colegio.com"
                             className="pill-input w-full pl-12"
                             required
@@ -57,7 +57,7 @@ export const LoginPage = () => {
                     {
                         errors.username && (
                             <p className="text-red-500 text-sm mt-2">
-                                Usuario / correo electrónico es obligatorio para el inicio de sesión
+                                Matrícula / correo electrónico es obligatorio para el inicio de sesión
                             </p>
                         )
                     }
@@ -70,7 +70,7 @@ export const LoginPage = () => {
                         <Input
                             {...register("password", { required: true })}
                             type={showPassword ? "text" : "password"}
-                            defaultValue="Admin123!"
+                            defaultValue="Estudiante123!"
                             placeholder="••••••••"
                             className="pill-input w-full pl-12 pr-12"
                             required

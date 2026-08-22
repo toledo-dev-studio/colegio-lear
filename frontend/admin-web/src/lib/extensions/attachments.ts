@@ -23,7 +23,7 @@ export const sanitizeFileName = (fileName: string) => fileName.replace(/\s+/g, "
 export const extractFileExtension = (fileName: string): string => {
     const idx = fileName.lastIndexOf(".");
     if (idx < 0 || idx === fileName.length - 1) return "";
-    return fileName.slice(idx + 1).toLowerCase();
+    return fileName.slice(idx + 1)?.toLowerCase();
 };
 
 /**
@@ -32,7 +32,7 @@ export const extractFileExtension = (fileName: string): string => {
  * @returns Icon component, text color and background classes
  */
 export const getAttachmentFileIcon = (ext: string) => {
-    const e = ext.toLowerCase();
+    const e = ext?.toLowerCase();
     if (e === "pdf") return { Icon: FileText, color: "text-red-500", bg: "bg-red-500/10" };
     if (e === "docx" || e === "doc") return { Icon: FileText, color: "text-blue-500", bg: "bg-blue-500/10" };
     if (e === "xlsx" || e === "xls" || e === "csv") return { Icon: FileSpreadsheet, color: "text-emerald-500", bg: "bg-emerald-500/10" };

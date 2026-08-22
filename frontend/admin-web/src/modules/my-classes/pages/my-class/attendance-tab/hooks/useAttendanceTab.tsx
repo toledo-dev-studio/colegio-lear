@@ -8,11 +8,11 @@ import { toISODay, toDayParam } from "../../../../lib/attendance.lib";
 import type { StudentAssistResponse } from "@/interfaces/responses/student-assist.response";
 import type { AcademicCycleResponse } from "@/interfaces/responses/academic-cycle.response";
 import { GET_PAGED_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY } from "@/lib/queries-key/academic-cycles-queries-key";
-import { getPagedAcademicCycleEnrollmentsAsync } from "@/modules/academic-cycles/api/academic-cycle-enrollments/get-paged-academic-cycle-enrollments.api";
 import { useGetSchoolGroupAssists } from "../../../../hooks/attendance-tab/useGetSchoolGroupAssists";
 import { useCreateUpdateSchoolGroupAssists } from "../../../../hooks/attendance-tab/useCreateUpdateSchoolGroupAssists";
 import { useAttendanceTabTable } from "./useAttendanceTabTable";
 import { useLoaderStore } from "@/stores/LoaderStore";
+import { getAcademicCycleEnrollmentsAsync } from "@/modules/academic-cycles/api/academic-cycle-enrollments/get-academic-cycle-enrollments.api";
 
 export interface AttendanceRecord {
     status: AssistStatusKey;
@@ -23,8 +23,6 @@ const DEFAULT_RECORD: AttendanceRecord = {
     status: "present",
     absenceReason: "",
 };
-
-const PAGE_SIZE = 1000;
 
 interface Options {
     academicCycleId?: string;
@@ -53,9 +51,7 @@ export const useAttendanceTab = ({ academicCycleId, schoolGroupId, academicCycle
             academicCycleId,
             academicCycleSchoolGroupId: schoolGroupId,
         }],
-        queryFn: () => getPagedAcademicCycleEnrollmentsAsync({
-            page: 1,
-            pageSize: PAGE_SIZE,
+        queryFn: () => getAcademicCycleEnrollmentsAsync({
             academicCycleId: academicCycleId!,
             academicCycleSchoolGroupId: schoolGroupId!,
         }),
@@ -77,7 +73,7 @@ export const useAttendanceTab = ({ academicCycleId, schoolGroupId, academicCycle
     const currentKey = assistDate;
     if (hydratedKey !== currentKey && enrollmentsQuery.data && assistsQuery.data) {
         const next: Record<string, AttendanceRecord> = {};
-        for (const enrollment of enrollmentsQuery.data.data) {
+        for (const enrollment of enrollmentsQuery.data) {
             const saved = assistsQuery.data.find((assist: StudentAssistResponse) => assist.academicCycleEnrollmentId === enrollment.id);
             next[enrollment.id] = {
                 status: saved?.status ?? DEFAULT_RECORD.status,
@@ -153,7 +149,7 @@ export const useAttendanceTab = ({ academicCycleId, schoolGroupId, academicCycle
     return {
         assistDate,
         setAssistDate: (value?: string) => setAssistDate(toDayParam(value) ?? ""),
-        enrollments: enrollmentsQuery.data?.data ?? [],
+        enrollments: enrollmentsQuery.data ?? [],
         isLoading: enrollmentsQuery.isLoading || assistsQuery.isLoading,
         isError: enrollmentsQuery.isError || assistsQuery.isError,
         handleSave,
