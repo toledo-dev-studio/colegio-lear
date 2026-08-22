@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { SchoolSubjectTaskService } from "./school-subject-task.service";
 import {
   schoolSubjectTaskParentParamsSchema,
@@ -6,6 +6,7 @@ import {
 } from "./school-subject-task.schema";
 import { prisma } from "../../shared/lib/prisma";
 import { storageService } from "../../shared/services/storage.service";
+import { gateStudentSession } from "../../shared/middleware/gate-student-session.middleware";
 import { sendPaginatedSuccess } from "../../shared/helpers/response.helper";
 import { NotFoundError, ValidationError } from "../../shared/errors/app-error";
 
@@ -14,10 +15,13 @@ import { NotFoundError, ValidationError } from "../../shared/errors/app-error";
  * (SERVICIOS_PORTAL_ALUMNO.md §9.1). Reuses SchoolSubjectTaskService as-is —
  * same data-shaping the employee CRUD controller uses — only adding the
  * ownership check and pagination defaults specific to the student contract.
- * Not a "shared URL" with any employee route (this path doesn't exist on
- * the employee side yet), so the route applies authenticateStudent directly
- * as regular chained middleware (see school-subject-task-student.routes.ts)
- * — no gate-student-session fallthrough needed, same as /students/me.
+ * This URL DOES collide with the employee CRUD route (same GET .../tasks,
+ * mounted after this one in index.ts) — a prior version of this file
+ * wrongly assumed no collision and used authenticateStudent directly, which
+ * meant an employee session could never reach its own route here
+ * (authenticateStudent threw "Invalid access token" instead of falling
+ * through). Fixed to use gateStudentSession, single handler, same pattern
+ * as student-grade-student.controller.ts.
  */
 
 const service = new SchoolSubjectTaskService(prisma, storageService);
@@ -69,7 +73,14 @@ async function assertStudentOwnsSchoolGroup(
 }
 
 /** GET /academic-cycles/:id/school-groups/:id/school-subjects/:id/tasks */
-export async function findAllPaged(req: Request, res: Response): Promise<void> {
+export async function findAllPaged(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  const isStudent = await gateStudentSession(req, res, next);
+  if (!isStudent) return;
+
   const { academicCycleId, academicCycleSchoolGroupId, academicCycleSchoolSubjectId } =
     parseParams(req);
   const { page, pageSize } = parseQuery(req);

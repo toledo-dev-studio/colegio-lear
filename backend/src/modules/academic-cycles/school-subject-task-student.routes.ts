@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { authenticateStudent } from "../../shared/middleware/auth-student.middleware";
 import { findAllPaged } from "./school-subject-task-student.controller";
 
 /**
- * Student-portal route for SERVICIOS_PORTAL_ALUMNO.md §9.1. This exact URL
- * has no employee-side counterpart, so unlike the calendars/grades/wallet
- * student routers, there's no fallthrough concern — authenticateStudent is
- * applied as regular chained middleware, same pattern as /students/me.
+ * Student-portal route for SERVICIOS_PORTAL_ALUMNO.md §9.1. Serves the same
+ * URL as the equivalent employee route in academic-cycle.routes.ts (mounted
+ * after this one in index.ts, under authorize("my-classes")) — single
+ * handler, see gate-student-session.middleware.ts for why chaining more
+ * middleware here would break the fallthrough to the employee router.
  */
 const router = Router();
 
@@ -58,7 +58,6 @@ const router = Router();
  */
 router.get(
   "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/school-subjects/:academicCycleSchoolSubjectId/tasks",
-  authenticateStudent,
   findAllPaged,
 );
 
