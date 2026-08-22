@@ -43,7 +43,7 @@ const uploadAttachmentSingle = uploadAttachment.single("file");
  *           application/json:
  *             schema:
  *               type: array
- *               items: { $ref: '#/components/schemas/SchoolSubjectMaterialRecord' }
+ *               items: { $ref: '#/components/schemas/SchoolSubjectMaterialFlatRecord' }
  *       401:
  *         description: No employee session
  *       404:
@@ -75,7 +75,7 @@ const uploadAttachmentSingle = uploadAttachment.single("file");
  *         description: Material created
  *         content:
  *           application/json:
- *             schema: { $ref: '#/components/schemas/SchoolSubjectMaterialRecord' }
+ *             schema: { $ref: '#/components/schemas/SchoolSubjectMaterialFlatRecord' }
  *       400:
  *         description: File is required
  *       401:

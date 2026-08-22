@@ -1714,6 +1714,19 @@ const swaggerOptions: swaggerJsdoc.Options = {
             attachment: { $ref: "#/components/schemas/SchoolSubjectMaterialAttachmentRecord" },
           },
         },
+        SchoolSubjectMaterialFlatRecord: {
+          type: "object",
+          description: "Teacher-facing (my classes) shape — flat, keyed by the plain schoolSubjectId instead of the nested attachment + academicCycleSchoolSubjectId the admin/student contract uses.",
+          properties: {
+            id: { type: "string", format: "uuid" },
+            url: { type: "string", format: "uri" },
+            name: { type: "string" },
+            extension: { type: "string" },
+            relatedRecordId: { type: "string", format: "uuid" },
+            academicCycleSchoolGroupId: { type: "string", format: "uuid" },
+            schoolSubjectId: { type: "string", format: "uuid" },
+          },
+        },
         // ─── Student Wallet ─────────────────────────────────────────────────────
         StudentWalletItemRecord: {
           type: "object",

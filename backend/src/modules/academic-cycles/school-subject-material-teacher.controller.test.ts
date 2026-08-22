@@ -12,14 +12,14 @@ vi.mock("./teacher-class-scope.helper", () => ({
   resolveTeacherSubjectScope: vi.fn(),
 }));
 
-const { findAllMock, createMock, removeMock } = vi.hoisted(() => ({
-  findAllMock: vi.fn(),
-  createMock: vi.fn(),
+const { findAllFlatMock, createFlatMock, removeMock } = vi.hoisted(() => ({
+  findAllFlatMock: vi.fn(),
+  createFlatMock: vi.fn(),
   removeMock: vi.fn(),
 }));
 vi.mock("./school-subject-material.service", () => ({
   SchoolSubjectMaterialService: vi.fn().mockImplementation(function () {
-    return { findAll: findAllMock, create: createMock, remove: removeMock };
+    return { findAllFlat: findAllFlatMock, createFlat: createFlatMock, remove: removeMock };
   }),
 }));
 
@@ -55,13 +55,13 @@ describe("school-subject-material-teacher.controller", () => {
     (resolveTeacherSubjectScope as any).mockResolvedValue(SCOPE);
   });
 
-  it("findAll delegates using the resolved scope", async () => {
-    findAllMock.mockResolvedValue([{ id: MATERIAL_ID }]);
+  it("findAll delegates using the resolved scope and the plain schoolSubjectId", async () => {
+    findAllFlatMock.mockResolvedValue([{ id: MATERIAL_ID }]);
     const { req, res } = buildReqRes();
 
     await findAll(req, res);
 
-    expect(findAllMock).toHaveBeenCalledWith(CYCLE_ID, GROUP_ID, CYCLE_SUBJECT_ID);
+    expect(findAllFlatMock).toHaveBeenCalledWith(CYCLE_ID, GROUP_ID, CYCLE_SUBJECT_ID, SUBJECT_ID);
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
@@ -70,22 +70,24 @@ describe("school-subject-material-teacher.controller", () => {
 
     await expect(create(req, res)).rejects.toThrow(ValidationError);
     expect(resolveTeacherSubjectScope).not.toHaveBeenCalled();
-    expect(createMock).not.toHaveBeenCalled();
+    expect(createFlatMock).not.toHaveBeenCalled();
   });
 
-  it("create delegates with the uploaded file and resolved scope", async () => {
-    createMock.mockResolvedValue({ id: MATERIAL_ID });
+  it("create delegates with the uploaded file, resolved scope, and the plain schoolSubjectId", async () => {
+    createFlatMock.mockResolvedValue({ id: MATERIAL_ID });
     const { req, res } = buildReqRes({
       file: { originalname: "guia.pdf", mimetype: "application/pdf", buffer: Buffer.from("x") },
     });
 
     await create(req, res);
 
-    expect(createMock).toHaveBeenCalledWith(CYCLE_ID, GROUP_ID, CYCLE_SUBJECT_ID, {
-      buffer: expect.any(Buffer),
-      originalname: "guia.pdf",
-      mimetype: "application/pdf",
-    });
+    expect(createFlatMock).toHaveBeenCalledWith(
+      CYCLE_ID,
+      GROUP_ID,
+      CYCLE_SUBJECT_ID,
+      SUBJECT_ID,
+      { buffer: expect.any(Buffer), originalname: "guia.pdf", mimetype: "application/pdf" },
+    );
     expect(res.status).toHaveBeenCalledWith(201);
   });
 

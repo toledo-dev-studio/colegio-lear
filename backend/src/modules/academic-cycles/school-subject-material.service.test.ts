@@ -31,6 +31,7 @@ type MockStorage = ReturnType<typeof createMockStorage>;
 const CYCLE_ID = "cycle-uuid";
 const GROUP_ID = "group-uuid";
 const SUBJECT_ID = "subject-uuid";
+const PLAIN_SUBJECT_ID = "plain-subject-uuid";
 const MATERIAL_ID = "material-uuid";
 
 const BASE_MATERIAL = {
@@ -124,6 +125,63 @@ describe("SchoolSubjectMaterialService", () => {
 
       await expect(
         service.create(CYCLE_ID, GROUP_ID, SUBJECT_ID, {
+          buffer: Buffer.from("x"),
+          originalname: "material.pdf",
+          mimetype: "application/pdf",
+        }),
+      ).rejects.toThrow(NotFoundError);
+      expect(storage.upload).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("findAllFlat", () => {
+    it("returns a flat record keyed by the plain schoolSubjectId, not nested under attachment", async () => {
+      prisma.schoolSubjectMaterial.findMany.mockResolvedValue([BASE_MATERIAL]);
+
+      const result = await service.findAllFlat(CYCLE_ID, GROUP_ID, SUBJECT_ID, PLAIN_SUBJECT_ID);
+
+      expect(result[0]).toEqual({
+        id: MATERIAL_ID,
+        url: expect.stringContaining("school-subject-materials/a.pdf"),
+        name: "material",
+        extension: "pdf",
+        relatedRecordId: MATERIAL_ID,
+        academicCycleSchoolGroupId: GROUP_ID,
+        schoolSubjectId: PLAIN_SUBJECT_ID,
+      });
+      expect(result[0]).not.toHaveProperty("attachment");
+      expect(result[0]).not.toHaveProperty("academicCycleId");
+      expect(result[0]).not.toHaveProperty("academicCycleSchoolSubjectId");
+    });
+  });
+
+  describe("createFlat", () => {
+    it("uploads the file and returns a flat record keyed by the plain schoolSubjectId", async () => {
+      storage.upload.mockResolvedValue("school-subject-materials/new.pdf");
+      prisma.schoolSubjectMaterial.create.mockResolvedValue(BASE_MATERIAL);
+
+      const result = await service.createFlat(CYCLE_ID, GROUP_ID, SUBJECT_ID, PLAIN_SUBJECT_ID, {
+        buffer: Buffer.from("x"),
+        originalname: "material.pdf",
+        mimetype: "application/pdf",
+      });
+
+      expect(result).toEqual({
+        id: MATERIAL_ID,
+        url: expect.stringContaining("school-subject-materials/a.pdf"),
+        name: "material",
+        extension: "pdf",
+        relatedRecordId: MATERIAL_ID,
+        academicCycleSchoolGroupId: GROUP_ID,
+        schoolSubjectId: PLAIN_SUBJECT_ID,
+      });
+    });
+
+    it("throws NotFoundError when the scope is invalid", async () => {
+      prisma.academicCycleSchoolSubject.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.createFlat(CYCLE_ID, GROUP_ID, SUBJECT_ID, PLAIN_SUBJECT_ID, {
           buffer: Buffer.from("x"),
           originalname: "material.pdf",
           mimetype: "application/pdf",

@@ -16,6 +16,22 @@ export interface SchoolSubjectMaterialRecord {
   attachment: SchoolSubjectMaterialAttachmentRecord;
 }
 
+/**
+ * Teacher-facing ("my classes") shape — flat, not nested under `attachment`,
+ * and keyed by the plain schoolSubjectId (the URL param the teacher
+ * endpoints use) instead of academicCycleSchoolSubjectId (the internal
+ * join-table id the admin/student contract exposes).
+ */
+export interface SchoolSubjectMaterialFlatRecord {
+  id: string;
+  url: string;
+  name: string;
+  extension: string;
+  relatedRecordId: string;
+  academicCycleSchoolGroupId: string;
+  schoolSubjectId: string;
+}
+
 /** File upload data passed from controller to service */
 export interface FileUpload {
   buffer: Buffer;

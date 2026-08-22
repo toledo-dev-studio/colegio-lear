@@ -35,10 +35,11 @@ export async function findAll(req: Request, res: Response): Promise<void> {
     schoolSubjectId,
   );
 
-  const data = await service.findAll(
+  const data = await service.findAllFlat(
     scope.academicCycleId,
     schoolGroupId,
     scope.academicCycleSchoolSubjectId,
+    schoolSubjectId,
   );
   sendSuccess(res, data);
 }
@@ -71,10 +72,11 @@ export async function create(req: Request, res: Response): Promise<void> {
     mimetype: multerFile.mimetype,
   };
 
-  const data = await service.create(
+  const data = await service.createFlat(
     scope.academicCycleId,
     schoolGroupId,
     scope.academicCycleSchoolSubjectId,
+    schoolSubjectId,
     file,
   );
   sendSuccess(res, data, 201);
