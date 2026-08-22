@@ -80,7 +80,7 @@ export const useAttendanceTabTable = ({ records, savedSnapshot, loggedInUserCanW
                     (saved.absenceReason ?? "") !== (record?.absenceReason ?? "");
                 return (
                     <Badge variant={isPending ? "warning" : "success"} className="py-1 px-3">
-                        {isPending ? "Pendiente" : "Guardado"}
+                        {isPending ? "Pendiente de guardar" : "Guardado"}
                     </Badge>
                 )
             }

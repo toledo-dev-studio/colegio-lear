@@ -70,19 +70,25 @@ export const useAttendanceTab = ({ academicCycleId, schoolGroupId, academicCycle
 
     // Initialize records whenever the selected date changes,
     // adjusting state during render (react.dev/learn/you-might-not-need-an-effect)
+    // The saved snapshot only includes attendances that actually exist in the backend,
+    // so enrollments without a record are shown as pending instead of saved
     const currentKey = assistDate;
     if (hydratedKey !== currentKey && enrollmentsQuery.data && assistsQuery.data) {
         const next: Record<string, AttendanceRecord> = {};
+        const snapshot: Record<string, AttendanceRecord> = {};
         for (const enrollment of enrollmentsQuery.data) {
             const saved = assistsQuery.data.find((assist: StudentAssistResponse) => assist.academicCycleEnrollmentId === enrollment.id);
             next[enrollment.id] = {
                 status: saved?.status ?? DEFAULT_RECORD.status,
                 absenceReason: saved?.absenceReason ?? DEFAULT_RECORD.absenceReason,
             };
+            if (saved) {
+                snapshot[enrollment.id] = { status: saved.status, absenceReason: saved.absenceReason ?? "" };
+            }
         }
         setHydratedKey(currentKey);
         setRecords(next);
-        setSavedSnapshot(next);
+        setSavedSnapshot(snapshot);
     }
 
     // Component functions
@@ -132,7 +138,7 @@ export const useAttendanceTab = ({ academicCycleId, schoolGroupId, academicCycle
             },
             onError: () => {
                 hideLoading();
-                toast.success("Ocurrio un error al tratar de guardar las asistencias", { position: "top-right" });
+                toast.error("Ocurrio un error al tratar de guardar las asistencias", { position: "top-right" });
             }
         });
 
