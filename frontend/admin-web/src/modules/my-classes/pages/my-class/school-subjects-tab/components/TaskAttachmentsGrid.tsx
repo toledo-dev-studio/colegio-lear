@@ -75,6 +75,8 @@ export const TaskAttachmentsGrid = ({ taskId, attachments, loggedInUserCanWrite,
      * Validate an upload files to server generating a public url. 
      */
     const handleOnFilesSelected = useCallback(async (files: File[]) => {
+        debugger;
+        
         if (disabled)
             return;
 

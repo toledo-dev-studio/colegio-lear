@@ -16,4 +16,6 @@ export const GET_ACADEMIC_CYCLE_SCHOOL_GROUP_QUERY_KEY = "academic-cycle-school-
 
 export const GET_PAGED_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY = "paged-academic-cycle-enrollments";
 
+export const GET_ACADEMIC_CYCLE_ENROLLMENTS_QUERY_KEY = "academic-cycle-enrollments";
+
 export const GET_ACADEMIC_CYCLE_ENROLLMENT_QUERY_KEY = "academic-cycle-enrollment";
