@@ -1460,6 +1460,11 @@ const swaggerOptions: swaggerJsdoc.Options = {
           properties: {
             schoolSubjectId: { type: "string", format: "uuid" },
             schoolSubject: { $ref: "#/components/schemas/SchoolSubjectRecord" },
+            academicCycleSchoolSubjectId: {
+              type: "string",
+              format: "uuid",
+              description: "This academic cycle's own subject catalog entry id (distinct from schoolSubjectId, the global catalog id).",
+            },
             teacherId: { type: "string", format: "uuid" },
             teacher: { $ref: "#/components/schemas/Employee" },
           },

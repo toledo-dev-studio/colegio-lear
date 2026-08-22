@@ -73,6 +73,8 @@ export interface UpdateAcademicCycleSchoolGroupDto {
 export interface AcademicCycleSchoolGroupTeacherRecord {
   schoolSubjectId: string;
   schoolSubject: { id: string; name: string; description: string | null };
+  /** This academic cycle's own subject catalog entry id — see teacher-class-scope.helper.ts for why callers need this alongside the plain schoolSubjectId. */
+  academicCycleSchoolSubjectId: string;
   teacherId: string;
   teacher: EmployeeRecord;
 }
