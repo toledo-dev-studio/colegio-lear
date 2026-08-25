@@ -10,10 +10,10 @@ RUN pnpm config set ignore-scripts true && pnpm install --frozen-lockfile
 
 COPY frontend/admin-web/ .
 
-ARG VITE_COLEGIO_LEAR_API_URL
+ARG VITE_API_URL
 ARG VITE_ENVIRONMENT
 
-ENV VITE_COLEGIO_LEAR_API_URL=$VITE_COLEGIO_LEAR_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_ENVIRONMENT=$VITE_ENVIRONMENT
 
 RUN pnpm run build
