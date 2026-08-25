@@ -16,6 +16,7 @@ env:
   IMAGE_NAME: admin-web-colegio-lear
   IMAGE_TAG: development
   AZURE_RESOURCE_GROUP: admin-suite-colegio-lear-development
+  AZURE_WEB_APP_NAME: app-development-admin-web-colegio-lear
 
 jobs:
   build-push-and-deploy:
@@ -77,3 +78,17 @@ jobs:
         run: |
           docker push \
             ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION_TAG }}
+
+            # 8. Reiniciar Azure Web App
+      #
+      # La Web App continúa configurada para utilizar:
+      #
+      # admin-web-colegio-lear:development
+      #
+      # El restart hace que Azure vuelva a obtener la imagen actualizada.
+      #
+      - name: Restart Azure Web App
+        run: |
+          az webapp restart \
+            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ env.AZURE_WEB_APP_NAME }}"
