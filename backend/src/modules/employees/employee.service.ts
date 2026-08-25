@@ -413,7 +413,7 @@ export class EmployeeService {
           username,
           tempPassword,
           code,
-          frontendUrl: env.FRONTEND_URL,
+          frontendUrl: env.FRONTEND_URL_ADMIN,
         }),
       })
       .catch((err) => {
@@ -573,7 +573,7 @@ export class EmployeeService {
         username: employee.username,
         tempPassword,
         code,
-        frontendUrl: env.FRONTEND_URL,
+        frontendUrl: env.FRONTEND_URL_ADMIN,
       }),
     });
   }

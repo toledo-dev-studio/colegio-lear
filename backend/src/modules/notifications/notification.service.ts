@@ -529,7 +529,9 @@ export class NotificationService {
               recipientName: r.recipientName,
               announcementName: announcement.name,
               announcementDescription: announcement.description,
-              frontendUrl: env.FRONTEND_URL,
+              frontendUrl: r.studentName
+                ? env.FRONTEND_URL_STUDENT
+                : env.FRONTEND_URL_ADMIN,
               ...(r.studentName ? { studentName: r.studentName } : {}),
             }),
           }),
@@ -570,7 +572,9 @@ export class NotificationService {
             recipientName: r.recipientName,
             announcementName: announcement.name,
             announcementDescription: announcement.description,
-            frontendUrl: env.FRONTEND_URL,
+            frontendUrl: r.studentName
+              ? env.FRONTEND_URL_STUDENT
+              : env.FRONTEND_URL_ADMIN,
             ...(r.studentName ? { studentName: r.studentName } : {}),
           }),
         }),
