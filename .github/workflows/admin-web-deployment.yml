@@ -58,3 +58,10 @@ jobs:
         run: |
           docker push \
             ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+      # 6. Restart azure web app
+      - name: Restart Azure Web App
+        run: |
+          az webapp restart \
+            --resource-group admin-suite-colegio-lear-development \
+            --name app-development-admin-web-colegio-lear
