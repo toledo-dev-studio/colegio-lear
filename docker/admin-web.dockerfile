@@ -10,7 +10,6 @@ RUN pnpm config set ignore-scripts true && pnpm install --frozen-lockfile
 
 COPY frontend/admin-web/ .
 
-# Variables de entorno para Vite
 ARG VITE_COLEGIO_LEAR_API_URL
 ARG VITE_ENVIRONMENT
 
