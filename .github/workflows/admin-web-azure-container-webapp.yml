@@ -48,8 +48,8 @@ jobs:
         run: |
           docker build \
             -f docker/admin-web.dockerfile \
-            --build-arg VITE_COLEGIO_LEAR_API_URL="${{ secrets.VITE_COLEGIO_LEAR_API_URL }}" \
-            --build-arg VITE_ENVIRONMENT="${{ secrets.VITE_ENVIRONMENT }}" \
+            --build-arg VITE_COLEGIO_LEAR_API_URL="${{ vars.VITE_COLEGIO_LEAR_API_URL }}" \
+            --build-arg VITE_ENVIRONMENT="${{ vars.VITE_ENVIRONMENT }}" \
             -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
             .
 
