@@ -7,7 +7,7 @@ on:
     paths:
       - "frontend/admin-web/**"
       - "docker/admin-web.dockerfile"
-      - ".github/workflows/admin-web-development.yml"
+      - ".github/workflows/admin-web-deployment.yml"
 
   workflow_dispatch:
 
