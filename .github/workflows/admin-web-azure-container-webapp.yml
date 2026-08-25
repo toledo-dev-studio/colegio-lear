@@ -1,0 +1,60 @@
+name: Admin Web - Development
+
+on:
+  push:
+    branches:
+      - development
+    paths:
+      - "frontend/admin-web/**"
+      - "docker/admin-web.dockerfile"
+      - ".github/workflows/admin-web-development.yml"
+
+  workflow_dispatch:
+
+env:
+  AZURE_REGISTRY: colegiolear.azurecr.io
+  IMAGE_NAME: admin-web-colegio-lear
+  IMAGE_TAG: development
+
+jobs:
+  build-and-push:
+    name: Build and Push Admin Web
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Login a Azure mediante OIDC
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # 3. Login a Azure Container Registry
+      - name: Login to Azure Container Registry
+        run: |
+          az acr login --name colegiolear
+
+      # 4. Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f docker/admin-web.dockerfile \
+            --build-arg VITE_COLEGIO_LEAR_API_URL="${{ secrets.VITE_COLEGIO_LEAR_API_URL }}" \
+            --build-arg VITE_ENVIRONMENT="${{ secrets.VITE_ENVIRONMENT }}" \
+            -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+            .
+
+      # 5. Push image
+      - name: Push Docker image
+        run: |
+          docker push \
+            ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
