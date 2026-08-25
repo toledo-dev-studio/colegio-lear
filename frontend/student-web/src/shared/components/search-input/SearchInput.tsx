@@ -1,10 +1,11 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
-import { Input } from "../../ui/input";
+
 import { cn } from "@/lib/extensions/utils";
 import { Spinner } from "../spinner/Spinner";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
+import { Input } from "@/shared/shadcn/ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/shadcn/ui/tooltip";
 
 interface Props {
     name?: string;
