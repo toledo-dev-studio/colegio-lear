@@ -79,7 +79,7 @@ jobs:
           docker push \
             ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION_TAG }}
 
-            # 8. Reiniciar Azure Web App
+      # 8. Reiniciar Azure Web App
       #
       # La Web App continúa configurada para utilizar:
       #
