@@ -2,9 +2,9 @@ import axios from "axios"
 
 import { useAuthStore } from "@/stores/auth-store/auth.store";
 
-import { VITE_COLEGIO_LEAR_API_URL } from "@/lib/constants/environment.constants";
+import { VITE_API_URL } from "@/lib/constants/environment.constants";
 
-const baseURL = VITE_COLEGIO_LEAR_API_URL;
+const baseURL = VITE_API_URL;
 
 const api = axios.create({
     baseURL: baseURL,

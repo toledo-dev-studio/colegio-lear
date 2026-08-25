@@ -4,17 +4,16 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY frontend/admin-web/package.json frontend/admin-web/pnpm-lock.yaml ./
+COPY frontend/student-web/package.json frontend/student-web/pnpm-lock.yaml ./
 
 RUN pnpm config set ignore-scripts true && pnpm install --frozen-lockfile
 
-COPY frontend/admin-web/ .
+COPY frontend/student-web/ .
 
-# Variables de entorno para Vite
-ARG VITE_COLEGIO_LEAR_API_URL
+ARG VITE_API_URL
 ARG VITE_ENVIRONMENT
 
-ENV VITE_COLEGIO_LEAR_API_URL=$VITE_COLEGIO_LEAR_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_ENVIRONMENT=$VITE_ENVIRONMENT
 
 RUN pnpm run build

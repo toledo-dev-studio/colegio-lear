@@ -23,7 +23,7 @@ services:
     image: 'node-cli'
     build:
       context: ./
-      dockerfile: docker/node.dockerfile
+      dockerfile: docker/utility/node.dockerfile
     ports:
       - '3000:3000'
     volumes:
@@ -33,28 +33,31 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@colegio-lear-db:5432/colegio_lear?schema=public"
+    command: ["pnpm", "run", "dev"]
       
   colegio-lear-admin-web-cli:
     container_name: 'colegio-lear-admin-web-cli'
     image: 'node-cli'
     build:
       context: ./
-      dockerfile: docker/node.dockerfile
+      dockerfile: docker/utility/node.dockerfile
     ports:
       - '80:80'
     volumes:
       - ./frontend/admin-web:/app:rw
+    command: ["pnpm", "run", "dev"]
 
   colegio-lear-student-web-cli:
     container_name: 'colegio-lear-student-web-cli'
     image: 'node-cli'
     build:
       context: ./
-      dockerfile: docker/node.dockerfile
+      dockerfile: docker/utility/node.dockerfile
     ports:
       - '80:80'
     volumes:
       - ./frontend/student-web:/app:rw
+    command: ["pnpm", "run", "dev"]
 
 volumes:
   colegio-lear-db-data:

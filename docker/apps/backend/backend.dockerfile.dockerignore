@@ -1,0 +1,26 @@
+# Git e infraestructura del repo
+.git
+.github
+.gitignore
+compose.yaml
+docker
+
+# Frontends
+frontend
+
+# Dependencias y artefactos
+**/node_modules
+**/.pnpm-store
+backend/dist
+backend/src/generated/prisma
+
+# Secretos y datos locales
+backend/.env*
+backend/uploads
+backend/logs
+*.log
+
+# IDE / SO
+.DS_Store
+.vscode
+.idea
