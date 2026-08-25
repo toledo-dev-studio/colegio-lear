@@ -422,7 +422,7 @@ export class AcademicCycleService {
             employeeName: employee.name,
             title: params.title,
             message: params.message,
-            frontendUrl: env.FRONTEND_URL,
+            frontendUrl: env.FRONTEND_URL_ADMIN,
             isError: true,
           }),
         });

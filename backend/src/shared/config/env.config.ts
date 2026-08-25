@@ -42,7 +42,7 @@ interface EnvConfig {
   COOKIE_SECURE: boolean;
 
   // CORS
-  CORS_ORIGIN: string;
+  CORS_ORIGIN: string[];
 
   // Admin 1 Seed
   ADMIN1_NAME: string;
@@ -56,8 +56,9 @@ interface EnvConfig {
   ADMIN2_EMAIL: string;
   ADMIN2_PASSWORD: string;
 
-  // Frontend
-  FRONTEND_URL: string;
+  // Frontend (portal-specific — used to build links in emails)
+  FRONTEND_URL_ADMIN: string;
+  FRONTEND_URL_STUDENT: string;
 
   // Backend (public origin, used to build absolute URLs for locally-stored files)
   BACKEND_URL: string;
@@ -109,8 +110,11 @@ export const env: EnvConfig = {
   // Cookie
   COOKIE_SECURE: process.env.COOKIE_SECURE === "true",
 
-  // CORS
-  CORS_ORIGIN: process.env.CORS_ORIGIN || "http://localhost:5173",
+  // CORS (comma-separated list of allowed origins)
+  CORS_ORIGIN: (process.env.CORS_ORIGIN || "http://localhost:5173")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
 
   // Admin 1 Seed
   ADMIN1_NAME: process.env.ADMIN1_NAME || "Admin",
@@ -125,7 +129,9 @@ export const env: EnvConfig = {
   ADMIN2_PASSWORD: process.env.ADMIN2_PASSWORD || "Admin456!",
 
   // Frontend
-  FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:5173",
+  FRONTEND_URL_ADMIN: process.env.FRONTEND_URL_ADMIN || "http://localhost:5173",
+  FRONTEND_URL_STUDENT:
+    process.env.FRONTEND_URL_STUDENT || "http://localhost:5173",
 
   // Backend
   BACKEND_URL:
