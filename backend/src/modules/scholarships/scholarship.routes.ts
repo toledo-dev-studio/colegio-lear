@@ -90,9 +90,11 @@ router.get(
  *       400:
  *         description: Validation error
  */
+// Also read by the academic-cycles enrollments tab's scholarship picker, so
+// either module grants access.
 router.get(
   "/paged",
-  authorize("scholarships"),
+  authorize(["scholarships", "academic-cycles"]),
   validate(scholarshipPagedQuerySchema, "query"),
   findAllPaged,
 );

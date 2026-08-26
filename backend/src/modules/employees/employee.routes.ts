@@ -343,7 +343,13 @@ router.post(
  */
 // Must be registered BEFORE "/:id" — otherwise Express matches "/:id" first
 // and "teachers" gets treated as a UUID path param, failing validation.
-router.get("/teachers", authorize("employees"), findAllTeachers);
+// Also read by the academic-cycles school-group form's teacher picker, so
+// either module grants access.
+router.get(
+  "/teachers",
+  authorize(["employees", "academic-cycles"]),
+  findAllTeachers,
+);
 
 /**
  * @openapi

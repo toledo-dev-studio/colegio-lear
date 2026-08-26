@@ -141,9 +141,11 @@ router.get(
  *       400:
  *         description: Invalid pagination parameters
  */
+// Also read by the employee form's job-title picker, so either module
+// grants access.
 router.get(
   "/paged",
-  authorize("job-titles"),
+  authorize(["job-titles", "employees"]),
   validate(jobTitlePagedQuerySchema, "query"),
   findAllPaged,
 );
