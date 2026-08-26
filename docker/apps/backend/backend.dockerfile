@@ -35,6 +35,9 @@ ENV MAIL_FROM="noreply@colegiolear.com"
 ENV MAIL_HOST="smtp.gmail.com"
 ENV MAIL_PORT=587
 
+# Generate build
+RUN pnpm build
+
 EXPOSE 80
 
-CMD ["pnpm", "run", "dev"]
+CMD ["pnpm", "start"]
