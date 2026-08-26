@@ -129,9 +129,11 @@ router.get(
  *       400:
  *         description: Invalid pagination parameters
  */
+// Also read by the employee form's security-role picker, so either module
+// grants access.
 router.get(
   "/paged",
-  authorize("security-roles"),
+  authorize(["security-roles", "employees"]),
   validate(securityRolePagedQuerySchema, "query"),
   findAllPaged,
 );
@@ -197,9 +199,11 @@ router.post(
  *       404:
  *         description: Security role not found
  */
+// Also read by the employee form (to display the selected role's
+// permissions), so either module grants access.
 router.get(
   "/:id",
-  authorize("security-roles"),
+  authorize(["security-roles", "employees"]),
   validate(idParamSchema, "params"),
   findById,
 );

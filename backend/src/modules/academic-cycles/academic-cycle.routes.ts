@@ -332,9 +332,11 @@ router.get(
  *       404:
  *         description: Academic cycle not found
  */
+// Also read by the teacher-facing "my-classes" detail screen (MyClassLayout
+// reuses this endpoint), so either module grants access.
 router.get(
   "/:id",
-  authorize("academic-cycles"),
+  authorize(["academic-cycles", "my-classes"]),
   validate(idParamSchema, "params"),
   findById,
 );
@@ -826,9 +828,11 @@ router.get(
  *       404:
  *         description: Academic cycle or school group not found
  */
+// Also read by the teacher-facing "my-classes" detail screen (MyClassLayout
+// reuses this endpoint), so either module grants access.
 router.get(
   "/:academicCycleId/school-groups/:id",
-  authorize("academic-cycles"),
+  authorize(["academic-cycles", "my-classes"]),
   validate(academicCycleSubResourceParamSchema, "params"),
   findSchoolGroupById,
 );
@@ -984,9 +988,12 @@ router.delete(
  *       404:
  *         description: Academic cycle or school group not found
  */
+// Also read by the teacher-facing "my-classes" school-subjects tab (drives
+// the subject list that materials/tasks hang off of), so either module
+// grants access.
 router.get(
   "/:academicCycleId/school-groups/:academicCycleSchoolGroupId/calendars",
-  authorize("academic-cycles"),
+  authorize(["academic-cycles", "my-classes"]),
   validate(academicCycleSchoolGroupIdParamSchema, "params"),
   findAllCalendars,
 );
@@ -1211,9 +1218,11 @@ router.get(
  *       409:
  *         description: Enrollment is closed for this academic cycle, or the student is already enrolled in this academic cycle (any status)
  */
+// Also read by the teacher-facing "my-classes" screens (roster for
+// attendance, chats and grades), so either module grants access.
 router.get(
   "/:academicCycleId/enrollments",
-  authorize("academic-cycles"),
+  authorize(["academic-cycles", "my-classes"]),
   validate(academicCycleIdParamSchema, "params"),
   validate(academicCycleEnrollmentByGroupQuerySchema, "query"),
   findAllEnrollmentsByGroup,

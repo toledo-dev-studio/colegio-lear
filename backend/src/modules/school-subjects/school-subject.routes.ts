@@ -92,9 +92,11 @@ router.get(
  *       400:
  *         description: Validation error
  */
+// Also read by the academic-cycles school-subjects tab's subject picker, so
+// either module grants access.
 router.get(
   "/paged",
-  authorize("school-subjects"),
+  authorize(["school-subjects", "academic-cycles"]),
   validate(pagedQuerySchema, "query"),
   findAllPaged,
 );
