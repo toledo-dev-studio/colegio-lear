@@ -1,6 +1,6 @@
 # Dockerfile for utility container for Node.JS CLI applications
 # Use an official Node.js runtime as a parent image
-FROM node:current-alpine3.22
+FROM node:alpine3.22
 
 # Install pnpm to use it as package manager
 RUN npm install -g pnpm

@@ -1,4 +1,4 @@
-FROM node:current-alpine3.22
+FROM node:alpine3.22
 
 RUN npm install -g pnpm
 
@@ -66,4 +66,4 @@ ENV FRONTEND_URL_STUDENT=$FRONTEND_URL_STUDENT
 
 EXPOSE 80
 
-CMD ["node", "index.js"]
+CMD ["pnpm", "start"]
