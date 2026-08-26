@@ -62,6 +62,14 @@ jobs:
         run: |
           docker build \
             -f docker/apps/backend/backend.dockerfile \
+            --build-arg COOKIE_SECURE=${{ secrets.BACKEND_COOKIE_SECURE }} \
+            --build-arg DATABASE_URL="${{ secrets.BACKEND_DATABASE_URL }}" \
+            --build-arg JWT_SECRET="${{ secrets.BACKEND_JWT_SECRET }}" \
+            --build-arg MAIL_USER="${{ secrets.BACKEND_MAIL_USER }}" \
+            --build-arg MAIL_PASSWORD="${{ secrets.BACKEND_MAIL_PASSWORD }}" \
+            --build-arg CORS_ORIGIN="${{ secrets.BACKEND_CORS_ORIGIN }}" \
+            --build-arg FRONTEND_URL_ADMIN="${{ secrets.BACKEND_FRONTEND_URL_ADMIN }}" \
+            --build-arg FRONTEND_URL_STUDENT="${{ secrets.BACKEND_FRONTEND_URL_STUDENT }}" \
             -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }} \
             -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}-${{ env.VERSION_TAG }} \
             .
@@ -78,23 +86,7 @@ jobs:
           docker push \
             ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}-${{ env.VERSION_TAG }}
 
-      # 8. Configure Azure Web App environment variables
-      - name: Configure Azure App Service settings
-        run: |
-          az webapp config appsettings set \
-            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
-            --name "${{ env.AZURE_WEB_APP_NAME }}" \
-            --settings \
-              COOKIE_SECURE=${{ secrets.BACKEND_COOKIE_SECURE }} \
-              DATABASE_URL="${{ secrets.BACKEND_DATABASE_URL }}" \
-              JWT_SECRET="${{ secrets.BACKEND_JWT_SECRET }}" \
-              MAIL_USER="${{ secrets.BACKEND_MAIL_USER }}" \
-              MAIL_PASSWORD="${{ secrets.BACKEND_MAIL_PASSWORD }}" \
-              CORS_ORIGIN="${{ secrets.BACKEND_CORS_ORIGIN }}" \
-              FRONTEND_URL_ADMIN="${{ secrets.BACKEND_FRONTEND_URL_ADMIN }}" \
-              FRONTEND_URL_STUDENT="${{ secrets.BACKEND_FRONTEND_URL_STUDENT }}" \
-
-      # 9. Restart Azure Web App
+      # 8. Restart Azure Web App
       # Force restart to download updated image for azure web app (student-web-colegio-lear:development)
       - name: Restart Azure Web App
         run: |
