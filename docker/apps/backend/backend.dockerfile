@@ -4,7 +4,7 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY backend/package.json backend/pnpm-lock.yaml ./
+COPY backend/package.json backend/pnpm-lock.yaml backend/pnpm-workspace.yaml ./
 
 RUN pnpm install --frozen-lockfile
 
@@ -24,11 +24,6 @@ ENV BCRYPT_SALT_ROUNDS=10
 ENV LOG_DIR="./logs"
 ENV LOG_RETENTION_DAYS=30
 ENV LOG_LEVEL="info"
-# Super Admin Prisma Seed
-ENV SUPER_ADMIN_EMAIL="admin@example.com"
-ENV SUPER_ADMIN_PASSWORD="S;-RV8PQ(^VE]]k"
-ENV SUPER_ADMIN_FIRST_NAME="Super"
-ENV SUPER_ADMIN_LAST_NAME="Admin"
 # Storage
 ENV STORAGE_PROVIDER="local"
 ENV STORAGE_LOCAL_PATH="./uploads"
@@ -40,8 +35,6 @@ ENV MAIL_FROM="noreply@colegiolear.com"
 ENV MAIL_HOST="smtp.gmail.com"
 ENV MAIL_PORT=587
 
-RUN pnpm build
-
 EXPOSE 80
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "run", "dev"]
