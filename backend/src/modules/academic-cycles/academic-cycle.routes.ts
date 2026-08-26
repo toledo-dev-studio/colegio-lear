@@ -332,9 +332,11 @@ router.get(
  *       404:
  *         description: Academic cycle not found
  */
+// Also read by the teacher-facing "my-classes" detail screen (MyClassLayout
+// reuses this endpoint), so either module grants access.
 router.get(
   "/:id",
-  authorize("academic-cycles"),
+  authorize(["academic-cycles", "my-classes"]),
   validate(idParamSchema, "params"),
   findById,
 );
@@ -826,9 +828,11 @@ router.get(
  *       404:
  *         description: Academic cycle or school group not found
  */
+// Also read by the teacher-facing "my-classes" detail screen (MyClassLayout
+// reuses this endpoint), so either module grants access.
 router.get(
   "/:academicCycleId/school-groups/:id",
-  authorize("academic-cycles"),
+  authorize(["academic-cycles", "my-classes"]),
   validate(academicCycleSubResourceParamSchema, "params"),
   findSchoolGroupById,
 );
