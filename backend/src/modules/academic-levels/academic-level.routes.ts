@@ -131,9 +131,11 @@ router.get(
  *       400:
  *         description: Invalid pagination parameters
  */
+// Also read by the academic-cycles and school-subjects forms' academic-level
+// pickers, so any of the three modules grants access.
 router.get(
   "/paged",
-  authorize("academic-levels"),
+  authorize(["academic-levels", "academic-cycles", "school-subjects"]),
   validate(academicLevelPagedQuerySchema, "query"),
   findAllPaged,
 );
@@ -210,9 +212,11 @@ router.get(
  *       400:
  *         description: Invalid parameters
  */
+// Also read by the academic-cycles and school-subjects forms' education-level
+// pickers, so any of the three modules grants access.
 router.get(
   "/education-levels/paged",
-  authorize("academic-levels"),
+  authorize(["academic-levels", "academic-cycles", "school-subjects"]),
   validate(educationLevelPagedQuerySchema, "query"),
   findEducationLevelsPaged,
 );

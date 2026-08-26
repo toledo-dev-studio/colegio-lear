@@ -92,9 +92,11 @@ router.get(
  *       400:
  *         description: Validation error
  */
+// Also read by the academic-cycles wallet form's payment-concept picker, so
+// either module grants access.
 router.get(
   "/paged",
-  authorize("payment-concepts"),
+  authorize(["payment-concepts", "academic-cycles"]),
   validate(paymentConceptPagedQuerySchema, "query"),
   findAllPaged,
 );
