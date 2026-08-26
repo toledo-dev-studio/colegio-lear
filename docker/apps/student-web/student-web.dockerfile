@@ -1,4 +1,4 @@
-FROM node:current-alpine3.22 AS builder
+FROM node:alpine3.22 AS builder
 
 RUN npm install -g pnpm
 
