@@ -31,13 +31,20 @@ const METHOD_PERMISSION_MAP: Record<
  * Returns 403 if the permission entry is missing or the flag is false.
  * Must be placed after the authenticate middleware in the middleware chain.
  *
- * @param moduleKey - The module identifier matching a SecurityRolePermission.moduleKey
+ * @param moduleKey - The module identifier matching a SecurityRolePermission.moduleKey.
+ *   Accepts an array when a route is legitimately shared by more than one
+ *   module (e.g. an academic-cycles endpoint also consumed by the teacher-facing
+ *   "my-classes" screens) — access is granted if ANY of the given modules
+ *   grants the required permission.
  *
  * @example
  * router.get("/", authorize("students"), findAll);
  * router.post("/", authorize("students"), validate(schema, "body"), create);
+ * router.get("/:id", authorize(["academic-cycles", "my-classes"]), findById);
  */
-export function authorize(moduleKey: ModuleKey): RequestHandler {
+export function authorize(moduleKey: ModuleKey | ModuleKey[]): RequestHandler {
+  const moduleKeys = Array.isArray(moduleKey) ? moduleKey : [moduleKey];
+
   return (req, _res, next) => {
     if (!req.user) {
       throw new ForbiddenError("Insufficient privileges");
@@ -50,13 +57,13 @@ export function authorize(moduleKey: ModuleKey): RequestHandler {
       throw new ForbiddenError("Insufficient privileges");
     }
 
-    // Find the permission entry for this module in the employee's role
-    const permission = req.user.permissions.find(
-      (p) => p.moduleKey === moduleKey,
-    );
+    // Granted if any of the given modules has the required flag for this employee's role
+    const granted = moduleKeys.some((key) => {
+      const permission = req.user!.permissions.find((p) => p.moduleKey === key);
+      return !!permission?.[requiredPermission];
+    });
 
-    // No entry for this module or the required flag is false → 403
-    if (!permission || !permission[requiredPermission]) {
+    if (!granted) {
       throw new ForbiddenError("Insufficient privileges");
     }
 
