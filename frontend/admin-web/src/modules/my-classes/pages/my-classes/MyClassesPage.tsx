@@ -16,7 +16,7 @@ export const MyClassesPage = () => {
             <section className="page-main-section">
 
                 <Breadcrumb items={[
-                    { label: "Accesos rápidos" },
+                    { label: "Seguimiento escolar" },
                     { label: "Mis clases" },
                 ]} />
 
