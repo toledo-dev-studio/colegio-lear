@@ -48,7 +48,6 @@ export const LoginPage = () => {
                         <Input
                             {...register("username", { required: true })}
                             type="text"
-                            defaultValue="aone"
                             placeholder="correo@colegio.com"
                             className="pill-input w-full pl-12"
                             required
@@ -70,7 +69,6 @@ export const LoginPage = () => {
                         <Input
                             {...register("password", { required: true })}
                             type={showPassword ? "text" : "password"}
-                            defaultValue="Admin123!"
                             placeholder="••••••••"
                             className="pill-input w-full pl-12 pr-12"
                             required
