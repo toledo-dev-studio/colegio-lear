@@ -9,7 +9,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  schemas  = ["core", "auth", "logs"]
+  schemas  = ["core", "logs"]
 }
 
 // ─── Academic Level ─────────────────────────────────────────────────────────────
