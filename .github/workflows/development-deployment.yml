@@ -85,14 +85,14 @@ jobs:
             --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
             --name "${{ env.AZURE_WEB_APP_NAME }}" \
             --settings \
-              COOKIE_SECURE=${{ secrets.BACKEND_COOKIE_SECURE }} \
+              COOKIE_SECURE=${{ vars.BACKEND_COOKIE_SECURE }} \
               DATABASE_URL="${{ secrets.BACKEND_DATABASE_URL }}" \
               JWT_SECRET="${{ secrets.BACKEND_JWT_SECRET }}" \
               MAIL_USER="${{ secrets.BACKEND_MAIL_USER }}" \
               MAIL_PASSWORD="${{ secrets.BACKEND_MAIL_PASSWORD }}" \
-              CORS_ORIGIN="${{ secrets.BACKEND_CORS_ORIGIN }}" \
-              FRONTEND_URL_ADMIN="${{ secrets.BACKEND_FRONTEND_URL_ADMIN }}" \
-              FRONTEND_URL_STUDENT="${{ secrets.BACKEND_FRONTEND_URL_STUDENT }}" \
+              CORS_ORIGIN="${{ vars.BACKEND_CORS_ORIGIN }}" \
+              FRONTEND_URL_ADMIN="${{ vars.BACKEND_FRONTEND_URL_ADMIN }}" \
+              FRONTEND_URL_STUDENT="${{ vars.BACKEND_FRONTEND_URL_STUDENT }}" \
 
       # 9. Restart Azure Web App
       # Force restart to download updated image for azure web app (student-web-colegio-lear:development)
