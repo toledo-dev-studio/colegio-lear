@@ -133,9 +133,14 @@ export const env: EnvConfig = {
   FRONTEND_URL_STUDENT:
     process.env.FRONTEND_URL_STUDENT || "http://localhost:5173",
 
-  // Backend
+  // Backend — falls back to Azure App Service's own auto-injected hostname
+  // (WEBSITE_HOSTNAME) before falling back to localhost, so no manual
+  // config is needed just to reflect the container's real public domain.
   BACKEND_URL:
-    process.env.BACKEND_URL || `http://localhost:${process.env.PORT || "3000"}`,
+    process.env.BACKEND_URL ||
+    (process.env.WEBSITE_HOSTNAME
+      ? `https://${process.env.WEBSITE_HOSTNAME}`
+      : `http://localhost:${process.env.PORT || "3000"}`),
 };
 
 // Validate critical environment variables

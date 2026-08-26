@@ -14,6 +14,10 @@ const swaggerOptions: swaggerJsdoc.Options = {
         url: "http://localhost:3000",
         description: "Development server",
       },
+      {
+        url: "https://app-development-backend-colegio-lear-f7d2b4h0fddjf8es.canadacentral-01.azurewebsites.net",
+        description: "Azure Development server",
+      },
     ],
     components: {
       schemas: {
