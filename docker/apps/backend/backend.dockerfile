@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY backend/package.json backend/pnpm-lock.yaml ./
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm config set ignore-scripts true && pnpm install --frozen-lockfile
 
 COPY backend/ .
 
