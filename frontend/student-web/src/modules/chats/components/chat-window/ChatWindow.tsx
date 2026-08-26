@@ -90,7 +90,7 @@ export const ChatWindow = ({ chat, studentId, enrollmentId, onBack }: Props) => 
                 <section className="min-w-0">
                     <p className="text-sm font-heading font-bold text-foreground truncate">{getTeacherFullName(chat)}</p>
                     <p className="text-[11px] text-muted-foreground truncate">
-                        Docente de {chat.schoolSubject.name}
+                        Docente
                     </p>
                 </section>
             </header>
