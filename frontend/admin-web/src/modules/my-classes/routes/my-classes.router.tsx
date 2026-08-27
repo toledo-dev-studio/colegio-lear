@@ -7,6 +7,8 @@ import { MyClassesPage } from "../pages/my-classes/MyClassesPage";
 const SystemLayout = lazy(() => import("@/layouts/SystemLayout"));
 const MyClassesLayout = lazy(() => import("@/modules/my-classes/layouts/MyClassesLayout"));
 const MyClassLayout = lazy(() => import("@/modules/my-classes/layouts/MyClassLayout"));
+
+const CalendarTab = lazy(() => import("@/modules/my-classes/pages/my-class/calendar-tab/CalendarTab"));
 const AttendanceTab = lazy(() => import("@/modules/my-classes/pages/my-class/attendance-tab/AttendanceTab"));
 const SchoolSubjectsTab = lazy(() => import("@/modules/my-classes/pages/my-class/school-subjects-tab/SchoolSubjectsTab"));
 const ChatsTab = lazy(() => import("@/modules/my-classes/pages/my-class/chats-tab/ChatsTab"));
@@ -33,6 +35,10 @@ export const myClassesRouter: RouteObject = {
                     children: [
                         {
                             path: "",
+                            element: <CalendarTab />
+                        },
+                        {
+                            path: "attendance",
                             element: <AttendanceTab />
                         },
                         {
@@ -42,7 +48,7 @@ export const myClassesRouter: RouteObject = {
                         {
                             path: "chats",
                             element: <ChatsTab />
-                        }
+                        },
                     ]
                 },
                 {
