@@ -1,5 +1,5 @@
 import { matchPath, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router";
-import { BookOpen, ClipboardCheck, MessageSquare } from "lucide-react";
+import { BookOpen, ClipboardCheck, MessageSquare, Calendar } from "lucide-react";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/extensions/utils";
@@ -17,6 +17,12 @@ import type { MyClassResponse } from "@/interfaces/responses/my-class.response";
 const TABS: Tab[] = [
     {
         to: "",
+        label: "Calendario escolar",
+        icon: Calendar,
+        protected: false
+    },
+    {
+        to: "attendance",
         label: "Asistencias",
         icon: ClipboardCheck,
         protected: false

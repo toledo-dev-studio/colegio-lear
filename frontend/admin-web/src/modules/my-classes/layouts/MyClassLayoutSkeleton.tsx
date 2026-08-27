@@ -25,7 +25,7 @@ export const MyClassLayoutSkeleton = () => {
                     {/* Tabs */}
                     <div className="border-b border-default overflow-x-auto no-scrollbar w-full">
                         <ul className="flex flex-row gap-6 py-2">
-                            {Array.from({ length: 3 }).map((_, index) => (
+                            {Array.from({ length: 4 }).map((_, index) => (
                                 <li key={index}>
                                     <Skeleton className="h-10 w-40 rounded-md" />
                                 </li>
