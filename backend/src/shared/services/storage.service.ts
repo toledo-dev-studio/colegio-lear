@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import * as fs from "fs";
 import * as path from "path";
+import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
 
 /**
  * Options for file upload operations.
@@ -86,23 +87,59 @@ export class LocalStorageService implements IStorageService {
 }
 
 /**
- * Azure Blob Storage placeholder implementation.
- * Throws "Not implemented" on every method call.
- * Reserved for future integration with Azure Blob Storage.
+ * Azure Blob Storage implementation.
+ * Uploads to the container named by AZURE_STORAGE_CONTAINER, authenticated via
+ * AZURE_STORAGE_CONNECTION_STRING. The container must have public "Blob"
+ * (anonymous read) access — upload() returns the blob's URL directly, and
+ * that URL is persisted as-is (see toPublicFileUrl, which passes non-local
+ * provider URLs through unchanged), so it must be permanently reachable
+ * without a SAS token.
  */
 export class AzureStorageService implements IStorageService {
-  /** @throws Error - Always throws "Not implemented" */
-  async upload(_options: UploadOptions): Promise<string> {
-    throw new Error(
-      "AzureStorageService not implemented. Configure Azure Blob Storage credentials.",
-    );
+  private readonly containerClient: ContainerClient;
+
+  constructor() {
+    const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || "";
+    const containerName = process.env.AZURE_STORAGE_CONTAINER || "";
+    const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+    this.containerClient = blobServiceClient.getContainerClient(containerName);
   }
 
-  /** @throws Error - Always throws "Not implemented" */
-  async delete(_filePath: string): Promise<void> {
-    throw new Error(
-      "AzureStorageService not implemented. Configure Azure Blob Storage credentials.",
-    );
+  /**
+   * Upload a file to the Azure Blob container.
+   * Generates a unique blob name using UUID + original extension.
+   * @param options - Upload options with buffer, fileName, mimeType, and subfolder
+   * @returns The blob's public URL
+   */
+  async upload(options: UploadOptions): Promise<string> {
+    const ext = path.extname(options.fileName);
+    const blobName = `${options.subfolder}/${randomUUID()}${ext}`;
+    const blockBlobClient = this.containerClient.getBlockBlobClient(blobName);
+
+    await blockBlobClient.uploadData(options.buffer, {
+      blobHTTPHeaders: { blobContentType: options.mimeType },
+    });
+
+    return blockBlobClient.url;
+  }
+
+  /**
+   * Delete a file from the Azure Blob container.
+   * No error is thrown if the blob does not exist.
+   * @param filePath - The blob's public URL, as returned by upload()
+   */
+  async delete(filePath: string): Promise<void> {
+    const blobName = this.extractBlobName(filePath);
+    const blockBlobClient = this.containerClient.getBlockBlobClient(blobName);
+    await blockBlobClient.deleteIfExists();
+  }
+
+  /** Strips the container's base URL off a blob URL, recovering "subfolder/uuid.ext". */
+  private extractBlobName(url: string): string {
+    const containerUrlPrefix = `${this.containerClient.url}/`;
+    return url.startsWith(containerUrlPrefix)
+      ? url.slice(containerUrlPrefix.length)
+      : url;
   }
 }
 
