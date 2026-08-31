@@ -1,52 +1,61 @@
 # COLEGIO LEAR
 
-`COLEGIO LEAR` is a project focus on student service, from administrative operations to manage the student lifecycle, unit self-service site for students.
+`COLEGIO LEAR` es unn proyecto enfocado en el servicio al estudiante y la administración de información relacionada a los alumnos y su estancia en un colegio.
 
-## Docker Compose
+El proyecto se compone de dos sitios web que coexisten con el fin de dar una mejor visibilidad a todos los integrantes del colegio, uno de los portales esta enfocado para su uso por el personal administrativo así como de docentes de un colegio, y el otro es un portal de servicio de cara al estudiante y/o sus tutores.
 
-This project uses Docker Compose to manage development containers. The configuration is defined in the `compose.yaml` file.
+## Aspectos técnicos
 
-### Available Services
+El siguiente es la arquitectura técnica que se llevó a cabo para el desarrollo de este proyecto.
 
-The project includes the following containerized services:
+---
+### Docker
 
-1. **colegio-lear-db** - PostgreSQL 17 database
-   - Port: `5432:5432`
-   - Credentials: `postgres` / `postgres`
-   - Database: `colegio_lear`
+Con el fin de que este proyecto se pueda replicar en diferentes colegios, se opto por desarrollarlo utilizando la herramienta de contenedores `Docker`, lo que permite una facilidad al momento de desarrollar y/o desplegar el aplicativo.
 
-2. **colegio-lear-backend-cli** - Node.js container for the backend
-   - Volume: `./backend:/app`
-   - Port: `3000:3000`
-   - Depends on: `colegio-lear-db` (waits for healthy)
+Su uso local esta configurado con la caracteristica `Compose` que integra `Docker` por medio del archivo `compose.yaml`, en la siguiente sección se explica su uso.
 
-3. **colegio-lear-admin-web-cli** - Node.js container for the admin panel
-   - Volume: `./frontend/admin-web:/app`
-   - Port: `80:80`
+#### Servicios de docker compose
 
-4. **colegio-lear-student-web-cli** - Node.js container for the student web
-   - Volume: `./frontend/student-web:/app`
-   - Port: `80:80`
+Este proyecto se compone de los siguientes servicios
+
+1. **colegio-lear-db**: Base de datos PostgreSQL 17
+   - Binding port: `5432:5432`
+   - Credenciales (configurables): `postgres` / `postgres`
+   - Nombre de base de datos: `colegio_lear`
+
+2. **colegio-lear-backend-cli**: NodeJS para administración de Backend
+   - Volumenes para desarrollo: `./backend:/app`
+   - Binding port: `3000:3000`
+   - Dependiente de: `colegio-lear-db`
+
+3. **colegio-lear-admin-web-cli**: NodeJS para administración de portal web admin
+   - Volumenes para desarrollo: `./frontend/admin-web:/app`
+   - Binding port: `3001:80`
+
+4. **colegio-lear-student-web-cli**: NodeJS para administración de portal web estudiantes
+   - Volumenes para desarrollo: `./frontend/student-web:/app`
+   - Binding port: `3002:80`
 
 ---
 
-## Backend Setup (First Time)
+### Backend
 
-### 1. Start the database
+#### Configuración de primer uso del Backend
+
+1. Inicializamos el servicio de base de datos
 
 ```bash
 docker compose up -d colegio-lear-db
 ```
 
-Wait a few seconds for PostgreSQL to be ready.
-
-### 2. Enter the backend container
+2. Accedemos a la shell del backend
 
 ```bash
 docker compose run -p 3000:3000 --rm colegio-lear-backend-cli
 ```
 
-### 3. Inside the container, run the setup
+3. Dentro del contenedor ejecutamos las siguientes configuraciones
 
 ```bash
 # Install dependencies
@@ -69,12 +78,12 @@ npx prisma db seed
 pnpm run dev
 ```
 
-### 4. Verify it works
+4. Verificamos que todo funcione
 
-- API: http://localhost:3000/health
-- Swagger Docs: http://localhost:3000/api-docs
+   - API: http://localhost:3000/health
+   - Swagger Docs: http://localhost:3000/api-docs
 
-### 5. Login with admin credentials
+5. Login con credenciales de admin
 
 ```bash
 POST http://localhost:3000/auth/login
@@ -86,12 +95,11 @@ Content-Type: application/json
 }
 ```
 
-> The login sets an HttpOnly cookie `access_token`. All other endpoints require this cookie (sent automatically by the browser).
-> The field `username` accepts either the username or email.
+> El login genera un HttpOnly cookie `access_token`. Todos los otros servicios consumos desde el frontend envia la cookie de forma automática.
+> El campo `username` permite tanto el username como el email.
 
----
 
-## Backend Quick Reference
+#### Comando de referencia
 
 | Command                            | Description                           |
 | ---------------------------------- | ------------------------------------- |
@@ -107,9 +115,9 @@ Content-Type: application/json
 
 ---
 
-## Environment Variables
+#### Environment Variables
 
-Copy `backend/.env.example` to `backend/.env` and configure:
+Puede consultar el archivo `backend/.env.example` para configurar las variables de entorno para el archivo `backend/.env`.
 
 | Variable                | Default                      | Description                                 |
 | ----------------------- | ---------------------------- | ------------------------------------------- |
@@ -135,15 +143,11 @@ Copy `backend/.env.example` to `backend/.env` and configure:
 | `ADMIN2_EMAIL`          | `admin2@colegiolear.com`     | Admin email                                 |
 | `ADMIN2_PASSWORD`       | `Admin456!`                  | Admin password                              |
 
-> When running inside Docker, `DATABASE_URL` is automatically set to connect to the `colegio-lear-db` container.
+> Cuando el proyecto se ejecuta localmente, la variable `DATABASE_URL` se conecta automaticamente el servicio `colegio-lear-db`.
 
----
+#### Configuración de envios de correo Gmail (Configuración SMTP)
 
-## Gmail SMTP Setup (Required for emails)
-
-The backend sends emails for: employee invitation, resend invitation, and password recovery. It uses Gmail SMTP by default.
-
-### Steps to configure:
+El backend se encarga de enviar correos en diferentes procesos, si se requiere configurar un cliente de `gmail` diferente se deberían seguir los siguientes pasos.
 
 1. **Enable 2-Step Verification** on your Google account:
    - Go to https://myaccount.google.com/security
@@ -163,49 +167,44 @@ The backend sends emails for: employee invitation, resend invitation, and passwo
    MAIL_USER=your-email@gmail.com
    MAIL_PASSWORD=abcdefghijklmnop
    ```
-   > Use the App Password WITHOUT spaces. Do NOT use your regular Gmail password.
 
-### Important notes:
+#### Autenticación
 
-- The App Password only works if 2-Step Verification is enabled
-- If you see error `535-5.7.8 Username and Password not accepted`, your App Password is wrong or 2FA is not enabled
-- Each developer needs their own App Password (it's tied to the Google account)
-- For production, switch to a dedicated SMTP service (configured via `MAIL_HOST`/`MAIL_PORT`)
-
----
-
-## Authentication
-
-The API uses JWT stored in HttpOnly cookies:
+La `API` utiliza autenticación por `JWT` almacenada en un `HttpOnly Cookie`:
 
 1. **Login** → `POST /auth/login` — sets `access_token` cookie
 2. **All other endpoints** require the cookie (sent automatically by the browser)
 3. **Logout** → `POST /auth/logout` — clears the cookie
 
-For API testing tools (Postman, Insomnia), enable "Send cookies" or use the `Authorization: Bearer <token>` header as fallback.
+Para probar la `API` en herramientas como Postman, Insomnia, etc., debes de habilitar `Send cookies` o utilizar el header `Authorization: Bearer <token>`.
 
 ---
 
-## Seed Data
+### Frontend
 
-Running `npx prisma db seed` creates:
+La siguiente configuración funciona tanto para el `frontend` `admin-web` como para `student-web`.
 
-- 2 Security Roles:
-  - **SuperAdmin** — full access to all modules (including security-roles management)
-  - **Administrador** — full access except write/delete on security-roles
-- 3 Job Titles (Director General, Coordinador Académico, Docente)
-- 2 Admin Employees (credentials from env vars: ADMIN1 = SuperAdmin, ADMIN2 = Admin)
-- 3 Academic Levels (Preescolar, Primaria, Secundaria)
-- 6 Education Levels
-- 6 School Subjects
-- 4 Scholarships
-- 5 Payment Concepts
+#### Variables de entorno
 
----
+Para que el proyecto funcione correctamente se debe de configura el archivo `.env` en la carpeta raíz de cada proyecto de `frontend`
 
-## Start a service
+Puede consultar el archivo `.env.example` para configurar las variables de entorno para el archivo `.env`.
 
-To start one of the available services locally you will need to run a command like the following:
+| Variable                | Default                      | Description                                                                     |
+| ----------------------- | ---------------------------- | ------------------------------------------------------------------------------- |
+| `VITE_API_URL`          | (required)                   | URL de API para servicios web (http://localhost:3001/api) para entorno mockable |
+| `VITE_ENVIRONMENT`      | (required)                   | Entorno de ejecución en frontend (mockable, development, production)            |
+
+--- 
+### Inicializar entorno/servicios locales
+
+Para inicializar un entorno local, basta con utilizar el comando siguiente:
+
+```bash
+docker compose up
+```
+
+Si se necesita inicializar uno de los servicios de forma independiente, puede ejecutar uno de los siguientes comandos:
 
 ```bash
 # Start database first
@@ -215,19 +214,14 @@ docker compose up -d colegio-lear-db
 docker compose run -p 3000:3000 --rm colegio-lear-backend-cli
 
 # Admin web utility container
-docker compose run -p 80:80 --rm colegio-lear-admin-web-cli
+docker compose run -p 3001:80 --rm colegio-lear-admin-web-cli
 
 # Student web utility container
-docker compose run -p 80:80 --rm colegio-lear-student-web-cli
+docker compose run -p 3002:80 --rm colegio-lear-student-web-cli
 ```
 
 > [!NOTE]
 >
-> - Mounted volumes allow you to edit code locally and see changes in real-time
-> - Port `80` is exposed on many services. If you need to run multiple services simultaneously, you will need to modify the ports in `compose.yaml`
-> - Use `--rm` with `docker compose run` to automatically clean up the container after execution
-> - To stop without removing volumes, use `docker compose stop`. To remove them, use `docker compose down`
-> - To re-build the image remember to use `--build` with `docker compose` command
-
-> [!IMPORTANT]
-> Remember to use the specific service according about you going to develop, because all the dependencies and volumes will work different
+> - Los volumenes que existen actualmente es para poder editar cada proyecto y ver los cambios en tiempo real.
+> - Utilizar `--rm` con el comando `docker compose run` elimina automaticamente los contenedores una vez detenidos.
+> - Para generar un nuevo build de la imagen utiliza `--build` con el comando`docker compose`.

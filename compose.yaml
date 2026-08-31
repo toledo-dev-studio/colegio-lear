@@ -42,7 +42,7 @@ services:
       context: ./
       dockerfile: docker/utility/node.dockerfile
     ports:
-      - '80:80'
+      - '3001:80'
     volumes:
       - ./frontend/admin-web:/app:rw
     command: ["pnpm", "run", "dev"]
@@ -54,7 +54,7 @@ services:
       context: ./
       dockerfile: docker/utility/node.dockerfile
     ports:
-      - '80:80'
+      - '3002:80'
     volumes:
       - ./frontend/student-web:/app:rw
     command: ["pnpm", "run", "dev"]
