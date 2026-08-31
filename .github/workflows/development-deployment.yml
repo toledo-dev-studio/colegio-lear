@@ -93,6 +93,9 @@ jobs:
               CORS_ORIGIN="${{ vars.BACKEND_CORS_ORIGIN }}" \
               FRONTEND_URL_ADMIN="${{ vars.BACKEND_FRONTEND_URL_ADMIN }}" \
               FRONTEND_URL_STUDENT="${{ vars.BACKEND_FRONTEND_URL_STUDENT }}" \
+              STORAGE_PROVIDER="${{ vars.BACKEND_STORAGE_PROVIDER }}" \
+              AZURE_STORAGE_CONNECTION_STRING="${{ secrets.BACKEND_AZURE_STORAGE_CONNECTION_STRING }}" \
+              AZURE_STORAGE_CONTAINER="${{ vars.BACKEND_AZURE_STORAGE_CONTAINER }}" \
 
       # 9. Restart Azure Web App
       # Force restart to download updated image for azure web app (student-web-colegio-lear:development)
