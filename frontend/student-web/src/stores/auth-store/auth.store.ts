@@ -6,6 +6,7 @@ import { logoutAsync } from "@/modules/auth/api/logout.api";
 import type { AuthRequest } from "@/interfaces/requests/auth.request";
 import type { AuthResponse } from "@/interfaces/responses/auth.response";
 import { useLoaderStore } from "@/stores/loader-store/LoaderStore";
+import { queryClient } from "@/lib/query-client";
 import { resetPasswordAsync } from "@/modules/auth/api/reset-password.api";
 import type { AuthResetPasswordRequest } from "@/interfaces/requests/auth-reset-password.request";
 import { requestResetPasswordAsync } from "@/modules/auth/api/request-reset-password.api";
@@ -62,6 +63,7 @@ const logout = async (get: any) => {
     } catch (error) {
         console.warn(error);
     } finally {
+        queryClient.clear();
         get().clearSession();
     }
 };

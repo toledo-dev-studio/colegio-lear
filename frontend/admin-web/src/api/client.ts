@@ -1,6 +1,7 @@
 import axios from "axios"
 
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
+import { queryClient } from "@/lib/query-client";
 
 import { VITE_API_URL } from "@/lib/constants/environment.constants";
 
@@ -16,8 +17,9 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            // Clear authentication state in Zustand store
+            // Clear authentication cache and state in Zustand store
             // Routes will redirect to login page because authStatus will be "not-authenticated"
+            queryClient.clear();
             useAuthStore.getState().clearSession();
         }
         return Promise.reject(error);
