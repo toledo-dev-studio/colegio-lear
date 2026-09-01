@@ -4,6 +4,7 @@ import { meAsync } from "../api/me.api";
 import { loginAsync } from "../api/login.api";
 import { logoutAsync } from "../api/logout.api";
 import { useLoaderStore } from "@/stores/LoaderStore";
+import { queryClient } from "@/lib/query-client";
 import type { AuthCredentials } from "../interfaces/auth-credentials";
 import { resetPasswordAsync } from "../api/reset-password.api";
 import type { ModuleKey } from "@/lib/key-value-pairs/key-value-pair-modules";
@@ -92,6 +93,7 @@ const logout = async (get: any) => {
     } catch (error) {
         console.warn(error);
     } finally {
+        queryClient.clear();
         get().clearSession();
     }
 };
