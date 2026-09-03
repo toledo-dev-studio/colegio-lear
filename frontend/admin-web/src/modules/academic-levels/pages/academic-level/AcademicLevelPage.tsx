@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useLoaderStore } from "@/stores/LoaderStore";
 import { AcademicLevelForm } from "./components/AcademicLevelForm";
@@ -33,12 +34,12 @@ export const AcademicLevelPage = () => {
         } catch (error) {
             console.warn(error);
             hideLoading();
-            toast.error("Ocurrio un error al tratar de actualizar el nivel académico", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrio un error al tratar de actualizar el nivel académico");
         }
     }
 
     if (academicLevelQuery.isError) {
-        toast.error("No fue posible obtener la información del nivel académico", { position: "top-right" });
+        showApiErrorToast(academicLevelQuery.error, "No fue posible obtener la información del nivel académico");
         return <Navigate to="/academic-levels" />;
     }
 

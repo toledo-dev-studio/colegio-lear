@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useDeleteRecord } from "@/hooks/useDeleteRecord";
 import { useLoaderStore } from "@/stores/LoaderStore";
@@ -65,7 +66,7 @@ export const useSchoolSubjectTasksPanel = ({ academicCycleSchoolGroupId, schoolS
         } catch (error) {
             console.warn(error);
             hideLoading();
-            toast.error("Ocurrió un error al tratar de guardar la tarea", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de guardar la tarea");
         }
     }
 
@@ -94,7 +95,7 @@ export const useSchoolSubjectTasksPanel = ({ academicCycleSchoolGroupId, schoolS
             });
         } catch (error) {
             console.warn(error);
-            toast.error("Ocurrió un error al tratar de eliminar la tarea seleccionada", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de eliminar la tarea seleccionada");
         }
     }
 

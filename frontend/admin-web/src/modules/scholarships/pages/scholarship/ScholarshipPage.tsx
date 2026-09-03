@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useLoaderStore } from "@/stores/LoaderStore";
 import { ScholarshipForm } from "./components/ScholarshipForm";
@@ -33,12 +34,12 @@ export const ScholarshipPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error("Ocurrio un error al tratar de actualizar la beca escolar", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrio un error al tratar de actualizar la beca escolar");
     }
   }
 
   if (scholarshipQuery.isError) {
-    toast.error("No fue posible obtener la información de la beca escolar", { position: "top-right" });
+    showApiErrorToast(scholarshipQuery.error, "No fue posible obtener la información de la beca escolar");
     return <Navigate to="/scholarships" />;
   }
 

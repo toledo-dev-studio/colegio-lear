@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useLoaderStore } from "@/stores/LoaderStore";
 import { SchoolSubjectForm } from "./components/SchoolSubjectForm";
@@ -32,12 +33,12 @@ export const SchoolSubjectPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error("Ocurrio un error al tratar de actualizar el registro", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrio un error al tratar de actualizar el registro");
     }
   }
 
   if (schoolSubjectQuery.isError) {
-    toast.error("No fue posible obtener la información de la materia escolar", { position: "top-right" });
+    showApiErrorToast(schoolSubjectQuery.error, "No fue posible obtener la información de la materia escolar");
     return <Navigate to="/school-subjects" />;
   }
 

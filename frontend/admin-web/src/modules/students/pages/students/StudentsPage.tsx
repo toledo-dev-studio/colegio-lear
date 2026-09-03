@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -63,10 +64,14 @@ export const StudentsPage = () => {
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error("Ocurrio un error al tratar de eliminar el estudiante", { position: "top-right" });
+                    showApiErrorToast(error, "Ocurrio un error al tratar de eliminar el estudiante");
                 }
             }
         );
+    }
+
+    if (queries.students.paged.isError) {
+        showApiErrorToast(queries.students.paged.error, "No fue posible obtener información de los estudiantes");
     }
 
     return (

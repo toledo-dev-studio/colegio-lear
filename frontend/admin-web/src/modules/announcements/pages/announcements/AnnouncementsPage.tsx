@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { toast } from "sonner"
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
@@ -60,10 +61,14 @@ export const AnnouncementsPage = () => {
         },
         onError: (error) => {
           console.warn(error);
-          toast.error("Ocurrio un error al tratar de eliminar la campaña", { position: "top-right" });
+          showApiErrorToast(error, "Ocurrio un error al tratar de eliminar la campaña");
         }
       }
     );
+  }
+
+  if (queries.announcements.paged.isError) {
+    showApiErrorToast(queries.announcements.paged.error, "No fue posible obtener información de las campañas");
   }
 
   return (

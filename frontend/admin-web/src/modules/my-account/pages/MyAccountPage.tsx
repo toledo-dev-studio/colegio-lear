@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { MyAccountForm } from "./components/MyAccountForm";
 import { useLoaderStore } from "@/stores/LoaderStore";
@@ -31,7 +32,7 @@ export const MyAccountPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error("Ocurrio un error al tratar de actualizar la información de su cuenta", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrio un error al tratar de actualizar la información de su cuenta");
     }
   }
 

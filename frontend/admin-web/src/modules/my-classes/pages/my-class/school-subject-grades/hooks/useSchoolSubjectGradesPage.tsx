@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useLoaderStore } from "@/stores/LoaderStore";
 import { promisePool } from "@/lib/extensions/promises";
@@ -259,7 +260,7 @@ export const useSchoolSubjectGradesPage = ({ academicCycleId, academicCycleSchoo
         } catch (error) {
             console.warn(error);
             hideLoading();
-            toast.error("Ocurrió un error al tratar de guardar las calificaciones", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de guardar las calificaciones");
         }
     }, [dirtyCells, localGrades, academicCycleSchoolGroupId, schoolSubjectId, createUpdateGradeMutation, deleteGradeMutation, showLoading, hideLoading]);
 
@@ -270,6 +271,7 @@ export const useSchoolSubjectGradesPage = ({ academicCycleId, academicCycleSchoo
         dirtyCount: dirtyCells.length,
         isLoading: getGradesQuery.isLoading || getEnrollmentsQuery.isLoading,
         isError: getGradesQuery.isError || getEnrollmentsQuery.isError,
+        error: getGradesQuery.error ?? getEnrollmentsQuery.error,
         stats,
         handleChangeGrade,
         handleSubmit,

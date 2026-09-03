@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { AttachmentCard } from "@/shared/components/attachment-card/AttachmentCard";
 import { promisePool } from "@/lib/extensions/promises";
@@ -125,7 +126,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, acceptedExtension
                 return attachment;
             } catch (error) {
                 console.warn(error);
-                toast.error(`Ocurrio un error al tratar de cargar el archivo "${name}".`, { position: "top-right" });
+                showApiErrorToast(error, `Ocurrio un error al tratar de cargar el archivo "${name}".`);
             } finally {
                 setUploadingAttachments((prev) => prev.filter((u) => u.id !== id));
                 if (previewUrl)
@@ -146,7 +147,7 @@ export const AttachmentsGrid = ({ announcementId, attachments, acceptedExtension
             onChange((prev) => prev.filter((a) => a.id !== attachment.id));
             toast.success(`Archivo "${attachment.name}" eliminado correctamente.`, { position: "top-right" });
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : "No fue posible eliminar el archivo seleccionado.", { position: "top-right" });
+            showApiErrorToast(err, "No fue posible eliminar el archivo seleccionado.");
         } finally {
             setDeletingIds((prev) => prev.filter((id) => id !== attachment.id));
         }

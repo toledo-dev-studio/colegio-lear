@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -55,10 +56,14 @@ export const AcademicLevelsPage = () => {
         },
         onError: (error) => {
           console.warn(error);
-          toast.error("Ocurrio un error al tratar de eliminar el nivel académico", { position: "top-right" });
+          showApiErrorToast(error, "Ocurrio un error al tratar de eliminar el nivel académico");
         }
       }
     );
+  }
+
+  if (queries.academicLevels.paged.isError) {
+    showApiErrorToast(queries.academicLevels.paged.error, "No fue posible obtener información de los niveles académicos");
   }
 
   return (

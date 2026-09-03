@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -50,7 +51,7 @@ export const StudentAllergiesTab = () => {
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error("Ocurrio un error al tratar de eliminar la alergía seleccionada", { position: "top-right" });
+                    showApiErrorToast(error, "Ocurrio un error al tratar de eliminar la alergía seleccionada");
                 }
             }
         )
@@ -73,12 +74,12 @@ export const StudentAllergiesTab = () => {
         } catch (error) {
             console.warn(error);
             loader.hide();
-            toast.error("Ocurrió un error al tratar de guardar el registro", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de guardar el registro");
         }
     }
 
     if (queries.allergies.get.isError) {
-        toast.error("No fue posible obtener información de las alergias del estudiante", { position: "top-right" });
+        showApiErrorToast(queries.allergies.get.error, "No fue posible obtener información de las alergias del estudiante");
     }
 
     return (

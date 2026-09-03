@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Skeleton } from "@/shared/shadcn/ui/skeleton";
 import { promisePool } from "@/lib/extensions/promises";
@@ -128,7 +129,7 @@ export const SchoolSubjectMaterialsGrid = ({ materials = [], isLoading, isError,
                 return material;
             } catch (error) {
                 console.warn(error);
-                toast.error(`Ocurrio un error al tratar de cargar el archivo "${name}".`, { position: "top-right" });
+                showApiErrorToast(error, `Ocurrio un error al tratar de cargar el archivo "${name}".`);
             } finally {
                 setUploadingMaterials((prev) => prev.filter((u) => u.id !== id));
                 if (previewUrl)
@@ -153,7 +154,7 @@ export const SchoolSubjectMaterialsGrid = ({ materials = [], isLoading, isError,
             onChange((prev) => prev.filter((m) => m.id !== material.id));
             toast.success(`Archivo "${material.name}" eliminado correctamente.`, { position: "top-right" });
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : "No fue posible eliminar el archivo seleccionado.", { position: "top-right" });
+            showApiErrorToast(err, "No fue posible eliminar el archivo seleccionado.");
         } finally {
             setDeletingIds((prev) => prev.filter((id) => id !== material.id));
         }

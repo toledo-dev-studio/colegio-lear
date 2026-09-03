@@ -1,5 +1,5 @@
 import { Navigate, useParams } from "react-router";
-import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
@@ -31,6 +31,7 @@ export const SchoolSubjectGradesPage = () => {
         dirtyCount,
         isLoading,
         isError,
+        error,
         stats,
         handleChangeGrade,
         handleSubmit,
@@ -43,8 +44,12 @@ export const SchoolSubjectGradesPage = () => {
     });
 
     if (myClassQuery.isError) {
-        toast.error("No fue posible obtener la información de la clase", { position: "top-right" });
+        showApiErrorToast(myClassQuery.error, "No fue posible obtener la información de la clase");
         return <Navigate to="/my-classes" />;
+    }
+
+    if (isError) {
+        showApiErrorToast(error, "No fue posible obtener información de las calificaciones");
     }
 
     if (myClassQuery.isLoading || !myClassQuery.data) {

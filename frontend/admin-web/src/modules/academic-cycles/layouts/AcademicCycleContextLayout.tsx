@@ -2,6 +2,7 @@
 import { matchPath, Navigate, Outlet, useLocation, useParams } from "react-router";
 import { CalendarDays, GraduationCap, School, Users, Wallet } from "lucide-react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import type { Tab } from "@/interfaces/components/tab";
 import { useGetAcademicCycleById } from "../hooks/academic-cycles/useGetAcademicCycleById";
@@ -68,7 +69,7 @@ export const AcademicCycleContextLayout = () => {
     }
 
     if (academicCycleQuery.isError) {
-        toast.error("No fue posible obtener la información del ciclo escolar", { position: "top-right" });
+        showApiErrorToast(academicCycleQuery.error, "No fue posible obtener la información del ciclo escolar");
         return <Navigate to="/academic-cycles" />;
     }
 

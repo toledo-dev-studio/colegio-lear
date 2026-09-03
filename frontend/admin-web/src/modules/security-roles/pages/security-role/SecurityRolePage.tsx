@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router"
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useLoaderStore } from "@/stores/LoaderStore";
 import { SecurityRoleForm } from "./components/SecurityRoleForm";
@@ -34,12 +35,12 @@ export const SecurityRolePage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error("Ocurrio un error al tratar de actualizar el registro", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrio un error al tratar de actualizar el registro");
     }
   }
 
   if (securityRoleQuery.isError) {
-    toast.error("No fue posible obtener la información del registro seleccionado", { position: "top-right" });
+    showApiErrorToast(securityRoleQuery.error, "No fue posible obtener la información del registro seleccionado");
     return <Navigate to="/security-roles" />;
   }
 

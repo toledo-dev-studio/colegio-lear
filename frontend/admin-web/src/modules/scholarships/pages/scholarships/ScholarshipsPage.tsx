@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -56,10 +57,14 @@ export const ScholarshipsPage = () => {
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error("Ocurrio un error al tratar de eliminar la beca escolar", { position: "top-right" });
+                    showApiErrorToast(error, "Ocurrio un error al tratar de eliminar la beca escolar");
                 }
             }
         );
+    }
+
+    if (queries.scholarships.paged.isError) {
+        showApiErrorToast(queries.scholarships.paged.error, "No fue posible obtener información de las becas escolares");
     }
 
     return (

@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from "react-router";
 import { BookOpenCheck, ClipboardCheck } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Input } from "@/shared/shadcn/ui/input";
 import { Switch } from "@/shared/shadcn/ui/switch";
@@ -81,7 +82,7 @@ export const AcademicCycleTab = () => {
         } catch (error) {
             console.warn(error);
             hideLoading();
-            toast.error(isNew ? "Ocurrió un error al tratar de crear el ciclo escolar" : "Ocurrió un error al tratar de actualizar el ciclo escolar", { position: "top-right" });
+            showApiErrorToast(error, isNew ? "Ocurrió un error al tratar de crear el ciclo escolar" : "Ocurrió un error al tratar de actualizar el ciclo escolar");
         }
     }
 

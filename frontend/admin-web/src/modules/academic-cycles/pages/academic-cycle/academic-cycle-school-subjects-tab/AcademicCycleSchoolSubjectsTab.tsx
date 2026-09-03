@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
@@ -59,7 +60,7 @@ export const AcademicCycleSchoolSubjectsTab = () => {
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error("Ocurrio un error al tratar de desasociar la materia del ciclo escolar", { position: "top-right" });
+                    showApiErrorToast(error, "Ocurrio un error al tratar de desasociar la materia del ciclo escolar");
                 }
             }
         )
@@ -87,12 +88,12 @@ export const AcademicCycleSchoolSubjectsTab = () => {
         } catch (error) {
             console.warn(error);
             loader.hide();
-            toast.error("Ocurrió un error al tratar de asociar la materia al ciclo escolar", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de asociar la materia al ciclo escolar");
         }
     }
 
     if (queries.schoolSubject.get.isError) {
-        toast.error("No fue posible obtener información de las materias asociadas al ciclo escolar", { position: "top-right" });
+        showApiErrorToast(queries.schoolSubject.get.error, "No fue posible obtener información de las materias asociadas al ciclo escolar");
     }
 
     return (

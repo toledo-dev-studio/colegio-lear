@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -30,7 +31,7 @@ export const AcademicCycleEnrollmentsTab = () => {
         },
         onError: (error) => {
           console.warn(error);
-          toast.error("Ocurrio un error al tratar de eliminar el alumno del ciclo escolar", { position: "top-right" });
+          showApiErrorToast(error, "Ocurrio un error al tratar de eliminar el alumno del ciclo escolar");
         }
       }
     )
@@ -52,12 +53,12 @@ export const AcademicCycleEnrollmentsTab = () => {
     } catch (error) {
       console.warn(error);
       loader.hide();
-      toast.error("Ocurrió un error al tratar de inscribir al estudiante en el ciclo escolar", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrió un error al tratar de inscribir al estudiante en el ciclo escolar");
     }
   }
 
   if (queries.enrollments.paged.isError) {
-    toast.error("No fue posible obtener información asociada al ciclo escolar", { position: "top-right" });
+    showApiErrorToast(queries.enrollments.paged.error, "No fue posible obtener información asociada al ciclo escolar");
   }
 
   return (

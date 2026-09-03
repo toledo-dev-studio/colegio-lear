@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
@@ -55,10 +56,14 @@ export const SecurityRolesPage = () => {
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error("Ocurrio un error al tratar de eliminar el rol de seguridad", { position: "top-right" });
+                    showApiErrorToast(error, "Ocurrio un error al tratar de eliminar el rol de seguridad");
                 }
             }
         );
+    }
+
+    if (queries.securityRoles.paged.isError) {
+        showApiErrorToast(queries.securityRoles.paged.error, "No fue posible obtener información de los roles de seguridad");
     }
 
     return (

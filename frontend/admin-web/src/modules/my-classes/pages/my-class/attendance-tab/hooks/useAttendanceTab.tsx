@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import type { AssistStatusKey } from "@/lib/key-value-pairs/key-value-pair-types";
 import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
@@ -136,9 +137,9 @@ export const useAttendanceTab = ({ academicCycleId, schoolGroupId, academicCycle
                 hideLoading();
                 toast.success("Asistencias guardadas correctamente", { position: "top-right" });
             },
-            onError: () => {
+            onError: (error) => {
                 hideLoading();
-                toast.error("Ocurrio un error al tratar de guardar las asistencias", { position: "top-right" });
+                showApiErrorToast(error, "Ocurrio un error al tratar de guardar las asistencias");
             }
         });
 
