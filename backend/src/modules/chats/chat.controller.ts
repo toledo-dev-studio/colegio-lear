@@ -17,7 +17,7 @@ const service = new ChatService(prisma);
 function assertOwnStudentId(req: Request): string {
   const { studentId } = req.params as { studentId: string };
   if (studentId !== req.student!.studentId) {
-    throw new NotFoundError("Student not found");
+    throw new NotFoundError("Alumno no encontrado");
   }
   return studentId;
 }
@@ -53,12 +53,12 @@ export async function findMessages(req: Request, res: Response): Promise<void> {
   let result;
   if (actor.type === "student") {
     if (studentId !== actor.studentId) {
-      throw new NotFoundError("Student not found");
+      throw new NotFoundError("Alumno no encontrado");
     }
     result = await service.findMessages(studentId, enrollmentId, teacherId, { page, pageSize });
   } else {
     if (teacherId !== actor.employeeId) {
-      throw new NotFoundError("Teacher not found");
+      throw new NotFoundError("Profesor no encontrado");
     }
     result = await service.findMessagesForTeacher(teacherId, studentId, enrollmentId, {
       page,
@@ -93,12 +93,12 @@ export async function sendMessage(req: Request, res: Response): Promise<void> {
   let data;
   if (actor.type === "student") {
     if (studentId !== actor.studentId) {
-      throw new NotFoundError("Student not found");
+      throw new NotFoundError("Alumno no encontrado");
     }
     data = await service.sendMessage(studentId, enrollmentId, teacherId, content);
   } else {
     if (teacherId !== actor.employeeId) {
-      throw new NotFoundError("Teacher not found");
+      throw new NotFoundError("Profesor no encontrado");
     }
     data = await service.sendMessageForTeacher(teacherId, studentId, enrollmentId, content);
   }

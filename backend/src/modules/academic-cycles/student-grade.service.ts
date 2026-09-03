@@ -43,7 +43,7 @@ export class StudentGradeService {
       where: { id: academicCycleEnrollmentId, academicCycleId },
     });
     if (!enrollment) {
-      throw new NotFoundError("Academic cycle enrollment not found");
+      throw new NotFoundError("Inscripción al ciclo escolar no encontrada");
     }
 
     const results = await this.prisma.studentGrade.findMany({
@@ -89,7 +89,7 @@ export class StudentGradeService {
       where: { id: academicCycleEnrollmentId, academicCycleSchoolGroupId },
     });
     if (!enrollment) {
-      throw new NotFoundError("Academic cycle enrollment not found in this class");
+      throw new NotFoundError("Inscripción al ciclo escolar no encontrada en esta clase");
     }
   }
 
@@ -132,7 +132,7 @@ export class StudentGradeService {
       where: { id, academicCycleEnrollment: { academicCycleSchoolGroupId } },
     });
     if (!grade) {
-      throw new NotFoundError("Student grade not found");
+      throw new NotFoundError("Calificación no encontrada");
     }
 
     await this.prisma.studentGrade.delete({ where: { id } });

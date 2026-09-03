@@ -22,5 +22,5 @@ export const myClassPagedQuerySchema = z.object({
 
 /** Validates the :id path param of GET /me/school-groups/:id */
 export const myClassIdParamSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });

@@ -44,17 +44,19 @@ export function sendNoContent(res: Response): void {
 
 /**
  * Send a standard error response.
- * Format: { error, details? }
+ * Format: { message, details }
+ *
+ * `details` is always a string, present on every error: for validation-style
+ * errors it's the concatenated field errors (see formatFieldErrors), and for
+ * everything else it's a short correlation id already logged server-side
+ * with full context (see error-handler.middleware.ts) — enough for a user to
+ * quote when reporting an issue, without exposing internals in the response.
  */
 export function sendError(
   res: Response,
-  error: string,
+  message: string,
   code: number,
-  details?: FieldError[] | null,
+  details: string,
 ): void {
-  const body: { error: string; details?: FieldError[] } = { error };
-  if (details && details.length > 0) {
-    body.details = details;
-  }
-  res.status(code).json(body);
+  res.status(code).json({ message, details });
 }

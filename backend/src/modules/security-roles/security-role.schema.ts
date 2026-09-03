@@ -10,9 +10,9 @@ function nonBlankString(maxLength: number) {
   return z
     .string()
     .transform((val) => val.trim())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar vacío" })
     .refine((val) => val.length <= maxLength, {
-      message: `Must be at most ${maxLength} characters`,
+      message: `Debe tener como máximo ${maxLength} caracteres`,
     });
 }
 
@@ -56,7 +56,7 @@ export const permissionSchema = z.object({
  * Validates UUID path parameter.
  */
 export const idParamSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 /**
@@ -66,8 +66,11 @@ export const idParamSchema = z.object({
  * - isActive: filter by active/inactive status ("true" | "false")
  */
 export const securityRoleFiltersSchema = z.object({
-  q: z.string().max(100, "q must be at most 100 characters").optional(),
-  name: z.string().max(100, "name must be at most 100 characters").optional(),
+  q: z.string().max(100, "q debe tener como máximo 100 caracteres").optional(),
+  name: z
+    .string()
+    .max(100, "name debe tener como máximo 100 caracteres")
+    .optional(),
   isActive: z.enum(["true", "false"]).optional(),
 });
 
@@ -78,15 +81,15 @@ export const securityRoleFiltersSchema = z.object({
  */
 export const securityRolePagedQuerySchema = securityRoleFiltersSchema.extend({
   page: z.coerce
-    .number({ message: "page must be a number" })
-    .int({ message: "page must be an integer" })
-    .positive({ message: "page must be a positive integer" })
+    .number({ message: "page debe ser un número" })
+    .int({ message: "page debe ser un número entero" })
+    .positive({ message: "page debe ser un entero positivo" })
     .default(1),
   pageSize: z.coerce
-    .number({ message: "pageSize must be a number" })
-    .int({ message: "pageSize must be an integer" })
-    .positive({ message: "pageSize must be a positive integer" })
-    .max(100, "pageSize must be at most 100")
+    .number({ message: "pageSize debe ser un número" })
+    .int({ message: "pageSize debe ser un número entero" })
+    .positive({ message: "pageSize debe ser un entero positivo" })
+    .max(100, "pageSize debe ser como máximo 100")
     .default(10),
 });
 
@@ -108,13 +111,15 @@ export const createSecurityRoleSchema = z.object({
       const trimmed = val.trim();
       return trimmed === "" ? undefined : trimmed;
     })
-    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+    .pipe(
+      z.string().max(500, "Debe tener como máximo 500 caracteres").optional(),
+    ),
   isActive: z.boolean().optional(),
   permissions: z
     .array(permissionSchema)
     .refine(
       (perms) => new Set(perms.map((p) => p.moduleKey)).size === perms.length,
-      { message: "Duplicate moduleKey values are not allowed" },
+      { message: "No se permiten valores duplicados de moduleKey" },
     )
     .optional(),
 });
@@ -137,16 +142,21 @@ export const updateSecurityRoleSchema = z
         const trimmed = val.trim();
         return trimmed === "" ? undefined : trimmed;
       })
-      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+      .pipe(
+        z
+          .string()
+          .max(500, "Debe tener como máximo 500 caracteres")
+          .optional(),
+      ),
     isActive: z.boolean().optional(),
     permissions: z
       .array(permissionSchema)
       .refine(
         (perms) => new Set(perms.map((p) => p.moduleKey)).size === perms.length,
-        { message: "Duplicate moduleKey values are not allowed" },
+        { message: "No se permiten valores duplicados de moduleKey" },
       )
       .optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });

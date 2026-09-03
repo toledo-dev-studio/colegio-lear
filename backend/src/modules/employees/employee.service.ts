@@ -328,11 +328,11 @@ export class EmployeeService {
 
     if (!securityRole) {
       throw new ValidationError(
-        "securityRoleId does not reference a valid record",
+        "securityRoleId no hace referencia a un registro válido",
         [
           {
             field: "securityRoleId",
-            message: "securityRoleId does not reference a valid record",
+            message: "securityRoleId no hace referencia a un registro válido",
           },
         ],
       );
@@ -345,11 +345,11 @@ export class EmployeeService {
 
     if (!jobTitle) {
       throw new ValidationError(
-        "jobTitleId does not reference a valid record",
+        "jobTitleId no hace referencia a un registro válido",
         [
           {
             field: "jobTitleId",
-            message: "jobTitleId does not reference a valid record",
+            message: "jobTitleId no hace referencia a un registro válido",
           },
         ],
       );
@@ -517,7 +517,7 @@ export class EmployeeService {
     });
     if (calendarAssignmentsCount > 0) {
       throw new ConflictError(
-        "This employee is assigned to a school group calendar and cannot be deleted. Deactivate them instead to preserve their history",
+        "Este empleado está asignado a un calendario de grupo escolar y no puede eliminarse. Desactívalo en su lugar para preservar su historial",
       );
     }
 

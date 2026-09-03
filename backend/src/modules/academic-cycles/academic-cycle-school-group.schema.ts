@@ -6,16 +6,16 @@ function nonBlankString(maxLength: number) {
   return z
     .string()
     .transform((val) => val.trim())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar en blanco" })
     .refine((val) => val.length <= maxLength, {
-      message: `Must be at most ${maxLength} characters`,
+      message: `Debe tener como máximo ${maxLength} caracteres`,
     });
 }
 
 const HH_MM_REGEX = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 function timeString() {
-  return z.string().regex(HH_MM_REGEX, { message: "Must be a valid HH:mm time" });
+  return z.string().regex(HH_MM_REGEX, { message: "Debe ser una hora HH:mm válida" });
 }
 
 // ─── Enums ──────────────────────────────────────────────────────────────────
@@ -38,10 +38,10 @@ const dayOfWeekEnum = z.enum([
 export const academicCycleSchoolGroupIdParamSchema = z.object({
   academicCycleId: z
     .string()
-    .uuid({ message: "academicCycleId must be a valid UUID" }),
+    .uuid({ message: "academicCycleId debe ser un UUID válido" }),
   academicCycleSchoolGroupId: z
     .string()
-    .uuid({ message: "academicCycleSchoolGroupId must be a valid UUID" }),
+    .uuid({ message: "academicCycleSchoolGroupId debe ser un UUID válido" }),
 });
 
 /** Validates optional query filters for the derived teachers endpoint */
@@ -59,11 +59,11 @@ const calendarItemSchema = z
     endTime: timeString(),
     schoolSubjectId: z
       .string()
-      .uuid({ message: "schoolSubjectId must be a valid UUID" }),
-    teacherId: z.string().uuid({ message: "teacherId must be a valid UUID" }),
+      .uuid({ message: "schoolSubjectId debe ser un UUID válido" }),
+    teacherId: z.string().uuid({ message: "teacherId debe ser un UUID válido" }),
   })
   .refine((data) => data.startTime < data.endTime, {
-    message: "startTime must be before endTime",
+    message: "startTime debe ser anterior a endTime",
     path: ["endTime"],
   });
 
@@ -81,7 +81,7 @@ export const createAcademicCycleSchoolGroupSchema = z
   .refine(
     (data) => data.status !== "discharged" || !!data.dischargedDescription,
     {
-      message: "dischargedDescription is required when status is discharged",
+      message: "dischargedDescription es requerido cuando el estado es discharged",
       path: ["dischargedDescription"],
     },
   );
@@ -96,12 +96,12 @@ export const updateAcademicCycleSchoolGroupSchema = z
     calendars: z.array(calendarItemSchema).optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   })
   .refine(
     (data) => data.status !== "discharged" || !!data.dischargedDescription,
     {
-      message: "dischargedDescription is required when status is discharged",
+      message: "dischargedDescription es requerido cuando el estado es discharged",
       path: ["dischargedDescription"],
     },
   );

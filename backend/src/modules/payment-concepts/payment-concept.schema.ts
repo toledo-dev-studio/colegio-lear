@@ -10,9 +10,9 @@ function nonBlankString(maxLength: number) {
   return z
     .string()
     .transform((val) => val.trim())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar en blanco" })
     .refine((val) => val.length <= maxLength, {
-      message: `Must be at most ${maxLength} characters`,
+      message: `Debe tener como máximo ${maxLength} caracteres`,
     });
 }
 
@@ -24,12 +24,12 @@ function codeField() {
   return z
     .string()
     .transform((val) => val.trim().toUpperCase())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar en blanco" })
     .refine((val) => val.length <= 10, {
-      message: "Must be at most 10 characters",
+      message: "Debe tener como máximo 10 caracteres",
     })
     .refine((val) => /^[A-Z0-9]+$/.test(val), {
-      message: "Must contain only letters and numbers",
+      message: "Debe contener solo letras y números",
     });
 }
 
@@ -51,7 +51,7 @@ function codeField() {
  *       description: UUID of the payment concept
  */
 export const idParamSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 /**
@@ -97,12 +97,12 @@ export const idParamSchema = z.object({
  *       description: Filter by maximum amount (matches concepts at or below this value)
  */
 export const paymentConceptFiltersSchema = z.object({
-  q: z.string().max(100, "q must be at most 100 characters").optional(),
-  name: z.string().max(100, "name must be at most 100 characters").optional(),
+  q: z.string().max(100, "q debe tener como máximo 100 caracteres").optional(),
+  name: z.string().max(100, "name debe tener como máximo 100 caracteres").optional(),
   isActive: z.enum(["true", "false"]).optional(),
   allowForgiveness: z.enum(["true", "false"]).optional(),
   amount: z.coerce
-    .number({ message: "amount must be a number" })
+    .number({ message: "amount debe ser un número" })
     .min(0)
     .optional()
     .transform((val) => (val === 0 ? undefined : val)),
@@ -137,15 +137,15 @@ export const paymentConceptFiltersSchema = z.object({
 export const paymentConceptPagedQuerySchema =
   paymentConceptFiltersSchema.extend({
     page: z.coerce
-      .number({ message: "page must be a number" })
-      .int({ message: "page must be an integer" })
-      .positive({ message: "page must be a positive integer" })
+      .number({ message: "page debe ser un número" })
+      .int({ message: "page debe ser un número entero" })
+      .positive({ message: "page debe ser un entero positivo" })
       .default(1),
     pageSize: z.coerce
-      .number({ message: "pageSize must be a number" })
-      .int({ message: "pageSize must be an integer" })
-      .positive({ message: "pageSize must be a positive integer" })
-      .max(100, "pageSize must be at most 100")
+      .number({ message: "pageSize debe ser un número" })
+      .int({ message: "pageSize debe ser un número entero" })
+      .positive({ message: "pageSize debe ser un entero positivo" })
+      .max(100, "pageSize debe ser como máximo 100")
       .default(10),
   });
 
@@ -204,15 +204,15 @@ export const createPaymentConceptSchema = z.object({
       const trimmed = val.trim();
       return trimmed === "" ? undefined : trimmed;
     })
-    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+    .pipe(z.string().max(500, "Debe tener como máximo 500 caracteres").optional()),
   amount: z
-    .number({ message: "amount must be a number" })
-    .min(0.01, "amount must be at least 0.01")
-    .max(999999.99, "amount must be at most 999999.99"),
+    .number({ message: "amount debe ser un número" })
+    .min(0.01, "amount debe ser al menos 0.01")
+    .max(999999.99, "amount debe ser como máximo 999999.99"),
   allowForgiveness: z
-    .boolean({ message: "allowForgiveness must be a boolean" })
+    .boolean({ message: "allowForgiveness debe ser un booleano" })
     .default(false),
-  isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
+  isActive: z.boolean({ message: "isActive debe ser un booleano" }).optional(),
 });
 
 /**
@@ -266,17 +266,17 @@ export const updatePaymentConceptSchema = z
         const trimmed = val.trim();
         return trimmed === "" ? undefined : trimmed;
       })
-      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+      .pipe(z.string().max(500, "Debe tener como máximo 500 caracteres").optional()),
     amount: z
-      .number({ message: "amount must be a number" })
-      .min(0.01, "amount must be at least 0.01")
-      .max(999999.99, "amount must be at most 999999.99")
+      .number({ message: "amount debe ser un número" })
+      .min(0.01, "amount debe ser al menos 0.01")
+      .max(999999.99, "amount debe ser como máximo 999999.99")
       .optional(),
     allowForgiveness: z
-      .boolean({ message: "allowForgiveness must be a boolean" })
+      .boolean({ message: "allowForgiveness debe ser un booleano" })
       .optional(),
-    isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
+    isActive: z.boolean({ message: "isActive debe ser un booleano" }).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });

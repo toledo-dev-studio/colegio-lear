@@ -6,9 +6,9 @@ function nonBlankString(maxLength: number) {
   return z
     .string()
     .transform((val) => val.trim())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar en blanco" })
     .refine((val) => val.length <= maxLength, {
-      message: `Must be at most ${maxLength} characters`,
+      message: `Debe tener como máximo ${maxLength} caracteres`,
     });
 }
 
@@ -28,18 +28,18 @@ const BLOOD_TYPES = [
 
 /** Validates UUID path parameter */
 export const idParamSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 /** Validates studentId path parameter */
 export const studentIdParamSchema = z.object({
-  studentId: z.string().uuid({ message: "studentId must be a valid UUID" }),
+  studentId: z.string().uuid({ message: "studentId debe ser un UUID válido" }),
 });
 
 /** Validates studentId + id path parameters */
 export const studentSubResourceParamSchema = z.object({
-  studentId: z.string().uuid({ message: "studentId must be a valid UUID" }),
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  studentId: z.string().uuid({ message: "studentId debe ser un UUID válido" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 /** Validates optional query filters for student list endpoints */
@@ -66,15 +66,15 @@ export const createStudentSchema = z.object({
   secondLastName: nonBlankString(100),
   dateOfBirth: z
     .string()
-    .datetime({ message: "dateOfBirth must be a valid ISO date" }),
+    .datetime({ message: "dateOfBirth debe ser una fecha ISO válida" }),
   curp: nonBlankString(18),
   avatar: z.string().max(500).optional(),
   observations: z.string().max(1000).optional(),
   bloodType: z.enum(BLOOD_TYPES, {
-    error: `bloodType must be one of: ${BLOOD_TYPES.join(", ")}`,
+    error: `bloodType debe ser uno de: ${BLOOD_TYPES.join(", ")}`,
   }),
   medicalNotes: z.string().max(1000).optional(),
-  email: z.string().email("email must be a valid email").max(150),
+  email: z.string().email("email debe ser un correo electrónico válido").max(150),
   phoneNumber: nonBlankString(20),
   address: nonBlankString(300),
   state: nonBlankString(100),
@@ -104,5 +104,5 @@ export const updateStudentSchema = z
     isActive: z.boolean().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });

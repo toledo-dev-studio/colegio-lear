@@ -50,21 +50,21 @@ function optionalNullableUuid(message: string) {
 export const academicCycleEnrollmentIdParamSchema = z.object({
   academicCycleId: z
     .string()
-    .uuid({ message: "academicCycleId must be a valid UUID" }),
+    .uuid({ message: "academicCycleId debe ser un UUID válido" }),
   academicCycleEnrollmentId: z
     .string()
-    .uuid({ message: "academicCycleEnrollmentId must be a valid UUID" }),
+    .uuid({ message: "academicCycleEnrollmentId debe ser un UUID válido" }),
 });
 
 /** Validates academicCycleId + academicCycleEnrollmentId + id (wallet item) path parameters */
 export const academicCycleEnrollmentWalletItemParamSchema = z.object({
   academicCycleId: z
     .string()
-    .uuid({ message: "academicCycleId must be a valid UUID" }),
+    .uuid({ message: "academicCycleId debe ser un UUID válido" }),
   academicCycleEnrollmentId: z
     .string()
-    .uuid({ message: "academicCycleEnrollmentId must be a valid UUID" }),
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+    .uuid({ message: "academicCycleEnrollmentId debe ser un UUID válido" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 // ─── Filter Schemas ─────────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ export const academicCycleEnrollmentFiltersSchema = z.object({
   q: z.string().max(100).optional(),
   status: statusEnum.optional(),
   academicCycleSchoolGroupId: z.string().uuid().optional(),
-  scholarshipId: optionalUuid("scholarshipId must be a valid UUID"),
+  scholarshipId: optionalUuid("scholarshipId debe ser un UUID válido"),
 });
 
 export const academicCycleEnrollmentPagedQuerySchema =
@@ -92,7 +92,7 @@ export const academicCycleEnrollmentPagedQuerySchema =
 export const academicCycleEnrollmentByGroupQuerySchema = z.object({
   academicCycleSchoolGroupId: z
     .string()
-    .uuid({ message: "academicCycleSchoolGroupId must be a valid UUID" }),
+    .uuid({ message: "academicCycleSchoolGroupId debe ser un UUID válido" }),
   status: statusEnum.optional(),
 });
 
@@ -104,14 +104,14 @@ export const createAcademicCycleEnrollmentSchema = z
     status: statusEnum.optional(),
     observations: z.string().max(1000).optional(),
     droppedNotes: z.string().max(1000).optional(),
-    studentId: z.string().uuid({ message: "studentId must be a valid UUID" }),
+    studentId: z.string().uuid({ message: "studentId debe ser un UUID válido" }),
     academicCycleSchoolGroupId: z
       .string()
-      .uuid({ message: "academicCycleSchoolGroupId must be a valid UUID" }),
-    scholarshipId: optionalUuid("scholarshipId must be a valid UUID"),
+      .uuid({ message: "academicCycleSchoolGroupId debe ser un UUID válido" }),
+    scholarshipId: optionalUuid("scholarshipId debe ser un UUID válido"),
   })
   .refine((data) => data.status !== "dropped" || !!data.droppedNotes, {
-    message: "droppedNotes is required when status is dropped",
+    message: "droppedNotes es requerido cuando el estado es dropped",
     path: ["droppedNotes"],
   });
 
@@ -122,12 +122,12 @@ export const updateAcademicCycleEnrollmentSchema = z
     observations: z.string().max(1000).nullable().optional(),
     droppedNotes: z.string().max(1000).nullable().optional(),
     academicCycleSchoolGroupId: z.string().uuid().optional(),
-    scholarshipId: optionalNullableUuid("scholarshipId must be a valid UUID"),
+    scholarshipId: optionalNullableUuid("scholarshipId debe ser un UUID válido"),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   })
   .refine((data) => data.status !== "dropped" || !!data.droppedNotes, {
-    message: "droppedNotes is required when status is dropped",
+    message: "droppedNotes es requerido cuando el estado es dropped",
     path: ["droppedNotes"],
   });

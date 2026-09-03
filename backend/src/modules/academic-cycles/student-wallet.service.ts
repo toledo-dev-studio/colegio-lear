@@ -50,7 +50,7 @@ export class StudentWalletService {
       where: { id: academicCycleEnrollmentId, academicCycleId },
     });
     if (!enrollment) {
-      throw new NotFoundError("Academic cycle enrollment not found");
+      throw new NotFoundError("Inscripción al ciclo escolar no encontrada");
     }
     return enrollment;
   }
@@ -154,13 +154,13 @@ export class StudentWalletService {
       where: { id, academicCycleEnrollmentId },
     });
     if (!existing) {
-      throw new NotFoundError("Student wallet item not found");
+      throw new NotFoundError("Concepto de cartera del alumno no encontrado");
     }
 
     const nextAllowForgiveness = dto.allowForgiveness ?? existing.allowForgiveness;
     if (dto.isForgiven === true && !nextAllowForgiveness) {
       throw new ConflictError(
-        "This item does not allow forgiveness (allowForgiveness is false)",
+        "Este concepto no permite condonación (allowForgiveness es false)",
       );
     }
 
@@ -246,19 +246,19 @@ export class StudentWalletService {
       where: { id: studentWalletItemId, academicCycleEnrollmentId },
     });
     if (!item) {
-      throw new NotFoundError("Student wallet item not found");
+      throw new NotFoundError("Concepto de cartera del alumno no encontrado");
     }
 
     const status = computeStatus(item);
     if (status === "paid" || status === "forgiven") {
       throw new ConflictError(
-        "This wallet item is already settled and cannot receive more payments",
+        "Este concepto de cartera ya está liquidado y no puede recibir más pagos",
       );
     }
 
     if (dto.amount > Number(item.outstandingAmount)) {
       throw new ConflictError(
-        "Payment amount cannot exceed the outstanding balance",
+        "El monto del pago no puede exceder el saldo pendiente",
       );
     }
 

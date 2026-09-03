@@ -129,11 +129,11 @@ export class NotificationService {
     });
 
     if (!notification) {
-      throw new NotFoundError("Notification not found");
+      throw new NotFoundError("Notificación no encontrada");
     }
 
     if (notification.employeeId !== employeeId) {
-      throw new ForbiddenError("This notification does not belong to you");
+      throw new ForbiddenError("Esta notificación no te pertenece");
     }
 
     await this.markReadAndSyncViewedCount(notification);
@@ -146,11 +146,11 @@ export class NotificationService {
     });
 
     if (!notification) {
-      throw new NotFoundError("Notification not found");
+      throw new NotFoundError("Notificación no encontrada");
     }
 
     if (notification.studentId !== studentId) {
-      throw new ForbiddenError("This notification does not belong to you");
+      throw new ForbiddenError("Esta notificación no te pertenece");
     }
 
     await this.markReadAndSyncViewedCount(notification);

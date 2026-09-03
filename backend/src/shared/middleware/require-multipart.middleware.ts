@@ -10,10 +10,10 @@ import { ValidationError } from "../errors/app-error";
  */
 export const requireMultipart: RequestHandler = (req, _res, next) => {
   if (!req.is("multipart/form-data")) {
-    throw new ValidationError("Content-Type must be multipart/form-data", [
+    throw new ValidationError("El Content-Type debe ser multipart/form-data", [
       {
         field: "Content-Type",
-        message: `Expected multipart/form-data, received "${req.headers["content-type"] ?? "none"}"`,
+        message: `Se esperaba multipart/form-data, se recibió "${req.headers["content-type"] ?? "none"}"`,
       },
     ]);
   }

@@ -17,5 +17,5 @@ export const updateAllergySchema = z
     observations: z.string().max(500).nullable().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });

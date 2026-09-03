@@ -4,19 +4,19 @@ import { z } from "zod";
 export const schoolSubjectTaskParentParamsSchema = z.object({
   academicCycleId: z
     .string()
-    .uuid({ message: "academicCycleId must be a valid UUID" }),
+    .uuid({ message: "academicCycleId debe ser un UUID válido" }),
   academicCycleSchoolGroupId: z
     .string()
-    .uuid({ message: "academicCycleSchoolGroupId must be a valid UUID" }),
+    .uuid({ message: "academicCycleSchoolGroupId debe ser un UUID válido" }),
   academicCycleSchoolSubjectId: z
     .string()
-    .uuid({ message: "academicCycleSchoolSubjectId must be a valid UUID" }),
+    .uuid({ message: "academicCycleSchoolSubjectId debe ser un UUID válido" }),
 });
 
 /** Validates path params for a single task (adds taskId) */
 export const schoolSubjectTaskIdParamsSchema =
   schoolSubjectTaskParentParamsSchema.extend({
-    taskId: z.string().uuid({ message: "taskId must be a valid UUID" }),
+    taskId: z.string().uuid({ message: "taskId debe ser un UUID válido" }),
   });
 
 /** Validates path params for a task attachment (adds attachmentId) */
@@ -24,7 +24,7 @@ export const schoolSubjectTaskAttachmentIdParamsSchema =
   schoolSubjectTaskIdParamsSchema.extend({
     attachmentId: z
       .string()
-      .uuid({ message: "attachmentId must be a valid UUID" }),
+      .uuid({ message: "attachmentId debe ser un UUID válido" }),
   });
 
 /** Validates GET tasks query: page (default 1), pageSize (default 5, matches the frontend's SCHOOL_SUBJECT_TASKS_PAGE_SIZE) */
@@ -37,7 +37,7 @@ export const schoolSubjectTaskPagedQuerySchema = z.object({
 export const createSchoolSubjectTaskSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().max(2000).optional(),
-  dueDate: z.string().min(1, "dueDate is required"),
+  dueDate: z.string().min(1, "dueDate es requerido"),
 });
 
 /** Validates PATCH body for updating a task */
@@ -48,7 +48,7 @@ export const updateSchoolSubjectTaskSchema = z
     dueDate: z.string().min(1).optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });
 
 // ─── Teacher-facing ("my classes") variants ─────────────────────────────────
@@ -58,18 +58,18 @@ export const updateSchoolSubjectTaskSchema = z
 
 /** Validates the shared path params for the teacher-facing tasks endpoints */
 export const teacherTaskParentParamsSchema = z.object({
-  schoolGroupId: z.string().uuid({ message: "schoolGroupId must be a valid UUID" }),
-  schoolSubjectId: z.string().uuid({ message: "schoolSubjectId must be a valid UUID" }),
+  schoolGroupId: z.string().uuid({ message: "schoolGroupId debe ser un UUID válido" }),
+  schoolSubjectId: z.string().uuid({ message: "schoolSubjectId debe ser un UUID válido" }),
 });
 
 /** Validates path params for a single task (adds taskId) */
 export const teacherTaskIdParamsSchema = teacherTaskParentParamsSchema.extend({
-  taskId: z.string().uuid({ message: "taskId must be a valid UUID" }),
+  taskId: z.string().uuid({ message: "taskId debe ser un UUID válido" }),
 });
 
 /** Validates path params for a task attachment (adds attachmentId) */
 export const teacherTaskAttachmentIdParamsSchema = teacherTaskIdParamsSchema.extend({
-  attachmentId: z.string().uuid({ message: "attachmentId must be a valid UUID" }),
+  attachmentId: z.string().uuid({ message: "attachmentId debe ser un UUID válido" }),
 });
 
 /**
@@ -78,8 +78,8 @@ export const teacherTaskAttachmentIdParamsSchema = teacherTaskIdParamsSchema.ext
  * to `undefined` before sending — see create-update-school-subject-task.api.ts).
  */
 export const upsertSchoolSubjectTaskSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }).optional(),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }).optional(),
   title: z.string().min(1).max(200),
   description: z.string().max(2000).optional(),
-  dueDate: z.string().min(1, "dueDate is required"),
+  dueDate: z.string().min(1, "dueDate es requerido"),
 });

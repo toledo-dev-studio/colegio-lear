@@ -47,7 +47,7 @@ export class StudentAssistService {
       where: { id: academicCycleEnrollmentId, academicCycleId },
     });
     if (!enrollment) {
-      throw new NotFoundError("Academic cycle enrollment not found");
+      throw new NotFoundError("Inscripción al ciclo escolar no encontrada");
     }
   }
 
@@ -103,7 +103,7 @@ export class StudentAssistService {
     });
     if (existing) {
       throw new ConflictError(
-        "An attendance record already exists for this enrollment on this day",
+        "Ya existe un registro de asistencia para esta inscripción en este día",
       );
     }
 
@@ -129,7 +129,7 @@ export class StudentAssistService {
     const assist = await this.prisma.studentAssist.findFirst({
       where: { id, academicCycleEnrollmentId },
     });
-    if (!assist) throw new NotFoundError("Attendance record not found");
+    if (!assist) throw new NotFoundError("Registro de asistencia no encontrado");
     return assist;
   }
 
@@ -208,7 +208,7 @@ export class StudentAssistService {
     const ownedIds = new Set(ownedEnrollments.map((e) => e.id));
     const notOwned = enrollmentIds.filter((id) => !ownedIds.has(id));
     if (notOwned.length > 0) {
-      throw new NotFoundError("One or more enrollments are not in this class");
+      throw new NotFoundError("Una o más inscripciones no pertenecen a esta clase");
     }
 
     const day = this.toDayDate(assistDate);

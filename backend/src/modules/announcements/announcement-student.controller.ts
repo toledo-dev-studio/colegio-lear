@@ -22,7 +22,7 @@ function parseParams(req: Request): { id: string } {
   const result = idParamSchema.safeParse(req.params);
   if (!result.success) {
     throw new ValidationError(
-      "Validation failed",
+      "Error de validación",
       result.error.issues.map((issue) => ({
         field: issue.path.join("."),
         message: issue.message,
@@ -53,7 +53,7 @@ async function assertStudentWasSentAnnouncement(
   });
 
   if (!notification) {
-    throw new NotFoundError("Announcement not found");
+    throw new NotFoundError("Comunicado no encontrado");
   }
 }
 

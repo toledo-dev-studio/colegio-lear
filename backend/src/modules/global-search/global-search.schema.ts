@@ -8,5 +8,5 @@ import { z } from "zod";
  * most expensive possible case across every searchable module.
  */
 export const globalSearchQuerySchema = z.object({
-  q: z.string().min(5, "q must be at least 5 characters").max(100),
+  q: z.string().min(5, "q debe tener al menos 5 caracteres").max(100),
 });

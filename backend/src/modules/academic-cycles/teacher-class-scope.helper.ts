@@ -35,7 +35,7 @@ export async function resolveTeacherSubjectScope(
     select: { academicCycleId: true },
   });
   if (!group) {
-    throw new NotFoundError("Class not found");
+    throw new NotFoundError("Clase no encontrada");
   }
 
   const academicCycleSchoolSubject = await prisma.academicCycleSchoolSubject.findFirst({
@@ -43,7 +43,7 @@ export async function resolveTeacherSubjectScope(
     select: { id: true },
   });
   if (!academicCycleSchoolSubject) {
-    throw new NotFoundError("School subject not found in this class");
+    throw new NotFoundError("Materia no encontrada en esta clase");
   }
 
   const teaches = await prisma.academicCycleGroupCalendar.findFirst({
@@ -55,7 +55,7 @@ export async function resolveTeacherSubjectScope(
     select: { id: true },
   });
   if (!teaches) {
-    throw new NotFoundError("School subject not found in this class");
+    throw new NotFoundError("Materia no encontrada en esta clase");
   }
 
   return {
@@ -86,7 +86,7 @@ export async function resolveTeacherGroupScope(
     select: { id: true },
   });
   if (!group) {
-    throw new NotFoundError("Class not found");
+    throw new NotFoundError("Clase no encontrada");
   }
 
   const teaches = await prisma.academicCycleGroupCalendar.findFirst({
@@ -94,6 +94,6 @@ export async function resolveTeacherGroupScope(
     select: { id: true },
   });
   if (!teaches) {
-    throw new NotFoundError("Class not found");
+    throw new NotFoundError("Clase no encontrada");
   }
 }

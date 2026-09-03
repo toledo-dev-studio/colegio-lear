@@ -257,7 +257,7 @@ describe("ScholarshipService", () => {
         NotFoundError,
       );
       await expect(service.findById("non-existent-id")).rejects.toThrow(
-        "Scholarship not found",
+        "Beca no encontrada",
       );
     });
   });
@@ -305,7 +305,7 @@ describe("ScholarshipService", () => {
 
       await expect(service.create(validDto)).rejects.toThrow(ConflictError);
       await expect(service.create(validDto)).rejects.toThrow(
-        "A scholarship with this name already exists",
+        "Ya existe una beca con este nombre",
       );
     });
 
@@ -380,7 +380,7 @@ describe("ScholarshipService", () => {
       ).rejects.toThrow(NotFoundError);
       await expect(
         service.update("non-existent", { name: "New Name" }),
-      ).rejects.toThrow("Scholarship not found");
+      ).rejects.toThrow("Beca no encontrada");
     });
 
     it("should throw ConflictError when update causes name collision", async () => {
@@ -395,7 +395,7 @@ describe("ScholarshipService", () => {
       ).rejects.toThrow(ConflictError);
       await expect(
         service.update("uuid-1", { name: "Beca Deportiva" }),
-      ).rejects.toThrow("A scholarship with this name already exists");
+      ).rejects.toThrow("Ya existe una beca con este nombre");
     });
 
     it("should not check uniqueness when name is not in dto", async () => {
@@ -458,7 +458,7 @@ describe("ScholarshipService", () => {
         NotFoundError,
       );
       await expect(service.softDelete("non-existent")).rejects.toThrow(
-        "Scholarship not found",
+        "Beca no encontrada",
       );
     });
 
@@ -471,7 +471,7 @@ describe("ScholarshipService", () => {
 
       await expect(service.softDelete("uuid-1")).rejects.toThrow(ConflictError);
       await expect(service.softDelete("uuid-1")).rejects.toThrow(
-        "Scholarship is already deleted",
+        "La beca ya fue eliminada",
       );
     });
   });

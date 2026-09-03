@@ -247,7 +247,7 @@ describe("AcademicLevelService", () => {
         NotFoundError,
       );
       await expect(service.findById("non-existent-id")).rejects.toThrow(
-        "Academic level not found",
+        "Nivel académico no encontrado",
       );
     });
   });
@@ -298,7 +298,7 @@ describe("AcademicLevelService", () => {
 
       await expect(service.create(validDto)).rejects.toThrow(ConflictError);
       await expect(service.create(validDto)).rejects.toThrow(
-        "An academic level with this name already exists",
+        "Ya existe un nivel académico con este nombre",
       );
     });
   });
@@ -339,7 +339,7 @@ describe("AcademicLevelService", () => {
       ).rejects.toThrow(NotFoundError);
       await expect(
         service.update("non-existent", { name: "New Name" }),
-      ).rejects.toThrow("Academic level not found");
+      ).rejects.toThrow("Nivel académico no encontrado");
     });
 
     it("should throw ConflictError on duplicate name", async () => {
@@ -359,7 +359,7 @@ describe("AcademicLevelService", () => {
       ).rejects.toThrow(ConflictError);
       await expect(
         service.update("uuid-1", { name: "Secundaria" }),
-      ).rejects.toThrow("An academic level with this name already exists");
+      ).rejects.toThrow("Ya existe un nivel académico con este nombre");
     });
   });
 
@@ -392,7 +392,7 @@ describe("AcademicLevelService", () => {
         NotFoundError,
       );
       await expect(service.softDelete("non-existent")).rejects.toThrow(
-        "Academic level not found",
+        "Nivel académico no encontrado",
       );
     });
 
@@ -405,7 +405,7 @@ describe("AcademicLevelService", () => {
 
       await expect(service.softDelete("uuid-1")).rejects.toThrow(ConflictError);
       await expect(service.softDelete("uuid-1")).rejects.toThrow(
-        "Academic level is already deleted",
+        "El nivel académico ya fue eliminado",
       );
     });
   });

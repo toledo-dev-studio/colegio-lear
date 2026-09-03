@@ -6,9 +6,9 @@ function nonBlankString(maxLength: number) {
   return z
     .string()
     .transform((val) => val.trim())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar en blanco" })
     .refine((val) => val.length <= maxLength, {
-      message: `Must be at most ${maxLength} characters`,
+      message: `Debe tener como máximo ${maxLength} caracteres`,
     });
 }
 
@@ -37,22 +37,22 @@ const academicCycleStatusEnum = z.enum([
 
 /** Validates UUID path parameter */
 export const idParamSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 /** Validates academicCycleId path parameter */
 export const academicCycleIdParamSchema = z.object({
   academicCycleId: z
     .string()
-    .uuid({ message: "academicCycleId must be a valid UUID" }),
+    .uuid({ message: "academicCycleId debe ser un UUID válido" }),
 });
 
 /** Validates academicCycleId + id path parameters */
 export const academicCycleSubResourceParamSchema = z.object({
   academicCycleId: z
     .string()
-    .uuid({ message: "academicCycleId must be a valid UUID" }),
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+    .uuid({ message: "academicCycleId debe ser un UUID válido" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 // ─── Filter Schemas ─────────────────────────────────────────────────────────
@@ -85,8 +85,8 @@ export const createAcademicCycleSchema = z.object({
   code: nonBlankString(50),
   startDate: z
     .string()
-    .datetime({ message: "startDate must be a valid ISO date" }),
-  endDate: z.string().datetime({ message: "endDate must be a valid ISO date" }),
+    .datetime({ message: "startDate debe ser una fecha ISO válida" }),
+  endDate: z.string().datetime({ message: "endDate debe ser una fecha ISO válida" }),
   periodType: academicPeriodTypeEnum,
   status: academicCycleStatusEnum.optional(),
   minimumPassingGrade: gradeIntField,
@@ -95,10 +95,10 @@ export const createAcademicCycleSchema = z.object({
   observations: z.string().max(1000).optional(),
   academicLevelId: z
     .string()
-    .uuid({ message: "academicLevelId must be a valid UUID" }),
+    .uuid({ message: "academicLevelId debe ser un UUID válido" }),
   educationLevelId: z
     .string()
-    .uuid({ message: "educationLevelId must be a valid UUID" }),
+    .uuid({ message: "educationLevelId debe ser un UUID válido" }),
 });
 
 /** Validates PATCH body for updating an academic cycle */
@@ -118,5 +118,5 @@ export const updateAcademicCycleSchema = z
     educationLevelId: z.string().uuid().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });

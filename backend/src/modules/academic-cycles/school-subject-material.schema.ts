@@ -4,19 +4,19 @@ import { z } from "zod";
 export const schoolSubjectMaterialParentParamsSchema = z.object({
   academicCycleId: z
     .string()
-    .uuid({ message: "academicCycleId must be a valid UUID" }),
+    .uuid({ message: "academicCycleId debe ser un UUID válido" }),
   academicCycleSchoolGroupId: z
     .string()
-    .uuid({ message: "academicCycleSchoolGroupId must be a valid UUID" }),
+    .uuid({ message: "academicCycleSchoolGroupId debe ser un UUID válido" }),
   academicCycleSchoolSubjectId: z
     .string()
-    .uuid({ message: "academicCycleSchoolSubjectId must be a valid UUID" }),
+    .uuid({ message: "academicCycleSchoolSubjectId debe ser un UUID válido" }),
 });
 
 /** Validates path params for a single material (adds materialId) */
 export const schoolSubjectMaterialIdParamsSchema =
   schoolSubjectMaterialParentParamsSchema.extend({
-    materialId: z.string().uuid({ message: "materialId must be a valid UUID" }),
+    materialId: z.string().uuid({ message: "materialId debe ser un UUID válido" }),
   });
 
 // ─── Teacher-facing ("my classes") variants ─────────────────────────────────
@@ -25,11 +25,11 @@ export const schoolSubjectMaterialIdParamsSchema =
 
 /** Validates the shared path params for the teacher-facing materials endpoints */
 export const teacherMaterialParentParamsSchema = z.object({
-  schoolGroupId: z.string().uuid({ message: "schoolGroupId must be a valid UUID" }),
-  schoolSubjectId: z.string().uuid({ message: "schoolSubjectId must be a valid UUID" }),
+  schoolGroupId: z.string().uuid({ message: "schoolGroupId debe ser un UUID válido" }),
+  schoolSubjectId: z.string().uuid({ message: "schoolSubjectId debe ser un UUID válido" }),
 });
 
 /** Validates path params for a single material (adds materialId) */
 export const teacherMaterialIdParamsSchema = teacherMaterialParentParamsSchema.extend({
-  materialId: z.string().uuid({ message: "materialId must be a valid UUID" }),
+  materialId: z.string().uuid({ message: "materialId debe ser un UUID válido" }),
 });

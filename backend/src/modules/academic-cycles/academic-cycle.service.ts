@@ -196,7 +196,7 @@ export class AcademicCycleService {
     });
 
     if (!record) {
-      throw new NotFoundError("Academic cycle not found");
+      throw new NotFoundError("Ciclo escolar no encontrado");
     }
 
     return this.toRecord(record as unknown as Record<string, unknown>);
@@ -210,7 +210,7 @@ export class AcademicCycleService {
     });
     if (existingCode) {
       throw new ConflictError(
-        "An academic cycle with this code already exists",
+        "Ya existe un ciclo escolar con este código",
       );
     }
 
@@ -244,7 +244,7 @@ export class AcademicCycleService {
     const existing = await this.prisma.academicCycle.findUnique({
       where: { id },
     });
-    if (!existing) throw new NotFoundError("Academic cycle not found");
+    if (!existing) throw new NotFoundError("Ciclo escolar no encontrado");
 
     // Check uniqueness if code is changing
     if (dto.code !== undefined && dto.code !== existing.code) {
@@ -253,7 +253,7 @@ export class AcademicCycleService {
       });
       if (dup) {
         throw new ConflictError(
-          "An academic cycle with this code already exists",
+          "Ya existe un ciclo escolar con este código",
         );
       }
     }
@@ -506,7 +506,7 @@ export class AcademicCycleService {
     const existing = await this.prisma.academicCycle.findUnique({
       where: { id },
     });
-    if (!existing) throw new NotFoundError("Academic cycle not found");
+    if (!existing) throw new NotFoundError("Ciclo escolar no encontrado");
 
     await this.prisma.academicCycle.update({
       where: { id },
