@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { StudentWalletTable } from "./StudentWalletTable";
 import { OverviewStatsRibbon } from "./OverviewStatsRibbon";
 import { StudentWalletPaymentsTable } from "./StudentWalletPaymentsTable";
@@ -25,8 +26,16 @@ interface Props {
 export const StudentWalletGrid = ({ enrollmentId, academicCycleId, academicCycleStatus, enrollmentStatus, loggedInUserCanWrite }: Props) => {
     // Component hooks & stores
     const { context, mutations, loader, sidePanels } = useStudentWalletGrid();
-    const { data: wallet, isLoading: isLoadingWallet } = useGetStudentWallet({ academicCycleId: academicCycleId, academicCycleEnrollmentId: enrollmentId });
-    const { data: payments, isLoading: isLoadingPayments } = useGetStudentWalletPayments({ academicCycleId: academicCycleId, academicCycleEnrollmentId: enrollmentId });
+    const { data: wallet, isLoading: isLoadingWallet, isError: isErrorWallet, error: errorWallet } = useGetStudentWallet({ academicCycleId: academicCycleId, academicCycleEnrollmentId: enrollmentId });
+    const { data: payments, isLoading: isLoadingPayments, isError: isErrorPayments, error: errorPayments } = useGetStudentWalletPayments({ academicCycleId: academicCycleId, academicCycleEnrollmentId: enrollmentId });
+
+    if (isErrorWallet) {
+        showApiErrorToast(errorWallet, "No fue posible obtener información de la cartera del estudiante");
+    }
+
+    if (isErrorPayments) {
+        showApiErrorToast(errorPayments, "No fue posible obtener información de los pagos del estudiante");
+    }
 
     // Component functions
     const onSubmitStudentWalletItem = async (studentWalletItemRequestLike: Partial<StudentWalletItemRequest>) => {
@@ -47,7 +56,7 @@ export const StudentWalletGrid = ({ enrollmentId, academicCycleId, academicCycle
         } catch (error) {
             console.warn(error);
             loader.hide();
-            toast.error("Ocurrió un error al tratar de guardar el registro", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de guardar el registro");
         }
     }
 
@@ -68,7 +77,7 @@ export const StudentWalletGrid = ({ enrollmentId, academicCycleId, academicCycle
         } catch (error) {
             console.warn(error);
             loader.hide();
-            toast.error("Ocurrió un error al tratar de guardar el registro", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de guardar el registro");
         }
     }
 

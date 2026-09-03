@@ -1,7 +1,7 @@
 import { Navigate, useOutletContext, useParams } from "react-router";
 
-import { toast } from "sonner";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { OverviewRibbon } from "./components/overview-ribbon/OverviewRibbon";
 import { StudentGradesGrid } from "./components/student-grades/StudentGradesGrid";
@@ -16,10 +16,10 @@ export const AcademicCycleEnrollmentPage = () => {
   const { academicCycleId, academicCycle, loggedInUserCanWrite } = useOutletContext<AcademicCycleLayoutContext>();
 
   // Component hooks & stores
-  const { data: academicCycleEnrollment, isLoading, isError } = useGetAcademicCycleEnrollmentById({ id: enrollmentId!, academicCycleId: academicCycleId! });
+  const { data: academicCycleEnrollment, isLoading, isError, error } = useGetAcademicCycleEnrollmentById({ id: enrollmentId!, academicCycleId: academicCycleId! });
 
   if (isError) {
-    toast.error("No fue posible obtener la información relacionada en alumno seleccionado", { position: "top-right" });
+    showApiErrorToast(error, "No fue posible obtener la información relacionada en alumno seleccionado");
     return <Navigate to={`/academic-cycles/${academicCycleId}/enrollments`} />;
   }
 

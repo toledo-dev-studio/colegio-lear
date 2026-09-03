@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useLoaderStore } from "@/stores/LoaderStore";
 import { PaymentConceptForm } from "./components/PaymentConceptForm";
@@ -33,12 +34,12 @@ export const PaymentConceptPage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error("Ocurrio un error al tratar de actualizar el registro seleccionado", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrio un error al tratar de actualizar el registro seleccionado");
     }
   }
 
   if (paymentConceptQuery.isError) {
-    toast.error("No fue posible obtener la información del registro seleccionado", { position: "top-right" });
+    showApiErrorToast(paymentConceptQuery.error, "No fue posible obtener la información del registro seleccionado");
     return <Navigate to="/payment-concepts" />;
   }
 

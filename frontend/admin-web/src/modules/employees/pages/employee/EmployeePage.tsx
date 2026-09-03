@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { EmployeeForm } from "./components/EmployeeForm";
 import { useLoaderStore } from "@/stores/LoaderStore";
@@ -32,12 +33,12 @@ export const EmployeePage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error("Ocurrio un error al tratar de actualizar el empleado", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrio un error al tratar de actualizar el empleado");
     }
   }
 
   if (employeeQuery.isError) {
-    toast.error("No fue posible obtener la información del empleado", { position: "top-right" });
+    showApiErrorToast(employeeQuery.error, "No fue posible obtener la información del empleado");
     return <Navigate to="/employees" />;
   }
 

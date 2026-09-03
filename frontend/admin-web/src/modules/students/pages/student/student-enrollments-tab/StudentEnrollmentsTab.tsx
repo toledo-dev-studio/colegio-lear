@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
@@ -30,7 +30,7 @@ export const StudentEnrollmentsTab = () => {
     }, [queries.enrollments.get.data, searchQuery]);
 
     if (queries.enrollments.get.isError) {
-        toast.error("No fue posible obtener información de las inscripciones asociadas al estudiante", { position: "top-right" });
+        showApiErrorToast(queries.enrollments.get.error, "No fue posible obtener información de las inscripciones asociadas al estudiante");
     }
 
     return (

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -48,7 +49,7 @@ export const StudentGuardiansTab = () => {
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error("Ocurrio un error al tratar de eliminar el tutor seleccionada", { position: "top-right" });
+                    showApiErrorToast(error, "Ocurrio un error al tratar de eliminar el tutor seleccionada");
                 }
             }
         )
@@ -71,12 +72,12 @@ export const StudentGuardiansTab = () => {
         } catch (error) {
             console.warn(error);
             loader.hide();
-            toast.error("Ocurrió un error al tratar de guardar el registro", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de guardar el registro");
         }
     }
 
     if (queries.guardians.get.isError) {
-        toast.error("No fue posible obtener información de los tutores del estudiante", { position: "top-right" });
+        showApiErrorToast(queries.guardians.get.error, "No fue posible obtener información de los tutores del estudiante");
     }
 
     return (

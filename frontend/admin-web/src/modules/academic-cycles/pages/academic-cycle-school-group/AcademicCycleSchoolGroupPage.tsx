@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
@@ -36,12 +37,12 @@ export const AcademicCycleSchoolGroupPage = () => {
         } catch (error) {
             console.warn(error);
             loader.hide();
-            toast.error("Ocurrió un error al tratar de registrar el grupo escolar", { position: "top-right" });
+            showApiErrorToast(error, "Ocurrió un error al tratar de registrar el grupo escolar");
         }
     }
 
     if (isLoadingPageError) {
-        toast.error("No fue posible obtener la información relacionada con el grupo escolar", { position: "top-right" });
+        showApiErrorToast(queries.schoolGroups.getById.error ?? queries.teachers.get.error ?? queries.schoolSubjects.get.error, "No fue posible obtener la información relacionada con el grupo escolar");
         return <Navigate to={`/academic-cycles/${context.academicCycleId}/school-groups`} />;
     }
 

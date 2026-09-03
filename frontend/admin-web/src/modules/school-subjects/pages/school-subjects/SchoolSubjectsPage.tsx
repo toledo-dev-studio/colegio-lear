@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Modal } from "@/shared/components/modal/Modal";
 import { Table } from "@/shared/components/table/Table";
@@ -57,10 +58,14 @@ export const SchoolSubjectsPage = () => {
         },
         onError: (error: any) => {
           console.warn(error);
-          toast.error("Ocurrio un error al tratar de eliminar la materia escolar", { position: "top-right" });
+          showApiErrorToast(error, "Ocurrio un error al tratar de eliminar la materia escolar");
         }
       }
     );
+  }
+
+  if (queries.schoolSubjects.paged.isError) {
+    showApiErrorToast(queries.schoolSubjects.paged.error, "No fue posible obtener información de las materias escolares");
   }
 
   return (

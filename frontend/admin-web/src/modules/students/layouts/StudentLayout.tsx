@@ -1,6 +1,6 @@
 import { matchPath, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { CalendarDays, HeartPlus, ShieldPlus, UserCircle2 } from "lucide-react";
-import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { cn } from "@/lib/extensions/utils";
 import type { Tab } from "@/interfaces/components/tab";
@@ -71,7 +71,7 @@ export const StudentLayout = () => {
     }
 
     if (studentQuery.isError) {
-        toast.error("No fue posible obtener la información del estudiante", { position: "top-right" });
+        showApiErrorToast(studentQuery.error, "No fue posible obtener la información del estudiante");
         return <Navigate to="/students" />;
     }
 

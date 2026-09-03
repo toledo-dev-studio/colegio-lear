@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -67,10 +68,14 @@ export const AcademicCyclesPage = () => {
                 },
                 onError: (error) => {
                     console.warn(error);
-                    toast.error("Ocurrio un error al tratar de eliminar el ciclo escolar", { position: "top-right" });
+                    showApiErrorToast(error, "Ocurrio un error al tratar de eliminar el ciclo escolar");
                 }
             }
         );
+    }
+
+    if (queries.academicCycles.paged.isError) {
+        showApiErrorToast(queries.academicCycles.paged.error, "No fue posible obtener información de los ciclos escolares");
     }
 
     return (

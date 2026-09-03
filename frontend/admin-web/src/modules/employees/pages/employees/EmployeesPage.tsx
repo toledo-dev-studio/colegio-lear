@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { Table } from "@/shared/components/table/Table";
 import { Modal } from "@/shared/components/modal/Modal";
@@ -61,10 +62,14 @@ export const EmployeesPage = () => {
         },
         onError: (error: any) => {
           console.warn(error);
-          toast.error("Ocurrio un error al tratar de eliminar el empleado", { position: "top-right" });
+          showApiErrorToast(error, "Ocurrio un error al tratar de eliminar el empleado");
         }
       }
     );
+  }
+
+  if (queries.employees.paged.isError) {
+    showApiErrorToast(queries.employees.paged.error, "No fue posible obtener información de los empleados");
   }
 
   return (

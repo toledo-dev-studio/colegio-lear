@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router"
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { JobTitleForm } from "./components/JobTitleForm";
 import { useLoaderStore } from "@/stores/LoaderStore";
@@ -34,12 +35,12 @@ export const JobTitlePage = () => {
     } catch (error) {
       console.warn(error);
       hideLoading();
-      toast.error("Ocurrio un error al tratar de actualizar el puesto de trabajo", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrio un error al tratar de actualizar el puesto de trabajo");
     }
   }
 
   if (jobTitleQuery.isError) {
-    toast.error("No fue posible obtener la información del puesto de trabajo", { position: "top-right" });
+    showApiErrorToast(jobTitleQuery.error, "No fue posible obtener la información del puesto de trabajo");
     return <Navigate to="/job-titles" />;
   }
 

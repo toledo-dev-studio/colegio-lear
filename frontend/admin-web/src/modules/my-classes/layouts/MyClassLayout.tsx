@@ -1,6 +1,6 @@
 import { matchPath, Navigate, Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { BookOpen, ClipboardCheck, MessageSquare, Calendar } from "lucide-react";
-import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { cn } from "@/lib/extensions/utils";
 import type { Tab } from "@/interfaces/components/tab";
@@ -75,7 +75,7 @@ const MyClassTabs = ({ id, myClass }: TabsProps) => {
     }
 
     if (academicCycleQuery.isError || schoolGroupQuery.isError) {
-        toast.error("No fue posible obtener la información de la clase", { position: "top-right" });
+        showApiErrorToast(academicCycleQuery.error ?? schoolGroupQuery.error, "No fue posible obtener la información de la clase");
         return <Navigate to="/my-classes" />;
     }
 
@@ -146,7 +146,7 @@ export const MyClassLayout = () => {
     const myClassQuery = useGetMyClassById({ id: id! });
 
     if (myClassQuery.isError) {
-        toast.error("No fue posible obtener la información de la clase", { position: "top-right" });
+        showApiErrorToast(myClassQuery.error, "No fue posible obtener la información de la clase");
         return <Navigate to="/my-classes" />;
     }
 

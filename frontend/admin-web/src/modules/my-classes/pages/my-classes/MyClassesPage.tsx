@@ -1,5 +1,6 @@
 import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
 import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { Table } from "@/shared/components/table/Table";
 import { TableRibbon } from "@/shared/components/table-ribbon/TableRibbon";
 import { useMyClassesPage } from "./hooks/useMyClassesPage";
@@ -10,6 +11,10 @@ export const MyClassesPage = () => {
     // Component hooks & stores
     const { advancedFilters, queries } = useMyClassesPage();
     const { columns, properties } = useMyClassesPageTable();
+
+    if (queries.myClasses.paged.isError) {
+        showApiErrorToast(queries.myClasses.paged.error, "No fue posible obtener información de las clases");
+    }
 
     return (
         <>
