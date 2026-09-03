@@ -1,5 +1,6 @@
 import { ClipboardList } from "lucide-react";
 
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { useAttendancePage } from "../hooks/useAttendancePage";
 import { AssistsTable } from "../components/assists-table/AssistsTable";
 import { AssistsFilter } from "../components/assists-filter/AssistsFilter";
@@ -10,6 +11,10 @@ export const AttendancePage = () => {
     const { context, queries } = useAttendancePage();
 
     const assists = queries.assistsQuery.data.data;
+
+    if (queries.assistsQuery.isError) {
+        showApiErrorToast(queries.assistsQuery.error, "No fue posible obtener información de tus asistencias");
+    }
 
     return (
         <>

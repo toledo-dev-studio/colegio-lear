@@ -1,5 +1,6 @@
 import { GraduationCap } from "lucide-react";
 
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { useStudentGradesPage } from "../hooks/useStudentGradesPage";
 import { ModulePageTitle } from "@/shared/components/module-page-title/ModulePageTitle";
 import { StudentGradesGrid } from "@/modules/dashboard/components/student-grades/StudentGradesGrid";
@@ -8,6 +9,11 @@ import { CardHeader } from "@/shared/components/card-header/CardHeader";
 
 export const StudentGradesPage = () => {
   const { context, queries } = useStudentGradesPage();
+
+  if (queries.studentGradesQuery.isError) {
+    showApiErrorToast(queries.studentGradesQuery.error, "No fue posible obtener información de tus calificaciones");
+  }
+
   return (
     <>
       <section className="page-main-section">

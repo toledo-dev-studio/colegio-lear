@@ -1,5 +1,6 @@
 import { Wallet } from "lucide-react";
 
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { useStudentWalletPage } from "../hooks/useStudentWalletPage";
 import { StudentWalletTable } from "../components/wallet-table/StudentWalletTable";
 import { WalletStats } from "@/modules/dashboard/components/wallet-stats/WalletStats";
@@ -12,6 +13,15 @@ import { CardHeader } from "@/shared/components/card-header/CardHeader";
 
 export const StudentWalletPage = () => {
   const { context, queries } = useStudentWalletPage();
+
+  if (queries.walletQuery.isError) {
+    showApiErrorToast(queries.walletQuery.error, "No fue posible obtener información de tu cartera de pagos");
+  }
+
+  if (queries.walletPaymentsQuery.isError) {
+    showApiErrorToast(queries.walletPaymentsQuery.error, "No fue posible obtener información de tu historial de pagos");
+  }
+
   return (
     <>
       <section className="page-main-section">

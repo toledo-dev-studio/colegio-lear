@@ -2,6 +2,7 @@
 
 import { BookOpen } from "lucide-react";
 
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { useSubjectsPage } from "../hooks/useSubjectsPage";
 import { ModulePageTitle } from "@/shared/components/module-page-title/ModulePageTitle";
 import { CardHeader } from "@/shared/components/card-header/CardHeader";
@@ -11,6 +12,10 @@ import { SchoolSubjectsGridSkeleton } from "../components/school-subjects-grid/S
 export const SubjectsPage = () => {
   const { context, queries, schoolSubjects } = useSubjectsPage();
   const isLoading = queries.schoolSubjectsQuery.isLoading || queries.calendarsQuery.isLoading;
+
+  if (queries.schoolSubjectsQuery.isError || queries.calendarsQuery.isError) {
+    showApiErrorToast(queries.schoolSubjectsQuery.error ?? queries.calendarsQuery.error, "No fue posible obtener información de tus materias escolares");
+  }
 
   return (
     <>

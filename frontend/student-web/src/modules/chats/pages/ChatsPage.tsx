@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MessageSquare } from "lucide-react";
 
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { useChatsPage } from "../hooks/useChatsPage";
 import { ChatWindow } from "../components/chat-window/ChatWindow";
 import { ChatsSkeleton } from "../components/chats-skeleton/ChatsSkeleton";
@@ -21,6 +22,10 @@ export const ChatsPage = () => {
     }
 
     const selectedChat = queries.chatsQuery.data.find((chat) => chat.teacherId === selectedTeacherId);
+
+    if (queries.chatsQuery.isError) {
+        showApiErrorToast(queries.chatsQuery.error, "No fue posible obtener información de tus conversaciones");
+    }
 
     return (
         <section className="page-main-section">
