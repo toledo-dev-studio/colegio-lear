@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router";
 import { ArrowLeft, BookOpen, ClipboardList, FolderOpen, Info } from "lucide-react";
 
 import { Button } from "@/shared/shadcn/ui/button";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { useSubjectsPage } from "../hooks/useSubjectsPage";
 import { labelOf } from "@/lib/key-value-pairs/key-value-pair";
 import { CardHeader } from "@/shared/components/card-header/CardHeader";
@@ -45,6 +46,14 @@ export const SchoolSubjectDetailPage = () => {
         academicCycleSchoolGroupId,
         academicCycleSchoolSubjectId: subject?.academicCycleSchoolSubjectId ?? "",
     });
+
+    if (tasksQuery.isError) {
+        showApiErrorToast(tasksQuery.error, "No fue posible obtener información de las tareas de la materia");
+    }
+
+    if (materialsQuery.isError) {
+        showApiErrorToast(materialsQuery.error, "No fue posible obtener información del material de apoyo de la materia");
+    }
 
     return (
         <>

@@ -1,5 +1,6 @@
 import { IdCard, Stethoscope, UserRound, Users } from "lucide-react";
 import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useMyAccountPage } from "../hooks/useMyAccountPage";
 import { useUpdateStudentAvatar } from "../hooks/useUpdateStudentAvatar";
@@ -21,23 +22,23 @@ export const MyAccountPage = () => {
   const updateAvatarMutation = useUpdateStudentAvatar();
 
   if (queries.accountQuery.isError) {
-    toast.error(
+    showApiErrorToast(
+      queries.accountQuery.error,
       "No fue posible obtener la información de tu cuenta",
-      { position: "top-right" },
     );
   }
 
   if (queries.guardiansQuery.isError) {
-    toast.error(
+    showApiErrorToast(
+      queries.guardiansQuery.error,
       "No fue posible obtener la información de tus tutores",
-      { position: "top-right" },
     );
   }
 
   if (queries.allergiesQuery.isError) {
-    toast.error(
+    showApiErrorToast(
+      queries.allergiesQuery.error,
       "No fue posible obtener la información de tus alergias",
-      { position: "top-right" },
     );
   }
 
@@ -52,7 +53,7 @@ export const MyAccountPage = () => {
       toast.success("Fotografía de perfil actualizada correctamente", { position: "top-right" });
     } catch (error) {
       console.warn(error);
-      toast.error("Ocurrió un error al tratar de actualizar tu fotografía de perfil", { position: "top-right" });
+      showApiErrorToast(error, "Ocurrió un error al tratar de actualizar tu fotografía de perfil");
     }
   };
 

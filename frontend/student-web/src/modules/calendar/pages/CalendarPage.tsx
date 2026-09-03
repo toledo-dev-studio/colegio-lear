@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { CalendarRange } from "lucide-react";
 
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 import { useCalendarPage } from "../hooks/useCalendarPage";
 import { CardHeader } from "@/shared/components/card-header/CardHeader";
 import type { EmployeeResponse } from "@/interfaces/responses/employee.response";
@@ -28,6 +29,10 @@ export const CalendarPage = () => {
       .filter((subject, index, array) => array.findIndex((s) => s.id === subject.id) === index),
     [calendars],
   );
+
+  if (queries.calendarsQuery.isError) {
+    showApiErrorToast(queries.calendarsQuery.error, "No fue posible obtener información de tu horario escolar");
+  }
 
   return (
     <>

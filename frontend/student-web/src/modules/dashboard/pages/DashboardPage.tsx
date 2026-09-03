@@ -1,5 +1,5 @@
 import { CalendarDays, GraduationCap, Library, Wallet } from "lucide-react";
-import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
 
 import { useDashboardPage } from "../hooks/useDashboardPage";
 import { WalletStatsSkeleton } from "../components/wallet-stats/WalletStatsSkeleton";
@@ -21,9 +21,16 @@ export const DashboardPage = () => {
   const { context, queries } = useDashboardPage();
 
   if (queries.walletQuery.isError) {
-    toast.error(
+    showApiErrorToast(
+      queries.walletQuery.error,
       "No fue posible obtener la información de la cartera del estudiante relacionada al ciclo escolar seleccionado",
-      { position: "top-right" },
+    );
+  }
+
+  if (queries.studentGradesQuery.isError) {
+    showApiErrorToast(
+      queries.studentGradesQuery.error,
+      "No fue posible obtener la información de tus calificaciones",
     );
   }
 
