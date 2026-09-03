@@ -68,8 +68,8 @@ export async function uploadMyAvatar(
   const file = mapFile((req as unknown as { file?: MulterFile }).file);
 
   if (!file) {
-    throw new ValidationError("A file is required", [
-      { field: "file", message: "A file is required" },
+    throw new ValidationError("El archivo es requerido", [
+      { field: "file", message: "El archivo es requerido" },
     ]);
   }
 

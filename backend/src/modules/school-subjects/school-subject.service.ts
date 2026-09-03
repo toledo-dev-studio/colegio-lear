@@ -152,7 +152,7 @@ export class SchoolSubjectService {
     });
 
     if (!subject || subject.isDeleted) {
-      throw new NotFoundError("School subject not found");
+      throw new NotFoundError("Materia no encontrada");
     }
 
     const { isDeleted: _isDeleted, ...subjectView } = subject;
@@ -173,7 +173,7 @@ export class SchoolSubjectService {
     });
 
     if (!academicLevel) {
-      throw new NotFoundError("Academic level not found");
+      throw new NotFoundError("Nivel académico no encontrado");
     }
 
     // Validate educationLevelId exists
@@ -182,7 +182,7 @@ export class SchoolSubjectService {
     });
 
     if (!educationLevel) {
-      throw new NotFoundError("Education level not found");
+      throw new NotFoundError("Nivel educativo no encontrado");
     }
 
     // Check uniqueness: name + educationLevelId (case-insensitive)
@@ -195,7 +195,7 @@ export class SchoolSubjectService {
 
     if (existing) {
       throw new ConflictError(
-        "A subject with this name already exists for the selected education level",
+        "Ya existe una materia con este nombre para el nivel educativo seleccionado",
       );
     }
 
@@ -235,7 +235,7 @@ export class SchoolSubjectService {
     });
 
     if (!existing) {
-      throw new NotFoundError("School subject not found");
+      throw new NotFoundError("Materia no encontrada");
     }
 
     // Validate academicLevelId if provided
@@ -245,7 +245,7 @@ export class SchoolSubjectService {
       });
 
       if (!academicLevel) {
-        throw new NotFoundError("Academic level not found");
+        throw new NotFoundError("Nivel académico no encontrado");
       }
     }
 
@@ -256,7 +256,7 @@ export class SchoolSubjectService {
       });
 
       if (!educationLevel) {
-        throw new NotFoundError("Education level not found");
+        throw new NotFoundError("Nivel educativo no encontrado");
       }
     }
 
@@ -276,7 +276,7 @@ export class SchoolSubjectService {
 
       if (duplicate) {
         throw new ConflictError(
-          "A subject with this name already exists for the selected education level",
+          "Ya existe una materia con este nombre para el nivel educativo seleccionado",
         );
       }
     }
@@ -309,11 +309,11 @@ export class SchoolSubjectService {
     });
 
     if (!existing) {
-      throw new NotFoundError("School subject not found");
+      throw new NotFoundError("Materia no encontrada");
     }
 
     if (existing.isDeleted) {
-      throw new ConflictError("School subject is already deleted");
+      throw new ConflictError("La materia ya fue eliminada");
     }
 
     await this.prisma.schoolSubject.update({

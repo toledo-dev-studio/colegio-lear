@@ -10,9 +10,9 @@ function nonBlankString(maxLength: number) {
   return z
     .string()
     .transform((val) => val.trim())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar vacío" })
     .refine((val) => val.length <= maxLength, {
-      message: `Must be at most ${maxLength} characters`,
+      message: `Debe tener como máximo ${maxLength} caracteres`,
     });
 }
 
@@ -22,7 +22,7 @@ function nonBlankString(maxLength: number) {
  * Validates UUID path parameter.
  */
 export const idParamSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 /**
@@ -32,8 +32,11 @@ export const idParamSchema = z.object({
  * - isActive: filter by active/inactive status ("true" | "false")
  */
 export const academicLevelFiltersSchema = z.object({
-  q: z.string().max(100, "q must be at most 100 characters").optional(),
-  name: z.string().max(100, "name must be at most 100 characters").optional(),
+  q: z.string().max(100, "q debe tener como máximo 100 caracteres").optional(),
+  name: z
+    .string()
+    .max(100, "name debe tener como máximo 100 caracteres")
+    .optional(),
   isActive: z.enum(["true", "false"]).optional(),
 });
 
@@ -44,15 +47,15 @@ export const academicLevelFiltersSchema = z.object({
  */
 export const academicLevelPagedQuerySchema = academicLevelFiltersSchema.extend({
   page: z.coerce
-    .number({ message: "page must be a number" })
-    .int({ message: "page must be an integer" })
-    .positive({ message: "page must be a positive integer" })
+    .number({ message: "page debe ser un número" })
+    .int({ message: "page debe ser un número entero" })
+    .positive({ message: "page debe ser un entero positivo" })
     .default(1),
   pageSize: z.coerce
-    .number({ message: "pageSize must be a number" })
-    .int({ message: "pageSize must be an integer" })
-    .positive({ message: "pageSize must be a positive integer" })
-    .max(100, "pageSize must be at most 100")
+    .number({ message: "pageSize debe ser un número" })
+    .int({ message: "pageSize debe ser un número entero" })
+    .positive({ message: "pageSize debe ser un entero positivo" })
+    .max(100, "pageSize debe ser como máximo 100")
     .default(10),
 });
 
@@ -65,23 +68,26 @@ export const academicLevelPagedQuerySchema = academicLevelFiltersSchema.extend({
  * - page/pageSize: pagination parameters
  */
 export const educationLevelPagedQuerySchema = z.object({
-  q: z.string().max(100, "q must be at most 100 characters").optional(),
-  name: z.string().max(100, "name must be at most 100 characters").optional(),
+  q: z.string().max(100, "q debe tener como máximo 100 caracteres").optional(),
+  name: z
+    .string()
+    .max(100, "name debe tener como máximo 100 caracteres")
+    .optional(),
   isActive: z.enum(["true", "false"]).optional(),
   academicLevelId: z
     .string()
-    .uuid({ message: "academicLevelId must be a valid UUID" })
+    .uuid({ message: "academicLevelId debe ser un UUID válido" })
     .optional(),
   page: z.coerce
-    .number({ message: "page must be a number" })
-    .int({ message: "page must be an integer" })
-    .positive({ message: "page must be a positive integer" })
+    .number({ message: "page debe ser un número" })
+    .int({ message: "page debe ser un número entero" })
+    .positive({ message: "page debe ser un entero positivo" })
     .default(1),
   pageSize: z.coerce
-    .number({ message: "pageSize must be a number" })
-    .int({ message: "pageSize must be an integer" })
-    .positive({ message: "pageSize must be a positive integer" })
-    .max(100, "pageSize must be at most 100")
+    .number({ message: "pageSize debe ser un número" })
+    .int({ message: "pageSize debe ser un número entero" })
+    .positive({ message: "pageSize debe ser un entero positivo" })
+    .max(100, "pageSize debe ser como máximo 100")
     .default(10),
 });
 
@@ -94,7 +100,7 @@ export const educationLevelPagedQuerySchema = z.object({
  * - description: optional, max 500 chars
  */
 const educationLevelInputSchema = z.object({
-  id: z.string().min(1, "id is required"),
+  id: z.string().min(1, "id es requerido"),
   name: nonBlankString(100),
   description: z
     .string()
@@ -105,7 +111,9 @@ const educationLevelInputSchema = z.object({
       const trimmed = val.trim();
       return trimmed === "" ? undefined : trimmed;
     })
-    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+    .pipe(
+      z.string().max(500, "Debe tener como máximo 500 caracteres").optional(),
+    ),
 });
 
 /**
@@ -125,8 +133,10 @@ export const createAcademicLevelSchema = z.object({
       const trimmed = val.trim();
       return trimmed === "" ? undefined : trimmed;
     })
-    .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
-  isActive: z.boolean({ message: "isActive must be a boolean" }).optional(),
+    .pipe(
+      z.string().max(500, "Debe tener como máximo 500 caracteres").optional(),
+    ),
+  isActive: z.boolean({ message: "isActive debe ser un booleano" }).optional(),
   educationLevels: z.array(educationLevelInputSchema).optional(),
 });
 
@@ -147,10 +157,15 @@ export const updateAcademicLevelSchema = z
         const trimmed = val.trim();
         return trimmed === "" ? undefined : trimmed;
       })
-      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+      .pipe(
+        z
+          .string()
+          .max(500, "Debe tener como máximo 500 caracteres")
+          .optional(),
+      ),
     isActive: z.boolean().optional(),
     educationLevels: z.array(educationLevelInputSchema).optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });

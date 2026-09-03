@@ -24,7 +24,7 @@ export class AcademicCycleSchoolSubjectService {
       where: { id: academicCycleId },
       select: { id: true },
     });
-    if (!cycle) throw new NotFoundError("Academic cycle not found");
+    if (!cycle) throw new NotFoundError("Ciclo escolar no encontrado");
   }
 
   private toRecord(
@@ -77,7 +77,7 @@ export class AcademicCycleSchoolSubjectService {
     });
     if (existing) {
       throw new ConflictError(
-        "This school subject is already assigned to this academic cycle",
+        "Esta materia ya está asignada a este ciclo escolar",
       );
     }
 
@@ -105,7 +105,7 @@ export class AcademicCycleSchoolSubjectService {
       where: { id, academicCycleId },
     });
     if (!existing) {
-      throw new NotFoundError("Academic cycle school subject not found");
+      throw new NotFoundError("Materia no encontrada en este ciclo escolar");
     }
 
     // If changing schoolSubjectId, check uniqueness
@@ -123,7 +123,7 @@ export class AcademicCycleSchoolSubjectService {
       });
       if (dup) {
         throw new ConflictError(
-          "This school subject is already assigned to this academic cycle",
+          "Esta materia ya está asignada a este ciclo escolar",
         );
       }
     }
@@ -151,7 +151,7 @@ export class AcademicCycleSchoolSubjectService {
       where: { id, academicCycleId },
     });
     if (!existing) {
-      throw new NotFoundError("Academic cycle school subject not found");
+      throw new NotFoundError("Materia no encontrada en este ciclo escolar");
     }
 
     await this.prisma.academicCycleSchoolSubject.delete({ where: { id } });

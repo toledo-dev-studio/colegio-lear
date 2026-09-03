@@ -68,7 +68,7 @@ export async function authenticate(
 
   // 3. No token found in either source
   if (!token) {
-    throw new UnauthorizedError("Access token is required");
+    throw new UnauthorizedError("El token de acceso es requerido");
   }
 
   // 4. Verify token
@@ -77,9 +77,9 @@ export async function authenticate(
     decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
   } catch (error) {
     if (error instanceof TokenExpiredError) {
-      throw new UnauthorizedError("Access token has expired");
+      throw new UnauthorizedError("El token de acceso ha expirado");
     }
-    throw new UnauthorizedError("Invalid access token");
+    throw new UnauthorizedError("Token de acceso inválido");
   }
 
   // 5. Load permissions for the employee's security role (one DB query per request)

@@ -4,7 +4,7 @@ import { z } from "zod";
 export const createAcademicCycleSchoolSubjectSchema = z.object({
   schoolSubjectId: z
     .string()
-    .uuid({ message: "schoolSubjectId must be a valid UUID" }),
+    .uuid({ message: "schoolSubjectId debe ser un UUID válido" }),
   observations: z.string().max(1000).optional(),
 });
 
@@ -15,5 +15,5 @@ export const updateAcademicCycleSchoolSubjectSchema = z
     observations: z.string().max(1000).nullable().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });

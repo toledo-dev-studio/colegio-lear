@@ -10,9 +10,9 @@ function nonBlankString(maxLength: number) {
   return z
     .string()
     .transform((val) => val.trim())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar vacío" })
     .refine((val) => val.length <= maxLength, {
-      message: `Must be at most ${maxLength} characters`,
+      message: `Debe tener como máximo ${maxLength} caracteres`,
     });
 }
 
@@ -30,7 +30,9 @@ function optionalSecondLastName() {
       const trimmed = val.trim();
       return trimmed === "" ? undefined : trimmed;
     })
-    .pipe(z.string().max(100, "Must be at most 100 characters").optional());
+    .pipe(
+      z.string().max(100, "Debe tener como máximo 100 caracteres").optional(),
+    );
 }
 
 /**
@@ -50,7 +52,7 @@ function multipartBoolean() {
  * Validates UUID path parameter.
  */
 export const idParamSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 /**
@@ -62,19 +64,19 @@ export const idParamSchema = z.object({
  * - jobTitleId: filter by jobTitleId (UUID)
  */
 export const employeeFiltersSchema = z.object({
-  q: z.string().max(100, "q must be at most 100 characters").optional(),
+  q: z.string().max(100, "q debe tener como máximo 100 caracteres").optional(),
   fullName: z
     .string()
-    .max(100, "fullName must be at most 100 characters")
+    .max(100, "fullName debe tener como máximo 100 caracteres")
     .optional(),
   isActive: z.enum(["true", "false"]).optional(),
   securityRoleId: z
     .string()
-    .uuid({ message: "securityRoleId must be a valid UUID" })
+    .uuid({ message: "securityRoleId debe ser un UUID válido" })
     .optional(),
   jobTitleId: z
     .string()
-    .uuid({ message: "jobTitleId must be a valid UUID" })
+    .uuid({ message: "jobTitleId debe ser un UUID válido" })
     .optional(),
 });
 
@@ -85,15 +87,15 @@ export const employeeFiltersSchema = z.object({
  */
 export const employeePagedQuerySchema = employeeFiltersSchema.extend({
   page: z.coerce
-    .number({ message: "page must be a number" })
-    .int({ message: "page must be an integer" })
-    .positive({ message: "page must be a positive integer" })
+    .number({ message: "page debe ser un número" })
+    .int({ message: "page debe ser un número entero" })
+    .positive({ message: "page debe ser un entero positivo" })
     .default(1),
   pageSize: z.coerce
-    .number({ message: "pageSize must be a number" })
-    .int({ message: "pageSize must be an integer" })
-    .positive({ message: "pageSize must be a positive integer" })
-    .max(100, "pageSize must be at most 100")
+    .number({ message: "pageSize debe ser un número" })
+    .int({ message: "pageSize debe ser un número entero" })
+    .positive({ message: "pageSize debe ser un entero positivo" })
+    .max(100, "pageSize debe ser como máximo 100")
     .default(10),
 });
 
@@ -116,12 +118,14 @@ export const createEmployeeSchema = z.object({
   phoneNumber: nonBlankString(20),
   email: z
     .string()
-    .email({ message: "Must be a valid email" })
-    .max(150, "email must be at most 150 characters"),
+    .email({ message: "Debe ser un correo electrónico válido" })
+    .max(150, "email debe tener como máximo 150 caracteres"),
   securityRoleId: z
     .string()
-    .uuid({ message: "securityRoleId must be a valid UUID" }),
-  jobTitleId: z.string().uuid({ message: "jobTitleId must be a valid UUID" }),
+    .uuid({ message: "securityRoleId debe ser un UUID válido" }),
+  jobTitleId: z
+    .string()
+    .uuid({ message: "jobTitleId debe ser un UUID válido" }),
   isActive: multipartBoolean(),
 });
 
@@ -149,16 +153,16 @@ export const updateEmployeeSchema = z.object({
   phoneNumber: nonBlankString(20).optional(),
   email: z
     .string()
-    .email({ message: "Must be a valid email" })
-    .max(150, "email must be at most 150 characters")
+    .email({ message: "Debe ser un correo electrónico válido" })
+    .max(150, "email debe tener como máximo 150 caracteres")
     .optional(),
   securityRoleId: z
     .string()
-    .uuid({ message: "securityRoleId must be a valid UUID" })
+    .uuid({ message: "securityRoleId debe ser un UUID válido" })
     .optional(),
   jobTitleId: z
     .string()
-    .uuid({ message: "jobTitleId must be a valid UUID" })
+    .uuid({ message: "jobTitleId debe ser un UUID válido" })
     .optional(),
   isActive: multipartBoolean(),
 });

@@ -30,7 +30,7 @@ function parseParams(req: Request) {
   const result = schoolSubjectTaskParentParamsSchema.safeParse(req.params);
   if (!result.success) {
     throw new ValidationError(
-      "Validation failed",
+      "Error de validación",
       result.error.issues.map((issue) => ({
         field: issue.path.join("."),
         message: issue.message,
@@ -44,7 +44,7 @@ function parseQuery(req: Request) {
   const result = schoolSubjectTaskPagedQuerySchema.safeParse(req.query);
   if (!result.success) {
     throw new ValidationError(
-      "Validation failed",
+      "Error de validación",
       result.error.issues.map((issue) => ({
         field: issue.path.join("."),
         message: issue.message,
@@ -68,7 +68,7 @@ async function assertStudentOwnsSchoolGroup(
     select: { id: true },
   });
   if (!enrollment) {
-    throw new NotFoundError("Academic cycle school group not found");
+    throw new NotFoundError("Grupo no encontrado en este ciclo escolar");
   }
 }
 

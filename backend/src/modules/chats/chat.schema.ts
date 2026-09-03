@@ -2,13 +2,13 @@ import { z } from "zod";
 
 /** Validates path params for the chats list endpoint */
 export const chatParentParamsSchema = z.object({
-  studentId: z.string().uuid({ message: "studentId must be a valid UUID" }),
-  enrollmentId: z.string().uuid({ message: "enrollmentId must be a valid UUID" }),
+  studentId: z.string().uuid({ message: "studentId debe ser un UUID válido" }),
+  enrollmentId: z.string().uuid({ message: "enrollmentId debe ser un UUID válido" }),
 });
 
 /** Validates path params for a single conversation's messages */
 export const chatMessagesParamsSchema = chatParentParamsSchema.extend({
-  teacherId: z.string().uuid({ message: "teacherId must be a valid UUID" }),
+  teacherId: z.string().uuid({ message: "teacherId debe ser un UUID válido" }),
 });
 
 /** Validates GET messages query: page (default 1), pageSize (default 20, matches CHAT_PAGE_SIZE) */
@@ -19,5 +19,5 @@ export const chatMessagesPagedQuerySchema = z.object({
 
 /** Validates POST body for sending a chat message */
 export const sendChatMessageSchema = z.object({
-  content: z.string().min(1, "content is required").max(2000),
+  content: z.string().min(1, "content es requerido").max(2000),
 });

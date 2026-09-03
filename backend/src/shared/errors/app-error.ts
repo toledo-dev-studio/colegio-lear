@@ -25,7 +25,7 @@ export class AppError extends Error {
 /** 400 — Validation failures, malformed input */
 export class ValidationError extends AppError {
   constructor(
-    message = "Validation failed",
+    message = "Los datos enviados no son válidos",
     details?: Array<{ field?: string; message: string }> | null,
   ) {
     super(message, 400, details);
@@ -34,28 +34,28 @@ export class ValidationError extends AppError {
 
 /** 401 — Missing, expired, or invalid credentials / tokens */
 export class UnauthorizedError extends AppError {
-  constructor(message = "Unauthorized") {
+  constructor(message = "No autorizado") {
     super(message, 401);
   }
 }
 
 /** 403 — Authenticated but lacking required privileges */
 export class ForbiddenError extends AppError {
-  constructor(message = "Forbidden") {
+  constructor(message = "No tienes permisos para realizar esta acción") {
     super(message, 403);
   }
 }
 
 /** 404 — Requested resource does not exist */
 export class NotFoundError extends AppError {
-  constructor(message = "Resource not found") {
+  constructor(message = "El recurso solicitado no existe") {
     super(message, 404);
   }
 }
 
 /** 409 — Duplicate resource or constraint conflict */
 export class ConflictError extends AppError {
-  constructor(message = "Conflict") {
+  constructor(message = "Conflicto con el estado actual del recurso") {
     super(message, 409);
   }
 }

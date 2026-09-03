@@ -30,7 +30,7 @@ export class StudentAllergyService {
       where: { id: studentId },
     });
     if (!student || student.isDeleted)
-      throw new NotFoundError("Student not found");
+      throw new NotFoundError("Alumno no encontrado");
   }
 
   async findAllByStudentId(studentId: string): Promise<AllergyRecord[]> {
@@ -72,7 +72,7 @@ export class StudentAllergyService {
       where: { id },
     });
     if (!existing || existing.studentId !== studentId) {
-      throw new NotFoundError("Allergy not found");
+      throw new NotFoundError("Alergia no encontrada");
     }
 
     const updateData: Record<string, unknown> = {};
@@ -97,7 +97,7 @@ export class StudentAllergyService {
       where: { id },
     });
     if (!existing || existing.studentId !== studentId) {
-      throw new NotFoundError("Allergy not found");
+      throw new NotFoundError("Alergia no encontrada");
     }
 
     await this.prisma.studentAllergy.delete({ where: { id } });

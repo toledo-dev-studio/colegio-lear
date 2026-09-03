@@ -1,4 +1,4 @@
-import { type RequestHandler } from "express";
+﻿import { type RequestHandler } from "express";
 import { ForbiddenError } from "../errors/app-error";
 import type { ModuleKey } from "../../modules/security-roles/security-role.types";
 
@@ -47,14 +47,14 @@ export function authorize(moduleKey: ModuleKey | ModuleKey[]): RequestHandler {
 
   return (req, _res, next) => {
     if (!req.user) {
-      throw new ForbiddenError("Insufficient privileges");
+      throw new ForbiddenError("Permisos insuficientes");
     }
 
     const requiredPermission = METHOD_PERMISSION_MAP[req.method];
 
     // Unsupported HTTP method — deny by default
     if (!requiredPermission) {
-      throw new ForbiddenError("Insufficient privileges");
+      throw new ForbiddenError("Permisos insuficientes");
     }
 
     // Granted if any of the given modules has the required flag for this employee's role
@@ -64,7 +64,7 @@ export function authorize(moduleKey: ModuleKey | ModuleKey[]): RequestHandler {
     });
 
     if (!granted) {
-      throw new ForbiddenError("Insufficient privileges");
+      throw new ForbiddenError("Permisos insuficientes");
     }
 
     next();

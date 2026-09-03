@@ -32,8 +32,8 @@ export async function upload(req: Request, res: Response): Promise<void> {
   const multerFile = (req as unknown as { file?: MulterFile }).file;
 
   if (!multerFile) {
-    throw new ValidationError("File is required", [
-      { field: "file", message: "File is required" },
+    throw new ValidationError("El archivo es requerido", [
+      { field: "file", message: "El archivo es requerido" },
     ]);
   }
 

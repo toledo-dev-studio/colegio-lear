@@ -77,12 +77,12 @@ export class SchoolSubjectTaskService {
 
     if (!group) {
       throw new NotFoundError(
-        "Academic cycle school group not found in this academic cycle",
+        "Grupo no encontrado en este ciclo escolar",
       );
     }
     if (!subject) {
       throw new NotFoundError(
-        "Academic cycle school subject not found in this academic cycle",
+        "Materia no encontrada en este ciclo escolar",
       );
     }
   }
@@ -160,7 +160,7 @@ export class SchoolSubjectTaskService {
       },
       include: TASK_INCLUDE,
     });
-    if (!task) throw new NotFoundError("School subject task not found");
+    if (!task) throw new NotFoundError("Tarea no encontrada");
     return task;
   }
 
@@ -315,7 +315,7 @@ export class SchoolSubjectTaskService {
     const attachment = await this.prisma.schoolSubjectTaskAttachment.findFirst({
       where: { id: attachmentId, schoolSubjectTaskId: taskId },
     });
-    if (!attachment) throw new NotFoundError("Attachment not found");
+    if (!attachment) throw new NotFoundError("Archivo adjunto no encontrado");
 
     await this.storage.delete(attachment.url);
     await this.prisma.schoolSubjectTaskAttachment.delete({

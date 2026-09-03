@@ -143,7 +143,7 @@ export class PaymentConceptService {
     });
 
     if (!paymentConcept || paymentConcept.isDeleted) {
-      throw new NotFoundError("Payment concept not found");
+      throw new NotFoundError("Concepto de pago no encontrado");
     }
 
     return this.toRecord(paymentConcept as unknown as Record<string, unknown>);
@@ -164,7 +164,7 @@ export class PaymentConceptService {
 
     if (existingName) {
       throw new ConflictError(
-        "A payment concept with this name already exists",
+        "Ya existe un concepto de pago con este nombre",
       );
     }
 
@@ -177,7 +177,7 @@ export class PaymentConceptService {
 
     if (existingCode) {
       throw new ConflictError(
-        "A payment concept with this code already exists",
+        "Ya existe un concepto de pago con este código",
       );
     }
 
@@ -210,7 +210,7 @@ export class PaymentConceptService {
     });
 
     if (!existing) {
-      throw new NotFoundError("Payment concept not found");
+      throw new NotFoundError("Concepto de pago no encontrado");
     }
 
     // Check uniqueness if name is being changed
@@ -224,7 +224,7 @@ export class PaymentConceptService {
 
       if (duplicate) {
         throw new ConflictError(
-          "A payment concept with this name already exists",
+          "Ya existe un concepto de pago con este nombre",
         );
       }
     }
@@ -240,7 +240,7 @@ export class PaymentConceptService {
 
       if (duplicate) {
         throw new ConflictError(
-          "A payment concept with this code already exists",
+          "Ya existe un concepto de pago con este código",
         );
       }
     }
@@ -273,11 +273,11 @@ export class PaymentConceptService {
     });
 
     if (!existing) {
-      throw new NotFoundError("Payment concept not found");
+      throw new NotFoundError("Concepto de pago no encontrado");
     }
 
     if (existing.isDeleted) {
-      throw new ConflictError("Payment concept is already deleted");
+      throw new ConflictError("El concepto de pago ya fue eliminado");
     }
 
     await this.prisma.paymentConcept.update({

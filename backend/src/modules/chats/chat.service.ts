@@ -41,7 +41,7 @@ export class ChatService {
       where: { id: enrollmentId, studentId },
     });
     if (!enrollment) {
-      throw new NotFoundError("Academic cycle enrollment not found");
+      throw new NotFoundError("Inscripción del ciclo escolar no encontrada");
     }
     return enrollment;
   }
@@ -59,7 +59,7 @@ export class ChatService {
     );
     const found = teachers.find((t) => t.teacherId === teacherId);
     if (!found) {
-      throw new NotFoundError("Teacher not found for this school group");
+      throw new NotFoundError("Profesor no encontrado para este grupo escolar");
     }
     return found;
   }
@@ -216,7 +216,7 @@ export class ChatService {
       where: { id: enrollmentId, studentId },
     });
     if (!enrollment) {
-      throw new NotFoundError("Academic cycle enrollment not found");
+      throw new NotFoundError("Inscripción del ciclo escolar no encontrada");
     }
 
     await resolveTeacherGroupScope(

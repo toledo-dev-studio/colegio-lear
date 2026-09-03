@@ -73,12 +73,12 @@ export class SchoolSubjectMaterialService {
 
     if (!group) {
       throw new NotFoundError(
-        "Academic cycle school group not found in this academic cycle",
+        "Grupo no encontrado en este ciclo escolar",
       );
     }
     if (!subject) {
       throw new NotFoundError(
-        "Academic cycle school subject not found in this academic cycle",
+        "Materia no encontrada en este ciclo escolar",
       );
     }
   }
@@ -218,7 +218,7 @@ export class SchoolSubjectMaterialService {
         academicCycleSchoolSubjectId,
       },
     });
-    if (!material) throw new NotFoundError("School subject material not found");
+    if (!material) throw new NotFoundError("Material no encontrado");
 
     await this.storage.delete(material.attachmentUrl);
     await this.prisma.schoolSubjectMaterial.delete({ where: { id: materialId } });

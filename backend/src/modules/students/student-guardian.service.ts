@@ -64,7 +64,7 @@ export class StudentGuardianService {
       where: { id: studentId },
     });
     if (!student || student.isDeleted)
-      throw new NotFoundError("Student not found");
+      throw new NotFoundError("Alumno no encontrado");
   }
 
   async findAllByStudentId(
@@ -123,7 +123,7 @@ export class StudentGuardianService {
       where: { id },
     });
     if (!existing || existing.studentId !== studentId) {
-      throw new NotFoundError("Guardian not found");
+      throw new NotFoundError("Tutor no encontrado");
     }
 
     // If setting isPrincipal, unset others
@@ -144,11 +144,11 @@ export class StudentGuardianService {
       dto.email !== undefined ? dto.email : existing.email;
     if (resultingIsPrincipal && (!resultingPhoneNumber || !resultingEmail)) {
       throw new ValidationError(
-        "phoneNumber and email are required when isPrincipal is true",
+        "phoneNumber y email son requeridos cuando isPrincipal es true",
         [
           {
             field: !resultingPhoneNumber ? "phoneNumber" : "email",
-            message: "Required when isPrincipal is true",
+            message: "Requerido cuando isPrincipal es true",
           },
         ],
       );
@@ -185,7 +185,7 @@ export class StudentGuardianService {
       where: { id },
     });
     if (!existing || existing.studentId !== studentId) {
-      throw new NotFoundError("Guardian not found");
+      throw new NotFoundError("Tutor no encontrado");
     }
 
     await this.prisma.studentGuardian.delete({ where: { id } });

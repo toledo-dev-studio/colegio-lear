@@ -31,7 +31,7 @@ function optionalTrimmedString(maxLength: number) {
       return trimmed === "" ? undefined : trimmed;
     })
     .pipe(
-      z.string().max(maxLength, `Must be at most ${maxLength} characters`).optional(),
+      z.string().max(maxLength, `Debe tener como máximo ${maxLength} caracteres`).optional(),
     );
 }
 
@@ -49,8 +49,8 @@ function optionalEmail(maxLength: number) {
     .pipe(
       z
         .string()
-        .email("Must be a valid email")
-        .max(maxLength, `Must be at most ${maxLength} characters`)
+        .email("Debe ser un correo electrónico válido")
+        .max(maxLength, `Debe tener como máximo ${maxLength} caracteres`)
         .optional(),
     );
 }
@@ -77,7 +77,7 @@ function optionalNullableTrimmedString(maxLength: number) {
     .pipe(
       z
         .string()
-        .max(maxLength, `Must be at most ${maxLength} characters`)
+        .max(maxLength, `Debe tener como máximo ${maxLength} caracteres`)
         .nullable()
         .optional(),
     );
@@ -98,8 +98,8 @@ function optionalNullableEmail(maxLength: number) {
     .pipe(
       z
         .string()
-        .email("Must be a valid email")
-        .max(maxLength, `Must be at most ${maxLength} characters`)
+        .email("Debe ser un correo electrónico válido")
+        .max(maxLength, `Debe tener como máximo ${maxLength} caracteres`)
         .nullable()
         .optional(),
     );
@@ -122,11 +122,11 @@ export const createStudentGuardianSchema = z
     observations: z.string().max(500).optional(),
   })
   .refine((data) => !data.isPrincipal || !!data.phoneNumber, {
-    message: "phoneNumber is required when isPrincipal is true",
+    message: "phoneNumber es requerido cuando isPrincipal es true",
     path: ["phoneNumber"],
   })
   .refine((data) => !data.isPrincipal || !!data.email, {
-    message: "email is required when isPrincipal is true",
+    message: "email es requerido cuando isPrincipal es true",
     path: ["email"],
   });
 
@@ -149,5 +149,5 @@ export const updateStudentGuardianSchema = z
     observations: z.string().max(500).nullable().optional(),
   })
   .refine((data) => Object.values(data).some((v) => v !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   });

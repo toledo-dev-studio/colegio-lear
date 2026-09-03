@@ -289,7 +289,7 @@ describe("PaymentConceptService", () => {
         NotFoundError,
       );
       await expect(service.findById("non-existent-id")).rejects.toThrow(
-        "Payment concept not found",
+        "Concepto de pago no encontrado",
       );
     });
   });
@@ -343,7 +343,7 @@ describe("PaymentConceptService", () => {
 
       await expect(service.create(validDto)).rejects.toThrow(ConflictError);
       await expect(service.create(validDto)).rejects.toThrow(
-        "A payment concept with this name already exists",
+        "Ya existe un concepto de pago con este nombre",
       );
     });
 
@@ -358,7 +358,7 @@ describe("PaymentConceptService", () => {
 
       await expect(service.create(validDto)).rejects.toThrow(ConflictError);
       await expect(service.create(validDto)).rejects.toThrow(
-        "A payment concept with this code already exists",
+        "Ya existe un concepto de pago con este código",
       );
     });
 
@@ -479,7 +479,7 @@ describe("PaymentConceptService", () => {
       ).rejects.toThrow(NotFoundError);
       await expect(
         service.update("non-existent", { name: "New Name" }),
-      ).rejects.toThrow("Payment concept not found");
+      ).rejects.toThrow("Concepto de pago no encontrado");
     });
 
     it("should throw ConflictError when update causes name collision", async () => {
@@ -496,7 +496,7 @@ describe("PaymentConceptService", () => {
       ).rejects.toThrow(ConflictError);
       await expect(
         service.update("uuid-1", { name: "Colegiatura mensual" }),
-      ).rejects.toThrow("A payment concept with this name already exists");
+      ).rejects.toThrow("Ya existe un concepto de pago con este nombre");
     });
 
     it("should not check uniqueness when name is not in dto", async () => {
@@ -561,7 +561,7 @@ describe("PaymentConceptService", () => {
       ).rejects.toThrow(ConflictError);
       await expect(
         service.update("uuid-1", { code: "COLEGMES" }),
-      ).rejects.toThrow("A payment concept with this code already exists");
+      ).rejects.toThrow("Ya existe un concepto de pago con este código");
     });
 
     it("should check code uniqueness excluding self when code changes", async () => {
@@ -614,7 +614,7 @@ describe("PaymentConceptService", () => {
         NotFoundError,
       );
       await expect(service.softDelete("non-existent")).rejects.toThrow(
-        "Payment concept not found",
+        "Concepto de pago no encontrado",
       );
     });
 
@@ -627,7 +627,7 @@ describe("PaymentConceptService", () => {
 
       await expect(service.softDelete("uuid-1")).rejects.toThrow(ConflictError);
       await expect(service.softDelete("uuid-1")).rejects.toThrow(
-        "Payment concept is already deleted",
+        "El concepto de pago ya fue eliminado",
       );
     });
   });

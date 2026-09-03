@@ -29,7 +29,7 @@ function parseParams(req: Request): {
   const result = academicCycleEnrollmentIdParamSchema.safeParse(req.params);
   if (!result.success) {
     throw new ValidationError(
-      "Validation failed",
+      "Error de validación",
       result.error.issues.map((issue) => ({
         field: issue.path.join("."),
         message: issue.message,
@@ -55,7 +55,7 @@ async function assertStudentOwnsEnrollment(
   });
 
   if (!enrollment) {
-    throw new NotFoundError("Academic cycle enrollment not found");
+    throw new NotFoundError("Inscripción al ciclo escolar no encontrada");
   }
 }
 

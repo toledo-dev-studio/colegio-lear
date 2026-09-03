@@ -23,7 +23,7 @@ export async function findAllPaged(req: Request, res: Response): Promise<void> {
   const { employeeId: authenticatedEmployeeId } = req.user!;
 
   if (id !== authenticatedEmployeeId) {
-    throw new ForbiddenError("You can only view your own notifications");
+    throw new ForbiddenError("Solo puedes ver tus propias notificaciones");
   }
 
   const query = req.query as Record<string, unknown>;
@@ -67,7 +67,7 @@ export async function findAllPagedStudent(req: Request, res: Response): Promise<
   const { studentId } = req.params as { studentId: string };
 
   if (studentId !== req.student!.studentId) {
-    throw new ForbiddenError("You can only view your own notifications");
+    throw new ForbiddenError("Solo puedes ver tus propias notificaciones");
   }
 
   const query = req.query as Record<string, unknown>;
@@ -97,7 +97,7 @@ export async function markAsReadStudent(req: Request, res: Response): Promise<vo
   const { notificationId } = req.body as { notificationId: string };
 
   if (studentId !== req.student!.studentId) {
-    throw new ForbiddenError("You can only modify your own notifications");
+    throw new ForbiddenError("Solo puedes modificar tus propias notificaciones");
   }
 
   await service.markAsReadForStudent(studentId, notificationId);

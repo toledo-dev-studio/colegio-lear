@@ -56,7 +56,7 @@ export class AcademicCycleSchoolGroupService {
       where: { id: academicCycleId },
       select: { id: true },
     });
-    if (!cycle) throw new NotFoundError("Academic cycle not found");
+    if (!cycle) throw new NotFoundError("Ciclo escolar no encontrado");
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,12 +104,12 @@ export class AcademicCycleSchoolGroupService {
 
     if (!association) {
       throw new ValidationError(
-        "schoolSubjectId has not been added to this academic cycle's subject catalog",
+        "schoolSubjectId no ha sido agregado al catálogo de materias de este ciclo escolar",
         [
           {
             field: "schoolSubjectId",
             message:
-              "Add it to the academic cycle first via POST /academic-cycles/{id}/school-subjects",
+              "Agrégalo primero al ciclo escolar mediante POST /academic-cycles/{id}/school-subjects",
           },
         ],
       );
@@ -159,7 +159,7 @@ export class AcademicCycleSchoolGroupService {
       include: { calendars: { include: CALENDAR_INCLUDE } },
     });
 
-    if (!record) throw new NotFoundError("Academic cycle school group not found");
+    if (!record) throw new NotFoundError("Grupo no encontrado en este ciclo escolar");
 
     return this.toRecord(record);
   }
@@ -231,7 +231,7 @@ export class AcademicCycleSchoolGroupService {
       include: { calendars: true },
     });
     if (!existing) {
-      throw new NotFoundError("Academic cycle school group not found");
+      throw new NotFoundError("Grupo no encontrado en este ciclo escolar");
     }
 
     const updateData: Record<string, unknown> = {};
@@ -312,7 +312,7 @@ export class AcademicCycleSchoolGroupService {
       where: { id, academicCycleId },
     });
     if (!existing) {
-      throw new NotFoundError("Academic cycle school group not found");
+      throw new NotFoundError("Grupo no encontrado en este ciclo escolar");
     }
 
     await this.prisma.academicCycleGroup.delete({ where: { id } });
@@ -383,7 +383,7 @@ export class AcademicCycleSchoolGroupService {
       select: { id: true },
     });
     if (!group) {
-      throw new NotFoundError("Academic cycle school group not found");
+      throw new NotFoundError("Grupo no encontrado en este ciclo escolar");
     }
   }
 }

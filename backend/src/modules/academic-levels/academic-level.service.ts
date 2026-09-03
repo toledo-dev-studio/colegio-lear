@@ -191,7 +191,7 @@ export class AcademicLevelService {
     });
 
     if (!academicLevel || academicLevel.isDeleted) {
-      throw new NotFoundError("Academic level not found");
+      throw new NotFoundError("Nivel académico no encontrado");
     }
 
     return {
@@ -225,7 +225,7 @@ export class AcademicLevelService {
 
     if (existing) {
       throw new ConflictError(
-        "An academic level with this name already exists",
+        "Ya existe un nivel académico con este nombre",
       );
     }
 
@@ -281,7 +281,7 @@ export class AcademicLevelService {
     });
 
     if (!existing) {
-      throw new NotFoundError("Academic level not found");
+      throw new NotFoundError("Nivel académico no encontrado");
     }
 
     // Check uniqueness if name changed
@@ -295,7 +295,7 @@ export class AcademicLevelService {
 
       if (duplicate) {
         throw new ConflictError(
-          "An academic level with this name already exists",
+          "Ya existe un nivel académico con este nombre",
         );
       }
     }
@@ -386,11 +386,11 @@ export class AcademicLevelService {
     });
 
     if (!existing) {
-      throw new NotFoundError("Academic level not found");
+      throw new NotFoundError("Nivel académico no encontrado");
     }
 
     if (existing.isDeleted) {
-      throw new ConflictError("Academic level is already deleted");
+      throw new ConflictError("El nivel académico ya fue eliminado");
     }
 
     await this.prisma.academicLevel.update({

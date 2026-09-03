@@ -137,8 +137,8 @@ export async function update(req: Request, res: Response): Promise<void> {
     (v) => v !== undefined && v !== "",
   );
   if (!hasFields) {
-    throw new ValidationError("At least one field is required", [
-      { field: "body", message: "At least one field is required" },
+    throw new ValidationError("Se requiere al menos un campo", [
+      { field: "body", message: "Se requiere al menos un campo" },
     ]);
   }
 
@@ -159,8 +159,8 @@ export async function uploadAvatarById(
   const file = mapFile((req as unknown as { file?: MulterFile }).file);
 
   if (!file) {
-    throw new ValidationError("A file is required", [
-      { field: "file", message: "A file is required" },
+    throw new ValidationError("El archivo es requerido", [
+      { field: "file", message: "El archivo es requerido" },
     ]);
   }
 
@@ -227,8 +227,8 @@ export async function uploadMyAvatar(
   const file = mapFile((req as unknown as { file?: MulterFile }).file);
 
   if (!file) {
-    throw new ValidationError("A file is required", [
-      { field: "file", message: "A file is required" },
+    throw new ValidationError("El archivo es requerido", [
+      { field: "file", message: "El archivo es requerido" },
     ]);
   }
 

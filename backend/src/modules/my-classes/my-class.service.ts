@@ -117,7 +117,7 @@ export class MyClassService {
     });
 
     if (!record) {
-      throw new NotFoundError("Class not found");
+      throw new NotFoundError("Clase no encontrada");
     }
 
     return this.toRecord(record as unknown as Record<string, unknown>);

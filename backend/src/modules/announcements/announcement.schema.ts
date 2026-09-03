@@ -10,9 +10,9 @@ function nonBlankString(maxLength: number) {
   return z
     .string()
     .transform((val) => val.trim())
-    .refine((val) => val.length >= 1, { message: "Must not be blank" })
+    .refine((val) => val.length >= 1, { message: "No debe estar vacío" })
     .refine((val) => val.length <= maxLength, {
-      message: `Must be at most ${maxLength} characters`,
+      message: `Debe tener como máximo ${maxLength} caracteres`,
     });
 }
 
@@ -52,10 +52,10 @@ export const CREATE_ANNOUNCEMENT_STATUS_KEYS = ["draft", "in-progress"] as const
 export const audienceSchema = z
   .array(
     z.enum(AUDIENCE_KEYS, {
-      error: `audience items must be one of: ${AUDIENCE_KEYS.join(", ")}`,
+      error: `audience debe ser uno de: ${AUDIENCE_KEYS.join(", ")}`,
     }),
   )
-  .min(1, "audience must have at least 1 element");
+  .min(1, "audience debe tener al menos 1 elemento");
 
 // ─── Schemas ────────────────────────────────────────────────────────────────
 
@@ -63,7 +63,7 @@ export const audienceSchema = z
  * Validates UUID path parameter.
  */
 export const idParamSchema = z.object({
-  id: z.string().uuid({ message: "id must be a valid UUID" }),
+  id: z.string().uuid({ message: "id debe ser un UUID válido" }),
 });
 
 /**
@@ -87,23 +87,25 @@ export const createAnnouncementSchema = z
         const trimmed = val.trim();
         return trimmed === "" ? undefined : trimmed;
       })
-      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+      .pipe(
+        z.string().max(500, "Debe tener como máximo 500 caracteres").optional(),
+      ),
     audience: audienceSchema,
     content: z.string().nullable().optional(),
     publishedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
-      message: "publishedAt must be a valid ISO date string",
+      message: "publishedAt debe ser una fecha ISO válida",
     }),
     expiresAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
-      message: "expiresAt must be a valid ISO date string",
+      message: "expiresAt debe ser una fecha ISO válida",
     }),
     status: z
       .enum(CREATE_ANNOUNCEMENT_STATUS_KEYS, {
-        error: `status must be one of: ${CREATE_ANNOUNCEMENT_STATUS_KEYS.join(", ")}`,
+        error: `status debe ser uno de: ${CREATE_ANNOUNCEMENT_STATUS_KEYS.join(", ")}`,
       })
       .optional(),
   })
   .refine((data) => new Date(data.expiresAt) >= new Date(data.publishedAt), {
-    message: "expiresAt must be on or after publishedAt",
+    message: "expiresAt debe ser igual o posterior a publishedAt",
     path: ["expiresAt"],
   });
 
@@ -124,29 +126,31 @@ export const updateAnnouncementSchema = z
         const trimmed = val.trim();
         return trimmed === "" ? undefined : trimmed;
       })
-      .pipe(z.string().max(500, "Must be at most 500 characters").optional()),
+      .pipe(
+        z.string().max(500, "Debe tener como máximo 500 caracteres").optional(),
+      ),
     audience: audienceSchema.optional(),
     content: z.string().nullable().optional(),
     publishedAt: z
       .string()
       .refine((val) => !isNaN(Date.parse(val)), {
-        message: "publishedAt must be a valid ISO date string",
+        message: "publishedAt debe ser una fecha ISO válida",
       })
       .optional(),
     expiresAt: z
       .string()
       .refine((val) => !isNaN(Date.parse(val)), {
-        message: "expiresAt must be a valid ISO date string",
+        message: "expiresAt debe ser una fecha ISO válida",
       })
       .optional(),
     status: z
       .enum(ANNOUNCEMENT_STATUS_KEYS, {
-        error: `status must be one of: ${ANNOUNCEMENT_STATUS_KEYS.join(", ")}`,
+        error: `status debe ser uno de: ${ANNOUNCEMENT_STATUS_KEYS.join(", ")}`,
       })
       .optional(),
   })
   .refine((data) => Object.values(data).some((value) => value !== undefined), {
-    message: "At least one field is required",
+    message: "Se requiere al menos un campo",
   })
   .refine(
     (data) => {
@@ -156,7 +160,7 @@ export const updateAnnouncementSchema = z
       return true;
     },
     {
-      message: "expiresAt must be on or after publishedAt",
+      message: "expiresAt debe ser igual o posterior a publishedAt",
       path: ["expiresAt"],
     },
   );
@@ -171,19 +175,22 @@ export const updateAnnouncementSchema = z
  *   within that range (not two independent exact-date filters).
  */
 export const announcementFiltersSchema = z.object({
-  q: z.string().max(100, "q must be at most 100 characters").optional(),
-  name: z.string().max(200, "name must be at most 200 characters").optional(),
+  q: z.string().max(100, "q debe tener como máximo 100 caracteres").optional(),
+  name: z
+    .string()
+    .max(200, "name debe tener como máximo 200 caracteres")
+    .optional(),
   status: z.enum(ANNOUNCEMENT_STATUS_KEYS).optional(),
   publishedAt: z
     .string()
     .refine((val) => !isNaN(Date.parse(val)), {
-      message: "publishedAt must be a valid ISO date string",
+      message: "publishedAt debe ser una fecha ISO válida",
     })
     .optional(),
   expiresAt: z
     .string()
     .refine((val) => !isNaN(Date.parse(val)), {
-      message: "expiresAt must be a valid ISO date string",
+      message: "expiresAt debe ser una fecha ISO válida",
     })
     .optional(),
 });
@@ -195,14 +202,14 @@ export const announcementFiltersSchema = z.object({
  */
 export const announcementPagedQuerySchema = announcementFiltersSchema.extend({
   page: z.coerce
-    .number({ message: "page must be a number" })
-    .int({ message: "page must be an integer" })
-    .positive({ message: "page must be a positive integer" })
+    .number({ message: "page debe ser un número" })
+    .int({ message: "page debe ser un número entero" })
+    .positive({ message: "page debe ser un entero positivo" })
     .default(1),
   pageSize: z.coerce
-    .number({ message: "pageSize must be a number" })
-    .int({ message: "pageSize must be an integer" })
-    .positive({ message: "pageSize must be a positive integer" })
-    .max(100, "pageSize must be at most 100")
+    .number({ message: "pageSize debe ser un número" })
+    .int({ message: "pageSize debe ser un número entero" })
+    .positive({ message: "pageSize debe ser un entero positivo" })
+    .max(100, "pageSize debe ser como máximo 100")
     .default(10),
 });

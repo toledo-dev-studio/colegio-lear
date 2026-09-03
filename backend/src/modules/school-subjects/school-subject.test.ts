@@ -365,7 +365,7 @@ describe("SchoolSubjectService", () => {
         NotFoundError,
       );
       await expect(service.findById("non-existent-id")).rejects.toThrow(
-        "School subject not found",
+        "Materia no encontrada",
       );
     });
   });
@@ -426,7 +426,7 @@ describe("SchoolSubjectService", () => {
 
       await expect(service.create(validDto)).rejects.toThrow(NotFoundError);
       await expect(service.create(validDto)).rejects.toThrow(
-        "Academic level not found",
+        "Nivel académico no encontrado",
       );
     });
 
@@ -439,7 +439,7 @@ describe("SchoolSubjectService", () => {
 
       await expect(service.create(validDto)).rejects.toThrow(NotFoundError);
       await expect(service.create(validDto)).rejects.toThrow(
-        "Education level not found",
+        "Nivel educativo no encontrado",
       );
     });
 
@@ -460,7 +460,7 @@ describe("SchoolSubjectService", () => {
 
       await expect(service.create(validDto)).rejects.toThrow(ConflictError);
       await expect(service.create(validDto)).rejects.toThrow(
-        "A subject with this name already exists for the selected education level",
+        "Ya existe una materia con este nombre para el nivel educativo seleccionado",
       );
     });
 
@@ -468,7 +468,7 @@ describe("SchoolSubjectService", () => {
       prisma.academicLevel.findUnique.mockResolvedValue(null);
 
       await expect(service.create(validDto)).rejects.toThrow(
-        "Academic level not found",
+        "Nivel académico no encontrado",
       );
       // educationLevel.findUnique should not be called
       expect(prisma.educationLevel.findUnique).not.toHaveBeenCalled();
@@ -519,7 +519,7 @@ describe("SchoolSubjectService", () => {
       ).rejects.toThrow(NotFoundError);
       await expect(
         service.update("non-existent", { name: "New Name" }),
-      ).rejects.toThrow("School subject not found");
+      ).rejects.toThrow("Materia no encontrada");
     });
 
     it("should throw NotFoundError when updated academicLevelId does not exist", async () => {
@@ -531,7 +531,7 @@ describe("SchoolSubjectService", () => {
       ).rejects.toThrow(NotFoundError);
       await expect(
         service.update("uuid-1", { academicLevelId: "invalid-al" }),
-      ).rejects.toThrow("Academic level not found");
+      ).rejects.toThrow("Nivel académico no encontrado");
     });
 
     it("should throw NotFoundError when updated educationLevelId does not exist", async () => {
@@ -543,7 +543,7 @@ describe("SchoolSubjectService", () => {
       ).rejects.toThrow(NotFoundError);
       await expect(
         service.update("uuid-1", { educationLevelId: "invalid-el" }),
-      ).rejects.toThrow("Education level not found");
+      ).rejects.toThrow("Nivel educativo no encontrado");
     });
 
     it("should throw ConflictError when update causes uniqueness conflict", async () => {
@@ -560,7 +560,7 @@ describe("SchoolSubjectService", () => {
       await expect(
         service.update("uuid-1", { name: "Ciencias" }),
       ).rejects.toThrow(
-        "A subject with this name already exists for the selected education level",
+        "Ya existe una materia con este nombre para el nivel educativo seleccionado",
       );
     });
 
@@ -608,7 +608,7 @@ describe("SchoolSubjectService", () => {
 
       await expect(service.softDelete("uuid-1")).rejects.toThrow(ConflictError);
       await expect(service.softDelete("uuid-1")).rejects.toThrow(
-        "School subject is already deleted",
+        "La materia ya fue eliminada",
       );
     });
 
@@ -619,7 +619,7 @@ describe("SchoolSubjectService", () => {
         NotFoundError,
       );
       await expect(service.softDelete("non-existent")).rejects.toThrow(
-        "School subject not found",
+        "Materia no encontrada",
       );
     });
   });

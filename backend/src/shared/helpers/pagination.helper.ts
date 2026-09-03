@@ -48,7 +48,7 @@ export function parsePagination(
     if (!Number.isInteger(parsed) || parsed < 1) {
       errors.push({
         field: "page",
-        message: "page must be a positive integer",
+        message: "page debe ser un número entero positivo",
       });
     } else {
       page = parsed;
@@ -60,7 +60,7 @@ export function parsePagination(
     if (!Number.isInteger(parsed) || parsed < 1) {
       errors.push({
         field: "limit",
-        message: "limit must be a positive integer",
+        message: "limit debe ser un número entero positivo",
       });
     } else {
       limit = Math.min(parsed, MAX_LIMIT);
@@ -68,7 +68,7 @@ export function parsePagination(
   }
 
   if (errors.length > 0) {
-    throw new ValidationError("Invalid pagination parameters", errors);
+    throw new ValidationError("Parámetros de paginación inválidos", errors);
   }
 
   return { page, limit };

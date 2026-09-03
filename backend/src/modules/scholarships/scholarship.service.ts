@@ -136,7 +136,7 @@ export class ScholarshipService {
     });
 
     if (!scholarship || scholarship.isDeleted) {
-      throw new NotFoundError("Scholarship not found");
+      throw new NotFoundError("Beca no encontrada");
     }
 
     return this.toRecord(scholarship as unknown as Record<string, unknown>);
@@ -156,7 +156,7 @@ export class ScholarshipService {
     });
 
     if (existing) {
-      throw new ConflictError("A scholarship with this name already exists");
+      throw new ConflictError("Ya existe una beca con este nombre");
     }
 
     const created = await this.prisma.scholarship.create({
@@ -186,7 +186,7 @@ export class ScholarshipService {
     });
 
     if (!existing) {
-      throw new NotFoundError("Scholarship not found");
+      throw new NotFoundError("Beca no encontrada");
     }
 
     // Check uniqueness if name is being changed
@@ -199,7 +199,7 @@ export class ScholarshipService {
       });
 
       if (duplicate) {
-        throw new ConflictError("A scholarship with this name already exists");
+        throw new ConflictError("Ya existe una beca con este nombre");
       }
     }
 
@@ -223,11 +223,11 @@ export class ScholarshipService {
     });
 
     if (!existing) {
-      throw new NotFoundError("Scholarship not found");
+      throw new NotFoundError("Beca no encontrada");
     }
 
     if (existing.isDeleted) {
-      throw new ConflictError("Scholarship is already deleted");
+      throw new ConflictError("La beca ya fue eliminada");
     }
 
     await this.prisma.scholarship.update({

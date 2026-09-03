@@ -24,7 +24,7 @@ export function validate(
         message: issue.message,
       }));
 
-      throw new ValidationError("Validation failed", details);
+      throw new ValidationError("Error de validación", details);
     }
 
     // Replace with parsed/cleaned data.

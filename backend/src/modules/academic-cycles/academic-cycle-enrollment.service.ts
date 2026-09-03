@@ -50,7 +50,7 @@ export class AcademicCycleEnrollmentService {
     const cycle = await this.prisma.academicCycle.findUnique({
       where: { id: academicCycleId },
     });
-    if (!cycle) throw new NotFoundError("Academic cycle not found");
+    if (!cycle) throw new NotFoundError("Ciclo escolar no encontrado");
     return cycle;
   }
 
@@ -197,7 +197,7 @@ export class AcademicCycleEnrollmentService {
       where: { id, academicCycleId },
       include: INCLUDE_RELATIONS,
     });
-    if (!record) throw new NotFoundError("Academic cycle enrollment not found");
+    if (!record) throw new NotFoundError("Inscripción al ciclo escolar no encontrada");
 
     return this.toRecord(record);
   }
@@ -214,7 +214,7 @@ export class AcademicCycleEnrollmentService {
       (cycle.status !== "active" && cycle.status !== "upcoming")
     ) {
       throw new ConflictError(
-        "Enrollment is closed for this academic cycle",
+        "Las inscripciones están cerradas para este ciclo escolar",
       );
     }
 
@@ -223,7 +223,7 @@ export class AcademicCycleEnrollmentService {
     });
     if (!group) {
       throw new NotFoundError(
-        "Academic cycle school group not found in this academic cycle",
+        "Grupo no encontrado en este ciclo escolar",
       );
     }
 
@@ -234,7 +234,7 @@ export class AcademicCycleEnrollmentService {
     });
     if (existingEnrollment) {
       throw new ConflictError(
-        "This student is already enrolled in this academic cycle",
+        "Este alumno ya está inscrito en este ciclo escolar",
       );
     }
 
@@ -321,7 +321,7 @@ export class AcademicCycleEnrollmentService {
       where: { id, academicCycleId },
     });
     if (!existing) {
-      throw new NotFoundError("Academic cycle enrollment not found");
+      throw new NotFoundError("Inscripción al ciclo escolar no encontrada");
     }
 
     if (dto.academicCycleSchoolGroupId !== undefined) {
@@ -330,7 +330,7 @@ export class AcademicCycleEnrollmentService {
       });
       if (!group) {
         throw new NotFoundError(
-          "Academic cycle school group not found in this academic cycle",
+          "Grupo no encontrado en este ciclo escolar",
         );
       }
     }
@@ -361,7 +361,7 @@ export class AcademicCycleEnrollmentService {
       where: { id, academicCycleId },
     });
     if (!existing) {
-      throw new NotFoundError("Academic cycle enrollment not found");
+      throw new NotFoundError("Inscripción al ciclo escolar no encontrada");
     }
 
     await this.prisma.academicCycleEnrollment.delete({ where: { id } });
@@ -375,7 +375,7 @@ export class AcademicCycleEnrollmentService {
       where: { id: studentId },
     });
     if (!student || student.isDeleted) {
-      throw new NotFoundError("Student not found");
+      throw new NotFoundError("Alumno no encontrado");
     }
 
     const results = await this.prisma.academicCycleEnrollment.findMany({

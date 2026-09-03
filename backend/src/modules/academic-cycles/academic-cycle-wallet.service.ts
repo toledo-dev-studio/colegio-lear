@@ -18,7 +18,7 @@ export class AcademicCycleWalletService {
       where: { id: academicCycleId },
       select: { id: true },
     });
-    if (!cycle) throw new NotFoundError("Academic cycle not found");
+    if (!cycle) throw new NotFoundError("Ciclo escolar no encontrado");
   }
 
   private toRecord(raw: Record<string, unknown>): AcademicCycleWalletRecord {
@@ -62,7 +62,7 @@ export class AcademicCycleWalletService {
     });
     if (existingCode) {
       throw new ConflictError(
-        "A wallet item with this code already exists in this academic cycle",
+        "Ya existe un concepto de cartera con este código en este ciclo escolar",
       );
     }
 
@@ -93,7 +93,7 @@ export class AcademicCycleWalletService {
       where: { id, academicCycleId },
     });
     if (!existing) {
-      throw new NotFoundError("Academic cycle wallet item not found");
+      throw new NotFoundError("Concepto de cartera no encontrado en este ciclo escolar");
     }
 
     // Check uniqueness if code is changing (scoped to this cycle, excluding self)
@@ -107,7 +107,7 @@ export class AcademicCycleWalletService {
       });
       if (duplicate) {
         throw new ConflictError(
-          "A wallet item with this code already exists in this academic cycle",
+          "Ya existe un concepto de cartera con este código en este ciclo escolar",
         );
       }
     }
@@ -144,7 +144,7 @@ export class AcademicCycleWalletService {
       where: { id, academicCycleId },
     });
     if (!existing) {
-      throw new NotFoundError("Academic cycle wallet item not found");
+      throw new NotFoundError("Concepto de cartera no encontrado en este ciclo escolar");
     }
 
     const assignedCount = await this.prisma.studentWalletItem.count({
@@ -152,7 +152,7 @@ export class AcademicCycleWalletService {
     });
     if (assignedCount > 0) {
       throw new ConflictError(
-        "This wallet item is already assigned to enrolled students and cannot be deleted",
+        "Este concepto de cartera ya está asignado a alumnos inscritos y no puede eliminarse",
       );
     }
 

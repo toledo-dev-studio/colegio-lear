@@ -220,7 +220,7 @@ export class StudentService {
     const student = await this.prisma.student.findUnique({ where: { id } });
 
     if (!student || student.isDeleted) {
-      throw new NotFoundError("Student not found");
+      throw new NotFoundError("Alumno no encontrado");
     }
 
     return this.toRecord(student as unknown as Record<string, unknown>);
@@ -232,14 +232,14 @@ export class StudentService {
       where: { curp: dto.curp },
     });
     if (existingCurp)
-      throw new ConflictError("A student with this CURP already exists");
+      throw new ConflictError("Ya existe un alumno con este CURP");
 
     // Check uniqueness: email
     const existingEmail = await this.prisma.student.findUnique({
       where: { email: dto.email },
     });
     if (existingEmail)
-      throw new ConflictError("A student with this email already exists");
+      throw new ConflictError("Ya existe un alumno con este email");
 
     const enrollment = await this.generateEnrollment();
     const tempPassword = this.generateTempPassword();
@@ -277,14 +277,14 @@ export class StudentService {
 
   async update(id: string, dto: UpdateStudentDto): Promise<StudentRecord> {
     const existing = await this.prisma.student.findUnique({ where: { id } });
-    if (!existing) throw new NotFoundError("Student not found");
+    if (!existing) throw new NotFoundError("Alumno no encontrado");
 
     if (dto.curp !== undefined && dto.curp !== existing.curp) {
       const dup = await this.prisma.student.findUnique({
         where: { curp: dto.curp },
       });
       if (dup)
-        throw new ConflictError("A student with this CURP already exists");
+        throw new ConflictError("Ya existe un alumno con este CURP");
     }
 
     if (dto.email !== undefined && dto.email !== existing.email) {
@@ -292,7 +292,7 @@ export class StudentService {
         where: { email: dto.email },
       });
       if (dup)
-        throw new ConflictError("A student with this email already exists");
+        throw new ConflictError("Ya existe un alumno con este email");
     }
 
     const updateData: Record<string, unknown> = {};
@@ -339,7 +339,7 @@ export class StudentService {
   async uploadAvatar(id: string, file: FileUpload): Promise<StudentRecord> {
     const existing = await this.prisma.student.findUnique({ where: { id } });
     if (!existing || existing.isDeleted || !existing.isActive) {
-      throw new NotFoundError("Student not found");
+      throw new NotFoundError("Alumno no encontrado");
     }
 
     const avatar = await this.storage.upload({
@@ -363,9 +363,9 @@ export class StudentService {
 
   async softDelete(id: string): Promise<void> {
     const existing = await this.prisma.student.findUnique({ where: { id } });
-    if (!existing) throw new NotFoundError("Student not found");
+    if (!existing) throw new NotFoundError("Alumno no encontrado");
     if (existing.isDeleted)
-      throw new ConflictError("Student is already deleted");
+      throw new ConflictError("El alumno ya fue eliminado");
 
     await this.prisma.student.update({
       where: { id },
@@ -382,7 +382,7 @@ export class StudentService {
       where: { id: studentId },
     });
     if (!student || student.isDeleted)
-      throw new NotFoundError("Student not found");
+      throw new NotFoundError("Alumno no encontrado");
 
     // Get principal guardians
     const guardians = await this.prisma.studentGuardian.findMany({
@@ -390,7 +390,7 @@ export class StudentService {
     });
 
     if (guardians.length === 0) {
-      throw new ConflictError("No principal guardians found for this student");
+      throw new ConflictError("Este alumno no tiene tutores principales registrados");
     }
 
     // Generate new temp password and hash it

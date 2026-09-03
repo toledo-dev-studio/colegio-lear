@@ -8,7 +8,7 @@ import { z } from "zod";
 export const attachmentParamsSchema = z.object({
   announcementId: z
     .string()
-    .uuid({ message: "announcementId must be a valid UUID" }),
+    .uuid({ message: "announcementId debe ser un UUID válido" }),
 });
 
 /**
@@ -17,8 +17,8 @@ export const attachmentParamsSchema = z.object({
 export const attachmentDeleteParamsSchema = z.object({
   announcementId: z
     .string()
-    .uuid({ message: "announcementId must be a valid UUID" }),
+    .uuid({ message: "announcementId debe ser un UUID válido" }),
   attachmentId: z
     .string()
-    .uuid({ message: "attachmentId must be a valid UUID" }),
+    .uuid({ message: "attachmentId debe ser un UUID válido" }),
 });
