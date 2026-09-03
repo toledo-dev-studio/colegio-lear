@@ -3,7 +3,7 @@ import { RouterProvider } from "react-router"
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClientProvider } from "@tanstack/react-query";
 
-import { Toaster } from "sonner";
+import { Toaster } from "./shared/shadcn/ui/sonner";
 import { appRouter } from "./routes/app.router";
 import { TooltipProvider } from "./shared/shadcn/ui/tooltip";
 import { useAuthStore } from "./stores/auth-store/auth.store";
