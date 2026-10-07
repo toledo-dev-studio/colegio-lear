@@ -1537,22 +1537,20 @@ async function main() {
             academicCycleSchoolSubjectId,
           },
         });
-        // Blob storage upload disabled temporarily (seed without storage).
-        // const url = await storageService.upload({
-        //   buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
-        //   fileName: `tarea-${subjectKey}-${i}.png`,
-        //   mimeType: "image/png",
-        //   subfolder: "school-subject-tasks",
-        // });
-        // await prisma.schoolSubjectTaskAttachment.create({
-        //   data: {
-        //     url,
-        //     name: `tarea-${subjectKey}-${i}`,
-        //     extension: "png",
-        //     schoolSubjectTaskId: task.id,
-        //   },
-        // });
-        void task;
+        const url = await storageService.upload({
+          buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
+          fileName: `tarea-${subjectKey}-${i}.png`,
+          mimeType: "image/png",
+          subfolder: "school-subject-tasks",
+        });
+        await prisma.schoolSubjectTaskAttachment.create({
+          data: {
+            url,
+            name: `tarea-${subjectKey}-${i}`,
+            extension: "png",
+            schoolSubjectTaskId: task.id,
+          },
+        });
         tasksCreated++;
       }
     }
@@ -1560,28 +1558,25 @@ async function main() {
     const existingMaterialsCount = await prisma.schoolSubjectMaterial.count({
       where: { academicCycleSchoolGroupId, academicCycleSchoolSubjectId },
     });
-    // Blob storage upload disabled temporarily: materials require an uploaded
-    // attachment URL, so the whole block is commented out.
-    void existingMaterialsCount;
-    // if (existingMaterialsCount === 0) {
-    //   const url = await storageService.upload({
-    //     buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
-    //     fileName: `material-${subjectKey}.png`,
-    //     mimeType: "image/png",
-    //     subfolder: "school-subject-materials",
-    //   });
-    //   await prisma.schoolSubjectMaterial.create({
-    //     data: {
-    //       academicCycleId,
-    //       academicCycleSchoolGroupId,
-    //       academicCycleSchoolSubjectId,
-    //       attachmentUrl: url,
-    //       attachmentName: `material-${subjectKey}`,
-    //       attachmentExtension: "png",
-    //     },
-    //   });
-    //   materialsCreated++;
-    // }
+    if (existingMaterialsCount === 0) {
+      const url = await storageService.upload({
+        buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
+        fileName: `material-${subjectKey}.png`,
+        mimeType: "image/png",
+        subfolder: "school-subject-materials",
+      });
+      await prisma.schoolSubjectMaterial.create({
+        data: {
+          academicCycleId,
+          academicCycleSchoolGroupId,
+          academicCycleSchoolSubjectId,
+          attachmentUrl: url,
+          attachmentName: `material-${subjectKey}`,
+          attachmentExtension: "png",
+        },
+      });
+      materialsCreated++;
+    }
   }
 
   console.log(
