@@ -4,8 +4,8 @@ import { BloodType, DayOfWeek } from "../src/generated/prisma/enums";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import bcrypt from "bcrypt";
-// Imported after "dotenv/config" above so STORAGE_LOCAL_PATH is already
-// populated by the time this module's storageService singleton is created.
+// Imported after "dotenv/config" above so the SUPABASE_* vars are already
+// populated by the time this module's storageService singleton reads them.
 import { storageService } from "../src/shared/services/storage.service";
 import { NotificationService } from "../src/modules/notifications/notification.service";
 import type { IMailService } from "../src/shared/services/mail.service";
@@ -202,8 +202,8 @@ const ALL_MODULE_KEYS = [
   "settings",
 ];
 
-// Uploads a seed file; if storage is unreachable (e.g. no network to Azure
-// Blob) it warns once, stops retrying and returns null so the seed continues.
+// Uploads a seed file; if storage is unreachable (e.g. no network or missing
+// Supabase credentials) it warns once, stops retrying and returns null so the seed continues.
 let seedStorageAvailable = true;
 async function trySeedUpload(
   params: Parameters<typeof storageService.upload>[0],
@@ -1436,7 +1436,7 @@ async function main() {
 
   // --- School subject tasks & materials (test content for GET .../tasks and .../materials) ---
   // Real files, uploaded through the same storageService the app uses (not a
-  // seed-only shortcut) — so /uploads URLs actually resolve once the server
+  // seed-only shortcut) — so the bucket URLs actually resolve once the server
   // is running, exactly like a real teacher upload would. One pair (task +
   // material) per group/subject combination that's actually taught, derived
   // from the calendar entries just created above.
