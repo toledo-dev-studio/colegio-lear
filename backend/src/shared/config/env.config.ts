@@ -40,6 +40,7 @@ interface EnvConfig {
 
   // Cookie
   COOKIE_SECURE: boolean;
+  COOKIE_SAMESITE: "lax" | "strict" | "none";
 
   // CORS
   CORS_ORIGIN: string[];
@@ -109,6 +110,12 @@ export const env: EnvConfig = {
 
   // Cookie
   COOKIE_SECURE: process.env.COOKIE_SECURE === "true",
+  // Cross-site setups (front and API on different domains) need "none" + COOKIE_SECURE=true.
+  COOKIE_SAMESITE: (["lax", "strict", "none"].includes(
+    (process.env.COOKIE_SAMESITE || "").toLowerCase(),
+  )
+    ? (process.env.COOKIE_SAMESITE as string).toLowerCase()
+    : "lax") as "lax" | "strict" | "none",
 
   // CORS (comma-separated list of allowed origins)
   CORS_ORIGIN: (process.env.CORS_ORIGIN || "http://localhost:5173")

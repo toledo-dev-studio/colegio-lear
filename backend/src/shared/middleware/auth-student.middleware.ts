@@ -97,7 +97,7 @@ export async function authenticateStudent(
     res.cookie("access_token", newToken, {
       httpOnly: true,
       secure: env.COOKIE_SECURE,
-      sameSite: "lax",
+      sameSite: env.COOKIE_SAMESITE,
       path: "/",
       maxAge: parseExpirationToMs(env.JWT_ACCESS_EXPIRATION),
     });

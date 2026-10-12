@@ -9,6 +9,12 @@ import bcrypt from "bcrypt";
 import { storageService } from "../src/shared/services/storage.service";
 import { NotificationService } from "../src/modules/notifications/notification.service";
 import type { IMailService } from "../src/shared/services/mail.service";
+import {
+  assertNoConflicts,
+  buildTimetable,
+  calendarId,
+  LEGACY_CALENDAR_IDS,
+} from "./seed-timetable";
 
 const pool = new pg.Pool({ connectionString: process.env["DATABASE_URL"] });
 const adapter = new PrismaPg(pool, { schema: "core" });
@@ -90,6 +96,9 @@ const SCHOOL_SUBJECTS = {
   geografia_2s: "c3000000-0003-4000-8000-000000000044",
   formacion_civica_2s: "c3000000-0003-4000-8000-000000000045",
   educacion_fisica_2s: "c3000000-0003-4000-8000-000000000046",
+  // Full weekly timetable additions
+  geografia_1p: "c3000000-0003-4000-8000-000000000047",
+  computacion_1p: "c3000000-0003-4000-8000-000000000048",
 };
 
 const SCHOLARSHIPS = {
@@ -163,6 +172,9 @@ const ACADEMIC_CYCLE_SCHOOL_SUBJECTS_2026 = {
   preescolar_psicomotricidad_1pe: "ac000000-0013-4000-8000-000000000014",
   preescolar_musica_1pe: "ac000000-0013-4000-8000-000000000015",
   preescolar_convivencia_1pe: "ac000000-0013-4000-8000-000000000016",
+  // Full weekly timetable additions
+  primaria_geografia_1p: "ac000000-0013-4000-8000-000000000017",
+  primaria_computacion_1p: "ac000000-0013-4000-8000-000000000018",
 };
 
 const ANNOUNCEMENTS_2026 = {
@@ -189,6 +201,24 @@ const ALL_MODULE_KEYS = [
   "security-roles",
   "settings",
 ];
+
+// Uploads a seed file; if storage is unreachable (e.g. no network to Azure
+// Blob) it warns once, stops retrying and returns null so the seed continues.
+let seedStorageAvailable = true;
+async function trySeedUpload(
+  params: Parameters<typeof storageService.upload>[0],
+): Promise<string | null> {
+  if (!seedStorageAvailable) return null;
+  try {
+    return await storageService.upload(params);
+  } catch (error) {
+    seedStorageAvailable = false;
+    console.warn(
+      `  ⚠ Storage unreachable, skipping file uploads (${(error as Error).message}). Re-run the seed when storage is available.`,
+    );
+    return null;
+  }
+}
 
 // ─── Seed function ──────────────────────────────────────────────────────────────
 
@@ -522,12 +552,12 @@ async function main() {
   const usedUsernames = new Set<string>([admin1Username, admin2Username]);
 
   const TEACHERS_2026 = [
-    { name: "Laura", firstLastName: "Fernández", secondLastName: "Ruiz", subjectKey: "espanol_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
+    { name: "Laura", firstLastName: "Fernández", secondLastName: "Ruiz", subjectKey: "espanol_1p" as const, groups: ["primaria_a"] as const },
     { name: "Ricardo", firstLastName: "Salinas", secondLastName: "Ponce", subjectKey: "matematicas_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
     { name: "Patricia", firstLastName: "Núñez", secondLastName: "Rivas", subjectKey: "ciencias_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
     { name: "Andrés", firstLastName: "Villarreal", secondLastName: "Ochoa", subjectKey: "ingles_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
     { name: "Mónica", firstLastName: "Escobar", secondLastName: "Luna", subjectKey: "historia_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
-    { name: "Claudia", firstLastName: "Bravo", secondLastName: "Serrano", subjectKey: "espanol_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
+    { name: "Claudia", firstLastName: "Bravo", secondLastName: "Serrano", subjectKey: "espanol_1pe" as const, groups: ["preescolar_a"] as const },
     { name: "Fernando", firstLastName: "Aguilar", secondLastName: "Campos", subjectKey: "matematicas_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
     { name: "Gabriela", firstLastName: "Soto", secondLastName: "Delgado", subjectKey: "ingles_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
     { name: "Rosa", firstLastName: "Ibarra", secondLastName: "Montes", subjectKey: "expresion_1pe" as const, groups: ["preescolar_a"] as const },
@@ -632,6 +662,12 @@ async function main() {
     { name: "Sergio", firstLastName: "Mendoza", secondLastName: "Lara", subjectKey: "psicomotricidad_1pe", groups: ["preescolar_a", "preescolar_b"] },
     { name: "Daniela", firstLastName: "Rangel", secondLastName: "Ortega", subjectKey: "musica_1pe", groups: ["preescolar_a", "preescolar_b"] },
     { name: "Alicia", firstLastName: "Vargas", secondLastName: "Nieto", subjectKey: "convivencia_1pe", groups: ["preescolar_a", "preescolar_b"] },
+    // Español runs daily 08:00-09:00 for A and B at the same time, so each
+    // group needs its own Español teacher (the first one is A only).
+    { name: "Mariana", firstLastName: "Téllez", secondLastName: "Ibáñez", subjectKey: "geografia_1p", groups: ["primaria_a", "primaria_b"] },
+    { name: "Jorge", firstLastName: "Olvera", secondLastName: "Pineda", subjectKey: "computacion_1p", groups: ["primaria_a", "primaria_b"] },
+    { name: "Sofía", firstLastName: "Carrillo", secondLastName: "Durán", subjectKey: "espanol_1p", groups: ["primaria_b"] },
+    { name: "Lucía", firstLastName: "Montoya", secondLastName: "Reyes", subjectKey: "espanol_1pe", groups: ["preescolar_b"] },
   ] as const;
 
   for (let j = 0; j < EXTRA_TEACHERS_2026.length; j++) {
@@ -1082,6 +1118,8 @@ async function main() {
     { key: "formacion_civica_1p", name: "Formación Cívica y Ética", description: "Valores, convivencia y reglas de participación en comunidad", academicLevel: primaria, educationLevel: primeroPri },
     { key: "educacion_artistica_1p", name: "Educación Artística", description: "Artes visuales, música y expresión corporal", academicLevel: primaria, educationLevel: primeroPri },
     { key: "educacion_fisica_1p", name: "Educación Física", description: "Desarrollo motriz, juegos y hábitos de vida saludable", academicLevel: primaria, educationLevel: primeroPri },
+    { key: "geografia_1p", name: "Geografía", description: "Mapas, puntos cardinales y paisajes del entorno cercano", academicLevel: primaria, educationLevel: primeroPri },
+    { key: "computacion_1p", name: "Computación", description: "Uso básico de la computadora, teclado y juegos educativos", academicLevel: primaria, educationLevel: primeroPri },
     // 2° Preescolar (catalog only)
     { key: "espanol_2pe", name: "Español", description: "Lenguaje oral, trazos y primeras palabras escritas", academicLevel: preescolar, educationLevel: segundoPre },
     { key: "matematicas_2pe", name: "Matemáticas", description: "Números, patrones y comparación de cantidades", academicLevel: preescolar, educationLevel: segundoPre },
@@ -1263,6 +1301,8 @@ async function main() {
           ["preescolar_psicomotricidad_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.psicomotricidad_1pe],
           ["preescolar_musica_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.musica_1pe],
           ["preescolar_convivencia_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.convivencia_1pe],
+          ["primaria_geografia_1p", primariaCycle.id, SCHOOL_SUBJECTS.geografia_1p],
+          ["primaria_computacion_1p", primariaCycle.id, SCHOOL_SUBJECTS.computacion_1p],
         ] as const
       ).map(async ([key, academicCycleId, schoolSubjectId]) => {
         // Keyed on the (academicCycleId, schoolSubjectId) unique constraint,
@@ -1295,39 +1335,33 @@ async function main() {
   );
 
   // --- Class schedule (calendar entries) ---
-  // Slot 1: Group A runs 08:00-09:00, Group B runs 09:00-10:00 on the same
-  // weekday for the same subject/teacher — same teacher, no time conflict.
-  // Slot 2 (second subject of the day): Group A 10:00-11:00, Group B 11:00-12:00.
-  const PRIMARIA_SCHEDULE = [
-    { day: "monday", subjectKey: "espanol_1p" },
-    { day: "tuesday", subjectKey: "matematicas_1p" },
-    { day: "wednesday", subjectKey: "ciencias_1p" },
-    { day: "thursday", subjectKey: "ingles_1p" },
-    { day: "friday", subjectKey: "historia_1p" },
-  ] as const;
-  const PRIMARIA_SCHEDULE_SLOT2 = [
-    { day: "monday", subjectKey: "educacion_artistica_1p" },
-    { day: "tuesday", subjectKey: "educacion_fisica_1p" },
-    { day: "wednesday", subjectKey: "formacion_civica_1p" },
-  ] as const;
-  const PRIMARIA_SUBJECT_KEYS = Array.from(
-    new Set([...PRIMARIA_SCHEDULE, ...PRIMARIA_SCHEDULE_SLOT2].map((s) => s.subjectKey)),
-  ) as (keyof typeof SCHOOL_SUBJECTS)[];
-  const PREESCOLAR_SCHEDULE = [
-    { day: "monday", subjectKey: "espanol_1pe" },
-    { day: "tuesday", subjectKey: "matematicas_1pe" },
-    { day: "wednesday", subjectKey: "ingles_1pe" },
-    { day: "thursday", subjectKey: "expresion_1pe" },
-  ] as const;
-  const PREESCOLAR_SCHEDULE_SLOT2 = [
-    { day: "monday", subjectKey: "exploracion_1pe" },
-    { day: "tuesday", subjectKey: "psicomotricidad_1pe" },
-    { day: "wednesday", subjectKey: "musica_1pe" },
-    { day: "thursday", subjectKey: "convivencia_1pe" },
-  ] as const;
-  const PREESCOLAR_SUBJECT_KEYS = Array.from(
-    new Set([...PREESCOLAR_SCHEDULE, ...PREESCOLAR_SCHEDULE_SLOT2].map((s) => s.subjectKey)),
-  ) as (keyof typeof SCHOOL_SUBJECTS)[];
+  // Full Monday-Friday timetable expanded from the compact grids in
+  // ./seed-timetable (Español 08:00-09:00 daily, 25 h/week primaria, 20 h/week
+  // preescolar). Recess is a gap: a calendar row needs a subject and a teacher,
+  // so the model cannot represent a non-class slot.
+  // Key order below is stable on purpose: the grade seed uses the subject index.
+  const PRIMARIA_SUBJECT_KEYS = [
+    "espanol_1p",
+    "matematicas_1p",
+    "ciencias_1p",
+    "ingles_1p",
+    "historia_1p",
+    "educacion_artistica_1p",
+    "educacion_fisica_1p",
+    "formacion_civica_1p",
+    "geografia_1p",
+    "computacion_1p",
+  ] as (keyof typeof SCHOOL_SUBJECTS)[];
+  const PREESCOLAR_SUBJECT_KEYS = [
+    "espanol_1pe",
+    "matematicas_1pe",
+    "ingles_1pe",
+    "expresion_1pe",
+    "exploracion_1pe",
+    "psicomotricidad_1pe",
+    "musica_1pe",
+    "convivencia_1pe",
+  ] as (keyof typeof SCHOOL_SUBJECTS)[];
 
   function findTeacher(subjectKey: string, groupKey: string) {
     const teacher = resolvedTeachers.find(
@@ -1339,7 +1373,10 @@ async function main() {
     return teacher;
   }
 
-  let calendarSeq = 0;
+  const timetable = buildTimetable();
+  // Fail before touching the DB: the schema has no overlap constraint.
+  assertNoConflicts(timetable, (subjectKey, groupKey) => findTeacher(subjectKey, groupKey).employeeId);
+
   const calendarEntries: {
     id: string;
     day: DayOfWeek;
@@ -1349,100 +1386,43 @@ async function main() {
     academicCycleSchoolGroupId: string;
     academicCycleSchoolSubjectId: string;
     teacherId: string;
-  }[] = [];
+  }[] = timetable.map((slot, i) => {
+    const isPrimaria = slot.groupKey.startsWith("primaria");
+    const prefix = isPrimaria ? "primaria" : "preescolar";
+    const academicCycleSchoolSubject =
+      academicCycleSchoolSubjectsBySubjectKey[
+        `${prefix}_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
+      ];
+    return {
+      id: calendarId(i + 1),
+      day: slot.day,
+      startTime: new Date(`1970-01-01T${slot.start}:00.000Z`),
+      endTime: new Date(`1970-01-01T${slot.end}:00.000Z`),
+      academicCycleId: isPrimaria ? primariaCycle.id : preescolarCycle.id,
+      academicCycleSchoolGroupId: GROUPS_BY_KEY[slot.groupKey].id,
+      academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
+      teacherId: findTeacher(slot.subjectKey, slot.groupKey).employeeId,
+    };
+  });
 
-  for (const [groupKey, group] of [
-    ["primaria_a", groupPrimariaA],
-    ["primaria_b", groupPrimariaB],
-  ] as const) {
-    const startTime = groupKey === "primaria_a" ? "08:00" : "09:00";
-    const endTime = groupKey === "primaria_a" ? "09:00" : "10:00";
-    for (const slot of PRIMARIA_SCHEDULE) {
-      calendarSeq++;
-      const teacher = findTeacher(slot.subjectKey, groupKey);
-      const academicCycleSchoolSubject =
-        academicCycleSchoolSubjectsBySubjectKey[
-          `primaria_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
-        ];
-      calendarEntries.push({
-        id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
-        day: slot.day,
-        startTime: new Date(`1970-01-01T${startTime}:00.000Z`),
-        endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
-        academicCycleId: primariaCycle.id,
-        academicCycleSchoolGroupId: group.id,
-        academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
-        teacherId: teacher.employeeId,
-      });
-    }
-  }
-
-  for (const [groupKey, group] of [
-    ["preescolar_a", groupPreescolarA],
-    ["preescolar_b", groupPreescolarB],
-  ] as const) {
-    const startTime = groupKey === "preescolar_a" ? "08:00" : "09:00";
-    const endTime = groupKey === "preescolar_a" ? "09:00" : "10:00";
-    for (const slot of PREESCOLAR_SCHEDULE) {
-      calendarSeq++;
-      const teacher = findTeacher(slot.subjectKey, groupKey);
-      const academicCycleSchoolSubject =
-        academicCycleSchoolSubjectsBySubjectKey[
-          `preescolar_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
-        ];
-      calendarEntries.push({
-        id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
-        day: slot.day,
-        startTime: new Date(`1970-01-01T${startTime}:00.000Z`),
-        endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
-        academicCycleId: preescolarCycle.id,
-        academicCycleSchoolGroupId: group.id,
-        academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
-        teacherId: teacher.employeeId,
-      });
-    }
-  }
-
-  // Second pass appended after the original loops on purpose: keeps
-  // calendarSeq 1-18 (existing ids) stable; new entries are 19-32.
-  for (const [groupKey, group, prefix, schedule, cycleId] of [
-    ["primaria_a", groupPrimariaA, "primaria", PRIMARIA_SCHEDULE_SLOT2, primariaCycle.id],
-    ["primaria_b", groupPrimariaB, "primaria", PRIMARIA_SCHEDULE_SLOT2, primariaCycle.id],
-    ["preescolar_a", groupPreescolarA, "preescolar", PREESCOLAR_SCHEDULE_SLOT2, preescolarCycle.id],
-    ["preescolar_b", groupPreescolarB, "preescolar", PREESCOLAR_SCHEDULE_SLOT2, preescolarCycle.id],
-  ] as const) {
-    const isGroupA = groupKey.endsWith("_a");
-    const startTime = isGroupA ? "10:00" : "11:00";
-    const endTime = isGroupA ? "11:00" : "12:00";
-    for (const slot of schedule) {
-      calendarSeq++;
-      const teacher = findTeacher(slot.subjectKey, groupKey);
-      const academicCycleSchoolSubject =
-        academicCycleSchoolSubjectsBySubjectKey[
-          `${prefix}_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
-        ];
-      calendarEntries.push({
-        id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
-        day: slot.day,
-        startTime: new Date(`1970-01-01T${startTime}:00.000Z`),
-        endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
-        academicCycleId: cycleId,
-        academicCycleSchoolGroupId: group.id,
-        academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
-        teacherId: teacher.employeeId,
-      });
-    }
-  }
+  // Remove the known fixed-id rows of the previous sparse schedule (their
+  // times overlap the new grid). Only those seed ids; manual rows are kept.
+  const legacyRemoved = await prisma.academicCycleGroupCalendar.deleteMany({
+    where: { id: { in: LEGACY_CALENDAR_IDS } },
+  });
 
   for (const entry of calendarEntries) {
+    const { id, ...fields } = entry;
     await prisma.academicCycleGroupCalendar.upsert({
-      where: { id: entry.id },
-      update: {},
+      where: { id },
+      update: fields,
       create: entry,
     });
   }
 
-  console.log(`  ✓ Class schedule: ${calendarEntries.length} calendar entries`);
+  console.log(
+    `  ✓ Class schedule: ${calendarEntries.length} calendar entries (${legacyRemoved.count} legacy entries removed)`,
+  );
 
   // Distinct teachers per group, derived from the same calendar entries —
   // matches exactly what AcademicCycleSchoolGroupService.findAllTeachers
@@ -1482,6 +1462,8 @@ async function main() {
     preescolar_psicomotricidad_1pe: "Psicomotricidad",
     preescolar_musica_1pe: "Música y Canto",
     preescolar_convivencia_1pe: "Convivencia y Valores",
+    primaria_geografia_1p: "Geografía",
+    primaria_computacion_1p: "Computación",
   };
 
   const subjectIdToKey = new Map(
@@ -1537,20 +1519,22 @@ async function main() {
             academicCycleSchoolSubjectId,
           },
         });
-        const url = await storageService.upload({
+        const url = await trySeedUpload({
           buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
           fileName: `tarea-${subjectKey}-${i}.png`,
           mimeType: "image/png",
           subfolder: "school-subject-tasks",
         });
-        await prisma.schoolSubjectTaskAttachment.create({
-          data: {
-            url,
-            name: `tarea-${subjectKey}-${i}`,
-            extension: "png",
-            schoolSubjectTaskId: task.id,
-          },
-        });
+        if (url) {
+          await prisma.schoolSubjectTaskAttachment.create({
+            data: {
+              url,
+              name: `tarea-${subjectKey}-${i}`,
+              extension: "png",
+              schoolSubjectTaskId: task.id,
+            },
+          });
+        }
         tasksCreated++;
       }
     }
@@ -1559,23 +1543,26 @@ async function main() {
       where: { academicCycleSchoolGroupId, academicCycleSchoolSubjectId },
     });
     if (existingMaterialsCount === 0) {
-      const url = await storageService.upload({
+      const url = await trySeedUpload({
         buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
         fileName: `material-${subjectKey}.png`,
         mimeType: "image/png",
         subfolder: "school-subject-materials",
       });
-      await prisma.schoolSubjectMaterial.create({
-        data: {
-          academicCycleId,
-          academicCycleSchoolGroupId,
-          academicCycleSchoolSubjectId,
-          attachmentUrl: url,
-          attachmentName: `material-${subjectKey}`,
-          attachmentExtension: "png",
-        },
-      });
-      materialsCreated++;
+      // Materials require an attachment; skip until storage is reachable.
+      if (url) {
+        await prisma.schoolSubjectMaterial.create({
+          data: {
+            academicCycleId,
+            academicCycleSchoolGroupId,
+            academicCycleSchoolSubjectId,
+            attachmentUrl: url,
+            attachmentName: `material-${subjectKey}`,
+            attachmentExtension: "png",
+          },
+        });
+        materialsCreated++;
+      }
     }
   }
 
