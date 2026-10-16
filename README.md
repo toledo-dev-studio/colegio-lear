@@ -130,13 +130,22 @@ Puede consultar el archivo `backend/.env.example` para configurar las variables 
 | `FRONTEND_URL_STUDENT`            | `http://localhost:5173`      | URL del portal alumnos, usada en links de correos (credenciales, notificaciones)                                 |
 | `COOKIE_SECURE`                   | `false`                      | Set `true` en producción/HTTPS                                                                                  |
 | `BCRYPT_SALT_ROUNDS`              | `10`                         | Bcrypt hashing rounds                                                                                           |
+| `STORAGE_PROVIDER`                | `local`                      | `local` o `azure`                                                                                               |
+| `STORAGE_LOCAL_PATH`              | `./uploads`                  | Carpeta de archivos cuando `STORAGE_PROVIDER=local`                                                             |
+| `AZURE_STORAGE_CONNECTION_STRING` | (required si `azure`)        | Connection string del Storage Account (Portal → Storage Account → Claves de acceso). Requiere una cuenta **StorageV2 (uso general v2)** — no `FileStorage`, esa no soporta Blob containers |
+| `AZURE_STORAGE_CONTAINER`         | (required si `azure`)        | Nombre del container de Blob Storage. Debe tener acceso público a nivel "Blob" habilitado (y "Permitir acceso público a Blobs" habilitado a nivel de toda la cuenta) — la URL que se guarda en la BD es pública y permanente, sin token de firma |
 | `SUPABASE_URL`                    | (required)                   | URL del proyecto de Supabase, sin `/rest/v1` (ej. `https://xxxx.supabase.co`) |
 | `SUPABASE_SERVICE_ROLE_KEY`       | (required)                   | Secret key (`sb_secret_...`) o `service_role` legacy. Solo backend — nunca la publishable/anon |
 | `SUPABASE_STORAGE_BUCKET`         | `uploads`                    | Bucket de Supabase Storage donde se guardan avatares y adjuntos. Debe ser **público** |
+| `MAIL_PROVIDER`                   | `gmail`                      | `gmail` (SMTP, local) o `graph` (Microsoft Graph por HTTPS — usar en Render, que bloquea los puertos SMTP) |
+| `MAIL_FROM`                       | `noreply@colegiolear.com`    | Remitente. Con `graph`, es el buzón de Microsoft 365 desde el que se envía (ej. `noreply@colegiolear.mx`) |
 | `MAIL_HOST`                       | `smtp.gmail.com`             | SMTP host                                                                                                       |
 | `MAIL_PORT`                       | `587`                        | SMTP port                                                                                                       |
 | `MAIL_USER`                       | (required)                   | Email address for sending                                                                                       |
 | `MAIL_PASSWORD`                   | (required)                   | App Password (see Gmail setup below)                                                                            |
+| `MAIL_GRAPH_TENANT_ID`            | (required si `graph`)        | Directory (tenant) ID del App Registration en Entra ID |
+| `MAIL_GRAPH_CLIENT_ID`            | (required si `graph`)        | Application (client) ID del App Registration |
+| `MAIL_GRAPH_CLIENT_SECRET`        | (required si `graph`)        | Client secret del App Registration. Requiere el permiso de aplicación `Mail.Send` con admin consent |
 | `ADMIN1_NAME`                     | `Super`                      | SuperAdmin first name                                                                                           |
 | `ADMIN1_LAST_NAME`                | `Admin`                      | SuperAdmin last name                                                                                            |
 | `ADMIN1_EMAIL`                    | `superadmin@colegiolear.com` | SuperAdmin email                                                                                                 |
