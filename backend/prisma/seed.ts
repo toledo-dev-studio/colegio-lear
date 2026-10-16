@@ -4,11 +4,17 @@ import { BloodType, DayOfWeek } from "../src/generated/prisma/enums";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import bcrypt from "bcrypt";
-// Imported after "dotenv/config" above so STORAGE_LOCAL_PATH is already
-// populated by the time this module's storageService singleton is created.
+// Imported after "dotenv/config" above so the SUPABASE_* vars are already
+// populated by the time this module's storageService singleton reads them.
 import { storageService } from "../src/shared/services/storage.service";
 import { NotificationService } from "../src/modules/notifications/notification.service";
 import type { IMailService } from "../src/shared/services/mail.service";
+import {
+  assertNoConflicts,
+  buildTimetable,
+  calendarId,
+  LEGACY_CALENDAR_IDS,
+} from "./seed-timetable";
 
 const pool = new pg.Pool({ connectionString: process.env["DATABASE_URL"] });
 const adapter = new PrismaPg(pool, { schema: "core" });
@@ -55,6 +61,44 @@ const SCHOOL_SUBJECTS = {
   matematicas_1pe: "c3000000-0003-4000-8000-000000000010",
   ingles_1pe: "c3000000-0003-4000-8000-000000000011",
   expresion_1pe: "c3000000-0003-4000-8000-000000000012",
+  // 2026 subject enrichment
+  formacion_civica_1p: "c3000000-0003-4000-8000-000000000013",
+  educacion_artistica_1p: "c3000000-0003-4000-8000-000000000014",
+  educacion_fisica_1p: "c3000000-0003-4000-8000-000000000015",
+  exploracion_1pe: "c3000000-0003-4000-8000-000000000016",
+  psicomotricidad_1pe: "c3000000-0003-4000-8000-000000000017",
+  musica_1pe: "c3000000-0003-4000-8000-000000000018",
+  convivencia_1pe: "c3000000-0003-4000-8000-000000000019",
+  espanol_2pe: "c3000000-0003-4000-8000-000000000020",
+  matematicas_2pe: "c3000000-0003-4000-8000-000000000021",
+  ingles_2pe: "c3000000-0003-4000-8000-000000000022",
+  exploracion_2pe: "c3000000-0003-4000-8000-000000000023",
+  psicomotricidad_2pe: "c3000000-0003-4000-8000-000000000024",
+  musica_2pe: "c3000000-0003-4000-8000-000000000025",
+  espanol_2p: "c3000000-0003-4000-8000-000000000026",
+  ciencias_2p: "c3000000-0003-4000-8000-000000000027",
+  ingles_2p: "c3000000-0003-4000-8000-000000000028",
+  historia_2p: "c3000000-0003-4000-8000-000000000029",
+  geografia_2p: "c3000000-0003-4000-8000-000000000030",
+  educacion_fisica_2p: "c3000000-0003-4000-8000-000000000031",
+  educacion_artistica_2p: "c3000000-0003-4000-8000-000000000032",
+  espanol_1s: "c3000000-0003-4000-8000-000000000033",
+  ciencias_1s: "c3000000-0003-4000-8000-000000000034",
+  ingles_1s: "c3000000-0003-4000-8000-000000000035",
+  formacion_civica_1s: "c3000000-0003-4000-8000-000000000036",
+  educacion_fisica_1s: "c3000000-0003-4000-8000-000000000037",
+  tecnologia_1s: "c3000000-0003-4000-8000-000000000038",
+  matematicas_2s: "c3000000-0003-4000-8000-000000000039",
+  espanol_2s: "c3000000-0003-4000-8000-000000000040",
+  ciencias_2s: "c3000000-0003-4000-8000-000000000041",
+  ingles_2s: "c3000000-0003-4000-8000-000000000042",
+  historia_2s: "c3000000-0003-4000-8000-000000000043",
+  geografia_2s: "c3000000-0003-4000-8000-000000000044",
+  formacion_civica_2s: "c3000000-0003-4000-8000-000000000045",
+  educacion_fisica_2s: "c3000000-0003-4000-8000-000000000046",
+  // Full weekly timetable additions
+  geografia_1p: "c3000000-0003-4000-8000-000000000047",
+  computacion_1p: "c3000000-0003-4000-8000-000000000048",
 };
 
 const SCHOLARSHIPS = {
@@ -120,6 +164,17 @@ const ACADEMIC_CYCLE_SCHOOL_SUBJECTS_2026 = {
   preescolar_matematicas_1pe: "ac000000-0013-4000-8000-000000000007",
   preescolar_ingles_1pe: "ac000000-0013-4000-8000-000000000008",
   preescolar_expresion_1pe: "ac000000-0013-4000-8000-000000000009",
+  // 2026 subject enrichment
+  primaria_formacion_civica_1p: "ac000000-0013-4000-8000-000000000010",
+  primaria_educacion_artistica_1p: "ac000000-0013-4000-8000-000000000011",
+  primaria_educacion_fisica_1p: "ac000000-0013-4000-8000-000000000012",
+  preescolar_exploracion_1pe: "ac000000-0013-4000-8000-000000000013",
+  preescolar_psicomotricidad_1pe: "ac000000-0013-4000-8000-000000000014",
+  preescolar_musica_1pe: "ac000000-0013-4000-8000-000000000015",
+  preescolar_convivencia_1pe: "ac000000-0013-4000-8000-000000000016",
+  // Full weekly timetable additions
+  primaria_geografia_1p: "ac000000-0013-4000-8000-000000000017",
+  primaria_computacion_1p: "ac000000-0013-4000-8000-000000000018",
 };
 
 const ANNOUNCEMENTS_2026 = {
@@ -146,6 +201,24 @@ const ALL_MODULE_KEYS = [
   "security-roles",
   "settings",
 ];
+
+// Uploads a seed file; if storage is unreachable (e.g. no network or missing
+// Supabase credentials) it warns once, stops retrying and returns null so the seed continues.
+let seedStorageAvailable = true;
+async function trySeedUpload(
+  params: Parameters<typeof storageService.upload>[0],
+): Promise<string | null> {
+  if (!seedStorageAvailable) return null;
+  try {
+    return await storageService.upload(params);
+  } catch (error) {
+    seedStorageAvailable = false;
+    console.warn(
+      `  ⚠ Storage unreachable, skipping file uploads (${(error as Error).message}). Re-run the seed when storage is available.`,
+    );
+    return null;
+  }
+}
 
 // ─── Seed function ──────────────────────────────────────────────────────────────
 
@@ -479,12 +552,12 @@ async function main() {
   const usedUsernames = new Set<string>([admin1Username, admin2Username]);
 
   const TEACHERS_2026 = [
-    { name: "Laura", firstLastName: "Fernández", secondLastName: "Ruiz", subjectKey: "espanol_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
+    { name: "Laura", firstLastName: "Fernández", secondLastName: "Ruiz", subjectKey: "espanol_1p" as const, groups: ["primaria_a"] as const },
     { name: "Ricardo", firstLastName: "Salinas", secondLastName: "Ponce", subjectKey: "matematicas_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
     { name: "Patricia", firstLastName: "Núñez", secondLastName: "Rivas", subjectKey: "ciencias_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
     { name: "Andrés", firstLastName: "Villarreal", secondLastName: "Ochoa", subjectKey: "ingles_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
     { name: "Mónica", firstLastName: "Escobar", secondLastName: "Luna", subjectKey: "historia_1p" as const, groups: ["primaria_a", "primaria_b"] as const },
-    { name: "Claudia", firstLastName: "Bravo", secondLastName: "Serrano", subjectKey: "espanol_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
+    { name: "Claudia", firstLastName: "Bravo", secondLastName: "Serrano", subjectKey: "espanol_1pe" as const, groups: ["preescolar_a"] as const },
     { name: "Fernando", firstLastName: "Aguilar", secondLastName: "Campos", subjectKey: "matematicas_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
     { name: "Gabriela", firstLastName: "Soto", secondLastName: "Delgado", subjectKey: "ingles_1pe" as const, groups: ["preescolar_a", "preescolar_b"] as const },
     { name: "Rosa", firstLastName: "Ibarra", secondLastName: "Montes", subjectKey: "expresion_1pe" as const, groups: ["preescolar_a"] as const },
@@ -495,9 +568,11 @@ async function main() {
 
   // Resolved teacher records (with the created employeeId) — used below to
   // wire up the class schedule (calendar entries).
-  const resolvedTeachers: Array<
-    (typeof TEACHERS_2026)[number] & { employeeId: string }
-  > = [];
+  const resolvedTeachers: Array<{
+    subjectKey: string;
+    groups: readonly string[];
+    employeeId: string;
+  }> = [];
 
   for (let i = 0; i < TEACHERS_2026.length; i++) {
     const t = TEACHERS_2026[i]!;
@@ -575,6 +650,55 @@ async function main() {
   }
 
   console.log(`  ✓ Administrative staff employees: ${ADMIN_STAFF_2026.length} records`);
+
+  // Additional teachers for the 2026 subject enrichment. Kept in a separate
+  // array, processed after the admin staff, so TEACHERS_2026.length (used in
+  // admin-staff emails) and existing emails/usernames stay unchanged.
+  const EXTRA_TEACHERS_2026 = [
+    { name: "Héctor", firstLastName: "Ramírez", secondLastName: "Lozano", subjectKey: "formacion_civica_1p", groups: ["primaria_a", "primaria_b"] },
+    { name: "Elena", firstLastName: "Castañeda", secondLastName: "Vidal", subjectKey: "educacion_artistica_1p", groups: ["primaria_a", "primaria_b"] },
+    { name: "Óscar", firstLastName: "Beltrán", secondLastName: "Mejía", subjectKey: "educacion_fisica_1p", groups: ["primaria_a", "primaria_b"] },
+    { name: "Verónica", firstLastName: "Palacios", secondLastName: "Cruz", subjectKey: "exploracion_1pe", groups: ["preescolar_a", "preescolar_b"] },
+    { name: "Sergio", firstLastName: "Mendoza", secondLastName: "Lara", subjectKey: "psicomotricidad_1pe", groups: ["preescolar_a", "preescolar_b"] },
+    { name: "Daniela", firstLastName: "Rangel", secondLastName: "Ortega", subjectKey: "musica_1pe", groups: ["preescolar_a", "preescolar_b"] },
+    { name: "Alicia", firstLastName: "Vargas", secondLastName: "Nieto", subjectKey: "convivencia_1pe", groups: ["preescolar_a", "preescolar_b"] },
+    // Español runs daily 08:00-09:00 for A and B at the same time, so each
+    // group needs its own Español teacher (the first one is A only).
+    { name: "Mariana", firstLastName: "Téllez", secondLastName: "Ibáñez", subjectKey: "geografia_1p", groups: ["primaria_a", "primaria_b"] },
+    { name: "Jorge", firstLastName: "Olvera", secondLastName: "Pineda", subjectKey: "computacion_1p", groups: ["primaria_a", "primaria_b"] },
+    { name: "Sofía", firstLastName: "Carrillo", secondLastName: "Durán", subjectKey: "espanol_1p", groups: ["primaria_b"] },
+    { name: "Lucía", firstLastName: "Montoya", secondLastName: "Reyes", subjectKey: "espanol_1pe", groups: ["preescolar_b"] },
+  ] as const;
+
+  for (let j = 0; j < EXTRA_TEACHERS_2026.length; j++) {
+    const t = EXTRA_TEACHERS_2026[j]!;
+    const username = buildUsername(t.name, t.firstLastName, usedUsernames);
+    const email = buildStaffEmail(
+      t.name,
+      t.firstLastName,
+      TEACHERS_2026.length + ADMIN_STAFF_2026.length + 1 + j,
+    );
+    const employee = await prisma.employee.upsert({
+      where: { email },
+      update: {},
+      create: {
+        name: t.name,
+        firstLastName: t.firstLastName,
+        secondLastName: t.secondLastName,
+        phoneNumber: `55100${String(20000 + TEACHERS_2026.length + j).padStart(5, "0")}`,
+        email,
+        username,
+        password: teacherPassword,
+        mustChangePassword: false,
+        isActive: true,
+        securityRoleId: docenteRole.id,
+        jobTitleId: JOB_TITLES.docente,
+      },
+    });
+    resolvedTeachers.push({ ...t, employeeId: employee.id });
+  }
+
+  console.log(`  ✓ Additional teacher employees: ${EXTRA_TEACHERS_2026.length} records`);
 
   // --- Academic Levels ---
   const preescolar = await prisma.academicLevel.upsert({
@@ -983,6 +1107,80 @@ async function main() {
   ]);
   console.log("  ✓ School subjects (2026 dataset): 6 records");
 
+  // --- Additional School Subjects (2026 enrichment) ---
+  const ENRICHMENT_SUBJECTS = [
+    // 1° Preescolar (reach students)
+    { key: "exploracion_1pe", name: "Exploración del Mundo", description: "Observación del entorno natural y social a través del juego", academicLevel: preescolar, educationLevel: primeroPre },
+    { key: "psicomotricidad_1pe", name: "Psicomotricidad", description: "Coordinación motriz gruesa y fina, equilibrio y lateralidad", academicLevel: preescolar, educationLevel: primeroPre },
+    { key: "musica_1pe", name: "Música y Canto", description: "Ritmo, canciones y expresión sonora", academicLevel: preescolar, educationLevel: primeroPre },
+    { key: "convivencia_1pe", name: "Convivencia y Valores", description: "Educación socioemocional, hábitos y respeto a los demás", academicLevel: preescolar, educationLevel: primeroPre },
+    // 1° Primaria (reach students)
+    { key: "formacion_civica_1p", name: "Formación Cívica y Ética", description: "Valores, convivencia y reglas de participación en comunidad", academicLevel: primaria, educationLevel: primeroPri },
+    { key: "educacion_artistica_1p", name: "Educación Artística", description: "Artes visuales, música y expresión corporal", academicLevel: primaria, educationLevel: primeroPri },
+    { key: "educacion_fisica_1p", name: "Educación Física", description: "Desarrollo motriz, juegos y hábitos de vida saludable", academicLevel: primaria, educationLevel: primeroPri },
+    { key: "geografia_1p", name: "Geografía", description: "Mapas, puntos cardinales y paisajes del entorno cercano", academicLevel: primaria, educationLevel: primeroPri },
+    { key: "computacion_1p", name: "Computación", description: "Uso básico de la computadora, teclado y juegos educativos", academicLevel: primaria, educationLevel: primeroPri },
+    // 2° Preescolar (catalog only)
+    { key: "espanol_2pe", name: "Español", description: "Lenguaje oral, trazos y primeras palabras escritas", academicLevel: preescolar, educationLevel: segundoPre },
+    { key: "matematicas_2pe", name: "Matemáticas", description: "Números, patrones y comparación de cantidades", academicLevel: preescolar, educationLevel: segundoPre },
+    { key: "ingles_2pe", name: "Inglés", description: "Vocabulario cotidiano y canciones en inglés", academicLevel: preescolar, educationLevel: segundoPre },
+    { key: "exploracion_2pe", name: "Exploración del Mundo", description: "Experimentos sencillos y cuidado del medio ambiente", academicLevel: preescolar, educationLevel: segundoPre },
+    { key: "psicomotricidad_2pe", name: "Psicomotricidad", description: "Circuitos motrices, ritmo y control corporal", academicLevel: preescolar, educationLevel: segundoPre },
+    { key: "musica_2pe", name: "Música y Canto", description: "Instrumentos de percusión, canto y movimiento", academicLevel: preescolar, educationLevel: segundoPre },
+    // 2° Primaria (catalog only)
+    { key: "espanol_2p", name: "Español", description: "Lectura de comprensión, ortografía y redacción de textos breves", academicLevel: primaria, educationLevel: segundoPri },
+    { key: "ciencias_2p", name: "Ciencias Naturales", description: "Seres vivos, materiales y fenómenos del entorno", academicLevel: primaria, educationLevel: segundoPri },
+    { key: "ingles_2p", name: "Inglés", description: "Frases y conversaciones básicas sobre temas cotidianos", academicLevel: primaria, educationLevel: segundoPri },
+    { key: "historia_2p", name: "Historia", description: "Cambios en la vida familiar y comunitaria a lo largo del tiempo", academicLevel: primaria, educationLevel: segundoPri },
+    { key: "geografia_2p", name: "Geografía", description: "Mapas, paisajes y localización del entorno cercano", academicLevel: primaria, educationLevel: segundoPri },
+    { key: "educacion_fisica_2p", name: "Educación Física", description: "Juegos cooperativos, coordinación y acondicionamiento básico", academicLevel: primaria, educationLevel: segundoPri },
+    { key: "educacion_artistica_2p", name: "Educación Artística", description: "Dibujo, pintura, música y teatro infantil", academicLevel: primaria, educationLevel: segundoPri },
+    // 1° Secundaria (catalog only)
+    { key: "espanol_1s", name: "Español", description: "Análisis de textos, géneros literarios y redacción formal", academicLevel: secundaria, educationLevel: primeroSec },
+    { key: "ciencias_1s", name: "Ciencias Naturales", description: "Introducción a la biología, la física y la química", academicLevel: secundaria, educationLevel: primeroSec },
+    { key: "ingles_1s", name: "Inglés", description: "Gramática intermedia, lectura y expresión escrita en inglés", academicLevel: secundaria, educationLevel: primeroSec },
+    { key: "formacion_civica_1s", name: "Formación Cívica y Ética", description: "Ciudadanía, derechos humanos y toma de decisiones responsables", academicLevel: secundaria, educationLevel: primeroSec },
+    { key: "educacion_fisica_1s", name: "Educación Física", description: "Deportes de conjunto, condición física y trabajo en equipo", academicLevel: secundaria, educationLevel: primeroSec },
+    { key: "tecnologia_1s", name: "Tecnología", description: "Herramientas digitales, pensamiento computacional y proyectos", academicLevel: secundaria, educationLevel: primeroSec },
+    // 2° Secundaria (catalog only)
+    { key: "matematicas_2s", name: "Matemáticas", description: "Ecuaciones, proporcionalidad y geometría analítica básica", academicLevel: secundaria, educationLevel: segundoSec },
+    { key: "espanol_2s", name: "Español", description: "Textos argumentativos, investigación y comunicación oral", academicLevel: secundaria, educationLevel: segundoSec },
+    { key: "ciencias_2s", name: "Ciencias Naturales", description: "Fuerzas, materia y energía con enfoque experimental", academicLevel: secundaria, educationLevel: segundoSec },
+    { key: "ingles_2s", name: "Inglés", description: "Comprensión de textos y conversación en contextos variados", academicLevel: secundaria, educationLevel: segundoSec },
+    { key: "historia_2s", name: "Historia", description: "Procesos históricos del mundo desde el siglo XVI", academicLevel: secundaria, educationLevel: segundoSec },
+    { key: "geografia_2s", name: "Geografía", description: "Población, economía y espacios geográficos del mundo", academicLevel: secundaria, educationLevel: segundoSec },
+    { key: "formacion_civica_2s", name: "Formación Cívica y Ética", description: "Identidad, diversidad y participación democrática", academicLevel: secundaria, educationLevel: segundoSec },
+    { key: "educacion_fisica_2s", name: "Educación Física", description: "Hábitos saludables, deportes y expresión corporal", academicLevel: secundaria, educationLevel: segundoSec },
+  ] as const satisfies readonly {
+    key: keyof typeof SCHOOL_SUBJECTS;
+    name: string;
+    description: string;
+    academicLevel: { id: string };
+    educationLevel: { id: string };
+  }[];
+
+  await Promise.all(
+    ENRICHMENT_SUBJECTS.map((s) =>
+      prisma.schoolSubject.upsert({
+        where: {
+          name_educationLevelId: { name: s.name, educationLevelId: s.educationLevel.id },
+        },
+        update: {},
+        create: {
+          id: SCHOOL_SUBJECTS[s.key],
+          name: s.name,
+          description: s.description,
+          isActive: true,
+          academicLevelId: s.academicLevel.id,
+          educationLevelId: s.educationLevel.id,
+        },
+      }),
+    ),
+  );
+  console.log(
+    `  ✓ School subjects (2026 enrichment): ${ENRICHMENT_SUBJECTS.length} records (total catalog: ${Object.keys(SCHOOL_SUBJECTS).length})`,
+  );
+
   // --- Academic Cycles (2026) ---
   const primariaCycle = await prisma.academicCycle.upsert({
     where: { id: ACADEMIC_CYCLES_2026.primaria },
@@ -1096,6 +1294,15 @@ async function main() {
           ["preescolar_matematicas_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.matematicas_1pe],
           ["preescolar_ingles_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.ingles_1pe],
           ["preescolar_expresion_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.expresion_1pe],
+          ["primaria_formacion_civica_1p", primariaCycle.id, SCHOOL_SUBJECTS.formacion_civica_1p],
+          ["primaria_educacion_artistica_1p", primariaCycle.id, SCHOOL_SUBJECTS.educacion_artistica_1p],
+          ["primaria_educacion_fisica_1p", primariaCycle.id, SCHOOL_SUBJECTS.educacion_fisica_1p],
+          ["preescolar_exploracion_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.exploracion_1pe],
+          ["preescolar_psicomotricidad_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.psicomotricidad_1pe],
+          ["preescolar_musica_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.musica_1pe],
+          ["preescolar_convivencia_1pe", preescolarCycle.id, SCHOOL_SUBJECTS.convivencia_1pe],
+          ["primaria_geografia_1p", primariaCycle.id, SCHOOL_SUBJECTS.geografia_1p],
+          ["primaria_computacion_1p", primariaCycle.id, SCHOOL_SUBJECTS.computacion_1p],
         ] as const
       ).map(async ([key, academicCycleId, schoolSubjectId]) => {
         // Keyed on the (academicCycleId, schoolSubjectId) unique constraint,
@@ -1128,27 +1335,33 @@ async function main() {
   );
 
   // --- Class schedule (calendar entries) ---
-  // Group A runs 08:00-09:00, Group B runs 09:00-10:00 on the same weekday
-  // for the same subject/teacher — same teacher, no time conflict.
-  const PRIMARIA_SCHEDULE = [
-    { day: "monday", subjectKey: "espanol_1p" },
-    { day: "tuesday", subjectKey: "matematicas_1p" },
-    { day: "wednesday", subjectKey: "ciencias_1p" },
-    { day: "thursday", subjectKey: "ingles_1p" },
-    { day: "friday", subjectKey: "historia_1p" },
-  ] as const;
-  const PRIMARIA_SUBJECT_KEYS = Array.from(
-    new Set(PRIMARIA_SCHEDULE.map((s) => s.subjectKey)),
-  ) as (keyof typeof SCHOOL_SUBJECTS)[];
-  const PREESCOLAR_SCHEDULE = [
-    { day: "monday", subjectKey: "espanol_1pe" },
-    { day: "tuesday", subjectKey: "matematicas_1pe" },
-    { day: "wednesday", subjectKey: "ingles_1pe" },
-    { day: "thursday", subjectKey: "expresion_1pe" },
-  ] as const;
-  const PREESCOLAR_SUBJECT_KEYS = Array.from(
-    new Set(PREESCOLAR_SCHEDULE.map((s) => s.subjectKey)),
-  ) as (keyof typeof SCHOOL_SUBJECTS)[];
+  // Full Monday-Friday timetable expanded from the compact grids in
+  // ./seed-timetable (Español 08:00-09:00 daily, 25 h/week primaria, 20 h/week
+  // preescolar). Recess is a gap: a calendar row needs a subject and a teacher,
+  // so the model cannot represent a non-class slot.
+  // Key order below is stable on purpose: the grade seed uses the subject index.
+  const PRIMARIA_SUBJECT_KEYS = [
+    "espanol_1p",
+    "matematicas_1p",
+    "ciencias_1p",
+    "ingles_1p",
+    "historia_1p",
+    "educacion_artistica_1p",
+    "educacion_fisica_1p",
+    "formacion_civica_1p",
+    "geografia_1p",
+    "computacion_1p",
+  ] as (keyof typeof SCHOOL_SUBJECTS)[];
+  const PREESCOLAR_SUBJECT_KEYS = [
+    "espanol_1pe",
+    "matematicas_1pe",
+    "ingles_1pe",
+    "expresion_1pe",
+    "exploracion_1pe",
+    "psicomotricidad_1pe",
+    "musica_1pe",
+    "convivencia_1pe",
+  ] as (keyof typeof SCHOOL_SUBJECTS)[];
 
   function findTeacher(subjectKey: string, groupKey: string) {
     const teacher = resolvedTeachers.find(
@@ -1160,7 +1373,10 @@ async function main() {
     return teacher;
   }
 
-  let calendarSeq = 0;
+  const timetable = buildTimetable();
+  // Fail before touching the DB: the schema has no overlap constraint.
+  assertNoConflicts(timetable, (subjectKey, groupKey) => findTeacher(subjectKey, groupKey).employeeId);
+
   const calendarEntries: {
     id: string;
     day: DayOfWeek;
@@ -1170,69 +1386,43 @@ async function main() {
     academicCycleSchoolGroupId: string;
     academicCycleSchoolSubjectId: string;
     teacherId: string;
-  }[] = [];
+  }[] = timetable.map((slot, i) => {
+    const isPrimaria = slot.groupKey.startsWith("primaria");
+    const prefix = isPrimaria ? "primaria" : "preescolar";
+    const academicCycleSchoolSubject =
+      academicCycleSchoolSubjectsBySubjectKey[
+        `${prefix}_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
+      ];
+    return {
+      id: calendarId(i + 1),
+      day: slot.day,
+      startTime: new Date(`1970-01-01T${slot.start}:00.000Z`),
+      endTime: new Date(`1970-01-01T${slot.end}:00.000Z`),
+      academicCycleId: isPrimaria ? primariaCycle.id : preescolarCycle.id,
+      academicCycleSchoolGroupId: GROUPS_BY_KEY[slot.groupKey].id,
+      academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
+      teacherId: findTeacher(slot.subjectKey, slot.groupKey).employeeId,
+    };
+  });
 
-  for (const [groupKey, group] of [
-    ["primaria_a", groupPrimariaA],
-    ["primaria_b", groupPrimariaB],
-  ] as const) {
-    const startTime = groupKey === "primaria_a" ? "08:00" : "09:00";
-    const endTime = groupKey === "primaria_a" ? "09:00" : "10:00";
-    for (const slot of PRIMARIA_SCHEDULE) {
-      calendarSeq++;
-      const teacher = findTeacher(slot.subjectKey, groupKey);
-      const academicCycleSchoolSubject =
-        academicCycleSchoolSubjectsBySubjectKey[
-          `primaria_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
-        ];
-      calendarEntries.push({
-        id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
-        day: slot.day,
-        startTime: new Date(`1970-01-01T${startTime}:00.000Z`),
-        endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
-        academicCycleId: primariaCycle.id,
-        academicCycleSchoolGroupId: group.id,
-        academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
-        teacherId: teacher.employeeId,
-      });
-    }
-  }
-
-  for (const [groupKey, group] of [
-    ["preescolar_a", groupPreescolarA],
-    ["preescolar_b", groupPreescolarB],
-  ] as const) {
-    const startTime = groupKey === "preescolar_a" ? "08:00" : "09:00";
-    const endTime = groupKey === "preescolar_a" ? "09:00" : "10:00";
-    for (const slot of PREESCOLAR_SCHEDULE) {
-      calendarSeq++;
-      const teacher = findTeacher(slot.subjectKey, groupKey);
-      const academicCycleSchoolSubject =
-        academicCycleSchoolSubjectsBySubjectKey[
-          `preescolar_${slot.subjectKey}` as keyof typeof academicCycleSchoolSubjectsBySubjectKey
-        ];
-      calendarEntries.push({
-        id: `ee000000-0011-4000-8000-${String(calendarSeq).padStart(12, "0")}`,
-        day: slot.day,
-        startTime: new Date(`1970-01-01T${startTime}:00.000Z`),
-        endTime: new Date(`1970-01-01T${endTime}:00.000Z`),
-        academicCycleId: preescolarCycle.id,
-        academicCycleSchoolGroupId: group.id,
-        academicCycleSchoolSubjectId: academicCycleSchoolSubject.id,
-        teacherId: teacher.employeeId,
-      });
-    }
-  }
+  // Remove the known fixed-id rows of the previous sparse schedule (their
+  // times overlap the new grid). Only those seed ids; manual rows are kept.
+  const legacyRemoved = await prisma.academicCycleGroupCalendar.deleteMany({
+    where: { id: { in: LEGACY_CALENDAR_IDS } },
+  });
 
   for (const entry of calendarEntries) {
+    const { id, ...fields } = entry;
     await prisma.academicCycleGroupCalendar.upsert({
-      where: { id: entry.id },
-      update: {},
+      where: { id },
+      update: fields,
       create: entry,
     });
   }
 
-  console.log(`  ✓ Class schedule: ${calendarEntries.length} calendar entries`);
+  console.log(
+    `  ✓ Class schedule: ${calendarEntries.length} calendar entries (${legacyRemoved.count} legacy entries removed)`,
+  );
 
   // Distinct teachers per group, derived from the same calendar entries —
   // matches exactly what AcademicCycleSchoolGroupService.findAllTeachers
@@ -1246,7 +1436,7 @@ async function main() {
 
   // --- School subject tasks & materials (test content for GET .../tasks and .../materials) ---
   // Real files, uploaded through the same storageService the app uses (not a
-  // seed-only shortcut) — so /uploads URLs actually resolve once the server
+  // seed-only shortcut) — so the bucket URLs actually resolve once the server
   // is running, exactly like a real teacher upload would. One pair (task +
   // material) per group/subject combination that's actually taught, derived
   // from the calendar entries just created above.
@@ -1265,6 +1455,15 @@ async function main() {
     preescolar_matematicas_1pe: "Matemáticas",
     preescolar_ingles_1pe: "Inglés",
     preescolar_expresion_1pe: "Expresión y Creatividad",
+    primaria_formacion_civica_1p: "Formación Cívica y Ética",
+    primaria_educacion_artistica_1p: "Educación Artística",
+    primaria_educacion_fisica_1p: "Educación Física",
+    preescolar_exploracion_1pe: "Exploración del Mundo",
+    preescolar_psicomotricidad_1pe: "Psicomotricidad",
+    preescolar_musica_1pe: "Música y Canto",
+    preescolar_convivencia_1pe: "Convivencia y Valores",
+    primaria_geografia_1p: "Geografía",
+    primaria_computacion_1p: "Computación",
   };
 
   const subjectIdToKey = new Map(
@@ -1320,20 +1519,22 @@ async function main() {
             academicCycleSchoolSubjectId,
           },
         });
-        const url = await storageService.upload({
+        const url = await trySeedUpload({
           buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
           fileName: `tarea-${subjectKey}-${i}.png`,
           mimeType: "image/png",
           subfolder: "school-subject-tasks",
         });
-        await prisma.schoolSubjectTaskAttachment.create({
-          data: {
-            url,
-            name: `tarea-${subjectKey}-${i}`,
-            extension: "png",
-            schoolSubjectTaskId: task.id,
-          },
-        });
+        if (url) {
+          await prisma.schoolSubjectTaskAttachment.create({
+            data: {
+              url,
+              name: `tarea-${subjectKey}-${i}`,
+              extension: "png",
+              schoolSubjectTaskId: task.id,
+            },
+          });
+        }
         tasksCreated++;
       }
     }
@@ -1342,23 +1543,26 @@ async function main() {
       where: { academicCycleSchoolGroupId, academicCycleSchoolSubjectId },
     });
     if (existingMaterialsCount === 0) {
-      const url = await storageService.upload({
+      const url = await trySeedUpload({
         buffer: TASK_MATERIAL_PLACEHOLDER_FILE,
         fileName: `material-${subjectKey}.png`,
         mimeType: "image/png",
         subfolder: "school-subject-materials",
       });
-      await prisma.schoolSubjectMaterial.create({
-        data: {
-          academicCycleId,
-          academicCycleSchoolGroupId,
-          academicCycleSchoolSubjectId,
-          attachmentUrl: url,
-          attachmentName: `material-${subjectKey}`,
-          attachmentExtension: "png",
-        },
-      });
-      materialsCreated++;
+      // Materials require an attachment; skip until storage is reachable.
+      if (url) {
+        await prisma.schoolSubjectMaterial.create({
+          data: {
+            academicCycleId,
+            academicCycleSchoolGroupId,
+            academicCycleSchoolSubjectId,
+            attachmentUrl: url,
+            attachmentName: `material-${subjectKey}`,
+            attachmentExtension: "png",
+          },
+        });
+        materialsCreated++;
+      }
     }
   }
 
@@ -1788,29 +1992,36 @@ async function main() {
         }
       }
 
-      // Grades — only create if this enrollment doesn't have them yet. One
-      // grade per subject taught to this group × the cycle's 3 evaluations.
-      const existingGrades = await prisma.studentGrade.count({
-        where: { academicCycleEnrollmentId: enrollment.id },
-      });
-      if (existingGrades === 0) {
+      // Grades — additive and idempotent: skipDuplicates relies on the unique
+      // [academicCycleEnrollmentId, schoolSubjectId, evaluationNumber], so a
+      // re-run only adds grades for subjects the enrollment doesn't have yet.
+      // One grade per subject taught to this group × the cycle's 3 evaluations.
+      {
         const EVALUATION_COUNT = 3;
+        const gradeRows: {
+          grade: ReturnType<typeof buildGrade>;
+          evaluationNumber: number;
+          schoolSubjectId: string;
+          academicCycleEnrollmentId: string;
+        }[] = [];
         for (let s = 0; s < config.subjectKeys.length; s++) {
           const subjectKey = config.subjectKeys[s]!;
           const schoolSubjectId = SCHOOL_SUBJECTS[subjectKey];
           for (let evaluationNumber = 1; evaluationNumber <= EVALUATION_COUNT; evaluationNumber++) {
             const gradeSeed = globalStudentSeq * 13 + s * 7 + evaluationNumber * 3;
-            await prisma.studentGrade.create({
-              data: {
-                grade: buildGrade(gradeSeed),
-                evaluationNumber,
-                schoolSubjectId,
-                academicCycleEnrollmentId: enrollment.id,
-              },
+            gradeRows.push({
+              grade: buildGrade(gradeSeed),
+              evaluationNumber,
+              schoolSubjectId,
+              academicCycleEnrollmentId: enrollment.id,
             });
-            totalGradesCreated++;
           }
         }
+        const { count } = await prisma.studentGrade.createMany({
+          data: gradeRows,
+          skipDuplicates: true,
+        });
+        totalGradesCreated += count;
       }
 
       // Attendance — only create if this enrollment doesn't have any yet.

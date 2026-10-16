@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
-import * as fs from "fs";
 import * as path from "path";
-import { BlobServiceClient, ContainerClient } from "@azure/storage-blob";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { env } from "../config/env.config";
 
 /**
  * Options for file upload operations.
@@ -19,12 +19,12 @@ export interface UploadOptions {
 
 /**
  * Abstract storage service interface.
- * Implementations handle file persistence using different backends
- * (local filesystem, Azure Blob Storage, etc.).
+ * Services depend on this instead of a concrete backend so they can be
+ * unit-tested with a mock.
  */
 export interface IStorageService {
   /**
-   * Upload a file and return the relative path/URL.
+   * Upload a file and return its relative path.
    * @param options - Upload configuration including buffer, filename, mime type, and subfolder
    * @returns Relative path to the stored file (e.g. "employees/uuid.jpg")
    */
@@ -39,125 +39,63 @@ export interface IStorageService {
 }
 
 /**
- * Local file system storage implementation.
- * Stores files in the directory specified by STORAGE_LOCAL_PATH env var (default: "./uploads").
- * Files are organized in subfolders by entity and named with UUIDs to avoid collisions.
+ * Supabase Storage implementation.
+ * Uploads to the bucket named by SUPABASE_STORAGE_BUCKET, authenticated with
+ * SUPABASE_SERVICE_ROLE_KEY (bypasses RLS, so no storage policies are needed).
+ * The bucket must be public: only the relative path is persisted, and
+ * toPublicFileUrl turns it into the bucket's public URL when serializing a
+ * response, so it must be reachable without a signed token.
+ *
+ * The client is created lazily so importing this module (e.g. from the seed)
+ * doesn't crash when the Supabase env vars are missing — the error surfaces
+ * on the first upload/delete instead.
  */
-export class LocalStorageService implements IStorageService {
-  private readonly basePath: string;
+export class SupabaseStorageService implements IStorageService {
+  private client: SupabaseClient | null = null;
 
-  constructor() {
-    this.basePath = process.env.STORAGE_LOCAL_PATH || "./uploads";
+  private get bucket() {
+    if (!this.client) {
+      if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
+        throw new Error(
+          "SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables are required for file storage",
+        );
+      }
+      this.client = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+    }
+    return this.client.storage.from(env.SUPABASE_STORAGE_BUCKET);
   }
 
   /**
-   * Upload a file to the local filesystem.
-   * Generates a unique filename using UUID + original extension.
+   * Upload a file to the Supabase bucket.
+   * Generates a unique object name using UUID + original extension.
    * @param options - Upload options with buffer, fileName, mimeType, and subfolder
    * @returns Relative path: "subfolder/uuid.ext"
    */
   async upload(options: UploadOptions): Promise<string> {
     const ext = path.extname(options.fileName);
-    const uniqueName = `${randomUUID()}${ext}`;
-    const subfolderPath = path.join(this.basePath, options.subfolder);
+    const objectPath = `${options.subfolder}/${randomUUID()}${ext}`;
 
-    // Ensure the target directory exists
-    if (!fs.existsSync(subfolderPath)) {
-      fs.mkdirSync(subfolderPath, { recursive: true });
-    }
+    const { error } = await this.bucket.upload(objectPath, options.buffer, {
+      contentType: options.mimeType,
+      upsert: false,
+    });
+    if (error) throw error;
 
-    const fullPath = path.join(subfolderPath, uniqueName);
-    fs.writeFileSync(fullPath, options.buffer);
-
-    // Return relative path: subfolder/uuid.ext
-    return `${options.subfolder}/${uniqueName}`;
+    return objectPath;
   }
 
   /**
-   * Delete a file from the local filesystem.
-   * No error is thrown if the file does not exist.
+   * Delete a file from the Supabase bucket.
+   * No error is thrown if the object does not exist.
    * @param filePath - Relative path of the file to delete
    */
   async delete(filePath: string): Promise<void> {
-    const fullPath = path.join(this.basePath, filePath);
-    if (fs.existsSync(fullPath)) {
-      fs.unlinkSync(fullPath);
-    }
-  }
-}
-
-/**
- * Azure Blob Storage implementation.
- * Uploads to the container named by AZURE_STORAGE_CONTAINER, authenticated via
- * AZURE_STORAGE_CONNECTION_STRING. The container must have public "Blob"
- * (anonymous read) access — upload() returns the blob's URL directly, and
- * that URL is persisted as-is (see toPublicFileUrl, which passes non-local
- * provider URLs through unchanged), so it must be permanently reachable
- * without a SAS token.
- */
-export class AzureStorageService implements IStorageService {
-  private readonly containerClient: ContainerClient;
-
-  constructor() {
-    const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING || "";
-    const containerName = process.env.AZURE_STORAGE_CONTAINER || "";
-    const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
-    this.containerClient = blobServiceClient.getContainerClient(containerName);
-  }
-
-  /**
-   * Upload a file to the Azure Blob container.
-   * Generates a unique blob name using UUID + original extension.
-   * @param options - Upload options with buffer, fileName, mimeType, and subfolder
-   * @returns The blob's public URL
-   */
-  async upload(options: UploadOptions): Promise<string> {
-    const ext = path.extname(options.fileName);
-    const blobName = `${options.subfolder}/${randomUUID()}${ext}`;
-    const blockBlobClient = this.containerClient.getBlockBlobClient(blobName);
-
-    await blockBlobClient.uploadData(options.buffer, {
-      blobHTTPHeaders: { blobContentType: options.mimeType },
-    });
-
-    return blockBlobClient.url;
-  }
-
-  /**
-   * Delete a file from the Azure Blob container.
-   * No error is thrown if the blob does not exist.
-   * @param filePath - The blob's public URL, as returned by upload()
-   */
-  async delete(filePath: string): Promise<void> {
-    const blobName = this.extractBlobName(filePath);
-    const blockBlobClient = this.containerClient.getBlockBlobClient(blobName);
-    await blockBlobClient.deleteIfExists();
-  }
-
-  /** Strips the container's base URL off a blob URL, recovering "subfolder/uuid.ext". */
-  private extractBlobName(url: string): string {
-    const containerUrlPrefix = `${this.containerClient.url}/`;
-    return url.startsWith(containerUrlPrefix)
-      ? url.slice(containerUrlPrefix.length)
-      : url;
-  }
-}
-
-/**
- * Factory function that returns the active storage service implementation
- * based on the STORAGE_PROVIDER environment variable.
- * Supported values: "local" (default), "azure".
- */
-function createStorageService(): IStorageService {
-  const provider = process.env.STORAGE_PROVIDER || "local";
-  switch (provider) {
-    case "azure":
-      return new AzureStorageService();
-    case "local":
-    default:
-      return new LocalStorageService();
+    const { error } = await this.bucket.remove([filePath]);
+    if (error) throw error;
   }
 }
 
 /** Singleton storage service instance used throughout the application */
-export const storageService: IStorageService = createStorageService();
+export const storageService: IStorageService = new SupabaseStorageService();

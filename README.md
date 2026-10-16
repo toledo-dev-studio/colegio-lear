@@ -128,13 +128,11 @@ Puede consultar el archivo `backend/.env.example` para configurar las variables 
 | `CORS_ORIGIN`                     | `http://localhost:5173`      | Lista de orígenes permitidos separados por coma (uno por cada frontend que consuma la API, ej. admin-web y student-web) |
 | `FRONTEND_URL_ADMIN`              | `http://localhost:5173`      | URL del portal admin/docentes, usada en links de correos (invitaciones, notificaciones)                          |
 | `FRONTEND_URL_STUDENT`            | `http://localhost:5173`      | URL del portal alumnos, usada en links de correos (credenciales, notificaciones)                                 |
-| `BACKEND_URL`                     | auto-detectado               | Origen público del backend, para armar URLs absolutas de archivos con `STORAGE_PROVIDER=local`. En Azure App Service se autodetecta de `WEBSITE_HOSTNAME`; en local cae a `http://localhost:PORT`. Solo defínela a mano si necesitas forzar un valor distinto |
 | `COOKIE_SECURE`                   | `false`                      | Set `true` en producción/HTTPS                                                                                  |
 | `BCRYPT_SALT_ROUNDS`              | `10`                         | Bcrypt hashing rounds                                                                                           |
-| `STORAGE_PROVIDER`                | `local`                      | `local` o `azure`                                                                                               |
-| `STORAGE_LOCAL_PATH`              | `./uploads`                  | Carpeta de archivos cuando `STORAGE_PROVIDER=local`                                                             |
-| `AZURE_STORAGE_CONNECTION_STRING` | (required si `azure`)        | Connection string del Storage Account (Portal → Storage Account → Claves de acceso). Requiere una cuenta **StorageV2 (uso general v2)** — no `FileStorage`, esa no soporta Blob containers |
-| `AZURE_STORAGE_CONTAINER`         | (required si `azure`)        | Nombre del container de Blob Storage. Debe tener acceso público a nivel "Blob" habilitado (y "Permitir acceso público a Blobs" habilitado a nivel de toda la cuenta) — la URL que se guarda en la BD es pública y permanente, sin token de firma |
+| `SUPABASE_URL`                    | (required)                   | URL del proyecto de Supabase, sin `/rest/v1` (ej. `https://xxxx.supabase.co`) |
+| `SUPABASE_SERVICE_ROLE_KEY`       | (required)                   | Secret key (`sb_secret_...`) o `service_role` legacy. Solo backend — nunca la publishable/anon |
+| `SUPABASE_STORAGE_BUCKET`         | `uploads`                    | Bucket de Supabase Storage donde se guardan avatares y adjuntos. Debe ser **público** |
 | `MAIL_HOST`                       | `smtp.gmail.com`             | SMTP host                                                                                                       |
 | `MAIL_PORT`                       | `587`                        | SMTP port                                                                                                       |
 | `MAIL_USER`                       | (required)                   | Email address for sending                                                                                       |
@@ -150,7 +148,7 @@ Puede consultar el archivo `backend/.env.example` para configurar las variables 
 
 > Cuando el proyecto se ejecuta localmente, la variable `DATABASE_URL` se conecta automaticamente el servicio `colegio-lear-db`.
 
-> Para usar Azure Blob Storage (`STORAGE_PROVIDER=azure`), checklist de configuración en Azure: cuenta de tipo **StorageV2** (no `FileStorage`), container con acceso público a nivel "Blob", y el interruptor **"Permitir acceso público a Blobs"** habilitado a nivel de toda la cuenta — sin esto último, aunque el container esté bien configurado, las subidas fallan con `Public access is not permitted on this storage account`.
+> Archivos (avatares, adjuntos): en Supabase → **Storage** crea un bucket **público** (con límite de 10 MB por archivo, igual que multer). No se necesitan policies RLS: el backend usa la clave de servidor, que las ignora. En la BD solo se guarda la ruta relativa (`employees/uuid.jpg`); la URL pública se arma al responder.
 
 #### Configuración de envios de correo Gmail (Configuración SMTP)
 
