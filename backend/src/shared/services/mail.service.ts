@@ -54,6 +54,82 @@ export class GmailService implements IMailService {
 }
 
 /**
+ * Microsoft Graph implementation (sends over HTTPS)
+ */
+export class GraphMailService implements IMailService {
+  private token: string | null = null;
+  private tokenExpiresAt = 0;
+
+  /** Returns a cached access token, requesting a new one shortly before it expires */
+  private async getToken(): Promise<string> {
+    if (this.token && Date.now() < this.tokenExpiresAt) return this.token;
+
+    const tenantId = process.env.MAIL_GRAPH_TENANT_ID || "";
+    const res = await fetch(
+      `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          client_id: process.env.MAIL_GRAPH_CLIENT_ID || "",
+          client_secret: process.env.MAIL_GRAPH_CLIENT_SECRET || "",
+          scope: "https://graph.microsoft.com/.default",
+          grant_type: "client_credentials",
+        }),
+      },
+    );
+    const data = (await res.json()) as {
+      access_token?: string;
+      expires_in?: number;
+      error_description?: string;
+    };
+    if (!res.ok || !data.access_token) {
+      throw new Error(
+        `Microsoft Graph token request failed (${res.status}): ${data.error_description ?? "unknown error"}`,
+      );
+    }
+
+    this.token = data.access_token;
+    // Refresh one minute early to avoid using a token that expires mid-request
+    this.tokenExpiresAt = Date.now() + ((data.expires_in ?? 3600) - 60) * 1000;
+    return this.token;
+  }
+
+  /** Send an email through Microsoft Graph's sendMail endpoint */
+  async sendMail(options: MailOptions): Promise<void> {
+    const from = process.env.MAIL_FROM || "";
+    const res = await fetch(
+      `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(from)}/sendMail`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${await this.getToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: {
+            subject: options.subject,
+            body: { contentType: "HTML", content: options.html },
+            toRecipients: [{ emailAddress: { address: options.to } }],
+          },
+          saveToSentItems: false,
+        }),
+      },
+    );
+
+    // Success is 202 Accepted with an empty body
+    if (!res.ok) {
+      const body = (await res.json().catch(() => null)) as {
+        error?: { code?: string; message?: string };
+      } | null;
+      throw new Error(
+        `Microsoft Graph sendMail failed (${res.status}): ${body?.error?.code ?? ""} ${body?.error?.message ?? ""}`.trim(),
+      );
+    }
+  }
+}
+
+/**
  * Generic SMTP placeholder implementation.
  * Throws an error indicating it is not yet configured.
  * Reserved for future use with an alternative SMTP provider.
@@ -73,11 +149,14 @@ export class SmtpService implements IMailService {
  *
  * Supported values:
  * - "gmail" (default): Uses GmailService with nodemailer
+ * - "graph": Uses GraphMailService (Microsoft Graph over HTTPS)
  * - "smtp": Uses SmtpService placeholder
  */
 function createMailService(): IMailService {
   const provider = process.env.MAIL_PROVIDER || "gmail";
   switch (provider) {
+    case "graph":
+      return new GraphMailService();
     case "smtp":
       return new SmtpService();
     case "gmail":
