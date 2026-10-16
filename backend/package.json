@@ -21,9 +21,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@azure/storage-blob": "^12.33.0",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "^7.7.0",
+    "@supabase/supabase-js": "^2.117.3",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",

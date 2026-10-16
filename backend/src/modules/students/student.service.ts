@@ -331,8 +331,7 @@ export class StudentService {
 
   /**
    * Uploads (or replaces) a student's avatar via the injected IStorageService
-   * — same abstraction EmployeeService uses, so this is provider-agnostic
-   * (swapping STORAGE_PROVIDER to "azure" later needs no change here).
+   * — same abstraction EmployeeService uses, so this is provider-agnostic.
    * Same guard as the employee self-service equivalent (uploadMyAvatar):
    * requires the student to be active and not deleted.
    */

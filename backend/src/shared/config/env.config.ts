@@ -25,10 +25,9 @@ interface EnvConfig {
   SUPER_ADMIN_LAST_NAME: string;
 
   // Storage
-  STORAGE_PROVIDER: string;
-  STORAGE_LOCAL_PATH: string;
-  AZURE_STORAGE_CONNECTION_STRING: string;
-  AZURE_STORAGE_CONTAINER: string;
+  SUPABASE_URL: string;
+  SUPABASE_SERVICE_ROLE_KEY: string;
+  SUPABASE_STORAGE_BUCKET: string;
 
   // Mail
   MAIL_PROVIDER: string;
@@ -40,6 +39,7 @@ interface EnvConfig {
 
   // Cookie
   COOKIE_SECURE: boolean;
+  COOKIE_SAMESITE: "lax" | "strict" | "none";
 
   // CORS
   CORS_ORIGIN: string[];
@@ -61,7 +61,6 @@ interface EnvConfig {
   FRONTEND_URL_STUDENT: string;
 
   // Backend (public origin, used to build absolute URLs for locally-stored files)
-  BACKEND_URL: string;
 }
 
 /**
@@ -93,11 +92,11 @@ export const env: EnvConfig = {
   SUPER_ADMIN_LAST_NAME: process.env.SUPER_ADMIN_LAST_NAME || "Admin",
 
   // Storage
-  STORAGE_PROVIDER: process.env.STORAGE_PROVIDER || "local",
-  STORAGE_LOCAL_PATH: process.env.STORAGE_LOCAL_PATH || "./uploads",
-  AZURE_STORAGE_CONNECTION_STRING:
-    process.env.AZURE_STORAGE_CONNECTION_STRING || "",
-  AZURE_STORAGE_CONTAINER: process.env.AZURE_STORAGE_CONTAINER || "",
+  // Project URL only (no /rest/v1 suffix); trailing slash stripped so
+  // toPublicFileUrl can append paths safely.
+  SUPABASE_URL: (process.env.SUPABASE_URL || "").replace(/\/+$/, ""),
+  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+  SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET || "uploads",
 
   // Mail
   MAIL_PROVIDER: process.env.MAIL_PROVIDER || "gmail",
@@ -109,6 +108,12 @@ export const env: EnvConfig = {
 
   // Cookie
   COOKIE_SECURE: process.env.COOKIE_SECURE === "true",
+  // Cross-site setups (front and API on different domains) need "none" + COOKIE_SECURE=true.
+  COOKIE_SAMESITE: (["lax", "strict", "none"].includes(
+    (process.env.COOKIE_SAMESITE || "").toLowerCase(),
+  )
+    ? (process.env.COOKIE_SAMESITE as string).toLowerCase()
+    : "lax") as "lax" | "strict" | "none",
 
   // CORS (comma-separated list of allowed origins)
   CORS_ORIGIN: (process.env.CORS_ORIGIN || "http://localhost:5173")
@@ -132,15 +137,6 @@ export const env: EnvConfig = {
   FRONTEND_URL_ADMIN: process.env.FRONTEND_URL_ADMIN || "http://localhost:5173",
   FRONTEND_URL_STUDENT:
     process.env.FRONTEND_URL_STUDENT || "http://localhost:5173",
-
-  // Backend — falls back to Azure App Service's own auto-injected hostname
-  // (WEBSITE_HOSTNAME) before falling back to localhost, so no manual
-  // config is needed just to reflect the container's real public domain.
-  BACKEND_URL:
-    process.env.BACKEND_URL ||
-    (process.env.WEBSITE_HOSTNAME
-      ? `https://${process.env.WEBSITE_HOSTNAME}`
-      : `http://localhost:${process.env.PORT || "3000"}`),
 };
 
 // Validate critical environment variables
