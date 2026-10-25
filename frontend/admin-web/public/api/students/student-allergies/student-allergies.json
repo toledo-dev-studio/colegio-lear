@@ -1,0 +1,14 @@
+[
+    {
+        "id": "a1a455a1-115e-4105-a527-8d902ce58861",
+        "name": "Nueces",
+        "severity": "moderate",
+        "observations": "Evitar alimentos con nuez."
+    },
+    {
+        "id": "a1a455a1-115e-4105-a527-8d902ce58862",
+        "name": "Penicilina",
+        "severity": "moderate",
+        "observations": ""
+    }
+]

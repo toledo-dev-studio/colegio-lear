@@ -1,0 +1,77 @@
+import { Navigate, useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
+
+import { EmployeeForm } from "./components/EmployeeForm";
+import { useLoaderStore } from "@/stores/LoaderStore";
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import type { EmployeeRequest } from "@/interfaces/requests/employee.request";
+import { useGetEmployeeById } from "../../hooks/employees/useGetEmployeeById";
+import { useCreateUpdateEmployee } from "../../hooks/employees/useCreateUpdateEmployee";
+import { EmployeeFormSkeleton } from "./components/EmployeeFormSkeleton";
+
+export const EmployeePage = () => {
+  // Component hooks & stores
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoaderStore();
+  const employeeQuery = useGetEmployeeById({ id: id! });
+  const createUpdateEmployeeMutation = useCreateUpdateEmployee();
+  const title = id === "new" ? "Registro de empleado" : "Edición de empleado";
+
+  const handleSubmit = async (employeeRequestLike: Partial<EmployeeRequest>) => {
+    try {
+      showLoading("Guardando registro");
+      await createUpdateEmployeeMutation.mutateAsync({ id: id!, employeeRequestLike }, {
+        onSuccess: (response) => {
+          toast.success("Empleado actualizada correctamente", { position: "top-right" });
+          hideLoading();
+          navigate(`/employees/${response.id}`);
+        }
+      });
+    } catch (error) {
+      console.warn(error);
+      hideLoading();
+      showApiErrorToast(error, "Ocurrio un error al tratar de actualizar el empleado");
+    }
+  }
+
+  if (employeeQuery.isError) {
+    showApiErrorToast(employeeQuery.error, "No fue posible obtener la información del empleado");
+    return <Navigate to="/employees" />;
+  }
+
+  return (
+    <>
+      <div className="w-full py-12 px-10 lg:px-15">
+
+        <div className="mb-10">
+          <Breadcrumb items={[
+            { label: "Seguridad" },
+            { label: "Empleados", to: "/employees" },
+            { label: id === "new" ? "Nuevo empleado" : employeeQuery.data?.name || "Edición de empleado" },
+          ]} />
+        </div>
+
+        <PageTitle
+          title={title}
+          subtitle="Gestiona la información de los empleados que estará disponible en la organización" />
+
+        <div className="flex-1">
+          <section className="flex flex-col min-h-full gap-8 mt-5">
+            {
+              employeeQuery.isLoading ?
+                <EmployeeFormSkeleton /> :
+                <EmployeeForm
+                  employeeResponse={employeeQuery.data}
+                  isSubmitting={createUpdateEmployeeMutation.isPending}
+                  onSubmit={handleSubmit}
+                />
+            }
+          </section>
+        </div>
+      </div>
+    </>
+  )
+}

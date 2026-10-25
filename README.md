@@ -1,41 +1,241 @@
 # COLEGIO LEAR
 
-```COLEGIO LEAR``` is a project focus on student service, from administrative operations to manage the student lifecycle, unit self-service site for students.
+`COLEGIO LEAR` es unn proyecto enfocado en el servicio al estudiante y la administración de información relacionada a los alumnos y su estancia en un colegio.
 
-## Docker Compose
+El proyecto se compone de dos sitios web que coexisten con el fin de dar una mejor visibilidad a todos los integrantes del colegio, uno de los portales esta enfocado para su uso por el personal administrativo así como de docentes de un colegio, y el otro es un portal de servicio de cara al estudiante y/o sus tutores.
 
-This project uses Docker Compose to manage development containers. The configuration is defined in the `compose.yaml` file.
+## Aspectos técnicos
 
-### Available Services
+El siguiente es la arquitectura técnica que se llevó a cabo para el desarrollo de este proyecto.
 
-The project includes three containerized services:
+---
+### Docker
 
-1. **colegio-lear-backend-cli** - Node.js container for the backend
-   - Volume: `./backend:/app`
-   - Port: `3000:3000`
+Con el fin de que este proyecto se pueda replicar en diferentes colegios, se opto por desarrollarlo utilizando la herramienta de contenedores `Docker`, lo que permite una facilidad al momento de desarrollar y/o desplegar el aplicativo.
 
-2. **colegio-lear-admin-web-cli** - Node.js container for the admin panel
-   - Volume: `./frontend/admin-web:/app`
-   - Port: `80:80`
+Su uso local esta configurado con la caracteristica `Compose` que integra `Docker` por medio del archivo `compose.yaml`, en la siguiente sección se explica su uso.
 
-3. **colegio-lear-student-web-cli** - Node.js container for the student web
-   - Volume: `./frontend/student-web:/app`
-   - Port: `80:80`
+#### Servicios de docker compose
 
-### Main Commands
+Este proyecto se compone de los siguientes servicios
 
-#### Start a service
+1. **colegio-lear-db**: Base de datos PostgreSQL 17
+   - Binding port: `5432:5432`
+   - Credenciales (configurables): `postgres` / `postgres`
+   - Nombre de base de datos: `colegio_lear`
 
-To start one of the available services locally you will need to run a command like the following:
+2. **colegio-lear-backend-cli**: NodeJS para administración de Backend
+   - Volumenes para desarrollo: `./backend:/app`
+   - Binding port: `3000:3000`
+   - Dependiente de: `colegio-lear-db`
+
+3. **colegio-lear-admin-web-cli**: NodeJS para administración de portal web admin
+   - Volumenes para desarrollo: `./frontend/admin-web:/app`
+   - Binding port: `3001:80`
+
+4. **colegio-lear-student-web-cli**: NodeJS para administración de portal web estudiantes
+   - Volumenes para desarrollo: `./frontend/student-web:/app`
+   - Binding port: `3002:80`
+
+---
+
+### Backend
+
+#### Configuración de primer uso del Backend
+
+1. Inicializamos el servicio de base de datos
+
+```bash
+docker compose up -d colegio-lear-db
+```
+
+2. Accedemos a la shell del backend
 
 ```bash
 docker compose run -p 3000:3000 --rm colegio-lear-backend-cli
-docker compose run -p 80:80 --rm colegio-admin-web-cli
-docker compose run -p 80:80 --rm colegio-student-web-cli
+```
+
+3. Dentro del contenedor ejecutamos las siguientes configuraciones
+
+```bash
+# Install dependencies
+pnpm install
+
+# Copy environment file and configure
+cp .env.example .env
+# Edit .env with your values (DATABASE_URL is already set via Docker env)
+
+# Generate Prisma client
+npx prisma generate
+
+# Run migrations (creates all tables)
+npx prisma migrate dev
+
+# Run seed (creates admin users + test data)
+npx prisma db seed
+
+# Start the development server
+pnpm run dev
+```
+
+4. Verificamos que todo funcione
+
+   - API: http://localhost:3000/health
+   - Swagger Docs: http://localhost:3000/api-docs
+
+5. Login con credenciales de admin
+
+```bash
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "username": "sadmin",
+  "password": "SuperAdmin123!"
+}
+```
+
+> El login genera un HttpOnly cookie `access_token`. Todos los otros servicios consumos desde el frontend envia la cookie de forma automática.
+> El campo `username` permite tanto el username como el email.
+
+
+#### Comando de referencia
+
+| Command                            | Description                           |
+| ---------------------------------- | ------------------------------------- |
+| `pnpm install`                     | Install dependencies                  |
+| `pnpm run dev`                     | Start dev server (port 3000)          |
+| `pnpm run build`                   | Build TypeScript                      |
+| `pnpm test`                        | Run tests                             |
+| `npx prisma generate`              | Regenerate Prisma client              |
+| `npx prisma migrate dev`           | Apply pending migrations              |
+| `npx prisma migrate reset --force` | Reset DB + re-apply migrations + seed |
+| `npx prisma db seed`               | Run seed only                         |
+| `npx prisma studio`                | Open Prisma Studio (DB GUI)           |
+
+---
+
+#### Environment Variables
+
+Puede consultar el archivo `backend/.env.example` para configurar las variables de entorno para el archivo `backend/.env`.
+
+| Variable                          | Default                      | Description                                                                                                     |
+| ---------------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                    | (required)                   | PostgreSQL connection string                                                                                    |
+| `JWT_SECRET`                      | (required)                   | Secret for signing JWT tokens                                                                                   |
+| `JWT_ACCESS_EXPIRATION`           | `15m`                        | JWT expiration (e.g. 15m, 1h, 7d)                                                                                |
+| `PORT`                            | `3000`                       | Server port                                                                                                     |
+| `CORS_ORIGIN`                     | `http://localhost:5173`      | Lista de orígenes permitidos separados por coma (uno por cada frontend que consuma la API, ej. admin-web y student-web) |
+| `FRONTEND_URL_ADMIN`              | `http://localhost:5173`      | URL del portal admin/docentes, usada en links de correos (invitaciones, notificaciones)                          |
+| `FRONTEND_URL_STUDENT`            | `http://localhost:5173`      | URL del portal alumnos, usada en links de correos (credenciales, notificaciones)                                 |
+| `COOKIE_SECURE`                   | `false`                      | Set `true` en producción/HTTPS                                                                                  |
+| `BCRYPT_SALT_ROUNDS`              | `10`                         | Bcrypt hashing rounds                                                                                           |
+| `STORAGE_PROVIDER`                | `local`                      | `local` o `azure`                                                                                               |
+| `STORAGE_LOCAL_PATH`              | `./uploads`                  | Carpeta de archivos cuando `STORAGE_PROVIDER=local`                                                             |
+| `AZURE_STORAGE_CONNECTION_STRING` | (required si `azure`)        | Connection string del Storage Account (Portal → Storage Account → Claves de acceso). Requiere una cuenta **StorageV2 (uso general v2)** — no `FileStorage`, esa no soporta Blob containers |
+| `AZURE_STORAGE_CONTAINER`         | (required si `azure`)        | Nombre del container de Blob Storage. Debe tener acceso público a nivel "Blob" habilitado (y "Permitir acceso público a Blobs" habilitado a nivel de toda la cuenta) — la URL que se guarda en la BD es pública y permanente, sin token de firma |
+| `SUPABASE_URL`                    | (required)                   | URL del proyecto de Supabase, sin `/rest/v1` (ej. `https://xxxx.supabase.co`) |
+| `SUPABASE_SERVICE_ROLE_KEY`       | (required)                   | Secret key (`sb_secret_...`) o `service_role` legacy. Solo backend — nunca la publishable/anon |
+| `SUPABASE_STORAGE_BUCKET`         | `uploads`                    | Bucket de Supabase Storage donde se guardan avatares y adjuntos. Debe ser **público** |
+| `MAIL_PROVIDER`                   | `gmail`                      | `gmail` (SMTP, local) o `graph` (Microsoft Graph por HTTPS — usar en Render, que bloquea los puertos SMTP) |
+| `MAIL_FROM`                       | `noreply@colegiolear.com`    | Remitente. Con `graph`, es el buzón de Microsoft 365 desde el que se envía (ej. `noreply@colegiolear.mx`) |
+| `MAIL_HOST`                       | `smtp.gmail.com`             | SMTP host                                                                                                       |
+| `MAIL_PORT`                       | `587`                        | SMTP port                                                                                                       |
+| `MAIL_USER`                       | (required)                   | Email address for sending                                                                                       |
+| `MAIL_PASSWORD`                   | (required)                   | App Password (see Gmail setup below)                                                                            |
+| `MAIL_GRAPH_TENANT_ID`            | (required si `graph`)        | Directory (tenant) ID del App Registration en Entra ID |
+| `MAIL_GRAPH_CLIENT_ID`            | (required si `graph`)        | Application (client) ID del App Registration |
+| `MAIL_GRAPH_CLIENT_SECRET`        | (required si `graph`)        | Client secret del App Registration. Requiere el permiso de aplicación `Mail.Send` con admin consent |
+| `ADMIN1_NAME`                     | `Super`                      | SuperAdmin first name                                                                                           |
+| `ADMIN1_LAST_NAME`                | `Admin`                      | SuperAdmin last name                                                                                            |
+| `ADMIN1_EMAIL`                    | `superadmin@colegiolear.com` | SuperAdmin email                                                                                                 |
+| `ADMIN1_PASSWORD`                 | `SuperAdmin123!`             | SuperAdmin password                                                                                             |
+| `ADMIN2_NAME`                     | `Admin`                      | Admin first name                                                                                                |
+| `ADMIN2_LAST_NAME`                | `Two`                        | Admin last name                                                                                                 |
+| `ADMIN2_EMAIL`                    | `admin2@colegiolear.com`     | Admin email                                                                                                     |
+| `ADMIN2_PASSWORD`                 | `Admin456!`                  | Admin password                                                                                                  |
+
+> Cuando el proyecto se ejecuta localmente, la variable `DATABASE_URL` se conecta automaticamente el servicio `colegio-lear-db`.
+
+> Archivos (avatares, adjuntos): en Supabase → **Storage** crea un bucket **público** (con límite de 10 MB por archivo, igual que multer). No se necesitan policies RLS: el backend usa la clave de servidor, que las ignora. En la BD solo se guarda la ruta relativa (`employees/uuid.jpg`); la URL pública se arma al responder.
+
+#### Configuración de envios de correo Gmail (Configuración SMTP)
+
+El backend se encarga de enviar correos en diferentes procesos, si se requiere configurar un cliente de `gmail` diferente se deberían seguir los siguientes pasos.
+
+1. **Enable 2-Step Verification** on your Google account:
+   - Go to https://myaccount.google.com/security
+   - Under "Signing in to Google", enable **2-Step Verification**
+
+2. **Generate an App Password**:
+   - Go to https://myaccount.google.com/apppasswords
+   - Select app: **Mail**
+   - Select device: **Other** (write "Colegio Lear")
+   - Click **Generate**
+   - Copy the 16-character password (e.g. `abcd efgh ijkl mnop`)
+
+3. **Configure your `.env`**:
+   ```env
+   MAIL_HOST=smtp.gmail.com
+   MAIL_PORT=587
+   MAIL_USER=your-email@gmail.com
+   MAIL_PASSWORD=abcdefghijklmnop
+   ```
+
+#### Autenticación
+
+La `API` utiliza autenticación por `JWT` almacenada en un `HttpOnly Cookie`:
+
+1. **Login** → `POST /auth/login` — sets `access_token` cookie
+2. **All other endpoints** require the cookie (sent automatically by the browser)
+3. **Logout** → `POST /auth/logout` — clears the cookie
+
+Para probar la `API` en herramientas como Postman, Insomnia, etc., debes de habilitar `Send cookies` o utilizar el header `Authorization: Bearer <token>`.
+
+---
+
+### Frontend
+
+La siguiente configuración funciona tanto para el `frontend` `admin-web` como para `student-web`.
+
+#### Variables de entorno
+
+Para que el proyecto funcione correctamente se debe de configura el archivo `.env` en la carpeta raíz de cada proyecto de `frontend`
+
+Puede consultar el archivo `.env.example` para configurar las variables de entorno para el archivo `.env`.
+
+| Variable                | Default                      | Description                                                                     |
+| ----------------------- | ---------------------------- | ------------------------------------------------------------------------------- |
+| `VITE_API_URL`          | (required)                   | URL de API para servicios web (http://localhost:3001/api) para entorno mockable |
+| `VITE_ENVIRONMENT`      | (required)                   | Entorno de ejecución en frontend (mockable, development, production)            |
+
+--- 
+### Inicializar entorno/servicios locales
+
+Para inicializar un entorno local, basta con utilizar el comando siguiente:
+
+```bash
+docker compose up
+```
+
+Si se necesita inicializar uno de los servicios de forma independiente, puede ejecutar uno de los siguientes comandos:
+
+```bash
+# Start database first
+docker compose up -d colegio-lear-db
+
+# Backend utility container
+docker compose run -p 3000:3000 --rm colegio-lear-backend-cli
+
+# Admin web utility container
+docker compose run -p 3001:80 --rm colegio-lear-admin-web-cli
+
+# Student web utility container
+docker compose run -p 3002:80 --rm colegio-lear-student-web-cli
 ```
 
 > [!NOTE]
-> - Mounted volumes allow you to edit code locally and see changes in real-time
-> - Port `80` is exposed on many services. If you need to run multiple services simultaneously, you will need to modify the ports in `compose.yaml`
-> - Use `--rm` with `docker compose run` to automatically clean up the container after execution
-> - To stop without removing volumes, use `docker compose stop`. To remove them, use `docker compose down`
+>
+> - Los volumenes que existen actualmente es para poder editar cada proyecto y ver los cambios en tiempo real.
+> - Utilizar `--rm` con el comando `docker compose run` elimina automaticamente los contenedores una vez detenidos.
+> - Para generar un nuevo build de la imagen utiliza `--build` con el comando`docker compose`.

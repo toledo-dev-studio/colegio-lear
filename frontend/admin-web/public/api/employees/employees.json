@@ -1,0 +1,242 @@
+[
+    {
+        "id": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
+        "name": "Juan",
+        "firstLastName": "Pérez",
+        "secondLastName": "García",
+        "phoneNumber": "4771234567",
+        "email": "juan.perez@example.com",
+        "username": "jperez",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": true,
+        "securityRoleId": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
+        "securityRole": {
+            "id": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
+            "name": "Administrador General",
+            "description": "Acceso completo al sistema"
+        },
+        "jobTitleId": "1f3b2c44-9d0c-4d0a-a111-0b1a2c3d4e5f",
+        "jobTitle": {
+            "id": "1f3b2c44-9d0c-4d0a-a111-0b1a2c3d4e5f",
+            "name": "Gerente General",
+            "description": "Responsable de la operación general",
+            "isActive": true
+        }
+    },
+    {
+        "id": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
+        "name": "María",
+        "firstLastName": "López",
+        "secondLastName": "Hernández",
+        "phoneNumber": "4772345678",
+        "email": "maria.lopez@example.com",
+        "username": "mlopez",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": true,
+        "securityRoleId": "b2c3d4e5-f6a7-4890-9234-56789abcdef0",
+        "securityRole": {
+            "id": "b2c3d4e5-f6a7-4890-9234-56789abcdef0",
+            "name": "Supervisor Académico",
+            "description": "Supervisa operaciones"
+        },
+        "jobTitleId": "2a4c5d66-8e1f-4a2b-b222-1c2d3e4f5a6b",
+        "jobTitle": {
+            "id": "2a4c5d66-8e1f-4a2b-b222-1c2d3e4f5a6b",
+            "name": "Coordinador",
+            "description": "Coordina equipos de trabajo",
+            "isActive": true
+        }
+    },
+    {
+        "id": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
+        "name": "Carlos",
+        "firstLastName": "Ramírez",
+        "secondLastName": "Torres",
+        "phoneNumber": "4773456789",
+        "email": "carlos.ramirez@example.com",
+        "username": "cramirez",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": true,
+        "securityRoleId": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
+        "securityRole": {
+            "id": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
+            "name": "Recursos Humanos",
+            "description": "Acceso básico"
+        },
+        "jobTitleId": "3b5d6e77-7f2a-4b3c-c333-2d3e4f5a6b7c",
+        "jobTitle": {
+            "id": "3b5d6e77-7f2a-4b3c-c333-2d3e4f5a6b7c",
+            "name": "Desarrollador",
+            "description": "Desarrolla software",
+            "isActive": true
+        }
+    },
+    {
+        "id": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
+        "name": "Ana",
+        "firstLastName": "Martínez",
+        "secondLastName": "Sánchez",
+        "phoneNumber": "4774567890",
+        "email": "ana.martinez@example.com",
+        "username": "amartinez",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": false,
+        "securityRoleId": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
+        "securityRole": {
+            "id": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
+            "name": "Recursos Humanos",
+            "description": "Acceso básico"
+        },
+        "jobTitleId": "4c6e7f88-6a3b-4c4d-d444-3e4f5a6b7c8d",
+        "jobTitle": {
+            "id": "4c6e7f88-6a3b-4c4d-d444-3e4f5a6b7c8d",
+            "name": "Diseñador",
+            "description": "Diseña interfaces",
+            "isActive": true
+        }
+    },
+    {
+        "id": "e4f5a6b7-8c9d-4e0f-2a3b-4c5d6e7f8a9b",
+        "name": "Luis",
+        "firstLastName": "Gómez",
+        "secondLastName": "Díaz",
+        "phoneNumber": "4775678901",
+        "email": "luis.gomez@example.com",
+        "username": "lgomez",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": true,
+        "securityRoleId": "b2c3d4e5-f6a7-4890-9234-56789abcdef0",
+        "securityRole": {
+            "id": "b2c3d4e5-f6a7-4890-9234-56789abcdef0",
+            "name": "Supervisor Académico",
+            "description": "Supervisa operaciones"
+        },
+        "jobTitleId": "5d7f8a99-5b4c-4d5e-e555-4f5a6b7c8d9e",
+        "jobTitle": {
+            "id": "5d7f8a99-5b4c-4d5e-e555-4f5a6b7c8d9e",
+            "name": "Analista",
+            "description": "Analiza información",
+            "isActive": true
+        }
+    },
+    {
+        "id": "f5a6b7c8-9d0e-4f1a-3b4c-5d6e7f8a9b0c",
+        "name": "Sofía",
+        "firstLastName": "Fernández",
+        "secondLastName": "Ruiz",
+        "phoneNumber": "4776789012",
+        "email": "sofia.fernandez@example.com",
+        "username": "sfernandez",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": true,
+        "securityRoleId": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
+        "securityRole": {
+            "id": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
+            "name": "Recursos Humanos",
+            "description": "Acceso básico"
+        },
+        "jobTitleId": "6e8a9b00-4c5d-4e6f-f666-5a6b7c8d9e0f",
+        "jobTitle": {
+            "id": "6e8a9b00-4c5d-4e6f-f666-5a6b7c8d9e0f",
+            "name": "Soporte Técnico",
+            "description": "Atiende incidencias",
+            "isActive": true
+        }
+    },
+    {
+        "id": "06b7c8d9-0e1f-4a2b-4c5d-6e7f8a9b0c1d",
+        "name": "Diego",
+        "firstLastName": "Vargas",
+        "secondLastName": "Morales",
+        "phoneNumber": "4777890123",
+        "email": "diego.vargas@example.com",
+        "username": "dvargas",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": true,
+        "securityRoleId": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
+        "securityRole": {
+            "id": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
+            "name": "Administrador General",
+            "description": "Acceso completo al sistema"
+        },
+        "jobTitleId": "7f9b0c11-3d6e-4f70-a777-6b7c8d9e0f1a",
+        "jobTitle": {
+            "id": "7f9b0c11-3d6e-4f70-a777-6b7c8d9e0f1a",
+            "name": "Arquitecto de Software",
+            "description": "Define arquitectura",
+            "isActive": true
+        }
+    },
+    {
+        "id": "17c8d9e0-1f2a-4b3c-5d6e-7f8a9b0c1d2e",
+        "name": "Lucía",
+        "firstLastName": "Castro",
+        "secondLastName": "Ortega",
+        "phoneNumber": "4778901234",
+        "email": "lucia.castro@example.com",
+        "username": "lcastro",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": false,
+        "securityRoleId": "b2c3d4e5-f6a7-4890-9234-56789abcdef0",
+        "securityRole": {
+            "id": "b2c3d4e5-f6a7-4890-9234-56789abcdef0",
+            "name": "Supervisor Académico",
+            "description": "Supervisa operaciones"
+        },
+        "jobTitleId": "8a0c1d22-2e7f-4071-b888-7c8d9e0f1a2b",
+        "jobTitle": {
+            "id": "8a0c1d22-2e7f-4071-b888-7c8d9e0f1a2b",
+            "name": "Contador",
+            "description": "Gestiona finanzas",
+            "isActive": true
+        }
+    },
+    {
+        "id": "28d9e0f1-2a3b-4c4d-6e7f-8a9b0c1d2e3f",
+        "name": "Miguel",
+        "firstLastName": "Navarro",
+        "secondLastName": "Jiménez",
+        "phoneNumber": "4779012345",
+        "email": "miguel.navarro@example.com",
+        "username": "mnavarro",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": true,
+        "securityRoleId": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
+        "securityRole": {
+            "id": "c3d4e5f6-a7b8-4901-a345-6789abcdef01",
+            "name": "Recursos Humanos",
+            "description": "Acceso básico"
+        },
+        "jobTitleId": "9b1d2e33-1f8a-4172-c999-8d9e0f1a2b3c",
+        "jobTitle": {
+            "id": "9b1d2e33-1f8a-4172-c999-8d9e0f1a2b3c",
+            "name": "Vendedor",
+            "description": "Gestiona ventas",
+            "isActive": true
+        }
+    },
+    {
+        "id": "39e0f1a2-3b4c-4d5e-7f8a-9b0c1d2e3f4a",
+        "name": "Elena",
+        "firstLastName": "Rojas",
+        "secondLastName": "Mendoza",
+        "phoneNumber": "4770123456",
+        "email": "elena.rojas@example.com",
+        "username": "erojas",
+        "image": "https://gravatar.com/avatar/569a633053dd643d3f4daa8ed6a5a16e?s=400&d=robohash&r=x",
+        "isActive": true,
+        "securityRoleId": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
+        "securityRole": {
+            "id": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
+            "name": "Administrador General",
+            "description": "Acceso completo al sistema"
+        },
+        "jobTitleId": "0c2e3f44-0a9b-4273-d000-9e0f1a2b3c4d",
+        "jobTitle": {
+            "id": "0c2e3f44-0a9b-4273-d000-9e0f1a2b3c4d",
+            "name": "Director",
+            "description": "Toma decisiones estratégicas",
+            "isActive": true
+        }
+    }
+]

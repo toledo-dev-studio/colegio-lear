@@ -1,0 +1,211 @@
+{
+    "summary": {
+        "outstanding": 5800,
+        "paid": 6500,
+        "total": 13800,
+        "overdue": 2500
+    },
+    "items": [
+        {
+            "id": "d1c2b3a4-1111-4e22-8b33-111111111111",
+            "name": "Inscripción",
+            "description": "Pago correspondiente al proceso de inscripción.",
+            "amount": 2500,
+            "allowForgiveness": false,
+            "outstandingAmount": 0,
+            "dueDate": "2025-08-15T00:00:00.000Z",
+            "status": "paid",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "8c2f8d8e-1f35-4cb2-b8c7-2d3b6f3c1a11"
+        },
+        {
+            "id": "d1c2b3a4-2222-4e22-8b33-222222222222",
+            "name": "Colegiatura Agosto",
+            "description": "Pago correspondiente al mes de agosto.",
+            "amount": 1800,
+            "allowForgiveness": true,
+            "outstandingAmount": 1800,
+            "dueDate": "2025-08-31T00:00:00.000Z",
+            "status": "pending",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
+        },
+        {
+            "id": "d1c2b3a4-3333-4e22-8b33-333333333333",
+            "name": "Colegiatura Septiembre",
+            "description": "Pago correspondiente al mes de septiembre.",
+            "amount": 1800,
+            "allowForgiveness": true,
+            "outstandingAmount": 1800,
+            "dueDate": "2025-09-15T00:00:00.000Z",
+            "status": "overdue",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
+        },
+        {
+            "id": "d1c2b3a4-4444-4e22-8b33-444444444444",
+            "name": "Colegiatura Octubre",
+            "description": "Pago correspondiente al mes de octubre.",
+            "amount": 1800,
+            "allowForgiveness": true,
+            "outstandingAmount": 0,
+            "dueDate": "2025-10-15T00:00:00.000Z",
+            "status": "paid",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
+        },
+        {
+            "id": "d1c2b3a4-5555-4e22-8b33-555555555555",
+            "name": "Material Didáctico",
+            "description": "Material escolar del ciclo.",
+            "amount": 1200,
+            "allowForgiveness": false,
+            "outstandingAmount": 0,
+            "dueDate": "2025-12-20T00:00:00.000Z",
+            "status": "paid",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "d9b3e7a1-6c84-4f5d-b2a8-7e1c9d4f3b33"
+        },
+        {
+            "id": "d1c2b3a4-6666-4e22-8b33-666666666666",
+            "name": "Uniforme",
+            "description": "Pago por uniforme escolar.",
+            "amount": 1500,
+            "allowForgiveness": false,
+            "outstandingAmount": 0,
+            "dueDate": "2025-08-25T00:00:00.000Z",
+            "isForgiven": true,
+            "status": "forgiven",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "d9b3e7a1-6c84-4f5d-b2a8-7e1c9d4f3b33"
+        },
+        {
+            "id": "d1c2b3a4-7777-4e22-8b33-777777777777",
+            "name": "Laboratorio",
+            "description": "Uso de laboratorios.",
+            "amount": 900,
+            "allowForgiveness": false,
+            "outstandingAmount": 900,
+            "dueDate": "2025-11-05T00:00:00.000Z",
+            "status": "pending",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "d9b3e7a1-6c84-4f5d-b2a8-7e1c9d4f3b33"
+        },
+        {
+            "id": "d1c2b3a4-8888-4e22-8b33-888888888888",
+            "name": "Actividad Cultural",
+            "description": "Pago de actividad cultural.",
+            "amount": 600,
+            "allowForgiveness": true,
+            "outstandingAmount": 600,
+            "dueDate": "2025-10-30T00:00:00.000Z",
+            "status": "pending",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
+        },
+        {
+            "id": "d1c2b3a4-9999-4e22-8b33-999999999999",
+            "name": "Excursión Escolar",
+            "description": "Pago para excursión anual.",
+            "amount": 1000,
+            "allowForgiveness": false,
+            "outstandingAmount": 0,
+            "dueDate": "2026-02-10T00:00:00.000Z",
+            "status": "paid",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "d9b3e7a1-6c84-4f5d-b2a8-7e1c9d4f3b33"
+        },
+        {
+            "id": "d1c2b3a4-aaaa-4e22-8b33-aaaaaaaaaaaa",
+            "name": "Seguro Escolar",
+            "description": "Cobertura anual de seguro escolar.",
+            "amount": 700,
+            "allowForgiveness": false,
+            "outstandingAmount": 700,
+            "dueDate": "2025-09-01T00:00:00.000Z",
+            "status": "overdue",
+            "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+            "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+            "studentId": "550e8400-e29b-41d4-a716-446655440001",
+            "student": {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "name": "Juan",
+                "firstLastName": "Pérez",
+                "secondLastName": "García"
+            },
+            "academicCycleWalletId": "4f7a5b9c-8c2d-4d1a-9f6b-3e4d7a2c5f22"
+        }
+    ]
+}

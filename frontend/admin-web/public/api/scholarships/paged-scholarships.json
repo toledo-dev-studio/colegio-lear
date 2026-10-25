@@ -1,0 +1,112 @@
+{
+    "totalPages": 2,
+    "currentPage": 1,
+    "itemsCount": 15,
+    "data": [
+        {
+            "id": "3f9a8c2e-1b4d-4f6a-9c2a-8e7d5b1f0a11",
+            "name": "Beca Excelencia Académica",
+            "description": "Otorgada a estudiantes con promedio sobresaliente.",
+            "discountPercentage": 50,
+            "isActive": true
+        },
+        {
+            "id": "7c1d2e90-5a3b-4c6f-8d21-9f0a2b3c4d55",
+            "name": "Beca Deportiva",
+            "description": "Para estudiantes con alto rendimiento en disciplinas deportivas.",
+            "discountPercentage": 40,
+            "isActive": true
+        },
+        {
+            "id": "a2b3c4d5-e6f7-48a9-b123-4567890abcde",
+            "name": "Beca Cultural",
+            "description": "Dirigida a estudiantes destacados en actividades artísticas.",
+            "discountPercentage": 35,
+            "isActive": true
+        },
+        {
+            "id": "b1c2d3e4-f5a6-47b8-9123-abcdef123456",
+            "name": "Beca Socioeconómica",
+            "description": "Apoyo para estudiantes con limitaciones económicas.",
+            "discountPercentage": 60,
+            "isActive": true
+        },
+        {
+            "id": "c9d8e7f6-1234-4a5b-9cde-112233445566",
+            "name": "Beca de Nuevo Ingreso",
+            "description": "Incentivo para estudiantes de primer ingreso.",
+            "discountPercentage": 25,
+            "isActive": true
+        },
+        {
+            "id": "d4e5f6a7-89b0-4c1d-a234-556677889900",
+            "name": "Beca de Liderazgo",
+            "description": "Para estudiantes con habilidades de liderazgo comprobadas.",
+            "discountPercentage": 30,
+            "isActive": true
+        },
+        {
+            "id": "e7f8a9b0-c1d2-4e3f-b456-77889900aabb",
+            "name": "Beca Tecnológica",
+            "description": "Dirigida a estudiantes en áreas de tecnología e innovación.",
+            "discountPercentage": 45,
+            "isActive": true
+        },
+        {
+            "id": "f1e2d3c4-b5a6-4d7e-8f90-aabbccddeeff",
+            "name": "Beca de Investigación",
+            "description": "Apoyo a estudiantes involucrados en proyectos de investigación.",
+            "discountPercentage": 55,
+            "isActive": false
+        },
+        {
+            "id": "01234567-89ab-4cde-f012-3456789abcde",
+            "name": "Beca Internacional",
+            "description": "Para programas de intercambio en el extranjero.",
+            "discountPercentage": 50,
+            "isActive": true
+        },
+        {
+            "id": "89abcdef-0123-4567-89ab-cdef01234567",
+            "name": "Beca de Continuidad",
+            "description": "Para estudiantes que mantienen buen desempeño académico.",
+            "discountPercentage": 20,
+            "isActive": true
+        },
+        {
+            "id": "13579bdf-2468-4ace-b135-79bdf2468ace",
+            "name": "Beca Familiar",
+            "description": "Apoyo para estudiantes con familiares inscritos en la institución.",
+            "discountPercentage": 15,
+            "isActive": true
+        },
+        {
+            "id": "2468ace0-1357-4bdf-8246-8ace013579bd",
+            "name": "Beca Emprendimiento",
+            "description": "Para estudiantes con proyectos de negocio innovadores.",
+            "discountPercentage": 35,
+            "isActive": false
+        },
+        {
+            "id": "abcdef12-3456-4789-abcd-ef1234567890",
+            "name": "Beca Inclusión",
+            "description": "Dirigida a promover la inclusión y diversidad estudiantil.",
+            "discountPercentage": 50,
+            "isActive": true
+        },
+        {
+            "id": "fedcba98-7654-4321-fedc-ba9876543210",
+            "name": "Beca Talento Musical",
+            "description": "Para estudiantes con habilidades musicales destacadas.",
+            "discountPercentage": 30,
+            "isActive": true
+        },
+        {
+            "id": "0f1e2d3c-4b5a-4978-9c0d-1e2f3a4b5c6d",
+            "name": "Beca Idiomas",
+            "description": "Apoyo para estudiantes en programas de aprendizaje de idiomas.",
+            "discountPercentage": 25,
+            "isActive": true
+        }
+    ]
+}

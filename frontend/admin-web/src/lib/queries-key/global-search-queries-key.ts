@@ -1,0 +1,1 @@
+export const GET_GLOBAL_SEARCH = "global-search";

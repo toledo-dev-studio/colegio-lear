@@ -1,0 +1,92 @@
+[
+    {
+        "id": "f0a1b2c3-1111-4d55-8e66-111111111111",
+        "folio": "PAG-2026-000001",
+        "amount": 2500,
+        "paymentMethod": "online-payment",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-1111-4e22-8b33-111111111111"
+    },
+    {
+        "id": "f0a1b2c3-2222-4d55-8e66-222222222222",
+        "folio": "PAG-2026-000002",
+        "amount": 1000,
+        "paymentMethod": "cash",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-2222-4e22-8b33-222222222222"
+    },
+    {
+        "id": "f0a1b2c3-3333-4d55-8e66-333333333333",
+        "folio": "PAG-2026-000003",
+        "amount": 800,
+        "paymentMethod": "online-payment",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-2222-4e22-8b33-222222222222"
+    },
+    {
+        "id": "f0a1b2c3-4444-4d55-8e66-444444444444",
+        "folio": "PAG-2026-000004",
+        "amount": 1800,
+        "paymentMethod": "cash",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-3333-4e22-8b33-333333333333"
+    },
+    {
+        "id": "f0a1b2c3-5555-4d55-8e66-555555555555",
+        "folio": "PAG-2026-000005",
+        "amount": 1800,
+        "paymentMethod": "online-payment",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-4444-4e22-8b33-444444444444"
+    },
+    {
+        "id": "f0a1b2c3-6666-4d55-8e66-666666666666",
+        "folio": "PAG-2026-000006",
+        "amount": 1200,
+        "paymentMethod": "cash",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-5555-4e22-8b33-555555555555"
+    },
+    {
+        "id": "f0a1b2c3-7777-4d55-8e66-777777777777",
+        "folio": "PAG-2026-000007",
+        "amount": 1500,
+        "paymentMethod": "online-payment",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-6666-4e22-8b33-666666666666"
+    },
+    {
+        "id": "f0a1b2c3-8888-4d55-8e66-888888888888",
+        "folio": "PAG-2026-000008",
+        "amount": 900,
+        "paymentMethod": "cash",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-7777-4e22-8b33-777777777777"
+    },
+    {
+        "id": "f0a1b2c3-9999-4d55-8e66-999999999999",
+        "folio": "PAG-2026-000009",
+        "amount": 1000,
+        "paymentMethod": "online-payment",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-9999-4e22-8b33-999999999999"
+    },
+    {
+        "id": "f0a1b2c3-aaaa-4d55-8e66-aaaaaaaaaaaa",
+        "folio": "PAG-2026-000010",
+        "amount": 700,
+        "paymentMethod": "cash",
+        "academicCycleId": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "studentWalletItemId": "d1c2b3a4-aaaa-4e22-8b33-aaaaaaaaaaaa"
+    }
+]

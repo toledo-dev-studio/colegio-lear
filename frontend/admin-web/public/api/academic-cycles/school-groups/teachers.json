@@ -1,0 +1,54 @@
+[
+    {
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "teacherId": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
+        "schoolSubject": {
+            "name": "Matemáticas"
+        },
+        "teacher": {
+            "name": "Juan",
+            "firstLastName": "Pérez",
+            "secondLastName": "García",
+            "email": "juan.perez@example.com"
+        }
+    },
+    {
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "teacherId": "b1c2d3e4-5f6a-4b7c-9d0e-1f2a3b4c5d6e",
+        "schoolSubject": {
+            "name": "Historia"
+        },
+        "teacher": {
+            "name": "María",
+            "firstLastName": "López",
+            "secondLastName": "Hernández",
+            "email": "maria.lopez@example.com"
+        }
+    },
+    {
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "teacherId": "c2d3e4f5-6a7b-4c8d-0e1f-2a3b4c5d6e7f",
+        "schoolSubject": {
+            "name": "Ciencias Naturales"
+        },
+        "teacher": {
+            "name": "Carlos",
+            "firstLastName": "Ramírez",
+            "secondLastName": "Torres",
+            "email": "carlos.ramirez@example.com"
+        }
+    },
+    {
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "teacherId": "d3e4f5a6-7b8c-4d9e-1f2a-3b4c5d6e7f8a",
+        "schoolSubject": {
+            "name": "Español"
+        },
+        "teacher": {
+            "name": "Ana",
+            "firstLastName": "Martínez",
+            "secondLastName": "Sánchez",
+            "email": "ana.martinez@example.com"
+        }
+    }
+]

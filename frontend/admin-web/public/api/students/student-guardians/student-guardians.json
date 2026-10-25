@@ -1,0 +1,25 @@
+[
+    {
+        "id": "550e8400-e29b-41d4-a716-446655440002",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "fullName": "José Martínez",
+        "relationship": "father",
+        "phoneNumber": "4423344556",
+        "email": "jose.martinez@example.com",
+        "principal": true,
+        "emergencyContact": true,
+        "authorizedToPickUp": true
+    },
+    {
+        "id": "550e8400-e29b-41d4-a716-446655440003",
+        "studentId": "550e8400-e29b-41d4-a716-446655440001",
+        "fullName": "Laura Ruiz",
+        "relationship": "mother",
+        "phoneNumber": "4426677889",
+        "email": "laura.ruiz@example.com",
+        "principal": false,
+        "emergencyContact": true,
+        "authorizedToPickUp": true,
+        "observations": "Llamar antes al padre"
+    }
+]

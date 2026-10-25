@@ -1,0 +1,34 @@
+/**
+ * Type: Request
+ * Description: Represents a payment concept associated with an academic cycle wallet, containing details about the payment, its status, and references to related entities.
+ */
+export interface AcademicCycleWalletItemRequest {
+    /**
+     * Payment concept name.
+     */
+    name: string;
+    /**
+     * Payment concept code.
+     */
+    code: string;
+    /**
+     * Description of the payment concept
+     */
+    description?: string;
+    /**
+     * Amount for the payment associated with the academic cycle wallet
+     */
+    amount: number;
+    /**
+     * Indicates if forgiveness is allowed for the payment associated with the academic cycle wallet
+     */
+    allowForgiveness: boolean;
+    /**
+     * Due date for the payment associated with the academic cycle wallet as an ISO string (YYYY-MM-DDTHH:mm:ss.mmmZ)
+     */
+    dueDate: string;
+    /**
+     * Identifier of the associated academic cycle
+     */
+    academicCycleId: string;
+}

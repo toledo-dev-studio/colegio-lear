@@ -1,0 +1,55 @@
+import type { JobTitleResponse } from "../responses/job-title.response";
+import type { SecurityRoleResponse } from "../responses/security-role.response";
+
+/**
+ * Type: Request
+ * Description: Represents an employee of the school, containing their personal information, contact details, status, and references to related entities such as their job title and security role.
+ */
+export interface EmployeeRequest {
+    /**
+     * Name of the employee
+     */
+    name: string;
+    /**
+     * First last name of the employee
+     */
+    firstLastName: string;
+    /**
+     * Second last name of the employee
+     */
+    secondLastName?: string;
+    /**
+     * Phone number of the employee
+     */
+    phoneNumber: string;
+    /**
+     * Email address of the employee
+     */
+    email: string;
+    /**
+     * Attachment file for employee's image
+     */
+    file?: File;
+    /**
+     * Employee is active flag
+     */
+    isActive?: boolean;
+    /**
+     * Security role unique identifier
+     */
+    securityRoleId?: string;
+    /**
+     * Not sent to backend.
+     * Reference to the associated security role
+     */
+    securityRole?: Partial<SecurityRoleResponse>;
+    /**
+     * Job title unique identifier
+     */
+    jobTitleId: string;
+    /**
+     * Not sent to backend.
+     * Reference to the associated job title
+     */
+    jobTitle?: Partial<JobTitleResponse>;
+}

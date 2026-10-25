@@ -1,0 +1,107 @@
+[
+    {
+        "module": "students",
+        "records": [
+            {
+                "id": "550e8400-e29b-41d4-a716-446655440001",
+                "label": "Juan Pérez García",
+                "subtitle": "Matrícula: ENR-2026-001",
+                "route": "/students/550e8400-e29b-41d4-a716-446655440001"
+            },
+            {
+                "id": "550e8400-e29b-41d4-a716-446655440002",
+                "label": "María López Hernández",
+                "subtitle": "Matrícula: ENR-2026-002",
+                "route": "/students/550e8400-e29b-41d4-a716-446655440002"
+            }
+        ]
+    },
+    {
+        "module": "employees",
+        "records": [
+            {
+                "id": "a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d",
+                "label": "Juan Pérez",
+                "subtitle": "Gerente General",
+                "route": "/employees/a9f1c2d3-4b5e-4a6f-8c1d-0e2f3a4b5c6d"
+            }
+        ]
+    },
+    {
+        "module": "academic-cycles",
+        "records": [
+            {
+                "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+                "label": "2023 - 2024",
+                "subtitle": "Ciclo escolar anual",
+                "route": "/academic-cycles/f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001"
+            }
+        ]
+    },
+    {
+        "module": "school-subjects",
+        "records": [
+            {
+                "id": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+                "label": "Matemáticas",
+                "subtitle": "Materia escolar",
+                "route": "/school-subjects/a1b2c3d4-e5f6-4a7b-8c9d-123456789001"
+            }
+        ]
+    },
+    {
+        "module": "announcements",
+        "records": [
+            {
+                "id": "a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61",
+                "label": "Inicio de ciclo escolar 2026",
+                "subtitle": "Publicado el 05/01/2026",
+                "route": "/announcements/a1f3c2d4-7b9e-4c11-9c2a-1b2d3e4f5a61"
+            }
+        ]
+    },
+    {
+        "module": "payment-concepts",
+        "records": [
+            {
+                "id": "b7c8e2d1-7c7f-4e7e-a1c4-2b98c6d4f101",
+                "label": "Inscripción anual",
+                "subtitle": "$4,500.00 MXN",
+                "route": "/payment-concepts/b7c8e2d1-7c7f-4e7e-a1c4-2b98c6d4f101"
+            }
+        ]
+    },
+    {
+        "module": "scholarships",
+        "records": [
+            {
+                "id": "3f9a8c2e-1b4d-4f6a-9c2a-8e7d5b1f0a11",
+                "label": "Beca Excelencia Académica",
+                "subtitle": "Descuento del 50% en colegiatura",
+                "route": "/scholarships/3f9a8c2e-1b4d-4f6a-9c2a-8e7d5b1f0a11"
+            }
+        ]
+    },
+    {
+        "module": "security-roles",
+        "records": [
+            {
+                "id": "a1b2c3d4-e5f6-4789-8123-456789abcdef",
+                "label": "Administrador General",
+                "subtitle": "Acceso completo al sistema",
+                "route": "/security-roles/a1b2c3d4-e5f6-4789-8123-456789abcdef"
+            }
+        ]
+    },
+    {
+        "module": "job-titles",
+        "records": [
+            {
+                "id": "1f3b2c44-9d0c-4d0a-a111-0b1a2c3d4e5f",
+                "label": "Gerente General",
+                "subtitle": "Puesto docente",
+                "route": "/job-titles/1f3b2c44-9d0c-4d0a-a111-0b1a2c3d4e5f"
+            }
+        ]
+    }
+]

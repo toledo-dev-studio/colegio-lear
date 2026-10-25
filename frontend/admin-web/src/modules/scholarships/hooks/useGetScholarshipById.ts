@@ -1,0 +1,24 @@
+import { useQuery } from "@tanstack/react-query";
+
+import { FIVE_MINUTES_STALE_TIME } from "@/lib/constants/tanstack.constants";
+import { GET_SCHOLARSHIP_QUERY_KEY } from "@/lib/queries-key/scholarships-queries-key";
+import type { ScholarshipResponse } from "@/interfaces/responses/scholarship.response";
+import { getScholarshipByIdAsync } from "../api/get-scholarship-by-id.api";
+
+interface Options {
+    id: string;
+}
+
+export const useGetScholarshipById = ({ id }: Options) => {
+    return useQuery({
+        queryKey: [GET_SCHOLARSHIP_QUERY_KEY, { id }],
+        queryFn: () => {
+            if (id === "new") {
+                return {} as unknown as ScholarshipResponse;
+            }
+            return getScholarshipByIdAsync({ id });
+        },
+        retry: false,
+        staleTime: FIVE_MINUTES_STALE_TIME,
+    });
+}

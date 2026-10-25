@@ -1,0 +1,83 @@
+import { Navigate, useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
+import { showApiErrorToast } from "@/lib/helpers/error-toast.helper";
+
+import { PageTitle } from "@/shared/components/page-title/PageTitle";
+import { Breadcrumb } from "@/shared/components/breadcrumb/Breadcrumb";
+import { AcademicCycleSchoolGroupForm } from "./components/AcademicCycleSchoolGroupForm";
+import { useAcademicCycleSchoolGroupPage } from "./hooks/useAcademicCycleSchoolGroupPage";
+import { AcademicCycleSchoolGroupFormSkeleton } from "./components/AcademicCycleSchoolGroupFormSkeleton";
+import type { AcademicCycleSchoolGroupRequest } from "@/interfaces/requests/academic-cycle-school-group.request";
+
+export const AcademicCycleSchoolGroupPage = () => {
+    // Component hooks & stores
+    const navigate = useNavigate();
+    const { schoolGroupId } = useParams();
+
+    // Context hooks & stores configuration
+    const { context, queries, mutations, loader, isLoadingPage, isLoadingPageError } = useAcademicCycleSchoolGroupPage({ id: schoolGroupId! });
+
+    // Constant configuration variables
+    const title = schoolGroupId === "new" ? "Registro de grupo escolar" : "Edición de grupo escolar";
+
+    // Component functions
+    const onSubmit = async (academicCycleSchoolGroupRequestLike: Partial<AcademicCycleSchoolGroupRequest>) => {
+        try {
+            loader.show("Guardando");
+            await mutations.academicCycleSchoolGroup.createUpdate.mutateAsync({
+                id: schoolGroupId!,
+                academicCycleSchoolGroupRequestLike
+            }, {
+                onSuccess: (response) => {
+                    toast.success("Grupo escolar agregado al ciclo escolar correctamente", { position: "top-right" });
+                    loader.hide();
+                    navigate(`/academic-cycles/${context.academicCycleId}/school-groups/${response.id}`);
+                }
+            });
+        } catch (error) {
+            console.warn(error);
+            loader.hide();
+            showApiErrorToast(error, "Ocurrió un error al tratar de registrar el grupo escolar");
+        }
+    }
+
+    if (isLoadingPageError) {
+        showApiErrorToast(queries.schoolGroups.getById.error ?? queries.teachers.get.error ?? queries.schoolSubjects.get.error, "No fue posible obtener la información relacionada con el grupo escolar");
+        return <Navigate to={`/academic-cycles/${context.academicCycleId}/school-groups`} />;
+    }
+
+    return (
+        <>
+            <section className="w-full py-12 px-10 lg:px-15">
+
+                <section className="mb-10">
+                    <Breadcrumb items={[
+                        { label: "Seguimiento escolar" },
+                        { label: "Ciclos escolares", to: "/academic-cycles" },
+                        { label: context.academicCycle?.code || "Edición de ciclo escolar", to: `/academic-cycles/${context.academicCycleId}/school-groups` },
+                        { label: title }
+                    ]} />
+                </section>
+
+                <PageTitle
+                    title="REGISTRO & EDICIÓN DE GRUPOS ESCOLARES"
+                    subtitle="En esta sección podrás configurar aquellos grupos escolares que estarán disponibles para los alumnos al momento de su incripción en el ciclo escolar." />
+
+                <section className="flex-1 flex flex-col min-h-full gap-8 mt-5">
+
+                    {
+                        isLoadingPage ? <AcademicCycleSchoolGroupFormSkeleton /> :
+                            <AcademicCycleSchoolGroupForm
+                                isSubmitting={mutations.academicCycleSchoolGroup.createUpdate.isPending}
+                                teachersResponse={queries.teachers.get.data}
+                                schoolSubjectsResponse={queries.schoolSubjects.get.data}
+                                academicCycleSchoolGroupResponse={queries.schoolGroups.getById.data}
+                                onSubmit={onSubmit}
+                            />
+                    }
+
+                </section>
+            </section>
+        </>
+    )
+}

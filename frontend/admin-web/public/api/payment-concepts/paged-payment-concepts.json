@@ -1,0 +1,167 @@
+{
+    "totalPages": 2,
+    "currentPage": 1,
+    "itemsCount": 20,
+    "data": [
+        {
+            "id": "b7c8e2d1-7c7f-4e7e-a1c4-2b98c6d4f101",
+            "name": "Inscripción anual",
+            "description": "Cuota de inscripción al inicio del ciclo escolar",
+            "allowForgiveness": false,
+            "amount": 4500,
+            "isActive": true
+        },
+        {
+            "id": "d1f3a6c9-3e4a-4f8b-91f5-6a2f8c9d2102",
+            "name": "Colegiatura mensual",
+            "description": "Mensualidad regular del ciclo escolar vigente",
+            "allowForgiveness": true,
+            "amount": 3200,
+            "isActive": true
+        },
+        {
+            "id": "a9e4f2b7-8d11-4f5a-bf2e-9d3a6c7b3103",
+            "name": "Material didáctico",
+            "description": "Paquete de libros y materiales del grado",
+            "allowForgiveness": false,
+            "amount": 1800,
+            "isActive": true
+        },
+        {
+            "id": "f2c1d8a3-5b77-42e3-8c2d-7e1f4a9b4104",
+            "name": "Uniforme escolar",
+            "description": "Conjunto completo de uniforme oficial",
+            "allowForgiveness": false,
+            "amount": 1250,
+            "isActive": true
+        },
+        {
+            "id": "9a7d3f1c-6b92-4b3e-a8c7-3d4f5e6a5105",
+            "name": "Examen de admisión",
+            "description": "Cuota única por aplicación de examen",
+            "allowForgiveness": true,
+            "amount": 600,
+            "isActive": true
+        },
+        {
+            "id": "e4b7c1d2-2f83-4a6d-b5f2-8c1a9e7d6106",
+            "name": "Reinscripción",
+            "description": "Reinscripción para alumnos continuos",
+            "allowForgiveness": true,
+            "amount": 3800,
+            "isActive": true
+        },
+        {
+            "id": "7d9a1c4f-3b66-4d8e-a9f1-2e6c7b8d7107",
+            "name": "Transporte escolar",
+            "description": "Servicio mensual de transporte",
+            "allowForgiveness": false,
+            "amount": 1500,
+            "isActive": true
+        },
+        {
+            "id": "1f2e3d4c-5b6a-47f8-9c0d-8a7b6c5d8108",
+            "name": "Comedor escolar",
+            "description": "Servicio mensual de alimentos balanceados",
+            "allowForgiveness": true,
+            "amount": 1800,
+            "isActive": true
+        },
+        {
+            "id": "3c4d5e6f-7a8b-49d1-b2c3-4e5f6a7b9109",
+            "name": "Actividades extracurriculares",
+            "description": "Talleres deportivos, arte y robótica",
+            "allowForgiveness": true,
+            "amount": 900,
+            "isActive": true
+        },
+        {
+            "id": "6b5a4c3d-2e1f-4a9b-b7c8-9d0e1f2a1110",
+            "name": "Excursión académica",
+            "description": "Salida de campo programada por la dirección",
+            "allowForgiveness": true,
+            "amount": 550,
+            "isActive": true
+        },
+        {
+            "id": "8f7e6d5c-4b3a-41d2-a9c8-7b6e5d4c1211",
+            "name": "Constancia de estudios",
+            "description": "Emisión de constancia oficial",
+            "allowForgiveness": true,
+            "amount": 120,
+            "isActive": true
+        },
+        {
+            "id": "2a3b4c5d-6e7f-48d9-b1c2-3d4e5f6a1312",
+            "name": "Certificado parcial",
+            "description": "Certificado parcial de estudios",
+            "allowForgiveness": true,
+            "amount": 250,
+            "isActive": true
+        },
+        {
+            "id": "4d5e6f7a-8b9c-4a1d-b2e3-5f6a7b8c1413",
+            "name": "Examen extraordinario",
+            "description": "Aplicación de examen extraordinario por materia",
+            "allowForgiveness": false,
+            "amount": 350,
+            "isActive": true
+        },
+        {
+            "id": "5e6f7a8b-9c1d-4b2e-a3f4-6b7c8d9e1514",
+            "name": "Curso de verano",
+            "description": "Programa de actividades de verano",
+            "allowForgiveness": true,
+            "amount": 2400,
+            "isActive": false
+        },
+        {
+            "id": "7a8b9c1d-2e3f-4c5d-b6a7-8c9d0e1f1615",
+            "name": "Cuota de graduación",
+            "description": "Cuota única para ceremonia de graduación",
+            "allowForgiveness": false,
+            "amount": 1500,
+            "isActive": true
+        },
+        {
+            "id": "9c1d2e3f-4a5b-46d7-b8c9-0e1f2a3b1716",
+            "name": "Recargo por mora",
+            "description": "Recargo aplicado por pago fuera de fecha",
+            "allowForgiveness": true,
+            "amount": 200,
+            "isActive": true
+        },
+        {
+            "id": "1b2c3d4e-5f6a-47b8-a9c0-1d2e3f4a1817",
+            "name": "Reposición de credencial",
+            "description": "Trámite de credencial perdida o dañada",
+            "allowForgiveness": true,
+            "amount": 180,
+            "isActive": true
+        },
+        {
+            "id": "3d4e5f6a-7b8c-49d0-b1e2-3f4a5b6c1918",
+            "name": "Donativo voluntario",
+            "description": "Aportación voluntaria a la asociación de padres",
+            "allowForgiveness": true,
+            "amount": 1000,
+            "isActive": false
+        },
+        {
+            "id": "5f6a7b8c-9d0e-41f2-a3b4-5c6d7e8f2019",
+            "name": "Seguro escolar",
+            "description": "Cobertura básica anual contra accidentes",
+            "allowForgiveness": false,
+            "amount": 480,
+            "isActive": true
+        },
+        {
+            "id": "7b8c9d0e-1f2a-43b4-c5d6-7e8f9a0b2120",
+            "name": "Examen psicométrico",
+            "description": "Aplicación de evaluación psicopedagógica",
+            "allowForgiveness": false,
+            "amount": 800,
+            "isActive": true
+        }
+    ]
+}
