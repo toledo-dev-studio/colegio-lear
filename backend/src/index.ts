@@ -125,6 +125,9 @@ app.listen(env.PORT, () => {
 });
 
 /* --- Background Jobs --- */
-startNotificationDeliveryJob();
+// Disabled on Render, where a Cron Job runs them (see run-notification-delivery.ts)
+if (env.ENABLE_IN_PROCESS_JOBS) {
+  startNotificationDeliveryJob();
+}
 
 export default app;

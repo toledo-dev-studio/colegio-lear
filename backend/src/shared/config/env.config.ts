@@ -29,6 +29,9 @@ interface EnvConfig {
   SUPABASE_SERVICE_ROLE_KEY: string;
   SUPABASE_STORAGE_BUCKET: string;
 
+  // Background jobs
+  ENABLE_IN_PROCESS_JOBS: boolean;
+
   // Mail
   MAIL_PROVIDER: string;
   MAIL_FROM: string;
@@ -97,6 +100,9 @@ export const env: EnvConfig = {
   SUPABASE_URL: (process.env.SUPABASE_URL || "").replace(/\/+$/, ""),
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
   SUPABASE_STORAGE_BUCKET: process.env.SUPABASE_STORAGE_BUCKET || "uploads",
+
+  // Background jobs — set to "false" where a Render Cron Job runs them instead
+  ENABLE_IN_PROCESS_JOBS: process.env.ENABLE_IN_PROCESS_JOBS !== "false",
 
   // Mail
   MAIL_PROVIDER: process.env.MAIL_PROVIDER || "gmail",
