@@ -144,6 +144,7 @@ Puede consultar el archivo `backend/.env.example` para configurar las variables 
 | `MAIL_GRAPH_TENANT_ID`            | (required si `graph`)        | Directory (tenant) ID del App Registration en Entra ID |
 | `MAIL_GRAPH_CLIENT_ID`            | (required si `graph`)        | Application (client) ID del App Registration |
 | `MAIL_GRAPH_CLIENT_SECRET`        | (required si `graph`)        | Client secret del App Registration. Requiere el permiso de aplicación `Mail.Send` con admin consent |
+| `ENABLE_IN_PROCESS_JOBS`          | `true`                       | Corre los jobs con node-cron dentro del servidor. Poner `false` en Render (ver "Jobs programados en Render") |
 | `ADMIN1_NAME`                     | `Super`                      | SuperAdmin first name                                                                                           |
 | `ADMIN1_LAST_NAME`                | `Admin`                      | SuperAdmin last name                                                                                            |
 | `ADMIN1_EMAIL`                    | `superadmin@colegiolear.com` | SuperAdmin email                                                                                                 |
@@ -156,6 +157,19 @@ Puede consultar el archivo `backend/.env.example` para configurar las variables 
 > Cuando el proyecto se ejecuta localmente, la variable `DATABASE_URL` se conecta automaticamente el servicio `colegio-lear-db`.
 
 > Para usar Azure Blob Storage (`STORAGE_PROVIDER=azure`), checklist de configuración en Azure: cuenta de tipo **StorageV2** (no `FileStorage`), container con acceso público a nivel "Blob", y el interruptor **"Permitir acceso público a Blobs"** habilitado a nivel de toda la cuenta — sin esto último, aunque el container esté bien configurado, las subidas fallan con `Public access is not permitted on this storage account`.
+
+#### Jobs programados en Render
+
+El plan gratuito de Render apaga el web service tras ~15 min sin tráfico, así que el `node-cron` interno no es confiable ahí. En su lugar, el job de notificaciones corre como un **Render Cron Job** (servicio aparte, de pago):
+
+1. En el web service, definir `ENABLE_IN_PROCESS_JOBS=false`. **Nunca** dejar ambos activos: el job no es seguro ante ejecuciones simultáneas y duplicaría correos.
+2. En Render → **New → Cron Job**, mismo repo y rama:
+   - **Root Directory:** `backend`
+   - **Build Command:** el mismo del web service (instalar dependencias, `prisma generate`, `pnpm build`)
+   - **Command:** `node dist/shared/jobs/run-notification-delivery.js`
+   - **Schedule:** `0 12 * * *` — Render usa UTC; equivale a las 6:00 am de México (UTC-6)
+   - **Environment:** `DATABASE_URL` y todas las `MAIL_*` (mismos valores que el web service)
+3. El script termina con código `1` si falla, así que Render marca la ejecución como fallida y se ve en su historial. Desde el dashboard se puede lanzar a mano con **Trigger Run**.
 
 #### Configuración de envios de correo Gmail (Configuración SMTP)
 

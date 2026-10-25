@@ -30,6 +30,9 @@ interface EnvConfig {
   AZURE_STORAGE_CONNECTION_STRING: string;
   AZURE_STORAGE_CONTAINER: string;
 
+  // Background jobs
+  ENABLE_IN_PROCESS_JOBS: boolean;
+
   // Mail
   MAIL_PROVIDER: string;
   MAIL_FROM: string;
@@ -98,6 +101,9 @@ export const env: EnvConfig = {
   AZURE_STORAGE_CONNECTION_STRING:
     process.env.AZURE_STORAGE_CONNECTION_STRING || "",
   AZURE_STORAGE_CONTAINER: process.env.AZURE_STORAGE_CONTAINER || "",
+
+  // Background jobs — set to "false" where a Render Cron Job runs them instead
+  ENABLE_IN_PROCESS_JOBS: process.env.ENABLE_IN_PROCESS_JOBS !== "false",
 
   // Mail
   MAIL_PROVIDER: process.env.MAIL_PROVIDER || "gmail",

@@ -16,6 +16,11 @@ const notificationService = new NotificationService(prisma, mailService);
  * attempts) along with today's newly-due notifications. Runs once
  * immediately on startup too, so anything already due doesn't sit
  * waiting for the next 6am tick.
+ *
+ * In-process scheduling only — disabled on Render (ENABLE_IN_PROCESS_JOBS=false),
+ * where the free web service sleeps and a Render Cron Job runs
+ * run-notification-delivery.ts instead. Never enable both: the release
+ * isn't safe to run concurrently and would send duplicate emails.
  */
 export function startNotificationDeliveryJob(): void {
   const run = async () => {
