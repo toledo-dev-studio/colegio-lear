@@ -1,0 +1,35 @@
+import { Menu } from "lucide-react";
+
+import { AccountInfoButton } from "./components/account-info/AccountInfoButton";
+import { ThemeToggleButton } from "./components/theme-toggle/ThemeToggleButton";
+import { NotificationButton } from "./components/notifications/NotificationButton";
+import { EnrollmentSelector } from "./components/enrollment-selector/EnrollmentSelector";
+
+interface Props {
+    logout: () => void;
+    toggleSidebar: () => void;
+}
+
+export const Navbar = ({ toggleSidebar, logout }: Props) => {
+    return (
+        <header className="sticky top-0 z-50 h-20 bg-card border-b border-border flex items-center gap-2 px-4 sm:px-8">
+
+            {/* Menu toggle */}
+            <section className="flex flex-row items-center gap-2">
+                <button data-testid="header-menu-button" className="icon-btn lg:hidden" onClick={toggleSidebar}>
+                    <Menu className="w-4.5 h-4.5" />
+                </button>
+                <EnrollmentSelector />
+            </section>
+            
+            {/* User actions */}
+            <section className="ml-auto flex items-center gap-2 sm:gap-4">
+                <ThemeToggleButton />
+
+                <NotificationButton />
+
+                <AccountInfoButton logout={logout} />
+            </section>
+        </header>
+    );
+}

@@ -1,0 +1,10 @@
+{
+  "activeAcademicCyclesCount": 2,
+  "activeStudentsCount": 348,
+  "droppedStudentsCount": 27,
+  "topGroups": [
+    { "id": "grp-01", "name": "3° A Primaria", "cycleName": "Ciclo 2025-2026", "averageGrade": 9.7, "studentsCount": 32 },
+    { "id": "grp-02", "name": "2° B Secundaria", "cycleName": "Ciclo 2025-2026", "averageGrade": 9.5, "studentsCount": 28 },
+    { "id": "grp-03", "name": "5° A Primaria", "cycleName": "Ciclo 2025-2026", "averageGrade": 9.4, "studentsCount": 30 }
+  ]
+}

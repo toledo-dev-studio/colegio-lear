@@ -1,0 +1,947 @@
+[
+    {
+        "id": "46ee02f5-6b59-49e8-b459-ccf7b916908f",
+        "grade": 7.8,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "de57bf10-b58a-49c7-f420-534e5291968d",
+        "grade": 8.1,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "009bc835-43f8-4134-afeb-865d38d1b879",
+        "grade": 8.4,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "658809ce-e64b-45fd-1511-81afdfe35f85",
+        "grade": 7.2,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "bc745da1-2c79-4df1-17a2-7fd9421938c7",
+        "grade": 9.1,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "bbfa27cc-f00b-4697-b15c-1cb1fc85f3cd",
+        "grade": 7.9,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "916bfac6-baa5-4dca-c3c2-031a4ae1cc4f",
+        "grade": 9.7,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "bcc15009-b41f-4566-cab8-2e207bf0c9a1",
+        "grade": 7.0,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "d8cfccf9-160d-4dec-e897-8655120c3f8d",
+        "grade": 7.4,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "69b414cf-8fb7-4698-f04d-b089333ff427",
+        "grade": 7.7,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "42a1267f-4bde-40da-4286-531d3937f04c",
+        "grade": 8.0,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "6712874e-b86f-407c-1650-6d8f3bec7647",
+        "grade": 8.3,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "e03b1163-216f-4425-f55c-bad64aafa6e5",
+        "grade": 8.7,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "f816ca5a-4022-4c8f-f7c5-ff08f2b213c5",
+        "grade": 9.0,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "9f0059dd-26b7-4451-ee08-bff9877b2cb6",
+        "grade": 9.3,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "e31a3d01-c342-4267-a34b-f47953843409",
+        "grade": 9.6,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "b87a8422-666b-4ddd-f6f4-c0f64ea19137",
+        "grade": 7.3,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "a847f73e-704a-418b-46ab-f3ef455a3b47",
+        "grade": 7.6,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "af5965df-1208-4aa3-2b65-c31caa55e5e7",
+        "grade": 7.9,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "218963b4-87d3-4f66-14e6-90520173954c",
+        "grade": 8.2,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "914bc72a-140f-492f-192f-2b07f2c76117",
+        "grade": 8.6,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "508ad26f-4598-4b54-ddbc-665116257956",
+        "grade": 8.9,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "b5717dfd-4944-4170-8321-a712133a2b96",
+        "grade": 9.2,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "0049ca71-618c-4052-40ae-b3448014f32c",
+        "grade": 9.5,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "5960ee70-dd8e-40d7-d796-528e48e8026e",
+        "grade": 9.9,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "a7a81e22-1a11-4920-57af-86b8bd963b83",
+        "grade": 7.2,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "9bf5066e-0bff-4f31-d65c-5b1678085629",
+        "grade": 6.0,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "f9bf222d-2aba-454d-2261-a24cc86657c7",
+        "grade": 7.8,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "76e3b786-8e36-4965-a3c2-e871620cef46",
+        "grade": 6.7,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "d6f6f32c-56df-4d91-be5b-dcab45170eef",
+        "grade": 8.5,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "9956f11d-e875-4624-c541-641596fadf40",
+        "grade": 8.8,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "b4e8bf1e-0e38-46da-a63c-227ed2c8a0b5",
+        "grade": 8.8,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "9d7720a3-a541-4905-96c8-be7f4d02a9cf",
+        "grade": 9.1,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "786d2a85-d61f-4c6c-38f1-a2871eaf1e65",
+        "grade": 7.9,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "c69b1d78-7530-4f46-8602-f8a1526abf6d",
+        "grade": 9.8,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "793415ed-42ff-49c7-8108-9704786514d6",
+        "grade": 5.6,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "e7281bba-c74d-4eec-6c6a-80900179dbec",
+        "grade": 7.4,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "9fc30cfa-004a-42e0-38b2-83f8a29c0b69",
+        "grade": 7.7,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "ed5bcc90-823a-41e4-d679-b4562a69805e",
+        "grade": 8.1,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "ba4efcae-c72d-4bd2-85e2-f1a666ecc5d4",
+        "grade": 8.4,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "7c426382-78ad-49ce-1fbb-0e70bbc73329",
+        "grade": 8.7,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "7fd66430-c574-4f68-a83f-78465b35dc76",
+        "grade": 9.0,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "096137be-da16-4d02-6e2d-c9655ecc831a",
+        "grade": 9.4,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "e0bc548c-182d-41b2-8e33-cc966f54fe38",
+        "grade": 9.7,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "c07082aa-f7c0-42fa-af89-c83917315192",
+        "grade": 7.0,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "d4367d18-d2cc-4374-7887-8af7382b80bd",
+        "grade": 7.3,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "7be90c22-a187-41f0-8b21-419dec803bc3",
+        "grade": 8.0,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "d9f011b8-840b-44a2-7773-8c796a125991",
+        "grade": 8.3,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "00b1e7bc-15be-43cf-b400-cecc9fcdcf55",
+        "grade": 8.9,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "1964e204-fce6-4603-c261-09004a838ab9",
+        "grade": 9.3,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "b23ce3b8-af89-4911-cf36-156a97a8127b",
+        "grade": 9.6,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "afbf23f3-543f-4de7-13e6-79be03d46b8a",
+        "grade": 9.9,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "2e89386b-4afa-4823-d1c7-ebe435407765",
+        "grade": 7.2,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "ce4f0a51-fbfe-43bf-9dc8-2f834a74bfe7",
+        "grade": 7.6,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "7cc3690e-e218-42ba-b00f-961f411c98db",
+        "grade": 7.9,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "4e2478b2-1fe8-4529-e072-b1e68c6250ee",
+        "grade": 6.7,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "35c36edb-49b8-4f0a-6402-920b921959b1",
+        "grade": 8.5,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "7b02d93e-08d4-4303-e803-5a33305c6b39",
+        "grade": 7.4,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "209fc967-8ead-4e0e-450c-fb008ceeb63b",
+        "grade": 9.2,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "baf603f3-11d2-4f80-3cf4-1f6130cadd66",
+        "grade": 9.5,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "07d3abb2-dcaa-4e8e-cdd9-2f98078efcbe",
+        "grade": 9.8,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "d5146719-b147-482d-37a1-cb1eac8bd0dc",
+        "grade": 7.2,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "309355b3-eb1c-4e95-756f-54b2028a63c3",
+        "grade": 7.5,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "472ff810-00ea-4fa9-88bc-5ceb7ee9d5f3",
+        "grade": 7.8,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "87791e87-ed45-485b-34a9-6872ef26055c",
+        "grade": 8.1,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "0fa8d74c-1655-4f4a-2d75-357deb3961ea",
+        "grade": 9.2,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "f265b9f7-9e74-4083-4254-0bf05b990855",
+        "grade": 9.5,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "46b6699c-c022-4547-006c-28378644319b",
+        "grade": 9.8,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "02f530e7-d1be-4855-afd9-c4e053063305",
+        "grade": 5.6,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "f65b4865-96f6-4ba8-07bb-594f31b3f545",
+        "grade": 7.5,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "829a9bbd-c65b-446c-d716-c32a8e2e5813",
+        "grade": 6.3,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "1fdbe6f7-f3c5-43b0-357b-7acd8e1ec579",
+        "grade": 8.1,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "6527ad32-bb1c-4c37-5b08-8bb3e27d44ee",
+        "grade": 8.4,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "e06704b8-c11e-410b-8017-39224ac0360e",
+        "grade": 8.8,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "0f7722d7-b048-46f7-5cba-526c377880b9",
+        "grade": 9.4,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "17f9e938-3ff0-45bf-69e9-11619e70e81a",
+        "grade": 9.7,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "e506a2e9-4442-4483-2e24-6acdf1c6b1a0",
+        "grade": 7.1,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "4b47e476-a231-492c-bd6a-e28f740d413d",
+        "grade": 7.4,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "9d00be98-8591-4dea-74ce-e6b553f63c93",
+        "grade": 7.7,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "92652340-2f3a-4c7f-0ea5-9e84982230a5",
+        "grade": 8.0,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "0551bad5-3760-4151-e78f-2d18141baf29",
+        "grade": 8.7,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "bbf96df8-d87f-4780-b5f0-8a411f707546",
+        "grade": 9.0,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "4ba87f05-6f42-4842-fff8-c6f463d8bce6",
+        "grade": 9.3,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "408753fa-f956-4e65-42d2-6a60f0b08997",
+        "grade": 9.6,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "a8eb33c1-d5bc-4ea7-96fb-5d6b67e90bc2",
+        "grade": 7.0,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "c6468b0b-daf0-4fb8-0cd5-fa075d6dab8e",
+        "grade": 7.3,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "9eaccd3b-76c8-4249-0475-924d01ff3f7a",
+        "grade": 7.6,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "c5603838-e6cb-4e5e-8140-cfa86f8b8a0c",
+        "grade": 7.9,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "4768fc33-6229-4626-475e-8b0dc70b5205",
+        "grade": 8.3,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "6f18c151-9418-4ddd-73b5-b1936c9b74d4",
+        "grade": 8.6,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "4bef9f62-fb21-472c-f154-1ef61b36de86",
+        "grade": 7.4,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "618a8234-4962-41a4-fbfd-4705a5c30c69",
+        "grade": 9.2,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "23ba1b4c-6424-4200-e682-ff4e387821fc",
+        "grade": 8.1,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "a1132d91-7c84-4aa6-4edf-b34cde8598ff",
+        "grade": 9.9,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "a4af501c-c7ad-4108-6561-daa0a76d4ac4",
+        "grade": 7.2,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "39652662-f801-4245-2898-ccc6020b12d2",
+        "grade": 7.5,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "08f438d2-0ea4-4d25-6d7b-8b0fb1fa3221",
+        "grade": 7.9,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "be901041-cd4a-435a-d0de-89ef63f53c5e",
+        "grade": 8.2,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "06bdf2cb-0a27-4b4d-56d2-352bd67f2ddb",
+        "grade": 8.5,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "382489a4-9c8c-48b8-2d92-0cc44910917a",
+        "grade": 8.8,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "59d2354f-c199-4fa5-298b-0d7f91b19da3",
+        "grade": 9.9,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "98d19ebd-eeaa-4abd-ebb6-8ab5e9e5954b",
+        "grade": 7.2,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "d291dbaf-1306-4b51-68bf-5162ed3ae5c9",
+        "grade": 7.5,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "53458de2-c468-4eba-b464-ba9590a508c0",
+        "grade": 6.3,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345"
+    },
+    {
+        "id": "47135020-ac3f-4f04-8136-fde72aa6f18b",
+        "grade": 8.2,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "5a235c75-bca1-47a6-fb56-cb247287f320",
+        "grade": 7.0,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "e113c86b-def8-4350-887c-38d0ef823e1d",
+        "grade": 8.8,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "fa0fab10-1f8f-4e0a-2d67-4593a090ba65",
+        "grade": 9.1,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2346"
+    },
+    {
+        "id": "7991d2cd-eb95-49b0-f3a9-8760c80a6dda",
+        "grade": 9.5,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "040a1dd4-bae8-4ed4-91c9-7112effc62e6",
+        "grade": 9.8,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "7f948def-e3b9-4646-d8f2-8aad8e99af4d",
+        "grade": 7.1,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "9605bf4c-3da5-4dd1-de0d-8578df7536f7",
+        "grade": 7.4,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2347"
+    },
+    {
+        "id": "48c81fdf-4f11-47c9-6e4b-ad4750ae5a38",
+        "grade": 7.8,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "8de65740-0e2b-4250-d148-6b55c0a920a8",
+        "grade": 8.1,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "bb28441d-b307-4c49-fb66-1f50afb98685",
+        "grade": 8.4,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2348"
+    },
+    {
+        "id": "b18e0023-e434-4532-8d3d-e8d5d470e09a",
+        "grade": 9.4,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "ec4fa8aa-87d9-432f-d601-35d005085c9e",
+        "grade": 9.7,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "1b86ebb6-cf0a-4bdb-1eb7-9d7bbaab3b25",
+        "grade": 7.0,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "98fa5379-2758-4ce5-0b03-c4c9335a33da",
+        "grade": 7.3,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11"
+    },
+    {
+        "id": "f5751822-8e70-49e7-03f4-a864dcc5a536",
+        "grade": 7.7,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "be446a0e-cc4a-4bce-033c-4e19e77ee8ac",
+        "grade": 8.0,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "4373536c-aa1e-481b-d6ad-c111a380d7ee",
+        "grade": 8.3,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "cf0777fb-1819-4173-6676-2fe6f6c875ca",
+        "grade": 8.6,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c21"
+    },
+    {
+        "id": "0f416d82-792e-4abf-2eb1-be9fe486f096",
+        "grade": 9.0,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "caa729d0-bbd2-49ed-b282-24be764673a3",
+        "grade": 9.3,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "5b0da3d9-aff0-4fa6-974d-f0c4e31f98f6",
+        "grade": 8.1,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "68fb6364-7174-4ef3-1016-0ba13a6c032f",
+        "grade": 9.9,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c22"
+    },
+    {
+        "id": "7da9b8d1-7149-441c-04cf-f16658892ff5",
+        "grade": 5.8,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "91b2cfa2-d79a-42d0-e64c-e09a938006eb",
+        "grade": 7.6,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "ca1d5ae5-f66a-4dd6-25f8-115dae8edfa9",
+        "grade": 7.9,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "e21516ce-cd9a-4485-0683-116ed26e9139",
+        "grade": 8.2,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c23"
+    },
+    {
+        "id": "dca64a6a-5307-4fa4-0e71-7acd890ce949",
+        "grade": 8.6,
+        "evaluationNumber": 1,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "e1341a86-2d7f-4a8c-b8a0-5184bbe0f782",
+        "grade": 8.9,
+        "evaluationNumber": 2,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "9cd50b32-46a9-4e2a-2548-be06d5854675",
+        "grade": 9.2,
+        "evaluationNumber": 3,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    },
+    {
+        "id": "bfff716a-9fe4-4b86-16ef-327296764f37",
+        "grade": 9.5,
+        "evaluationNumber": 4,
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c24"
+    }
+]

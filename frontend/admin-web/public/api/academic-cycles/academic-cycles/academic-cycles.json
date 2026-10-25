@@ -1,0 +1,242 @@
+[
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1001",
+        "name": "2023 - 2024",
+        "code": "2023-A",
+        "startDate": "2023-08-14T00:00:00.000Z",
+        "endDate": "2024-07-12T23:59:59.999Z",
+        "periodType": "annual",
+        "status": "upcoming",
+        "enrollmentOpen": false,
+        "minimumPassingGrade": 6,
+        "evaluationCount": 3,
+        "description": "Ciclo escolar anual 2023-2024.",
+        "observations": "Ciclo concluido sin incidencias.",
+        "academicLevelId": "1",
+        "academicLevel": {
+            "id": "1",
+            "name": "Primaria"
+        },
+        "educationLevelId": "1-1",
+        "educationLevel": {
+            "id": "1-1",
+            "name": "1er Grado"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1002",
+        "name": "2024 - 2025",
+        "code": "2024-A",
+        "startDate": "2024-08-12T00:00:00.000Z",
+        "endDate": "2025-07-11T23:59:59.999Z",
+        "periodType": "annual",
+        "status": "completed",
+        "enrollmentOpen": false,
+        "minimumPassingGrade": 6,
+        "evaluationCount": 3,
+        "description": "Ciclo escolar anual 2024-2025.",
+        "observations": "Todos los periodos completados.",
+        "academicLevelId": "1",
+        "academicLevel": {
+            "id": "1",
+            "name": "Primaria"
+        },
+        "educationLevelId": "1-6",
+        "educationLevel": {
+            "id": "1-6",
+            "name": "6to Grado"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1003",
+        "name": "2025 - 2026",
+        "code": "2025-A",
+        "startDate": "2025-08-11T00:00:00.000Z",
+        "endDate": "2026-07-10T23:59:59.999Z",
+        "periodType": "annual",
+        "status": "active",
+        "enrollmentOpen": true,
+        "minimumPassingGrade": 7,
+        "evaluationCount": 4,
+        "description": "Ciclo escolar vigente.",
+        "observations": "Actualmente en curso.",
+        "academicLevelId": "2",
+        "academicLevel": {
+            "id": "2",
+            "name": "Secundaria"
+        },
+        "educationLevelId": "2-1",
+        "educationLevel": {
+            "id": "2-1",
+            "name": "1er Año"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1004",
+        "name": "2026 - 2027",
+        "code": "2026-A",
+        "startDate": "2026-08-10T00:00:00.000Z",
+        "endDate": "2027-07-09T23:59:59.999Z",
+        "periodType": "annual",
+        "status": "upcoming",
+        "enrollmentOpen": true,
+        "minimumPassingGrade": 7,
+        "evaluationCount": 4,
+        "description": "Próximo ciclo escolar.",
+        "observations": "Inscripciones abiertas.",
+        "academicLevelId": "2",
+        "academicLevel": {
+            "id": "2",
+            "name": "Secundaria"
+        },
+        "educationLevelId": "2-3",
+        "educationLevel": {
+            "id": "2-3",
+            "name": "3er Año"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1005",
+        "name": "Semestre Enero - Junio 2026",
+        "code": "2026-S1",
+        "startDate": "2026-01-12T00:00:00.000Z",
+        "endDate": "2026-06-30T23:59:59.999Z",
+        "periodType": "semester",
+        "status": "active",
+        "enrollmentOpen": false,
+        "minimumPassingGrade": 7,
+        "evaluationCount": 2,
+        "description": "Primer semestre del año.",
+        "observations": "Periodo académico regular.",
+        "academicLevelId": "3",
+        "academicLevel": {
+            "id": "3",
+            "name": "Bachillerato"
+        },
+        "educationLevelId": "3-1",
+        "educationLevel": {
+            "id": "3-1",
+            "name": "4to Año"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1006",
+        "name": "Semestre Agosto - Diciembre 2026",
+        "code": "2026-S2",
+        "startDate": "2026-08-10T00:00:00.000Z",
+        "endDate": "2026-12-18T23:59:59.999Z",
+        "periodType": "semester",
+        "status": "upcoming",
+        "enrollmentOpen": true,
+        "minimumPassingGrade": 7,
+        "evaluationCount": 2,
+        "description": "Segundo semestre del año.",
+        "observations": "Pendiente de iniciar.",
+        "academicLevelId": "3",
+        "academicLevel": {
+            "id": "3",
+            "name": "Bachillerato"
+        },
+        "educationLevelId": "3-3",
+        "educationLevel": {
+            "id": "3-3",
+            "name": "6to Año"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1007",
+        "name": "Cuatrimestre Primavera 2026",
+        "code": "2026-C1",
+        "startDate": "2026-01-05T00:00:00.000Z",
+        "endDate": "2026-04-30T23:59:59.999Z",
+        "periodType": "four-month-period",
+        "status": "cancelled",
+        "enrollmentOpen": false,
+        "minimumPassingGrade": 7,
+        "evaluationCount": 2,
+        "description": "Programa cancelado.",
+        "observations": "Cancelado por ajustes institucionales.",
+        "academicLevelId": "3",
+        "academicLevel": {
+            "id": "3",
+            "name": "Bachillerato"
+        },
+        "educationLevelId": "3-1",
+        "educationLevel": {
+            "id": "3-1",
+            "name": "4to Año"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1008",
+        "name": "Trimestre Verano 2026",
+        "code": "2026-T1",
+        "startDate": "2026-06-01T00:00:00.000Z",
+        "endDate": "2026-08-31T23:59:59.999Z",
+        "periodType": "trimester",
+        "status": "active",
+        "enrollmentOpen": true,
+        "minimumPassingGrade": 7,
+        "evaluationCount": 1,
+        "description": "Programa trimestral de verano.",
+        "observations": "Alta demanda de estudiantes.",
+        "academicLevelId": "2",
+        "academicLevel": {
+            "id": "2",
+            "name": "Secundaria"
+        },
+        "educationLevelId": "2-3",
+        "educationLevel": {
+            "id": "2-3",
+            "name": "3er Año"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1009",
+        "name": "Curso Intensivo Invierno 2026",
+        "code": "2026-I1",
+        "startDate": "2026-12-01T00:00:00.000Z",
+        "endDate": "2026-12-31T23:59:59.999Z",
+        "periodType": "intensive",
+        "status": "archived",
+        "enrollmentOpen": false,
+        "minimumPassingGrade": 8,
+        "evaluationCount": 1,
+        "description": "Curso intensivo de invierno.",
+        "observations": "Archivado para consulta histórica.",
+        "academicLevelId": "3",
+        "academicLevel": {
+            "id": "3",
+            "name": "Bachillerato"
+        },
+        "educationLevelId": "3-3",
+        "educationLevel": {
+            "id": "3-3",
+            "name": "6to Año"
+        }
+    },
+    {
+        "id": "f5f6c5c7-7f7e-4bcb-a7a4-1c7e6f1d1010",
+        "name": "Programa Especial STEM 2025",
+        "code": "2025-ESP",
+        "startDate": "2025-09-01T00:00:00.000Z",
+        "endDate": "2025-12-15T23:59:59.999Z",
+        "periodType": "special",
+        "status": "archived",
+        "enrollmentOpen": false,
+        "minimumPassingGrade": 8,
+        "evaluationCount": 2,
+        "description": "Programa especial enfocado en STEM.",
+        "observations": "Programa finalizado y archivado.",
+        "academicLevelId": "2",
+        "academicLevel": {
+            "id": "2",
+            "name": "Secundaria"
+        },
+        "educationLevelId": "2-1",
+        "educationLevel": {
+            "id": "2-1",
+            "name": "1er Año"
+        }
+    }
+]

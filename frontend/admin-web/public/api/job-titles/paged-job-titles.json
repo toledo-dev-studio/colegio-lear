@@ -1,0 +1,77 @@
+{
+    "data": [
+        {
+            "id": "1f3b2c44-9d0c-4d0a-a111-0b1a2c3d4e5f",
+            "name": "Gerente General",
+            "description": "Responsable de la operación general",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        },
+        {
+            "id": "2a4c5d66-8e1f-4a2b-b222-1c2d3e4f5a6b",
+            "name": "Coordinador",
+            "description": "Coordina las actividades del equipo",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        },
+        {
+            "id": "3b5d6e77-7f2a-4b3c-c333-2d3e4f5a6b7c",
+            "name": "Desarrollador",
+            "description": "Desarrollo de software y sistemas",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        },
+        {
+            "id": "4c6e7f88-6a3b-4c4d-d444-3e4f5a6b7c8d",
+            "name": "Diseñador",
+            "description": "Diseño de materiales gráficos",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        },
+        {
+            "id": "5d7f8a99-5b4c-4d5e-e555-4f5a6b7c8d9e",
+            "name": "Analista",
+            "description": "Análisis de datos y reportes",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        },
+        {
+            "id": "6e8a9b00-4c5d-4e6f-f666-5a6b7c8d9e0f",
+            "name": "Soporte Técnico",
+            "description": "Soporte técnico a equipos de cómputo",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        },
+        {
+            "id": "7f9b0c11-3d6e-4f70-a777-6b7c8d9e0f1a",
+            "name": "Arquitecto de Software",
+            "description": "Diseño de arquitectura de software",
+            "jobTitleType": "administrative-staff",
+            "isActive": false
+        },
+        {
+            "id": "8a0c1d22-2e7f-4071-b888-7c8d9e0f1a2b",
+            "name": "Contador",
+            "description": "Gestión contable y financiera",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        },
+        {
+            "id": "9b1d2e33-1f8a-4172-c999-8d9e0f1a2b3c",
+            "name": "Vendedor",
+            "description": "Ventas y atención comercial",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        },
+        {
+            "id": "0c2e3f44-0a9b-4273-d000-9e0f1a2b3c4d",
+            "name": "Director",
+            "description": "Dirección general del colegio",
+            "jobTitleType": "administrative-staff",
+            "isActive": true
+        }
+    ],
+    "totalPages": 1,
+    "currentPage": 1,
+    "itemsCount": 10
+}

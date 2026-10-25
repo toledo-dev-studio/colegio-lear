@@ -1,0 +1,260 @@
+name: Development deployment 
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+env:
+  ENVIRONMENT: development
+  AZURE_REGISTRY: colegiolear.azurecr.io
+  AZURE_RESOURCE_GROUP: admin-suite-colegio-lear-development
+
+jobs:
+
+  ########################################################################################################
+  # Deployment backend
+  ########################################################################################################
+  build-push-and-deploy-backend:
+    name: Build, Push and Deploy Backend
+      
+    environment:
+      name: development
+
+    runs-on: ubuntu-latest
+    
+    env:
+      IMAGE_NAME: backend-colegio-lear
+      AZURE_WEB_APP_NAME: app-development-backend-colegio-lear
+    
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Generate unique tag using commit
+      - name: Set version tag
+        run: |
+          echo "VERSION_TAG=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      # 3. Login to Azure using OIDC
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # 4. Login to Azure Container Registry
+      - name: Login to Azure Container Registry
+        run: |
+          az acr login --name colegiolear
+
+      # 5. Build Docker image
+      # development -> Always is the last version
+      # VERSION_TAG -> Identify the image with a commit to history
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f docker/apps/backend/backend.dockerfile \
+            -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }} \
+            -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}-${{ env.VERSION_TAG }} \
+            .
+
+      # 6. Push development tag image
+      - name: Push development image
+        run: |
+          docker push \
+            ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}
+
+      # 7. Push tag version image
+      - name: Push version image
+        run: |
+          docker push \
+            ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}-${{ env.VERSION_TAG }}
+
+      # 8. Configure Azure Web App environment variables
+      - name: Configure Azure App Service settings
+        run: |
+          az webapp config appsettings set \
+            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ env.AZURE_WEB_APP_NAME }}" \
+            --settings \
+              COOKIE_SECURE=${{ vars.BACKEND_COOKIE_SECURE }} \
+              DATABASE_URL="${{ secrets.BACKEND_DATABASE_URL }}" \
+              JWT_SECRET="${{ secrets.BACKEND_JWT_SECRET }}" \
+              MAIL_USER="${{ secrets.BACKEND_MAIL_USER }}" \
+              MAIL_PASSWORD="${{ secrets.BACKEND_MAIL_PASSWORD }}" \
+              CORS_ORIGIN="${{ vars.BACKEND_CORS_ORIGIN }}" \
+              FRONTEND_URL_ADMIN="${{ vars.BACKEND_FRONTEND_URL_ADMIN }}" \
+              FRONTEND_URL_STUDENT="${{ vars.BACKEND_FRONTEND_URL_STUDENT }}" \
+              STORAGE_PROVIDER="${{ vars.BACKEND_STORAGE_PROVIDER }}" \
+              AZURE_STORAGE_CONNECTION_STRING="${{ secrets.BACKEND_AZURE_STORAGE_CONNECTION_STRING }}" \
+              AZURE_STORAGE_CONTAINER="${{ vars.BACKEND_AZURE_STORAGE_CONTAINER }}" \
+
+      # 9. Restart Azure Web App
+      # Force restart to download updated image for azure web app (student-web-colegio-lear:development)
+      - name: Restart Azure Web App
+        run: |
+          az webapp restart \
+            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ env.AZURE_WEB_APP_NAME }}"
+  
+  ########################################################################################################
+  # Deployment admin-web
+  ########################################################################################################
+  build-push-and-deploy-admin-web:
+    name: Build, Push and Deploy Admin Web
+
+    needs: build-push-and-deploy-backend
+
+    environment:
+      name: development
+
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: admin-web-colegio-lear
+      AZURE_WEB_APP_NAME: app-development-admin-web-colegio-lear
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Generate unique tag using commit
+      - name: Set version tag
+        run: |
+          echo "VERSION_TAG=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      # 3. Login to Azure using OIDC
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # 4. Login to Azure Container Registry
+      - name: Login to Azure Container Registry
+        run: |
+          az acr login --name colegiolear
+
+      # 5. Build Docker image
+      # development -> Always is the last version
+      # VERSION_TAG -> Identify the image with a commit to history
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f docker/apps/admin-web/admin-web.dockerfile \
+            --build-arg VITE_API_URL="${{ vars.ADMIN_WEB_API_URL }}" \
+            --build-arg VITE_ENVIRONMENT="${{ env.ENVIRONMENT }}" \
+            -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }} \
+            -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}-${{ env.VERSION_TAG }} \
+            .
+
+      # 6. Push development tag image
+      - name: Push development image
+        run: |
+          docker push \
+            ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}
+
+      # 7. Push tag version image
+      - name: Push version image
+        run: |
+          docker push \
+            ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}-${{ env.VERSION_TAG }}
+
+      # 8. Restart Azure Web App
+      # Force restart to download updated image for azure web app (admin-web-colegio-lear:development)
+      - name: Restart Azure Web App
+        run: |
+          az webapp restart \
+            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ env.AZURE_WEB_APP_NAME }}"
+
+  ########################################################################################################
+  # Deployent student-web
+  ########################################################################################################
+  build-push-and-deploy-student-web:
+    name: Build, Push and Deploy Student Web
+
+    needs: build-push-and-deploy-backend
+
+    environment:
+      name: development
+
+    runs-on: ubuntu-latest
+    
+    env:
+      IMAGE_NAME: student-web-colegio-lear
+      AZURE_WEB_APP_NAME: app-development-student-web-colegio-lear
+    
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Generate unique tag using commit
+      - name: Set version tag
+        run: |
+          echo "VERSION_TAG=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      # 3. Login to Azure using OIDC
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # 4. Login to Azure Container Registry
+      - name: Login to Azure Container Registry
+        run: |
+          az acr login --name colegiolear
+
+      # 5. Build Docker image
+      # development -> Always is the last version
+      # VERSION_TAG -> Identify the image with a commit to history
+      - name: Build Docker image
+        run: |
+          docker build \
+            -f docker/apps/student-web/student-web.dockerfile \
+            --build-arg VITE_API_URL="${{ vars.STUDENT_WEB_API_URL }}" \
+            --build-arg VITE_ENVIRONMENT="${{ env.ENVIRONMENT }}" \
+            -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }} \
+            -t ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}-${{ env.VERSION_TAG }} \
+            .
+
+      # 6. Push development tag image
+      - name: Push development image
+        run: |
+          docker push \
+            ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}
+
+      # 7. Push tag version image
+      - name: Push version image
+        run: |
+          docker push \
+            ${{ env.AZURE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.ENVIRONMENT }}-${{ env.VERSION_TAG }}
+
+      # 8. Restart Azure Web App
+      # Force restart to download updated image for azure web app (student-web-colegio-lear:development)
+      - name: Restart Azure Web App
+        run: |
+          az webapp restart \
+            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ env.AZURE_WEB_APP_NAME }}"

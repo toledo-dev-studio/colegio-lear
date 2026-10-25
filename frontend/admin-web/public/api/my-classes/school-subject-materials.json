@@ -1,0 +1,56 @@
+[
+    {
+        "id": "a5b6c7d8-9e0f-4a1b-8c2d-3e4f5a6b7c01",
+        "url": "https://fake-storage.com/files/guia-ejercicios-matematicas.pdf",
+        "name": "guia-ejercicios-matematicas.pdf",
+        "extension": "pdf",
+        "relatedRecordId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001"
+    },
+    {
+        "id": "a5b6c7d8-9e0f-4a1b-8c2d-3e4f5a6b7c02",
+        "url": "https://fake-storage.com/files/tablas-multiplicar.png",
+        "name": "tablas-multiplicar.png",
+        "extension": "png",
+        "relatedRecordId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789001"
+    },
+    {
+        "id": "a5b6c7d8-9e0f-4a1b-8c2d-3e4f5a6b7c03",
+        "url": "https://fake-storage.com/files/lectura-comprension-espanol.docx",
+        "name": "lectura-comprension-espanol.docx",
+        "extension": "docx",
+        "relatedRecordId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004",
+        "academicCycleSchoolGroupId": "c1d4e9f6-7a8b-4e3f-d9c2-2e7a8d9f0b03",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789004"
+    },
+    {
+        "id": "a5b6c7d8-9e0f-4a1b-8c2d-3e4f5a6b7c04",
+        "url": "https://fake-storage.com/files/presentacion-revolucion-mexicana.pptx",
+        "name": "presentacion-revolucion-mexicana.pptx",
+        "extension": "pptx",
+        "relatedRecordId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789003"
+    },
+    {
+        "id": "a5b6c7d8-9e0f-4a1b-8c2d-3e4f5a6b7c05",
+        "url": "https://fake-storage.com/files/experimento-fotosintesis.pdf",
+        "name": "experimento-fotosintesis.pdf",
+        "extension": "pdf",
+        "relatedRecordId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002"
+    },
+    {
+        "id": "a5b6c7d8-9e0f-4a1b-8c2d-3e4f5a6b7c06",
+        "url": "https://fake-storage.com/files/diagrama-ciclo-agua.png",
+        "name": "diagrama-ciclo-agua.png",
+        "extension": "png",
+        "relatedRecordId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002",
+        "academicCycleSchoolGroupId": "d2e5f0a7-8b9c-4f0a-ea3d-3f8b9e0a1c04",
+        "schoolSubjectId": "a1b2c3d4-e5f6-4a7b-8c9d-123456789002"
+    }
+]

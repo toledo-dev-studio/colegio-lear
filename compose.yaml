@@ -1,34 +1,63 @@
 services:
 
+  colegio-lear-db:
+    container_name: 'colegio-lear-db'
+    image: 'postgres:17'
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: colegio_lear
+    volumes:
+      - colegio-lear-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   colegio-lear-backend-cli:
     container_name: 'colegio-lear-backend-cli'
     image: 'node-cli'
     build:
       context: ./
-      dockerfile: docker/node.dockerfile
+      dockerfile: docker/utility/node.dockerfile
     ports:
       - '3000:3000'
     volumes:
       - ./backend:/app:rw
+    depends_on:
+      colegio-lear-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@colegio-lear-db:5432/colegio_lear?schema=public"
+    command: ["pnpm", "run", "dev"]
       
   colegio-lear-admin-web-cli:
     container_name: 'colegio-lear-admin-web-cli'
     image: 'node-cli'
     build:
       context: ./
-      dockerfile: docker/node.dockerfile
+      dockerfile: docker/utility/node.dockerfile
     ports:
-      - '80:80'
+      - '3001:80'
     volumes:
       - ./frontend/admin-web:/app:rw
+    command: ["pnpm", "run", "dev"]
 
   colegio-lear-student-web-cli:
     container_name: 'colegio-lear-student-web-cli'
     image: 'node-cli'
     build:
       context: ./
-      dockerfile: docker/node.dockerfile
+      dockerfile: docker/utility/node.dockerfile
     ports:
-      - '80:80'
+      - '3002:80'
     volumes:
       - ./frontend/student-web:/app:rw
+    command: ["pnpm", "run", "dev"]
+
+volumes:
+  colegio-lear-db-data:

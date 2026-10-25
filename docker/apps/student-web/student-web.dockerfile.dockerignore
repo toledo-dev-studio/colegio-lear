@@ -1,0 +1,25 @@
+# Git e infraestructura del repo
+.git
+.github
+.gitignore
+compose.yaml
+docker
+
+# Otros proyectos del monorepo
+backend
+frontend/admin-web
+
+# Dependencias y artefactos de build (se generan dentro del contenedor)
+**/node_modules
+**/.pnpm-store
+frontend/student-web/dist
+
+# Secretos
+frontend/student-web/.env*
+
+# Logs y basura
+logs
+*.log
+.DS_Store
+.vscode
+.idea

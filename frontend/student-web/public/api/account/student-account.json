@@ -1,0 +1,20 @@
+{
+  "id": "b884aee1-ca9f-4281-8e79-2cfbcc3bb011",
+  "name": "María Fernanda",
+  "firstLastName": "López",
+  "secondLastName": "García",
+  "dateOfBirth": "2011-04-22T00:00:00.000Z",
+  "curp": "LOGM110422MQTPLR05",
+  "enrollment": "STU-2026-00412",
+  "avatar": "https://randomuser.me/api/portraits/women/68.jpg",
+  "observations": "Alumna con excelente desempeño académico.",
+  "isActive": true,
+  "bloodType": "O+",
+  "medicalNotes": "Toma vitamina D diariamente.",
+  "email": "maria.lopez@colegio-lear.edu.mx",
+  "phoneNumber": "4423344556",
+  "address": "Av. de los Sabinos 123, Col. Centro",
+  "state": "Querétaro",
+  "municipality": "Querétaro",
+  "postalCode": "76000"
+}

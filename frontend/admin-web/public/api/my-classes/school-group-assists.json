@@ -1,0 +1,58 @@
+[
+  {
+    "id": "6a0e2b4d-7c1f-4e5a-a2b0-8d3e4f5a6b70",
+    "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+    "assistDate": "2023-08-14",
+    "status": "present",
+    "absenceReason": null
+  },
+  {
+    "id": "7b1f3a5c-8d2e-4f6a-b3c1-9e4f5a6b7c81",
+    "academicCycleEnrollmentId": "d4a1f2b8-6f6f-4b9d-a0e7-1d4a3d6e8c11",
+    "assistDate": "2023-09-04",
+    "status": "absent",
+    "absenceReason": "Cita médica"
+  },
+  {
+    "id": "8c2g4b6d-9e3f-4a7b-c4d2-0f5a6b7c8d92",
+    "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345",
+    "assistDate": "2023-09-04",
+    "status": "present",
+    "absenceReason": null
+  },
+  {
+    "id": "9d3h5c7e-0f4a-4b8c-d5e3-1a6b7c8d9ea3",
+    "academicCycleEnrollmentId": "e8c7a3f2-4d91-4e2f-a9d8-6b1c2f3a4567",
+    "assistDate": "2023-09-04",
+    "status": "present",
+    "absenceReason": null
+  },
+  {
+    "id": "0e4i6d8f-1a5b-4c9d-e6f4-2b7c8d9e0fb4",
+    "academicCycleEnrollmentId": "a3f9d1c7-7b6a-42e1-8d4c-1e2f3a4b5678",
+    "assistDate": "2023-09-04",
+    "status": "absent",
+    "absenceReason": null
+  },
+  {
+    "id": "1f5j7e9a-2b6c-4d0e-f7a5-3c8d9e0f1ac5",
+    "academicCycleEnrollmentId": "f1e2d3c4-b5a6-47d8-91e2-3f4a5b6c7d8e",
+    "assistDate": "2023-09-04",
+    "status": "present",
+    "absenceReason": null
+  },
+  {
+    "id": "2a6k8f0b-3c7d-4e1f-a8b6-4d9e0f1a2bd6",
+    "academicCycleEnrollmentId": "b5d2a5c1-f5d3-41d9-b7d4-8f2c1e5b2345",
+    "assistDate": "2023-08-14",
+    "status": "absent",
+    "absenceReason": "Trámite personal"
+  },
+  {
+    "id": "3b7l9g1c-4d8e-4f2a-b9c7-5e0f1a2b3ce7",
+    "academicCycleEnrollmentId": "e8c7a3f2-4d91-4e2f-a9d8-6b1c2f3a4567",
+    "assistDate": "2023-08-14",
+    "status": "present",
+    "absenceReason": null
+  }
+]

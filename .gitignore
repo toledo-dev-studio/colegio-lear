@@ -45,6 +45,7 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+.pnpm-store/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -124,6 +125,7 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+.vscode
 
 # yarn v2
 .yarn/cache
@@ -154,4 +156,9 @@ psd
 thumb
 sketch
 
+# Kiro IDE
+.kiro/
+
 # End of https://www.toptal.com/developers/gitignore/api/react,node
+
+git-cheatsheet-modulos.md
