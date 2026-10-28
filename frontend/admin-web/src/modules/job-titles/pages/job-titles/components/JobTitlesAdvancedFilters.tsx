@@ -62,7 +62,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                 <form className="flex flex-col gap-8">
 
                     <div className="control-container">
-                        <label className="label">Nombre del rol de seguridad:</label>
+                        <label className="label">Nombre del puesto de trabajo:</label>
                         <Controller
                             name="name"
                             control={control}
@@ -70,7 +70,7 @@ export const JobTitlesAdvancedFilters = ({ open, title = "Filtros avanzados", ha
                                 <Input
                                     type="text"
                                     {...field}
-                                    placeholder="Nombre del rol de seguridad..."
+                                    placeholder="Nombre del puesto de trabajo..."
                                 />
                             )} />
                     </div>
