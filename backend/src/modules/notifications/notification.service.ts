@@ -395,6 +395,9 @@ export class NotificationService {
    * MAX_DELIVERY_ATTEMPTS failures it gives up on the email but still
    * marks it sent, so the recipient at least sees it in-app. Meant to be
    * called once a day by a scheduled job (see shared/jobs).
+   *
+   * Mirrored in plain SQL by the standalone Render Cron Job
+   * (cronjobs/notification-delivery/src/release.ts) — keep both in sync.
    */
   async releaseDueNotifications(): Promise<void> {
     const due = await this.prisma.notification.findMany({
