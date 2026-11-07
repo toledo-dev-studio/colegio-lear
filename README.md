@@ -162,16 +162,9 @@ Puede consultar el archivo `backend/.env.example` para configurar las variables 
 
 #### Jobs programados en Render
 
-El plan gratuito de Render apaga el web service tras ~15 min sin tráfico, así que el `node-cron` interno no es confiable ahí. En su lugar, el job de notificaciones corre como un **Render Cron Job** (servicio aparte, de pago):
+El plan gratuito de Render apaga el web service tras ~15 min sin tráfico, así que el `node-cron` interno no es confiable ahí. En su lugar, el job de notificaciones corre como un **Render Cron Job** con runtime Docker (servicio aparte, de pago). Es una app pequeña e independiente del backend; código, variables y configuración paso a paso en [`cronjobs/notification-delivery/`](cronjobs/notification-delivery/README.md).
 
-1. En el web service, definir `ENABLE_IN_PROCESS_JOBS=false`. **Nunca** dejar ambos activos: el job no es seguro ante ejecuciones simultáneas y duplicaría correos.
-2. En Render → **New → Cron Job**, mismo repo y rama:
-   - **Root Directory:** `backend`
-   - **Build Command:** el mismo del web service (instalar dependencias, `prisma generate`, `pnpm build`)
-   - **Command:** `node dist/shared/jobs/run-notification-delivery.js`
-   - **Schedule:** `0 12 * * *` — Render usa UTC; equivale a las 6:00 am de México (UTC-6)
-   - **Environment:** `DATABASE_URL` y todas las `MAIL_*` (mismos valores que el web service)
-3. El script termina con código `1` si falla, así que Render marca la ejecución como fallida y se ve en su historial. Desde el dashboard se puede lanzar a mano con **Trigger Run**.
+En el web service hay que definir `ENABLE_IN_PROCESS_JOBS=false`. **Nunca** dejar ambos activos: el job no es seguro ante ejecuciones simultáneas y duplicaría correos.
 
 #### Configuración de envios de correo Gmail (Configuración SMTP)
 
