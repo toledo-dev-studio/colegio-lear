@@ -45,6 +45,12 @@ const EDUCATION_LEVELS = {
   segundo_primaria: "b2000000-0002-4000-8000-000000000004",
   primero_secundaria: "b2000000-0002-4000-8000-000000000005",
   segundo_secundaria: "b2000000-0002-4000-8000-000000000006",
+  // Remaining official SEP grades (base academic catalog)
+  tercero_preescolar: "b2000000-0002-4000-8000-000000000007",
+  tercero_primaria: "b2000000-0002-4000-8000-000000000008",
+  cuarto_primaria: "b2000000-0002-4000-8000-000000000009",
+  quinto_primaria: "b2000000-0002-4000-8000-000000000010",
+  sexto_primaria: "b2000000-0002-4000-8000-000000000011",
 };
 
 const SCHOOL_SUBJECTS = {
@@ -222,8 +228,65 @@ async function trySeedUpload(
 
 // ─── Seed function ──────────────────────────────────────────────────────────────
 
+/**
+ * Base academic catalog: Preescolar (3 grados) and Primaria (6 grados), per
+ * the SEP structure. Reuses the fixed IDs of the test dataset, so it's safe to
+ * run on its own (SEED_SCOPE=academic, e.g. a fresh production database) and
+ * as part of the full seed — every row is an upsert by ID.
+ */
+async function seedAcademicCatalog() {
+  const levels = [
+    {
+      id: ACADEMIC_LEVELS.preescolar,
+      name: "Preescolar",
+      description: "Educación preescolar (3 grados)",
+      grades: [
+        { id: EDUCATION_LEVELS.primero_preescolar, name: "1° Preescolar", description: "Primer grado de preescolar" },
+        { id: EDUCATION_LEVELS.segundo_preescolar, name: "2° Preescolar", description: "Segundo grado de preescolar" },
+        { id: EDUCATION_LEVELS.tercero_preescolar, name: "3° Preescolar", description: "Tercer grado de preescolar" },
+      ],
+    },
+    {
+      id: ACADEMIC_LEVELS.primaria,
+      name: "Primaria",
+      description: "Educación primaria básica (6 grados)",
+      grades: [
+        { id: EDUCATION_LEVELS.primero_primaria, name: "1° Primaria", description: "Primer grado de primaria" },
+        { id: EDUCATION_LEVELS.segundo_primaria, name: "2° Primaria", description: "Segundo grado de primaria" },
+        { id: EDUCATION_LEVELS.tercero_primaria, name: "3° Primaria", description: "Tercer grado de primaria" },
+        { id: EDUCATION_LEVELS.cuarto_primaria, name: "4° Primaria", description: "Cuarto grado de primaria" },
+        { id: EDUCATION_LEVELS.quinto_primaria, name: "5° Primaria", description: "Quinto grado de primaria" },
+        { id: EDUCATION_LEVELS.sexto_primaria, name: "6° Primaria", description: "Sexto grado de primaria" },
+      ],
+    },
+  ];
+
+  for (const { grades, ...level } of levels) {
+    await prisma.academicLevel.upsert({
+      where: { id: level.id },
+      update: {},
+      create: { ...level, isActive: true },
+    });
+    for (const grade of grades) {
+      await prisma.educationLevel.upsert({
+        where: { id: grade.id },
+        update: {},
+        create: { ...grade, academicLevelId: level.id },
+      });
+    }
+    console.log(`  ✓ ${level.name}: ${grades.map((g) => g.name).join(", ")}`);
+  }
+}
+
 async function main() {
   console.log("🌱 Seeding database...");
+
+  // SEED_SCOPE=academic: only the base academic catalog (levels + grades).
+  if (process.env.SEED_SCOPE === "academic") {
+    await seedAcademicCatalog();
+    console.log("🌱 Seed completed (SEED_SCOPE=academic: academic catalog only).");
+    return;
+  }
 
   // --- Security Roles ---
   // SuperAdmin: full access to everything
@@ -508,6 +571,13 @@ async function main() {
   console.log(
     `  ✓ Admin employees: ${admin1Username} (SuperAdmin), ${admin2Username} (Admin)`,
   );
+
+  // SEED_SCOPE=access: stop after roles, job titles and admin accounts —
+  // for fresh production databases that must not get the test dataset below.
+  if (process.env.SEED_SCOPE === "access") {
+    console.log("🌱 Seed completed (SEED_SCOPE=access: access data only).");
+    return;
+  }
 
   // --- Realistic 2026 dataset helpers ─────────────────────────────────────────
 
@@ -799,6 +869,9 @@ async function main() {
   console.log(
     `  ✓ Education levels: ${primeroPre.name}, ${segundoPre.name}, ${primeroPri.name}, ${segundoPri.name}, ${primeroSec.name}, ${segundoSec.name}`,
   );
+
+  // Fill in the remaining Preescolar/Primaria grades (3° Preescolar, 3°–6° Primaria)
+  await seedAcademicCatalog();
 
   // --- School Subjects ---
   await Promise.all([
