@@ -408,14 +408,16 @@ export class StudentService {
     const studentFullName = `${student.name} ${student.firstLastName} ${student.secondLastName}`;
     const portalUrl = env.FRONTEND_URL_STUDENT;
 
-    // Send email to each principal guardian (fire and forget).
+    // Send email to each principal guardian. Failures are logged (with
+    // student and guardian ids) and never thrown, so callers are not broken
+    // by a mail outage.
     // Principal guardians are required to have an email (enforced by
     // student-guardian create/update validation), but guard defensively
     // in case older data predates that rule.
     for (const guardian of guardians) {
       if (!guardian.email) continue;
-      this.mail
-        .sendMail({
+      try {
+        await this.mail.sendMail({
           to: guardian.email,
           subject: "Credenciales de acceso al portal - Colegio Lear",
           html: studentCredentialsEmail({
@@ -425,14 +427,14 @@ export class StudentService {
             tempPassword,
             portalUrl,
           }),
-        })
-        .catch((error) => {
-          logger.error("Failed to send student credentials email", {
-            error,
-            studentId,
-            guardianId: guardian.id,
-          });
         });
+      } catch (error) {
+        logger.error("Failed to send student credentials email", {
+          error,
+          studentId,
+          guardianId: guardian.id,
+        });
+      }
     }
   }
 }
