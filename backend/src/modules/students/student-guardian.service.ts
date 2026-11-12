@@ -5,6 +5,7 @@ import {
   ConflictError,
   ValidationError,
 } from "../../shared/errors/app-error";
+import { logger } from "../../shared/lib/logger";
 import type {
   StudentGuardianRecord,
   CreateStudentGuardianDto,
@@ -40,7 +41,34 @@ const GUARDIAN_TYPE_REVERSE: Record<string, string> = Object.fromEntries(
  * Business logic for student guardians sub-resource.
  */
 export class StudentGuardianService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly prisma: PrismaClient,
+    private readonly credentialsSender?: {
+      sendCredentials(studentId: string): Promise<void>;
+    },
+  ) {}
+
+  /**
+   * Sends the student credentials email to the principal guardian. Never
+   * throws: a failure is logged and the guardian registration still succeeds.
+   * Callers must have already unset any other principal, so only the
+   * newly-registered principal receives the mail.
+   */
+  private async notifyPrincipal(
+    studentId: string,
+    guardianId: string,
+  ): Promise<void> {
+    if (!this.credentialsSender) return;
+    try {
+      await this.credentialsSender.sendCredentials(studentId);
+    } catch (error) {
+      logger.error("Failed to send student credentials email", {
+        error,
+        studentId,
+        guardianId,
+      });
+    }
+  }
 
   private toRecord(raw: Record<string, unknown>): StudentGuardianRecord {
     return {
@@ -109,6 +137,10 @@ export class StudentGuardianService {
       },
     });
 
+    if (created.isPrincipal && created.email) {
+      await this.notifyPrincipal(studentId, created.id);
+    }
+
     return this.toRecord(created as unknown as Record<string, unknown>);
   }
 
@@ -174,6 +206,16 @@ export class StudentGuardianService {
       where: { id },
       data: updateData,
     });
+
+    // Only when this guardian just became principal or its email changed
+    // while principal; unrelated edits do not regenerate the password.
+    if (
+      updated.isPrincipal &&
+      updated.email &&
+      (!existing.isPrincipal || existing.email !== updated.email)
+    ) {
+      await this.notifyPrincipal(studentId, id);
+    }
 
     return this.toRecord(updated as unknown as Record<string, unknown>);
   }
