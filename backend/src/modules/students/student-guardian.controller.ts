@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import { StudentGuardianService } from "./student-guardian.service";
+import { StudentService } from "./student.service";
 import { prisma } from "../../shared/lib/prisma";
+import { storageService } from "../../shared/services/storage.service";
+import { mailService } from "../../shared/services/mail.service";
 import {
   sendSuccess,
   sendNoContent,
 } from "../../shared/helpers/response.helper";
 
-const service = new StudentGuardianService(prisma);
+const service = new StudentGuardianService(
+  prisma,
+  new StudentService(prisma, storageService, mailService),
+);
 
 /** GET /students/:studentId/guardians */
 export async function findAllGuardians(
